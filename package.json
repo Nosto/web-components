@@ -7,7 +7,7 @@
     "dist"
   ],
   "main": "main.cjs.js",
-  "module": "main.esm.js",
+  "module": "main.es.js",
   "exports": {
     ".": {
       "import": "./dist/main.es.js",
