@@ -1,0 +1,9 @@
+<nosto-product>
+    <a href="{{ product.url }}" class="nosto-product-link">
+        <div class="nosto-product-image">
+        <img src="{{ product.image_url | asset_url }}" alt="{{ product.name }}" width="300" height="300">
+        </div>
+        <div class="nosto-product-name">{{ product.name }}</div>
+        <div class="nosto-product-price">{{ product.price }}</div>
+    </a>
+</nosto-product>

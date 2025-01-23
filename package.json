@@ -21,15 +21,18 @@
   },
   "devDependencies": {
     "@types/eslint-config-prettier": "^6.11.3",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.8.7",
-    "typescript": "~5.6.2",
-    "vite": "^6.0.5",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-barrel-files": "^2.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "express": "^4.21.2",
+    "liquidjs": "^10.20.2",
     "prettier": "^3.3.3",
     "typedoc": "^0.27.2",
-    "typescript-eslint": "^8.12.2"
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.12.2",
+    "vite": "^6.0.5"
   }
 }

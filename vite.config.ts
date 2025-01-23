@@ -1,7 +1,9 @@
 import { resolve } from "path"
 import { defineConfig } from "vite"
+import { expressPlugin } from "./dev/server"
 
 export default defineConfig({
+  plugins: [expressPlugin()],
   build: {
     lib: {
       name: "@nosto/nosto-web-components",
