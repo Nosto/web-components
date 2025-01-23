@@ -14,7 +14,7 @@ export class NostoProduct extends HTMLElement {
   }
 
   handleClickEvent(event: MouseEvent) {
-    if (event.target instanceof HTMLElement && event.target.closest("[n-atc]")) {
+    if (event.target instanceof Element && event.target.closest("[n-atc]")) {
       if (window.Nosto?.addSkuToCart) {
         window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
       }
