@@ -10,6 +10,15 @@ export class NostoProduct extends HTMLElement {
     this.innerHTML = `
     <slot></slot>
     `
+    this.addEventListener("click", this.handleClickEvent.bind(this))
+  }
+
+  handleClickEvent(event: MouseEvent) {
+    if (event.target instanceof HTMLElement && event.target.closest("[n-atc]")) {
+      if (window.Nosto?.addSkuToCart) {
+        window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
+      }
+    }
   }
 
   get productId() {
@@ -36,23 +45,6 @@ export class NostoProduct extends HTMLElement {
     if (!this.getAttribute("slotId")) {
       throw new Error("Slot ID is required.")
     }
-  }
-
-  registerATCButtonEvent() {
-    const buttonATC = this.querySelector("[n-atc]")
-
-    if (!buttonATC) {
-      console.warn("Add to cart button with attribute [n-atc] not found. Skipping ATC event registration.")
-      return
-    }
-
-    this.querySelectorAll("[n-atc]")?.forEach(element =>
-      element.addEventListener("click", () => {
-        if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-          window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
-        }
-      })
-    )
   }
 }
 
