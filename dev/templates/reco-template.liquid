@@ -1,9 +1,19 @@
-<nosto-product>
-    <a href="{{ product.url }}" class="nosto-product-link">
-        <div class="nosto-product-image">
-        <img src="{{ product.image_url | asset_url }}" alt="{{ product.name }}" width="300" height="300">
-        </div>
-        <div class="nosto-product-name">{{ product.name }}</div>
-        <div class="nosto-product-price">{{ product.price }}</div>
-    </a>
+<script type="module" src="main.es.js" defer></script>
+
+<nosto-product product-id="{{ product.id }}" slot-id="1" class="nosto-product">
+  <a href="{{ product.url }}" class="nosto-product-link">
+    <div class="nosto-product-image">
+      <img src="{{ product.image_url | asset_url }}" alt="{{ product.name }}" width="300" height="300">
+    </div>
+    <div class="nosto-product-name">{{ product.name }}</div>
+    <div class="nosto-product-price">{{ product.price }}</div>
+    <div class="product-skus">
+      <select name="id" id="product-select-{{ product.id }}" class="product-select">
+        {% for variant in product.variants %}
+          <option value="{{ variant.id }}">{{ variant.title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button n-atc>Add to cart</button>
+  </a>
 </nosto-product>

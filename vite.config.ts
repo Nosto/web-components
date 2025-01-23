@@ -5,6 +5,7 @@ import { expressPlugin } from "./dev/server"
 export default defineConfig({
   plugins: [expressPlugin()],
   build: {
+    minify: true,
     lib: {
       name: "@nosto/nosto-web-components",
       entry: [resolve(__dirname, "src/main.ts")],

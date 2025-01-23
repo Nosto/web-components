@@ -1,5 +1,5 @@
 export class NostoProduct extends HTMLElement {
-  static observedAttributes = ["productId", "skuId", "slotId"]
+  static observedAttributes = ["product-id", "sku-id", "slot-id"]
 
   constructor() {
     super()
@@ -13,27 +13,23 @@ export class NostoProduct extends HTMLElement {
   }
 
   get productId() {
-    return this.getAttribute("productId")!
+    return this.getAttribute("product-id")!
   }
 
   get skuId() {
-    return this.getAttribute("skuId")!
+    return this.getAttribute("sku-id")!
   }
 
   get slotId() {
-    return this.getAttribute("slotId")!
+    return this.getAttribute("slot-id")!
   }
 
   validate() {
-    if (!this.getAttribute("productId")) {
+    if (!this.getAttribute("product-id")) {
       throw new Error("Product ID is required.")
     }
 
-    if (!this.getAttribute("skuId")) {
-      throw new Error("Sku ID is required.")
-    }
-
-    if (!this.getAttribute("slotId")) {
+    if (!this.getAttribute("slot-id")) {
       throw new Error("Slot ID is required.")
     }
   }
@@ -49,7 +45,8 @@ export class NostoProduct extends HTMLElement {
     this.querySelectorAll("[n-atc]")?.forEach(element =>
       element.addEventListener("click", () => {
         if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-          window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
+          // window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
+          console.log("Add to cart event registered.")
         }
       })
     )
