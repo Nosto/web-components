@@ -1,4 +1,4 @@
-export class ProductComponent extends HTMLElement {
+export class NostoProduct extends HTMLElement {
   static observedAttributes = ["productId", "skuId", "slotId"]
 
   constructor() {
@@ -7,6 +7,9 @@ export class ProductComponent extends HTMLElement {
 
   connectedCallback() {
     this.validate()
+    this.innerHTML = `
+    <slot></slot>
+    `
   }
 
   get productId() {
@@ -52,7 +55,7 @@ export class ProductComponent extends HTMLElement {
 }
 
 try {
-  customElements.define("nosto-product", ProductComponent)
+  customElements.define("nosto-product", NostoProduct)
 } catch (e) {
   console.error(e)
 }
