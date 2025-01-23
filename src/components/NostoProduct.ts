@@ -46,11 +46,13 @@ export class NostoProduct extends HTMLElement {
       return
     }
 
-    this.querySelector("[n-atc]")?.addEventListener("click", () => {
-      if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-        window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
-      }
-    })
+    this.querySelectorAll("[n-atc]")?.forEach(element =>
+      element.addEventListener("click", () => {
+        if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
+          window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
+        }
+      })
+    )
   }
 }
 
