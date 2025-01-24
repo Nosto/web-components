@@ -2,10 +2,11 @@ import { resolve } from "path"
 import { defineConfig } from "vite"
 import { expressPlugin } from "./dev/server"
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [expressPlugin()],
   build: {
     minify: true,
+    sourcemap: true,
     lib: {
       name: "@nosto/nosto-web-components",
       entry: [resolve(__dirname, "src/main.ts")],
@@ -16,4 +17,4 @@ export default defineConfig({
   server: {
     port: 8080
   }
-})
+}))

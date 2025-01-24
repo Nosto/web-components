@@ -1,8 +1,9 @@
 import express from "express"
 import { ProxyOptions, ViteDevServer } from "vite"
 import { Liquid } from "liquidjs"
-import { readFileSync } from "fs"
-import { resolve } from "path"
+import path, { resolve } from "path"
+import favicon from "serve-favicon"
+import dataSeed from "./data-seed"
 
 const app = express()
 const engine = new Liquid({
@@ -11,12 +12,11 @@ const engine = new Liquid({
   cache: process.env.NODE_ENV === "production"
 })
 
-console.log("global: ", resolve(__dirname, "templates"))
-
 app.engine("liquid", engine.express())
 app.set("views", resolve(__dirname, "templates"))
 app.set("view engine", "liquid")
 app.use(express.static("dist"))
+app.use(favicon(path.join(import.meta.dirname, "asset", "favcon_Nosto_32x32.png")))
 
 const proxy: Record<string, string | ProxyOptions> = {
   "/": {}
@@ -27,9 +27,11 @@ app.get("/", (req, res) => {
 })
 
 app.get("/simple", (req, res) => {
-  console.log(resolve(__dirname, "templates"))
-  const data = readFileSync(resolve(__dirname, "data/simple-product.json"), "utf-8")
-  res.render("reco-template", JSON.parse(data))
+  try {
+    res.render("reco-template", dataSeed())
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 export function expressPlugin() {
