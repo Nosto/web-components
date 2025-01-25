@@ -1,6 +1,9 @@
 {
   "name": "nosto-web-components",
   "private": true,
+  "author": {
+    "name": "Nosto Solutions Oy"
+  },
   "version": "0.0.0",
   "type": "module",
   "files": [

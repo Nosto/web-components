@@ -42,10 +42,11 @@ export class NostoProduct extends HTMLElement {
 
     this.querySelectorAll("[n-atc]")?.forEach(element =>
       element.addEventListener("click", () => {
-        //if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-        // window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
-        console.log("Add to cart event registered.")
-        //}
+        console.log("Add to cart event triggered.")
+        if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
+          window.Nosto.addSkuToCart({ productId: this.productId, skuId: this.skuId }, this.slotId, 1)
+          console.log("Add to cart event registered.")
+        }
       })
     )
   }
