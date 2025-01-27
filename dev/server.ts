@@ -3,7 +3,7 @@ import { ProxyOptions, ViteDevServer } from "vite"
 import { Liquid } from "liquidjs"
 import path, { resolve } from "path"
 import favicon from "serve-favicon"
-import dataSeed from "./data-seed"
+import dataSeed from "./data-seed.json"
 
 const app = express()
 const engine = new Liquid({
@@ -18,17 +18,25 @@ app.set("view engine", "liquid")
 app.use(express.static("dist"))
 app.use(favicon(path.join(import.meta.dirname, "asset", "favcon_Nosto_32x32.png")))
 
+engine.registerFilter("reco_data", it => {
+  return Object.entries(it).map(([_divId, data]) => data)
+})
+
 const proxy: Record<string, string | ProxyOptions> = {
   "/": {}
 }
 
 app.get("/", (req, res) => {
-  res.send("Nosto web components")
+  try {
+    res.render("reco-sku-select", { recs: dataSeed })
+  } catch (e) {
+    console.log(e)
+  }
 })
 
-app.get("/simple", (req, res) => {
+app.get("/sku-overlay", (req, res) => {
   try {
-    res.render("reco-template", dataSeed())
+    res.render("reco-sku-overlay", { recs: dataSeed })
   } catch (e) {
     console.log(e)
   }

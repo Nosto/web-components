@@ -58,24 +58,28 @@
   }
 </style>
 
+{% assign reco_results = recs | reco_data %}
+
 <div class="products">
-  {%- for product in products %}
-    <nosto-product product-id="{{ product.id }}" slot-id="1" class="nosto__product">
-      <div class="nosto__product-image">
-        <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
-      </div>
-      <div class="nosto__product-details--card">
-        <div class="nosto__product-name">{{ product.name }}</div>
-        <div class="nosto__product-price">EUR {{ product.price }}</div>
-        <div class="nosto__product-skus">
-          <select name="id" id="select__product-{{ product.id }}" class="select__product">
-            {% for variant in product.variants %}
-              <option value="{{ variant.id }}">{{ variant.title }}</option>
-            {% endfor %}
-          </select>
+  {%- for item in reco_results %}
+    {%- for product in item.products %}
+      <nosto-product product-id="{{ product.product_id }}" slot-id="{{ item.result_id }}" class="nosto__product">
+        <div class="nosto__product-image">
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
         </div>
-        <button class="btn__atc" n-atc>Add to cart</button>
-      </div>
-    </nosto-product>
+        <div class="nosto__product-details--card">
+          <div class="nosto__product-name">{{ product.name }}</div>
+          <div class="nosto__product-price">EUR {{ product.price }}</div>
+          <div class="nosto__product-skus">
+            <select n-sku-selector id="select__product-{{ product.product_id }}" class="select__product">
+              {% for sku in product.skus %}
+                <option value="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button class="btn__atc" n-atc>Add to cart</button>
+        </div>
+      </nosto-product>
+    {%- endfor %}
   {%- endfor %}
 </div>
