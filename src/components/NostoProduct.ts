@@ -39,13 +39,6 @@ export class NostoProduct extends HTMLElement {
   }
 
   registerATCButtonEvent() {
-    const buttonATC = this.querySelector("[n-atc]")
-
-    if (!buttonATC) {
-      console.warn("Add to cart button with attribute [n-atc] not found. Skipping ATC event registration.")
-      return
-    }
-
     this.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id") || this._selectedSkuId
