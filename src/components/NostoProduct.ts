@@ -17,14 +17,6 @@ export class NostoProduct extends HTMLElement {
     return this.getAttribute("product-id")!
   }
 
-  get selectedSkuId() {
-    return this.getAttribute("selected-sku-id")!
-  }
-
-  set selectedSkuId(value: string) {
-    this.setAttribute("selected-sku-id", value)
-  }
-
   get recoId() {
     return this.getAttribute("reco-id")!
   }
