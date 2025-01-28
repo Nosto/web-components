@@ -1,4 +1,4 @@
-import express from "express"
+import express, { response } from "express"
 import { Liquid } from "liquidjs"
 import path, { resolve } from "path"
 import favicon from "serve-favicon"
@@ -14,6 +14,11 @@ const engine = new Liquid({
 app.engine("liquid", engine.express())
 app.set("views", resolve(__dirname, "templates"))
 app.set("view engine", "liquid")
+
+app.use("*.css", (req, res) => {
+  res.sendFile(path.resolve(import.meta.dirname, `templates/${req.baseUrl}`))
+})
+
 app.use(express.static("dist"))
 app.use(favicon(path.join(import.meta.dirname, "asset", "favcon_Nosto_32x32.png")))
 
@@ -21,9 +26,9 @@ engine.registerFilter("reco_data", it => {
   return Object.entries(it).map(([_divId, data]) => data)
 })
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   try {
-    res.render("reco-sku-select", { recs: dataSeed() })
+    res.render("select/reco-sku-select", { recs: dataSeed() })
   } catch (e) {
     console.error(e)
   }
@@ -31,7 +36,7 @@ app.get("/", (req, res) => {
 
 app.get("/sku-overlay", (req, res) => {
   try {
-    res.render("reco-sku-overlay", { recs: dataSeed() })
+    res.render("overlay/reco-sku-overlay", { recs: dataSeed() })
   } catch (e) {
     console.error(e)
   }
