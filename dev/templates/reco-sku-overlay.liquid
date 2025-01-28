@@ -5,79 +5,91 @@
     font-family: Albert Sans, sans-serif;
     overflow: hidden;
 
-    .products {
+    .block__recommendation {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: 10px;
-      overflow: auto hidden;
-      scrollbar-width: none;
 
-      nosto-product {
+      .reco-title {
+        font-weight: bold;
+        font-size: larger;
+        text-transform: uppercase;
+      }
+
+      .products {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
+        overflow: auto hidden;
+        scrollbar-width: none;
 
-        .nosto__product-image > img {
-          border-radius: 10px;
-          object-fit: cover;
-        }
-
-        .nosto__product-details--card {
+        nosto-product {
           display: flex;
           flex-direction: column;
           gap: 10px;
 
-          .nosto__product-name {
-            color: #ff66bf;
+          .nosto__product-image > img {
+            border-radius: 10px;
+            object-fit: cover;
           }
 
-          .nosto__product-price {
-            font-size: large;
-            font-weight: bold;
-          }
-
-          .block__product {
+          .nosto__product-details--card {
             display: flex;
-            position: relative;
-            padding: 10px;
-            border-radius: 50px;
-            border: none;
-            background: #ff66bf;
-            color: #fff;
-            cursor: pointer;
+            flex-direction: column;
+            gap: 10px;
 
-            span.atc-title {
+            .nosto__product-name {
+              color: #ff66bf;
+            }
+
+            .nosto__product-price {
+              font-size: large;
+              font-weight: bold;
+            }
+
+            .block__product {
               display: flex;
-              justify-content: center;
-              width: 100%;
-            }
+              position: relative;
+              padding: 10px;
+              border-radius: 50px;
+              border: none;
+              background: #ff66bf;
+              color: #fff;
+              cursor: pointer;
 
-            .block__skus {
-              display: none;
-              position: absolute;
-              background: #fff;
-              padding: 10px 0;
-              border: 1px solid pink;
-              width: calc(100% - 5px);
-              justify-content: center;
-              left: 0px;
-              gap: 20px;
-              top: -50px;
-              color: #000;
-
-              span {
+              span.atc-title {
                 display: flex;
-                padding: 5px;
-                width: 20px;
-                height: 20px;
                 justify-content: center;
-                border: 1px solid lightpink;
+                width: 100%;
               }
-            }
 
-            &:hover {
               .block__skus {
-                display: flex;
+                display: none;
+                position: absolute;
+                background: #fff;
+                padding: 10px 0;
+                border: 1px solid pink;
+                width: calc(100% - 5px);
+                justify-content: center;
+                left: 0px;
+                gap: 20px;
+                top: -50px;
+                color: #000;
+
+                span {
+                  display: flex;
+                  padding: 5px;
+                  width: 20px;
+                  height: 20px;
+                  justify-content: center;
+                  border: 1px solid lightpink;
+                }
+              }
+
+              &:hover {
+                .block__skus {
+                  display: flex;
+                }
               }
             }
           }
@@ -89,28 +101,31 @@
 
 {% assign reco_results = recs | reco_data %}
 
-<div class="products">
-  {%- for item in reco_results %}
-    {%- for product in item.products %}
-      <nosto-product product-id="{{ product.product_id }}" slot-id="{{ item.result_id }}" class="nosto__product">
-        <div class="nosto__product-image">
-          <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
-        </div>
-        <div class="nosto__product-details--card">
-          <div class="nosto__product-name">{{ product.name }}</div>
-          <div class="nosto__product-price">EUR {{ product.price }}</div>
-          <div class="nosto__product-skus">
-            <div id="block__product-{{ product.product_id }}" class="block__product">
-              <span class="atc-title">Add to cart</span>
-              <div id="block__skus-{{ product.product_id }}" class="block__skus">
-                {% for sku in product.skus %}
-                  <span n-atc n-sku-id="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</span>
-                {% endfor %}
+{%- for item in reco_results %}
+  <div class="block__recommendation {{ item.div_id }}">
+    <span class="reco-title">{{ item.title }}</span>
+    <div class="products">
+      {%- for product in item.products %}
+        <nosto-product product-id="{{ product.product_id }}" reco-id="{{ item.result_id }}" class="nosto__product">
+          <div class="nosto__product-image">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
+          </div>
+          <div class="nosto__product-details--card">
+            <div class="nosto__product-name">{{ product.name }}</div>
+            <div class="nosto__product-price">EUR {{ product.price }}</div>
+            <div class="nosto__product-skus">
+              <div id="block__product-{{ product.product_id }}" class="block__product">
+                <span class="atc-title">Add to cart</span>
+                <div id="block__skus-{{ product.product_id }}" class="block__skus">
+                  {% for sku in product.skus %}
+                    <span n-atc n-sku-id="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</span>
+                  {% endfor %}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </nosto-product>
-    {%- endfor %}
-  {%- endfor %}
-</div>
+        </nosto-product>
+      {%- endfor %}
+    </div>
+  </div>
+{%- endfor %}

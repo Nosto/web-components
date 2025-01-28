@@ -1,8 +1,10 @@
 export class NostoProduct extends HTMLElement {
-  static observedAttributes = ["product-id", "selected-sku-id", "slot-id"]
+  static observedAttributes = ["product-id", "reco-id"]
+  private _selectedSkuId: string | undefined
 
   constructor() {
     super()
+    this._selectedSkuId = undefined
   }
 
   connectedCallback() {
@@ -23,8 +25,8 @@ export class NostoProduct extends HTMLElement {
     this.setAttribute("selected-sku-id", value)
   }
 
-  get slotId() {
-    return this.getAttribute("slot-id")!
+  get recoId() {
+    return this.getAttribute("reco-id")!
   }
 
   validate() {
@@ -32,15 +34,15 @@ export class NostoProduct extends HTMLElement {
       throw new Error("Product ID is required.")
     }
 
-    if (!this.getAttribute("slot-id")) {
+    if (!this.getAttribute("reco-id")) {
       throw new Error("Slot ID is required.")
     }
   }
 
   registerSKUSelectors() {
     this.querySelectorAll<HTMLSelectElement>("[n-sku-selector]").forEach(element => {
-      this.selectedSkuId = element.value
-      element.addEventListener("change", () => (this.selectedSkuId = element.value))
+      this._selectedSkuId = element.value
+      element.addEventListener("change", () => (this._selectedSkuId = element.value))
     })
   }
 
@@ -54,14 +56,14 @@ export class NostoProduct extends HTMLElement {
 
     this.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", () => {
-        const skuId = this.selectedSkuId || element.getAttribute("n-sku-id")
-        console.log(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
+        const skuId = this._selectedSkuId || element.getAttribute("n-sku-id")
+        console.info(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
         if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
           if (skuId) {
-            window.Nosto.addSkuToCart({ productId: this.productId, skuId }, this.slotId, 1)
-            console.log("Add to cart event registered.")
+            window.Nosto.addSkuToCart({ productId: this.productId, skuId }, this.recoId, 1)
+            console.info("Add to cart event registered.")
           } else {
-            console.log(`skuId missing for product ${this.productId}`)
+            console.info(`skuId missing for product ${this.productId}`)
           }
         }
       })

@@ -5,52 +5,64 @@
     font-family: Albert Sans, sans-serif;
     overflow: hidden;
 
-    .products {
+    .block__recommendation {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: 10px;
-      overflow: auto hidden;
-      scrollbar-width: none;
 
-      nosto-product {
+      .reco-title {
+        font-weight: bold;
+        font-size: larger;
+        text-transform: uppercase;
+      }
+
+      .products {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
+        overflow: auto hidden;
+        scrollbar-width: none;
 
-        .nosto__product-image > img {
-          border-radius: 10px;
-          object-fit: cover;
-        }
-
-        .nosto__product-details--card {
+        nosto-product {
           display: flex;
           flex-direction: column;
           gap: 10px;
 
-          .nosto__product-name {
-            color: #ff66bf;
+          .nosto__product-image > img {
+            border-radius: 10px;
+            object-fit: cover;
           }
 
-          .nosto__product-price {
-            font-size: large;
-            font-weight: bold;
-          }
+          .nosto__product-details--card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
 
-          .select__product {
-            padding: 5px;
-            width: 100%;
-            font-size: medium;
-            border: 1px solid lightgray;
-            outline: none;
-          }
+            .nosto__product-name {
+              color: #ff66bf;
+            }
 
-          .btn__atc {
-            padding: 10px;
-            border-radius: 50px;
-            border: none;
-            background: #ff66bf;
-            color: #fff;
-            cursor: pointer;
+            .nosto__product-price {
+              font-size: large;
+              font-weight: bold;
+            }
+
+            .select__product {
+              padding: 5px;
+              width: 100%;
+              font-size: medium;
+              border: 1px solid lightgray;
+              outline: none;
+            }
+
+            .btn__atc {
+              padding: 10px;
+              border-radius: 50px;
+              border: none;
+              background: #ff66bf;
+              color: #fff;
+              cursor: pointer;
+            }
           }
         }
       }
@@ -60,26 +72,29 @@
 
 {% assign reco_results = recs | reco_data %}
 
-<div class="products">
-  {%- for item in reco_results %}
-    {%- for product in item.products %}
-      <nosto-product product-id="{{ product.product_id }}" slot-id="{{ item.result_id }}" class="nosto__product">
-        <div class="nosto__product-image">
-          <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
-        </div>
-        <div class="nosto__product-details--card">
-          <div class="nosto__product-name">{{ product.name }}</div>
-          <div class="nosto__product-price">EUR {{ product.price }}</div>
-          <div class="nosto__product-skus">
-            <select n-sku-selector id="select__product-{{ product.product_id }}" class="select__product">
-              {% for sku in product.skus %}
-                <option value="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</option>
-              {% endfor %}
-            </select>
+{%- for item in reco_results %}
+  <div class="block__recommendation {{ item.div_id }}">
+    <span class="reco-title">{{ item.title }}</span>
+    <div class="products">
+      {%- for product in item.products %}
+        <nosto-product product-id="{{ product.product_id }}" reco-id="{{ item.result_id }}" class="nosto__product">
+          <div class="nosto__product-image">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
           </div>
-          <button class="btn__atc" n-atc>Add to cart</button>
-        </div>
-      </nosto-product>
-    {%- endfor %}
-  {%- endfor %}
-</div>
+          <div class="nosto__product-details--card">
+            <div class="nosto__product-name">{{ product.name }}</div>
+            <div class="nosto__product-price">EUR {{ product.price }}</div>
+            <div class="nosto__product-skus">
+              <select n-sku-selector id="select__product-{{ product.product_id }}" class="select__product">
+                {% for sku in product.skus %}
+                  <option value="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button class="btn__atc" n-atc>Add to cart</button>
+          </div>
+        </nosto-product>
+      {%- endfor %}
+    </div>
+  </div>
+{%- endfor %}

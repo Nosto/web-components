@@ -1,9 +1,8 @@
 import express from "express"
-import { ProxyOptions, ViteDevServer } from "vite"
 import { Liquid } from "liquidjs"
 import path, { resolve } from "path"
 import favicon from "serve-favicon"
-import dataSeed from "./data-seed.json"
+import dataSeed from "./data-seed"
 
 const app = express()
 const engine = new Liquid({
@@ -22,37 +21,20 @@ engine.registerFilter("reco_data", it => {
   return Object.entries(it).map(([_divId, data]) => data)
 })
 
-const proxy: Record<string, string | ProxyOptions> = {
-  "/": {}
-}
-
 app.get("/", (req, res) => {
   try {
-    res.render("reco-sku-select", { recs: dataSeed })
+    res.render("reco-sku-select", { recs: dataSeed() })
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 })
 
 app.get("/sku-overlay", (req, res) => {
   try {
-    res.render("reco-sku-overlay", { recs: dataSeed })
+    res.render("reco-sku-overlay", { recs: dataSeed() })
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 })
 
-export function expressPlugin() {
-  return {
-    name: "express",
-    config() {
-      return {
-        server: { proxy },
-        preview: { proxy }
-      }
-    },
-    configureServer(server: ViteDevServer) {
-      server.middlewares.use(app)
-    }
-  }
-}
+export default app
