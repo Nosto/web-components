@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     emptyOutDir: true,
     minify: true,
-    sourcemap: true,
+    sourcemap: mode === "development",
     lib: {
       name: "@nosto/nosto-web-components",
       entry: [resolve(__dirname, "src/main.ts")],
