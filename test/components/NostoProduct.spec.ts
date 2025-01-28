@@ -39,14 +39,15 @@ describe("NostoProduct", () => {
     const mockAddSkuToCart = vi.fn()
     window.Nosto = { addSkuToCart: mockAddSkuToCart }
 
-    const clickEvent = new MouseEvent("click", { bubbles: true })
-    const atcElement = document.createElement("div")
-    atcElement.setAttribute("n-atc", "")
-    atcElement.setAttribute("n-sku-id", "456")
-    element.appendChild(atcElement)
+    element.innerHTML = `
+      <div n-sku-id="456">
+        <div n-atc>ATC</div>
+      </div>
+    `
     element.connectedCallback()
 
-    atcElement.dispatchEvent(clickEvent)
+    const clickEvent = new MouseEvent("click", { bubbles: true })
+    element.querySelector("[n-atc]")?.dispatchEvent(clickEvent)
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
   })
@@ -58,18 +59,58 @@ describe("NostoProduct", () => {
     const mockAddSkuToCart = vi.fn()
     window.Nosto = { addSkuToCart: mockAddSkuToCart }
 
-    const atcWrapper = document.createElement("div")
-    atcWrapper.setAttribute("n-sku-id", "456")
-    element.appendChild(atcWrapper)
-
-    const clickEvent = new MouseEvent("click", { bubbles: true })
-    const atcElement = document.createElement("div")
-    atcElement.setAttribute("n-atc", "")
-    atcWrapper.appendChild(atcElement)
+    element.innerHTML = `
+      <div n-sku-id="456">
+        <div n-atc>ATC</div>
+      </div>
+    `
     element.connectedCallback()
 
-    atcElement.dispatchEvent(clickEvent)
+    const clickEvent = new MouseEvent("click", { bubbles: true })
+    element.querySelector("[n-atc]")!.dispatchEvent(clickEvent)
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
+  })
+
+  it("should pick n-sku-selector change events", () => {
+    element.setAttribute("product-id", "123")
+    element.setAttribute("reco-id", "789")
+
+    const mockAddSkuToCart = vi.fn()
+    window.Nosto = { addSkuToCart: mockAddSkuToCart }
+
+    element.innerHTML = `
+    <select n-sku-selector>
+      <option value="456">SKU 1</option>
+      <option value="457" selected>SKU 2</option>
+    </select>
+    <div n-atc>ATC</div>
+    `
+    element.connectedCallback()
+
+    element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
+    element.querySelector("[n-atc]")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+
+    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "457" }, "789", 1)
+  })
+
+  it("should pick up [n-sku-id] clicks", () => {
+    element.setAttribute("product-id", "123")
+    element.setAttribute("reco-id", "789")
+
+    const mockAddSkuToCart = vi.fn()
+    window.Nosto = { addSkuToCart: mockAddSkuToCart }
+
+    element.innerHTML = `
+    <div n-sku-id="234">1st sku</div>
+    <div n-sku-id="345">end sku</div>
+    <div n-atc>ATC</div>
+    `
+    element.connectedCallback()
+
+    element.querySelector("[n-sku-id='345']")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+    element.querySelector("[n-atc]")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+
+    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "345" }, "789", 1)
   })
 })

@@ -10,7 +10,8 @@ export class NostoProduct extends HTMLElement {
   connectedCallback() {
     this.validate()
     this.registerSKUSelectors()
-    this.registerATCButtonEvent()
+    this.registerSKUIds()
+    this.registerATCButtons()
   }
 
   get productId() {
@@ -32,27 +33,39 @@ export class NostoProduct extends HTMLElement {
   }
 
   registerSKUSelectors() {
-    this.querySelectorAll<HTMLSelectElement>("[n-sku-selector]").forEach(element => {
+    this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
       this._selectedSkuId = element.value
       element.addEventListener("change", () => (this._selectedSkuId = element.value))
     })
   }
 
-  registerATCButtonEvent() {
+  registerSKUIds() {
+    this.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
+      element.addEventListener("click", () => {
+        this._selectedSkuId = element.getAttribute("n-sku-id")!
+      })
+    })
+  }
+
+  registerATCButtons() {
     this.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id") || this._selectedSkuId
-        console.info(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
-        if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-          if (skuId) {
-            window.Nosto.addSkuToCart({ productId: this.productId, skuId }, this.recoId, 1)
-            console.info("Add to cart event registered.")
-          } else {
-            console.info(`skuId missing for product ${this.productId}`)
-          }
-        }
+        this.addSkuToCart(skuId)
       })
     )
+  }
+
+  addSkuToCart(skuId: string | undefined) {
+    console.info(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
+    if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
+      if (skuId) {
+        window.Nosto.addSkuToCart({ productId: this.productId, skuId }, this.recoId, 1)
+        console.info("Add to cart event registered.")
+      } else {
+        console.info(`skuId missing for product ${this.productId}`)
+      }
+    }
   }
 }
 
