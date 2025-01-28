@@ -48,7 +48,7 @@ export class NostoProduct extends HTMLElement {
 
     this.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", () => {
-        const skuId = this._selectedSkuId || element.getAttribute("n-sku-id")
+        const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id") || this._selectedSkuId
         console.info(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
         if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
           if (skuId) {

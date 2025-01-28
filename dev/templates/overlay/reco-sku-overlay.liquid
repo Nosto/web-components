@@ -20,7 +20,9 @@
                 <span class="atc-title">Add to cart</span>
                 <div id="block__skus-{{ product.product_id }}" class="block__skus">
                   {% for sku in product.skus %}
-                    <span n-atc n-sku-id="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</span>
+                    <div n-sku-id="{{ sku.id }}">
+                      <span n-atc>{{ sku.name | split: '/' | last | strip }}</span>
+                    </div>
                   {% endfor %}
                 </div>
               </div>
