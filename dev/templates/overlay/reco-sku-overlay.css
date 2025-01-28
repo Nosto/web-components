@@ -1,0 +1,98 @@
+body {
+  font-family:
+    Albert Sans,
+    sans-serif;
+  overflow: hidden;
+
+  .block__recommendation {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .reco-title {
+      font-weight: bold;
+      font-size: larger;
+      text-transform: uppercase;
+    }
+
+    .products {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      overflow: auto hidden;
+      scrollbar-width: none;
+
+      nosto-product {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .nosto__product-image > img {
+          border-radius: 10px;
+          object-fit: cover;
+        }
+
+        .nosto__product-details--card {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .nosto__product-name {
+            color: #ff66bf;
+          }
+
+          .nosto__product-price {
+            font-size: large;
+            font-weight: bold;
+          }
+
+          .block__product {
+            display: flex;
+            position: relative;
+            padding: 10px;
+            border-radius: 50px;
+            border: none;
+            background: #ff66bf;
+            color: #fff;
+            cursor: pointer;
+
+            span.atc-title {
+              display: flex;
+              justify-content: center;
+              width: 100%;
+            }
+
+            .block__skus {
+              display: none;
+              position: absolute;
+              background: #fff;
+              padding: 10px 0;
+              border: 1px solid pink;
+              width: calc(100% - 5px);
+              justify-content: center;
+              left: 0px;
+              gap: 20px;
+              top: -50px;
+              color: #000;
+
+              span {
+                display: flex;
+                padding: 5px;
+                width: 20px;
+                height: 20px;
+                justify-content: center;
+                border: 1px solid lightpink;
+              }
+            }
+
+            &:hover {
+              .block__skus {
+                display: flex;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
