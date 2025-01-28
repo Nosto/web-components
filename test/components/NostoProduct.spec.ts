@@ -14,36 +14,27 @@ describe("NostoProduct", () => {
   })
 
   it("should have observed attributes", () => {
-    expect(NostoProduct.observedAttributes).toEqual(["productId", "skuId", "slotId"])
+    expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id"])
   })
 
-  it("should throw an error if productId is not provided", () => {
+  it("should throw an error if product-id is not provided", () => {
     expect(() => element.connectedCallback()).toThrow("Product ID is required.")
   })
 
-  it("should throw an error if skuId is not provided", () => {
-    element.setAttribute("productId", "123")
-    expect(() => element.connectedCallback()).toThrow("Sku ID is required.")
-  })
-
-  it("should throw an error if slotId is not provided", () => {
-    element.setAttribute("productId", "123")
-    element.setAttribute("skuId", "456")
+  it("should throw an error if reco-id is not provided", () => {
+    element.setAttribute("product-id", "123")
     expect(() => element.connectedCallback()).toThrow("Slot ID is required.")
   })
 
   it("should not throw an error if all required attributes are provided", () => {
-    element.setAttribute("productId", "123")
-    element.setAttribute("skuId", "456")
-    element.setAttribute("slotId", "789")
+    element.setAttribute("product-id", "123")
+    element.setAttribute("reco-id", "789")
     expect(() => element.connectedCallback()).not.toThrow()
   })
 
   it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
-    element.setAttribute("productId", "123")
-    element.setAttribute("skuId", "456")
-    element.setAttribute("slotId", "789")
-    element.connectedCallback()
+    element.setAttribute("product-id", "123")
+    element.setAttribute("reco-id", "789")
 
     const mockAddSkuToCart = vi.fn()
     window.Nosto = { addSkuToCart: mockAddSkuToCart }
@@ -51,7 +42,32 @@ describe("NostoProduct", () => {
     const clickEvent = new MouseEvent("click", { bubbles: true })
     const atcElement = document.createElement("div")
     atcElement.setAttribute("n-atc", "")
+    atcElement.setAttribute("n-sku-id", "456")
     element.appendChild(atcElement)
+    element.connectedCallback()
+
+    atcElement.dispatchEvent(clickEvent)
+
+    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
+  })
+
+  it("should pick up n-sku-id from the closest parent with [n-sku-id]", () => {
+    element.setAttribute("product-id", "123")
+    element.setAttribute("reco-id", "789")
+
+    const mockAddSkuToCart = vi.fn()
+    window.Nosto = { addSkuToCart: mockAddSkuToCart }
+
+    const atcWrapper = document.createElement("div")
+    atcWrapper.setAttribute("n-sku-id", "456")
+    element.appendChild(atcWrapper)
+
+    const clickEvent = new MouseEvent("click", { bubbles: true })
+    const atcElement = document.createElement("div")
+    atcElement.setAttribute("n-atc", "")
+    atcWrapper.appendChild(atcElement)
+    element.connectedCallback()
+
     atcElement.dispatchEvent(clickEvent)
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
