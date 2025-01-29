@@ -60,7 +60,7 @@ function generateProducts() {
     })
 }
 
-export default function () {
+function generateData() {
   return {
     "productslot-nosto-1": {
       result_id: "productslot-nosto-1",
@@ -72,3 +72,8 @@ export default function () {
     }
   }
 }
+
+export type Product = ReturnType<typeof generateProducts>[number]
+export type RecoResponse = ReturnType<typeof generateData>
+
+export default generateData

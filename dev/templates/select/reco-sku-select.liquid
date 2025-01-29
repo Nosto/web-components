@@ -16,7 +16,7 @@
             <div class="nosto__product-name">{{ product.name }}</div>
             <div class="nosto__product-price">EUR {{ product.price }}</div>
             <div class="nosto__product-skus">
-              <nosto-color-swatch sku-colors='["BURGUNDY"]'></nosto-color-swatch>
+              <nosto-color-swatch sku-colors="{{ product | sku_colors: 0 }}"></nosto-color-swatch>
               <select n-sku-selector id="select__product-{{ product.product_id }}" class="select__product">
                 {% for sku in product.skus %}
                   <option value="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</option>
