@@ -18,7 +18,18 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* JSX */
+    "jsx": "react",
+    "jsxFactory": "createElement",
+    "jsxFragmentFactory": "createFragment",
+
+    /* Aliases */
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src", "test"]
 }

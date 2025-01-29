@@ -37,6 +37,12 @@ body {
           flex-direction: column;
           gap: 10px;
 
+          .nosto__product-skus {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+
           .nosto__product-name {
             color: #ff66bf;
           }

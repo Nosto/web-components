@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config"
 import { ProxyOptions, ViteDevServer } from "vite"
 import expressApp from "./dev/server"
 import { exec } from "child_process"
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js"
 
 const proxy: Record<string, string | ProxyOptions> = {
   "/": {}
@@ -37,9 +38,12 @@ function customHMRReload() {
   return {
     name: "custom-hmr-reload",
     handleHotUpdate: ({ file, server }) => {
+      const reloadedExtensions = [".ts", ".css", ".tsx"]
       const fileName = path.basename(file)
-      if (file.includes("/src/") && file.endsWith(".ts")) {
-        console.log(`${fileName} changed, build and reload src changes`)
+      const fileExt = path.extname(file)
+
+      if (file.includes("/src/") && reloadedExtensions.includes(fileExt)) {
+        console.info(`${fileName} changed, build and reload src changes`)
 
         if (!bundling) {
           hmrBuild()
@@ -51,7 +55,7 @@ function customHMRReload() {
           })
         }
       } else if (file.includes("/dev/")) {
-        console.log(`${fileName} changed, reload dev server changes`)
+        console.info(`${fileName} changed, reload dev server changes`)
         server.ws.send({
           type: "custom",
           event: "server-reload"
@@ -62,7 +66,15 @@ function customHMRReload() {
 }
 
 export default defineConfig(({ mode }) => ({
-  plugins: [expressMiddleware(), customHMRReload()],
+  plugins: [
+    expressMiddleware(),
+    customHMRReload(),
+    cssInjectedByJsPlugin({
+      dev: {
+        enableDev: true
+      }
+    })
+  ],
   build: {
     emptyOutDir: true,
     minify: true,
@@ -72,7 +84,19 @@ export default defineConfig(({ mode }) => ({
       entry: [resolve(__dirname, "src/main.ts")],
       formats: ["es", "cjs"],
       fileName: (format, name) => `${name}.${format}.js`
+    },
+    cssCodeSplit: false
+  },
+  css: {
+    modules: {
+      localsConvention: "camelCaseOnly"
     }
+  },
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./src")
+    },
+    extensions: [".ts", ".tsx", ".json"]
   },
   server: {
     port: 8080
