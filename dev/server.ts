@@ -1,4 +1,4 @@
-import express, { response } from "express"
+import express from "express"
 import { Liquid } from "liquidjs"
 import path, { resolve } from "path"
 import favicon from "serve-favicon"
@@ -23,7 +23,7 @@ app.use(express.static("dist"))
 app.use(favicon(path.join(import.meta.dirname, "asset", "favcon_Nosto_32x32.png")))
 
 engine.registerFilter("reco_data", it => {
-  return Object.entries(it).map(([_divId, data]) => data)
+  return Object.values(it)
 })
 
 app.get("/", (_req, res) => {
