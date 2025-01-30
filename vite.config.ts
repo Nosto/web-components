@@ -74,6 +74,12 @@ export default defineConfig(({ mode }) => ({
       fileName: (format, name) => `${name}.${format}.js`
     }
   },
+  resolve: {
+    alias: {
+      "@": resolve(import.meta.dirname, "./src")
+    },
+    extensions: [".ts", ".tsx", ".json"]
+  },
   server: {
     port: 8080
   },

@@ -94,6 +94,16 @@ export interface Score {
   totalRevenue: number
   views: number
 }
+export interface SkuOptionVM {
+  available: boolean
+  firstSku?: SkuVM
+  lowestPriceSku: SkuVM
+  nextLayerOptions: SkuOptionVM[]
+  optionType: string
+  optionValue: string
+  product: ProductVM
+  skus: SkuVM[]
+}
 export interface SkuVM {
   available: boolean
   customFields: { [index: string]: string }[]

@@ -26,6 +26,10 @@ engine.registerFilter("reco_data", it => {
   return Object.values(it)
 })
 
+engine.registerFilter("reco_data", it => {
+  return Object.values(it)
+})
+
 app.get("/", (_req, res) => {
   try {
     res.render("select/reco-sku-select", { recs: dataSeed() })
