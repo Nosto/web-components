@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
-import { NostoProduct } from "../../src/components/NostoProduct"
+import { NostoProduct } from "@/components/NostoProduct"
 
 describe("NostoProduct", () => {
   let element: NostoProduct

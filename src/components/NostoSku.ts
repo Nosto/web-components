@@ -1,5 +1,5 @@
 export class NostoSku extends HTMLElement {
-  static observedAttributes = ["depth", "separator", "sku-options"]
+  static observedAttributes = ["depth"]
 
   constructor() {
     super()
@@ -13,10 +13,6 @@ export class NostoSku extends HTMLElement {
   get depth() {
     const depth = this.getAttribute("depth")
     return Number(depth) || 1
-  }
-
-  get separator() {
-    return this.getAttribute("separator") || "/"
   }
 
   get options() {
@@ -93,7 +89,7 @@ export class NostoSku extends HTMLElement {
       .querySelectorAll(`[n-sku-item]:not([n-sku-item-id="${skuId}"])`)
       .forEach(otherSkuOption => otherSkuOption.removeAttribute("selected"))
 
-    if (nextLayer && skuItemValue) {
+    if (this.depth > 1 && nextLayer && skuItemValue) {
       const nextLayerKey = `${skuItemValue.toLowerCase()}-${nextLayer}`
       this._enableItem(`[n-sku-items="${nextLayerKey}"]`)
       this._disableItem(`[n-sku-items]:not([n-sku-items="${nextLayerKey}"])`, skuElement)
