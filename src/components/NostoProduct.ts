@@ -1,3 +1,5 @@
+import { SkuEventDetailProps } from "@/types"
+
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
@@ -12,6 +14,7 @@ export class NostoProduct extends HTMLElement {
     this.registerSKUSelectors()
     this.registerSKUIds()
     this.registerATCButtons()
+    this.registerSkuSelectionEvent()
   }
 
   get productId() {
@@ -20,6 +23,10 @@ export class NostoProduct extends HTMLElement {
 
   get recoId() {
     return this.getAttribute("reco-id")!
+  }
+
+  get selectedSkuId() {
+    return this._selectedSkuId
   }
 
   validate() {
@@ -66,6 +73,17 @@ export class NostoProduct extends HTMLElement {
         console.info(`skuId missing for product ${this.productId}`)
       }
     }
+  }
+
+  registerSkuSelectionEvent() {
+    this.addEventListener("n-sku-selection", (event: Event) => {
+      const selectionDetail = (event as CustomEvent).detail as SkuEventDetailProps
+      if (selectionDetail && selectionDetail.depth === selectionDetail.selectionIndex) {
+        console.log("Sku selection event received in NostoProduct: ", selectionDetail)
+        this._selectedSkuId = selectionDetail.skuId
+        event.stopPropagation()
+      }
+    })
   }
 }
 
