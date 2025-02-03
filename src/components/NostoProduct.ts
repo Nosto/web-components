@@ -1,4 +1,5 @@
-import { SkuEventDetailProps } from "@/components/types"
+import { NostoSkuOptions } from "./NostoSkuOptions"
+import { intersectionOf } from "@/utils"
 
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
@@ -75,14 +76,30 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
+  totalSkuOptions() {
+    return this.querySelectorAll("nosto-sku-options").length
+  }
+
+  getSelectedSkuId() {
+    const skuOptions = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
+
+    const selectedSkuOptions = skuOptions
+      .filter(skuOption => skuOption.selectedSkuIds.length > 0)
+      .map(validSkuOption => validSkuOption.selectedSkuIds)
+
+    if (selectedSkuOptions.length === this.totalSkuOptions()) {
+      return intersectionOf(...selectedSkuOptions)[0]
+    }
+  }
+
   // The final invocation in the wrapper after all the events at NostoSku elements are handled
   // TODO handle ATC
   registerSkuSelectionEvent() {
     this.addEventListener("n-sku-selection", (event: Event) => {
-      const selectionDetail = (event as CustomEvent).detail as SkuEventDetailProps
-      if (selectionDetail && selectionDetail.skuCount === selectionDetail.selectionIndex) {
-        console.info("Sku selection event received in NostoProduct: ", selectionDetail)
-        this._selectedSkuId = selectionDetail.skuId
+      const selectedSkuId = this.getSelectedSkuId()
+      if (selectedSkuId) {
+        console.info("Sku selection event received in NostoProduct: ", selectedSkuId)
+        this._selectedSkuId = selectedSkuId
         event.stopPropagation()
       }
     })
