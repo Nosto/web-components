@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, vi, expect } from "vitest"
+import { describe, it, beforeEach, expect } from "vitest"
 import { NostoProduct } from "@/components/NostoProduct"
 import { NostoSku } from "@/components/NostoSku"
 
