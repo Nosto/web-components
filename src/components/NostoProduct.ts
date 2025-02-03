@@ -75,11 +75,13 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
+  // The final invocation in the wrapper after all the events at NostoSku elements are handled
+  // TODO handle ATC
   registerSkuSelectionEvent() {
     this.addEventListener("n-sku-selection", (event: Event) => {
       const selectionDetail = (event as CustomEvent).detail as SkuEventDetailProps
       if (selectionDetail && selectionDetail.depth === selectionDetail.selectionIndex) {
-        console.log("Sku selection event received in NostoProduct: ", selectionDetail)
+        console.info("Sku selection event received in NostoProduct: ", selectionDetail)
         this._selectedSkuId = selectionDetail.skuId
         event.stopPropagation()
       }
