@@ -116,20 +116,8 @@ type ProductIdentifier = {
 
 type SlotReference = string | HTMLElement
 
-type AddSkuToCart = (
+export type AddSkuToCart = (
   productIdentifier: ProductIdentifier,
   element: SlotReference,
   quantity: number
 ) => Promise<unknown | undefined>
-
-export type SkuEventProps = {
-  optionValue: string
-  skuId: string
-}
-
-export type SkuEventDetailProps = {
-  skuId?: string
-  skuProps: Record<number, SkuEventProps[]>
-  depth: number
-  selectionIndex: number
-}

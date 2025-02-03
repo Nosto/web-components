@@ -1,7 +1,7 @@
-import { SkuEventDetailProps, SkuEventProps } from "@/types"
+import { SkuEventDetailProps, SkuEventProps } from "@/components/types"
 
 export class NostoSku extends HTMLElement {
-  private _options: Record<string, string>
+  private _options: Record<string, string[]>
 
   constructor() {
     super()
@@ -24,7 +24,7 @@ export class NostoSku extends HTMLElement {
       const optionValue = option.textContent?.trim()
 
       if (optionValue && skusValue) {
-        this._options[optionValue] = skusValue
+        this._options[optionValue] = skusValue.split(",")
       }
     })
   }
@@ -36,24 +36,19 @@ export class NostoSku extends HTMLElement {
   registerOptionsClickEvent() {
     this.querySelectorAll("[n-option]").forEach(option => {
       option.addEventListener("click", () => {
-        option.toggleAttribute("selected")
-
-        // remove selected attribute from other other options
-        Array.from(this.querySelectorAll("[n-option]"))
-          .filter(element => element !== option)
-          .forEach(otherOption => otherOption.removeAttribute("selected"))
-
         const optionValue = option.textContent
         if (!optionValue) {
           return
         }
+
+        this.syncSelectedAttribute(option)
 
         const siblings = this.getAllSiblings(option)
 
         // provides easy access to the selection context from sibling SKU
         // the indexed value will also come in handy when dealing with more than two SKU selections
         const skuProps: Record<number, SkuEventProps[]> = {
-          1: this.options[optionValue].split(",").map(it => ({
+          1: this.options[optionValue].map(it => ({
             optionValue,
             skuId: it
           }))
@@ -61,7 +56,7 @@ export class NostoSku extends HTMLElement {
 
         const detail: SkuEventDetailProps = {
           skuProps,
-          depth: siblings.length + 1,
+          skuCount: siblings.length + 1,
           selectionIndex: 1
         }
 
@@ -75,6 +70,15 @@ export class NostoSku extends HTMLElement {
         )
       })
     })
+  }
+
+  syncSelectedAttribute(clickedOption: Element) {
+    clickedOption.toggleAttribute("selected")
+
+    // remove selected attribute from other other options
+    Array.from(this.querySelectorAll("[n-option]"))
+      .filter(element => element !== clickedOption)
+      .forEach(otherOption => otherOption.removeAttribute("selected"))
   }
 
   /**
@@ -91,14 +95,13 @@ export class NostoSku extends HTMLElement {
         return
       }
 
-      const { skuProps, selectionIndex, depth } = selectionDetails
+      const { skuProps, selectionIndex, skuCount: depth } = selectionDetails
       const selectedSkuIds = skuProps[selectionIndex].map(it => it.skuId)
       selectionDetails.selectionIndex += 1
       skuProps[selectionDetails.selectionIndex] = []
 
       Object.entries(this.options).forEach(([k, v]) => {
-        const localSkus = v.split(",")
-        const matched = localSkus.find(it => selectedSkuIds.includes(it))
+        const matched = v.find(it => selectedSkuIds.includes(it))
         if (matched) {
           skuProps[selectionDetails.selectionIndex].push({ skuId: matched, optionValue: k })
         } else {

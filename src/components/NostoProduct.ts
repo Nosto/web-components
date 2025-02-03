@@ -1,4 +1,4 @@
-import { SkuEventDetailProps } from "@/types"
+import { SkuEventDetailProps } from "@/components/types"
 
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
@@ -80,7 +80,7 @@ export class NostoProduct extends HTMLElement {
   registerSkuSelectionEvent() {
     this.addEventListener("n-sku-selection", (event: Event) => {
       const selectionDetail = (event as CustomEvent).detail as SkuEventDetailProps
-      if (selectionDetail && selectionDetail.depth === selectionDetail.selectionIndex) {
+      if (selectionDetail && selectionDetail.skuCount === selectionDetail.selectionIndex) {
         console.info("Sku selection event received in NostoProduct: ", selectionDetail)
         this._selectedSkuId = selectionDetail.skuId
         event.stopPropagation()
