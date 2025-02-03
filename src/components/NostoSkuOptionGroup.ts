@@ -1,6 +1,6 @@
 import { SkuEventDetailProps, SkuEventProps } from "@/components/types"
 
-export class NostoSku extends HTMLElement {
+export class NostoSkuOptionGroup extends HTMLElement {
   private _optionTypeToSkuIds: Record<string, string[]>
 
   constructor() {
@@ -135,7 +135,7 @@ export class NostoSku extends HTMLElement {
 }
 
 try {
-  customElements.define("nosto-sku", NostoSku)
+  customElements.define("nosto-sku-option-group", NostoSkuOptionGroup)
 } catch (e) {
   console.error(e)
 }
