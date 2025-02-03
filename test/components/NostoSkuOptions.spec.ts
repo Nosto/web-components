@@ -1,16 +1,16 @@
 import { describe, it, beforeEach, expect } from "vitest"
 import { NostoProduct } from "@/components/NostoProduct"
-import { NostoSkuOptionGroup } from "@/components/NostoSkuOptionGroup"
+import { NostoSkuOptions } from "@/components/NostoSkuOptions"
 
 describe("swatch side effects", () => {
   let nostoProduct: NostoProduct
-  let firstNostoSkuOptionGroup: NostoSkuOptionGroup
-  let secondNostoSkuOptionGroup: NostoSkuOptionGroup
+  let firstNostoSkuOptions: NostoSkuOptions
+  let secondNostoSkuOptions: NostoSkuOptions
 
   beforeEach(() => {
     nostoProduct = new NostoProduct()
-    firstNostoSkuOptionGroup = new NostoSkuOptionGroup()
-    secondNostoSkuOptionGroup = new NostoSkuOptionGroup()
+    firstNostoSkuOptions = new NostoSkuOptions()
+    secondNostoSkuOptions = new NostoSkuOptions()
     document.body.innerHTML = ""
     loadSkuContent()
   })
@@ -20,23 +20,23 @@ describe("swatch side effects", () => {
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 
-    firstNostoSkuOptionGroup.innerHTML = `
+    firstNostoSkuOptions.innerHTML = `
         <span n-option n-skus="123,145" selected>Black</span>
         <span n-option n-skus="223,234,245">White</span>
         <span n-option n-skus="334,345">Blue</span>
         `
 
-    secondNostoSkuOptionGroup.innerHTML = `
+    secondNostoSkuOptions.innerHTML = `
         <span n-option n-skus="123,223" selected>L</span>
         <span n-option n-skus="234,334">M</span>
         <span n-option n-skus="145,245,345">S</span>
     `
 
-    nostoProduct.appendChild(firstNostoSkuOptionGroup)
-    nostoProduct.appendChild(secondNostoSkuOptionGroup)
+    nostoProduct.appendChild(firstNostoSkuOptions)
+    nostoProduct.appendChild(secondNostoSkuOptions)
 
-    secondNostoSkuOptionGroup.connectedCallback()
-    firstNostoSkuOptionGroup.connectedCallback()
+    secondNostoSkuOptions.connectedCallback()
+    firstNostoSkuOptions.connectedCallback()
     nostoProduct.connectedCallback()
   }
 
@@ -64,15 +64,15 @@ describe("swatch side effects", () => {
   }
 
   it("should provide selection side effects on SKU selection", () => {
-    testClickedSku(firstNostoSkuOptionGroup, 2) // 223,234,245
-    testOtherSkusAfterClick(secondNostoSkuOptionGroup) // 123,223 & 234,334 & 145,245,345
+    testClickedSku(firstNostoSkuOptions, 2) // 223,234,245
+    testOtherSkusAfterClick(secondNostoSkuOptions) // 123,223 & 234,334 & 145,245,345
 
     expect(nostoProduct.selectedSkuId).toBe("223") // first matching SkuId is selected by default
   })
 
   it("should provide selection side effects on reverse SKU selection", () => {
-    testClickedSku(secondNostoSkuOptionGroup, 2) // 234,334
-    testOtherSkusAfterClick(firstNostoSkuOptionGroup) // 223,234,245
+    testClickedSku(secondNostoSkuOptions, 2) // 234,334
+    testOtherSkusAfterClick(firstNostoSkuOptions) // 223,234,245
 
     expect(nostoProduct.selectedSkuId).toBe("234") // first matching SkuId is selected by default
   })
