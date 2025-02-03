@@ -116,7 +116,7 @@ type ProductIdentifier = {
 
 type SlotReference = string | HTMLElement
 
-type AddSkuToCart = (
+export type AddSkuToCart = (
   productIdentifier: ProductIdentifier,
   element: SlotReference,
   quantity: number
