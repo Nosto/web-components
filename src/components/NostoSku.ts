@@ -1,11 +1,11 @@
 import { SkuEventDetailProps, SkuEventProps } from "@/components/types"
 
 export class NostoSku extends HTMLElement {
-  private _optionTypeBySkuId: Record<string, string[]>
+  private _optionTypeToSkuIds: Record<string, string[]>
 
   constructor() {
     super()
-    this._optionTypeBySkuId = {}
+    this._optionTypeToSkuIds = {}
   }
 
   connectedCallback() {
@@ -15,7 +15,7 @@ export class NostoSku extends HTMLElement {
   }
 
   get optionTypeBySkuId() {
-    return this._optionTypeBySkuId
+    return this._optionTypeToSkuIds
   }
 
   parseSkuMapping() {
@@ -24,7 +24,7 @@ export class NostoSku extends HTMLElement {
       const optionValue = option.textContent?.trim()
 
       if (optionValue && skusValue) {
-        this._optionTypeBySkuId[optionValue] = skusValue.split(",")
+        this._optionTypeToSkuIds[optionValue] = skusValue.split(",")
       }
     })
   }
