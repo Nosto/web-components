@@ -1,11 +1,11 @@
 import { SkuEventDetailProps, SkuEventProps } from "@/components/types"
 
 export class NostoSku extends HTMLElement {
-  private _options: Record<string, string[]>
+  private _optionTypeBySkuId: Record<string, string[]>
 
   constructor() {
     super()
-    this._options = {}
+    this._optionTypeBySkuId = {}
   }
 
   connectedCallback() {
@@ -14,8 +14,8 @@ export class NostoSku extends HTMLElement {
     this.registerSkuSelectionEvent()
   }
 
-  get options() {
-    return this._options
+  get optionTypeBySkuId() {
+    return this._optionTypeBySkuId
   }
 
   parseSkuMapping() {
@@ -24,7 +24,7 @@ export class NostoSku extends HTMLElement {
       const optionValue = option.textContent?.trim()
 
       if (optionValue && skusValue) {
-        this._options[optionValue] = skusValue.split(",")
+        this._optionTypeBySkuId[optionValue] = skusValue.split(",")
       }
     })
   }
@@ -48,7 +48,7 @@ export class NostoSku extends HTMLElement {
         // provides easy access to the selection context from sibling SKU
         // the indexed value will also come in handy when dealing with more than two SKU selections
         const skuProps: Record<number, SkuEventProps[]> = {
-          1: this.options[optionValue].map(it => ({
+          1: this.optionTypeBySkuId[optionValue].map(it => ({
             optionValue,
             skuId: it
           }))
@@ -100,7 +100,7 @@ export class NostoSku extends HTMLElement {
       selectionDetails.selectionIndex += 1
       skuProps[selectionDetails.selectionIndex] = []
 
-      Object.entries(this.options).forEach(([k, v]) => {
+      Object.entries(this.optionTypeBySkuId).forEach(([k, v]) => {
         const matched = v.find(it => selectedSkuIds.includes(it))
         if (matched) {
           skuProps[selectionDetails.selectionIndex].push({ skuId: matched, optionValue: k })
