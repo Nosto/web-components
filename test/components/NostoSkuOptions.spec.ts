@@ -4,17 +4,16 @@ import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
 
 type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s"
+type Verification = "selected" | "unselected" | "enabled" | "disabled"
+type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
 function element(value: SkuOptionValue) {
   return document.querySelector<HTMLElement>(`[${value}]`)!
 }
 
-function verifyEnabled(enabled: SkuOptionValue[], disabled: SkuOptionValue[]) {
+function verify({ enabled = [], disabled = [], selected = [], unselected = [] }: Options) {
   enabled.map(element).every(el => expect(el.hasAttribute("disabled")).toBeFalsy())
   disabled.map(element).every(el => expect(el.hasAttribute("disabled")).toBeTruthy())
-}
-
-function verifySelected(selected: SkuOptionValue[], unselected: SkuOptionValue[]) {
   selected.map(element).every(el => expect(el.hasAttribute("selected")).toBeTruthy())
   unselected.map(element).every(el => expect(el.hasAttribute("selected")).toBeFalsy())
 }
@@ -46,26 +45,32 @@ describe("Sku options side effects", () => {
 
   it("selected skuId should be undefined when all SKU options are not selected", () => {
     element("white").click() // 223,234,245
-    verifySelected(["white"], ["black", "blue"])
-    verifyEnabled(["l", "m", "s"], [])
+    verify({
+      selected: ["white"],
+      unselected: ["black", "blue"]
+    })
+    verify({ enabled: ["l", "m", "s"] })
 
     expect(nostoProduct.selectedSkuId).toBeUndefined()
   })
 
   it("should provide selection side effects on SKU selection", () => {
     element("white").click() // 223,234,245
-    verifySelected(["white"], ["black", "blue"])
-    verifyEnabled(["l", "m", "s"], [])
+    verify({
+      selected: ["white"],
+      unselected: ["black", "blue"]
+    })
+    verify({ enabled: ["l", "m", "s"] })
 
     element("m").click() // 234,334
-    verifySelected(["m"], ["l", "s"])
-    verifyEnabled(["white", "blue"], ["black"])
+    verify({ selected: ["m"], unselected: ["l", "s"] })
+    verify({ enabled: ["white", "blue"], disabled: ["black"] })
 
     expect(nostoProduct.selectedSkuId).toBe("234")
 
     element("blue").click() //334,345
-    verifySelected(["blue"], ["black", "white"])
-    verifyEnabled(["m", "s"], ["l"])
+    verify({ selected: ["blue"], unselected: ["black", "white"] })
+    verify({ enabled: ["m", "s"], disabled: ["l"] })
 
     expect(nostoProduct.selectedSkuId).toBe("334")
   })
