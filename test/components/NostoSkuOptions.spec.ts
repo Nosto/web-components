@@ -70,11 +70,11 @@ describe("Sku options side effects", () => {
       .every(optionElement => test(optionElement!))
   }
 
-  function verifyATC(selectedSkuId: string) {
+  function verifyATC() {
     const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
-    atc?.click()
+    atc!.click()
     expect(window.Nosto?.addSkuToCart).toBeCalled()
-    expect(window.Nosto?.addSkuToCart).toBeCalledWith({ productId: "123", skuId: selectedSkuId }, "789", 1)
+    expect(window.Nosto?.addSkuToCart).toBeCalledWith({ productId: "123", skuId: nostoProduct.selectedSkuId }, "789", 1)
   }
 
   it("selected skuId should be undefined when all SKU options are not selected", () => {
@@ -106,7 +106,7 @@ describe("Sku options side effects", () => {
     })
 
     expect(nostoProduct.selectedSkuId).toBe("234")
-    verifyATC("234")
+    verifyATC()
 
     clickSkuOption("blue") //334,345
     verifySkuSelection("blue")
@@ -118,6 +118,6 @@ describe("Sku options side effects", () => {
     })
 
     expect(nostoProduct.selectedSkuId).toBe("334")
-    verifyATC("334")
+    verifyATC()
   })
 })

@@ -9,17 +9,7 @@ describe("NostoProduct", () => {
     document.body.innerHTML = ""
   })
 
-  function checkATC(skuId: string, skuATC: boolean = false) {
-    const atcSelector = skuATC ? `[n-sku-id="${skuId}"] > [n-atc]` : "[n-atc]"
-    const atc = element.querySelector<HTMLElement>(atcSelector)
-
-    const clickEvent = new MouseEvent("click", { bubbles: true })
-    atc?.dispatchEvent(clickEvent)
-
-    expect(window.Nosto?.addSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId }, "789", 1)
-  }
-
-  describe("NostoProduct - verify setup & validation", () => {
+  describe("verify setup & validation", () => {
     it("should be defined as a custom element", () => {
       expect(customElements.get("nosto-product")).toBe(NostoProduct)
     })
@@ -43,20 +33,39 @@ describe("NostoProduct", () => {
     })
   })
 
-  describe("NostoProduct - verify ATC", () => {
+  describe("verify ATC", () => {
     beforeEach(() => {
       element.setAttribute("product-id", "123")
       element.setAttribute("reco-id", "789")
+      window.Nosto = { addSkuToCart: vi.fn() }
     })
+
+    function checkSkuAtc(skuId: string) {
+      const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
+      checkATC(atc!)
+    }
+
+    function checkProductAtc() {
+      const atc = element.querySelector<HTMLElement>("[n-atc]")
+      checkATC(atc!)
+    }
+
+    function checkATC(atcElement: Element) {
+      const clickEvent = new MouseEvent("click", { bubbles: true })
+      atcElement.dispatchEvent(clickEvent)
+
+      expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
+        { productId: "123", skuId: element.selectedSkuId },
+        "789",
+        1
+      )
+    }
 
     it("should not throw an error if all required attributes are provided", () => {
       expect(() => element.connectedCallback()).not.toThrow()
     })
 
     it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
-      const mockAddSkuToCart = vi.fn()
-      window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
       element.innerHTML = `
       <div n-sku-id="456">
         <div n-atc>ATC</div>
@@ -64,13 +73,10 @@ describe("NostoProduct", () => {
     `
       element.connectedCallback()
 
-      checkATC("456", true)
+      checkSkuAtc("456")
     })
 
     it("should handle [n-atc] on every individual sku option", () => {
-      const mockAddSkuToCart = vi.fn()
-      window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
       element.innerHTML = `
       <div n-sku-id="456">
         <div n-atc>ATC</div>
@@ -81,40 +87,34 @@ describe("NostoProduct", () => {
     `
       element.connectedCallback()
 
-      checkATC("456", true)
-      checkATC("101", true)
+      checkSkuAtc("456")
+      checkSkuAtc("101")
     })
 
     it("should pick n-sku-selector change events", () => {
-      const mockAddSkuToCart = vi.fn()
-      window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
       element.innerHTML = `
-    <select n-sku-selector>
-      <option value="456">SKU 1</option>
-      <option value="457" selected>SKU 2</option>
-    </select>
-    <div n-atc>ATC</div>
-    `
+      <select n-sku-selector>
+        <option value="456">SKU 1</option>
+        <option value="457" selected>SKU 2</option>
+      </select>
+      <div n-atc>ATC</div>
+      `
       element.connectedCallback()
 
       element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
-      checkATC("457")
+      checkProductAtc()
     })
 
     it("should pick up [n-sku-id] clicks", () => {
-      const mockAddSkuToCart = vi.fn()
-      window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
       element.innerHTML = `
-    <div n-sku-id="234">1st sku</div>
-    <div n-sku-id="345">end sku</div>
-    <div n-atc>ATC</div>
+      <div n-sku-id="234">1st sku</div>
+      <div n-sku-id="345">end sku</div>
+      <div n-atc>ATC</div>
     `
       element.connectedCallback()
 
       element.querySelector("[n-sku-id='345']")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
-      checkATC("345")
+      checkProductAtc()
     })
   })
 })
