@@ -35,11 +35,11 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.getAttribute("n-options")!
+    const optionId = this.getAttribute("name")!
     optionElements.forEach(option => {
       option.addEventListener("click", () => {
         const skuIds = getSkus(option)
-        option.setAttribute("selected", "")
+        option.toggleAttribute("selected", true)
         optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
         selectSkuOption(optionId, skuIds)
       })

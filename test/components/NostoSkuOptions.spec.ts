@@ -24,12 +24,12 @@ describe("Sku options side effects", () => {
   function loadSkuContent() {
     document.body.innerHTML = `
       <nosto-product product-id="123" reco-id="789">
-        <nosto-sku-options colors n-options="colors">
+        <nosto-sku-options colors name="colors">
           <span black n-option n-skus="123,145" selected>Black</span>
           <span white n-option n-skus="223,234,245">White</span>
           <span blue n-option n-skus="334,345">Blue</span>
         </nosto-sku-options>
-        <nosto-sku-options sizes n-options="sizes">
+        <nosto-sku-options sizes name="sizes">
           <span l n-option n-skus="123,223">L</span>
           <span m n-option n-skus="234,334">M</span>
           <span s n-option n-skus="145,245,345">S</span>

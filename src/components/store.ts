@@ -20,9 +20,6 @@ export function createStore(productId: string, recoId: string) {
       if (state.selectedSkuId) {
         const skuId = state.selectedSkuId
         window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
-        console.info("Add to cart event registered.")
-      } else {
-        console.info(`skuId missing for product ${productId}`)
       }
     }
   }
