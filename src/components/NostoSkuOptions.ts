@@ -16,8 +16,13 @@ export class NostoSkuOptions extends HTMLElement {
     return this._selectedSkuIds
   }
 
+  get options() {
+    // as sku options changes upon selection, it's safe to fetch it from the DOM rather than storing it in static context
+    return () => Array.from(this.querySelectorAll("[n-option]"))
+  }
+
   parseSkuMapping() {
-    return Array.from(this.querySelectorAll("[n-option]"))
+    return Array.from(this.options())
       .map(option => {
         const skusValue = option.getAttribute("n-skus")
         const optionValue = option.textContent?.trim()
@@ -34,7 +39,7 @@ export class NostoSkuOptions extends HTMLElement {
    * triggers a n-sku-selection event with the details of SKU selected to be handled by other NostoSku sibling elements
    */
   registerOptionsClickEvent() {
-    this.querySelectorAll("[n-option]").forEach(option => {
+    this.options().forEach(option => {
       option.addEventListener("click", () => {
         const optionValue = option.textContent
         if (!optionValue) {
@@ -71,7 +76,7 @@ export class NostoSkuOptions extends HTMLElement {
     this._selectedSkuIds = this.getSkus(clickedOption)
 
     // remove selected attribute from other other options
-    Array.from(this.querySelectorAll("[n-option]"))
+    this.options()
       .filter(element => element !== clickedOption)
       .forEach(otherOption => otherOption.removeAttribute("selected"))
   }
@@ -92,7 +97,7 @@ export class NostoSkuOptions extends HTMLElement {
 
       const { selectedSourceIds } = selectionDetails
 
-      this.querySelectorAll<HTMLElement>("[n-options]").forEach(option => {
+      this.options().forEach(option => {
         const skus = this.getSkus(option)
 
         if (!skus.length) {

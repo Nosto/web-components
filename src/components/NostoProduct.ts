@@ -4,10 +4,12 @@ import { intersectionOf } from "@/utils"
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
+  private _skuOptions: NostoSkuOptions[]
 
   constructor() {
     super()
     this._selectedSkuId = undefined
+    this._skuOptions = []
   }
 
   connectedCallback() {
@@ -16,6 +18,8 @@ export class NostoProduct extends HTMLElement {
     this.registerSKUIds()
     this.registerATCButtons()
     this.registerSkuSelectionEvent()
+
+    this._skuOptions = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
   }
 
   get productId() {
@@ -76,18 +80,12 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
-  totalSkuOptions() {
-    return this.querySelectorAll("nosto-sku-options").length
-  }
-
   getSelectedSkuId() {
-    const skuOptions = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
-
-    const selectedSkuOptions = skuOptions
+    const selectedSkuOptions = this._skuOptions
       .filter(skuOption => skuOption.selectedSkuIds.length > 0)
       .map(validSkuOption => validSkuOption.selectedSkuIds)
 
-    if (selectedSkuOptions.length === this.totalSkuOptions()) {
+    if (selectedSkuOptions.length === this._skuOptions.length) {
       return intersectionOf(...selectedSkuOptions)[0]
     }
   }
