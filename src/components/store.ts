@@ -34,8 +34,8 @@ export function createStore(productId: string, recoId: string) {
     listeners.forEach(cb => cb(state))
   }
 
-  function updateSkuOptions(groupId: string, skuIds: string[]) {
-    state.skuOptions[groupId] = skuIds
+  function updateSkuOptions(optionId: string, skuIds: string[]) {
+    state.skuOptions[optionId] = skuIds
 
     state.selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
 
