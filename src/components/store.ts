@@ -47,10 +47,17 @@ export function createStore(productId: string, recoId: string) {
     listeners.push(cb)
   }
 
+  function selectedSkuId() {
+    return state.selectedSkuId
+  }
+
   return {
     addToCart,
     onChange,
+    selectedSkuId,
     selectSkuOption,
     selectSkuId
   }
 }
+
+export type Store = ReturnType<typeof createStore>

@@ -9,12 +9,12 @@ describe("swatch integration", () => {
     nostoProduct.setAttribute("reco-id", "789")
 
     nostoProduct.innerHTML = `
-      <nosto-sku-options colors>
+      <nosto-sku-options n-options="colors">
         <span black n-option n-skus="123,145">Black</span>
         <span white n-option n-skus="223,234,245">White</span>
         <span blue n-option n-skus="334,345">Blue</span>
       </nosto-sku-options>
-      <nosto-sku-options sizes>
+      <nosto-sku-options n-options="sizes">
         <span l n-option n-skus="123,223">L</span>
         <span m n-option n-skus="234,334">M</span>
         <span s n-option n-skus="145,245,345">S</span>
