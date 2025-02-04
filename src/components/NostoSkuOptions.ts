@@ -18,8 +18,9 @@ export class NostoSkuOptions extends HTMLElement {
     this.registerStateChange(store, optionElements)
   }
 
-  registerStateChange(store: Store, optionElements: HTMLElement[]) {
-    store.onChange(state => {
+  registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
+    onChange(state => {
+      // TODO introduce cached version of this in store ?
       const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
 
       optionElements.forEach(option => {
@@ -33,14 +34,14 @@ export class NostoSkuOptions extends HTMLElement {
     })
   }
 
-  registerClickEvents(store: Store, optionElements: HTMLElement[]) {
+  registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
     const optionId = this.getAttribute("n-options")!
     optionElements.forEach(option => {
       option.addEventListener("click", () => {
         const skuIds = getSkus(option)
         option.setAttribute("selected", "")
         optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
-        store.selectSkuOption(optionId, skuIds)
+        selectSkuOption(optionId, skuIds)
       })
     })
   }

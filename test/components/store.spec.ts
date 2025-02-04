@@ -10,22 +10,14 @@ describe("createStore", () => {
   it("should update selectedSkuId when selectSkuId is called", () => {
     const store = createStore("product1", "reco1")
     store.selectSkuId("sku1")
-    store.onChange(state => {
-      expect(state.selectedSkuId).toBe("sku1")
-    })
+    expect(store.selectedSkuId()).toBe("sku1")
   })
 
   it("should update skuOptions and selectedSkuId when selectSkuOption is called", () => {
     const store = createStore("product1", "reco1")
     store.selectSkuOption("option1", ["sku1", "sku2"])
     store.selectSkuOption("option2", ["sku1"])
-    store.onChange(state => {
-      expect(state.skuOptions).toEqual({
-        option1: ["sku1", "sku2"],
-        option2: ["sku1"]
-      })
-      expect(state.selectedSkuId).toBe("sku1")
-    })
+    expect(store.selectedSkuId()).toBe("sku1")
   })
 
   it("should call addSkuToCart when addToCart is called with selectedSkuId", () => {
