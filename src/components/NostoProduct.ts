@@ -68,14 +68,13 @@ export class NostoProduct extends HTMLElement {
     )
   }
 
-  addSkuToCart(skuId: string | undefined) {
+  addSkuToCart(skuId?: string) {
     console.info(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
     if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-      if (skuId) {
-        window.Nosto.addSkuToCart({ productId: this.productId, skuId }, this.recoId, 1)
+      const skuIdToCart = skuId || this._selectedSkuId
+      if (skuIdToCart) {
+        window.Nosto.addSkuToCart({ productId: this.productId, skuId: skuIdToCart }, this.recoId, 1)
         console.info("Add to cart event registered.")
-      } else {
-        console.info(`skuId missing for product ${this.productId}`)
       }
     }
   }

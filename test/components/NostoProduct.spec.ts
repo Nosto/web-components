@@ -79,10 +79,10 @@ describe("NostoProduct", () => {
     it("should handle [n-atc] on every individual sku option", () => {
       element.innerHTML = `
       <div n-sku-id="456">
-        <div n-atc>ATC</div>
+        <span n-atc>Blue</span>
       </div>
       <div n-sku-id="101">
-        <div n-atc>ATC</div>
+        <span n-atc>Black</span>
       </div>
     `
       element.connectedCallback()
