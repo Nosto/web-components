@@ -12,12 +12,14 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   connectedCallback() {
+    // FIXME can we fetch the store for this element in a more neutral way?
     const store = this.closest<NostoProduct>("nosto-product")!.store!
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
   }
 
+  // FIXME make private?
   registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     onChange(state => {
       // TODO introduce cached version of this in store ?
@@ -30,6 +32,7 @@ export class NostoSkuOptions extends HTMLElement {
     })
   }
 
+  // FIXME make private?
   registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
     const optionId = this.getAttribute("name")!
     optionElements.forEach(option => {

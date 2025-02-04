@@ -16,23 +16,28 @@ export class NostoProduct extends HTMLElement {
     this.registerATCButtons()
   }
 
+  // FIXME do we need to expose this?
   get productId() {
     return this.getAttribute("product-id")!
   }
 
+  // FIXME do we need to expose this?
   // for testing purposes
   get selectedSkuId() {
     return this._store?.selectedSkuId()
   }
 
+  // FIXME do we need to expose this?
   get recoId() {
     return this.getAttribute("reco-id")!
   }
 
+  // FIXME do we need to expose this?
   get store() {
     return this._store
   }
 
+  // FIXME should this be private?
   validate() {
     if (!this.getAttribute("product-id")) {
       throw new Error("Product ID is required.")
@@ -43,6 +48,7 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
+  // FIXME should this be private?
   registerSKUSelectors() {
     const { selectSkuId } = this._store!
     this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
@@ -51,6 +57,7 @@ export class NostoProduct extends HTMLElement {
     })
   }
 
+  // FIXME should this be private?
   registerSKUIds() {
     const { selectSkuId } = this._store!
     this.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
@@ -60,6 +67,7 @@ export class NostoProduct extends HTMLElement {
     })
   }
 
+  // FIXME should this be private?
   registerATCButtons() {
     const { addToCart, selectSkuId } = this._store!
     this.querySelectorAll("[n-atc]").forEach(element =>
