@@ -1,15 +1,20 @@
-import { SkuEventDetailProps } from "@/components/types"
+import { NostoSkuOptions } from "./NostoSkuOptions"
+import { intersectionOf } from "@/utils"
 
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
+  private _skuOptionsElements: NostoSkuOptions[]
 
   constructor() {
     super()
     this._selectedSkuId = undefined
+    this._skuOptionsElements = []
   }
 
   connectedCallback() {
+    this._skuOptionsElements = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
+
     this.validate()
     this.registerSKUSelectors()
     this.registerSKUIds()
@@ -75,15 +80,24 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
-  // The final invocation in the wrapper after all the events at NostoSku elements are handled
+  getSelectedSkuId() {
+    const selectedSkuOptions = this._skuOptionsElements
+      .filter(skuOption => !!skuOption.selectedSkuIds.length)
+      .map(validSkuOption => validSkuOption.selectedSkuIds)
+
+    if (selectedSkuOptions.length === this._skuOptionsElements.length) {
+      return intersectionOf(...selectedSkuOptions)[0]
+    }
+  }
+
+  // Records the selected SKU id only after all the SKU options are selected
   // TODO handle ATC
   registerSkuSelectionEvent() {
-    this.addEventListener("n-sku-selection", (event: Event) => {
-      const selectionDetail = (event as CustomEvent).detail as SkuEventDetailProps
-      if (selectionDetail && selectionDetail.skuCount === selectionDetail.selectionIndex) {
-        console.info("Sku selection event received in NostoProduct: ", selectionDetail)
-        this._selectedSkuId = selectionDetail.skuId
-        event.stopPropagation()
+    this.addEventListener("n-sku-selection", () => {
+      const selectedSkuId = this.getSelectedSkuId()
+      if (selectedSkuId) {
+        console.info("Sku selection event received in NostoProduct: ", selectedSkuId)
+        this._selectedSkuId = selectedSkuId
       }
     })
   }
