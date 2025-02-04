@@ -42,6 +42,7 @@ export function createStore(productId: string, recoId: string) {
 
   function onChange(cb: (state: State) => void) {
     listeners.push(cb)
+    cb(state)
   }
 
   function selectedSkuId() {

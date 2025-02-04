@@ -30,7 +30,7 @@ describe("Sku options side effects", () => {
     document.body.innerHTML = `
       <nosto-product product-id="123" reco-id="789">
         <nosto-sku-options name="colors">
-          <span black n-option n-skus="123,145" selected>Black</span>
+          <span black n-option n-skus="123,145">Black</span>
           <span white n-option n-skus="223,234,245">White</span>
           <span blue n-option n-skus="334,345">Blue</span>
         </nosto-sku-options>
