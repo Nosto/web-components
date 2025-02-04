@@ -1,12 +1,16 @@
 export class NostoSkuOptions extends HTMLElement {
   private _selectedSkuIds: string[]
+  private _options: HTMLElement[]
 
   constructor() {
     super()
     this._selectedSkuIds = []
+    this._options = []
   }
 
   connectedCallback() {
+    this._options = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+
     this.parseSkuMapping()
     this.registerOptionsClickEvent()
     this.registerSkuSelectionEvent()
@@ -16,13 +20,8 @@ export class NostoSkuOptions extends HTMLElement {
     return this._selectedSkuIds
   }
 
-  get options() {
-    // as sku options changes upon selection, it's safe to fetch it from the DOM rather than storing it in static context
-    return () => Array.from(this.querySelectorAll("[n-option]"))
-  }
-
   parseSkuMapping() {
-    return Array.from(this.options())
+    return Array.from(this._options)
       .map(option => {
         const skusValue = option.getAttribute("n-skus")
         const optionValue = option.textContent?.trim()
@@ -39,7 +38,7 @@ export class NostoSkuOptions extends HTMLElement {
    * triggers a n-sku-selection event with the details of SKU selected to be handled by other NostoSku sibling elements
    */
   registerOptionsClickEvent() {
-    this.options().forEach(option => {
+    this._options.forEach(option => {
       option.addEventListener("click", () => {
         const optionValue = option.textContent
         if (!optionValue) {
@@ -76,7 +75,7 @@ export class NostoSkuOptions extends HTMLElement {
     this._selectedSkuIds = this.getSkus(clickedOption)
 
     // remove selected attribute from other other options
-    this.options()
+    this._options
       .filter(element => element !== clickedOption)
       .forEach(otherOption => otherOption.removeAttribute("selected"))
   }
@@ -97,7 +96,7 @@ export class NostoSkuOptions extends HTMLElement {
 
       const { selectedSourceIds } = selectionDetails
 
-      this.options().forEach(option => {
+      this._options.forEach(option => {
         const skus = this.getSkus(option)
 
         if (!skus.length) {
