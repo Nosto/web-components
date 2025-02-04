@@ -73,8 +73,8 @@ describe("Sku options side effects", () => {
   function verifyATC() {
     const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
     atc!.click()
-    expect(window.Nosto?.addSkuToCart).toBeCalled()
-    expect(window.Nosto?.addSkuToCart).toBeCalledWith({ productId: "123", skuId: nostoProduct.selectedSkuId }, "789", 1)
+    expect(window.Nosto!.addSkuToCart).toBeCalled()
+    expect(window.Nosto!.addSkuToCart).toBeCalledWith({ productId: "123", skuId: nostoProduct.selectedSkuId }, "789", 1)
   }
 
   it("selected skuId should be undefined when all SKU options are not selected", () => {
