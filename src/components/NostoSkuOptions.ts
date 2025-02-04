@@ -1,15 +1,15 @@
 export class NostoSkuOptions extends HTMLElement {
   private _selectedSkuIds: string[]
-  private _options: HTMLElement[]
+  private _optionElements: HTMLElement[]
 
   constructor() {
     super()
     this._selectedSkuIds = []
-    this._options = []
+    this._optionElements = []
   }
 
   connectedCallback() {
-    this._options = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+    this._optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
 
     this.parseSkuMapping()
     this.registerOptionsClickEvent()
@@ -21,7 +21,7 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   parseSkuMapping() {
-    return Array.from(this._options)
+    return Array.from(this._optionElements)
       .map(option => {
         const skusValue = option.getAttribute("n-skus")
         const optionValue = option.textContent?.trim()
@@ -38,7 +38,7 @@ export class NostoSkuOptions extends HTMLElement {
    * triggers a n-sku-selection event with the details of SKU selected to be handled by other NostoSku sibling elements
    */
   registerOptionsClickEvent() {
-    this._options.forEach(option => {
+    this._optionElements.forEach(option => {
       option.addEventListener("click", () => {
         const optionValue = option.textContent
         if (!optionValue) {
@@ -75,7 +75,7 @@ export class NostoSkuOptions extends HTMLElement {
     this._selectedSkuIds = this.getSkus(clickedOption)
 
     // remove selected attribute from other other options
-    this._options
+    this._optionElements
       .filter(element => element !== clickedOption)
       .forEach(otherOption => otherOption.removeAttribute("selected"))
   }
@@ -96,7 +96,7 @@ export class NostoSkuOptions extends HTMLElement {
 
       const { selectedSourceIds } = selectionDetails
 
-      this._options.forEach(option => {
+      this._optionElements.forEach(option => {
         const skus = this.getSkus(option)
 
         if (!skus.length) {

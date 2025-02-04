@@ -53,7 +53,7 @@ describe("Sku options side effects", () => {
   function testElementSkus(element: Element, skus: string[], test: (optionElement: HTMLElement) => boolean) {
     skus
       .map(skus => element!.querySelector<HTMLElement>(`[n-skus="${skus}"]`))
-      .filter(it => it !== undefined)
+      .filter(it => !!it)
       .every(optionElement => test(optionElement!))
   }
 

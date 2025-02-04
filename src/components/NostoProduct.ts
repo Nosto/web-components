@@ -4,22 +4,22 @@ import { intersectionOf } from "@/utils"
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
-  private _skuOptions: NostoSkuOptions[]
+  private _skuOptionsElements: NostoSkuOptions[]
 
   constructor() {
     super()
     this._selectedSkuId = undefined
-    this._skuOptions = []
+    this._skuOptionsElements = []
   }
 
   connectedCallback() {
+    this._skuOptionsElements = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
+
     this.validate()
     this.registerSKUSelectors()
     this.registerSKUIds()
     this.registerATCButtons()
     this.registerSkuSelectionEvent()
-
-    this._skuOptions = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
   }
 
   get productId() {
@@ -81,16 +81,16 @@ export class NostoProduct extends HTMLElement {
   }
 
   getSelectedSkuId() {
-    const selectedSkuOptions = this._skuOptions
-      .filter(skuOption => skuOption.selectedSkuIds.length > 0)
+    const selectedSkuOptions = this._skuOptionsElements
+      .filter(skuOption => !!skuOption.selectedSkuIds.length)
       .map(validSkuOption => validSkuOption.selectedSkuIds)
 
-    if (selectedSkuOptions.length === this._skuOptions.length) {
+    if (selectedSkuOptions.length === this._skuOptionsElements.length) {
       return intersectionOf(...selectedSkuOptions)[0]
     }
   }
 
-  // The final invocation in the wrapper after all the events at NostoSku elements are handled
+  // Records the selected SKU id only after all the SKU options are selected
   // TODO handle ATC
   registerSkuSelectionEvent() {
     this.addEventListener("n-sku-selection", (event: Event) => {
@@ -98,7 +98,6 @@ export class NostoProduct extends HTMLElement {
       if (selectedSkuId) {
         console.info("Sku selection event received in NostoProduct: ", selectedSkuId)
         this._selectedSkuId = selectedSkuId
-        event.stopPropagation()
       }
     })
   }
