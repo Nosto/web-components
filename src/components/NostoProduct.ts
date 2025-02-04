@@ -91,7 +91,6 @@ export class NostoProduct extends HTMLElement {
   }
 
   // Records the selected SKU id only after all the SKU options are selected
-  // TODO handle ATC
   registerSkuSelectionEvent() {
     this.addEventListener("n-sku-selection", () => {
       const selectedSkuId = this.getSelectedSkuId()

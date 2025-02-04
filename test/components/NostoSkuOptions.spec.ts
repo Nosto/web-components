@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect } from "vitest"
+import { describe, it, beforeEach, expect, vi } from "vitest"
 import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
@@ -19,6 +19,7 @@ describe("Sku options side effects", () => {
   beforeEach(() => {
     loadSkuContent()
     nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+    window.Nosto = { addSkuToCart: vi.fn() }
   })
 
   function loadSkuContent() {
@@ -34,6 +35,7 @@ describe("Sku options side effects", () => {
           <span m n-option n-skus="234,334">M</span>
           <span s n-option n-skus="145,245,345">S</span>
         </nosto-sku-options>
+        <span n-atc>Add to cart</span>
       </nosto-product>
     `
   }
@@ -68,6 +70,13 @@ describe("Sku options side effects", () => {
       .every(optionElement => test(optionElement!))
   }
 
+  function verifyATC(selectedSkuId: string) {
+    const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
+    atc?.click()
+    expect(window.Nosto?.addSkuToCart).toBeCalled()
+    expect(window.Nosto?.addSkuToCart).toBeCalledWith({ productId: "123", skuId: selectedSkuId }, "789", 1)
+  }
+
   it("selected skuId should be undefined when all SKU options are not selected", () => {
     clickSkuOption("white") // 223,234,245
     verifySkuSelection("white")
@@ -97,6 +106,7 @@ describe("Sku options side effects", () => {
     })
 
     expect(nostoProduct.selectedSkuId).toBe("234")
+    verifyATC("234")
 
     clickSkuOption("blue") //334,345
     verifySkuSelection("blue")
@@ -108,5 +118,6 @@ describe("Sku options side effects", () => {
     })
 
     expect(nostoProduct.selectedSkuId).toBe("334")
+    verifyATC("334")
   })
 })
