@@ -1,126 +1,48 @@
-export class NostoSkuOptions extends HTMLElement {
-  private _selectedSkuIds: string[]
-  private _optionElements: HTMLElement[]
+import { intersectionOf } from "@/utils"
+import { NostoProduct } from "./NostoProduct"
+import { Store } from "./store"
 
+function getSkus(element: Element) {
+  return (element.getAttribute("n-skus") || "").split(",")
+}
+
+export class NostoSkuOptions extends HTMLElement {
   constructor() {
     super()
-    this._selectedSkuIds = []
-    this._optionElements = []
   }
 
   connectedCallback() {
-    this._optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-
-    this.parseSkuMapping()
-    this.registerOptionsClickEvent()
-    this.registerSkuSelectionEvent()
+    // FIXME can we fetch the store for this element in a more neutral way?
+    const store = this.closest<NostoProduct>("nosto-product")!.store!
+    const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+    this.registerClickEvents(store, optionElements)
+    this.registerStateChange(store, optionElements)
   }
 
-  get selectedSkuIds() {
-    return this._selectedSkuIds
-  }
+  // FIXME make private?
+  registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
+    onChange(state => {
+      // TODO introduce cached version of this in store ?
+      const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
 
-  parseSkuMapping() {
-    return Array.from(this._optionElements)
-      .map(option => {
-        const skusValue = option.getAttribute("n-skus")
-        const optionValue = option.textContent?.trim()
-
-        if (optionValue && skusValue) {
-          return { [optionValue]: skusValue.split(",") }
-        }
+      optionElements.forEach(option => {
+        const available = intersectionOf(getSkus(option), selectedSkuIds).length
+        option.toggleAttribute("disabled", !available)
       })
-      .filter(it => it !== undefined)
+    })
   }
 
-  /**
-   * registers a click event on all SKU options under this SKU wrapper
-   * triggers a n-sku-selection event with the details of SKU selected to be handled by other NostoSku sibling elements
-   */
-  registerOptionsClickEvent() {
-    this._optionElements.forEach(option => {
+  // FIXME make private?
+  registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
+    const optionId = this.getAttribute("name")!
+    optionElements.forEach(option => {
       option.addEventListener("click", () => {
-        const optionValue = option.textContent
-        if (!optionValue) {
-          return
-        }
-
-        this.syncSelectedAttribute(option)
-
-        const siblings = this.getAllSiblings(option)
-
-        const detail = {
-          selectedSourceIds: this._selectedSkuIds
-        }
-
-        siblings.forEach(sibling =>
-          sibling.dispatchEvent(
-            new CustomEvent("n-sku-selection", {
-              bubbles: true,
-              detail
-            })
-          )
-        )
+        const skuIds = getSkus(option)
+        option.toggleAttribute("selected", true)
+        optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
+        selectSkuOption(optionId, skuIds)
       })
     })
-  }
-
-  getSkus(element: Element) {
-    return (element.getAttribute("n-skus") || "").split(",")
-  }
-
-  syncSelectedAttribute(clickedOption: Element) {
-    clickedOption.toggleAttribute("selected")
-
-    this._selectedSkuIds = this.getSkus(clickedOption)
-
-    // remove selected attribute from other other options
-    this._optionElements
-      .filter(element => element !== clickedOption)
-      .forEach(otherOption => otherOption.removeAttribute("selected"))
-  }
-
-  /**
-   * register SKU selection event from subtree.
-   * The components triggers the event and also registers a listener.
-   * This is because the component is repeated for every SKUs rendered
-   * Every handled event adds the context information on every level to determine the selected SKU
-   * TODO: Hide the wrapper NostoSku element when none of the options matched the selected SKU from sibling
-   */
-  registerSkuSelectionEvent() {
-    this.addEventListener("n-sku-selection", (event: Event) => {
-      const selectionDetails = (event as CustomEvent).detail
-      if (!selectionDetails || !selectionDetails.selectedSourceIds) {
-        return
-      }
-
-      const { selectedSourceIds } = selectionDetails
-
-      this._optionElements.forEach(option => {
-        const skus = this.getSkus(option)
-
-        if (!skus.length) {
-          return
-        }
-
-        const matched = skus.find(it => selectedSourceIds.includes(it))
-        if (!matched) {
-          option.style.display = "none"
-        }
-      })
-    })
-  }
-
-  /**
-   * gets all sibling elements for the NostoSku element that triggered the click
-   */
-  getAllSiblings(element: Element) {
-    const wrapperElement = element.parentElement?.parentElement
-    if (!wrapperElement) {
-      return []
-    }
-    const children = [...wrapperElement.children]
-    return children.filter(child => child !== element.parentElement!)
   }
 }
 
