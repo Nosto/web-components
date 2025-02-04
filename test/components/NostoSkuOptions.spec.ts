@@ -3,14 +3,19 @@ import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
 
-type SkuOption = "colors" | "sizes"
 type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s"
+type Verification = "selected" | "unselected" | "enabled" | "disabled"
+type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
-type OtherSkuOptions = {
-  skuOption: SkuOption
-  visibleSkus?: string[]
-  hiddenSkus?: string[]
-  preSelected?: string[]
+function element(value: SkuOptionValue) {
+  return document.querySelector<HTMLElement>(`[${value}]`)!
+}
+
+function verify({ enabled = [], disabled = [], selected = [], unselected = [] }: Options) {
+  enabled.map(element).every(el => expect(el.hasAttribute("disabled")).toBeFalsy())
+  disabled.map(element).every(el => expect(el.hasAttribute("disabled")).toBeTruthy())
+  selected.map(element).every(el => expect(el.hasAttribute("selected")).toBeTruthy())
+  unselected.map(element).every(el => expect(el.hasAttribute("selected")).toBeFalsy())
 }
 
 describe("Sku options side effects", () => {
@@ -38,74 +43,34 @@ describe("Sku options side effects", () => {
     `
   }
 
-  function element(value: SkuOptionValue) {
-    return nostoProduct.querySelector<HTMLElement>(`[${value}]`)!
-  }
-
-  function clickSkuOption(value: SkuOptionValue) {
-    element(value).click()
-  }
-
-  function verifySkuSelection(value: SkuOptionValue) {
-    const el = element(value)
-    expect(el.hasAttribute("selected")).toBeTruthy()
-    const otherSkuOptions = Array.from(element(value).parentNode!.children).filter(c => c !== el)
-    const selectedOtherOptions = Array.from(otherSkuOptions).some(option => option.hasAttribute("selected"))
-    expect(selectedOtherOptions).toBeFalsy()
-  }
-
-  function verifyOtherSkus({ skuOption, visibleSkus = [], hiddenSkus = [], preSelected = [] }: OtherSkuOptions) {
-    const otherSkuElement = nostoProduct.querySelector(`nosto-sku-options[name=${skuOption}]`)
-    testElementSkus(otherSkuElement!, visibleSkus, (element: HTMLElement) => element.style.display !== "none")
-    testElementSkus(otherSkuElement!, hiddenSkus, (element: HTMLElement) => element.style.display === "none")
-    testElementSkus(otherSkuElement!, preSelected, (element: HTMLElement) => element.hasAttribute("selected"))
-  }
-
-  function testElementSkus(element: Element, skus: string[], test: (optionElement: HTMLElement) => boolean) {
-    skus
-      .map(skus => element!.querySelector<HTMLElement>(`[n-skus="${skus}"]`))
-      .filter(it => !!it)
-      .every(optionElement => test(optionElement!))
-  }
-
   it("selected skuId should be undefined when all SKU options are not selected", () => {
-    clickSkuOption("white") // 223,234,245
-    verifySkuSelection("white")
-    verifyOtherSkus({
-      skuOption: "sizes",
-      visibleSkus: ["123,223", "234,334", "145,245,345"]
+    element("white").click() // 223,234,245
+    verify({
+      selected: ["white"],
+      unselected: ["black", "blue"]
     })
+    verify({ enabled: ["l", "m", "s"] })
 
     expect(nostoProduct.selectedSkuId).toBeUndefined()
   })
 
   it("should provide selection side effects on SKU selection", () => {
-    clickSkuOption("white") // 223,234,245
-    verifySkuSelection("white")
-    verifyOtherSkus({
-      skuOption: "sizes",
-      visibleSkus: ["123,223", "234,334", "145,245,345"]
+    element("white").click() // 223,234,245
+    verify({
+      selected: ["white"],
+      unselected: ["black", "blue"]
     })
+    verify({ enabled: ["l", "m", "s"] })
 
-    clickSkuOption("m")
-    verifySkuSelection("m")
-    verifyOtherSkus({
-      skuOption: "colors",
-      visibleSkus: ["223,234,245", "334,345"],
-      hiddenSkus: ["123,145"],
-      preSelected: ["223,234,245"]
-    })
+    element("m").click() // 234,334
+    verify({ selected: ["m"], unselected: ["l", "s"] })
+    verify({ enabled: ["white", "blue"], disabled: ["black"] })
 
     expect(nostoProduct.selectedSkuId).toBe("234")
 
-    clickSkuOption("blue") //334,345
-    verifySkuSelection("blue")
-    verifyOtherSkus({
-      skuOption: "sizes",
-      visibleSkus: ["234,334", "145,245,345"],
-      hiddenSkus: ["123,223"],
-      preSelected: ["234,334"]
-    })
+    element("blue").click() //334,345
+    verify({ selected: ["blue"], unselected: ["black", "white"] })
+    verify({ enabled: ["m", "s"], disabled: ["l"] })
 
     expect(nostoProduct.selectedSkuId).toBe("334")
   })
