@@ -21,10 +21,18 @@ export class NostoSkuOptions extends HTMLElement {
 
   // FIXME make private?
   registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
+    const optionId = this.getAttribute("name")!
     onChange(state => {
-      // TODO introduce cached version of this in store ?
-      const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
+      const selectedSkuIds = intersectionOf(
+        ...Object.keys(state.skuOptions)
+          .filter(key => key !== optionId)
+          .map(key => state.skuOptions[key])
+      )
 
+      if (selectedSkuIds.length === 0) {
+        optionElements.forEach(option => option.removeAttribute("disabled"))
+        return
+      }
       optionElements.forEach(option => {
         const available = intersectionOf(getSkus(option), selectedSkuIds).length
         option.toggleAttribute("disabled", !available)

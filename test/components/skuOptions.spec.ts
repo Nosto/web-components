@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest"
 import { NostoProduct } from "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 
-describe("swatch integration", () => {
+describe("sku options integration", () => {
   it("should prune selections", () => {
     const nostoProduct = new NostoProduct()
     nostoProduct.setAttribute("product-id", "123")
@@ -28,6 +28,11 @@ describe("swatch integration", () => {
     element("[black]").click()
     expect(element("[black]").hasAttribute("selected")).toBeTruthy()
 
+    // validate size availability
+    expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[m]").hasAttribute("disabled")).toBeTruthy()
+    expect(element("[s]").hasAttribute("disabled")).toBeFalsy()
+
     // no sku should be selected on NostoProduct level yet, since only one dimension has been chosen
     expect(nostoProduct.selectedSkuId).toBeUndefined()
 
@@ -36,10 +41,25 @@ describe("swatch integration", () => {
     expect(element("[white]").hasAttribute("selected")).toBeTruthy()
     expect(element("[black]").hasAttribute("selected")).toBeFalsy()
 
+    // validate size availability
+    expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[m]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[s]").hasAttribute("disabled")).toBeFalsy()
+
     // click on option in another group shouldn't have an effect on the first group
     element("[l]").click()
     expect(element("[l]").hasAttribute("selected")).toBeTruthy()
     expect(element("[white]").hasAttribute("selected")).toBeTruthy()
+
+    // validate color availability
+    expect(element("[black]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[white]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[blue]").hasAttribute("disabled")).toBeTruthy()
+
+    // validate size availability
+    expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[m]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[s]").hasAttribute("disabled")).toBeFalsy()
 
     // selected SKU should be 223
     expect(nostoProduct.selectedSkuId).toBe("223")
