@@ -15,10 +15,10 @@ describe("createStore", () => {
     })
   })
 
-  it("should update skuOptions and selectedSkuId when updateSkuOptions is called", () => {
+  it("should update skuOptions and selectedSkuId when selectSkuOption is called", () => {
     const store = createStore("product1", "reco1")
-    store.updateSkuOptions("option1", ["sku1", "sku2"])
-    store.updateSkuOptions("option2", ["sku1"])
+    store.selectSkuOption("option1", ["sku1", "sku2"])
+    store.selectSkuOption("option2", ["sku1"])
     store.onChange(state => {
       expect(state.skuOptions).toEqual({
         option1: ["sku1", "sku2"],

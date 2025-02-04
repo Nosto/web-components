@@ -32,7 +32,7 @@ export function createStore(productId: string, recoId: string) {
     listeners.forEach(cb => cb(state))
   }
 
-  function updateSkuOptions(optionId: string, skuIds: string[]) {
+  function selectSkuOption(optionId: string, skuIds: string[]) {
     state.skuOptions[optionId] = skuIds
 
     const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
@@ -50,7 +50,7 @@ export function createStore(productId: string, recoId: string) {
   return {
     addToCart,
     onChange,
-    updateSkuOptions,
+    selectSkuOption,
     selectSkuId
   }
 }
