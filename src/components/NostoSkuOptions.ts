@@ -24,12 +24,8 @@ export class NostoSkuOptions extends HTMLElement {
       const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
 
       optionElements.forEach(option => {
-        const skuIds = getSkus(option)
-        if (!intersectionOf(skuIds, selectedSkuIds).length) {
-          option.style.display = "none"
-        } else {
-          option.style.display = "block"
-        }
+        const available = intersectionOf(getSkus(option), selectedSkuIds).length
+        option.toggleAttribute("disabled", !available)
       })
     })
   }
