@@ -9,11 +9,11 @@ export class NostoProduct extends HTMLElement {
   }
 
   connectedCallback() {
-    const store = (this._store = createStore(this.productId, this.recoId))
+    this._store = createStore(this.productId, this.recoId)
     this.validate()
-    this.registerSKUSelectors(store)
-    this.registerSKUIds(store)
-    this.registerATCButtons(store)
+    this.registerSKUSelectors()
+    this.registerSKUIds()
+    this.registerATCButtons()
   }
 
   get productId() {
@@ -43,14 +43,16 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
-  registerSKUSelectors({ selectSkuId }: Store) {
+  registerSKUSelectors() {
+    const { selectSkuId } = this._store!
     this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
       selectSkuId(element.value)
       element.addEventListener("change", () => selectSkuId(element.value))
     })
   }
 
-  registerSKUIds({ selectSkuId }: Store) {
+  registerSKUIds() {
+    const { selectSkuId } = this._store!
     this.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
       element.addEventListener("click", () => {
         selectSkuId(element.getAttribute("n-sku-id")!)
@@ -58,7 +60,8 @@ export class NostoProduct extends HTMLElement {
     })
   }
 
-  registerATCButtons({ addToCart, selectSkuId }: Store) {
+  registerATCButtons() {
+    const { addToCart, selectSkuId } = this._store!
     this.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
