@@ -1,32 +1,36 @@
-import { SkuEventDetailProps, SkuEventProps } from "@/components/types"
-
 export class NostoSkuOptions extends HTMLElement {
-  private _optionTypeToSkuIds: Record<string, string[]>
+  private _selectedSkuIds: string[]
+  private _optionElements: HTMLElement[]
 
   constructor() {
     super()
-    this._optionTypeToSkuIds = {}
+    this._selectedSkuIds = []
+    this._optionElements = []
   }
 
   connectedCallback() {
+    this._optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+
     this.parseSkuMapping()
     this.registerOptionsClickEvent()
     this.registerSkuSelectionEvent()
   }
 
-  get optionTypeBySkuId() {
-    return this._optionTypeToSkuIds
+  get selectedSkuIds() {
+    return this._selectedSkuIds
   }
 
   parseSkuMapping() {
-    this.querySelectorAll("[n-option]").forEach(option => {
-      const skusValue = option.getAttribute("n-skus")
-      const optionValue = option.textContent?.trim()
+    return Array.from(this._optionElements)
+      .map(option => {
+        const skusValue = option.getAttribute("n-skus")
+        const optionValue = option.textContent?.trim()
 
-      if (optionValue && skusValue) {
-        this._optionTypeToSkuIds[optionValue] = skusValue.split(",")
-      }
-    })
+        if (optionValue && skusValue) {
+          return { [optionValue]: skusValue.split(",") }
+        }
+      })
+      .filter(it => it !== undefined)
   }
 
   /**
@@ -34,7 +38,7 @@ export class NostoSkuOptions extends HTMLElement {
    * triggers a n-sku-selection event with the details of SKU selected to be handled by other NostoSku sibling elements
    */
   registerOptionsClickEvent() {
-    this.querySelectorAll("[n-option]").forEach(option => {
+    this._optionElements.forEach(option => {
       option.addEventListener("click", () => {
         const optionValue = option.textContent
         if (!optionValue) {
@@ -45,19 +49,8 @@ export class NostoSkuOptions extends HTMLElement {
 
         const siblings = this.getAllSiblings(option)
 
-        // provides easy access to the selection context from sibling SKU
-        // the indexed value will also come in handy when dealing with more than two SKU selections
-        const skuProps: Record<number, SkuEventProps[]> = {
-          1: this.optionTypeBySkuId[optionValue].map(it => ({
-            optionValue,
-            skuId: it
-          }))
-        }
-
-        const detail: SkuEventDetailProps = {
-          skuProps,
-          skuCount: siblings.length + 1,
-          selectionIndex: 1
+        const detail = {
+          selectedSourceIds: this._selectedSkuIds
         }
 
         siblings.forEach(sibling =>
@@ -72,11 +65,17 @@ export class NostoSkuOptions extends HTMLElement {
     })
   }
 
+  getSkus(element: Element) {
+    return (element.getAttribute("n-skus") || "").split(",")
+  }
+
   syncSelectedAttribute(clickedOption: Element) {
     clickedOption.toggleAttribute("selected")
 
+    this._selectedSkuIds = this.getSkus(clickedOption)
+
     // remove selected attribute from other other options
-    Array.from(this.querySelectorAll("[n-option]"))
+    this._optionElements
       .filter(element => element !== clickedOption)
       .forEach(otherOption => otherOption.removeAttribute("selected"))
   }
@@ -90,34 +89,25 @@ export class NostoSkuOptions extends HTMLElement {
    */
   registerSkuSelectionEvent() {
     this.addEventListener("n-sku-selection", (event: Event) => {
-      const selectionDetails = (event as CustomEvent).detail as SkuEventDetailProps
-      if (!selectionDetails || !selectionDetails.skuProps) {
+      const selectionDetails = (event as CustomEvent).detail
+      if (!selectionDetails || !selectionDetails.selectedSourceIds) {
         return
       }
 
-      const { skuProps, selectionIndex, skuCount: depth } = selectionDetails
-      const selectedSkuIds = skuProps[selectionIndex].map(it => it.skuId)
-      selectionDetails.selectionIndex += 1
-      skuProps[selectionDetails.selectionIndex] = []
+      const { selectedSourceIds } = selectionDetails
 
-      Object.entries(this.optionTypeBySkuId).forEach(([k, v]) => {
-        const matched = v.find(it => selectedSkuIds.includes(it))
-        if (matched) {
-          skuProps[selectionDetails.selectionIndex].push({ skuId: matched, optionValue: k })
-        } else {
-          const skuOption = this.querySelector<HTMLElement>(`[n-option][n-skus="${v}"]`)
-          if (skuOption) {
-            skuOption.style.display = "none"
-          }
+      this._optionElements.forEach(option => {
+        const skus = this.getSkus(option)
+
+        if (!skus.length) {
+          return
+        }
+
+        const matched = skus.find(it => selectedSourceIds.includes(it))
+        if (!matched) {
+          option.style.display = "none"
         }
       })
-
-      // when this is the last NostoSku sibling, record the selected SkuId combining all selections
-      // TODO: make it compatible with more than 2 levels of SKU selections in upcoming PRs
-      if (depth === selectionDetails.selectionIndex) {
-        const { skuId } = skuProps[selectionDetails.selectionIndex][0]
-        selectionDetails.skuId = skuId
-      }
     })
   }
 
