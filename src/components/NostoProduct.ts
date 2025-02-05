@@ -13,6 +13,7 @@ export class NostoProduct extends HTMLElement {
   connectedCallback() {
     this.validate()
     const store = createStore(this.productId, this.recoId)
+    store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
 
     this.addEventListener("sku-options-init", event => {
       event.stopPropagation()
@@ -23,8 +24,6 @@ export class NostoProduct extends HTMLElement {
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
     this.registerATCButtons(store)
-
-    store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
   }
 
   get productId() {
@@ -49,8 +48,7 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
-  // FIXME should this be private?
-  registerSKUSelectors({ selectSkuId }: Store) {
+  private registerSKUSelectors({ selectSkuId }: Store) {
     this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
       selectSkuId(element.value)
       element.addEventListener("change", () => selectSkuId(element.value))
