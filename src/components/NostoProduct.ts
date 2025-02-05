@@ -1,5 +1,7 @@
 import { createStore, Store } from "./store"
 
+type Callback = (store: Store) => void
+
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _store: Store | undefined
@@ -10,6 +12,10 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     this._store = createStore(this.productId, this.recoId)
+    this.addEventListener("nosto-init", event => {
+      const callback = (event as CustomEvent).detail as Callback
+      callback(this._store!)
+    })
     this.validate()
     this.registerSKUSelectors()
     this.registerSKUIds()
@@ -30,11 +36,6 @@ export class NostoProduct extends HTMLElement {
   // FIXME do we need to expose this?
   get recoId() {
     return this.getAttribute("reco-id")!
-  }
-
-  // FIXME do we need to expose this?
-  get store() {
-    return this._store
   }
 
   // FIXME should this be private?
