@@ -46,8 +46,7 @@ describe("NostoProduct", () => {
     `
     element.connectedCallback()
 
-    const clickEvent = new MouseEvent("click", { bubbles: true })
-    element.querySelector("[n-atc]")?.dispatchEvent(clickEvent)
+    element.querySelector<HTMLElement>("[n-atc]")!.click()
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
   })
@@ -66,8 +65,7 @@ describe("NostoProduct", () => {
     `
     element.connectedCallback()
 
-    const clickEvent = new MouseEvent("click", { bubbles: true })
-    element.querySelector("[n-atc]")!.dispatchEvent(clickEvent)
+    element.querySelector<HTMLElement>("[n-atc]")!.click()
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
   })
@@ -89,7 +87,7 @@ describe("NostoProduct", () => {
     element.connectedCallback()
 
     element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
-    element.querySelector("[n-atc]")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+    element.querySelector<HTMLElement>("[n-atc]")!.click()
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "457" }, "789", 1)
   })
@@ -108,8 +106,8 @@ describe("NostoProduct", () => {
     `
     element.connectedCallback()
 
-    element.querySelector("[n-sku-id='345']")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
-    element.querySelector("[n-atc]")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+    element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+    element.querySelector<HTMLElement>("[n-atc]")!.click()
 
     expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "345" }, "789", 1)
   })
