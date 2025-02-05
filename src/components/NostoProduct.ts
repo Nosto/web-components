@@ -1,40 +1,44 @@
-import { NostoSkuOptions } from "./NostoSkuOptions"
-import { intersectionOf } from "@/utils"
+import { createStore, Store } from "./store"
+
+type Callback = (store: Store) => void
 
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
-  private _skuOptionsElements: NostoSkuOptions[]
 
   constructor() {
     super()
-    this._selectedSkuId = undefined
-    this._skuOptionsElements = []
   }
 
   connectedCallback() {
-    this._skuOptionsElements = Array.from(this.querySelectorAll<NostoSkuOptions>("nosto-sku-options"))
-
     this.validate()
-    this.registerSKUSelectors()
-    this.registerSKUIds()
-    this.registerATCButtons()
-    this.registerSkuSelectionEvent()
+    const store = createStore(this.productId, this.recoId)
+    store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
+
+    this.addEventListener("sku-options-init", event => {
+      event.stopPropagation()
+      const callback = (event as CustomEvent).detail as Callback
+      callback(store)
+    })
+
+    this.registerSKUSelectors(store)
+    this.registerSKUIds(store)
+    this.registerATCButtons(store)
   }
 
   get productId() {
     return this.getAttribute("product-id")!
   }
 
-  get recoId() {
-    return this.getAttribute("reco-id")!
-  }
-
   get selectedSkuId() {
     return this._selectedSkuId
   }
 
-  validate() {
+  get recoId() {
+    return this.getAttribute("reco-id")!
+  }
+
+  private validate() {
     if (!this.getAttribute("product-id")) {
       throw new Error("Product ID is required.")
     }
@@ -44,60 +48,31 @@ export class NostoProduct extends HTMLElement {
     }
   }
 
-  registerSKUSelectors() {
+  private registerSKUSelectors({ selectSkuId }: Store) {
     this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
-      this._selectedSkuId = element.value
-      element.addEventListener("change", () => (this._selectedSkuId = element.value))
+      selectSkuId(element.value)
+      element.addEventListener("change", () => selectSkuId(element.value))
     })
   }
 
-  registerSKUIds() {
+  private registerSKUIds({ selectSkuId }: Store) {
     this.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
       element.addEventListener("click", () => {
-        this._selectedSkuId = element.getAttribute("n-sku-id")!
+        selectSkuId(element.getAttribute("n-sku-id")!)
       })
     })
   }
 
-  registerATCButtons() {
+  private registerATCButtons({ addToCart, selectSkuId }: Store) {
     this.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", () => {
-        const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id") || this._selectedSkuId
-        this.addSkuToCart(skuId)
+        const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
+        if (skuId) {
+          selectSkuId(skuId)
+        }
+        addToCart()
       })
     )
-  }
-
-  addSkuToCart(skuId?: string) {
-    console.info(`Add to cart event triggered for the product ${this.productId} and the sku ${skuId}`)
-    if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-      const skuIdToCart = skuId || this._selectedSkuId
-      if (skuIdToCart) {
-        window.Nosto.addSkuToCart({ productId: this.productId, skuId: skuIdToCart }, this.recoId, 1)
-        console.info("Add to cart event registered.")
-      }
-    }
-  }
-
-  getSelectedSkuId() {
-    const selectedSkuOptions = this._skuOptionsElements
-      .filter(skuOption => !!skuOption.selectedSkuIds.length)
-      .map(validSkuOption => validSkuOption.selectedSkuIds)
-
-    if (selectedSkuOptions.length === this._skuOptionsElements.length) {
-      return intersectionOf(...selectedSkuOptions)[0]
-    }
-  }
-
-  // Records the selected SKU id only after all the SKU options are selected
-  registerSkuSelectionEvent() {
-    this.addEventListener("n-sku-selection", () => {
-      const selectedSkuId = this.getSelectedSkuId()
-      if (selectedSkuId) {
-        console.info("Sku selection event received in NostoProduct: ", selectedSkuId)
-        this._selectedSkuId = selectedSkuId
-      }
-    })
   }
 }
 

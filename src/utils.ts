@@ -1,6 +1,8 @@
 export function intersectionOf(...arrays: string[][]) {
+  if (arrays.length === 0) {
+    return []
+  }
   return arrays?.reduce((intersection, currentArray) => {
-    const intersectionSet = new Set(intersection)
-    return currentArray.filter(item => intersectionSet.has(item))
+    return currentArray.filter(item => intersection.includes(item))
   })
 }

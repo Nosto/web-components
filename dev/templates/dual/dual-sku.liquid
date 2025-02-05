@@ -1,0 +1,36 @@
+<script type="module" src="main.es.js" defer></script>
+<link rel="stylesheet" href="dual/dual-sku.css">
+
+{% assign reco_results = recs | reco_data %}
+
+{%- for item in reco_results %}
+  <div class="block__recommendation {{ item.div_id }}">
+    <span class="reco-title">{{ item.title }}</span>
+    <div class="products">
+      {%- for product in item.products %}
+        <nosto-product product-id="{{ product.product_id }}" reco-id="{{ item.result_id }}" class="nosto__product">
+          <div class="nosto__product-image">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
+          </div>
+          <div class="nosto__product-details--card">
+            <div class="nosto__product-name">{{ product.name }}</div>
+            <div class="nosto__product-price">EUR {{ product.price }}</div>
+            <div class="nosto__product-skus">
+              <nosto-sku-options name="colors">
+                <span n-option n-skus="123,145" selected>Black</span>
+                <span n-option n-skus="223,234,245">White</span>
+                <span n-option n-skus="334,345">Blue</span>
+              </nosto-sku-options>
+              <nosto-sku-options name="sizes">
+                <span n-option n-skus="123,223">L</span>
+                <span n-option n-skus="234,334">M</span>
+                <span n-option n-skus="145,245,345">S</span>
+              </nosto-sku-options>
+            </div>
+            <button class="btn__atc" n-atc>Add to cart</button>
+          </div>
+        </nosto-product>
+      {%- endfor %}
+    </div>
+  </div>
+{%- endfor %}
