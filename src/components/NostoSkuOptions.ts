@@ -1,5 +1,4 @@
 import { intersectionOf } from "@/utils"
-import { NostoProduct } from "./NostoProduct"
 import { Store } from "./store"
 
 function getSkus(element: Element) {
@@ -12,16 +11,17 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   connectedCallback() {
-    // FIXME can we fetch the store for this element in a more neutral way?
-    const store = this.closest<NostoProduct>("nosto-product")!.store!
+    this.dispatchEvent(new CustomEvent("sku-options-init", { detail: this.init.bind(this), bubbles: true }))
+  }
+
+  private init(store: Store) {
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
     this.handlePreselection(store, optionElements)
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
   }
 
-  // FIXME make private?
-  registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
+  private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     const optionId = this.getAttribute("name")!
     onChange(state => {
       const selectedSkuIds = intersectionOf(
@@ -41,7 +41,7 @@ export class NostoSkuOptions extends HTMLElement {
     })
   }
 
-  handlePreselection({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
+  private handlePreselection({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
     const optionId = this.getAttribute("name")!
     const selected = optionElements.find(o => o.hasAttribute("selected"))
     if (selected) {
@@ -50,8 +50,7 @@ export class NostoSkuOptions extends HTMLElement {
     }
   }
 
-  // FIXME make private?
-  registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
+  private registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
     const optionId = this.getAttribute("name")!
     optionElements.forEach(option => {
       option.addEventListener("click", () => {

@@ -42,4 +42,12 @@ app.get("/sku-overlay", (req, res) => {
   }
 })
 
+app.get("/dual", (req, res) => {
+  try {
+    res.render("dual/dual-sku", { recs: dataSeed() })
+  } catch (e) {
+    console.error(e)
+  }
+})
+
 export default app
