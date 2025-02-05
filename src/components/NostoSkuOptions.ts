@@ -36,9 +36,9 @@ export class NostoSkuOptions extends HTMLElement {
     const optionId = this.name
     onChange(state => {
       const selectedSkuIds = intersectionOf(
-        ...Object.keys(state.skuOptions)
+        ...Object.keys(state.selectedSkuOptions)
           .filter(key => key !== optionId)
-          .map(key => state.skuOptions[key])
+          .map(key => state.selectedSkuOptions[key])
       )
 
       if (selectedSkuIds.length === 0) {

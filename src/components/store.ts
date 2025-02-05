@@ -2,15 +2,20 @@ import { intersectionOf } from "@/utils"
 
 interface State {
   selectedSkuId: string | undefined
-  skuOptions: Record<string, string[]>
+  selectedSkuOptions: Record<string, string[]>
 }
 
 type ChangeListener = (state: State) => void
+type StoreProps = {
+  productId: string
+  recoId: string
+  skuGroupCount: number
+}
 
-export function createStore(productId: string, recoId: string) {
+export function createStore({ productId, recoId, skuGroupCount }: StoreProps) {
   const state: State = {
     selectedSkuId: undefined,
-    skuOptions: {}
+    selectedSkuOptions: {}
   }
 
   const listeners: ChangeListener[] = []
@@ -30,11 +35,12 @@ export function createStore(productId: string, recoId: string) {
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
-    state.skuOptions[optionId] = skuIds
+    state.selectedSkuOptions[optionId] = skuIds
+    const totalSelection = Object.keys(state.selectedSkuOptions).length
 
-    const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
+    const selectedSkuIds = intersectionOf(...Object.values(state.selectedSkuOptions))
 
-    if (selectedSkuIds.length === 1) {
+    if (selectedSkuIds.length === 1 && totalSelection === skuGroupCount) {
       state.selectedSkuId = selectedSkuIds[0]
     }
     listeners.forEach(cb => cb(state))

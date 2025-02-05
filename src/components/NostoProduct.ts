@@ -12,7 +12,8 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     this.validate()
-    const store = createStore(this.productId, this.recoId)
+    const skuGroupCount = this.querySelectorAll("nosto-sku-options").length
+    const store = createStore({ productId: this.productId, recoId: this.recoId, skuGroupCount })
     store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
 
     this.addEventListener("sku-options-init", event => {

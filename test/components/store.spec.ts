@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest"
 import { createStore } from "../../src/components/store"
 
 describe("createStore", () => {
-  function newStore(productId: string, recoId: string) {
-    const store = createStore(productId, recoId)
+  function newStore(productId: string, recoId: string, skuGroupCount: number = 1) {
+    const store = createStore({ productId, recoId, skuGroupCount })
     const state = {} as Record<string, unknown>
     store.onChange(newState => Object.assign(state, newState))
     return [store, state] as const
@@ -22,7 +22,7 @@ describe("createStore", () => {
   })
 
   it("should update skuOptions and selectedSkuId when selectSkuOption is called", () => {
-    const [store, state] = newStore("product1", "reco1")
+    const [store, state] = newStore("product1", "reco1", 2)
     store.selectSkuOption("option1", ["sku1", "sku2"])
     store.selectSkuOption("option2", ["sku1"])
     expect(state.selectedSkuId).toBe("sku1")
