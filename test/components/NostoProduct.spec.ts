@@ -9,106 +9,110 @@ describe("NostoProduct", () => {
     document.body.innerHTML = ""
   })
 
-  it("should be defined as a custom element", () => {
-    expect(customElements.get("nosto-product")).toBe(NostoProduct)
+  describe("verify setup & validation", () => {
+    it("should be defined as a custom element", () => {
+      expect(customElements.get("nosto-product")).toBe(NostoProduct)
+    })
+
+    it("should have observed attributes", () => {
+      expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id"])
+    })
+
+    it("should throw an error if no attribute is provided", () => {
+      expect(() => element.connectedCallback()).toThrow("Product ID is required.")
+    })
+
+    it("should throw an error if product-id is not provided", () => {
+      element.setAttribute("reco-id", "123")
+      expect(() => element.connectedCallback()).toThrow("Product ID is required.")
+    })
+
+    it("should throw an error if reco-id is not provided", () => {
+      element.setAttribute("product-id", "123")
+      expect(() => element.connectedCallback()).toThrow("Slot ID is required.")
+    })
   })
 
-  it("should have observed attributes", () => {
-    expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id"])
-  })
+  describe("verify ATC", () => {
+    beforeEach(() => {
+      element.setAttribute("product-id", "123")
+      element.setAttribute("reco-id", "789")
+      window.Nosto = { addSkuToCart: vi.fn() }
+    })
 
-  it("should throw an error if product-id is not provided", () => {
-    expect(() => element.connectedCallback()).toThrow("Product ID is required.")
-  })
+    function checkSkuAtc(skuId: string) {
+      const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
+      checkATC(atc!)
+    }
 
-  it("should throw an error if reco-id is not provided", () => {
-    element.setAttribute("product-id", "123")
-    expect(() => element.connectedCallback()).toThrow("Slot ID is required.")
-  })
+    function checkProductAtc() {
+      const atc = element.querySelector<HTMLElement>("[n-atc]")
+      checkATC(atc!)
+    }
 
-  it("should not throw an error if all required attributes are provided", () => {
-    element.setAttribute("product-id", "123")
-    element.setAttribute("reco-id", "789")
-    expect(() => element.connectedCallback()).not.toThrow()
-  })
+    function checkATC(atcElement: HTMLElement) {
+      atcElement.click()
+      expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
+        { productId: "123", skuId: element.selectedSkuId },
+        "789",
+        1
+      )
+    }
 
-  it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
-    element.setAttribute("product-id", "123")
-    element.setAttribute("reco-id", "789")
+    it("should not throw an error if all required attributes are provided", () => {
+      expect(() => element.connectedCallback()).not.toThrow()
+    })
 
-    const mockAddSkuToCart = vi.fn()
-    window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
-    element.innerHTML = `
+    it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
+      element.innerHTML = `
       <div n-sku-id="456">
         <div n-atc>ATC</div>
       </div>
     `
-    element.connectedCallback()
+      element.connectedCallback()
 
-    element.querySelector<HTMLElement>("[n-atc]")!.click()
+      checkSkuAtc("456")
+    })
 
-    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
-  })
-
-  it("should pick up n-sku-id from the closest parent with [n-sku-id]", () => {
-    element.setAttribute("product-id", "123")
-    element.setAttribute("reco-id", "789")
-
-    const mockAddSkuToCart = vi.fn()
-    window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
-    element.innerHTML = `
+    it("should handle [n-atc] on every individual sku option", () => {
+      element.innerHTML = `
       <div n-sku-id="456">
-        <div n-atc>ATC</div>
+        <span n-atc>Blue</span>
+      </div>
+      <div n-sku-id="101">
+        <span n-atc>Black</span>
       </div>
     `
-    element.connectedCallback()
+      element.connectedCallback()
 
-    element.querySelector<HTMLElement>("[n-atc]")!.click()
+      checkSkuAtc("456")
+      checkSkuAtc("101")
+    })
 
-    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "456" }, "789", 1)
-  })
+    it("should pick n-sku-selector change events", () => {
+      element.innerHTML = `
+      <select n-sku-selector>
+        <option value="456">SKU 1</option>
+        <option value="457" selected>SKU 2</option>
+      </select>
+      <div n-atc>ATC</div>
+      `
+      element.connectedCallback()
 
-  it("should pick n-sku-selector change events", () => {
-    element.setAttribute("product-id", "123")
-    element.setAttribute("reco-id", "789")
+      element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
+      checkProductAtc()
+    })
 
-    const mockAddSkuToCart = vi.fn()
-    window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
-    element.innerHTML = `
-    <select n-sku-selector>
-      <option value="456">SKU 1</option>
-      <option value="457" selected>SKU 2</option>
-    </select>
-    <div n-atc>ATC</div>
+    it("should pick up [n-sku-id] clicks", () => {
+      element.innerHTML = `
+      <div n-sku-id="234">1st sku</div>
+      <div n-sku-id="345">end sku</div>
+      <div n-atc>ATC</div>
     `
-    element.connectedCallback()
+      element.connectedCallback()
 
-    element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
-    element.querySelector<HTMLElement>("[n-atc]")!.click()
-
-    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "457" }, "789", 1)
-  })
-
-  it("should pick up [n-sku-id] clicks", () => {
-    element.setAttribute("product-id", "123")
-    element.setAttribute("reco-id", "789")
-
-    const mockAddSkuToCart = vi.fn()
-    window.Nosto = { addSkuToCart: mockAddSkuToCart }
-
-    element.innerHTML = `
-    <div n-sku-id="234">1st sku</div>
-    <div n-sku-id="345">end sku</div>
-    <div n-atc>ATC</div>
-    `
-    element.connectedCallback()
-
-    element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-    element.querySelector<HTMLElement>("[n-atc]")!.click()
-
-    expect(mockAddSkuToCart).toHaveBeenCalledWith({ productId: "123", skuId: "345" }, "789", 1)
+      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      checkProductAtc()
+    })
   })
 })

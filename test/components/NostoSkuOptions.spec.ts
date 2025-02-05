@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect } from "vitest"
+import { describe, it, beforeEach, expect, vi } from "vitest"
 import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
@@ -6,6 +6,9 @@ import { NostoProduct } from "@/components/NostoProduct"
 type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s"
 type Verification = "selected" | "unselected" | "enabled" | "disabled"
 type Options = Partial<Record<Verification, SkuOptionValue[]>>
+
+const PROD_ID = "987"
+const RECO_ID = "789"
 
 function element(value: SkuOptionValue) {
   return document.querySelector<HTMLElement>(`[${value}]`)!
@@ -21,14 +24,25 @@ function verify({ enabled = [], disabled = [], selected = [], unselected = [] }:
 describe("Sku options side effects", () => {
   let nostoProduct: NostoProduct
 
+  function verifyATC() {
+    const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
+    atc!.click()
+    expect(window.Nosto!.addSkuToCart).toBeCalledWith(
+      { productId: PROD_ID, skuId: nostoProduct.selectedSkuId },
+      RECO_ID,
+      1
+    )
+  }
+
   beforeEach(() => {
     loadSkuContent()
     nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+    window.Nosto = { addSkuToCart: vi.fn() }
   })
 
   function loadSkuContent() {
     document.body.innerHTML = `
-      <nosto-product product-id="123" reco-id="789">
+      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
         <nosto-sku-options name="colors">
           <span black n-option n-skus="123,145">Black</span>
           <span white n-option n-skus="223,234,245">White</span>
@@ -39,6 +53,7 @@ describe("Sku options side effects", () => {
           <span m n-option n-skus="234,334">M</span>
           <span s n-option n-skus="145,245,345">S</span>
         </nosto-sku-options>
+        <span n-atc>Add to cart</span>
       </nosto-product>
     `
   }
@@ -67,11 +82,13 @@ describe("Sku options side effects", () => {
     verify({ enabled: ["white", "blue"], disabled: ["black"] })
 
     expect(nostoProduct.selectedSkuId).toBe("234")
+    verifyATC()
 
     element("blue").click() //334,345
     verify({ selected: ["blue"], unselected: ["black", "white"] })
     verify({ enabled: ["m", "s"], disabled: ["l"] })
 
     expect(nostoProduct.selectedSkuId).toBe("334")
+    verifyATC()
   })
 })
