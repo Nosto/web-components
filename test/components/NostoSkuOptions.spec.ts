@@ -24,7 +24,6 @@ describe("Sku options side effects", () => {
   function verifyATC() {
     const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
     atc!.click()
-    expect(window.Nosto!.addSkuToCart).toBeCalled()
     expect(window.Nosto!.addSkuToCart).toBeCalledWith({ productId: "123", skuId: nostoProduct.selectedSkuId }, "789", 1)
   }
 

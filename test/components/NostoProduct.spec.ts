@@ -50,10 +50,8 @@ describe("NostoProduct", () => {
       checkATC(atc!)
     }
 
-    function checkATC(atcElement: Element) {
-      const clickEvent = new MouseEvent("click", { bubbles: true })
-      atcElement.dispatchEvent(clickEvent)
-
+    function checkATC(atcElement: HTMLElement) {
+      atcElement.click()
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
         { productId: "123", skuId: element.selectedSkuId },
         "789",
@@ -113,7 +111,7 @@ describe("NostoProduct", () => {
     `
       element.connectedCallback()
 
-      element.querySelector("[n-sku-id='345']")!.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
       checkProductAtc()
     })
   })
