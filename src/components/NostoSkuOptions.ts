@@ -16,6 +16,7 @@ export class NostoSkuOptions extends HTMLElement {
 
   private init(store: Store) {
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+    this.handlePreselection(store, optionElements)
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
   }
@@ -38,6 +39,15 @@ export class NostoSkuOptions extends HTMLElement {
         option.toggleAttribute("disabled", !available)
       })
     })
+  }
+
+  private handlePreselection({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
+    const optionId = this.getAttribute("name")!
+    const selected = optionElements.find(o => o.hasAttribute("selected"))
+    if (selected) {
+      const skuIds = getSkus(selected)
+      selectSkuOption(optionId, skuIds)
+    }
   }
 
   private registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {

@@ -42,6 +42,8 @@ export function createStore(productId: string, recoId: string) {
 
   function onChange(cb: (state: State) => void) {
     listeners.push(cb)
+    // needed, since some components also trigger state changes during init
+    cb(state)
   }
 
   function selectedSkuId() {
