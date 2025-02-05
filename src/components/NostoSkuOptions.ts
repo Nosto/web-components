@@ -8,11 +8,9 @@ function getSkus(element: Element) {
 export class NostoSkuOptions extends HTMLElement {
   constructor() {
     super()
-    console.log("in constructor of sku options")
   }
 
   connectedCallback() {
-    console.log("in connectedCallback of sku options")
     this.dispatchEvent(new CustomEvent("sku-options-init", { detail: this.init.bind(this), bubbles: true }))
   }
 

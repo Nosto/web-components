@@ -27,7 +27,6 @@ export class NostoProduct extends HTMLElement {
     store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
   }
 
-  // FIXME do we need to expose this?
   get productId() {
     return this.getAttribute("product-id")!
   }
