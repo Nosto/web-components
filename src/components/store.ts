@@ -46,14 +46,9 @@ export function createStore(productId: string, recoId: string) {
     cb(state)
   }
 
-  function selectedSkuId() {
-    return state.selectedSkuId
-  }
-
   return {
     addToCart,
     onChange,
-    selectedSkuId,
     selectSkuOption,
     selectSkuId
   }
