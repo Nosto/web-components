@@ -11,7 +11,18 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   connectedCallback() {
+    this.validate()
     this.dispatchEvent(new CustomEvent("sku-options-init", { detail: this.init.bind(this), bubbles: true }))
+  }
+
+  get name() {
+    return this.getAttribute("name")!
+  }
+
+  private validate() {
+    if (!this.getAttribute("name")) {
+      throw new Error("Name is required.")
+    }
   }
 
   private init(store: Store) {
@@ -22,7 +33,7 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.getAttribute("name")!
+    const optionId = this.name
     onChange(state => {
       const selectedSkuIds = intersectionOf(
         ...Object.keys(state.skuOptions)
@@ -42,7 +53,7 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   private handlePreselection({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.getAttribute("name")!
+    const optionId = this.name
     const selected = optionElements.find(o => o.hasAttribute("selected"))
     if (selected) {
       const skuIds = getSkus(selected)
@@ -51,7 +62,7 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   private registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.getAttribute("name")!
+    const optionId = this.name
     optionElements.forEach(option => {
       option.addEventListener("click", () => {
         const skuIds = getSkus(option)
