@@ -8,18 +8,18 @@ function getSkus(element: Element) {
 export class NostoSkuOptions extends HTMLElement {
   constructor() {
     super()
-    this.registerStoreInitialized()
+    console.log("in constructor of sku options")
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    console.log("in connectedCallback of sku options")
+    this.dispatchEvent(new CustomEvent("sku-options-init", { detail: this.init.bind(this), bubbles: true }))
+  }
 
-  private registerStoreInitialized() {
-    this.addEventListener("store-initialized", (event: Event) => {
-      const store = (event as CustomEvent).detail as Store
-      const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-      this.registerClickEvents(store, optionElements)
-      this.registerStateChange(store, optionElements)
-    })
+  private init(store: Store) {
+    const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+    this.registerClickEvents(store, optionElements)
+    this.registerStateChange(store, optionElements)
   }
 
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {

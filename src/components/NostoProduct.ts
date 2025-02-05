@@ -1,5 +1,7 @@
 import { createStore, Store } from "./store"
 
+type Callback = (store: Store) => void
+
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
@@ -11,15 +13,18 @@ export class NostoProduct extends HTMLElement {
   connectedCallback() {
     this.validate()
     const store = createStore(this.productId, this.recoId)
+
+    this.addEventListener("sku-options-init", event => {
+      event.stopPropagation()
+      const callback = (event as CustomEvent).detail as Callback
+      callback(store)
+    })
+
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
     this.registerATCButtons(store)
 
     store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
-
-    Array.from(this.children).forEach(child =>
-      child.dispatchEvent(new CustomEvent("store-initialized", { detail: store }))
-    )
   }
 
   // FIXME do we need to expose this?
