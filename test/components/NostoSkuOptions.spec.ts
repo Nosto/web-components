@@ -7,6 +7,9 @@ type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s"
 type Verification = "selected" | "unselected" | "enabled" | "disabled"
 type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
+const PROD_ID = "987"
+const RECO_ID = "789"
+
 function element(value: SkuOptionValue) {
   return document.querySelector<HTMLElement>(`[${value}]`)!
 }
@@ -24,7 +27,11 @@ describe("Sku options side effects", () => {
   function verifyATC() {
     const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
     atc!.click()
-    expect(window.Nosto!.addSkuToCart).toBeCalledWith({ productId: "123", skuId: nostoProduct.selectedSkuId }, "789", 1)
+    expect(window.Nosto!.addSkuToCart).toBeCalledWith(
+      { productId: PROD_ID, skuId: nostoProduct.selectedSkuId },
+      RECO_ID,
+      1
+    )
   }
 
   beforeEach(() => {
@@ -35,7 +42,7 @@ describe("Sku options side effects", () => {
 
   function loadSkuContent() {
     document.body.innerHTML = `
-      <nosto-product product-id="123" reco-id="789">
+      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
         <nosto-sku-options name="colors">
           <span black n-option n-skus="123,145">Black</span>
           <span white n-option n-skus="223,234,245">White</span>
