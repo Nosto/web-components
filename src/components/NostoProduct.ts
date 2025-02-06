@@ -1,4 +1,4 @@
-import { createStore, Store } from "./store"
+import { createStore, Store } from "../store"
 
 type Callback = (store: Store) => void
 
