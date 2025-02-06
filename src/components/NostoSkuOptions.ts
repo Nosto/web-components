@@ -35,6 +35,10 @@ export class NostoSkuOptions extends HTMLElement {
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     onChange(state => {
+      if (state.selectedSkuIdsLatest && state.selectedSkuIdsLatest.optionId === optionId) {
+        return
+      }
+
       const selectedSkuIds = intersectionOf(
         ...Object.keys(state.selectedSkuOptions)
           .filter(key => key !== optionId)
@@ -46,7 +50,7 @@ export class NostoSkuOptions extends HTMLElement {
         return
       }
       optionElements.forEach(option => {
-        const available = intersectionOf(getSkus(option), state.selectedSkuIdsLatest).length
+        const available = intersectionOf(getSkus(option), state.selectedSkuIdsLatest!.skuIds).length
         option.toggleAttribute("disabled", !available)
       })
     })
