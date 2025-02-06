@@ -17,7 +17,7 @@ describe("sku options integration", () => {
     nostoProduct.innerHTML = `
       <nosto-sku-options name="colors">
         <span black n-option n-skus="123,145">Black</span>
-        <span white n-option n-skus="223,234,245">White</span>
+        <span white n-option n-skus="223,234,245 disabled">White</span>
         <span blue n-option n-skus="334,345">Blue</span>
       </nosto-sku-options>
       <nosto-sku-options name="sizes">
@@ -31,6 +31,8 @@ describe("sku options integration", () => {
     // click on option should select it
     element("[black]").click()
     expect(element("[black]").hasAttribute("selected")).toBeTruthy()
+
+    expect(element("[white]").hasAttribute("disabled")).toBeTruthy()
 
     // validate size availability
     expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
@@ -73,7 +75,7 @@ describe("sku options integration", () => {
     expect(nostoProduct.selectedSkuId).toBe("234")
   })
 
-  it.skip("should consider preselection (1 option)", () => {
+  it("should consider preselection (1 option)", () => {
     const nostoProduct = new NostoProduct()
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")

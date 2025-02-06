@@ -107,16 +107,16 @@ describe("NostoSkuOptions side effects", () => {
         <nosto-sku-options name="colors">
           <span black n-option n-skus="2134,8927">Black</span>
           <span white n-option n-skus="3254,6234,7542">White</span>
-          <span blue n-option n-skus="4911,345">Blue</span>
+          <span blue n-option n-skus="4911,8732">Blue</span>
         </nosto-sku-options>
         <nosto-sku-options name="sizes">
           <span l n-option n-skus="2134,3254">L</span>
           <span m n-option n-skus="6234,4911">M</span>
-          <span s n-option n-skus="8927,7542,345">S</span>
+          <span s n-option n-skus="8927,7542,8732">S</span>
         </nosto-sku-options>
         <nosto-sku-options name="gender">
-          <span ma n-option n-skus="2134,8927,6234,7542,345">M</span>
-          <span fe n-option n-skus="3254,234,4911,345">F</span>
+          <span ma n-option n-skus="2134,8927,6234,7542,8732">M</span>
+          <span fe n-option n-skus="3254,234,4911,8732">F</span>
         </nosto-sku-options>
       </nosto-product>
     `

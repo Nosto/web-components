@@ -22,7 +22,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint",
-    "test": "vitest --run -t=\"should consider preselection\""
+    "test": "vitest --run -t=\"should prune selections\""
   },
   "devDependencies": {
     "@types/eslint-config-prettier": "^6.11.3",

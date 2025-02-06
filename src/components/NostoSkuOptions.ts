@@ -27,18 +27,14 @@ export class NostoSkuOptions extends HTMLElement {
 
   private init(store: Store) {
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-    this.handlePreselection(store, optionElements)
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
+    this.handlePreselection(store, optionElements)
   }
 
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     onChange(state => {
-      if (state.selectedSkuIdsLatest && state.selectedSkuIdsLatest.optionId === optionId) {
-        return
-      }
-
       const selectedSkuIds = intersectionOf(
         ...Object.keys(state.selectedSkuOptions)
           .filter(key => key !== optionId)
