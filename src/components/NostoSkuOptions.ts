@@ -1,5 +1,5 @@
 import { intersectionOf } from "@/utils"
-import { Store } from "./store"
+import { Store } from "../store"
 
 function getSkus(element: Element) {
   return (element.getAttribute("n-skus") || "").split(",")
