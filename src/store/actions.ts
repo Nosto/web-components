@@ -1,6 +1,13 @@
-type AddSkuToCart = Record<"productId" | "skuId" | "recoId", string>
+type AddSkuToCart = {
+  productId: string
+  skuId?: string
+  recoId: string
+}
 
 export function addSkuToCart({ productId, skuId, recoId }: AddSkuToCart) {
+  if (!skuId) {
+    return
+  }
   if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
     window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
   } else {

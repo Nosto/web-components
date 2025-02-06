@@ -17,9 +17,7 @@ export function createStore(productId: string, recoId: string) {
   const listeners: ChangeListener[] = []
 
   function addToCart() {
-    if (state.selectedSkuId) {
-      addSkuToCart({ productId, skuId: state.selectedSkuId, recoId })
-    }
+    addSkuToCart({ productId, skuId: state.selectedSkuId, recoId })
   }
 
   function selectSkuId(skuId: string) {
