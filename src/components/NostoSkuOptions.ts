@@ -27,14 +27,18 @@ export class NostoSkuOptions extends HTMLElement {
 
   private init(store: Store) {
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-    this.handlePreselection(store, optionElements)
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
+    this.handlePreselection(store, optionElements)
   }
 
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     onChange(state => {
+      if (!state.latestSelectedOption || state.latestSelectedOption.optionId === optionId) {
+        return
+      }
+
       const selectedSkuIds = intersectionOf(
         ...Object.keys(state.skuOptions)
           .filter(key => key !== optionId)
@@ -46,7 +50,7 @@ export class NostoSkuOptions extends HTMLElement {
         return
       }
       optionElements.forEach(option => {
-        const available = intersectionOf(getSkus(option), selectedSkuIds).length
+        const available = intersectionOf(getSkus(option), state.latestSelectedOption!.skuIds).length
         option.toggleAttribute("disabled", !available)
       })
     })
@@ -57,7 +61,7 @@ export class NostoSkuOptions extends HTMLElement {
     const selected = optionElements.find(o => o.hasAttribute("selected"))
     if (selected) {
       const skuIds = getSkus(selected)
-      selectSkuOption(optionId, skuIds)
+      selectSkuOption({ optionId, skuIds })
     }
   }
 
@@ -68,7 +72,7 @@ export class NostoSkuOptions extends HTMLElement {
         const skuIds = getSkus(option)
         option.toggleAttribute("selected", true)
         optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
-        selectSkuOption(optionId, skuIds)
+        selectSkuOption({ optionId, skuIds })
       })
     })
   }
