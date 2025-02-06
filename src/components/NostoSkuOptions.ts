@@ -32,9 +32,14 @@ export class NostoSkuOptions extends HTMLElement {
     this.registerStateChange(store, optionElements)
   }
 
-  private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
+  private registerStateChange({ onChange, getListeners }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     onChange(state => {
+      // one in NostoProduct and 2 NostoSkuOptions
+      if (getListeners().length < 3) {
+        throw new Error("Not all listeners are registered")
+      }
+
       const selectedSkuIds = intersectionOf(
         ...Object.keys(state.skuOptions)
           .filter(key => key !== optionId)

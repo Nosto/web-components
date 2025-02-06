@@ -46,11 +46,16 @@ export function createStore(productId: string, recoId: string) {
     cb(state)
   }
 
+  function getListeners() {
+    return listeners
+  }
+
   return {
     addToCart,
     onChange,
     selectSkuOption,
-    selectSkuId
+    selectSkuId,
+    getListeners
   }
 }
 

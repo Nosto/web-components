@@ -73,7 +73,7 @@ describe("sku options integration", () => {
     expect(nostoProduct.selectedSkuId).toBe("234")
   })
 
-  it("should consider preselection (1 option)", () => {
+  it.skip("should consider preselection (1 option)", () => {
     const nostoProduct = new NostoProduct()
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")

@@ -5,6 +5,7 @@ type Callback = (store: Store) => void
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
+  private _store: Store | undefined
 
   constructor() {
     super()
@@ -13,6 +14,7 @@ export class NostoProduct extends HTMLElement {
   connectedCallback() {
     this.validate()
     const store = createStore(this.productId, this.recoId)
+    this._store = store
     store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
 
     this.addEventListener("sku-options-init", event => {
@@ -36,6 +38,10 @@ export class NostoProduct extends HTMLElement {
 
   get recoId() {
     return this.getAttribute("reco-id")!
+  }
+
+  get store() {
+    return this._store
   }
 
   private validate() {
