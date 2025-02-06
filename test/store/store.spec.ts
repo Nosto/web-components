@@ -23,8 +23,8 @@ describe("createStore", () => {
 
   it("should update skuOptions and selectedSkuId when selectSkuOption is called", () => {
     const [store, state] = newStore("product1", "reco1")
-    store.selectSkuOption({ optionId: "option1", skuIds: ["sku1", "sku2"] })
-    store.selectSkuOption({ optionId: "option2", skuIds: ["sku1"] })
+    store.selectSkuOption("option1", ["sku1", "sku2"])
+    store.selectSkuOption("option2", ["sku1"])
     expect(state.selectedSkuId).toBe("sku1")
   })
 
