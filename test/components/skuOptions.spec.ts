@@ -62,8 +62,8 @@ describe("sku options integration", () => {
 
     // validate size availability
     expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
-    expect(element("[m]").hasAttribute("disabled")).toBeFalsy()
-    expect(element("[s]").hasAttribute("disabled")).toBeFalsy()
+    expect(element("[m]").hasAttribute("disabled")).toBeTruthy()
+    expect(element("[s]").hasAttribute("disabled")).toBeTruthy()
 
     // selected SKU should be 223
     expect(nostoProduct.selectedSkuId).toBe("223")
@@ -122,8 +122,8 @@ describe("sku options integration", () => {
         `
     document.body.appendChild(nostoProduct)
 
-    // m size should be disabled
-    expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
+    // m & l size should be disabled as s is selected in the above example
+    expect(element("[l]").hasAttribute("disabled")).toBeTruthy()
     expect(element("[m]").hasAttribute("disabled")).toBeTruthy()
     expect(element("[s]").hasAttribute("disabled")).toBeFalsy()
 

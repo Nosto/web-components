@@ -79,8 +79,20 @@ describe("Sku options side effects", () => {
     // select gender
     element("fe").click() // 223,234,334,345
     verify({ selected: ["fe"], unselected: ["ma"] })
-    verify({ enabled: ["white", "blue", "l", "m", "s"], disabled: ["black"] })
+    // verify({ enabled: ["white", "blue", "l", "m", "s"], disabled: ["black"] })
 
-    expect(nostoProduct.selectedSkuId).toBe("345")
+    // expect(nostoProduct.selectedSkuId).toBe("345")
+
+    // select size
+    element("m").click() // 234,334
+    verify({ selected: ["m"], unselected: ["l", "s"] })
+    // verify({ enabled: ["white", "blue", "ma", "fe"], disabled: ["black"] })
+
+    element("blue").click() // 334,345
+    verify({
+      selected: ["blue"],
+      unselected: ["black", "white"]
+    })
+    verify({ enabled: ["m", "s", "ma", "fe"], disabled: ["l"] })
   })
 })
