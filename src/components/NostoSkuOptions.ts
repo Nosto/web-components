@@ -27,9 +27,9 @@ export class NostoSkuOptions extends HTMLElement {
 
   private init(store: Store) {
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-    this.handlePreselection(store, optionElements)
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
+    this.handlePreselection(store, optionElements)
   }
 
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
