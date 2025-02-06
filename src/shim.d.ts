@@ -1,5 +1,5 @@
 interface Window {
   Nosto?: {
-    addSkuToCart?: import("./types").AddSkuToCart
+    addSkuToCart?: (product: { productId: string; skuId: string }, element: string, quantity: number) => void
   }
 }

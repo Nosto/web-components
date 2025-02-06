@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest"
-import { createStore } from "../../src/components/store"
+import { createStore } from "../../src/store"
 
 describe("createStore", () => {
   function newStore(productId: string, recoId: string) {

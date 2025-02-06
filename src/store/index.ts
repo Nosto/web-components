@@ -1,4 +1,5 @@
 import { intersectionOf } from "@/utils"
+import { addSkuToCart } from "./actions"
 
 interface State {
   selectedSkuId: string | undefined
@@ -16,11 +17,8 @@ export function createStore(productId: string, recoId: string) {
   const listeners: ChangeListener[] = []
 
   function addToCart() {
-    if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-      if (state.selectedSkuId) {
-        const skuId = state.selectedSkuId
-        window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
-      }
+    if (state.selectedSkuId) {
+      addSkuToCart({ productId, skuId: state.selectedSkuId, recoId })
     }
   }
 
