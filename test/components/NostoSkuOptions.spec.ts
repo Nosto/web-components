@@ -3,7 +3,7 @@ import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
 
-type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s"
+type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s" | "cotton" | "silk" | "wool"
 type Verification = "selected" | "unselected" | "enabled" | "disabled"
 type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
@@ -90,5 +90,64 @@ describe("Sku options side effects", () => {
 
     expect(nostoProduct.selectedSkuId).toBe("334")
     verifyATC()
+  })
+})
+
+describe("Sku options with 3 dimensions", () => {
+  it("should prune selection", () => {
+    document.body.innerHTML = `
+    <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
+      <nosto-sku-options name="colors">
+        <span black n-option n-skus="123,145">Black</span>
+        <span white n-option n-skus="223,234,245">White</span>
+        <span blue n-option n-skus="334,345">Blue</span>
+      </nosto-sku-options>
+      <nosto-sku-options name="sizes">
+        <span l n-option n-skus="123,223">L</span>
+        <span m n-option n-skus="234,334">M</span>
+        <span s n-option n-skus="145,245,345">S</span>
+      </nosto-sku-options>
+      <nosto-sku-options name="materials">
+        <span cotton n-option n-skus="123,234,345">Cotton</span>
+        <span silk n-option n-skus="145,223,334">Silk</span>
+        <span wool n-option n-skus="245">Wool</span>
+      </nosto-sku-options>  
+      <span n-atc>Add to cart</span>
+    </nosto-product>`
+
+    const colors = ["black", "white", "blue"] as const
+    const sizes = ["l", "m", "s"] as const
+    const materials = ["cotton", "silk", "wool"] as const
+
+    // material chosen
+    element("wool").click() // 245
+    verify({
+      selected: ["wool"],
+      enabled: [...materials, "white", "s"],
+      disabled: ["black", "blue", "l", "m"]
+    })
+
+    // different material chosen
+    element("silk").click() // 145,223,334
+    verify({
+      selected: ["silk"],
+      enabled: [...materials, ...colors, ...sizes]
+    })
+
+    // size chosen
+    element("m").click() // 234,334
+    verify({
+      selected: ["silk", "m"],
+      enabled: ["blue", "l", "s"],
+      disabled: ["black", "white"]
+    })
+
+    // color chosen
+    element("blue").click() // 334
+    verify({
+      selected: ["silk", "m", "blue"],
+      enabled: ["silk", "m", "blue"],
+      disabled: ["black", "white", "cotton", "s", "l", "wool"]
+    })
   })
 })
