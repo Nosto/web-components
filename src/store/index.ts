@@ -54,4 +54,18 @@ export function createStore(productId: string, recoId: string) {
   }
 }
 
+const INIT_EVENT = "nosto-store-init"
+
+export function provideStore(element: HTMLElement, store: Store) {
+  element.addEventListener(INIT_EVENT, event => {
+    event.stopPropagation()
+    const callback = (event as CustomEvent).detail as (store: Store) => void
+    callback(store)
+  })
+}
+
+export function injectStore(element: HTMLElement, cb: (store: Store) => void) {
+  element.dispatchEvent(new CustomEvent(INIT_EVENT, { detail: cb, bubbles: true }))
+}
+
 export type Store = ReturnType<typeof createStore>
