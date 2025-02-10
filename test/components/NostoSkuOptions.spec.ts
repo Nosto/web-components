@@ -3,7 +3,7 @@ import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
 
-type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s" | "cotton" | "silk" | "wool"
+type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s" | "cotton" | "silk" | "wool" | "male" | "female"
 type Verification = "selected" | "unselected" | "enabled" | "disabled"
 type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
