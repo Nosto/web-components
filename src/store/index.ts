@@ -71,4 +71,20 @@ export function createStore({ productId, recoId, skuGroupCount }: StoreProps) {
   }
 }
 
+const REQUEST_STORE = "nosto-request-store"
+
+type Callback = (store: Store) => void
+
+export function provideStore(element: HTMLElement, store: Store) {
+  element.addEventListener(REQUEST_STORE, event => {
+    event.stopPropagation()
+    const callback = (event as CustomEvent).detail as Callback
+    callback(store)
+  })
+}
+
+export function injectStore(element: HTMLElement, cb: Callback) {
+  element.dispatchEvent(new CustomEvent(REQUEST_STORE, { detail: cb, bubbles: true }))
+}
+
 export type Store = ReturnType<typeof createStore>
