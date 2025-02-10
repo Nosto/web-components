@@ -26,6 +26,7 @@ export class NostoSkuOptions extends HTMLElement {
   }
 
   private init(store: Store) {
+    store.registerOptionGroup()
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
     this.registerClickEvents(store, optionElements)
     this.registerStateChange(store, optionElements)
@@ -36,9 +37,9 @@ export class NostoSkuOptions extends HTMLElement {
     const optionId = this.name
     onChange(state => {
       const selectedSkuIds = intersectionOf(
-        ...Object.keys(state.selectedSkuOptions)
+        ...Object.keys(state.skuOptions)
           .filter(key => key !== optionId)
-          .map(key => state.selectedSkuOptions[key])
+          .map(key => state.skuOptions[key])
       )
 
       if (selectedSkuIds.length === 0) {
@@ -46,7 +47,7 @@ export class NostoSkuOptions extends HTMLElement {
         return
       }
       optionElements.forEach(option => {
-        const available = intersectionOf(getSkus(option), state.selectedSkuIdsLatest!.skuIds).length
+        const available = intersectionOf(getSkus(option), selectedSkuIds).length
         option.toggleAttribute("disabled", !available)
       })
     })

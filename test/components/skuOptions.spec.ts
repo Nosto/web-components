@@ -17,7 +17,7 @@ describe("sku options integration", () => {
     nostoProduct.innerHTML = `
       <nosto-sku-options name="colors">
         <span black n-option n-skus="123,145">Black</span>
-        <span white n-option n-skus="223,234,245 disabled">White</span>
+        <span white n-option n-skus="223,234,245">White</span>
         <span blue n-option n-skus="334,345">Blue</span>
       </nosto-sku-options>
       <nosto-sku-options name="sizes">
@@ -31,8 +31,6 @@ describe("sku options integration", () => {
     // click on option should select it
     element("[black]").click()
     expect(element("[black]").hasAttribute("selected")).toBeTruthy()
-
-    expect(element("[white]").hasAttribute("disabled")).toBeTruthy()
 
     // validate size availability
     expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
@@ -124,7 +122,7 @@ describe("sku options integration", () => {
         `
     document.body.appendChild(nostoProduct)
 
-    // m should be disabled
+    // m size should be disabled
     expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
     expect(element("[m]").hasAttribute("disabled")).toBeTruthy()
     expect(element("[s]").hasAttribute("disabled")).toBeFalsy()

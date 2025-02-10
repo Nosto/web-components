@@ -2,8 +2,9 @@ import { describe, it, expect, vi } from "vitest"
 import { createStore } from "../../src/store"
 
 describe("createStore", () => {
-  function newStore(productId: string, recoId: string, skuGroupCount: number = 1) {
-    const store = createStore({ productId, recoId, skuGroupCount })
+  function newStore(productId: string, recoId: string, optionGroupCount: number = 1) {
+    const store = createStore(productId, recoId)
+    Array.from(new Array(optionGroupCount)).forEach(_ => store.registerOptionGroup())
     const state = {} as Record<string, unknown>
     store.onChange(newState => Object.assign(state, newState))
     return [store, state] as const

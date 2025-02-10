@@ -2,30 +2,18 @@ import { intersectionOf } from "@/utils"
 
 interface State {
   selectedSkuId: string | undefined
-  selectedSkuOptions: Record<string, string[]>
-  selectedSkuIdsLatest:
-    | {
-        optionId: string
-        skuIds: string[]
-      }
-    | undefined
+  skuOptions: Record<string, string[]>
 }
 
 type ChangeListener = (state: State) => void
-type StoreProps = {
-  productId: string
-  recoId: string
-  skuGroupCount: number
-}
 
-export function createStore({ productId, recoId, skuGroupCount }: StoreProps) {
+export function createStore(productId: string, recoId: string) {
   const state: State = {
     selectedSkuId: undefined,
-    selectedSkuOptions: {},
-    selectedSkuIdsLatest: undefined
+    skuOptions: {}
   }
-
   const listeners: ChangeListener[] = []
+  let optionGroupsCount = 0
 
   function addToCart() {
     if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
@@ -42,19 +30,20 @@ export function createStore({ productId, recoId, skuGroupCount }: StoreProps) {
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
-    state.selectedSkuOptions[optionId] = skuIds
-    state.selectedSkuIdsLatest = {
-      optionId,
-      skuIds
-    }
-    const totalSelection = Object.keys(state.selectedSkuOptions).length
+    state.skuOptions[optionId] = skuIds
 
-    const selectedSkuIds = intersectionOf(...Object.values(state.selectedSkuOptions))
+    const totalSelection = Object.keys(state.skuOptions).length
 
-    if (selectedSkuIds.length === 1 && totalSelection === skuGroupCount) {
+    const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
+
+    if (selectedSkuIds.length === 1 && totalSelection === optionGroupsCount) {
       state.selectedSkuId = selectedSkuIds[0]
     }
     listeners.forEach(cb => cb(state))
+  }
+
+  function registerOptionGroup() {
+    optionGroupsCount++
   }
 
   function onChange(cb: (state: State) => void) {
@@ -67,7 +56,8 @@ export function createStore({ productId, recoId, skuGroupCount }: StoreProps) {
     addToCart,
     onChange,
     selectSkuOption,
-    selectSkuId
+    selectSkuId,
+    registerOptionGroup
   }
 }
 

@@ -94,7 +94,7 @@ describe("NostoSkuOptions side effects", () => {
     })
   })
 
-  describe.skip("Three sku option groups", () => {
+  describe("Three sku option groups", () => {
     beforeEach(() => {
       loadSkuContent()
       nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
