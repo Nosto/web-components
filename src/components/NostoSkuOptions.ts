@@ -36,11 +36,11 @@ export class NostoSkuOptions extends HTMLElement {
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     onChange(state => {
-      const selectedSkuIds = intersectionOf(
-        ...Object.keys(state.skuOptions)
-          .filter(key => key !== optionId)
-          .map(key => state.skuOptions[key])
-      )
+      if (!state.lastOptionId || state.lastOptionId === optionId) {
+        return
+      }
+
+      const selectedSkuIds = state.skuOptions[state.lastOptionId]
 
       if (selectedSkuIds.length === 0) {
         optionElements.forEach(option => option.removeAttribute("disabled"))

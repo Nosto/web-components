@@ -3,6 +3,7 @@ import { intersectionOf } from "@/utils"
 export interface State {
   selectedSkuId: string | undefined
   skuOptions: Record<string, string[]>
+  lastOptionId: string | undefined
   optionGroupCount: number
 }
 
@@ -12,6 +13,7 @@ export function createStore(productId: string, recoId: string) {
   const state: State = {
     selectedSkuId: undefined,
     skuOptions: {},
+    lastOptionId: undefined,
     optionGroupCount: 0
   }
   const listeners: ChangeListener[] = []
@@ -31,6 +33,7 @@ export function createStore(productId: string, recoId: string) {
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
+    state.lastOptionId = optionId
     state.skuOptions[optionId] = skuIds
 
     const totalSelection = Object.keys(state.skuOptions).length

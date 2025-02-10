@@ -159,8 +159,8 @@ describe("NostoSkuOptions side effects", () => {
       element("m").click() // 234,334
       verify({
         selected: ["silk", "m"],
-        enabled: ["blue", "l", "s"], // TODO: fix this. Both blue and white to be enabled
-        disabled: ["black", "white"]
+        enabled: ["blue", "white", "l", "s", "cotton"],
+        disabled: ["black", "wool"]
       })
       expect(nostoProduct.selectedSkuId).toBeUndefined()
       verifyATCSkipped()
@@ -169,8 +169,8 @@ describe("NostoSkuOptions side effects", () => {
       element("blue").click() // 334
       verify({
         selected: ["silk", "m", "blue"],
-        enabled: ["silk", "m", "blue"],
-        disabled: ["black", "white", "cotton", "s", "l", "wool"]
+        enabled: ["white", "s", "cotton"],
+        disabled: ["black", "l", "wool"]
       })
       expect(nostoProduct.selectedSkuId).toBe("334")
       verifyATCInvocation()
