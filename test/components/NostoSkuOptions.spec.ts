@@ -176,4 +176,30 @@ describe("NostoSkuOptions side effects", () => {
       verifyATCInvocation()
     })
   })
+
+  it("should prune with different path", () => {
+    // selection order shouldn't matter
+    element("blue").click() // 334
+    element("m").click() // 234,334
+    element("silk").click() // 145,223,334
+
+    verify({
+      selected: ["silk", "m", "blue"],
+      enabled: ["white", "s", "cotton"],
+      disabled: ["black", "l", "wool"]
+    })
+  })
+
+  it("should prune with different path 2", () => {
+    // selection order shouldn't matter
+    element("blue").click() // 334
+    element("silk").click() // 145,223,334
+    element("m").click() // 234,334
+
+    verify({
+      selected: ["silk", "m", "blue"],
+      enabled: ["white", "s", "cotton"],
+      disabled: ["black", "l", "wool"]
+    })
+  })
 })
