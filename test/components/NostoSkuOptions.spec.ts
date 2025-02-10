@@ -83,6 +83,8 @@ describe("NostoSkuOptions side effects", () => {
         unselected: ["black", "blue"]
       })
       verify({ enabled: ["l", "m", "s"] })
+      expect(nostoProduct.selectedSkuId).toBeUndefined()
+      verifyATCSkipped()
 
       element("m").click() // 234,334
       verify({ selected: ["m"], unselected: ["l", "s"] })
