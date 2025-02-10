@@ -1,5 +1,5 @@
 import { intersectionOf } from "@/utils"
-import { Store } from "../store"
+import { injectStore, Store } from "../store"
 
 function getSkus(element: Element) {
   return (element.getAttribute("n-skus") || "").split(",")
@@ -12,7 +12,7 @@ export class NostoSkuOptions extends HTMLElement {
 
   connectedCallback() {
     this.validate()
-    this.dispatchEvent(new CustomEvent("sku-options-init", { detail: this.init.bind(this), bubbles: true }))
+    injectStore(this, this.init.bind(this))
   }
 
   get name() {

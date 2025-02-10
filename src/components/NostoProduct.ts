@@ -1,6 +1,4 @@
-import { createStore, Store } from "../store"
-
-type Callback = (store: Store) => void
+import { createStore, provideStore, Store } from "../store"
 
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
@@ -13,14 +11,8 @@ export class NostoProduct extends HTMLElement {
   connectedCallback() {
     this.validate()
     const store = createStore(this.productId, this.recoId)
+    provideStore(this, store)
     store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
-
-    this.addEventListener("sku-options-init", event => {
-      event.stopPropagation()
-      const callback = (event as CustomEvent).detail as Callback
-      callback(store)
-    })
-
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
     this.registerATCButtons(store)
