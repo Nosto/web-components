@@ -1,5 +1,6 @@
 interface Window {
   Nosto?: {
-    addSkuToCart?: import("./types").AddSkuToCart
+    addSkuToCart?: import("./shopify").AddSkuToCart
+    migrateToShopifyMarket?: import("./shopify").MigrateToShopifyMarket
   }
 }

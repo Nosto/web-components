@@ -108,16 +108,3 @@ export interface SkuVM {
   productId: string
   url: string
 }
-
-type ProductIdentifier = {
-  productId: string
-  skuId: string
-}
-
-type SlotReference = string | HTMLElement
-
-export type AddSkuToCart = (
-  productIdentifier: ProductIdentifier,
-  element: SlotReference,
-  quantity: number
-) => Promise<unknown | undefined>
