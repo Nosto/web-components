@@ -36,18 +36,19 @@ export class NostoSkuOptions extends HTMLElement {
   private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     onChange(state => {
-      const selectedSkuIds = intersectionOf(
-        ...Object.keys(state.skuOptions)
-          .filter(key => key !== optionId)
-          .map(key => state.skuOptions[key])
-      )
-
-      if (selectedSkuIds.length === 0) {
+      const otherGroups = Object.keys(state.skuOptions)
+        .filter(key => key !== optionId)
+        .map(key => state.skuOptions[key])
+      if (otherGroups.length === 0) {
         optionElements.forEach(option => option.removeAttribute("disabled"))
         return
       }
+      function isAvailable(skuds: string[]) {
+        // an option is available if it intersects with all other groups
+        return otherGroups.every(group => intersectionOf(group, skuds).length > 0)
+      }
       optionElements.forEach(option => {
-        const available = intersectionOf(getSkus(option), selectedSkuIds).length
+        const available = isAvailable(getSkus(option))
         option.toggleAttribute("disabled", !available)
       })
     })
