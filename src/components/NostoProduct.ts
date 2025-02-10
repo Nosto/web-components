@@ -12,7 +12,7 @@ export class NostoProduct extends HTMLElement {
     this.validate()
     const store = createStore(this.productId, this.recoId)
     provideStore(this, store)
-    store.onChange(({ selectedSkuId }) => (this._selectedSkuId = selectedSkuId))
+    store.onChange(({ state }) => (this._selectedSkuId = state.selectedSkuId))
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
     this.registerATCButtons(store)

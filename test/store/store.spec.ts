@@ -5,7 +5,7 @@ describe("createStore", () => {
   function newStore(productId: string, recoId: string) {
     const store = createStore(productId, recoId)
     const state = {} as State
-    store.onChange(newState => Object.assign(state, newState))
+    store.onChange(event => Object.assign(state, event.state))
     return [store, state] as [Store, State]
   }
 

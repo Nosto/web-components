@@ -6,7 +6,12 @@ export interface State {
   optionGroupCount: number
 }
 
-type ChangeListener = (state: State) => void
+type ChangeEvent = {
+  sourceId?: string
+  state: State
+}
+
+type ChangeListener = (event: ChangeEvent) => void
 
 export function createStore(productId: string, recoId: string) {
   const state: State = {
@@ -27,7 +32,7 @@ export function createStore(productId: string, recoId: string) {
 
   function selectSkuId(skuId: string) {
     state.selectedSkuId = skuId
-    listeners.forEach(cb => cb(state))
+    listeners.forEach(cb => cb({ state }))
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
@@ -41,17 +46,15 @@ export function createStore(productId: string, recoId: string) {
         state.selectedSkuId = selectedSkuIds[0]
       }
     }
-    listeners.forEach(cb => cb(state))
+    listeners.forEach(cb => cb({ state, sourceId: optionId }))
   }
 
   function registerOptionGroup() {
     state.optionGroupCount++
   }
 
-  function onChange(cb: (state: State) => void) {
+  function onChange(cb: (changeEvent: ChangeEvent) => void) {
     listeners.push(cb)
-    // needed, since some components also trigger state changes during init
-    cb(state)
   }
 
   return {
