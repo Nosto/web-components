@@ -73,6 +73,8 @@ describe("sku options integration", () => {
     expect(nostoProduct.selectedSkuId).toBe("234")
   })
 
+  // TODO: improve the pre-selection logic handling. Currently it's too much time-bound
+  // Enable this after the improvement
   it.skip("should consider preselection (1 option)", () => {
     const nostoProduct = new NostoProduct()
     nostoProduct.setAttribute("product-id", "123")
@@ -104,6 +106,8 @@ describe("sku options integration", () => {
     expect(nostoProduct.selectedSkuId).toBe("145")
   })
 
+  // TODO: improve the pre-selection logic handling. Currently it's too much time-bound
+  // Enable this after the improvement
   it.skip("should consider preselection (2 options)", () => {
     const nostoProduct = new NostoProduct()
     nostoProduct.setAttribute("product-id", "123")
