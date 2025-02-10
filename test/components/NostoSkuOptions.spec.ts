@@ -159,7 +159,7 @@ describe("NostoSkuOptions side effects", () => {
       element("m").click() // 234,334
       verify({
         selected: ["silk", "m"],
-        enabled: ["blue", "l", "s"],
+        enabled: ["blue", "l", "s"], // TODO: fix this. Both blue and white to be enabled
         disabled: ["black", "white"]
       })
       expect(nostoProduct.selectedSkuId).toBeUndefined()
