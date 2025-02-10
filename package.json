@@ -22,7 +22,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint",
-    "test": "vitest --run -t=\"should update skuOptions and selectedSkuId when selectSkuOption is called\""
+    "test": "vitest --run"
   },
   "devDependencies": {
     "@types/eslint-config-prettier": "^6.11.3",

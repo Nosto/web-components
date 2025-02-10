@@ -35,10 +35,11 @@ export function createStore(productId: string, recoId: string) {
 
     const totalSelection = Object.keys(state.skuOptions).length
 
-    const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
-
-    if (selectedSkuIds.length === 1 && totalSelection === state.optionGroupCount) {
-      state.selectedSkuId = selectedSkuIds[0]
+    if (totalSelection === state.optionGroupCount) {
+      const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
+      if (selectedSkuIds.length === 1) {
+        state.selectedSkuId = selectedSkuIds[0]
+      }
     }
     listeners.forEach(cb => cb(state))
   }
