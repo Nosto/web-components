@@ -1,29 +1,32 @@
 import { describe, it, expect, vi } from "vitest"
-import { createStore } from "../../src/store"
+import { createStore, State, Store } from "@/store"
 
 describe("createStore", () => {
-  function newStore(productId: string, recoId: string, optionGroupCount: number = 1) {
+  function newStore(productId: string, recoId: string) {
     const store = createStore(productId, recoId)
-    Array.from(new Array(optionGroupCount)).forEach(_ => store.registerOptionGroup())
-    const state = {} as Record<string, unknown>
+    const state = {} as State
     store.onChange(newState => Object.assign(state, newState))
-    return [store, state] as const
+    return [store, state] as [Store, State]
   }
 
   it("should initialize with default state", () => {
     const [store, state] = newStore("product1", "reco1")
+    store.registerOptionGroup()
     expect(store).toBeDefined()
     expect(state).toBeDefined()
   })
 
   it("should update selectedSkuId when selectSkuId is called", () => {
     const [store, state] = newStore("product1", "reco1")
+    store.registerOptionGroup()
     store.selectSkuId("sku1")
     expect(state.selectedSkuId).toBe("sku1")
   })
 
   it("should update skuOptions and selectedSkuId when selectSkuOption is called", () => {
-    const [store, state] = newStore("product1", "reco1", 2)
+    const [store, state] = newStore("product1", "reco1")
+    store.registerOptionGroup()
+    store.registerOptionGroup()
     store.selectSkuOption("option1", ["sku1", "sku2"])
     store.selectSkuOption("option2", ["sku1"])
     expect(state.selectedSkuId).toBe("sku1")
@@ -31,6 +34,7 @@ describe("createStore", () => {
 
   it("should call addSkuToCart when addToCart is called with selectedSkuId", () => {
     const [store, state] = newStore("product1", "reco1")
+    store.registerOptionGroup()
     window.Nosto = {
       addSkuToCart: vi.fn()
     }
@@ -42,6 +46,7 @@ describe("createStore", () => {
 
   it("should not call addSkuToCart when addToCart is called without selectedSkuId", () => {
     const [store, state] = newStore("product1", "reco1")
+    store.registerOptionGroup()
     window.Nosto = {
       addSkuToCart: vi.fn()
     }

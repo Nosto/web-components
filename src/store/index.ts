@@ -1,8 +1,9 @@
 import { intersectionOf } from "@/utils"
 
-interface State {
+export interface State {
   selectedSkuId: string | undefined
   skuOptions: Record<string, string[]>
+  optionGroupCount: number
 }
 
 type ChangeListener = (state: State) => void
@@ -10,10 +11,10 @@ type ChangeListener = (state: State) => void
 export function createStore(productId: string, recoId: string) {
   const state: State = {
     selectedSkuId: undefined,
-    skuOptions: {}
+    skuOptions: {},
+    optionGroupCount: 0
   }
   const listeners: ChangeListener[] = []
-  let optionGroupsCount = 0
 
   function addToCart() {
     if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
@@ -36,14 +37,14 @@ export function createStore(productId: string, recoId: string) {
 
     const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
 
-    if (selectedSkuIds.length === 1 && totalSelection === optionGroupsCount) {
+    if (selectedSkuIds.length === 1 && totalSelection === state.optionGroupCount) {
       state.selectedSkuId = selectedSkuIds[0]
     }
     listeners.forEach(cb => cb(state))
   }
 
   function registerOptionGroup() {
-    optionGroupsCount++
+    state.optionGroupCount++
   }
 
   function onChange(cb: (state: State) => void) {
