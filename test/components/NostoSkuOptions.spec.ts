@@ -175,32 +175,6 @@ describe("NostoSkuOptions side effects", () => {
       expect(nostoProduct.selectedSkuId).toBe("334")
       verifyATCInvocation()
     })
-
-    it("should prune with different path", () => {
-      // selection order shouldn't matter
-      element("blue").click() // 334
-      element("m").click() // 234,334
-      element("silk").click() // 145,223,334
-
-      verify({
-        selected: ["silk", "m", "blue"],
-        enabled: ["white", "s", "cotton"],
-        disabled: ["black", "l", "wool"]
-      })
-    })
-
-    it("should prune with different path 2", () => {
-      // selection order shouldn't matter
-      element("blue").click() // 334
-      element("silk").click() // 145,223,334
-      element("m").click() // 234,334
-
-      verify({
-        selected: ["silk", "m", "blue"],
-        enabled: ["white", "s", "cotton"],
-        disabled: ["black", "l", "wool"]
-      })
-    })
   })
 
   it("should prune with different path", () => {
@@ -225,7 +199,7 @@ describe("NostoSkuOptions side effects", () => {
     verify({
       selected: ["silk", "m", "blue"],
       enabled: ["white", "s", "cotton", "l"],
-      disabled: ["black", "wool"]
+      disabled: ["black", "wool"] // based on skuIds when m is selected
     })
   })
 })
