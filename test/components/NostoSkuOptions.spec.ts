@@ -179,27 +179,27 @@ describe("NostoSkuOptions side effects", () => {
 
   it("should prune with different path", () => {
     // selection order shouldn't matter
-    element("blue").click() // 334
+    element("blue").click() // 334,345
     element("m").click() // 234,334
     element("silk").click() // 145,223,334
 
     verify({
       selected: ["silk", "m", "blue"],
-      enabled: ["white", "s", "cotton"],
-      disabled: ["black", "l", "wool"]
+      enabled: ["white", "s", "cotton", "black", "l"],
+      disabled: ["wool"] //disabled when m size is selected. So remains disabled
     })
   })
 
   it("should prune with different path 2", () => {
     // selection order shouldn't matter
-    element("blue").click() // 334
+    element("blue").click() // 334,345
     element("silk").click() // 145,223,334
     element("m").click() // 234,334
 
     verify({
       selected: ["silk", "m", "blue"],
-      enabled: ["white", "s", "cotton"],
-      disabled: ["black", "l", "wool"]
+      enabled: ["white", "s", "cotton", "l"],
+      disabled: ["black", "wool"]
     })
   })
 })
