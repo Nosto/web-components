@@ -100,6 +100,16 @@ describe("NostoSkuOptions side effects", () => {
       expect(nostoProduct.selectedSkuId).toBe("334")
       verifyATCInvocation()
     })
+
+    it("should not change selection when disabled option is clicked", () => {
+      element("white").click()
+      element("m").click()
+      element("blue").click()
+
+      // click on disabled element
+      element("l").click()
+      expect(element("l").hasAttribute("selected")).toBeFalsy()
+    })
   })
 
   describe("Sku options with 3 dimensions", () => {

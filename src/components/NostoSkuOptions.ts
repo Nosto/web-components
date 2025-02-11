@@ -67,6 +67,9 @@ export class NostoSkuOptions extends HTMLElement {
     const optionId = this.name
     optionElements.forEach(option => {
       option.addEventListener("click", () => {
+        if (option.hasAttribute("disabled")) {
+          return
+        }
         const skuIds = getSkus(option)
         option.toggleAttribute("selected", true)
         optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))

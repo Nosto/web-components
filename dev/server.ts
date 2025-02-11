@@ -4,13 +4,16 @@ import path, { resolve } from "path"
 import favicon from "serve-favicon"
 import dataSeed from "./data-seed"
 
-const app = express()
 const engine = new Liquid({
   root: resolve(__dirname, "templates"),
   extname: ".liquid",
   cache: process.env.NODE_ENV === "production"
 })
+engine.registerFilter("reco_data", it => {
+  return Object.values(it)
+})
 
+const app = express()
 app.engine("liquid", engine.express())
 app.set("views", resolve(__dirname, "templates"))
 app.set("view engine", "liquid")
@@ -22,32 +25,16 @@ app.use("*.css", (req, res) => {
 app.use(express.static("dist"))
 app.use(favicon(path.join(import.meta.dirname, "asset", "favcon_Nosto_32x32.png")))
 
-engine.registerFilter("reco_data", it => {
-  return Object.values(it)
-})
-
-app.get("/", (_req, res) => {
-  try {
-    res.render("select/reco-sku-select", { recs: dataSeed() })
-  } catch (e) {
-    console.error(e)
-  }
-})
-
-app.get("/sku-overlay", (req, res) => {
-  try {
-    res.render("overlay/reco-sku-overlay", { recs: dataSeed() })
-  } catch (e) {
-    console.error(e)
-  }
-})
-
-app.get("/dual", (req, res) => {
-  try {
-    res.render("dual/dual-sku", { recs: dataSeed() })
-  } catch (e) {
-    console.error(e)
-  }
+const mapping = {
+  "/": "select/reco-sku-select",
+  "/sku-overlay": "overlay/reco-sku-overlay",
+  "/dual": "dual/dual-sku",
+  "/trio": "trio/trio"
+}
+Object.entries(mapping).forEach(([path, template]) => {
+  app.get(path, (req, res) => {
+    res.render(template, { recs: dataSeed() })
+  })
 })
 
 export default app
