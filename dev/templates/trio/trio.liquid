@@ -17,19 +17,19 @@
             <div class="nosto__product-price">EUR {{ product.price }}</div>
             <div class="nosto__product-skus">
               <nosto-sku-options name="colors">
-                <span black n-option n-skus="123,145">Black</span>
-                <span white n-option n-skus="223,234,245">White</span>
-                <span blue n-option n-skus="334,345">Blue</span>
+                <span black n-option n-skus="123,145" title="L,S,Cotton,Silk,Wool">Black</span>
+                <span white n-option n-skus="223,234,245" title="L,M,S,Cotton,Silk,Wool">White</span>
+                <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">Blue</span>
               </nosto-sku-options>
               <nosto-sku-options name="sizes">
-                <span l n-option n-skus="123,223">L</span>
-                <span m n-option n-skus="234,334">M</span>
-                <span s n-option n-skus="145,245,345">S</span>
+                <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk">L</span>
+                <span m n-option n-skus="234,334" title="White,Blue,Cotton,Silk">M</span>
+                <span s n-option n-skus="145,245,345" title="Black,White,Blue,Cotton,Silk,Wool">S</span>
               </nosto-sku-options>
               <nosto-sku-options name="materials">
-                <span cotton n-option n-skus="123,234,345">Cotton</span>
-                <span silk n-option n-skus="145,223,334">Silk</span>
-                <span wool n-option n-skus="245">Wool</span>
+                <span cotton n-option n-skus="123,234,345" title="Black,White,Blue,L,M,S">Cotton</span>
+                <span silk n-option n-skus="145,223,334" title="Black,White,Blue,L,M,S">Silk</span>
+                <span wool n-option n-skus="245" title="White,S">Wool</span>
               </nosto-sku-options>  
             </div>
             <button class="btn__atc" n-atc>Add to cart</button>
