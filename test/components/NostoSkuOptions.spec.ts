@@ -3,7 +3,8 @@ import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
 
-type SkuOptionValue = "black" | "white" | "blue" | "l" | "m" | "s" | "cotton" | "silk" | "wool"
+const values = ["black", "white", "blue", "l", "m", "s", "cotton", "silk", "wool"] as const
+type SkuOptionValue = (typeof values)[number]
 type Verification = "selected" | "unselected" | "enabled" | "disabled"
 type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
@@ -14,14 +15,23 @@ function element(value: SkuOptionValue) {
   return document.querySelector<HTMLElement>(`[${value}]`)!
 }
 
-function verify({ enabled = [], disabled = [], selected = [], unselected = [] }: Options) {
-  enabled.map(element).every(el => expect(el.hasAttribute("disabled")).toBeFalsy())
-  disabled.map(element).every(el => expect(el.hasAttribute("disabled")).toBeTruthy())
-  selected.map(element).every(el => expect(el.hasAttribute("selected")).toBeTruthy())
-  unselected.map(element).every(el => expect(el.hasAttribute("selected")).toBeFalsy())
+function expectMatches(predicate: (el: HTMLElement) => boolean, expected: SkuOptionValue[] | undefined) {
+  if (expected) {
+    expect(values.filter(v => element(v) && predicate(element(v))).sort()).toEqual(expected.sort())
+  }
+}
+
+function verify({ enabled, disabled, selected, unselected }: Options) {
+  expectMatches(el => !el.hasAttribute("disabled"), enabled)
+  expectMatches(el => el.hasAttribute("disabled"), disabled)
+  expectMatches(el => el.hasAttribute("selected"), selected)
+  expectMatches(el => !el.hasAttribute("selected"), unselected)
 }
 
 describe("NostoSkuOptions side effects", () => {
+  const colors = ["black", "white", "blue"] as const
+  const sizes = ["l", "m", "s"] as const
+  const materials = ["cotton", "silk", "wool"] as const
   let nostoProduct: NostoProduct
 
   function verifyATCInvocation() {
@@ -69,9 +79,9 @@ describe("NostoSkuOptions side effects", () => {
       element("white").click() // 223,234,245
       verify({
         selected: ["white"],
-        unselected: ["black", "blue"]
+        unselected: ["black", "blue", ...sizes]
       })
-      verify({ enabled: ["l", "m", "s"] })
+      verify({ enabled: [...colors, ...sizes] })
 
       expect(nostoProduct.selectedSkuId).toBeUndefined()
     })
@@ -80,22 +90,22 @@ describe("NostoSkuOptions side effects", () => {
       element("white").click() // 223,234,245
       verify({
         selected: ["white"],
-        unselected: ["black", "blue"]
+        unselected: ["black", "blue", ...sizes]
       })
-      verify({ enabled: ["l", "m", "s"] })
+      verify({ enabled: [...colors, ...sizes] })
       expect(nostoProduct.selectedSkuId).toBeUndefined()
       verifyATCSkipped()
 
       element("m").click() // 234,334
-      verify({ selected: ["m"], unselected: ["l", "s"] })
-      verify({ enabled: ["white", "blue"], disabled: ["black"] })
+      verify({ selected: ["m", "white"], unselected: ["black", "blue", "l", "s"] })
+      verify({ enabled: [...sizes, "white", "blue"], disabled: ["black"] })
 
       expect(nostoProduct.selectedSkuId).toBe("234")
       verifyATCInvocation()
 
       element("blue").click() //334,345
-      verify({ selected: ["blue"], unselected: ["black", "white"] })
-      verify({ enabled: ["m", "s"], disabled: ["l"] })
+      verify({ selected: ["blue", "m"], unselected: ["black", "white", "l", "s"] })
+      verify({ enabled: ["blue", "white", "m", "s"], disabled: ["black", "l"] })
 
       expect(nostoProduct.selectedSkuId).toBe("334")
       verifyATCInvocation()
@@ -132,10 +142,6 @@ describe("NostoSkuOptions side effects", () => {
     }
 
     it("should prune selection", () => {
-      const colors = ["black", "white", "blue"] as const
-      const sizes = ["l", "m", "s"] as const
-      const materials = ["cotton", "silk", "wool"] as const
-
       // material chosen
       element("wool").click() // 245
       verify({
@@ -159,7 +165,7 @@ describe("NostoSkuOptions side effects", () => {
       element("m").click() // 234,334
       verify({
         selected: ["silk", "m"],
-        enabled: ["blue", "white", "l", "s", "cotton"],
+        enabled: ["blue", "white", "l", "m", "s", "silk", "cotton"],
         disabled: ["black", "wool"]
       })
       expect(nostoProduct.selectedSkuId).toBeUndefined()
@@ -169,7 +175,7 @@ describe("NostoSkuOptions side effects", () => {
       element("blue").click() // 334
       verify({
         selected: ["silk", "m", "blue"],
-        enabled: ["white", "s", "cotton"],
+        enabled: ["white", "s", "cotton", "blue", "m", "silk"],
         disabled: ["black", "l", "wool"]
       })
       expect(nostoProduct.selectedSkuId).toBe("334")
@@ -184,7 +190,7 @@ describe("NostoSkuOptions side effects", () => {
 
       verify({
         selected: ["silk", "m", "blue"],
-        enabled: ["white", "s", "cotton"],
+        enabled: ["white", "s", "cotton", "blue", "m", "silk"],
         disabled: ["black", "l", "wool"]
       })
     })
@@ -197,7 +203,7 @@ describe("NostoSkuOptions side effects", () => {
 
       verify({
         selected: ["silk", "m", "blue"],
-        enabled: ["white", "s", "cotton"],
+        enabled: ["white", "s", "cotton", "blue", "m", "silk"],
         disabled: ["black", "l", "wool"]
       })
     })
