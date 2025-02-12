@@ -1,0 +1,47 @@
+<script type="module" src="main.es.js" defer></script>
+<link rel="stylesheet" href="trio/trio.css">
+
+{% assign reco_results = recs | reco_data %}
+
+{%- for item in reco_results %}
+  <div class="block__recommendation {{ item.div_id }}">
+    <span class="reco-title">{{ item.title }}</span>
+    <div class="products">
+      {%- for product in item.products %}
+        <nosto-product product-id="{{ product.product_id }}" reco-id="{{ item.result_id }}" class="nosto__product">
+          <div class="nosto__product-image">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
+          </div>
+          <div class="nosto__product-details--card">
+            <div class="nosto__product-name">{{ product.name }}</div>
+            <div class="nosto__product-price">EUR {{ product.price }}</div>
+            <div class="nosto__product-skus">
+              <nosto-sku-options name="colors">
+                <span black n-option n-skus="123,145" title="L,S,Cotton,Silk,Wool">Black</span>
+                <span white n-option n-skus="223,234,245" title="L,M,S,Cotton,Silk,Wool">White</span>
+                <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">Blue</span>
+              </nosto-sku-options>
+              <nosto-sku-options name="sizes">
+                <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk">L</span>
+                <span m n-option n-skus="234,334" title="White,Blue,Cotton,Silk">M</span>
+                <span s n-option n-skus="145,245,345" title="Black,White,Blue,Cotton,Silk,Wool">S</span>
+              </nosto-sku-options>
+              <nosto-sku-options name="materials">
+                <span cotton n-option n-skus="123,234,345" title="Black,White,Blue,L,M,S">Cotton</span>
+                <span silk n-option n-skus="145,223,334" title="Black,White,Blue,L,M,S">Silk</span>
+                <span wool n-option n-skus="245" title="White,S">Wool</span>
+              </nosto-sku-options>  
+            </div>
+            <button class="btn__atc" n-atc>Add to cart</button>
+          </div>
+        </nosto-product>
+      {%- endfor %}
+    </div>
+  </div>
+{%- endfor %}
+
+<script>
+window.Nosto = {
+  addSkuToCart: console.log
+}
+</script>
