@@ -60,14 +60,12 @@ body {
                 padding: 5px;
                 border: 1px solid #ff66bf;
 
-                &[selected],
-                &:hover {
+                &[selected] {
                   background-color: #ff66bf;
-                  border: none;
                 }
 
                 &[disabled] {
-                  display: none;
+                  opacity: 0.2;
                 }
               }
             }
