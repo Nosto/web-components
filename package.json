@@ -17,6 +17,9 @@
       "require": "./dist/main.cjs.js"
     }
   },
+  "publishConf": {
+    "registry": "https://npm.nos.to"
+  },
   "scripts": {
     "dev": "npm run build -- --mode development && vite",
     "build": "tsc && vite build",
