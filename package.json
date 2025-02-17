@@ -18,8 +18,9 @@
     }
   },
   "scripts": {
-    "dev": "npm run build -- --mode development && vite",
-    "build": "tsc && vite build",
+    "dev": "npm run build && vite",
+    "build": "tsc && vite build --mode development",
+    "build:ci": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint",
     "test": "vitest --run"
