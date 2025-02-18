@@ -17,6 +17,13 @@
       "require": "./dist/main.cjs.js"
     }
   },
+  "publishConf": {
+    "registry": "https://npm.nos.to"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nosto/nosto-web-components.git"
+  },
   "scripts": {
     "dev": "npm run build && vite",
     "build": "tsc && vite build --mode development",
