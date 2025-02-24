@@ -33,12 +33,12 @@ export class NostoSkuOptions extends HTMLElement {
     this.handlePreselection(store, optionElements)
   }
 
-  private registerStateChange({ onChange }: Store, optionElements: HTMLElement[]) {
+  private registerStateChange({ listen }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
-    onChange(state => {
-      const otherGroups = Object.keys(state.skuOptions)
+    listen("skuOptions", skuOptions => {
+      const otherGroups = Object.keys(skuOptions)
         .filter(key => key !== optionId)
-        .map(key => state.skuOptions[key])
+        .map(key => skuOptions[key])
       if (otherGroups.length === 0) {
         optionElements.forEach(option => option.removeAttribute("disabled"))
         return
