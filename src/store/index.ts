@@ -1,12 +1,14 @@
 import { intersectionOf } from "@/utils"
 
-export interface State {
+interface State {
   selectedSkuId: string | undefined
   skuOptions: Record<string, string[]>
   optionGroupCount: number
 }
 
-type ChangeListener = (state: State) => void
+export type Events = Pick<State, "selectedSkuId" | "skuOptions">
+
+type Listener<T extends keyof Events> = (value: Events[T]) => void
 
 export function createStore(productId: string, recoId: string) {
   const state: State = {
@@ -14,7 +16,8 @@ export function createStore(productId: string, recoId: string) {
     skuOptions: {},
     optionGroupCount: 0
   }
-  const listeners: ChangeListener[] = []
+
+  const listeners: { [K in keyof Events]?: Listener<K>[] } = {}
 
   function addToCart() {
     if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
@@ -27,36 +30,40 @@ export function createStore(productId: string, recoId: string) {
 
   function selectSkuId(skuId: string) {
     state.selectedSkuId = skuId
-    listeners.forEach(cb => cb(state))
+    notify("selectedSkuId", skuId)
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
     state.skuOptions[optionId] = skuIds
+    notify("skuOptions", state.skuOptions)
 
     const totalSelection = Object.keys(state.skuOptions).length
 
     if (totalSelection === state.optionGroupCount) {
       const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
       if (selectedSkuIds.length === 1) {
-        state.selectedSkuId = selectedSkuIds[0]
+        selectSkuId(selectedSkuIds[0])
       }
     }
-    listeners.forEach(cb => cb(state))
   }
 
   function registerOptionGroup() {
     state.optionGroupCount++
   }
 
-  function onChange(cb: (state: State) => void) {
-    listeners.push(cb)
-    // needed, since some components also trigger state changes during init
-    cb(state)
+  function notify<T extends keyof Events>(k: T, v: Events[T]) {
+    listeners[k]?.forEach(cb => cb(v))
+  }
+
+  function listen<T extends keyof Events>(k: T, cb: Listener<T>) {
+    const mapping: Listener<T>[] = listeners[k] || (listeners[k] = [])
+    mapping.push(cb)
+    cb(state[k])
   }
 
   return {
     addToCart,
-    onChange,
+    listen,
     selectSkuOption,
     selectSkuId,
     registerOptionGroup

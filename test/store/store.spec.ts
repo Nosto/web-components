@@ -1,12 +1,13 @@
 import { describe, it, expect, vi } from "vitest"
-import { createStore, State, Store } from "@/store"
+import { createStore, Events } from "@/store"
 
 describe("createStore", () => {
   function newStore(productId: string, recoId: string) {
     const store = createStore(productId, recoId)
-    const state = {} as State
-    store.onChange(newState => Object.assign(state, newState))
-    return [store, state] as [Store, State]
+    const events: Partial<Events> = {}
+    store.listen("selectedSkuId", skuId => (events.selectedSkuId = skuId))
+    store.listen("skuOptions", skuOptions => (events.skuOptions = skuOptions))
+    return [store, events] as const
   }
 
   it("should initialize with default state", () => {
