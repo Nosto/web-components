@@ -1,6 +1,6 @@
 # Nosto Web Components
 
-Nosto web components provides the necessary APIs to handle side-effects of a recommendation template like ATC button events (addSkuToCart), and other platform specific APIs.
+Nosto web components provides the necessary APIs to handle side-effects of a recommendation template like "Add to cart" button events (addSkuToCart), and other platform specific APIs.
 
 **Note**:
 This package doesn't render HTML markups on it's own and the template should be provided by the user. 
@@ -32,10 +32,10 @@ The following examples of rendering product Skus are applicable only for simple 
 
 **Example #1**: 
 
-Render Product with Sku selection dropdown and an ATC button
+Render Product with Sku selection dropdown and an "Add to cart" button
 
 ```html
-<nosto-product>
+<nosto-product product-id="123456" reco-id="789011">
     ...
     ...
     <select n-sku-selector>
@@ -43,7 +43,7 @@ Render Product with Sku selection dropdown and an ATC button
         <option value="457">SKU 2</option>
     </select>
     ...
-    <div n-atc>ATC</div>
+    <div n-atc>Add to cart</div>
     ...
     ...
 </nosto-product>
@@ -51,10 +51,10 @@ Render Product with Sku selection dropdown and an ATC button
 
 **Example #2**: 
 
-Render Product with individual Sku item acting as ATC button. When using this approach, the structure 
+Render Product with individual Sku item acting as "Add to cart" button. When using this approach, the structure 
 
 ```html
-<nosto-product>
+<nosto-product product-id="123456" reco-id="789011">
     ...
     ...
     <div n-sku-id="456">
@@ -73,10 +73,10 @@ Render Product with individual Sku item acting as ATC button. When using this ap
 This component requires the following attributes to parse the markup, extract product & SKU data and attach the event handlers to the selector/button elements
 
 `n-sku-selector`
-This attribute marks the SKU select dropdown. When specified, the component attaches an `onchange` event to the element. Clicking on the ATC button adds the SKU value selected from the dropdown to the cart. 
+This attribute marks the SKU select dropdown. When specified, the component attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. 
 
 `n-sku-id`
-This option is relevant when SKU options are rendered as ATC button. This attribute supplies the ID of the SKU option value and should be supplied on the parent of ATC button
+This option is relevant when SKU options are rendered as "Add to cart" button. This attribute supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button
 
 ```html
 <div n-sku-id="456">
@@ -85,7 +85,7 @@ This option is relevant when SKU options are rendered as ATC button. This attrib
 ```
 
 `n-atc`
-Marks an element as ATC trigger and attaches click event to the element. Clicking on this element triggers `addSkuToCart` API and supplies the selected SKU Id.
+Marks an element as Add to cart trigger and attaches click event to the element. Clicking on this element triggers `addSkuToCart` API and supplies the selected SKU Id.
 
 ### NostoSkuOptions
 
@@ -191,10 +191,10 @@ Migrate to Shopify market
 
 ## Pre-selected options
 
-In addition to handling APIs, supports pre-selection of SKU options. For example in the template below, option `SKU 2` is rendered with `selected` attribute. With this template, when clicking ATC button, `SKU 2` gets added to the cart.
+In addition to handling APIs, supports pre-selection of SKU options. For example in the template below, option `SKU 2` is rendered with `selected` attribute. With this template, when clicking "Add to cart" button, `SKU 2` gets added to the cart.
 
 ```html
-<nosto-product>
+<nosto-product product-id="123456" reco-id="789011">
     ...
     ...
     <select n-sku-selector>
@@ -202,7 +202,7 @@ In addition to handling APIs, supports pre-selection of SKU options. For example
         <option value="457" selected>SKU 2</option>
     </select>
     ...
-    <button n-atc>ATC</button>
+    <button n-atc>Add to cart</button>
     ...
     ...
 </nosto-product>
@@ -211,7 +211,7 @@ In addition to handling APIs, supports pre-selection of SKU options. For example
 with `nosto-sku-options` component
 
 ```html
-<nosto-product>
+<nosto-product product-id="123456" reco-id="789011">
     ...
     ...
     <nosto-sku-options name="colors">
@@ -236,7 +236,7 @@ This functionality is applicable only when using `nosto-sku-options` component
 The component does not handle styling for disabled options and it has to be applied from the template.
 
 ```html
-<nosto-product>
+<nosto-product product-id="123456" reco-id="789011">
     ...
     ...
     <nosto-sku-options name="colors">
@@ -253,7 +253,7 @@ The component does not handle styling for disabled options and it has to be appl
 
 ### addSkuToCart
 
-API triggered when ATC button is clicked. Triggers the `addSkuToCart` API with the selected Sku Id.
+API triggered when "Add to cart" button is clicked. Triggers the `addSkuToCart` API with the selected Sku Id.
 
 ### migrateToShopifyMarket
 
