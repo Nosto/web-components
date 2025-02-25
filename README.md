@@ -3,11 +3,11 @@
 Nosto web components provides the necessary APIs to handle side-effects of a recommendation template like ATC button events (addSkuToCart), and other platform specific APIs.
 
 **Note**:
-Currently, this package doesn't render HTML markups on it's own and the template needs to be provided by the user. 
+This package doesn't render HTML markups on it's own and the template should be provided by the user. 
 
 ## Components
 
-The package currently offers the following two web components. 
+This package provides the following web components. 
 
 1. NostoProduct
 2. NostoSkuOptions
@@ -15,9 +15,12 @@ The package currently offers the following two web components.
 
 ### NostoProduct
 
-When the markup for rendering product is wrapped with `NostoProduct` component, the APIs for SKU selection and Add to cart functionality is automatically handled by the component. By encapsulating the necessary APIs, this component reduces any JavaScript logic that otherwise gets included in the template and helps the team to concentrate only on building the template rather than implementating the JavaScript logic. 
+When markup (HTML) for rendering product is wrapped with `NostoProduct` component, the APIs for SKU selection and Add to cart functionality is automatically handled by the component. By encapsulating the necessary APIs, this component reduces any JavaScript logic that are otherwise gets included in the template and helps the team to concentrate only on building the template rather than implementating the JavaScript logic. 
 
-This component requires two attributes
+#### Component attributes
+
+Two mandatory component attributes
+
 a. `product-id`
 Id of the product being rendered. For example, in reco template, this value is available in `$!product.productId` variable
 
@@ -65,7 +68,7 @@ Render Product with individual Sku item acting as ATC button. When using this ap
 </nosto-product>
 ```
 
-#### Attributes
+#### Markup Attributes
 
 This component requires the following attributes to parse the markup, extract product & SKU data and attach the event handlers to the selector/button elements
 
@@ -87,6 +90,12 @@ Marks an element as ATC trigger and attaches click event to the element. Clickin
 ### NostoSkuOptions
 
 The `NostoSkuOptions` component is recommended for cases rendering multiple SKU option groups (color, size). It manages the state and interactions of SKU options, including preselection, state changes, and click events.
+
+#### Component attribute
+Requires one mandatory attribute
+
+`name`
+A required attribute supplied on the `nosto-sku-options` element. Supplies the option group name (color/size/material etc...)
 
 **Example #1**:
 
@@ -133,10 +142,7 @@ Trio SKU selection group
 </nosto-product>
 ```
 
-#### Attributes
-
-`name`
-A required attribute supplied on the `nosto-sku-options` element. Supplies the option group name (color/size/material etc...)
+#### Markup Attributes
 
 `n-option`
 Marks an element as SKU option element
@@ -185,7 +191,7 @@ Migrate to Shopify market
 
 ## Pre-selected options
 
-In addition to handling APIs, Nosto Web Components also supports pre-selection of SKU options and disabling some SKUs by default. For example in the template below, option `SKU 2` is rendered with `selected` attribute. With this template, when clicking ATC button, `SKU 2` gets added to the cart.
+In addition to handling APIs, supports pre-selection of SKU options. For example in the template below, option `SKU 2` is rendered with `selected` attribute. With this template, when clicking ATC button, `SKU 2` gets added to the cart.
 
 ```html
 <nosto-product>
@@ -223,10 +229,10 @@ The component does not handle styling for selected options and it has to be appl
 
 ## Default disabled
 
-Similarly, cases where some options would be disabled by default is also supported. This is useful for cases when SKU options that are Out-Of-Stock needs to be hidden or greyed out. By default, the `disabled` attribute is added to all unsupported SKU options. For example, when there is no `M` size in `Blue` color, on selection of `Blue` color, the component adds `disabled` attribute to option `M`. 
+Similarly, cases where some options are be disabled by default is also supported. This is useful when SKU options that are Out-Of-Stock needs to be hidden or greyed out. By default, the `disabled` attribute is added to all unsupported SKU options. For example, when there is no `M` size in `Blue` color, on selection of `Blue` color, the component adds `disabled` attribute to option `M`. 
 
 Note:
-The default disabled options are applicable only when using `nosto-sku-options` component
+This functionality is applicable only when using `nosto-sku-options` component
 The component does not handle styling for disabled options and it has to be applied from the template.
 
 ```html
