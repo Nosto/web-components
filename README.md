@@ -22,10 +22,10 @@ When markup (HTML) for rendering product is wrapped with `NostoProduct` componen
 Two mandatory component attributes
 
 a. `product-id`
-Id of the product being rendered. For example, in reco template, this value is available in `$!product.productId` variable
+Id of the product being rendered. `$!product.productId` provides the Product Id in templates
 
 b. `reco-id`
-The Id of the recommendation being rendered. For example, in reco template, this value is available in `$!product.attributionKey` variable
+The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates
 
 **Note**:
 The following examples of rendering product Skus are applicable only for simple use-cases. For complex cases, like multi-directional SKU selections where selecting color renders the matching size and vice-versa, consider using `NostoSku` component.
@@ -125,8 +125,8 @@ Trio SKU selection group
 <nosto-product product-id="1223456" reco-id="789011">
     <nosto-sku-options name="color">
         <span n-option n-skus="123,145">Black</span>
-        <span white n-option n-skus="223,234,245">White</span>
-        <span blue n-option n-skus="334,345">Blue</span>
+        <span n-option n-skus="223,234,245">White</span>
+        <span n-option n-skus="334,345">Blue</span>
     </nosto-sku-options>
     <nosto-sku-options name="size">
         <span n-option n-skus="123,223">L</span>
@@ -148,7 +148,7 @@ Trio SKU selection group
 Marks an element as SKU option element
 
 `n-skus`
-Comma-separated value of linked SKU Ids. This value is available in `$!product.getSkuAggregateOptions`. For more info on `getSkuAggregateOptions`, please refer [getSkuAggregateOptions](#getskuaggregateoptions)
+Comma-separated value of linked SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...)
 
 ### NostoShopify
 
@@ -160,12 +160,14 @@ Migrate to Shopify market
 
 ```html
 <div id="frontpage-nosto-1" class="nosto-element">
-    <nosto-shopify>
+    <nosto-shopify markets>
         <nosto-product product-id="123456" reco-id="789011">
-            <div class="product-card nosto-item" n-handle="$!product.lastPathOfProductUrl()" >
-                <span n-url="$product.url"></span>
-                <h3 n-title>Test Product</h3>
-                <span n-description>This is a product for demonstration</span>
+            <div class="product-card nosto-item" n-handle="5-pocket-jean" >
+                <span n-url="https://shopeasy-local.myshopify.com/products/5-pocket-jean"></span>
+                <h3 n-title>5 Pocket Jean</h3>
+                <span n-description>
+                    The 5 Pocket Jean by Nigel Cabourn is your denim go-to for every occasion. 
+                </span>
                 <span class="product-price" n-price>
                     110$
                 </span>
@@ -173,14 +175,14 @@ Migrate to Shopify market
                     110$
                 </span>
                 <nosto-sku-options name="colors">
-                    <span black n-option n-skus="123,145">Black</span>
-                    <span white n-option n-skus="223,234,245">White</span>
-                    <span blue n-option n-skus="334,345">Blue</span>
+                    <span n-option n-skus="123,145">Black</span>
+                    <span n-option n-skus="223,234,245">White</span>
+                    <span n-option n-skus="334,345">Blue</span>
                 </nosto-sku-options>
                 <nosto-sku-options name="sizes">
-                    <span l n-option n-skus="123,223">L</span>
-                    <span m n-option n-skus="234,334">M</span>
-                    <span s n-option n-skus="145,245,345">S</span>
+                    <span n-option n-skus="123,223">L</span>
+                    <span n-option n-skus="234,334">M</span>
+                    <span n-option n-skus="145,245,345">S</span>
                 </nosto-sku-options>
                 <span n-atc>Add to cart</span>
             </div>
@@ -188,6 +190,27 @@ Migrate to Shopify market
     </nosto-shopify>
 </div>
 ```
+
+#### Markup attributes
+
+`n-url`
+Product URL. `$product.url` provides the product URL in templates
+
+`n-title`
+Product name. `$product.name` provides the product name in templates
+
+`n-handle`
+The last segment of product URL. `$!product.lastPathOfProductUrl()` provides the product handle in templates
+
+`n-price`
+Product price. `$!product.price` provides the product price in templates
+
+`n-list-price`
+Product list price. `$!product.listPrice` provides the product list price in templates
+
+`n-description`
+Product description. `$!product.description` provides the product description in templates
+
 
 ## Pre-selected options
 
@@ -249,43 +272,3 @@ The component does not handle styling for disabled options and it has to be appl
 </nosto-product>
 ```
 
-## APIs supported
-
-### addSkuToCart
-
-API triggered when "Add to cart" button is clicked. Triggers the `addSkuToCart` API with the selected Sku Id.
-
-### migrateToShopifyMarket
-
-Performs migration of price and text rendered in recommendation to shopify market current & language
-
-## New Velocity Model (VM) methods
-
-### getSkuAggregateOptions
-
-Accepts a single mandatory `customField` parameter and returns an aggregate of linked SkuIds for the provided custom field (color/size/material etc...)
-
-**Examples**:
-
-When a product has multiple variants (color & size) with following vairant options
-
-color-size: 
-Blue - S (10), M (11), XL (12)
-Green - M (11), XL (12)
-Red - S (10), M (11)
-
-Now the method call 
-
-```js
-$!product.getSkuAggregateOptions('color')
-```
-
-returns an array of the following objects
-
-```json
-[
-    { "optionValue": "blue", "skuIds": ["10", "11", "12"], "skus": /*array of SkuVm object*/ },
-    { "optionValue": "green", "skuIds": ["11", "12"], "skus": /*array of SkuVm object*/ }
-    { "optionValue": "red", "skuIds": ["10", "11"], "skus": /*array of SkuVm object*/ }
-]
-```
