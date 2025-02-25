@@ -1,13 +1,13 @@
 # Nosto Web Components
 
-Nosto web components provides the necessary APIs to handle side-effects of a recommendation template like "Add to cart" button events (addSkuToCart), and other platform specific APIs.
+Nosto web components provide the necessary APIs to handle side-effects of a recommendation template like "Add to cart" button events (addSkuToCart), and other platform-specific APIs.
 
 **Note**:
-This package doesn't render HTML markups on it's own and the template should be provided by the user. 
+This package doesn't render HTML markups on its own and the template should be provided by the user.
 
 ## Components
 
-This package provides the following web components. 
+This package provides the following web components:
 
 1. NostoProduct
 2. NostoSkuOptions
@@ -15,28 +15,27 @@ This package provides the following web components.
 
 ### NostoProduct
 
-When markup (HTML) for rendering product is wrapped with `NostoProduct` component, the APIs for SKU selection and Add to cart functionality is automatically handled by the component. By encapsulating the necessary APIs, this component reduces any JavaScript logic that are otherwise gets included in the template and helps the team to concentrate only on building the template rather than implementating the JavaScript logic. 
+When markup (HTML) for rendering a product is wrapped with the `NostoProduct` component, the APIs for SKU selection and Add to cart functionality are automatically handled by the component. By encapsulating the necessary APIs, this component reduces any JavaScript logic that would otherwise be included in the template and helps the team to concentrate only on building the template rather than implementing the JavaScript logic.
 
 #### Component attributes
 
-Two mandatory component attributes
+Two mandatory component attributes:
 
 a. `product-id`
-Id of the product being rendered. `$!product.productId` provides the Product Id in templates
+   - Id of the product being rendered. `$!product.productId` provides the Product Id in templates.
 
 b. `reco-id`
-The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates
+   - The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates.
 
 **Note**:
-The following examples of rendering product Skus are applicable only for simple use-cases. For complex cases, like multi-directional SKU selections where selecting color renders the matching size and vice-versa, consider using `NostoSku` component.
+The following examples of rendering product SKUs are applicable only for simple use-cases. For complex cases, like multi-directional SKU selections where selecting color renders the matching size and vice-versa, consider using the `NostoSkuOptions` component.
 
-**Example #1**: 
+**Example #1**:
 
-Render Product with Sku selection dropdown and an "Add to cart" button
+Render Product with SKU selection dropdown and an "Add to cart" button:
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
     ...
     <select n-sku-selector>
         <option value="456">SKU 1</option>
@@ -45,17 +44,15 @@ Render Product with Sku selection dropdown and an "Add to cart" button
     ...
     <div n-atc>Add to cart</div>
     ...
-    ...
 </nosto-product>
 ```
 
-**Example #2**: 
+**Example #2**:
 
-Render Product with individual Sku item acting as "Add to cart" button. When using this approach, the structure 
+Render Product with individual SKU item acting as "Add to cart" button. When using this approach, the structure
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
     ...
     <div n-sku-id="456">
         <span n-atc>Blue</span>
@@ -64,16 +61,15 @@ Render Product with individual Sku item acting as "Add to cart" button. When usi
         <span n-atc>Black</span>
     </div>
     ...
-    ...
 </nosto-product>
 ```
 
 #### Markup Attributes
 
-This component requires the following attributes to parse the markup, extract product & SKU data and attach the event handlers to the selector/button elements
+This component requires the following attributes to parse the markup, extract product & SKU data and attach the event handlers to the selector/button elements:
 
 `n-sku-selector`
-This attribute marks the SKU select dropdown. When specified, the component attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. 
+This attribute marks the SKU select dropdown. When specified, the component attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart.
 
 `n-sku-id`
 This option is relevant when SKU options are rendered as "Add to cart" button. This attribute supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button
@@ -219,14 +215,12 @@ In addition to handling APIs, supports pre-selection of SKU options. For example
 ```html
 <nosto-product product-id="123456" reco-id="789011">
     ...
-    ...
     <select n-sku-selector>
         <option value="456">SKU 1</option>
         <option value="457" selected>SKU 2</option>
     </select>
     ...
     <button n-atc>Add to cart</button>
-    ...
     ...
 </nosto-product>
 ```
@@ -236,13 +230,11 @@ with `nosto-sku-options` component
 ```html
 <nosto-product product-id="123456" reco-id="789011">
     ...
-    ...
     <nosto-sku-options name="colors">
         <span black n-option n-skus="123,145" selected>Black</span>
         <span white n-option n-skus="223,234,245">White</span>
         <span blue n-option n-skus="334,345">Blue</span>
     </nosto-sku-options>
-    ...
     ...
 </nosto-product>
 ```
@@ -261,13 +253,11 @@ The component does not handle styling for disabled options and it has to be appl
 ```html
 <nosto-product product-id="123456" reco-id="789011">
     ...
-    ...
     <nosto-sku-options name="colors">
         <span black n-option n-skus="123,145">Black</span>
         <span white n-option n-skus="223,234,245" disabled>White</span>
         <span blue n-option n-skus="334,345">Blue</span>
     </nosto-sku-options>
-    ...
     ...
 </nosto-product>
 ```
