@@ -21,11 +21,10 @@ When markup (HTML) for rendering a product is wrapped with the `NostoProduct` co
 
 Two mandatory component attributes:
 
-a. `product-id`
-   - Id of the product being rendered. `$!product.productId` provides the Product Id in templates.
-
-b. `reco-id`
-   - The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates.
+| Attribute  | Description                                                                                  |
+|------------|----------------------------------------------------------------------------------------------|
+| `product-id` | Id of the product being rendered. `$!product.productId` provides the Product Id in templates. |
+| `reco-id`    | The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates. |
 
 **Note**:
 The following examples of rendering product SKUs are applicable only for simple use-cases. For complex cases, like multi-directional SKU selections where selecting color renders the matching size and vice-versa, consider using the `NostoSkuOptions` component.
@@ -68,11 +67,10 @@ Render Product with individual SKU item acting as "Add to cart" button. When usi
 
 This component requires the following attributes to parse the markup, extract product & SKU data and attach the event handlers to the selector/button elements:
 
-`n-sku-selector`
-This attribute marks the SKU select dropdown. When specified, the component attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart.
-
-`n-sku-id`
-This option is relevant when SKU options are rendered as "Add to cart" button. This attribute supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button
+| Attribute       | Description                                                                                                                      |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `n-sku-selector`| Marks the SKU select dropdown. Attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. |
+| `n-sku-id`      | Relevant when SKU options are rendered as "Add to cart" button. Supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button.       |
 
 ```html
 <div n-sku-id="456">
@@ -90,8 +88,9 @@ The `NostoSkuOptions` component is recommended for cases rendering multiple SKU 
 #### Component attribute
 Requires one mandatory attribute
 
-`name`
-A required attribute supplied on the `nosto-sku-options` element. Supplies the option group name (color/size/material etc...)
+| Attribute | Description                                                                                   |
+|-----------|-----------------------------------------------------------------------------------------------|
+| `name`    | A required attribute supplied on the `nosto-sku-options` element. Supplies the option group name (color/size/material etc...) |
 
 **Example #1**:
 
@@ -140,11 +139,10 @@ Trio SKU selection group
 
 #### Markup Attributes
 
-`n-option`
-Marks an element as SKU option element
-
-`n-skus`
-Comma-separated value of linked SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...)
+| Attribute | Description |
+|-----------|-------------|
+| `n-option` | Marks an element as SKU option element |
+| `n-skus` | Comma-separated value of linked SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
 
 ### NostoShopify
 
@@ -189,23 +187,14 @@ Migrate to Shopify market
 
 #### Markup attributes
 
-`n-url`
-Product URL. `$product.url` provides the product URL in templates
-
-`n-title`
-Product name. `$product.name` provides the product name in templates
-
-`n-handle`
-The last segment of product URL. `$!product.lastPathOfProductUrl()` provides the product handle in templates
-
-`n-price`
-Product price. `$!product.price` provides the product price in templates
-
-`n-list-price`
-Product list price. `$!product.listPrice` provides the product list price in templates
-
-`n-description`
-Product description. `$!product.description` provides the product description in templates
+| Attribute      | Description                                                                                     |
+|----------------|-------------------------------------------------------------------------------------------------|
+| `n-url`        | Product URL. `$product.url` provides the product URL in templates                               |
+| `n-title`      | Product name. `$product.name` provides the product name in templates                            |
+| `n-handle`     | The last segment of product URL. `$!product.lastPathOfProductUrl()` provides the product handle in templates |
+| `n-price`      | Product price. `$!product.price` provides the product price in templates                        |
+| `n-list-price` | Product list price. `$!product.listPrice` provides the product list price in templates          |
+| `n-description`| Product description. `$!product.description` provides the product description in templates      |
 
 
 ## Pre-selected options
