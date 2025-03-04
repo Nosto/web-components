@@ -43,9 +43,9 @@ export class NostoSkuOptions extends HTMLElement {
         optionElements.forEach(option => option.removeAttribute("disabled"))
         return
       }
-      function isAvailable(skuds: string[]) {
+      function isAvailable(skuIds: string[]) {
         // an option is available if it intersects with all other groups
-        return otherGroups.every(group => intersectionOf(group, skuds).length > 0)
+        return otherGroups.every(group => intersectionOf(group, skuIds).length > 0)
       }
       optionElements.forEach(option => {
         const available = isAvailable(getSkus(option))
