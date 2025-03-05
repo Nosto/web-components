@@ -1,5 +1,5 @@
 {
-  "name": "nosto-web-components",
+  "name": "@nosto/web-components",
   "private": false,
   "author": {
     "name": "Nosto Solutions Oy"
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nosto/nosto-web-components.git"
+    "url": "git+https://github.com/Nosto/web-components.git"
   },
   "scripts": {
     "dev": "npm run build && vite",
