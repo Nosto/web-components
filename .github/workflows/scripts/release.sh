@@ -20,7 +20,7 @@ then
   git add $workspace/package*.json
   git commit -m 'Bump version'
   git tag -a $new_version -m "Tag $new_version for nosto-web-components"
-  git push origin master
+  git push origin main
   git push origin $new_version
   echo "new_version=${new_version}" >> $GITHUB_OUTPUT
 else
