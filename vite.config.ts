@@ -29,7 +29,7 @@ function outputOptions(mode: string) {
   if (mode === "development") {
     output.push({
       entryFileNames: "nwc.min.js",
-      dir: resolve(__dirname, "../playcart/public/jsbuild/nosto-web-components"),
+      dir: resolve(__dirname, "../playcart/public/jsbuild/web-components"),
       format: "es"
     })
   }
@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     minify: true,
     sourcemap: true,
     lib: {
-      name: "@nosto/nosto-web-components",
+      name: "@nosto/web-components",
       entry: [resolve(__dirname, "src/main.ts")],
       formats: ["es", "cjs"],
       fileName: (format, name) => `${name}.${format}.js`
