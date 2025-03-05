@@ -1,6 +1,6 @@
 {
   "name": "nosto-web-components",
-  "private": true,
+  "private": false,
   "author": {
     "name": "Nosto Solutions Oy"
   },
