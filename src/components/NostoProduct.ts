@@ -69,7 +69,7 @@ export class NostoProduct extends HTMLElement {
         }
         addToCart()
         this.placementId &&
-          triggerPlacementEvent(ATC_COMPLETE, `[id="${this.placementId}"]`, {
+          triggerPlacementEvent(ATC_COMPLETE, this.placementId, {
             productId: this.productId,
             skuId: this.selectedSkuId!
           })

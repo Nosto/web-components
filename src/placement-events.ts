@@ -5,10 +5,10 @@ type EventDetail = {
 
 export const ATC_COMPLETE = "nosto:atc:complete"
 
-export function triggerPlacementEvent(type: string, selector: string, detail: EventDetail) {
-  const eventTarget = document.querySelector(selector)
+export function triggerPlacementEvent(type: string, placementId: string, detail: EventDetail) {
+  const eventTarget = document.querySelector(`[id="${placementId}"]`)
   if (!eventTarget) {
-    console.error(`Element ${selector} to trigger event ${type} not found`)
+    console.error(`Placement with id ${placementId} to trigger event ${type} not found`)
     return
   }
   const event = new CustomEvent(type, {
