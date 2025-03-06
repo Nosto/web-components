@@ -9,8 +9,8 @@ describe("NostoShopify", () => {
     document.body.innerHTML = ""
   })
 
-  it("should throw an exception if not wrapped in a nosto-element", () => {
-    expect(() => element.connectedCallback()).toThrow("Found no wrapper element with class 'nosto-element'")
+  it("should throw an exception if not wrapped in a nosto_element", () => {
+    expect(() => element.connectedCallback()).toThrow("Found no wrapper element with class 'nosto_element'")
   })
 
   it("should call window.Nosto.migrateToShopifyMarket with correct parameters", () => {
@@ -20,7 +20,7 @@ describe("NostoShopify", () => {
     window.Nosto = mockNosto
 
     const wrapper = document.createElement("div")
-    wrapper.classList.add("nosto-element")
+    wrapper.classList.add("nosto_element")
     wrapper.id = "test-campaign"
     document.body.appendChild(wrapper)
 
