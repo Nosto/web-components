@@ -2,7 +2,7 @@ import { ATC_COMPLETE, triggerPlacementEvent } from "@/placement-events"
 import { createStore, provideStore, Store } from "../store"
 
 export class NostoProduct extends HTMLElement {
-  static observedAttributes = ["product-id", "reco-id", "placement-id"]
+  static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
 
   constructor() {
@@ -29,10 +29,6 @@ export class NostoProduct extends HTMLElement {
 
   get recoId() {
     return this.getAttribute("reco-id")!
-  }
-
-  get placementId() {
-    return this.getAttribute("placement-id")
   }
 
   private validate() {
@@ -62,13 +58,13 @@ export class NostoProduct extends HTMLElement {
 
   private registerATCButtons({ addToCart, selectSkuId }: Store) {
     this.querySelectorAll("[n-atc]").forEach(element =>
-      element.addEventListener("click", () => {
+      element.addEventListener("click", async () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
         if (skuId) {
           selectSkuId(skuId)
         }
-        addToCart()
-        triggerPlacementEvent(ATC_COMPLETE, this.placementId, {
+        await addToCart()
+        triggerPlacementEvent(ATC_COMPLETE, element, {
           productId: this.productId,
           skuId: this.selectedSkuId!
         })
