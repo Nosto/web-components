@@ -1,7 +1,8 @@
+import { ATC_COMPLETE, triggerPlacementEvent } from "@/placement-events"
 import { createStore, provideStore, Store } from "../store"
 
 export class NostoProduct extends HTMLElement {
-  static observedAttributes = ["product-id", "reco-id"]
+  static observedAttributes = ["product-id", "reco-id", "placement-id"]
   private _selectedSkuId: string | undefined
 
   constructor() {
@@ -28,6 +29,10 @@ export class NostoProduct extends HTMLElement {
 
   get recoId() {
     return this.getAttribute("reco-id")!
+  }
+
+  get placementId() {
+    return this.getAttribute("placement-id")
   }
 
   private validate() {
@@ -63,6 +68,11 @@ export class NostoProduct extends HTMLElement {
           selectSkuId(skuId)
         }
         addToCart()
+        this.placementId &&
+          triggerPlacementEvent(ATC_COMPLETE, `[id="${this.placementId}"]`, {
+            productId: this.productId,
+            skuId: this.selectedSkuId!
+          })
       })
     )
   }

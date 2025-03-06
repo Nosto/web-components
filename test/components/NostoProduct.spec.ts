@@ -15,7 +15,7 @@ describe("NostoProduct", () => {
     })
 
     it("should have observed attributes", () => {
-      expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id"])
+      expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id", "placement-id"])
     })
 
     it("should throw an error if no attribute is provided", () => {
@@ -57,6 +57,18 @@ describe("NostoProduct", () => {
         "789",
         1
       )
+    }
+
+    function checkATCCompleteEvent(done: (value: void | PromiseLike<void>) => void) {
+      const placement = document.querySelector('[id="testpage-nosto-1"]')
+      expect(placement).not.toBeNull()
+      placement!.addEventListener("nosto:atc:complete", (event: Event) => {
+        expect((event as CustomEvent).detail).toEqual({
+          productId: "123",
+          skuId: element.selectedSkuId
+        })
+        done()
+      })
     }
 
     it("should not throw an error if all required attributes are provided", () => {
@@ -114,5 +126,24 @@ describe("NostoProduct", () => {
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
       checkProductAtc()
     })
+
+    it("should trigger nosto:atc:complete after add to cart", () =>
+      new Promise<void>(done => {
+        document.body.innerHTML = `
+      <div class="nosto-element" id="testpage-nosto-1"></div>
+    `
+        element.setAttribute("placement-id", "testpage-nosto-1")
+
+        element.innerHTML = `
+      <div n-sku-id="234">1st sku</div>
+      <div n-sku-id="345">end sku</div>
+      <div n-atc>ATC</div>
+    `
+        element.connectedCallback()
+
+        element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+        checkATCCompleteEvent(done)
+        checkProductAtc()
+      }))
   })
 })
