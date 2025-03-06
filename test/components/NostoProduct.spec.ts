@@ -52,7 +52,7 @@ describe("NostoProduct", () => {
 
     function checkATC(atcElement: HTMLElement) {
       atcElement.click()
-      expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
+      expect(window.Nosto!.addSkuToCart).toHaveBeenLastCalledWith(
         { productId: "123", skuId: element.selectedSkuId },
         "789",
         1
@@ -111,7 +111,12 @@ describe("NostoProduct", () => {
     `
       element.connectedCallback()
 
+      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(element.selectedSkuId).toBe("234")
+      checkProductAtc()
+
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(element.selectedSkuId).toBe("345")
       checkProductAtc()
     })
   })

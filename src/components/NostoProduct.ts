@@ -15,7 +15,8 @@ export class NostoProduct extends HTMLElement {
     store.listen("selectedSkuId", selectedSkuId => (this._selectedSkuId = selectedSkuId))
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
-    this.registerATCButtons(store)
+    this.registerProductATCButtons(store)
+    this.registerSkuATCButtons(store)
   }
 
   get productId() {
@@ -55,9 +56,23 @@ export class NostoProduct extends HTMLElement {
     })
   }
 
-  private registerATCButtons({ addToCart, selectSkuId }: Store) {
-    this.querySelectorAll("[n-atc]").forEach(element =>
-      element.addEventListener("click", () => {
+  private registerProductATCButtons({ addToCart, selectSkuId }: Store) {
+    this.querySelectorAll(":scope > [n-atc]").forEach(element =>
+      element.addEventListener("click", (event: Event) => {
+        event.stopPropagation()
+        const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
+        if (skuId) {
+          selectSkuId(skuId)
+        }
+        addToCart()
+      })
+    )
+  }
+
+  private registerSkuATCButtons({ addToCart, selectSkuId }: Store) {
+    this.querySelectorAll("[n-sku-id] > [n-atc]").forEach(element =>
+      element.addEventListener("click", (event: Event) => {
+        event.stopPropagation()
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
         if (skuId) {
           selectSkuId(skuId)
