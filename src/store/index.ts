@@ -28,7 +28,7 @@ export function createStore(productId: string, recoId: string) {
     }
   }
 
-  function selectSkuId(skuId: string | undefined) {
+  function selectSkuId(skuId: string) {
     state.selectedSkuId = skuId
     notify("selectedSkuId", skuId)
   }
