@@ -56,15 +56,13 @@ export class NostoProduct extends HTMLElement {
     })
   }
 
-  private registerProductATCButtons({ addToCart, selectSkuId }: Store) {
+  private registerProductATCButtons({ addToCart }: Store) {
     this.querySelectorAll(":scope > [n-atc]").forEach(element =>
       element.addEventListener("click", (event: Event) => {
         event.stopPropagation()
-        const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
-        if (skuId) {
-          selectSkuId(skuId)
+        if (this.selectedSkuId) {
+          addToCart()
         }
-        addToCart()
       })
     )
   }
