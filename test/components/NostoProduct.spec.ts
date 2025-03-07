@@ -110,6 +110,19 @@ describe("NostoProduct", () => {
       checkSkuAddToCart("456")
     })
 
+    it("should toggle n-sku-selected attribute when selectedSkuId changes", () => {
+      element.innerHTML = `
+      <div n-sku-id="456">
+        <div n-atc>Add to Cart</div>
+      </div>
+    `
+      element.connectedCallback()
+
+      expect(element.hasAttribute("n-sku-selected")).toBe(false)
+      element.querySelector<HTMLElement>("[n-atc]")!.click()
+      expect(element.hasAttribute("n-sku-selected")).toBe(true)
+    })
+
     it("should handle [n-atc] on every individual sku option", () => {
       element.innerHTML = `
       <div n-sku-id="456">

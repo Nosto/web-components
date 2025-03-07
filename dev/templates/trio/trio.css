@@ -1,86 +1,89 @@
 body {
-  font-family:
-    Albert Sans,
-    sans-serif;
+  font-family: Albert Sans, sans-serif;
   overflow: hidden;
+}
 
-  .block__recommendation {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.block__recommendation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-    .reco-title {
-      font-weight: bold;
-      font-size: larger;
-      text-transform: uppercase;
-    }
+.reco-title {
+  font-weight: bold;
+  font-size: larger;
+  text-transform: uppercase;
+}
 
-    .products {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      overflow: auto hidden;
-      scrollbar-width: none;
+.products {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow: auto hidden;
+  scrollbar-width: none;
+}
 
-      nosto-product {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+nosto-product {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-        .nosto__product-image > img {
-          border-radius: 10px;
-          object-fit: cover;
-        }
+.nosto__product-image > img {
+  border-radius: 10px;
+  object-fit: cover;
+}
 
-        .nosto__product-details--card {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
+.nosto__product-details--card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-          .nosto__product-name {
-            color: #ff66bf;
-          }
+.nosto__product-name {
+  color: #ff66bf;
+}
 
-          .nosto__product-price {
-            font-size: large;
-            font-weight: bold;
-          }
+.nosto__product-price {
+  font-size: large;
+  font-weight: bold;
+}
 
-          .nosto__product-skus {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+.nosto__product-skus {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-            nosto-sku-options {
-              display: flex;
-              gap: 10px;
-              cursor: pointer;
+nosto-sku-options {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+}
 
-              span {
-                padding: 5px;
-                border: 1px solid #ff66bf;
+nosto-sku-options span {
+  padding: 5px;
+  border: 1px solid #ff66bf;
+}
 
-                &[selected] {
-                  background-color: #ff66bf;
-                }
+nosto-sku-options span[selected] {
+  background-color: #ff66bf;
+}
 
-                &[disabled] {
-                  opacity: 0.2;
-                }
-              }
-            }
-          }
+nosto-sku-options span[disabled] {
+  opacity: 0.2;
+}
 
-          .btn__atc {
-            padding: 10px;
-            border-radius: 50px;
-            border: none;
-            background: #ff66bf;
-            color: #fff;
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  }
+.btn__atc {
+  padding: 10px;
+  border-radius: 50px;
+  border: none;
+  background: #ff66bf;
+  color: #fff;
+  cursor: pointer;
+}
+
+nosto-product:not([n-sku-selected]) .btn__atc {
+  background: #ccc;
+  cursor: not-allowed;
 }
