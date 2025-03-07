@@ -10,7 +10,7 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     this.validate()
-    const store = createStore(this, this.productId, this.recoId)
+    const store = createStore(this)
     provideStore(this, store)
     store.listen("selectedSkuId", selectedSkuId => (this._selectedSkuId = selectedSkuId))
     this.registerSKUSelectors(store)
@@ -57,12 +57,12 @@ export class NostoProduct extends HTMLElement {
 
   private registerATCButtons({ addToCart, selectSkuId }: Store) {
     this.querySelectorAll("[n-atc]").forEach(element =>
-      element.addEventListener("click", () => {
+      element.addEventListener("click", async () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
         if (skuId) {
           selectSkuId(skuId)
         }
-        addToCart()
+        await addToCart()
       })
     )
   }

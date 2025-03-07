@@ -1,9 +1,13 @@
 import { describe, it, expect, vi } from "vitest"
 import { createStore, Events } from "@/store"
+import { NostoProduct } from "@/components/NostoProduct"
 
 describe("createStore", () => {
   function newStore(productId: string, recoId: string) {
-    const store = createStore(document.createElement("div"), productId, recoId)
+    const element = new NostoProduct()
+    element.setAttribute("product-id", productId)
+    element.setAttribute("reco-id", recoId)
+    const store = createStore(element)
     const events: Partial<Events> = {}
     store.listen("selectedSkuId", skuId => (events.selectedSkuId = skuId))
     store.listen("skuOptions", skuOptions => (events.skuOptions = skuOptions))
