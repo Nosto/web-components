@@ -15,7 +15,7 @@ export class NostoProduct extends HTMLElement {
     provideStore(this, store)
     store.listen("selectedSkuId", selectedSkuId => {
       this._selectedSkuId = selectedSkuId
-      this.toggleAttribute("n-sku-selected", !!selectedSkuId)
+      this.toggleAttribute("sku-selected", !!selectedSkuId)
     })
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)

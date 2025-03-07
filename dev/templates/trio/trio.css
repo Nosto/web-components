@@ -83,7 +83,7 @@ nosto-sku-options span[disabled] {
   cursor: pointer;
 }
 
-nosto-product:not([n-sku-selected]) .btn__atc {
+nosto-product:not([sku-selected]) .btn__atc {
   background: #ccc;
   cursor: not-allowed;
 }
