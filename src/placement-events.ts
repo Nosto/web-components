@@ -1,12 +1,14 @@
 type Events = {
-  complete: {
+  "atc:complete": {
     productId: string
     skuId: string
   }
-  "no-sku": {
+  "atc:no-sku-selected": {
     productId: string
   }
 }
+
+export type EventName = keyof Events
 
 export function triggerPlacementEvent<E extends keyof Events>(type: E, sourceElement: Element, detail: Events[E]) {
   const eventTarget = sourceElement.closest('.nosto_element[id]:not(.nosto_element[id=""])')
@@ -14,7 +16,7 @@ export function triggerPlacementEvent<E extends keyof Events>(type: E, sourceEle
     console.warn(`Unable to locate the wrapper placement to trigger ${type} event`)
     return
   }
-  const event = new CustomEvent(`nosto:atc:${type}`, {
+  const event = new CustomEvent(`nosto:${type}`, {
     bubbles: true,
     cancelable: true,
     detail

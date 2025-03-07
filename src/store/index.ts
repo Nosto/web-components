@@ -24,16 +24,16 @@ export function createStore(element: NostoProduct) {
 
   async function addToCart() {
     if (state.selectedSkuId) {
-      if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
+      if (typeof window.Nosto?.addSkuToCart === "function") {
         const skuId = state.selectedSkuId
         await window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
-        triggerPlacementEvent("complete", element, {
+        triggerPlacementEvent("atc:complete", element, {
           productId,
           skuId
         })
       }
     } else {
-      triggerPlacementEvent("no-sku", element, { productId })
+      triggerPlacementEvent("atc:no-sku-selected", element, { productId })
     }
   }
 

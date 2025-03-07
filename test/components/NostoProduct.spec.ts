@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
+import { EventName } from "@/placement-events"
 
 describe("NostoProduct", () => {
   let element: NostoProduct
@@ -62,10 +63,10 @@ describe("NostoProduct", () => {
       )
     }
 
-    async function waitForPlacementEvent(eventType: string) {
+    async function waitForPlacementEvent(eventType: EventName) {
       return new Promise(resolve => {
         const placement = document.querySelector<HTMLElement>(`[id="${DIV_ID}"]`)
-        placement!.addEventListener(eventType, (event: Event) => resolve((event as CustomEvent).detail))
+        placement!.addEventListener(`nosto:${eventType}`, (event: Event) => resolve((event as CustomEvent).detail))
       })
     }
 
@@ -81,7 +82,7 @@ describe("NostoProduct", () => {
 
     async function checkAddToCartCompleteEvent(atcElement: HTMLElement) {
       atcElement!.click()
-      const detail = await waitForPlacementEvent("nosto:atc:complete")
+      const detail = await waitForPlacementEvent("atc:complete")
 
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
         { productId: PROD_ID, skuId: element.selectedSkuId },
@@ -119,7 +120,7 @@ describe("NostoProduct", () => {
       placementElement.appendChild(element)
       document.body.appendChild(placementElement)
 
-      const detail = waitForPlacementEvent("nosto:atc:no-sku")
+      const detail = waitForPlacementEvent("atc:no-sku-selected")
       element.querySelector<HTMLElement>("[n-atc]")!.click()
       expect(await detail).toEqual({ productId: PROD_ID })
     })
