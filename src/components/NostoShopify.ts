@@ -6,9 +6,9 @@ export class NostoShopify extends HTMLElement {
   }
 
   connectedCallback() {
-    const campaignId = this.closest(".nosto-element")?.id
+    const campaignId = this.closest(".nosto_element")?.id
     if (!campaignId) {
-      throw new Error("Found no wrapper element with class 'nosto-element'")
+      throw new Error("Found no wrapper element with class 'nosto_element'")
     }
     if (this.hasAttribute("markets")) {
       migrateToShopifyMarket(campaignId)

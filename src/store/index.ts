@@ -19,11 +19,11 @@ export function createStore(productId: string, recoId: string) {
 
   const listeners: { [K in keyof Events]?: Listener<K>[] } = {}
 
-  function addToCart() {
+  async function addToCart() {
     if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
       if (state.selectedSkuId) {
         const skuId = state.selectedSkuId
-        window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
+        await window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
       }
     }
   }
