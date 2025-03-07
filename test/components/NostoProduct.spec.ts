@@ -72,12 +72,12 @@ describe("NostoProduct", () => {
 
     async function checkProductAddToCartCompleteEvent() {
       const atc = element.querySelector<HTMLElement>("[n-atc]")
-      checkAddToCartCompleteEvent(atc!)
+      await checkAddToCartCompleteEvent(atc!)
     }
 
-    function checkSkuAddToCartCompleteEvent(skuId: string) {
+    async function checkSkuAddToCartCompleteEvent(skuId: string) {
       const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
-      checkAddToCartCompleteEvent(atc!)
+      await checkAddToCartCompleteEvent(atc!)
     }
 
     async function checkAddToCartCompleteEvent(atcElement: HTMLElement) {
@@ -168,7 +168,7 @@ describe("NostoProduct", () => {
       await checkProductAddToCartCompleteEvent()
     })
 
-    it("should trigger nosto:atc:complete after sku add to cart", () => {
+    it("should trigger nosto:atc:complete after sku add to cart", async () => {
       const placementElement = document.createElement("div")
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
@@ -184,8 +184,8 @@ describe("NostoProduct", () => {
       placementElement.appendChild(element)
       document.body.appendChild(placementElement)
 
-      checkSkuAddToCartCompleteEvent("456")
-      checkSkuAddToCartCompleteEvent("101")
+      await checkSkuAddToCartCompleteEvent("456")
+      await checkSkuAddToCartCompleteEvent("101")
     })
   })
 })
