@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
-import { ATC_COMPLETE, EventDetail } from "@/placement-events"
+import { EVENT_TYPE_ADD_TO_CART_COMPLETE, EventDetail } from "@/placement-events"
 
 describe("NostoProduct", () => {
   let element: NostoProduct
@@ -37,24 +37,24 @@ describe("NostoProduct", () => {
     })
   })
 
-  describe("verify ATC", () => {
+  describe("verify Add to cart", () => {
     beforeEach(() => {
       element.setAttribute("product-id", PROD_ID)
       element.setAttribute("reco-id", RECO_ID)
       window.Nosto = { addSkuToCart: vi.fn(() => Promise.resolve()) }
     })
 
-    function checkSkuAtc(skuId: string) {
+    function checkSkuAddToCart(skuId: string) {
       const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
-      checkAtc(atc!)
+      checkAddToCart(atc!)
     }
 
-    function checkProductAtc() {
+    function checkProductAddToCart() {
       const atc = element.querySelector<HTMLElement>("[n-atc]")
-      checkAtc(atc!)
+      checkAddToCart(atc!)
     }
 
-    function checkAtc(atcElement: HTMLElement) {
+    function checkAddToCart(atcElement: HTMLElement) {
       atcElement.click()
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
         { productId: PROD_ID, skuId: element.selectedSkuId },
@@ -70,19 +70,19 @@ describe("NostoProduct", () => {
       })
     }
 
-    async function checkProductAtcCompleteEvent() {
+    async function checkProductAddToCartCompleteEvent() {
       const atc = element.querySelector<HTMLElement>("[n-atc]")
-      checkAtcCompleteEvent(atc!)
+      checkAddToCartCompleteEvent(atc!)
     }
 
-    function checkSkuAtcCompleteEvent(skuId: string) {
+    function checkSkuAddToCartCompleteEvent(skuId: string) {
       const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
-      checkAtcCompleteEvent(atc!)
+      checkAddToCartCompleteEvent(atc!)
     }
 
-    async function checkAtcCompleteEvent(atcElement: HTMLElement) {
+    async function checkAddToCartCompleteEvent(atcElement: HTMLElement) {
       atcElement!.click()
-      const detail = await waitForPlacementEvent(ATC_COMPLETE)
+      const detail = await waitForPlacementEvent(EVENT_TYPE_ADD_TO_CART_COMPLETE)
 
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
         { productId: PROD_ID, skuId: element.selectedSkuId },
@@ -102,12 +102,12 @@ describe("NostoProduct", () => {
     it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
       element.innerHTML = `
       <div n-sku-id="456">
-        <div n-atc>ATC</div>
+        <div n-atc>Add to Cart</div>
       </div>
     `
       element.connectedCallback()
 
-      checkSkuAtc("456")
+      checkSkuAddToCart("456")
     })
 
     it("should handle [n-atc] on every individual sku option", () => {
@@ -121,8 +121,8 @@ describe("NostoProduct", () => {
     `
       element.connectedCallback()
 
-      checkSkuAtc("456")
-      checkSkuAtc("101")
+      checkSkuAddToCart("456")
+      checkSkuAddToCart("101")
     })
 
     it("should pick n-sku-selector change events", () => {
@@ -131,24 +131,24 @@ describe("NostoProduct", () => {
         <option value="456">SKU 1</option>
         <option value="457" selected>SKU 2</option>
       </select>
-      <div n-atc>ATC</div>
+      <div n-atc>Add to cart</div>
       `
       element.connectedCallback()
 
       element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
-      checkProductAtc()
+      checkProductAddToCart()
     })
 
     it("should pick up [n-sku-id] clicks", () => {
       element.innerHTML = `
       <div n-sku-id="234">1st sku</div>
       <div n-sku-id="345">end sku</div>
-      <div n-atc>ATC</div>
+      <div n-atc>Add to cart</div>
     `
       element.connectedCallback()
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      checkProductAtc()
+      checkProductAddToCart()
     })
 
     it("should trigger nosto:atc:complete after product add to cart", async () => {
@@ -159,13 +159,13 @@ describe("NostoProduct", () => {
       element.innerHTML = `
       <div n-sku-id="234">1st sku</div>
       <div n-sku-id="345">end sku</div>
-      <div n-atc>ATC</div>
+      <div n-atc>Add to cart</div>
     `
       placementElement.appendChild(element)
       document.body.appendChild(placementElement)
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      await checkProductAtcCompleteEvent()
+      await checkProductAddToCartCompleteEvent()
     })
 
     it("should trigger nosto:atc:complete after sku add to cart", () => {
@@ -184,8 +184,8 @@ describe("NostoProduct", () => {
       placementElement.appendChild(element)
       document.body.appendChild(placementElement)
 
-      checkSkuAtcCompleteEvent("456")
-      checkSkuAtcCompleteEvent("101")
+      checkSkuAddToCartCompleteEvent("456")
+      checkSkuAddToCartCompleteEvent("101")
     })
   })
 })

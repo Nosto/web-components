@@ -3,11 +3,11 @@ export type EventDetail = {
   skuId: string
 }
 
-export const ATC_COMPLETE = "nosto:atc:complete"
+export const EVENT_TYPE_ADD_TO_CART_COMPLETE = "nosto:atc:complete"
 
 export function triggerPlacementEvent(type: string, sourceElement: Element, detail: EventDetail) {
-  const eventTarget = sourceElement.closest("div.nosto_element")
-  if (!eventTarget || !eventTarget.getAttribute("id")) {
+  const eventTarget = sourceElement.closest('div.nosto_element[id]:not(div.nosto_element[id=""])')
+  if (!eventTarget) {
     console.warn(`Unable to locate the wrapper placement to trigger ${type} event`)
     return
   }

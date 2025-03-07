@@ -1,4 +1,4 @@
-import { ATC_COMPLETE, triggerPlacementEvent } from "@/placement-events"
+import { EVENT_TYPE_ADD_TO_CART_COMPLETE, triggerPlacementEvent } from "@/placement-events"
 import { createStore, provideStore, Store } from "../store"
 
 export class NostoProduct extends HTMLElement {
@@ -64,7 +64,7 @@ export class NostoProduct extends HTMLElement {
           selectSkuId(skuId)
         }
         await addToCart()
-        triggerPlacementEvent(ATC_COMPLETE, element, {
+        triggerPlacementEvent(EVENT_TYPE_ADD_TO_CART_COMPLETE, element, {
           productId: this.productId,
           skuId: this.selectedSkuId!
         })
