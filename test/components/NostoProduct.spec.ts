@@ -64,9 +64,9 @@ describe("NostoProduct", () => {
     }
 
     async function waitForPlacementEvent(eventType: string) {
-      return new Promise<EventDetail>(done => {
+      return new Promise<EventDetail>(resolve => {
         const placement = document.querySelector<HTMLElement>(`[id="${DIV_ID}"]`)
-        placement!.addEventListener(eventType, (event: Event) => done((event as CustomEvent).detail))
+        placement!.addEventListener(eventType, (event: Event) => resolve((event as CustomEvent).detail))
       })
     }
 
