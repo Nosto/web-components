@@ -1,4 +1,3 @@
-import { EVENT_TYPE_ADD_TO_CART_COMPLETE, triggerPlacementEvent } from "@/placement-events"
 import { createStore, provideStore, Store } from "../store"
 
 export class NostoProduct extends HTMLElement {
@@ -11,7 +10,7 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     this.validate()
-    const store = createStore(this.productId, this.recoId)
+    const store = createStore(this, this.productId, this.recoId)
     provideStore(this, store)
     store.listen("selectedSkuId", selectedSkuId => (this._selectedSkuId = selectedSkuId))
     this.registerSKUSelectors(store)
@@ -58,16 +57,12 @@ export class NostoProduct extends HTMLElement {
 
   private registerATCButtons({ addToCart, selectSkuId }: Store) {
     this.querySelectorAll("[n-atc]").forEach(element =>
-      element.addEventListener("click", async () => {
+      element.addEventListener("click", () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
         if (skuId) {
           selectSkuId(skuId)
         }
-        await addToCart()
-        triggerPlacementEvent(EVENT_TYPE_ADD_TO_CART_COMPLETE, element, {
-          productId: this.productId,
-          skuId: this.selectedSkuId!
-        })
+        addToCart()
       })
     )
   }

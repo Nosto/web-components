@@ -3,7 +3,7 @@ import { createStore, Events } from "@/store"
 
 describe("createStore", () => {
   function newStore(productId: string, recoId: string) {
-    const store = createStore(productId, recoId)
+    const store = createStore(document.createElement("div"), productId, recoId)
     const events: Partial<Events> = {}
     store.listen("selectedSkuId", skuId => (events.selectedSkuId = skuId))
     store.listen("skuOptions", skuOptions => (events.skuOptions = skuOptions))

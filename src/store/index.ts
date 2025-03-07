@@ -1,3 +1,4 @@
+import { EVENT_TYPE_ADD_TO_CART_COMPLETE, triggerPlacementEvent } from "@/placement-events"
 import { intersectionOf } from "@/utils"
 
 interface State {
@@ -10,7 +11,7 @@ export type Events = Pick<State, "selectedSkuId" | "skuOptions">
 
 type Listener<T extends keyof Events> = (value: Events[T]) => void
 
-export function createStore(productId: string, recoId: string) {
+export function createStore(element: HTMLElement, productId: string, recoId: string) {
   const state: State = {
     selectedSkuId: undefined,
     skuOptions: {},
@@ -24,6 +25,10 @@ export function createStore(productId: string, recoId: string) {
       if (state.selectedSkuId) {
         const skuId = state.selectedSkuId
         await window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
+        triggerPlacementEvent(EVENT_TYPE_ADD_TO_CART_COMPLETE, element, {
+          productId,
+          skuId
+        })
       }
     }
   }
