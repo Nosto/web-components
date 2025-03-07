@@ -86,6 +86,16 @@ describe("NostoSkuOptions side effects", () => {
       expect(nostoProduct.selectedSkuId).toBeUndefined()
     })
 
+    it("should reflect sku selection in both property and attribute", () => {
+      element("white").click()
+      expect(nostoProduct.selectedSkuId).toBe(undefined)
+      expect(nostoProduct.hasAttribute("sku-selected")).toBe(false)
+
+      element("m").click()
+      expect(nostoProduct.selectedSkuId).toBe("234")
+      expect(nostoProduct.hasAttribute("sku-selected")).toBe(true)
+    })
+
     it("should provide selection side effects on SKU selection", () => {
       element("white").click() // 223,234,245
       verify({

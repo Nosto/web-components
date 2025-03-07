@@ -12,7 +12,10 @@ export class NostoProduct extends HTMLElement {
     this.validate()
     const store = createStore(this)
     provideStore(this, store)
-    store.listen("selectedSkuId", selectedSkuId => (this._selectedSkuId = selectedSkuId))
+    store.listen("selectedSkuId", selectedSkuId => {
+      this._selectedSkuId = selectedSkuId
+      this.toggleAttribute("sku-selected", !!selectedSkuId)
+    })
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
     this.registerATCButtons(store)
