@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
-import { EVENT_TYPE_ADD_TO_CART_COMPLETE, EventDetail } from "@/placement-events"
+import { EventName } from "@/placement-events"
 
 describe("NostoProduct", () => {
   let element: NostoProduct
@@ -63,10 +63,10 @@ describe("NostoProduct", () => {
       )
     }
 
-    async function waitForPlacementEvent(eventType: string) {
-      return new Promise<EventDetail>(resolve => {
+    async function waitForPlacementEvent(eventType: EventName) {
+      return new Promise(resolve => {
         const placement = document.querySelector<HTMLElement>(`[id="${DIV_ID}"]`)
-        placement!.addEventListener(eventType, (event: Event) => resolve((event as CustomEvent).detail))
+        placement!.addEventListener(`nosto:${eventType}`, (event: Event) => resolve((event as CustomEvent).detail))
       })
     }
 
@@ -82,7 +82,7 @@ describe("NostoProduct", () => {
 
     async function checkAddToCartCompleteEvent(atcElement: HTMLElement) {
       atcElement!.click()
-      const detail = await waitForPlacementEvent(EVENT_TYPE_ADD_TO_CART_COMPLETE)
+      const detail = await waitForPlacementEvent("atc:complete")
 
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
         { productId: PROD_ID, skuId: element.selectedSkuId },
@@ -108,6 +108,21 @@ describe("NostoProduct", () => {
       element.connectedCallback()
 
       checkSkuAddToCart("456")
+    })
+
+    it("should emit nosto:atc:no-sku event when no sku is selected", async () => {
+      element.innerHTML = `
+      <div n-atc>Add to Cart</div>
+    `
+      const placementElement = document.createElement("div")
+      placementElement.classList.add("nosto_element")
+      placementElement.setAttribute("id", DIV_ID)
+      placementElement.appendChild(element)
+      document.body.appendChild(placementElement)
+
+      const detail = waitForPlacementEvent("atc:no-sku-selected")
+      element.querySelector<HTMLElement>("[n-atc]")!.click()
+      expect(await detail).toEqual({ productId: PROD_ID })
     })
 
     it("should toggle sku-selected attribute when selectedSkuId changes", () => {

@@ -1,17 +1,22 @@
-export type EventDetail = {
-  productId: string
-  skuId: string
+type Events = {
+  "atc:complete": {
+    productId: string
+    skuId: string
+  }
+  "atc:no-sku-selected": {
+    productId: string
+  }
 }
 
-export const EVENT_TYPE_ADD_TO_CART_COMPLETE = "nosto:atc:complete"
+export type EventName = keyof Events
 
-export function triggerPlacementEvent(type: string, sourceElement: Element, detail: EventDetail) {
+export function triggerPlacementEvent<E extends keyof Events>(type: E, sourceElement: Element, detail: Events[E]) {
   const eventTarget = sourceElement.closest('.nosto_element[id]:not(.nosto_element[id=""])')
   if (!eventTarget) {
     console.warn(`Unable to locate the wrapper placement to trigger ${type} event`)
     return
   }
-  const event = new CustomEvent(type, {
+  const event = new CustomEvent(`nosto:${type}`, {
     bubbles: true,
     cancelable: true,
     detail

@@ -1,5 +1,5 @@
 import { NostoProduct } from "@/main"
-import { EVENT_TYPE_ADD_TO_CART_COMPLETE, triggerPlacementEvent } from "@/placement-events"
+import { triggerPlacementEvent } from "@/placement-events"
 import { intersectionOf } from "@/utils"
 
 interface State {
@@ -23,15 +23,17 @@ export function createStore(element: NostoProduct) {
   const listeners: { [K in keyof Events]?: Listener<K>[] } = {}
 
   async function addToCart() {
-    if (window.Nosto && typeof window.Nosto.addSkuToCart === "function") {
-      if (state.selectedSkuId) {
+    if (state.selectedSkuId) {
+      if (typeof window.Nosto?.addSkuToCart === "function") {
         const skuId = state.selectedSkuId
         await window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
-        triggerPlacementEvent(EVENT_TYPE_ADD_TO_CART_COMPLETE, element, {
+        triggerPlacementEvent("atc:complete", element, {
           productId,
           skuId
         })
       }
+    } else {
+      triggerPlacementEvent("atc:no-sku-selected", element, { productId })
     }
   }
 
