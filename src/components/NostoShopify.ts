@@ -1,6 +1,11 @@
 import { migrateToShopifyMarket } from "@/store/actions"
+import { attribute, customElement } from "./decorators"
 
-export class NostoShopify extends HTMLElement {
+@customElement("nosto-shopify")
+class NostoShopify extends HTMLElement {
+  @attribute("markets", Boolean)
+  accessor markets!: boolean
+
   constructor() {
     super()
   }
@@ -10,14 +15,10 @@ export class NostoShopify extends HTMLElement {
     if (!campaignId) {
       throw new Error("Found no wrapper element with class 'nosto_element'")
     }
-    if (this.hasAttribute("markets")) {
+    if (this.markets) {
       migrateToShopifyMarket(campaignId)
     }
   }
 }
 
-try {
-  customElements.define("nosto-shopify", NostoShopify)
-} catch (e) {
-  console.error(e)
-}
+export { NostoShopify }
