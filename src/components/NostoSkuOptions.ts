@@ -1,3 +1,5 @@
+import { LitElement, html } from "lit"
+import { customElement } from "lit/decorators.js"
 import { intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
 
@@ -5,12 +7,18 @@ function getSkus(element: Element) {
   return (element.getAttribute("n-skus") || "").split(",")
 }
 
-export class NostoSkuOptions extends HTMLElement {
+@customElement("nosto-sku-options")
+export class NostoSkuOptions extends LitElement {
+  static properties = {
+    name: { type: String }
+  }
+
   constructor() {
     super()
   }
 
   connectedCallback() {
+    super.connectedCallback()
     this.validate()
     injectStore(this, this.init.bind(this))
   }
@@ -77,10 +85,13 @@ export class NostoSkuOptions extends HTMLElement {
       })
     })
   }
-}
 
-try {
-  customElements.define("nosto-sku-options", NostoSkuOptions)
-} catch (e) {
-  console.error(e)
+  render() {
+    return html``
+  }
+
+  // Use light DOM instead of shadow DOM to maintain compatibility with existing code
+  createRenderRoot() {
+    return this
+  }
 }

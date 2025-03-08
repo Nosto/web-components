@@ -1,24 +1,37 @@
+import { LitElement, html } from "lit"
+import { customElement } from "lit/decorators.js"
 import { createStore, provideStore, Store } from "../store"
 
-export class NostoProduct extends HTMLElement {
-  static observedAttributes = ["product-id", "reco-id"]
+@customElement("nosto-product")
+export class NostoProduct extends LitElement {
+  static properties = {
+    "product-id": { type: String, attribute: "product-id" },
+    "reco-id": { type: String, attribute: "reco-id" }
+  }
+
   private _selectedSkuId: string | undefined
+  private store!: Store
 
   constructor() {
     super()
   }
 
   connectedCallback() {
+    super.connectedCallback()
     this.validate()
-    const store = createStore(this)
-    provideStore(this, store)
-    store.listen("selectedSkuId", selectedSkuId => {
+    this.store = createStore(this)
+    provideStore(this, this.store)
+    this.store.listen("selectedSkuId", selectedSkuId => {
       this._selectedSkuId = selectedSkuId
       this.toggleAttribute("sku-selected", !!selectedSkuId)
+      this.requestUpdate(); // Request update when selectedSkuId changes
     })
-    this.registerSKUSelectors(store)
-    this.registerSKUIds(store)
-    this.registerATCButtons(store)
+  }
+
+  firstUpdated() {
+    this.registerSKUSelectors(this.store)
+    this.registerSKUIds(this.store)
+    this.registerATCButtons(this.store)
   }
 
   get productId() {
@@ -37,7 +50,6 @@ export class NostoProduct extends HTMLElement {
     if (!this.getAttribute("product-id")) {
       throw new Error("Product ID is required.")
     }
-
     if (!this.getAttribute("reco-id")) {
       throw new Error("Slot ID is required.")
     }
@@ -69,10 +81,15 @@ export class NostoProduct extends HTMLElement {
       })
     )
   }
-}
 
-try {
-  customElements.define("nosto-product", NostoProduct)
-} catch (e) {
-  console.error(e)
+  // Since this component is primarily focusing on functionality rather than rendering its own content,
+  // we'll create an empty render function and use createRenderRoot to allow light DOM rendering
+  render() {
+    return html``
+  }
+
+  // Use light DOM instead of shadow DOM to ensure CSS and event handling works as before
+  createRenderRoot() {
+    return this
+  }
 }
