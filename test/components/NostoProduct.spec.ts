@@ -19,6 +19,7 @@ describe("NostoProduct", () => {
     })
 
     it("should have observed attributes", () => {
+      // @ts-expect-error added via decorator
       expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id"])
     })
 
