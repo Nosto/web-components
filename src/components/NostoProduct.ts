@@ -1,8 +1,14 @@
 import { createStore, provideStore, Store } from "../store"
+import { customElement, attribute } from "./decorators"
 
+@customElement("nosto-product")
 export class NostoProduct extends HTMLElement {
-  static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
+
+  @attribute("product-id")
+  productId!: string
+  @attribute("reco-id")
+  recoId!: string
 
   constructor() {
     super()
@@ -21,24 +27,16 @@ export class NostoProduct extends HTMLElement {
     this.registerATCButtons(store)
   }
 
-  get productId() {
-    return this.getAttribute("product-id")!
-  }
-
   get selectedSkuId() {
     return this._selectedSkuId
   }
 
-  get recoId() {
-    return this.getAttribute("reco-id")!
-  }
-
   private validate() {
-    if (!this.getAttribute("product-id")) {
+    if (!this.productId) {
       throw new Error("Product ID is required.")
     }
 
-    if (!this.getAttribute("reco-id")) {
+    if (!this.recoId) {
       throw new Error("Slot ID is required.")
     }
   }
@@ -69,10 +67,4 @@ export class NostoProduct extends HTMLElement {
       })
     )
   }
-}
-
-try {
-  customElements.define("nosto-product", NostoProduct)
-} catch (e) {
-  console.error(e)
 }

@@ -1,6 +1,11 @@
 import { migrateToShopifyMarket } from "@/store/actions"
+import { customElement, attribute } from "./decorators"
 
+@customElement("nosto-shopify")
 export class NostoShopify extends HTMLElement {
+  @attribute("markets")
+  markets!: string
+
   constructor() {
     super()
   }
@@ -14,10 +19,4 @@ export class NostoShopify extends HTMLElement {
       migrateToShopifyMarket(campaignId)
     }
   }
-}
-
-try {
-  customElements.define("nosto-shopify", NostoShopify)
-} catch (e) {
-  console.error(e)
 }
