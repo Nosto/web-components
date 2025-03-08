@@ -1,5 +1,7 @@
 import { createStore, provideStore, Store } from "../store"
+import { customElement } from "./decorators"
 
+@customElement("nosto-product")
 export class NostoProduct extends HTMLElement {
   static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
@@ -69,10 +71,4 @@ export class NostoProduct extends HTMLElement {
       })
     )
   }
-}
-
-try {
-  customElements.define("nosto-product", NostoProduct)
-} catch (e) {
-  console.error(e)
 }

@@ -1,10 +1,12 @@
 import { intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
+import { customElement } from "./decorators"
 
 function getSkus(element: Element) {
   return (element.getAttribute("n-skus") || "").split(",")
 }
 
+@customElement("nosto-sku-options")
 export class NostoSkuOptions extends HTMLElement {
   constructor() {
     super()
@@ -77,10 +79,4 @@ export class NostoSkuOptions extends HTMLElement {
       })
     })
   }
-}
-
-try {
-  customElements.define("nosto-sku-options", NostoSkuOptions)
-} catch (e) {
-  console.error(e)
 }
