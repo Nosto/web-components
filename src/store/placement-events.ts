@@ -10,7 +10,7 @@ type Events = {
 
 export type EventName = keyof Events
 
-export function triggerPlacementEvent<E extends keyof Events>(type: E, sourceElement: Element, detail: Events[E]) {
+export function triggerEvent<E extends keyof Events>(type: E, sourceElement: Element, detail: Events[E]) {
   const eventTarget = sourceElement.closest('.nosto_element[id]:not(.nosto_element[id=""])')
   if (!eventTarget) {
     console.warn(`Unable to locate the wrapper placement to trigger ${type} event`)
