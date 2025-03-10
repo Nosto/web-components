@@ -21,11 +21,10 @@ describe("customElement", () => {
     const constructor = class extends HTMLElement {}
 
     customElement(tagName)(constructor)
-    vi.resetAllMocks()
+    expect(window.customElements.define).toHaveBeenCalledTimes(1)
 
     customElement(tagName)(constructor)
-
-    expect(window.customElements.define).not.toHaveBeenCalled()
+    expect(window.customElements.define).toHaveBeenCalledTimes(1)
   })
 })
 
