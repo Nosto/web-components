@@ -17,8 +17,11 @@ describe("customElement", () => {
   })
 
   it("should not redefine a custom element if already defined", () => {
-    const tagName = "my-element"
+    const tagName = "my-element2"
     const constructor = class extends HTMLElement {}
+
+    customElement(tagName)(constructor)
+    vi.resetAllMocks()
 
     customElement(tagName)(constructor)
 
@@ -39,7 +42,7 @@ describe("attribute", () => {
   it("should map attributes to properties", () => {
     const example = new Example()
     example.setAttribute("name", "John")
-    example.setAttribute("disabled", "")
+    example.toggleAttribute("disabled", true)
 
     expect(example.name).toBe("John")
     expect(example.disabled).toBe(true)
