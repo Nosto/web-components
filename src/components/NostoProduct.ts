@@ -1,18 +1,8 @@
 import { createStore, provideStore, Store } from "../store"
-import { attribute, customElement } from "./decorators"
 
-@customElement("nosto-product")
-class NostoProduct extends HTMLElement {
+export class NostoProduct extends HTMLElement {
+  static observedAttributes = ["product-id", "reco-id"]
   private _selectedSkuId: string | undefined
-
-  @attribute("product-id")
-  accessor productId!: string
-
-  @attribute("reco-id")
-  accessor recoId!: string
-
-  @attribute("sku-selected", Boolean)
-  accessor skuSelected!: boolean
 
   constructor() {
     super()
@@ -24,22 +14,31 @@ class NostoProduct extends HTMLElement {
     provideStore(this, store)
     store.listen("selectedSkuId", selectedSkuId => {
       this._selectedSkuId = selectedSkuId
-      this.skuSelected = !!selectedSkuId
+      this.toggleAttribute("sku-selected", !!selectedSkuId)
     })
     this.registerSKUSelectors(store)
     this.registerSKUIds(store)
     this.registerATCButtons(store)
   }
 
+  get productId() {
+    return this.getAttribute("product-id")!
+  }
+
   get selectedSkuId() {
     return this._selectedSkuId
   }
 
+  get recoId() {
+    return this.getAttribute("reco-id")!
+  }
+
   private validate() {
-    if (!this.productId) {
+    if (!this.getAttribute("product-id")) {
       throw new Error("Product ID is required.")
     }
-    if (!this.recoId) {
+
+    if (!this.getAttribute("reco-id")) {
       throw new Error("Slot ID is required.")
     }
   }
@@ -72,4 +71,8 @@ class NostoProduct extends HTMLElement {
   }
 }
 
-export { NostoProduct }
+try {
+  customElements.define("nosto-product", NostoProduct)
+} catch (e) {
+  console.error(e)
+}

@@ -18,6 +18,10 @@ describe("NostoProduct", () => {
       expect(customElements.get("nosto-product")).toBe(NostoProduct)
     })
 
+    it("should have observed attributes", () => {
+      expect(NostoProduct.observedAttributes).toEqual(["product-id", "reco-id"])
+    })
+
     it("should throw an error if no attribute is provided", () => {
       expect(() => element.connectedCallback()).toThrow("Product ID is required.")
     })

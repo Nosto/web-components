@@ -1,16 +1,11 @@
 import { intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
-import { attribute, customElement } from "./decorators"
 
 function getSkus(element: Element) {
   return (element.getAttribute("n-skus") || "").split(",")
 }
 
-@customElement("nosto-sku-options")
-class NostoSkuOptions extends HTMLElement {
-  @attribute("name")
-  accessor name!: string
-
+export class NostoSkuOptions extends HTMLElement {
   constructor() {
     super()
   }
@@ -20,8 +15,12 @@ class NostoSkuOptions extends HTMLElement {
     injectStore(this, this.init.bind(this))
   }
 
+  get name() {
+    return this.getAttribute("name")!
+  }
+
   private validate() {
-    if (!this.name) {
+    if (!this.getAttribute("name")) {
       throw new Error("Name is required.")
     }
   }
@@ -80,4 +79,8 @@ class NostoSkuOptions extends HTMLElement {
   }
 }
 
-export { NostoSkuOptions }
+try {
+  customElements.define("nosto-sku-options", NostoSkuOptions)
+} catch (e) {
+  console.error(e)
+}
