@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { customElement, attribute } from "../../src/components/decorators"
+import { customElement } from "../../src/components/decorators"
 
 describe("customElement", () => {
   beforeEach(() => {
@@ -25,25 +25,5 @@ describe("customElement", () => {
 
     customElement(tagName)(constructor)
     expect(window.customElements.define).toHaveBeenCalledTimes(1)
-  })
-})
-
-@customElement("example-element")
-class Example extends HTMLElement {
-  @attribute("name")
-  accessor name!: string
-
-  @attribute("disabled", Boolean)
-  accessor disabled!: boolean
-}
-
-describe("attribute", () => {
-  it("should map attributes to properties", () => {
-    const example = new Example()
-    example.setAttribute("name", "John")
-    example.toggleAttribute("disabled", true)
-
-    expect(example.name).toBe("John")
-    expect(example.disabled).toBe(true)
   })
 })

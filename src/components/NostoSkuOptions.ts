@@ -1,15 +1,18 @@
 import { intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
-import { attribute, customElement } from "./decorators"
+import { customElement } from "./decorators"
 
 function getSkus(element: Element) {
   return (element.getAttribute("n-skus") || "").split(",")
 }
 
 @customElement("nosto-sku-options")
-class NostoSkuOptions extends HTMLElement {
-  @attribute("name")
-  accessor name!: string
+export class NostoSkuOptions extends HTMLElement {
+  static attributes = {
+    name: String
+  }
+
+  name!: string
 
   constructor() {
     super()
@@ -79,5 +82,3 @@ class NostoSkuOptions extends HTMLElement {
     })
   }
 }
-
-export { NostoSkuOptions }
