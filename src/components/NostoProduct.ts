@@ -1,18 +1,18 @@
 import { createStore, provideStore, Store } from "../store"
-import { attribute, customElement } from "./decorators"
+import { customElement } from "./decorators"
 
 @customElement("nosto-product")
-class NostoProduct extends HTMLElement {
+export class NostoProduct extends HTMLElement {
+  static attributes = {
+    productId: String,
+    recoId: String,
+    skuSelected: Boolean
+  }
+
   private _selectedSkuId: string | undefined
-
-  @attribute("product-id")
-  accessor productId!: string
-
-  @attribute("reco-id")
-  accessor recoId!: string
-
-  @attribute("sku-selected", Boolean)
-  accessor skuSelected!: boolean
+  productId!: string
+  recoId!: string
+  skuSelected!: boolean
 
   constructor() {
     super()
@@ -71,5 +71,3 @@ class NostoProduct extends HTMLElement {
     )
   }
 }
-
-export { NostoProduct }

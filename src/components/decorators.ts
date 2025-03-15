@@ -1,23 +1,23 @@
+type FieldMappings = Record<string, StringConstructor | BooleanConstructor>
+
 export function customElement(tagName: string) {
-  return function (constructor: CustomElementConstructor) {
+  return function (constructor: CustomElementConstructor & { attributes?: FieldMappings }) {
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
+    }
+
+    if (constructor.attributes) {
+      Object.entries(constructor.attributes).forEach(([fieldName, type]) => {
+        const attribute = toKebabCase(fieldName)
+        const property = (type === String ? stringAttribute : booleanAttribute)(attribute)
+        Object.defineProperty(constructor.prototype, fieldName, property)
+      })
     }
   }
 }
 
-type Accessor<E, T> = (_: ClassAccessorDecoratorTarget<E, T>) => ClassAccessorDecoratorTarget<E, T>
-
-export function attribute<E extends HTMLElement>(attributeName: string, type?: StringConstructor): Accessor<E, string>
-export function attribute<E extends HTMLElement>(attributeName: string, type: BooleanConstructor): Accessor<E, boolean>
-
-export function attribute(attributeName: string, type?: unknown): unknown {
-  return function () {
-    if (type === Boolean) {
-      return booleanAttribute(attributeName)
-    }
-    return stringAttribute(attributeName)
-  }
+function toKebabCase(str: string) {
+  return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
 }
 
 function stringAttribute(attributeName: string) {
@@ -31,7 +31,9 @@ function stringAttribute(attributeName: string) {
       } else {
         this.setAttribute(attributeName, value)
       }
-    }
+    },
+    configurable: true,
+    enumerable: true
   }
 }
 
@@ -42,6 +44,8 @@ function booleanAttribute(attributeName: string) {
     },
     set(this: HTMLElement, value: boolean) {
       this.toggleAttribute(attributeName, value)
-    }
+    },
+    configurable: true,
+    enumerable: true
   }
 }
