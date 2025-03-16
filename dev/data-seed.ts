@@ -11,50 +11,50 @@ function generateProducts() {
       return {
         name: `Product ${index}`,
         url: `https://picsum.photos/id/${index + 20}/800/800`,
-        thumb_url: `https://picsum.photos/id/${index + 20}/300/300`,
-        product_id: getRandomId(index + 1),
-        image_url: `https://picsum.photos/id/${index + 20}/800/800`,
+        thumbUrl: `https://picsum.photos/id/${index + 20}/300/300`,
+        productId: getRandomId(index + 1),
+        imageUrl: `https://picsum.photos/id/${index + 20}/800/800`,
         price,
-        price_currency_code: "EUR",
+        priceCurrencyCode: "EUR",
         skus: [
           {
             name: "BURGUNDY / XS",
             id: getRandomId(index + 2),
             available: true,
-            image_url: `https://picsum.photos/id/${index + 100}/300/300`,
+            imageUrl: `https://picsum.photos/id/${index + 100}/300/300`,
             price,
-            list_price: listPrice
+            listPrice
           },
           {
             name: "BURGUNDY / S",
             id: getRandomId(index + 3),
             available: true,
-            image_url: `https://picsum.photos/id/${index + 101}/300/300`,
+            imageUrl: `https://picsum.photos/id/${index + 101}/300/300`,
             price,
-            list_price: listPrice
+            listPrice
           },
           {
             name: "BURGUNDY / M",
             id: getRandomId(index + 4),
             available: true,
-            image_url: `https://picsum.photos/id/${index + 102}/300/300`,
+            imageUrl: `https://picsum.photos/id/${index + 102}/300/300`,
             price,
-            list_price: listPrice
+            listPrice
           },
           {
             name: "BURGUNDY / L",
             id: getRandomId(index + 5),
             available: true,
-            image_url: `https://picsum.photos/id/${index + 103}/300/300`,
+            imageUrl: `https://picsum.photos/id/${index + 103}/300/300`,
             price,
-            list_price: listPrice
+            listPrice
           }
         ],
-        price_text: `${price}€`,
-        list_price: listPrice,
+        priceText: `${price}€`,
+        listPrice: listPrice,
         brand: `brand ${index + 1}`,
-        date_published: new Date().getTime(),
-        list_price_text: `${listPrice}€`,
+        datePublished: new Date().getTime(),
+        listPriceText: `${listPrice}€`,
         description: `description for product ${index + 1}`
       }
     })
@@ -62,13 +62,9 @@ function generateProducts() {
 
 export default function () {
   return {
-    "productslot-nosto-1": {
-      result_id: "productslot-nosto-1",
-      div_id: "productpage-nosto-1",
-      result_type: "REAL",
-      element: "productpage-nosto-1",
-      title: "Nosto recommendation",
-      products: generateProducts()
-    }
+    divId: "productpage-nosto-1",
+    resultId: "productslot-nosto-1",
+    title: "Nosto recommendation",
+    products: generateProducts()
   }
 }

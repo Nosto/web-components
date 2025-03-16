@@ -9,9 +9,6 @@ const engine = new Liquid({
   extname: ".liquid",
   cache: process.env.NODE_ENV === "production"
 })
-engine.registerFilter("reco_data", it => {
-  return Object.values(it)
-})
 
 const app = express()
 app.engine("liquid", engine.express())
@@ -33,7 +30,7 @@ const mapping = {
 }
 Object.entries(mapping).forEach(([path, template]) => {
   app.get(path, (req, res) => {
-    res.render(template, { recs: dataSeed() })
+    res.render(template, dataSeed())
   })
 })
 

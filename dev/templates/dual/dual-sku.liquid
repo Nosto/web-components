@@ -1,16 +1,13 @@
 <script type="module" src="../src/main.ts"></script>
 <link rel="stylesheet" href="dual/dual-sku.css">
 
-{% assign reco_results = recs | reco_data %}
-
-{%- for item in reco_results %}
-  <div class="block__recommendation {{ item.div_id }}">
-    <span class="reco-title">{{ item.title }}</span>
+  <div class="block__recommendation {{ divId }}">
+    <span class="reco-title">{{ title }}</span>
     <div class="products">
-      {%- for product in item.products %}
-        <nosto-product product-id="{{ product.product_id }}" reco-id="{{ item.result_id }}" class="nosto__product">
+      {%- for product in products %}
+        <nosto-product product-id="{{ product.productId }}" reco-id="{{ resultId }}" class="nosto__product">
           <div class="nosto__product-image">
-            <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
+            <img src="{{ product.imageUrl }}" alt="{{ product.name }}" width="300" height="300">
           </div>
           <div class="nosto__product-details--card">
             <div class="nosto__product-name">{{ product.name }}</div>
@@ -33,4 +30,3 @@
       {%- endfor %}
     </div>
   </div>
-{%- endfor %}
