@@ -1,22 +1,19 @@
 <script type="module" src="../src/main.ts"></script>
 <link rel="stylesheet" href="select/reco-sku-select.css">
 
-{% assign reco_results = recs | reco_data %}
-
-{%- for item in reco_results %}
-  <div class="block__recommendation {{ item.div_id }}">
-    <span class="reco-title">{{ item.title }}</span>
+  <div class="block__recommendation {{divId }}">
+    <span class="reco-title">{{title }}</span>
     <div class="products">
-      {%- for product in item.products %}
-        <nosto-product product-id="{{ product.product_id }}" reco-id="{{ item.result_id }}" class="nosto__product">
+      {%- for product in products %}
+        <nosto-product product-id="{{ product.productId }}" reco-id="{{resultId }}" class="nosto__product">
           <div class="nosto__product-image">
-            <img src="{{ product.image_url }}" alt="{{ product.name }}" width="300" height="300">
+            <img src="{{ product.imageUrl }}" alt="{{ product.name }}" width="300" height="300">
           </div>
           <div class="nosto__product-details--card">
             <div class="nosto__product-name">{{ product.name }}</div>
             <div class="nosto__product-price">EUR {{ product.price }}</div>
             <div class="nosto__product-skus">
-              <select n-sku-selector id="select__product-{{ product.product_id }}" class="select__product">
+              <select n-sku-selector id="select__product-{{ product.productId }}" class="select__product">
                 {% for sku in product.skus %}
                   <option value="{{ sku.id }}">{{ sku.name | split: '/' | last | strip }}</option>
                 {% endfor %}
@@ -28,4 +25,3 @@
       {%- endfor %}
     </div>
   </div>
-{%- endfor %}
