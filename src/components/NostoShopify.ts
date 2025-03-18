@@ -1,10 +1,13 @@
 import { migrateToShopifyMarket } from "@/store/actions"
-import { attribute, customElement } from "./decorators"
+import { customElement } from "./decorators"
 
 @customElement("nosto-shopify")
-class NostoShopify extends HTMLElement {
-  @attribute("markets", Boolean)
-  accessor markets!: boolean
+export class NostoShopify extends HTMLElement {
+  static attributes = {
+    markets: Boolean
+  }
+
+  markets!: boolean
 
   constructor() {
     super()
@@ -20,5 +23,3 @@ class NostoShopify extends HTMLElement {
     }
   }
 }
-
-export { NostoShopify }
