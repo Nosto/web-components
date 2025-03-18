@@ -26,4 +26,26 @@ describe("customElement", () => {
     customElement(tagName)(constructor)
     expect(window.customElements.define).toHaveBeenCalledTimes(1)
   })
+
+  it("should define properties for attributes", () => {
+    const tagName = "my-element3"
+    const constructor = class extends HTMLElement {
+      static attributes = {
+        foo: String,
+        bar: Boolean
+      }
+
+      foo!: string
+      bar!: boolean
+    }
+
+    customElement(tagName)(constructor)
+
+    const e = new constructor()
+    e.foo = "hello"
+    e.bar = true
+
+    expect(e.getAttribute("foo")).toBe("hello")
+    expect(e.getAttribute("bar")).toBe("")
+  })
 })

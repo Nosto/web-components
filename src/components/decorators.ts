@@ -1,7 +1,9 @@
 type FieldMappings = Record<string, StringConstructor | BooleanConstructor>
 
+type ConstructorMetadata = CustomElementConstructor & { attributes?: FieldMappings }
+
 export function customElement(tagName: string) {
-  return function (constructor: CustomElementConstructor & { attributes?: FieldMappings }) {
+  return function (constructor: ConstructorMetadata) {
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
     }
