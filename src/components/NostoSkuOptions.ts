@@ -20,7 +20,7 @@ export class NostoSkuOptions extends HTMLElement {
 
   connectedCallback() {
     this.validate()
-    injectStore(this, this.init.bind(this))
+    injectStore(this, store => init(this, store))
   }
 
   private validate() {
@@ -28,17 +28,14 @@ export class NostoSkuOptions extends HTMLElement {
       throw new Error("Name is required.")
     }
   }
+}
 
-  private init(store: Store) {
-    store.registerOptionGroup()
-    const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-    this.registerClickEvents(store, optionElements)
-    this.registerStateChange(store, optionElements)
-    this.handlePreselection(store, optionElements)
-  }
+function init(el: NostoSkuOptions, store: Store) {
+  const optionId = el.name
+  const { listen, selectSkuOption } = store
+  const optionElements = Array.from(el.querySelectorAll<HTMLElement>("[n-option]"))
 
-  private registerStateChange({ listen }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.name
+  function registerStateChange() {
     listen("skuOptions", skuOptions => {
       const otherGroups = Object.keys(skuOptions)
         .filter(key => key !== optionId)
@@ -58,8 +55,7 @@ export class NostoSkuOptions extends HTMLElement {
     })
   }
 
-  private handlePreselection({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.name
+  function handlePreselection() {
     const selected = optionElements.find(o => o.hasAttribute("selected"))
     if (selected) {
       const skuIds = getSkus(selected)
@@ -67,8 +63,7 @@ export class NostoSkuOptions extends HTMLElement {
     }
   }
 
-  private registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
-    const optionId = this.name
+  function registerClickEvents() {
     optionElements.forEach(option => {
       option.addEventListener("click", () => {
         if (option.hasAttribute("disabled")) {
@@ -81,4 +76,9 @@ export class NostoSkuOptions extends HTMLElement {
       })
     })
   }
+
+  store.registerOptionGroup()
+  registerClickEvents()
+  registerStateChange()
+  handlePreselection()
 }

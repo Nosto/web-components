@@ -9,7 +9,7 @@ export class NostoProduct extends HTMLElement {
     skuSelected: Boolean
   }
 
-  private _selectedSkuId: string | undefined
+  selectedSkuId: string | undefined
   productId!: string
   recoId!: string
   skuSelected!: boolean
@@ -20,19 +20,7 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     this.validate()
-    const store = createStore(this)
-    provideStore(this, store)
-    store.listen("selectedSkuId", selectedSkuId => {
-      this._selectedSkuId = selectedSkuId
-      this.skuSelected = !!selectedSkuId
-    })
-    this.registerSKUSelectors(store)
-    this.registerSKUIds(store)
-    this.registerATCButtons(store)
-  }
-
-  get selectedSkuId() {
-    return this._selectedSkuId
+    init(this, createStore(this))
   }
 
   private validate() {
@@ -43,24 +31,34 @@ export class NostoProduct extends HTMLElement {
       throw new Error("Slot ID is required.")
     }
   }
+}
 
-  private registerSKUSelectors({ selectSkuId }: Store) {
-    this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
+function init(el: NostoProduct, store: Store) {
+  provideStore(el, store)
+  const { listen, selectSkuId, addToCart } = store
+
+  listen("selectedSkuId", selectedSkuId => {
+    el.selectedSkuId = selectedSkuId
+    el.skuSelected = !!selectedSkuId
+  })
+
+  function registerSKUSelectors() {
+    el.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
       selectSkuId(element.value)
       element.addEventListener("change", () => selectSkuId(element.value))
     })
   }
 
-  private registerSKUIds({ selectSkuId }: Store) {
-    this.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
+  function registerSKUIds() {
+    el.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
       element.addEventListener("click", () => {
         selectSkuId(element.getAttribute("n-sku-id")!)
       })
     })
   }
 
-  private registerATCButtons({ addToCart, selectSkuId }: Store) {
-    this.querySelectorAll("[n-atc]").forEach(element =>
+  function registerATCButtons() {
+    el.querySelectorAll("[n-atc]").forEach(element =>
       element.addEventListener("click", async () => {
         const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
         if (skuId) {
@@ -70,4 +68,8 @@ export class NostoProduct extends HTMLElement {
       })
     )
   }
+
+  registerSKUSelectors()
+  registerSKUIds()
+  registerATCButtons()
 }
