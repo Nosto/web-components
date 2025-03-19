@@ -132,6 +132,53 @@ describe("NostoSkuOptions side effects", () => {
     })
   })
 
+  describe("Two sku option groups in select", () => {
+    beforeEach(() => {
+      loadContent()
+      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      window.Nosto = { addSkuToCart: vi.fn() }
+    })
+
+    function loadContent() {
+      document.body.innerHTML = `
+      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
+        <nosto-sku-options name="colors">
+          <select>
+            <option>Unselected</option>
+            <option value="black" n-skus="123,145">Black</span>
+            <option value="white" n-skus="223,234,245">White</span>
+            <option value="blue" n-skus="334,345">Blue</span>
+          </select>  
+        </nosto-sku-options>
+        <nosto-sku-options name="sizes">
+          <select>
+            <option>Unselected</option>
+            <option value="l" n-skus="123,223">L</span>
+            <option value="m" n-skus="234,334">M</span>
+            <option value="s" n-skus="145,245,345">S</span>
+          </select>  
+        </nosto-sku-options>
+        <span n-atc>Add to cart</span>
+      </nosto-product>
+    `
+    }
+
+    it("should update selection when select is changed", () => {
+      const colors = document.querySelector<HTMLSelectElement>("nosto-sku-options[name='colors'] select")!
+      const sizes = document.querySelector<HTMLSelectElement>("nosto-sku-options[name='sizes'] select")!
+
+      colors.value = "white"
+      colors.dispatchEvent(new Event("change"))
+      expect(nostoProduct.selectedSkuId).toBeUndefined()
+      expect(nostoProduct.hasAttribute("sku-selected")).toBe(false)
+
+      sizes.value = "m"
+      sizes.dispatchEvent(new Event("change"))
+      expect(nostoProduct.selectedSkuId).toBe("234")
+      expect(nostoProduct.hasAttribute("sku-selected")).toBe(true)
+    })
+  })
+
   describe("Sku options with 3 dimensions", () => {
     beforeEach(() => {
       loadContent()

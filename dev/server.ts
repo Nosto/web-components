@@ -26,6 +26,7 @@ const mapping = {
   "/": "select/reco-sku-select",
   "/sku-overlay": "overlay/reco-sku-overlay",
   "/dual": "dual/dual-sku",
+  "/dual-select": "dual-select/dual-sku",
   "/trio": "trio/trio"
 }
 Object.entries(mapping).forEach(([path, template]) => {
