@@ -144,7 +144,6 @@ describe("NostoSkuOptions side effects", () => {
       <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
         <nosto-sku-options name="colors">
           <select n-target>
-            <option>Unselected</option>
             <option value="black" n-skus="123,145">Black</span>
             <option value="white" n-skus="223,234,245">White</span>
             <option value="blue" n-skus="334,345">Blue</span>
@@ -162,6 +161,16 @@ describe("NostoSkuOptions side effects", () => {
       </nosto-product>
     `
     }
+
+    it("should handle preselection", () => {
+      // black is preselected
+      const sizes = document.querySelector<HTMLSelectElement>("nosto-sku-options[name='sizes'] select")!
+
+      sizes.value = "l"
+      sizes.dispatchEvent(new Event("change"))
+      expect(nostoProduct.selectedSkuId).toBe("123")
+      expect(nostoProduct.hasAttribute("sku-selected")).toBe(true)
+    })
 
     it("should update selection when select is changed", () => {
       const colors = document.querySelector<HTMLSelectElement>("nosto-sku-options[name='colors'] select")!
