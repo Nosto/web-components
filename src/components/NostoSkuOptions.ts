@@ -40,7 +40,7 @@ export class NostoSkuOptions extends HTMLElement {
       return
     }
     // implementation via <select> element
-    const select = this.querySelector<HTMLSelectElement>("select")
+    const select = this.querySelector<HTMLSelectElement>("select[n-target]")
     if (select) {
       this.registerSelectChange(store, select)
       this.registerStateChange(store, Array.from(select.querySelectorAll("option")))
@@ -50,7 +50,7 @@ export class NostoSkuOptions extends HTMLElement {
 
   private handleSelectPreselection({ selectSkuOption }: Store, select: HTMLSelectElement) {
     const optionId = this.name
-    const selected = select.querySelector<HTMLElement>("option:checked[n-skus]")
+    const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
     if (selected) {
       const skuIds = getSkus(selected)
       selectSkuOption(optionId, skuIds)
@@ -60,7 +60,7 @@ export class NostoSkuOptions extends HTMLElement {
   private registerSelectChange({ selectSkuOption }: Store, select: HTMLSelectElement) {
     const optionId = this.name
     select.addEventListener("change", () => {
-      const selected = select.querySelector<HTMLElement>("option:checked[n-skus]")
+      const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
       if (!selected) {
         return
       }

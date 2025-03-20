@@ -143,7 +143,7 @@ describe("NostoSkuOptions side effects", () => {
       document.body.innerHTML = `
       <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
         <nosto-sku-options name="colors">
-          <select>
+          <select n-target>
             <option>Unselected</option>
             <option value="black" n-skus="123,145">Black</span>
             <option value="white" n-skus="223,234,245">White</span>
@@ -151,7 +151,7 @@ describe("NostoSkuOptions side effects", () => {
           </select>  
         </nosto-sku-options>
         <nosto-sku-options name="sizes">
-          <select>
+          <select n-target>
             <option>Unselected</option>
             <option value="l" n-skus="123,223">L</span>
             <option value="m" n-skus="234,334">M</span>

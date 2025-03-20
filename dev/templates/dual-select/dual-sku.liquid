@@ -14,7 +14,7 @@
             <div class="nosto__product-price">EUR {{ product.price }}</div>
             <div class="nosto__product-skus">
               <nosto-sku-options name="colors">
-                <select>
+                <select n-target>
                   <option>Unselected</option>
                   <option value="black" n-skus="123,145">Black</option>
                   <option value="white" n-skus="223,234,245">White</option>
@@ -22,7 +22,7 @@
                 </select>
               </nosto-sku-options>
               <nosto-sku-options name="sizes">
-                <select>
+                <select n-target>
                   <option>Unselected</option>
                   <option value="l" n-skus="123,223">L</option>
                   <option value="m" n-skus="234,334">M</option>
