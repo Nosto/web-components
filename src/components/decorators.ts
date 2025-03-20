@@ -4,16 +4,15 @@ type ConstructorMetadata = CustomElementConstructor & { attributes?: FieldMappin
 
 export function customElement(tagName: string) {
   return function (constructor: ConstructorMetadata) {
-    if (!window.customElements.get(tagName)) {
-      window.customElements.define(tagName, constructor)
-    }
-
     if (constructor.attributes) {
       Object.entries(constructor.attributes).forEach(([fieldName, type]) => {
         const attribute = toKebabCase(fieldName)
         const property = (type === String ? stringAttribute : booleanAttribute)(attribute)
         Object.defineProperty(constructor.prototype, fieldName, property)
       })
+    }
+    if (!window.customElements.get(tagName)) {
+      window.customElements.define(tagName, constructor)
     }
   }
 }

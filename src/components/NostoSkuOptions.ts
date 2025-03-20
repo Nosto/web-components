@@ -31,10 +31,42 @@ export class NostoSkuOptions extends HTMLElement {
 
   private init(store: Store) {
     store.registerOptionGroup()
+    // implementation via [n-option] elements
     const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
-    this.registerClickEvents(store, optionElements)
-    this.registerStateChange(store, optionElements)
-    this.handlePreselection(store, optionElements)
+    if (optionElements.length) {
+      this.registerClickEvents(store, optionElements)
+      this.registerStateChange(store, optionElements)
+      this.handlePreselection(store, optionElements)
+      return
+    }
+    // implementation via <select> element
+    const select = this.querySelector<HTMLSelectElement>("select[n-target]")
+    if (select) {
+      this.registerSelectChange(store, select)
+      this.registerStateChange(store, Array.from(select.querySelectorAll("option")))
+      this.handleSelectPreselection(store, select)
+    }
+  }
+
+  private handleSelectPreselection({ selectSkuOption }: Store, select: HTMLSelectElement) {
+    const optionId = this.name
+    const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
+    if (selected) {
+      const skuIds = getSkus(selected)
+      selectSkuOption(optionId, skuIds)
+    }
+  }
+
+  private registerSelectChange({ selectSkuOption }: Store, select: HTMLSelectElement) {
+    const optionId = this.name
+    select.addEventListener("change", () => {
+      const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
+      if (!selected) {
+        return
+      }
+      const skuIds = getSkus(selected)
+      selectSkuOption(optionId, skuIds)
+    })
   }
 
   private registerStateChange({ listen }: Store, optionElements: HTMLElement[]) {
