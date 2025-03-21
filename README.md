@@ -137,6 +137,30 @@ Trio SKU selection group
 </nosto-product>
 ```
 
+**Example #3**:
+
+Usage with select elements
+
+```html
+<nosto-product product-id="1223456" reco-id="789011">
+    <nosto-sku-options name="color">
+        <select n-target>
+            <option value="black" n-skus="123,145">Black</option>
+            <option value="white" n-skus="223,234,245">White</option>
+            <option value="blue" n-skus="334,345">Blue</option>
+        </select>    
+    </nosto-sku-options>
+    <nosto-sku-options name="size">
+        <select n-target>    
+            <option value="l" n-skus="123,223">L</option>
+            <option value="m" n-skus="234,334">M</option>
+            <option value="s" n-skus="145,245,345">S</option>
+        </select>
+    </nosto-sku-options>
+    <span n-atc>Add to cart</span>
+</nosto-product>
+```
+
 #### Markup Attributes
 
 | Attribute | Description |
