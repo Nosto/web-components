@@ -5,7 +5,7 @@ import { customElement } from "./decorators"
 function getSkus(element: Element) {
   const skus = element.getAttribute("n-skus")
   const oosSkus = element.getAttribute("n-oos-skus")
-  return [...(skus ? skus.split(",") : []), ...(oosSkus ? oosSkus.split(",") : [])]
+  return [...(skus ? skus.split(",") : []), ...(oosSkus ? oosSkus.split(",") : [])].filter(Boolean)
 }
 
 @customElement("nosto-sku-options")
