@@ -3,9 +3,9 @@ import { injectStore, Store } from "../store"
 import { customElement } from "./decorators"
 
 function getSkus(element: Element) {
-  const skus = element.getAttribute("n-skus")
-  const oosSkus = element.getAttribute("n-oos-skus")
-  return [...(skus ? skus.split(",") : []), ...(oosSkus ? oosSkus.split(",") : [])].filter(Boolean)
+  const available = (element.getAttribute("n-skus") ?? "").split(",")
+  const unavailable = (element.getAttribute("n-oos-skus") ?? "").split(",")
+  return [...available, ...unavailable].filter(Boolean)
 }
 
 @customElement("nosto-sku-options")
