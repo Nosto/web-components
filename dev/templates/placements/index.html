@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    (function(){var name="nostojs";window[name]=window[name]||function(cb){(window[name].q=window[name].q||[]).push(cb);};})();
+</script>
+<script>
+// dummy settings
+nostoab = { settings: { site: location.hostname, testing: true } }
+</script>
+<script type="text/javascript" src="https://connect.staging.nosto.com/include/magento-8195054d" async></script>
+
+<script type="module" src="../src/main.ts"></script>
+
+<!-- shared nosto template-->
+<template id="nosto-template">
+  <h2>{{ title }}</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr);">
+    {% for product in products %}
+    <div>
+      <h2>{{ product.title }}</h2>
+      <a href="{{ product.url }}">
+        <img src="{{ product.image }}" alt="{{ product.title }}" width="150" height="150">
+      </a>
+      <p>{{ product.description }}</p>
+      <p>Price: {{ product.price }}</p>
+      <p>List price: {{ product.list_price }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</template>
+
+<!-- HTML template -->
+<nosto-placement id="frontpage-nosto-1" response-mode="HTML"></nosto-placement>
+
+<!-- JSON with external template -->
+<nosto-placement id="frontpage-nosto-3" template="#nosto-template" response-mode="JSON_400x400"></nosto-placement>
+
+<!-- JSON with embedded template-->
+<nosto-placement id="frontpage-nosto-2" template="#nosto-template" response-mode="JSON_400x400">
+  <template>
+    <h2>{{ title }}</h2>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr);">
+      {% for product in products %}
+      <div>{{ product.product_id }}</div>
+      {% endfor %}
+    </div>
+  </template>
+</nosto-placement>
