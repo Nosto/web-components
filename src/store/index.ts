@@ -1,6 +1,7 @@
 import { NostoProduct } from "@/main"
 import { triggerEvent } from "@/store/placement-events"
 import { intersectionOf } from "@/utils"
+import { addSkuToCart } from "@nosto/nosto-js"
 
 interface State {
   selectedSkuId: string | undefined
@@ -24,14 +25,12 @@ export function createStore(element: NostoProduct) {
 
   async function addToCart() {
     if (state.selectedSkuId) {
-      if (typeof window.Nosto?.addSkuToCart === "function") {
-        const skuId = state.selectedSkuId
-        await window.Nosto.addSkuToCart({ productId, skuId }, recoId, 1)
-        triggerEvent("atc:complete", element, {
-          productId,
-          skuId
-        })
-      }
+      const skuId = state.selectedSkuId
+      await addSkuToCart({ productId, skuId }, recoId, 1)
+      triggerEvent("atc:complete", element, {
+        productId,
+        skuId
+      })
     } else {
       triggerEvent("atc:no-sku-selected", element, { productId })
     }

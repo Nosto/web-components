@@ -1,17 +1,3 @@
-type ProductIdentifier = {
-  productId: string
-  skuId: string
-}
-
-type SlotReference = string | HTMLElement
-
-// function signature
-export type AddSkuToCart = (
-  productIdentifier: ProductIdentifier,
-  element: SlotReference,
-  quantity: number
-) => Promise<unknown | undefined>
-
 export type Position = 1 | 2 | 3
 
 export interface VariantOptionSelector {
