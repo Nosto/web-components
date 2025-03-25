@@ -1,4 +1,5 @@
 import { customElement } from "./decorators"
+import type { SwiperOptions } from "swiper/types"
 
 const swiperJs = "https://cdn.jsdelivr.net/npm/swiper@latest/swiper-bundle.min.mjs"
 
@@ -9,7 +10,7 @@ export class NostoSwiper extends HTMLElement {
   }
 
   containerSelector!: string
-  config!: Record<string, unknown>
+  config!: SwiperOptions
 
   constructor() {
     super()
@@ -20,7 +21,7 @@ export class NostoSwiper extends HTMLElement {
     this.loadSwiper()
   }
 
-  private getConfigFromScript(): Record<string, unknown> {
+  private getConfigFromScript(): SwiperOptions {
     const script = this.querySelector("[swiper-config]")
     if (!script) {
         return {}
