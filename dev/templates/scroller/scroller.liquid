@@ -10,9 +10,15 @@
     <div class="products">
         <nosto-scroller 
             library="swiper"
-            container-selector=".swiper" 
-            config='{"loop": true, "slidesPerView": 3, "spaceBetween": 30}'
-            >
+            container-selector=".swiper">
+            <script type="application/json">
+            {
+                "direction": "horizontal",
+                "loop": true,
+                "slidesPerView": 3,
+                "spaceBetween": 30
+            }
+            </script>
             <div class="swiper">
                 <div class="swiper-wrapper">
                     {%- for product in products %}

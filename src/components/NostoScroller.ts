@@ -11,7 +11,7 @@ export class NostoScroller extends HTMLElement {
   }
 
   connectedCallback() {
-    this._config = JSON.parse(this.config || "{}")
+    this._config = this.getConfigFromScript()
     this._version = this.version ?? "latest"
     this.initLibrary()
   }
@@ -28,8 +28,18 @@ export class NostoScroller extends HTMLElement {
     return this.getAttribute("container-selector")
   }
 
-  get config() {
-    return this.getAttribute("config")
+  private getConfigFromScript(): Record<string, unknown> {
+    const script = this.querySelector("script[type='application/json']")
+    if (!script) {
+        return {}
+    }
+
+    try {
+      return JSON.parse(script.textContent || "{}")
+    } catch (error) {
+      console.error("Invalid JSON in script tag.")
+      return {}
+    }
   }
 
   async initLibrary() {
@@ -51,6 +61,8 @@ export class NostoScroller extends HTMLElement {
       return
     }
 
-    new Swiper(this.containerSelector, this._config)
+    const swiperContainer = this.querySelector(this.containerSelector || ".swiper")
+
+    new Swiper(swiperContainer, this._config)
   }
 }
