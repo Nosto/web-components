@@ -21,7 +21,7 @@ export class NostoSwiper extends HTMLElement {
   }
 
   private getConfigFromScript(): Record<string, unknown> {
-    const script = this.querySelector("script[type='application/json']")
+    const script = this.querySelector("#nosto-swiper-config")
     if (!script) {
         return {}
     }
@@ -43,6 +43,10 @@ export class NostoSwiper extends HTMLElement {
     }
 
     const swiperContainer = this.querySelector(this.containerSelector || ".swiper")
+
+    if (!swiperContainer) {
+      console.error("Swiper container not found.")
+    }
 
     new Swiper(swiperContainer, this.config)
   }
