@@ -2,8 +2,21 @@ import { intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
 import { customElement } from "./decorators"
 
-function getSkus(element: Element) {
-  return (element.getAttribute("n-skus") || "").split(",")
+function getSkus(element: Element, available = true) {
+  const attributeName = available ? "n-skus" : "n-skus-oos"
+  return (element.getAttribute(attributeName) || "").split(",").filter(Boolean)
+}
+
+function getAllSkus(element: Element) {
+  return [...getSkus(element), ...getSkus(element, false)]
+}
+
+function setAvailability(elements: Element[]) {
+  elements
+    .filter(o => !o.getAttribute("n-skus"))
+    .forEach(o => {
+      o.toggleAttribute("unavailable", true)
+    })
 }
 
 @customElement("nosto-sku-options")
@@ -52,7 +65,7 @@ export class NostoSkuOptions extends HTMLElement {
     const optionId = this.name
     const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
     if (selected) {
-      const skuIds = getSkus(selected)
+      const skuIds = getAllSkus(selected)
       selectSkuOption(optionId, skuIds)
     }
   }
@@ -64,7 +77,7 @@ export class NostoSkuOptions extends HTMLElement {
       if (!selected) {
         return
       }
-      const skuIds = getSkus(selected)
+      const skuIds = getAllSkus(selected)
       selectSkuOption(optionId, skuIds)
     })
   }
@@ -77,15 +90,18 @@ export class NostoSkuOptions extends HTMLElement {
         .map(key => skuOptions[key])
       if (otherGroups.length === 0) {
         optionElements.forEach(option => option.removeAttribute("disabled"))
+        setAvailability(optionElements)
         return
       }
-      function isAvailable(skuIds: string[]) {
+      function hasIntersection(skuIds: string[]) {
         // an option is available if it intersects with all other groups
         return otherGroups.every(group => intersectionOf(group, skuIds).length > 0)
       }
       optionElements.forEach(option => {
-        const available = isAvailable(getSkus(option))
-        option.toggleAttribute("disabled", !available)
+        const availableMatches = hasIntersection(getSkus(option, true))
+        const unavailableMatches = hasIntersection(getSkus(option, false))
+        option.toggleAttribute("disabled", !availableMatches && !unavailableMatches)
+        option.toggleAttribute("unavailable", !availableMatches && unavailableMatches)
       })
     })
   }
@@ -94,19 +110,20 @@ export class NostoSkuOptions extends HTMLElement {
     const optionId = this.name
     const selected = optionElements.find(o => o.hasAttribute("selected"))
     if (selected) {
-      const skuIds = getSkus(selected)
+      const skuIds = getAllSkus(selected)
       selectSkuOption(optionId, skuIds)
     }
+    setAvailability(optionElements)
   }
 
   private registerClickEvents({ selectSkuOption }: Store, optionElements: HTMLElement[]) {
     const optionId = this.name
     optionElements.forEach(option => {
       option.addEventListener("click", () => {
-        if (option.hasAttribute("disabled")) {
+        if (option.hasAttribute("disabled") || option.hasAttribute("unavailable")) {
           return
         }
-        const skuIds = getSkus(option)
+        const skuIds = getAllSkus(option)
         option.toggleAttribute("selected", true)
         optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
         selectSkuOption(optionId, skuIds)

@@ -72,6 +72,12 @@ nosto-sku-options span[selected] {
 
 nosto-sku-options span[disabled] {
   opacity: 0.2;
+  cursor: not-allowed;
+}
+
+nosto-sku-options span[unavailable] {
+  text-decoration: line-through;
+  cursor: not-allowed;
 }
 
 .btn__atc {
