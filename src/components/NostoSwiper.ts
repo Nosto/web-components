@@ -21,7 +21,7 @@ export class NostoSwiper extends HTMLElement {
   }
 
   private getConfigFromScript(): Record<string, unknown> {
-    const script = this.querySelector("#nosto-swiper-config")
+    const script = this.querySelector("[swiper-config]")
     if (!script) {
         return {}
     }
