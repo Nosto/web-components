@@ -5,11 +5,9 @@ const swiperJs = "https://cdn.jsdelivr.net/npm/swiper@latest/swiper-bundle.min.m
 @customElement("nosto-swiper")
 export class NostoSwiper extends HTMLElement {
   static attributes = {
-    library: String,
     containerSelector: String
   }
 
-  library!: string
   containerSelector!: string
   config!: Record<string, unknown>
 
@@ -19,7 +17,7 @@ export class NostoSwiper extends HTMLElement {
 
   connectedCallback() {
     this.config = this.getConfigFromScript()
-    this.initLibrary()
+    this.loadSwiper()
   }
 
   private getConfigFromScript(): Record<string, unknown> {
@@ -33,17 +31,6 @@ export class NostoSwiper extends HTMLElement {
     } catch (error) {
       console.error("Invalid JSON in script tag.")
       return {}
-    }
-  }
-
-  async initLibrary() {
-    switch (this.library) {
-      case "swiper":
-        await this.loadSwiper()
-        break
-      // Add cases for other libraries as needed
-      default:
-        console.warn(`Library ${this.library} is not supported.`)
     }
   }
 
