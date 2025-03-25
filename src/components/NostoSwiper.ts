@@ -2,30 +2,24 @@ import { customElement } from "./decorators"
 
 const swiperJs = "https://cdn.jsdelivr.net/npm/swiper@latest/swiper-bundle.min.mjs"
 
-@customElement("nosto-scroller")
-export class NostoScroller extends HTMLElement {
-  _config?: Record<string, unknown>
-  _version?: string
+@customElement("nosto-swiper")
+export class NostoSwiper extends HTMLElement {
+  static attributes = {
+    library: String,
+    containerSelector: String
+  }
+
+  library!: string
+  containerSelector!: string
+  config!: Record<string, unknown>
+
   constructor() {
     super()
   }
 
   connectedCallback() {
-    this._config = this.getConfigFromScript()
-    this._version = this.version ?? "latest"
+    this.config = this.getConfigFromScript()
     this.initLibrary()
-  }
-
-  get library() {
-    return this.getAttribute("library")
-  }
-
-  get version() {
-    return this.getAttribute("version")
-  }
-
-  get containerSelector() {
-    return this.getAttribute("container-selector")
   }
 
   private getConfigFromScript(): Record<string, unknown> {
@@ -63,6 +57,6 @@ export class NostoScroller extends HTMLElement {
 
     const swiperContainer = this.querySelector(this.containerSelector || ".swiper")
 
-    new Swiper(swiperContainer, this._config)
+    new Swiper(swiperContainer, this.config)
   }
 }

@@ -28,7 +28,7 @@ const mapping = {
   "/dual": "dual/dual-sku",
   "/dual-select": "dual-select/dual-sku",
   "/trio": "trio/trio",
-  "/scroller": "scroller/scroller",
+  "/swiper": "swiper/swiper",
 }
 Object.entries(mapping).forEach(([path, template]) => {
   app.get(path, (req, res) => {

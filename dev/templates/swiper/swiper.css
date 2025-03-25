@@ -22,7 +22,7 @@ body {
         overflow: auto hidden;
         scrollbar-width: none;
 
-        nosto-scroller {
+        nosto-swiper {
             width: 100%;
         }
 
