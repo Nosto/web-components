@@ -145,6 +145,8 @@ Trio SKU selection group
 | `n-skus` | Comma-separated value of linked available SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
 | `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered. |
 
+Disabled options that are not available due to selections in other groups are marked with the `disabled` attribute and unavailable options that are Out of stock are marked with the `unavailable` attribute. Both should be styled distinctly.
+
 ### NostoShopify
 
 A component wrapper for performing Shopify specific APIs.
