@@ -12,11 +12,9 @@ function getAllSkus(element: Element) {
 }
 
 function setAvailability(elements: Element[]) {
-  elements
-    .filter(o => !o.getAttribute("n-skus"))
-    .forEach(o => {
-      o.toggleAttribute("unavailable", true)
-    })
+  elements.forEach(o => {
+    o.toggleAttribute("unavailable", !o.getAttribute("n-skus"))
+  })
 }
 
 @customElement("nosto-sku-options")

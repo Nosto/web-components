@@ -324,7 +324,7 @@ describe("NostoSkuOptions", () => {
       element("black").click() // 145,123
       verify({
         selected: ["black"],
-        unavailable: [],
+        unavailable: [], // should be l
         disabled: ["l", "m"]
       })
     })
