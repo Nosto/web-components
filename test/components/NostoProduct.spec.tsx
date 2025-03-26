@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
 import { EventName } from "@/store/placement-events"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createElement } from "../utils/jsx"
 
 describe("NostoProduct", () => {
   let element: NostoProduct
@@ -96,25 +98,24 @@ describe("NostoProduct", () => {
     })
 
     it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
-      element.innerHTML = `
-      <div n-sku-id="456">
-        <div n-atc>Add to Cart</div>
-      </div>
-    `
+      element.appendChild(
+        <div n-sku-id="456">
+          <div n-atc>Add to Cart</div>
+        </div>
+      )
       element.connectedCallback()
 
       checkSkuAddToCart("456")
     })
 
     it("should emit nosto:atc:no-sku event when no sku is selected", async () => {
-      element.innerHTML = `
-      <div n-atc>Add to Cart</div>
-    `
+      element.appendChild(<div n-atc>Add to Cart</div>)
+
       const placementElement = document.createElement("div")
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
       placementElement.appendChild(element)
-      document.body.appendChild(placementElement)
+      document.body.replaceChildren(placementElement)
 
       const detail = waitForPlacementEvent("atc:no-sku-selected")
       element.querySelector<HTMLElement>("[n-atc]")!.click()
@@ -122,11 +123,11 @@ describe("NostoProduct", () => {
     })
 
     it("should toggle sku-selected attribute when selectedSkuId changes", () => {
-      element.innerHTML = `
-      <div n-sku-id="456">
-        <div n-atc>Add to Cart</div>
-      </div>
-    `
+      element.appendChild(
+        <div n-sku-id="456">
+          <div n-atc>Add to Cart</div>
+        </div>
+      )
       element.connectedCallback()
 
       expect(element.hasAttribute("sku-selected")).toBe(false)
@@ -135,14 +136,14 @@ describe("NostoProduct", () => {
     })
 
     it("should handle [n-atc] on every individual sku option", () => {
-      element.innerHTML = `
-      <div n-sku-id="456">
-        <span n-atc>Blue</span>
-      </div>
-      <div n-sku-id="101">
-        <span n-atc>Black</span>
-      </div>
-    `
+      element.append(
+        <div n-sku-id="456">
+          <span n-atc>Blue</span>
+        </div>,
+        <div n-sku-id="101">
+          <span n-atc>Black</span>
+        </div>
+      )
       element.connectedCallback()
 
       checkSkuAddToCart("456")
@@ -150,13 +151,15 @@ describe("NostoProduct", () => {
     })
 
     it("should pick n-sku-selector change events", () => {
-      element.innerHTML = `
-      <select n-sku-selector>
-        <option value="456">SKU 1</option>
-        <option value="457" selected>SKU 2</option>
-      </select>
-      <div n-atc>Add to cart</div>
-      `
+      element.append(
+        <select n-sku-selector>
+          <option value="456">SKU 1</option>
+          <option value="457" selected>
+            SKU 2
+          </option>
+        </select>,
+        <div n-atc>Add to cart</div>
+      )
       element.connectedCallback()
 
       element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
@@ -164,11 +167,7 @@ describe("NostoProduct", () => {
     })
 
     it("should pick up [n-sku-id] clicks", () => {
-      element.innerHTML = `
-      <div n-sku-id="234">1st sku</div>
-      <div n-sku-id="345">end sku</div>
-      <div n-atc>Add to cart</div>
-    `
+      element.append(<div n-sku-id="234">1st sku</div>, <div n-sku-id="345">end sku</div>, <div n-atc>Add to cart</div>)
       element.connectedCallback()
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
@@ -180,13 +179,9 @@ describe("NostoProduct", () => {
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
 
-      element.innerHTML = `
-      <div n-sku-id="234">1st sku</div>
-      <div n-sku-id="345">end sku</div>
-      <div n-atc>Add to cart</div>
-    `
+      element.append(<div n-sku-id="234">1st sku</div>, <div n-sku-id="345">end sku</div>, <div n-atc>Add to cart</div>)
       placementElement.appendChild(element)
-      document.body.appendChild(placementElement)
+      document.body.replaceChildren(placementElement)
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
       await checkProductAddToCartCompleteEvent()
@@ -197,16 +192,16 @@ describe("NostoProduct", () => {
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
 
-      element.innerHTML = `
-    <div n-sku-id="456">
-      <span n-atc>Blue</span>
-    </div>
-    <div n-sku-id="101">
-      <span n-atc>Black</span>
-    </div>
-  `
+      element.append(
+        <div n-sku-id="456">
+          <span n-atc>Blue</span>
+        </div>,
+        <div n-sku-id="101">
+          <span n-atc>Black</span>
+        </div>
+      )
       placementElement.appendChild(element)
-      document.body.appendChild(placementElement)
+      document.body.replaceChildren(placementElement)
 
       await checkSkuAddToCartCompleteEvent("456")
       await checkSkuAddToCartCompleteEvent("101")

@@ -2,6 +2,8 @@ import { describe, it, beforeEach, expect, vi } from "vitest"
 import "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
 import { NostoProduct } from "@/components/NostoProduct"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createElement } from "../utils/jsx"
 
 const values = ["black", "white", "blue", "l", "m", "s", "cotton", "silk", "wool"] as const
 type SkuOptionValue = (typeof values)[number]
@@ -59,21 +61,21 @@ describe("NostoSkuOptions", () => {
     })
 
     function loadContent() {
-      document.body.innerHTML = `
-      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
-        <nosto-sku-options name="colors">
-          <span black n-option n-skus="123,145">Black</span>
-          <span white n-option n-skus="223,234,245">White</span>
-          <span blue n-option n-skus="334,345">Blue</span>
-        </nosto-sku-options>
-        <nosto-sku-options name="sizes">
-          <span l n-option n-skus="123,223">L</span>
-          <span m n-option n-skus="234,334">M</span>
-          <span s n-option n-skus="145,245,345">S</span>
-        </nosto-sku-options>
-        <span n-atc>Add to cart</span>
-      </nosto-product>
-    `
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="123,145"></span>
+            <span white n-option n-skus="223,234,245"></span>
+            <span blue n-option n-skus="334,345"></span>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span l n-option n-skus="123,223"></span>
+            <span m n-option n-skus="234,334"></span>
+            <span s n-option n-skus="145,245,345"></span>
+          </nosto-sku-options>
+          <span n-atc>Add to cart</span>
+        </nosto-product>
+      )
     }
 
     it("selected skuId should be undefined when all SKU options are not selected", () => {
@@ -141,26 +143,26 @@ describe("NostoSkuOptions", () => {
     })
 
     function loadContent() {
-      document.body.innerHTML = `
-      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
-        <nosto-sku-options name="colors">
-          <select n-target>
-            <option value="black" n-skus="123,145">Black</span>
-            <option value="white" n-skus="223,234,245">White</span>
-            <option value="blue" n-skus="334,345">Blue</span>
-          </select>  
-        </nosto-sku-options>
-        <nosto-sku-options name="sizes">
-          <select n-target>
-            <option>Unselected</option>
-            <option value="l" n-skus="123,223">L</span>
-            <option value="m" n-skus="234,334">M</span>
-            <option value="s" n-skus="145,245,345">S</span>
-          </select>  
-        </nosto-sku-options>
-        <span n-atc>Add to cart</span>
-      </nosto-product>
-    `
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <nosto-sku-options name="colors">
+            <select n-target>
+              <option value="black" n-skus="123,145"></option>
+              <option value="white" n-skus="223,234,245"></option>
+              <option value="blue" n-skus="334,345"></option>
+            </select>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <select n-target>
+              <option>Unselected</option>
+              <option value="l" n-skus="123,223"></option>
+              <option value="m" n-skus="234,334"></option>
+              <option value="s" n-skus="145,245,345"></option>
+            </select>
+          </nosto-sku-options>
+          <span n-atc>Add to cart</span>
+        </nosto-product>
+      )
     }
 
     it("should handle preselection", () => {
@@ -197,25 +199,26 @@ describe("NostoSkuOptions", () => {
     })
 
     function loadContent() {
-      document.body.innerHTML = `
-      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
-        <nosto-sku-options name="colors">
-          <span black n-option n-skus="123,145">Black</span>
-          <span white n-option n-skus="223,234,245">White</span>
-          <span blue n-option n-skus="334,345">Blue</span>
-        </nosto-sku-options>
-        <nosto-sku-options name="sizes">
-          <span l n-option n-skus="123,223">L</span>
-          <span m n-option n-skus="234,334">M</span>
-          <span s n-option n-skus="145,245,345">S</span>
-        </nosto-sku-options>
-        <nosto-sku-options name="materials">
-          <span cotton n-option n-skus="123,234,345">Cotton</span>
-          <span silk n-option n-skus="145,223,334">Silk</span>
-          <span wool n-option n-skus="245">Wool</span>
-        </nosto-sku-options>  
-        <span n-atc>Add to cart</span>
-      </nosto-product>`
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="123,145"></span>
+            <span white n-option n-skus="223,234,245"></span>
+            <span blue n-option n-skus="334,345"></span>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span l n-option n-skus="123,223"></span>
+            <span m n-option n-skus="234,334"></span>
+            <span s n-option n-skus="145,245,345"></span>
+          </nosto-sku-options>
+          <nosto-sku-options name="materials">
+            <span cotton n-option n-skus="123,234,345"></span>
+            <span silk n-option n-skus="145,223,334"></span>
+            <span wool n-option n-skus="245"></span>
+          </nosto-sku-options>
+          <span n-atc>Add to cart</span>
+        </nosto-product>
+      )
     }
 
     it("should prune selection", () => {
@@ -295,21 +298,21 @@ describe("NostoSkuOptions", () => {
 
     function loadContent() {
       // 123 and 223 are OOS
-      document.body.innerHTML = `
-      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
-        <nosto-sku-options name="colors">
-          <span black n-option n-skus="145" n-skus-oos="123">Black</span>
-          <span white n-option n-skus="234,245" n-skus-oos="223">White</span>
-          <span blue n-option n-skus="334,345">Blue</span>
-        </nosto-sku-options>
-        <nosto-sku-options name="sizes">
-          <span l n-option n-skus-oos="123,223">L</span>
-          <span m n-option n-skus="234,334">M</span>
-          <span s n-option n-skus="145,245,345">S</span>
-        </nosto-sku-options>
-        <span n-atc>Add to cart</span>
-      </nosto-product>
-    `
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="145" n-skus-oos="123"></span>
+            <span white n-option n-skus="234,245" n-skus-oos="223"></span>
+            <span blue n-option n-skus="334,345"></span>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span l n-option n-skus-oos="123,223"></span>
+            <span m n-option n-skus="234,334"></span>
+            <span s n-option n-skus="145,245,345"></span>
+          </nosto-sku-options>
+          <span n-atc>Add to cart</span>
+        </nosto-product>
+      )
     }
 
     it("should mark out-of-stock options as unavailable", () => {
