@@ -5,7 +5,7 @@ import { NostoProduct } from "@/components/NostoProduct"
 
 const values = ["black", "white", "blue", "l", "m", "s", "cotton", "silk", "wool"] as const
 type SkuOptionValue = (typeof values)[number]
-type Verification = "selected" | "unselected" | "enabled" | "disabled"
+type Verification = "selected" | "unselected" | "enabled" | "disabled" | "unavailable"
 type Options = Partial<Record<Verification, SkuOptionValue[]>>
 
 const PROD_ID = "987"
@@ -21,14 +21,15 @@ function expectMatches(predicate: (el: HTMLElement) => boolean, expected: SkuOpt
   }
 }
 
-function verify({ enabled, disabled, selected, unselected }: Options) {
+function verify({ enabled, disabled, selected, unselected, unavailable }: Options) {
   expectMatches(el => !el.hasAttribute("disabled"), enabled)
   expectMatches(el => el.hasAttribute("disabled"), disabled)
   expectMatches(el => el.hasAttribute("selected"), selected)
   expectMatches(el => !el.hasAttribute("selected"), unselected)
+  expectMatches(el => el.hasAttribute("unavailable"), unavailable)
 }
 
-describe("NostoSkuOptions side effects", () => {
+describe("NostoSkuOptions", () => {
   const colors = ["black", "white", "blue"] as const
   const sizes = ["l", "m", "s"] as const
   const materials = ["cotton", "silk", "wool"] as const
@@ -281,6 +282,59 @@ describe("NostoSkuOptions side effects", () => {
         selected: ["silk", "m", "blue"],
         enabled: ["white", "s", "cotton", "blue", "m", "silk"],
         disabled: ["black", "l", "wool"]
+      })
+    })
+  })
+
+  describe("Two sku option groups with OOS products", () => {
+    beforeEach(() => {
+      loadContent()
+      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      window.Nosto = { addSkuToCart: vi.fn() }
+    })
+
+    function loadContent() {
+      // 123 and 223 are OOS
+      document.body.innerHTML = `
+      <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
+        <nosto-sku-options name="colors">
+          <span black n-option n-skus="145" n-skus-oos="123">Black</span>
+          <span white n-option n-skus="234,245" n-skus-oos="223">White</span>
+          <span blue n-option n-skus="334,345">Blue</span>
+        </nosto-sku-options>
+        <nosto-sku-options name="sizes">
+          <span l n-option n-skus-oos="123,223">L</span>
+          <span m n-option n-skus="234,334">M</span>
+          <span s n-option n-skus="145,245,345">S</span>
+        </nosto-sku-options>
+        <span n-atc>Add to cart</span>
+      </nosto-product>
+    `
+    }
+
+    it("should mark out-of-stock options as unavailable", () => {
+      verify({
+        selected: [],
+        unavailable: ["l"],
+        disabled: []
+      })
+    })
+
+    it("should handle selection with out-of-stock options", () => {
+      element("black").click() // 145,123
+      verify({
+        selected: ["black"],
+        unavailable: ["l"],
+        disabled: ["m"]
+      })
+    })
+
+    it("should handle selection with out-of-stock options2", () => {
+      element("blue").click() // 334,345
+      verify({
+        selected: ["blue"],
+        unavailable: [],
+        disabled: ["l"]
       })
     })
   })
