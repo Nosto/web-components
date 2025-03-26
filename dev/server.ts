@@ -35,4 +35,8 @@ Object.entries(mapping).forEach(([path, template]) => {
   })
 })
 
+app.use("/placements", (req, res) => {
+  res.sendFile(path.resolve(import.meta.dirname, `templates/placements/index.html`))
+})
+
 export default app
