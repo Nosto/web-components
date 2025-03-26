@@ -1,43 +1,33 @@
 import { customElement } from "./decorators"
 import type { SwiperOptions } from "swiper/types"
 
-const swiperJs = "https://cdn.jsdelivr.net/npm/swiper@latest/swiper-bundle.min.mjs"
+const swiperBase = "https://cdn.jsdelivr.net/npm/swiper@latest"
+const swiperJs = `${swiperBase}/swiper.mjs`
 
 @customElement("nosto-swiper")
 export class NostoSwiper extends HTMLElement {
   static attributes = {
-    containerSelector: String
+    containerSelector: String,
   }
 
   containerSelector!: string
-  config!: SwiperOptions
 
   constructor() {
     super()
   }
 
   connectedCallback() {
-    this.config = this.getConfigFromScript()
-    this.loadSwiper()
+    const config = this.getConfigFromScript() 
+    this.loadSwiper(config)
   }
 
   private getConfigFromScript(): SwiperOptions {
-    const script = this.querySelector("[swiper-config]")
-    if (!script) {
-        return {}
-    }
-
-    try {
-      return JSON.parse(script.textContent || "{}")
-    } catch (error) {
-      console.error("Invalid JSON in script tag.")
-      return {}
-    }
+    const config = this.querySelector("[swiper-config]")
+    return config ? JSON.parse(config.textContent!) : {}
   }
 
-  async loadSwiper() {
-    const Swiper =
-      window.Swiper ?? (await import(swiperJs)).default
+  async loadSwiper(config: SwiperOptions) {
+    const Swiper = window.Swiper ?? (await import(swiperJs)).default
     if (typeof Swiper === "undefined") {
       console.error("Swiper library is not loaded.")
       return
@@ -49,6 +39,6 @@ export class NostoSwiper extends HTMLElement {
       console.error("Swiper container not found.")
     }
 
-    new Swiper(swiperContainer, this.config)
+    new Swiper(swiperContainer, config)
   }
 }
