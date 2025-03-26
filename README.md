@@ -142,7 +142,8 @@ Trio SKU selection group
 | Attribute | Description |
 |-----------|-------------|
 | `n-option` | Marks an element as SKU option element |
-| `n-skus` | Comma-separated value of linked SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
+| `n-skus` | Comma-separated value of linked available SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
+| `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered. |
 
 ### NostoShopify
 
