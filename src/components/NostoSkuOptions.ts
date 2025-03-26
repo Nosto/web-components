@@ -96,7 +96,7 @@ export class NostoSkuOptions extends HTMLElement {
         return otherGroups.every(group => intersectionOf(group, skuIds).length > 0)
       }
       optionElements.forEach(option => {
-        const availableMatches = hasIntersection(getSkus(option, true))
+        const availableMatches = hasIntersection(getSkus(option))
         const unavailableMatches = hasIntersection(getSkus(option, false))
         option.toggleAttribute("disabled", !availableMatches && !unavailableMatches)
         option.toggleAttribute("unavailable", !availableMatches && unavailableMatches)
