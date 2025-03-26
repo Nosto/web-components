@@ -298,7 +298,7 @@ describe("NostoSkuOptions", () => {
       document.body.innerHTML = `
       <nosto-product product-id="${PROD_ID}" reco-id="${RECO_ID}">
         <nosto-sku-options name="colors">
-          <span black n-option n-skus="145" n-skus-oos="123>Black</span>
+          <span black n-option n-skus="145" n-skus-oos="123">Black</span>
           <span white n-option n-skus="234,245" n-skus-oos="223">White</span>
           <span blue n-option n-skus="334,345">Blue</span>
         </nosto-sku-options>
@@ -324,8 +324,8 @@ describe("NostoSkuOptions", () => {
       element("black").click() // 145,123
       verify({
         selected: ["black"],
-        unavailable: [], // should be l
-        disabled: ["l", "m"]
+        unavailable: ["l"],
+        disabled: ["m"]
       })
     })
 
