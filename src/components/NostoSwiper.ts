@@ -33,6 +33,14 @@ export class NostoSwiper extends HTMLElement {
       return
     }
 
+    if (config.modules) {
+      config.modules = await Promise.all(
+        config.modules.map(
+          module => import(`${swiperBase}/modules/${module}.mjs`).then(mod => mod.default)
+        )
+      )
+    }
+
     const swiperContainer = this.querySelector(this.containerSelector || ".swiper")
 
     if (!swiperContainer) {
