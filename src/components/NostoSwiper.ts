@@ -18,7 +18,7 @@ export class NostoSwiper extends HTMLElement {
 
   connectedCallback() {
     const config = this.getConfigFromScript()
-    this.loadSwiper(config)
+    return this.loadSwiper(config)
   }
 
   private getConfigFromScript(): SwiperOptions {

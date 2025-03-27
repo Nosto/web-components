@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoSwiper } from "../../src/components/NostoSwiper"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
 const mockSwiper = vi.fn()
