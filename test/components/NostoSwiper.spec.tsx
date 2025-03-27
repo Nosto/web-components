@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoSwiper } from "../../src/components/NostoSwiper"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
 const mockSwiper = vi.fn()
@@ -7,9 +8,8 @@ const mockSwiper = vi.fn()
 describe("NostoSwiper", () => {
   let element: NostoSwiper
 
-
   beforeEach(() => {
-    element = new NostoSwiper() 
+    element = new NostoSwiper()
     vi.restoreAllMocks()
     vi.stubGlobal("Swiper", undefined)
   })
@@ -21,23 +21,19 @@ describe("NostoSwiper", () => {
 
     it("should use the global Swiper object if available", async () => {
       vi.stubGlobal("Swiper", mockSwiper)
-
-      element.append(
-        <div class="swiper-test"></div>
-    )
+      element.setAttribute("container-selector", ".swiper-test")
+      element.append(<div class="swiper-test"></div>)
 
       await element.connectedCallback()
-      expect(mockSwiper).toHaveBeenCalled()
+      expect(mockSwiper).toHaveBeenCalledWith(".swiper-test", {})
     })
 
-    it.skip("should load Swiper from CDN if global Swiper is not available", async () => {
-      vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => {
-        return { default: mockSwiper };
-      })
-      element.setAttribute("container-selector", ".swiper-test")
-      element.append(
-        <div class="swiper-test"></div>
-      )
+    it("should load Swiper from CDN if global Swiper is not available", async () => {
+      vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({
+        default: mockSwiper
+      }))
+      element.setAttribute("container-selector", ".swiper-test-cdn")
+      element.append(<div class="swiper-test-cdn"></div>)
 
       await element.connectedCallback()
       expect(mockSwiper).toHaveBeenCalled()
