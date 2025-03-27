@@ -25,7 +25,7 @@ describe("NostoSwiper", () => {
       element.append(<div class="swiper-test"></div>)
 
       await element.connectedCallback()
-      expect(mockSwiper).toHaveBeenCalledWith(".swiper-test", {})
+      expect(mockSwiper).toHaveBeenCalledWith(element.firstChild, {})
     })
 
     it("should load Swiper from CDN if global Swiper is not available", async () => {
