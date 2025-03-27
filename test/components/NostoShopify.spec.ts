@@ -22,7 +22,7 @@ describe("NostoShopify", () => {
     const wrapper = document.createElement("div")
     wrapper.classList.add("nosto_element")
     wrapper.id = "test-campaign"
-    document.body.appendChild(wrapper)
+    document.body.replaceChildren(wrapper)
 
     element.setAttribute("markets", "")
     wrapper.appendChild(element)

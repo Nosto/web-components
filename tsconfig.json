@@ -20,6 +20,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
+    /* JSX */
+    "jsx": "react",
+    "jsxFactory": "createElement",
+    "jsxFragmentFactory": "createFragment",
+
     "paths": {
       "@/*": ["./src/*"]
     }

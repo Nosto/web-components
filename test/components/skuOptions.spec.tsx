@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { NostoProduct } from "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createElement } from "../utils/jsx"
 
 describe("sku options integration", () => {
   const element = (selector: string) => document.querySelector<HTMLElement>(selector)!
@@ -14,19 +16,19 @@ describe("sku options integration", () => {
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 
-    nostoProduct.innerHTML = `
+    nostoProduct.append(
       <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145">Black</span>
-        <span white n-option n-skus="223,234,245">White</span>
-        <span blue n-option n-skus="334,345">Blue</span>
-      </nosto-sku-options>
+        <span black n-option n-skus="123,145"></span>
+        <span white n-option n-skus="223,234,245"></span>
+        <span blue n-option n-skus="334,345"></span>
+      </nosto-sku-options>,
       <nosto-sku-options name="sizes">
-        <span l n-option n-skus="123,223">L</span>
-        <span m n-option n-skus="234,334">M</span>
-        <span s n-option n-skus="145,245,345">S</span>
+        <span l n-option n-skus="123,223"></span>
+        <span m n-option n-skus="234,334"></span>
+        <span s n-option n-skus="145,245,345"></span>
       </nosto-sku-options>
-        `
-    document.body.appendChild(nostoProduct)
+    )
+    document.body.replaceChildren(nostoProduct)
 
     // click on option should select it
     element("[black]").click()
@@ -78,19 +80,19 @@ describe("sku options integration", () => {
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 
-    nostoProduct.innerHTML = `
+    nostoProduct.append(
       <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145" selected>Black</span>
-        <span white n-option n-skus="223,234,245">White</span>
-        <span blue n-option n-skus="334,345">Blue</span>
-      </nosto-sku-options>
+        <span black n-option n-skus="123,145" selected></span>
+        <span white n-option n-skus="223,234,245"></span>
+        <span blue n-option n-skus="334,345"></span>
+      </nosto-sku-options>,
       <nosto-sku-options name="sizes">
-        <span l n-option n-skus="123,223">L</span>
-        <span m n-option n-skus="234,334">M</span>
-        <span s n-option n-skus="145,245,345">S</span>
+        <span l n-option n-skus="123,223"></span>
+        <span m n-option n-skus="234,334"></span>
+        <span s n-option n-skus="145,245,345"></span>
       </nosto-sku-options>
-        `
-    document.body.appendChild(nostoProduct)
+    )
+    document.body.replaceChildren(nostoProduct)
 
     // m size should be disabled
     expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
@@ -108,19 +110,19 @@ describe("sku options integration", () => {
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 
-    nostoProduct.innerHTML = `
+    nostoProduct.append(
       <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145" selected>Black</span>
-        <span white n-option n-skus="223,234,245">White</span>
-        <span blue n-option n-skus="334,345">Blue</span>
-      </nosto-sku-options>
+        <span black n-option n-skus="123,145" selected></span>
+        <span white n-option n-skus="223,234,245"></span>
+        <span blue n-option n-skus="334,345"></span>
+      </nosto-sku-options>,
       <nosto-sku-options name="sizes">
-        <span l n-option n-skus="123,223">L</span>
-        <span m n-option n-skus="234,334">M</span>
-        <span s n-option n-skus="145,245,345" selected>S</span>
+        <span l n-option n-skus="123,223"></span>
+        <span m n-option n-skus="234,334"></span>
+        <span s n-option n-skus="145,245,345" selected></span>
       </nosto-sku-options>
-        `
-    document.body.appendChild(nostoProduct)
+    )
+    document.body.replaceChildren(nostoProduct)
 
     // m size should be disabled
     expect(element("[l]").hasAttribute("disabled")).toBeFalsy()
