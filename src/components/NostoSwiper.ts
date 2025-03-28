@@ -31,7 +31,7 @@ export class NostoSwiper extends HTMLElement {
   async initSwiper(config: SwiperOptions) {
     // Load Swiper from store context or fallback to CDN
     const Swiper: Swiper = window.Swiper ?? (await import(swiperJs)).default
-    if (!Swiper) {
+    if (typeof Swiper === "undefined") {
       throw new Error("Swiper library is not loaded.")
     }
 

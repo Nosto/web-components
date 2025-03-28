@@ -1,9 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
+
+vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: undefined }))
+
 import { NostoSwiper } from "../../src/components/NostoSwiper"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 import Swiper from "swiper"
 import { SwiperOptions } from "swiper/types"
+import * as SwiperCdn from "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
 
 describe("NostoSwiper", () => {
   let element: NostoSwiper
@@ -24,11 +28,11 @@ describe("NostoSwiper", () => {
     })
 
     it("should throw error on missing container element", async () => {
+      vi.stubGlobal("Swiper", Swiper)
       await expect(element.connectedCallback()).rejects.toThrow("Swiper container not found.")
     })
 
     it("should throw error on missing library", async () => {
-      vi.stubGlobal("Swiper", "")
       element.setAttribute("container-selector", ".swiper-test")
       element.append(<div class="swiper-test"></div>, <script swiper-config>{JSON.stringify(config)}</script>)
 
@@ -45,7 +49,8 @@ describe("NostoSwiper", () => {
     })
 
     it("should load Swiper from CDN if global Swiper is not available", async () => {
-      vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: Swiper }))
+      // @ts-expect-error explicit module mutation for testing
+      SwiperCdn.default = Swiper
       element.setAttribute("container-selector", ".swiper-test-cdn")
       element.append(<div class="swiper-test-cdn"></div>, <script swiper-config>{JSON.stringify(config)}</script>)
 

@@ -5,3 +5,7 @@ interface Window {
   }
   Swiper?: typeof import("swiper").default
 }
+
+declare module "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs" {
+  export default typeof import("swiper").default
+}
