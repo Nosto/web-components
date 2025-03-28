@@ -57,5 +57,32 @@ describe("NostoSwiper", () => {
       await element.connectedCallback()
       expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
     })
+
+    it("should handle invalid config JSON gracefully", async () => {
+      vi.stubGlobal("Swiper", Swiper)
+      element.setAttribute("container-selector", ".swiper-test")
+      element.append(<div class="swiper-test"></div>, <script swiper-config>{"{invalid-json}"}</script>)
+
+      await expect(element.connectedCallback()).rejects.toThrow()
+    })
+
+    it("should validate the slide content", async () => {
+      vi.stubGlobal("Swiper", Swiper)
+      element.setAttribute("container-selector", ".swiper-test-slides")
+      element.append(
+        <div class="swiper-test-slides">
+          <div class="swiper-wrapper">
+            <div class="nosto-swiper-slide">Slide 1</div>
+            <div class="nosto-swiper-slide">Slide 2</div>
+            <div class="nosto-swiper-slide">Slide 3</div>
+          </div>
+        </div>,
+        <script swiper-config>{JSON.stringify({...config, "slideClass": "nosto-swiper-slide"})}</script>
+      )
+
+      await element.connectedCallback()
+      expect(element.querySelector(".swiper-test-slides")?.classList).toContain("swiper-initialized")
+      expect(element.querySelectorAll(".nosto-swiper-slide").length).toBe(3)
+    })
   })
 })

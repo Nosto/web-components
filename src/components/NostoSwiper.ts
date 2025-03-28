@@ -25,7 +25,12 @@ export class NostoSwiper extends HTMLElement {
 
   private getConfigFromScript(): SwiperOptions {
     const config = this.querySelector("script[swiper-config]")
-    return config ? JSON.parse(config.textContent!) : {}
+    try {
+      return config ? JSON.parse(config.textContent!) : {}
+    } catch (error) {
+      console.error("Failed to parse Swiper configuration:", error)
+      return {}
+    }
   }
 
   async initSwiper(config: SwiperOptions) {
