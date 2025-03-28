@@ -20,15 +20,15 @@ export class NostoSwiper extends HTMLElement {
 
   connectedCallback() {
     const config = this.getConfigFromScript()
-    return this.loadSwiper(config)
+    return this.initSwiper(config)
   }
 
   private getConfigFromScript(): SwiperOptions {
-    const config = this.querySelector("[swiper-config]")
+    const config = this.querySelector("script[swiper-config]")
     return config ? JSON.parse(config.textContent!) : {}
   }
 
-  async loadSwiper(config: SwiperOptions) {
+  async initSwiper(config: SwiperOptions) {
     // Load Swiper from store context or fallback to CDN
     const Swiper: Swiper = window.Swiper ?? (await import(swiperJs)).default
     if (typeof Swiper === "undefined") {
