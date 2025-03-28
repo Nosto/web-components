@@ -1,9 +1,12 @@
-type FieldMappings = Record<string, StringConstructor | BooleanConstructor>
+type FieldType<T> = T extends string ? StringConstructor : T extends boolean ? BooleanConstructor : never
 
-type ConstructorMetadata = CustomElementConstructor & { attributes?: FieldMappings }
+type ConstructorMetadata<T extends HTMLElement> = {
+  new (): T
+  attributes?: { [K in keyof T]?: FieldType<T[K]> }
+}
 
-export function customElement(tagName: string) {
-  return function (constructor: ConstructorMetadata) {
+export function customElement<T extends HTMLElement>(tagName: string) {
+  return function (constructor: ConstructorMetadata<T>) {
     if (constructor.attributes) {
       Object.entries(constructor.attributes).forEach(([fieldName, type]) => {
         const attribute = toKebabCase(fieldName)
