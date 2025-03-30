@@ -1,19 +1,21 @@
-import { getSettings } from "@nosto/nosto-js"
 import { customElement } from "./decorators"
 import { NostoProduct } from "./NostoProduct"
-import { evaluate } from "../services/templating"
+import { evaluate } from "@/services/templating"
+import { getData } from "@/services/products"
 
 @customElement("nosto-card")
 export class NostoCard extends HTMLElement {
   static attributes = {
     handle: String,
     recoId: String,
+    data: String,
     template: String,
     wrap: Boolean
   }
 
   handle!: string
   recoId!: string
+  data!: string
   template!: string
   wrap!: boolean
 
@@ -27,8 +29,8 @@ export class NostoCard extends HTMLElement {
   }
 
   private validate() {
-    if (!this.handle) {
-      throw new Error("Product handle is required.")
+    if (!this.data && !this.handle) {
+      throw new Error("Product data or handle is required.")
     }
     if (!this.recoId) {
       throw new Error("Slot ID is required.")
@@ -39,18 +41,11 @@ export class NostoCard extends HTMLElement {
   }
 
   private async render() {
-    // shopify start
     this.toggleAttribute("loading", true)
-    const data = await fetch(`products/${this.handle}.json`)
-    const product = (await data.json()).product
-    const { parameterlessAttribution, nostoRefParam } = getSettings() ?? {}
-    // TODO how to handle parameterless attribution
-    if (!parameterlessAttribution) {
-      product.url = `/products/${this.handle}?${nostoRefParam}=${this.recoId}`
-    }
-    // shopify end
-
-    const html = await evaluate(this.template, product)
+    const product = this.data
+      ? getJsonFromElement(this.data)
+      : await getData({ handle: this.handle, recoId: this.recoId })
+    const html = await evaluate(this.template, { product, data: this.dataset })
 
     if (this.wrap) {
       const wrapper = new NostoProduct()
@@ -63,4 +58,12 @@ export class NostoCard extends HTMLElement {
     }
     this.toggleAttribute("loading", false)
   }
+}
+
+function getJsonFromElement(id: string) {
+  const element = document.getElementById(id)
+  if (!element) {
+    throw new Error(`Element with id ${id} not found`)
+  }
+  return JSON.parse(element.textContent!)
 }
