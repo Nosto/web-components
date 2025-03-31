@@ -44,7 +44,7 @@ export class NostoProductCard extends HTMLElement {
       wrapper.innerHTML = html
       this.appendChild(wrapper)
     } else {
-      this.innerHTML = html
+      this.insertAdjacentHTML("beforeend", html)
     }
     this.toggleAttribute("loading", false)
   }
