@@ -23,6 +23,12 @@ export class NostoProductCard extends HTMLElement {
     return this.render()
   }
 
+  attributeChangedCallback(name: string) {
+    if (this.isConnected && (name === "recoId" || name === "template")) {
+      return this.render()
+    }
+  }
+
   private validate() {
     if (!this.recoId) {
       throw new Error("Slot ID is required.")
