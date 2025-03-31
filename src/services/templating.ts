@@ -1,3 +1,5 @@
+import { Template } from "liquidjs"
+
 const liquidJs = "https://cdn.jsdelivr.net/npm/liquidjs@latest/dist/liquid.browser.esm.js"
 const handlebarsJs = "https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"
 
@@ -16,15 +18,26 @@ export async function evaluate(templateId: string, context: object) {
   }
 }
 
+const liquidCache = new Map<string, Template[]>()
+const handlebarsCache = new Map<string, HandlebarsTemplateDelegate>()
+
 async function evaluateLiquid(templateEl: HTMLElement, context: object) {
-  const Liquid = window.Liquid ?? (await import(liquidJs))
+  const Liquid = (window.Liquid ?? (await import(liquidJs))) as typeof import("liquidjs")
   const engine = new Liquid.Liquid()
-  const tmpl = engine.parse(templateEl.innerHTML)
+  let tmpl = liquidCache.get(templateEl.id)
+  if (!tmpl) {
+    tmpl = engine.parse(templateEl.innerHTML)
+    liquidCache.set(templateEl.id, tmpl)
+  }
   return await engine.render(tmpl, context)
 }
 
 async function evaluateHandlebars(templateEl: HTMLElement, context: object) {
   const Handlebars = window.Handlebars ?? (await import(handlebarsJs))
-  const template = Handlebars.compile(templateEl.innerHTML)
-  return template(context)
+  let tmpl = handlebarsCache.get(templateEl.id)
+  if (!tmpl) {
+    tmpl = Handlebars.compile(templateEl.innerHTML)
+    handlebarsCache.set(templateEl.id, tmpl)
+  }
+  return tmpl(context)
 }
