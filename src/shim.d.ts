@@ -1,8 +1,11 @@
 interface Window {
   Nosto?: {
+    shopifyScript?: boolean
+    bigCommerceScript?: boolean
     addSkuToCart?: import("@nosto/nosto-js").addSkuToCart
     migrateToShopifyMarket?: import("./shopify").MigrateToShopifyMarket
   }
+  Shopify?: unknown
   Swiper?: typeof import("swiper").default
   Liquid?: typeof import("liquidjs")
   Handlebars?: typeof import("handlebars")
