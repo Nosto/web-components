@@ -1,10 +1,10 @@
-import { NostoCard } from "../../src/components/NostoCard"
+import { NostoProductCard } from "../../src/components/NostoProductCard"
 import { describe, beforeEach, expect, it, vi } from "vitest"
 import * as Liquid from "liquidjs"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
-describe("NostoCard", () => {
+describe("NostoProductCard", () => {
   beforeEach(() => {
     document.body.innerHTML = ""
     vi.resetAllMocks()
@@ -12,28 +12,28 @@ describe("NostoCard", () => {
   })
 
   it("should throw an error if handle is not provided", () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.recoId = "test"
     card.template = "test"
     expect(() => card.connectedCallback()).toThrowError("Product data or handle is required.")
   })
 
   it("should throw an error if recoId is not provided", () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.handle = "test"
     card.template = "test"
     expect(() => card.connectedCallback()).toThrowError("Slot ID is required.")
   })
 
   it("should throw an error if template is not provided", () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.handle = "test"
     card.recoId = "test"
     expect(() => card.connectedCallback()).toThrowError("Template is required.")
   })
 
   it("should render the product", async () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.handle = "test"
     card.recoId = "test"
     card.template = "test"
@@ -58,7 +58,7 @@ describe("NostoCard", () => {
   })
 
   it("should render the product from DOM data", async () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.recoId = "test"
     card.data = "test-data"
     card.template = "test-template"
@@ -82,7 +82,7 @@ describe("NostoCard", () => {
   })
 
   it("should expose dataset to template context", async () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.handle = "test"
     card.recoId = "test"
     card.template = "test"
@@ -92,7 +92,7 @@ describe("NostoCard", () => {
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
       <template id="test" type="text/liquid">
-        <h1>{"{{ product.title }} {{ data.test }}"}</h1>
+        <h1>{"{{ product.title }} {{ dataset.test }}"}</h1>
       </template>
     )
 
@@ -107,7 +107,7 @@ describe("NostoCard", () => {
   })
 
   it("should render the product with wrapper", async () => {
-    const card = new NostoCard()
+    const card = new NostoProductCard()
     card.handle = "test"
     card.recoId = "test"
     card.template = "test"

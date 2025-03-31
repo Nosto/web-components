@@ -3,8 +3,8 @@ import { NostoProduct } from "./NostoProduct"
 import { evaluate } from "@/services/templating"
 import { getData } from "@/services/products"
 
-@customElement("nosto-card")
-export class NostoCard extends HTMLElement {
+@customElement("nosto-product-card")
+export class NostoProductCard extends HTMLElement {
   static attributes = {
     handle: String,
     recoId: String,
@@ -45,7 +45,7 @@ export class NostoCard extends HTMLElement {
     const product = this.data
       ? getJsonFromElement(this.data)
       : await getData({ handle: this.handle, recoId: this.recoId })
-    const html = await evaluate(this.template, { product, data: this.dataset })
+    const html = await evaluate(this.template, { product, dataset: this.dataset })
 
     if (this.wrap) {
       const wrapper = new NostoProduct()
