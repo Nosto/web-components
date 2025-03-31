@@ -85,12 +85,15 @@ Marks an element as Add to cart trigger and attaches click event to the element.
 
 ### NostoProductCard
 
-The `NostoProductCard` component acts as a basic product card component where the content is rendered via an externally defined template.
+The `NostoProductCard` component acts as a basic product card component where the content is rendered via an externally defined template. The data is embedded via an inner script element with JSON contents and rendering happens via Liquid or Handlebars using an external template element. 
+
+Unline `NostoProduct` doesn't include any side effects on top of the rendered markup. For side effects the wrap attribute can be used to wrap the inner content in a `NostoProduct` instance.
 
 ```html
 <nosto-product-card reco-id="789011" template="product-card-template">
   <script type="application/json" product-data>
   {
+    "id": "1223456", 
     "image": "https://example.com/images/awesome-product.jpg",
     "title": "Awesome Product",
     "price": "19.99",
