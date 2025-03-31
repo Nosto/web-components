@@ -11,30 +11,20 @@ describe("NostoProductCard", () => {
     window.Liquid = Liquid
   })
 
-  it("should throw an error if handle is not provided", () => {
-    const card = new NostoProductCard()
-    card.recoId = "test"
-    card.template = "test"
-    expect(() => card.connectedCallback()).toThrowError("Product data or handle is required.")
-  })
-
   it("should throw an error if recoId is not provided", () => {
     const card = new NostoProductCard()
-    card.handle = "test"
     card.template = "test"
     expect(() => card.connectedCallback()).toThrowError("Slot ID is required.")
   })
 
   it("should throw an error if template is not provided", () => {
     const card = new NostoProductCard()
-    card.handle = "test"
     card.recoId = "test"
     expect(() => card.connectedCallback()).toThrowError("Template is required.")
   })
 
   it("should render the product", async () => {
     const card = new NostoProductCard()
-    card.handle = "test"
     card.recoId = "test"
     card.template = "test"
     card.wrap = false
@@ -45,22 +35,20 @@ describe("NostoProductCard", () => {
         <h1>{"{{ product.title }}"}</h1>
       </template>
     )
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockProductData)
-    })
+    card.append(
+      <script type="application/json" product-data>
+        {JSON.stringify(mockProductData.product)}
+      </script>
+    )
 
     await card.connectedCallback()
 
-    expect(fetch).toHaveBeenCalledWith("/products/test.json")
     expect(card.innerHTML).toBe("<h1>Test Product</h1>")
   })
 
   it("should render the product from DOM data", async () => {
     const card = new NostoProductCard()
     card.recoId = "test"
-    card.data = "test-data"
     card.template = "test-template"
     card.wrap = false
 
@@ -70,8 +58,8 @@ describe("NostoProductCard", () => {
         <h1>{"{{ product.title }}"}</h1>
       </template>
     )
-    document.body.append(
-      <script type="application/json" id="test-data">
+    card.append(
+      <script type="application/json" product-data>
         {JSON.stringify(mockProductData.product)}
       </script>
     )
@@ -83,7 +71,6 @@ describe("NostoProductCard", () => {
 
   it("should expose dataset to template context", async () => {
     const card = new NostoProductCard()
-    card.handle = "test"
     card.recoId = "test"
     card.template = "test"
     card.wrap = false
@@ -95,11 +82,11 @@ describe("NostoProductCard", () => {
         <h1>{"{{ product.title }} {{ dataset.test }}"}</h1>
       </template>
     )
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockProductData)
-    })
+    card.append(
+      <script type="application/json" product-data>
+        {JSON.stringify(mockProductData.product)}
+      </script>
+    )
 
     await card.connectedCallback()
 
@@ -108,7 +95,6 @@ describe("NostoProductCard", () => {
 
   it("should render the product with wrapper", async () => {
     const card = new NostoProductCard()
-    card.handle = "test"
     card.recoId = "test"
     card.template = "test"
     card.wrap = true
@@ -119,15 +105,16 @@ describe("NostoProductCard", () => {
         <h1>{"{{ product.title }}"}</h1>
       </template>
     )
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockProductData)
-    })
+    card.append(
+      <script type="application/json" product-data>
+        {JSON.stringify(mockProductData.product)}
+      </script>
+    )
 
     await card.connectedCallback()
 
-    expect(fetch).toHaveBeenCalledWith("/products/test.json")
-    expect(card.innerHTML).toBe(`<nosto-product reco-id="test" product-id="123"><h1>Test Product</h1></nosto-product>`)
+    expect(card.children[1].outerHTML).toBe(
+      `<nosto-product reco-id="test" product-id="123"><h1>Test Product</h1></nosto-product>`
+    )
   })
 })

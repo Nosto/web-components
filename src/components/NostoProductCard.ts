@@ -1,21 +1,16 @@
 import { customElement } from "./decorators"
 import { NostoProduct } from "./NostoProduct"
 import { evaluate } from "@/services/templating"
-import { getData } from "@/services/products"
 
 @customElement("nosto-product-card")
 export class NostoProductCard extends HTMLElement {
   static attributes = {
-    handle: String,
     recoId: String,
-    data: String,
     template: String,
     wrap: Boolean
   }
 
-  handle!: string
   recoId!: string
-  data!: string
   template!: string
   wrap!: boolean
 
@@ -29,9 +24,6 @@ export class NostoProductCard extends HTMLElement {
   }
 
   private validate() {
-    if (!this.data && !this.handle) {
-      throw new Error("Product data or handle is required.")
-    }
     if (!this.recoId) {
       throw new Error("Slot ID is required.")
     }
@@ -42,9 +34,7 @@ export class NostoProductCard extends HTMLElement {
 
   private async render() {
     this.toggleAttribute("loading", true)
-    const product = this.data
-      ? getJsonFromElement(this.data)
-      : await getData({ handle: this.handle, recoId: this.recoId })
+    const product = this.getData()
     const html = await evaluate(this.template, { product, dataset: this.dataset })
 
     if (this.wrap) {
@@ -58,12 +48,9 @@ export class NostoProductCard extends HTMLElement {
     }
     this.toggleAttribute("loading", false)
   }
-}
 
-function getJsonFromElement(id: string) {
-  const element = document.getElementById(id)
-  if (!element) {
-    throw new Error(`Element with id ${id} not found`)
+  private getData() {
+    const data = this.querySelector("script[product-data]")
+    return data ? JSON.parse(data.textContent!) : {}
   }
-  return JSON.parse(element.textContent!)
 }
