@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 
 vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: undefined }))
-vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/modules/navigation.mjs", () => ({ default: () => {} }))
+vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/modules/navigation.mjs", () => ({
+  default: function Navigation() {}
+}))
 
 import { NostoSwiper } from "../../src/components/NostoSwiper"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,8 +61,7 @@ describe("NostoSwiper", () => {
       expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
     })
 
-    it.skip("should load Swiper modules from CDN", async () => {
-      vi.stubGlobal("Swiper", Swiper)
+    it("should load and initialize Swiper modules from CDN", async () => {
       element.setAttribute("container-selector", ".swiper-test-modules")
       element.append(
         <div class="swiper-test-modules"></div>,
@@ -68,7 +69,9 @@ describe("NostoSwiper", () => {
       )
 
       await element.connectedCallback()
-      // TODO: Write correct assertion
+      const swiperInstance = element.querySelector(".swiper-test-modules")?.swiper
+      const module = swiperInstance?.modules?.find(module => module.name === "Navigation")
+      expect(module).toBeDefined()
     })
   })
 })

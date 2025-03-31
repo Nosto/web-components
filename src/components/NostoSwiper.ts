@@ -41,9 +41,7 @@ export class NostoSwiper extends HTMLElement {
     // Load Swiper modules present in the config
     if (config.modules) {
       config.modules = await Promise.all(
-        config.modules.map(module =>
-          import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default)
-        )
+        config.modules.map(module => import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default))
       )
     }
 
