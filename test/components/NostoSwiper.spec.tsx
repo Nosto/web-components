@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest"
 
 vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: undefined }))
 vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/modules/navigation.mjs", () => ({
+  // Named dummy function for Swiper module testing purposes
   default: function Navigation() {}
 }))
 
@@ -66,7 +67,6 @@ describe("NostoSwiper", () => {
     const modulesConfig = { ...config, modules: ["navigation"] }
     //@ts-expect-error string is not assignable to SwiperModule
     const element = swiperExample("swiper-test-modules", modulesConfig)
-    element.setAttribute("container-selector", ".swiper-test-modules")
 
     const swiper = await element.connectedCallback()
     const module = swiper?.modules?.find((module: SwiperModule) => module.name === "Navigation")
