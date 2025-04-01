@@ -9,7 +9,7 @@ import { NostoSwiper } from "../../src/components/NostoSwiper"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 import Swiper from "swiper"
-import { SwiperOptions } from "swiper/types"
+import { SwiperOptions, SwiperModule } from "swiper/types"
 import * as SwiperCdn from "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
 
 describe("NostoSwiper", () => {
@@ -65,13 +65,11 @@ describe("NostoSwiper", () => {
 
     it("should load and initialize Swiper modules from CDN", async () => {
       element.setAttribute("container-selector", ".swiper-test-modules")
-      element.append(
-        <div class="swiper-test-modules"></div>,
-        <script swiper-config>{JSON.stringify({ ...config, modules: ["navigation"] })}</script>
-      )
+      //@ts-expect-error string is not assignable to SwiperModule
+      element.append(<SwiperExample className="swiper-test-modules" />, <SwiperConfig config={{...config, "modules": ["navigation"]}} />)
 
       const swiper = await element.connectedCallback()
-      const module = swiper?.modules?.find(module => module.name === "Navigation")
+      const module = swiper?.modules?.find((module: SwiperModule) => module.name === "Navigation")
       expect(module).toBeDefined()
     })
   })
