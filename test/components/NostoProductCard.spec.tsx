@@ -26,12 +26,12 @@ describe("NostoProductCard", () => {
   it("should render the product", async () => {
     const card = new NostoProductCard()
     card.recoId = "test"
-    card.template = "test"
+    card.template = "test1"
     card.wrap = false
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test" type="text/liquid">
+      <template id="test1" type="text/liquid">
         <h1>{"{{ product.title }}"}</h1>
       </template>
     )
@@ -49,12 +49,12 @@ describe("NostoProductCard", () => {
   it("should render the product from DOM data", async () => {
     const card = new NostoProductCard()
     card.recoId = "test"
-    card.template = "test-template"
+    card.template = "test2"
     card.wrap = false
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test-template" type="text/liquid">
+      <template id="test2" type="text/liquid">
         <h1>{"{{ product.title }}"}</h1>
       </template>
     )
@@ -72,14 +72,14 @@ describe("NostoProductCard", () => {
   it("should expose dataset to template context", async () => {
     const card = new NostoProductCard()
     card.recoId = "test"
-    card.template = "test"
+    card.template = "test3"
     card.wrap = false
     card.dataset.test = "test"
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test" type="text/liquid">
-        <h1>{"{{ product.title }} {{ dataset.test }}"}</h1>
+      <template id="test3" type="text/liquid">
+        <h1>{"{{ product.title }} {{ data.test }}"}</h1>
       </template>
     )
     card.append(
@@ -96,12 +96,12 @@ describe("NostoProductCard", () => {
   it("should render the product with wrapper", async () => {
     const card = new NostoProductCard()
     card.recoId = "test"
-    card.template = "test"
+    card.template = "test4"
     card.wrap = true
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test" type="text/liquid">
+      <template id="test4" type="text/liquid">
         <h1>{"{{ product.title }}"}</h1>
       </template>
     )

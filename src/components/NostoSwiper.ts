@@ -20,7 +20,7 @@ export class NostoSwiper extends HTMLElement {
     super()
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     const config = this.getConfigFromScript()
     return this.initSwiper(config)
   }
