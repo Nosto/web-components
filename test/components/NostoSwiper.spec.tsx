@@ -68,9 +68,8 @@ describe("NostoSwiper", () => {
         <script swiper-config>{JSON.stringify({ ...config, modules: ["navigation"] })}</script>
       )
 
-      await element.connectedCallback()
-      const swiperInstance = element.querySelector(".swiper-test-modules")?.swiper
-      const module = swiperInstance?.modules?.find(module => module.name === "Navigation")
+      const swiper = await element.connectedCallback()
+      const module = swiper?.modules?.find(module => module.name === "Navigation")
       expect(module).toBeDefined()
     })
   })

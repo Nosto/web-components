@@ -1,13 +1,3 @@
-import { SwiperModule } from "swiper/types"
-
-declare global {
-  interface Element {
-    swiper?: {
-      modules?: SwiperModule[]
-    }
-  }
-}
-
 interface Window {
   Nosto?: {
     addSkuToCart?: import("@nosto/nosto-js").addSkuToCart
