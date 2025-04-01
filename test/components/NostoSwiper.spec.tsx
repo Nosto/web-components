@@ -63,7 +63,7 @@ describe("NostoSwiper", () => {
   })
 
   it("should load and initialize Swiper modules from CDN", async () => {
-    const modulesConfig = { ...config, modules: ["Navigation"] }
+    const modulesConfig = { ...config, modules: ["navigation"] }
     //@ts-expect-error string is not assignable to SwiperModule
     const element = swiperExample("swiper-test-modules", modulesConfig)
     element.setAttribute("container-selector", ".swiper-test-modules")
