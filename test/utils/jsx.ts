@@ -72,6 +72,8 @@ function appendChild(element: ParentNode, child: MaybeArray<Child>) {
     child.forEach(c => appendChild(element, c))
   } else if (child instanceof DocumentFragment) {
     Array.from(child.children).forEach(c => element.appendChild(c))
+  } else if (element instanceof HTMLTemplateElement) {
+    appendChild(element.content, child)
   } else if (child instanceof HTMLElement) {
     element.appendChild(child)
   } else if (child !== undefined && child !== null && child !== false) {

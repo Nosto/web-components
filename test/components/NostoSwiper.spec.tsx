@@ -16,7 +16,8 @@ describe("NostoSwiper", () => {
   let element: NostoSwiper
 
   const config = {
-    createElements: true
+    createElements: true,
+    loop: true
   } satisfies SwiperOptions
 
   beforeEach(() => {
@@ -37,7 +38,7 @@ describe("NostoSwiper", () => {
 
     it("should throw error on missing library", async () => {
       element.setAttribute("container-selector", ".swiper-test")
-      element.append(<div class="swiper-test"></div>, <script swiper-config>{JSON.stringify(config)}</script>)
+      element.append(<SwiperExample className="swiper-test" />, <SwiperConfig config={config} />)
 
       await expect(element.connectedCallback()).rejects.toThrow("Swiper library is not loaded.")
     })
@@ -45,7 +46,7 @@ describe("NostoSwiper", () => {
     it("should use the global Swiper object if available", async () => {
       vi.stubGlobal("Swiper", Swiper)
       element.setAttribute("container-selector", ".swiper-test")
-      element.append(<div class="swiper-test"></div>, <script swiper-config>{JSON.stringify(config)}</script>)
+      element.append(<SwiperExample className="swiper-test" />, <SwiperConfig config={config} />)
 
       await element.connectedCallback()
       expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
@@ -55,10 +56,11 @@ describe("NostoSwiper", () => {
       // @ts-expect-error explicit module mutation for testing
       SwiperCdn.default = Swiper
       element.setAttribute("container-selector", ".swiper-test-cdn")
-      element.append(<div class="swiper-test-cdn"></div>, <script swiper-config>{JSON.stringify(config)}</script>)
+      element.append(<SwiperExample className="swiper-test-cdn" />, <SwiperConfig config={config} />)
 
       await element.connectedCallback()
       expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
+      expect(element.querySelectorAll("[data-swiper-slide-index]").length).toBe(3)
     })
 
     it("should load and initialize Swiper modules from CDN", async () => {
@@ -74,3 +76,17 @@ describe("NostoSwiper", () => {
     })
   })
 })
+
+function SwiperExample({ className }: { className?: string }) {
+  return (
+    <div className={className}>
+      <div className="swiper-slide">Slide 1</div>
+      <div className="swiper-slide">Slide 2</div>
+      <div className="swiper-slide">Slide 3</div>
+    </div>
+  )
+}
+
+function SwiperConfig({ config }: { config: SwiperOptions }) {
+  return <script swiper-config>{JSON.stringify(config)}</script>
+}

@@ -29,7 +29,8 @@ describe("customElement", () => {
 
   it("should define properties for attributes", () => {
     const tagName = "my-element3"
-    const constructor = class extends HTMLElement {
+    @customElement(tagName)
+    class constructor extends HTMLElement {
       static attributes = {
         foo: String,
         bar: Boolean
@@ -38,8 +39,6 @@ describe("customElement", () => {
       foo!: string
       bar!: boolean
     }
-
-    customElement(tagName)(constructor)
 
     const e = new constructor()
     e.foo = "hello"

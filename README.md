@@ -9,9 +9,11 @@ This package doesn't render HTML markups on its own and the template should be p
 
 This package provides the following web components:
 
-1. NostoProduct
-2. NostoSkuOptions
-3. NostoShopify
+* NostoProduct
+* NostoProductCard
+* NostoSkuOptions
+* NostoShopify
+* NostoSwiper
 
 ### NostoProduct
 
@@ -80,6 +82,37 @@ This component requires the following attributes to parse the markup, extract pr
 
 `n-atc`
 Marks an element as Add to cart trigger and attaches click event to the element. Clicking on this element triggers `addSkuToCart` API and supplies the selected SKU Id.
+
+### NostoProductCard
+
+The `NostoProductCard` component acts as a basic product card component where the content is rendered via an externally defined template. The data is embedded via an inner script element with JSON contents and rendering happens via Liquid or Handlebars using an external template element. 
+
+Unlike `NostoProduct`, this component doesn't include any side effects or platform-specific API support on top of the rendered markup. For side effects the `wrap` attribute can be used to wrap the inner content in a `NostoProduct` instance.
+
+```html
+<nosto-product-card reco-id="789011" template="product-card-template">
+  <script type="application/json" product-data>
+  {
+    "id": "1223456", 
+    "image": "https://example.com/images/awesome-product.jpg",
+    "title": "Awesome Product",
+    "price": "19.99",
+    "listPrice": "29.99"
+  }
+  </script>
+</nosto-product-card>    
+
+<template id="product-card-template" type="text/liquid">
+  <img src="{{ product.image }}" alt="{{ product.title }}" class="product-image" />
+  <h1>{{ product.title }}</h1>
+  <p class="price">
+    <span n-price>{{ product.price }}</span>
+  </p>
+  <p class="list-price">
+    <span n-list-price>{{ product.listPrice }}</span>
+  </p>
+</template>
+```
 
 ### NostoSkuOptions
 
@@ -170,6 +203,12 @@ Usage with select elements
 | `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered. |
 
 Disabled options that are not available due to selections in other groups are marked with the `disabled` attribute and unavailable options that are Out of stock are marked with the `unavailable` attribute. Both should be styled distinctly.
+
+### NostoSwiper
+
+Lightweight Swiper wrapper
+
+TODO examples
 
 ### NostoShopify
 
