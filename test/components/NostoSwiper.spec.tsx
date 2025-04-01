@@ -1,17 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
+import { NostoSwiper } from "../../src/components/NostoSwiper"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createElement } from "../utils/jsx"
+import Swiper from "swiper"
+import { SwiperOptions } from "swiper/types"
+import * as SwiperCdn from "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
 
 vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: undefined }))
 vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/modules/navigation.mjs", () => ({
   // Named dummy function for Swiper module testing purposes
   default: function Navigation() {}
 }))
-
-import { NostoSwiper } from "../../src/components/NostoSwiper"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createElement } from "../utils/jsx"
-import Swiper from "swiper"
-import { SwiperOptions, SwiperModule } from "swiper/types"
-import * as SwiperCdn from "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
 
 describe("NostoSwiper", () => {
   const config = {
@@ -69,7 +68,7 @@ describe("NostoSwiper", () => {
     const element = swiperExample("swiper-test-modules", modulesConfig)
 
     const swiper = await element.connectedCallback()
-    const module = swiper?.modules?.find((module: SwiperModule) => module.name === "Navigation")
+    const module = swiper?.modules?.find(module => module.name === "Navigation")
     expect(module).toBeDefined()
   })
 })
