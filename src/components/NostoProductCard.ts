@@ -35,7 +35,7 @@ export class NostoProductCard extends HTMLElement {
   private async render() {
     this.toggleAttribute("loading", true)
     const product = this.getData()
-    const html = await evaluate(this.template, { product, dataset: this.dataset })
+    const html = await evaluate(this.template, { product, data: this.dataset })
 
     if (this.wrap) {
       const wrapper = new NostoProduct()
