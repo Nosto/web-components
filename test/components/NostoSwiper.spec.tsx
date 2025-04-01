@@ -10,15 +10,12 @@ import { SwiperOptions } from "swiper/types"
 import * as SwiperCdn from "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
 
 describe("NostoSwiper", () => {
-  let element: NostoSwiper
-
   const config = {
     createElements: true,
     loop: true
   } satisfies SwiperOptions
 
   beforeEach(() => {
-    element = new NostoSwiper()
     vi.restoreAllMocks()
     vi.stubGlobal("Swiper", undefined)
   })
@@ -30,20 +27,18 @@ describe("NostoSwiper", () => {
 
     it("should throw error on missing container element", async () => {
       vi.stubGlobal("Swiper", Swiper)
+      const element = new NostoSwiper()
       await expect(element.connectedCallback()).rejects.toThrow("Swiper container not found.")
     })
 
     it("should throw error on missing library", async () => {
-      element.setAttribute("container-selector", ".swiper-test")
-      element.append(<SwiperExample className="swiper-test" />, <SwiperConfig config={config} />)
-
+      const element = swiperExample("swiper-test", config)
       await expect(element.connectedCallback()).rejects.toThrow("Swiper library is not loaded.")
     })
 
     it("should use the global Swiper object if available", async () => {
       vi.stubGlobal("Swiper", Swiper)
-      element.setAttribute("container-selector", ".swiper-test")
-      element.append(<SwiperExample className="swiper-test" />, <SwiperConfig config={config} />)
+      const element = swiperExample("swiper-test", config)
 
       await element.connectedCallback()
       expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
@@ -52,8 +47,7 @@ describe("NostoSwiper", () => {
     it("should load Swiper from CDN if global Swiper is not available", async () => {
       // @ts-expect-error explicit module mutation for testing
       SwiperCdn.default = Swiper
-      element.setAttribute("container-selector", ".swiper-test-cdn")
-      element.append(<SwiperExample className="swiper-test-cdn" />, <SwiperConfig config={config} />)
+      const element = swiperExample("swiper-test-cdn", config)
 
       await element.connectedCallback()
       expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
@@ -62,16 +56,15 @@ describe("NostoSwiper", () => {
   })
 })
 
-function SwiperExample({ className }: { className?: string }) {
+function swiperExample(containerClass: string, config: SwiperOptions) {
   return (
-    <div className={className}>
-      <div className="swiper-slide">Slide 1</div>
-      <div className="swiper-slide">Slide 2</div>
-      <div className="swiper-slide">Slide 3</div>
-    </div>
-  )
-}
-
-function SwiperConfig({ config }: { config: SwiperOptions }) {
-  return <script swiper-config>{JSON.stringify(config)}</script>
+    <nosto-swiper container-selector={`.${containerClass}`}>
+      <div className={containerClass}>
+        <div className="swiper-slide">Slide 1</div>
+        <div className="swiper-slide">Slide 2</div>
+        <div className="swiper-slide">Slide 3</div>
+      </div>
+      <script swiper-config>{JSON.stringify(config)}</script>
+    </nosto-swiper>
+  ) as NostoSwiper
 }
