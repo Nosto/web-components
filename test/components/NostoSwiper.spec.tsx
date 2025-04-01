@@ -20,39 +20,43 @@ describe("NostoSwiper", () => {
     vi.stubGlobal("Swiper", undefined)
   })
 
-  describe("verify setup & validation", () => {
-    it("should be defined as a custom element", () => {
-      expect(customElements.get("nosto-swiper")).toBe(NostoSwiper)
-    })
+  it("should be defined as a custom element", () => {
+    expect(customElements.get("nosto-swiper")).toBe(NostoSwiper)
+  })
 
-    it("should throw error on missing container element", async () => {
-      vi.stubGlobal("Swiper", Swiper)
-      const element = new NostoSwiper()
-      await expect(element.connectedCallback()).rejects.toThrow("Swiper container not found.")
-    })
+  it("should throw error on missing container element", async () => {
+    vi.stubGlobal("Swiper", Swiper)
+    const element = new NostoSwiper()
+    await expect(element.connectedCallback()).rejects.toThrow("Swiper container not found.")
+  })
 
-    it("should throw error on missing library", async () => {
-      const element = swiperExample("swiper-test", config)
-      await expect(element.connectedCallback()).rejects.toThrow("Swiper library is not loaded.")
-    })
+  it("should throw error on missing library", async () => {
+    const element = swiperExample("swiper-test", config)
+    await expect(element.connectedCallback()).rejects.toThrow("Swiper library is not loaded.")
+  })
 
-    it("should use the global Swiper object if available", async () => {
-      vi.stubGlobal("Swiper", Swiper)
-      const element = swiperExample("swiper-test", config)
+  it("should throw error on invalid JSON in config script", async () => {
+    const element = swiperExample("swiper-test", config)
+    element.querySelector("script")!.textContent = "invalid JSON"
+    await expect(element.connectedCallback()).rejects.toThrow(/Unexpected token/)
+  })
 
-      await element.connectedCallback()
-      expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
-    })
+  it("should use the global Swiper object if available", async () => {
+    vi.stubGlobal("Swiper", Swiper)
+    const element = swiperExample("swiper-test", config)
 
-    it("should load Swiper from CDN if global Swiper is not available", async () => {
-      // @ts-expect-error explicit module mutation for testing
-      SwiperCdn.default = Swiper
-      const element = swiperExample("swiper-test-cdn", config)
+    await element.connectedCallback()
+    expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
+  })
 
-      await element.connectedCallback()
-      expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
-      expect(element.querySelectorAll("[data-swiper-slide-index]").length).toBe(3)
-    })
+  it("should load Swiper from CDN if global Swiper is not available", async () => {
+    // @ts-expect-error explicit module mutation for testing
+    SwiperCdn.default = Swiper
+    const element = swiperExample("swiper-test-cdn", config)
+
+    await element.connectedCallback()
+    expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
+    expect(element.querySelectorAll("[data-swiper-slide-index]").length).toBe(3)
   })
 })
 
