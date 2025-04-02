@@ -41,6 +41,14 @@ describe("NostoSwiper", () => {
     expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
   })
 
+  it("should detect slide structure and utilize them", async () => {
+    const element = swiperExample("swiper-test", config)
+
+    await element.connectedCallback()
+    expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
+    expect(element.querySelectorAll("[data-swiper-slide-index]").length).toBe(3)
+  })
+
   it("should load and initialize Swiper modules from CDN", async () => {
     const modulesConfig = { ...config, modules: ["navigation"] }
     //@ts-expect-error string is not assignable to SwiperModule
