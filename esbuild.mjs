@@ -43,7 +43,7 @@ async function build() {
 
     await esbuild.build({
       ...sharedConfig,
-      outfile: "dist/main.es.browser.js",
+      outfile: "dist/main.es.bundle.js",
       format: "esm",
       plugins: [stubExternal]
     })

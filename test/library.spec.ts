@@ -14,7 +14,7 @@ describe("library loading", () => {
     await validate("../dist/main.es.js")
   })
 
-  it("should work without bundled dependencies in ESM browser mode", async () => {
-    await validate("../dist/main.es.browser.js")
+  it("should work without bundled dependencies in ESM bundle mode", async () => {
+    await validate("../dist/main.es.bundle.js")
   })
 })
