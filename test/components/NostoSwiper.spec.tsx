@@ -1,13 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
-
-vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: undefined }))
-
 import { NostoSwiper } from "../../src/components/NostoSwiper"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 import Swiper from "swiper"
 import { SwiperOptions } from "swiper/types"
 import * as SwiperCdn from "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
+
+vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs", () => ({ default: undefined }))
+vi.mock("https://cdn.jsdelivr.net/npm/swiper@latest/modules/navigation.mjs", () => ({
+  // Named dummy function for Swiper module testing purposes
+  default: function Navigation() {}
+}))
 
 describe("NostoSwiper", () => {
   const config = {
@@ -57,6 +60,16 @@ describe("NostoSwiper", () => {
     await element.connectedCallback()
     expect(element.querySelector(".swiper-test-cdn")?.classList).toContain("swiper-initialized")
     expect(element.querySelectorAll("[data-swiper-slide-index]").length).toBe(3)
+  })
+
+  it("should load and initialize Swiper modules from CDN", async () => {
+    const modulesConfig = { ...config, modules: ["navigation"] }
+    //@ts-expect-error string is not assignable to SwiperModule
+    const element = swiperExample("swiper-test-modules", modulesConfig)
+
+    const swiper = await element.connectedCallback()
+    const module = swiper?.modules?.find(module => module.name === "Navigation")
+    expect(module).toBeDefined()
   })
 })
 

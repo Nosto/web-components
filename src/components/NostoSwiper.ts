@@ -1,8 +1,10 @@
 import { customElement } from "./decorators"
 import type { SwiperOptions } from "swiper/types"
 
+const swiperURLBase = "https://cdn.jsdelivr.net/npm/swiper@latest"
+
 // Swiper core excludes modules by default
-const swiperJs = "https://cdn.jsdelivr.net/npm/swiper@latest/swiper.mjs"
+const swiperJs = `${swiperURLBase}/swiper.mjs`
 
 type Swiper = typeof import("swiper").default
 
@@ -31,8 +33,16 @@ export class NostoSwiper extends HTMLElement {
   async initSwiper(config: SwiperOptions) {
     // Load Swiper from store context or fallback to CDN
     const Swiper: Swiper = window.Swiper ?? (await import(swiperJs)).default
+
     if (typeof Swiper === "undefined") {
       throw new Error("Swiper library is not loaded.")
+    }
+
+    // Load Swiper modules present in the config
+    if (!window.Swiper && config.modules) {
+      config.modules = await Promise.all(
+        config.modules.map(module => import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default))
+      )
     }
 
     const swiperContainer = this.querySelector<HTMLElement>(this.containerSelector || ".swiper")
@@ -41,6 +51,6 @@ export class NostoSwiper extends HTMLElement {
       throw new Error("Swiper container not found.")
     }
 
-    new Swiper(swiperContainer!, config)
+    return new Swiper(swiperContainer!, config)
   }
 }
