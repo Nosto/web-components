@@ -1,6 +1,5 @@
 import { NostoProductCard } from "../../src/components/NostoProductCard"
 import { describe, beforeEach, expect, it, vi } from "vitest"
-import * as Liquid from "liquidjs"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
@@ -8,7 +7,6 @@ describe("NostoProductCard", () => {
   beforeEach(() => {
     document.body.innerHTML = ""
     vi.resetAllMocks()
-    window.Liquid = Liquid
   })
 
   it("should throw an error if recoId is not provided", () => {

@@ -1,7 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { evaluate } from "../../src/services/templating"
-import * as Liquid from "liquidjs"
-import * as Handlebars from "handlebars"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
@@ -9,8 +7,6 @@ describe("evaluate", () => {
   beforeEach(() => {
     vi.resetAllMocks()
     document.body.innerHTML = ""
-    window.Liquid = Liquid
-    window.Handlebars = Handlebars
   })
 
   it("should throw an error if the template element is not found", async () => {
