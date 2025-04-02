@@ -9,11 +9,11 @@ This package doesn't render HTML markups on its own and the template should be p
 
 This package provides the following web components:
 
-* NostoProduct
-* NostoProductCard
-* NostoSkuOptions
-* NostoShopify
-* NostoSwiper
+- NostoProduct
+- NostoProductCard
+- NostoSkuOptions
+- NostoShopify
+- NostoSwiper
 
 ### NostoProduct
 
@@ -23,9 +23,9 @@ When markup (HTML) for rendering a product is wrapped with the `NostoProduct` co
 
 Two mandatory component attributes:
 
-| Attribute  | Description                                                                                  |
-|------------|----------------------------------------------------------------------------------------------|
-| `product-id` | Id of the product being rendered. `$!product.productId` provides the Product Id in templates. |
+| Attribute    | Description                                                                                                          |
+| ------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `product-id` | Id of the product being rendered. `$!product.productId` provides the Product Id in templates.                        |
 | `reco-id`    | The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates. |
 
 **Note**:
@@ -37,14 +37,14 @@ Render Product with SKU selection dropdown and an "Add to cart" button:
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
-    <select n-sku-selector>
-        <option value="456">SKU 1</option>
-        <option value="457">SKU 2</option>
-    </select>
-    ...
-    <div n-atc>Add to cart</div>
-    ...
+  ...
+  <select n-sku-selector>
+    <option value="456">SKU 1</option>
+    <option value="457">SKU 2</option>
+  </select>
+  ...
+  <div n-atc>Add to cart</div>
+  ...
 </nosto-product>
 ```
 
@@ -54,14 +54,14 @@ Render Product with individual SKU item acting as "Add to cart" button. When usi
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
-    <div n-sku-id="456">
-        <span n-atc>Blue</span>
-    </div>
-    <div n-sku-id="101">
-        <span n-atc>Black</span>
-    </div>
-    ...
+  ...
+  <div n-sku-id="456">
+    <span n-atc>Blue</span>
+  </div>
+  <div n-sku-id="101">
+    <span n-atc>Black</span>
+  </div>
+  ...
 </nosto-product>
 ```
 
@@ -69,14 +69,14 @@ Render Product with individual SKU item acting as "Add to cart" button. When usi
 
 This component requires the following attributes to parse the markup, extract product & SKU data and attach the event handlers to the selector/button elements:
 
-| Attribute       | Description                                                                                                                      |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------|
-| `n-sku-selector`| Marks the SKU select dropdown. Attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. |
-| `n-sku-id`      | Relevant when SKU options are rendered as "Add to cart" button. Supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button.       |
+| Attribute        | Description                                                                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `n-sku-selector` | Marks the SKU select dropdown. Attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. |
+| `n-sku-id`       | Relevant when SKU options are rendered as "Add to cart" button. Supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button.       |
 
 ```html
 <div n-sku-id="456">
-    <span n-atc>Blue</span>
+  <span n-atc>Blue</span>
 </div>
 ```
 
@@ -85,22 +85,22 @@ Marks an element as Add to cart trigger and attaches click event to the element.
 
 ### NostoProductCard
 
-The `NostoProductCard` component acts as a basic product card component where the content is rendered via an externally defined template. The data is embedded via an inner script element with JSON contents and rendering happens via Liquid or Handlebars using an external template element. 
+The `NostoProductCard` component acts as a basic product card component where the content is rendered via an externally defined template. The data is embedded via an inner script element with JSON contents and rendering happens via Liquid or Handlebars using an external template element.
 
 Unlike `NostoProduct`, this component doesn't include any side effects or platform-specific API support on top of the rendered markup. For side effects the `wrap` attribute can be used to wrap the inner content in a `NostoProduct` instance.
 
 ```html
 <nosto-product-card reco-id="789011" template="product-card-template">
   <script type="application/json" product-data>
-  {
-    "id": "1223456", 
-    "image": "https://example.com/images/awesome-product.jpg",
-    "title": "Awesome Product",
-    "price": "19.99",
-    "listPrice": "29.99"
-  }
+    {
+      "id": "1223456",
+      "image": "https://example.com/images/awesome-product.jpg",
+      "title": "Awesome Product",
+      "price": "19.99",
+      "listPrice": "29.99"
+    }
   </script>
-</nosto-product-card>    
+</nosto-product-card>
 
 <template id="product-card-template" type="text/liquid">
   <img src="{{ product.image }}" alt="{{ product.title }}" class="product-image" />
@@ -119,10 +119,11 @@ Unlike `NostoProduct`, this component doesn't include any side effects or platfo
 The `NostoSkuOptions` component is recommended for cases rendering multiple SKU option groups (color, size). It manages the state and interactions of SKU options, including preselection, state changes, and click events.
 
 #### Component attribute
+
 Requires one mandatory attribute
 
-| Attribute | Description                                                                                   |
-|-----------|-----------------------------------------------------------------------------------------------|
+| Attribute | Description                                                                                                                   |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `name`    | A required attribute supplied on the `nosto-sku-options` element. Supplies the option group name (color/size/material etc...) |
 
 **Example #1**:
@@ -131,17 +132,17 @@ Dual SKU selection group
 
 ```html
 <nosto-product product-id="1223456" reco-id="789011">
-    <nosto-sku-options name="color">
-        <span n-option n-skus="123,145">Black</span>
-        <span n-option n-skus="223,234,245">White</span>
-        <span n-option n-skus="334,345">Blue</span>
-    </nosto-sku-options>
-    <nosto-sku-options name="size">
-        <span n-option n-skus="123,223">L</span>
-        <span n-option n-skus="234,334">M</span>
-        <span n-option n-skus="145,245,345">S</span>
-    </nosto-sku-options>
-    <span n-atc>Add to cart</span>
+  <nosto-sku-options name="color">
+    <span n-option n-skus="123,145">Black</span>
+    <span n-option n-skus="223,234,245">White</span>
+    <span n-option n-skus="334,345">Blue</span>
+  </nosto-sku-options>
+  <nosto-sku-options name="size">
+    <span n-option n-skus="123,223">L</span>
+    <span n-option n-skus="234,334">M</span>
+    <span n-option n-skus="145,245,345">S</span>
+  </nosto-sku-options>
+  <span n-atc>Add to cart</span>
 </nosto-product>
 ```
 
@@ -151,22 +152,22 @@ Trio SKU selection group
 
 ```html
 <nosto-product product-id="1223456" reco-id="789011">
-    <nosto-sku-options name="color">
-        <span n-option n-skus="123,145">Black</span>
-        <span n-option n-skus="223,234,245">White</span>
-        <span n-option n-skus="334,345">Blue</span>
-    </nosto-sku-options>
-    <nosto-sku-options name="size">
-        <span n-option n-skus="123,223">L</span>
-        <span n-option n-skus="234,334">M</span>
-        <span n-option n-skus="145,245,345">S</span>
-    </nosto-sku-options>
-    <nosto-sku-options name="material">
-        <span n-option n-skus="123,234,345">Cotton</span>
-        <span n-option n-skus="145,223,334">Silk</span>
-        <span n-option n-skus="245">Wool</span>
-    </nosto-sku-options>  
-    <span n-atc>Add to cart</span>
+  <nosto-sku-options name="color">
+    <span n-option n-skus="123,145">Black</span>
+    <span n-option n-skus="223,234,245">White</span>
+    <span n-option n-skus="334,345">Blue</span>
+  </nosto-sku-options>
+  <nosto-sku-options name="size">
+    <span n-option n-skus="123,223">L</span>
+    <span n-option n-skus="234,334">M</span>
+    <span n-option n-skus="145,245,345">S</span>
+  </nosto-sku-options>
+  <nosto-sku-options name="material">
+    <span n-option n-skus="123,234,345">Cotton</span>
+    <span n-option n-skus="145,223,334">Silk</span>
+    <span n-option n-skus="245">Wool</span>
+  </nosto-sku-options>
+  <span n-atc>Add to cart</span>
 </nosto-product>
 ```
 
@@ -176,39 +177,89 @@ Usage with select elements
 
 ```html
 <nosto-product product-id="1223456" reco-id="789011">
-    <nosto-sku-options name="color">
-        <select n-target>
-            <option value="black" n-skus="123,145">Black</option>
-            <option value="white" n-skus="223,234,245">White</option>
-            <option value="blue" n-skus="334,345">Blue</option>
-        </select>    
-    </nosto-sku-options>
-    <nosto-sku-options name="size">
-        <select n-target>    
-            <option value="l" n-skus="123,223">L</option>
-            <option value="m" n-skus="234,334">M</option>
-            <option value="s" n-skus="145,245,345">S</option>
-        </select>
-    </nosto-sku-options>
-    <span n-atc>Add to cart</span>
+  <nosto-sku-options name="color">
+    <select n-target>
+      <option value="black" n-skus="123,145">Black</option>
+      <option value="white" n-skus="223,234,245">White</option>
+      <option value="blue" n-skus="334,345">Blue</option>
+    </select>
+  </nosto-sku-options>
+  <nosto-sku-options name="size">
+    <select n-target>
+      <option value="l" n-skus="123,223">L</option>
+      <option value="m" n-skus="234,334">M</option>
+      <option value="s" n-skus="145,245,345">S</option>
+    </select>
+  </nosto-sku-options>
+  <span n-atc>Add to cart</span>
 </nosto-product>
 ```
 
 #### Markup Attributes
 
-| Attribute | Description |
-|-----------|-------------|
-| `n-option` | Marks an element as SKU option element |
-| `n-skus` | Comma-separated value of linked available SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
-| `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered. |
+| Attribute    | Description                                                                                                                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `n-option`   | Marks an element as SKU option element                                                                                                                                                           |
+| `n-skus`     | Comma-separated value of linked available SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
+| `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered.                               |
 
 Disabled options that are not available due to selections in other groups are marked with the `disabled` attribute and unavailable options that are Out of stock are marked with the `unavailable` attribute. Both should be styled distinctly.
 
 ### NostoSwiper
 
-Lightweight Swiper wrapper
+Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper component will load Swiper library on demand from CDN unless it is available through as a transitive dependency.
 
-TODO examples
+**Example**:
+
+```html
+<nosto-swiper container-selector=".nosto-swiper">
+  <!-- Swiper configuration -->
+  <script type="application/json" swiper-config>
+    {
+      "direction": "horizontal",
+      "loop": true,
+      "slidesPerView": 3
+    }
+  </script>
+  <!-- Swiper container -->
+  <div class="nosto-swiper">
+    <!-- Swiper wrapper -->
+    <div class="swiper-wrapper">
+      <!-- Loop your slides here -->
+      <nosto-product product-id="123456" reco-id="78901"> ... </nosto-product>
+    </div>
+  </div>
+</nosto-swiper>
+```
+
+#### Modules
+
+In order to use Swiper modules the names must be passed as strings. This is due to loading the modules on demand.
+
+```html
+<nosto-swiper container-selector=".nosto-swiper">
+  <script type="application/json" swiper-config>
+    {
+      "direction": "horizontal",
+      "loop": true,
+      "slidesPerView": 3,
+      "modules": ["navigation"], //Module passed 
+      "navigation": {
+        "nextEl": ".swiper-button-next",
+        "prevEl": ".swiper-button-prev"
+      }
+    }
+  </script>
+  <!-- Rest of the Swiper markup -->
+</nosto-swiper>
+```
+
+#### Markup attributes
+
+| Attribute            | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `container-selector` | HTML element selector. This will be used to initialize Swiper.              |
+| `swiper-config`      | Marks the `<script type="application/json">` block as Swiper configuration. |
 
 ### NostoShopify
 
@@ -220,48 +271,41 @@ Migrate to Shopify market
 
 ```html
 <div id="frontpage-nosto-1" class="nosto-element">
-    <nosto-shopify markets>
-        <nosto-product product-id="123456" reco-id="789011">
-            <div class="product-card nosto-item" n-handle="5-pocket-jean" >
-                <span n-url="https://shopeasy-local.myshopify.com/products/5-pocket-jean"></span>
-                <h3 n-title>5 Pocket Jean</h3>
-                <span n-description>
-                    The 5 Pocket Jean by Nigel Cabourn is your denim go-to for every occasion. 
-                </span>
-                <span class="product-price" n-price>
-                    110$
-                </span>
-                <span class="product-list-price" n-list-price>
-                    110$
-                </span>
-                <nosto-sku-options name="colors">
-                    <span n-option n-skus="123,145">Black</span>
-                    <span n-option n-skus="223,234,245">White</span>
-                    <span n-option n-skus="334,345">Blue</span>
-                </nosto-sku-options>
-                <nosto-sku-options name="sizes">
-                    <span n-option n-skus="123,223">L</span>
-                    <span n-option n-skus="234,334">M</span>
-                    <span n-option n-skus="145,245,345">S</span>
-                </nosto-sku-options>
-                <span n-atc>Add to cart</span>
-            </div>
-        </nosto-product>
-    </nosto-shopify>
+  <nosto-shopify markets>
+    <nosto-product product-id="123456" reco-id="789011">
+      <div class="product-card nosto-item" n-handle="5-pocket-jean">
+        <span n-url="https://shopeasy-local.myshopify.com/products/5-pocket-jean"></span>
+        <h3 n-title>5 Pocket Jean</h3>
+        <span n-description> The 5 Pocket Jean by Nigel Cabourn is your denim go-to for every occasion. </span>
+        <span class="product-price" n-price> 110$ </span>
+        <span class="product-list-price" n-list-price> 110$ </span>
+        <nosto-sku-options name="colors">
+          <span n-option n-skus="123,145">Black</span>
+          <span n-option n-skus="223,234,245">White</span>
+          <span n-option n-skus="334,345">Blue</span>
+        </nosto-sku-options>
+        <nosto-sku-options name="sizes">
+          <span n-option n-skus="123,223">L</span>
+          <span n-option n-skus="234,334">M</span>
+          <span n-option n-skus="145,245,345">S</span>
+        </nosto-sku-options>
+        <span n-atc>Add to cart</span>
+      </div>
+    </nosto-product>
+  </nosto-shopify>
 </div>
 ```
 
 #### Markup attributes
 
-| Attribute      | Description                                                                                     |
-|----------------|-------------------------------------------------------------------------------------------------|
-| `n-url`        | Product URL. `$product.url` provides the product URL in templates                               |
-| `n-title`      | Product name. `$product.name` provides the product name in templates                            |
-| `n-handle`     | The last segment of product URL. `$!product.lastPathOfProductUrl()` provides the product handle in templates |
-| `n-price`      | Product price. `$!product.price` provides the product price in templates                        |
-| `n-list-price` | Product list price. `$!product.listPrice` provides the product list price in templates          |
-| `n-description`| Product description. `$!product.description` provides the product description in templates      |
-
+| Attribute       | Description                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `n-url`         | Product URL. `$product.url` provides the product URL in templates                                            |
+| `n-title`       | Product name. `$product.name` provides the product name in templates                                         |
+| `n-handle`      | The last segment of product URL. `$!product.lastPathOfProductUrl()` provides the product handle in templates |
+| `n-price`       | Product price. `$!product.price` provides the product price in templates                                     |
+| `n-list-price`  | Product list price. `$!product.listPrice` provides the product list price in templates                       |
+| `n-description` | Product description. `$!product.description` provides the product description in templates                   |
 
 ## Pre-selected options
 
@@ -269,14 +313,14 @@ In addition to handling APIs, supports pre-selection of SKU options. For example
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
-    <select n-sku-selector>
-        <option value="456">SKU 1</option>
-        <option value="457" selected>SKU 2</option>
-    </select>
-    ...
-    <button n-atc>Add to cart</button>
-    ...
+  ...
+  <select n-sku-selector>
+    <option value="456">SKU 1</option>
+    <option value="457" selected>SKU 2</option>
+  </select>
+  ...
+  <button n-atc>Add to cart</button>
+  ...
 </nosto-product>
 ```
 
@@ -284,13 +328,13 @@ with `nosto-sku-options` component
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
-    <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145" selected>Black</span>
-        <span white n-option n-skus="223,234,245">White</span>
-        <span blue n-option n-skus="334,345">Blue</span>
-    </nosto-sku-options>
-    ...
+  ...
+  <nosto-sku-options name="colors">
+    <span black n-option n-skus="123,145" selected>Black</span>
+    <span white n-option n-skus="223,234,245">White</span>
+    <span blue n-option n-skus="334,345">Blue</span>
+  </nosto-sku-options>
+  ...
 </nosto-product>
 ```
 
@@ -299,7 +343,7 @@ The component does not handle styling for selected options and it has to be appl
 
 ## Default disabled
 
-Similarly, cases where some options are be disabled by default is also supported. This is useful when SKU options that are Out-Of-Stock needs to be hidden or greyed out. By default, the `disabled` attribute is added to all unsupported SKU options. For example, when there is no `M` size in `Blue` color, on selection of `Blue` color, the component adds `disabled` attribute to option `M`. 
+Similarly, cases where some options are be disabled by default is also supported. This is useful when SKU options that are Out-Of-Stock needs to be hidden or greyed out. By default, the `disabled` attribute is added to all unsupported SKU options. For example, when there is no `M` size in `Blue` color, on selection of `Blue` color, the component adds `disabled` attribute to option `M`.
 
 Note:
 This functionality is applicable only when using `nosto-sku-options` component
@@ -307,13 +351,12 @@ The component does not handle styling for disabled options and it has to be appl
 
 ```html
 <nosto-product product-id="123456" reco-id="789011">
-    ...
-    <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145">Black</span>
-        <span white n-option n-skus="223,234,245" disabled>White</span>
-        <span blue n-option n-skus="334,345">Blue</span>
-    </nosto-sku-options>
-    ...
+  ...
+  <nosto-sku-options name="colors">
+    <span black n-option n-skus="123,145">Black</span>
+    <span white n-option n-skus="223,234,245" disabled>White</span>
+    <span blue n-option n-skus="334,345">Blue</span>
+  </nosto-sku-options>
+  ...
 </nosto-product>
 ```
-
