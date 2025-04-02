@@ -10,7 +10,7 @@ describe("library loading", () => {
     expect(exports.NostoSwiper).toBeDefined()
   }
 
-  it("should work without bundled dependnencies in ESM mode", async () => {
+  it("should work without bundled dependencies in ESM mode", async () => {
     await validate("../dist/main.es.js")
   })
 
