@@ -1,12 +1,11 @@
 import { customElement } from "./decorators"
 import type { SwiperOptions } from "swiper/types"
+import _Swiper from "swiper"
 
 const swiperURLBase = "https://cdn.jsdelivr.net/npm/swiper@latest"
 
 // Swiper core excludes modules by default
 const swiperJs = `${swiperURLBase}/swiper.mjs`
-
-type Swiper = typeof import("swiper").default
 
 @customElement("nosto-swiper")
 export class NostoSwiper extends HTMLElement {
@@ -32,14 +31,14 @@ export class NostoSwiper extends HTMLElement {
 
   async initSwiper(config: SwiperOptions) {
     // Load Swiper from store context or fallback to CDN
-    const Swiper: Swiper = window.Swiper ?? (await import(swiperJs)).default
+    const Swiper = _Swiper ?? (await import(swiperJs)).default
 
     if (typeof Swiper === "undefined") {
       throw new Error("Swiper library is not loaded.")
     }
 
     // Load Swiper modules present in the config
-    if (!window.Swiper && config.modules) {
+    if (config.modules) {
       config.modules = await Promise.all(
         config.modules.map(module => import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default))
       )

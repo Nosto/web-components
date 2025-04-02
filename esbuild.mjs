@@ -5,7 +5,8 @@ const sharedConfig = {
   bundle: true,
   minify: true,
   target: "es2018",
-  sourcemap: true
+  sourcemap: true,
+  external: ["liquidjs", "handlebars", "swiper"]
 }
 
 async function build() {

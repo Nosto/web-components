@@ -3,9 +3,6 @@ interface Window {
     addSkuToCart?: import("@nosto/nosto-js").addSkuToCart
     migrateToShopifyMarket?: import("./shopify").MigrateToShopifyMarket
   }
-  Swiper?: typeof import("swiper").default
-  Liquid?: typeof import("liquidjs")
-  Handlebars?: typeof import("handlebars")
 }
 
 declare module "https://cdn.jsdelivr.net/npm/swiper@latest/modules/navigation.mjs" {
