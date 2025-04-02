@@ -207,13 +207,12 @@ Disabled options that are not available due to selections in other groups are ma
 
 ### NostoSwiper
 
-Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper component will load Swiper library on demand from CDN unless it is available through as a transitive dependency.
+Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper component will load Swiper library on demand from CDN unless it is available as a direct dependency.
 
 **Example**:
 
 ```html
 <nosto-swiper container-selector=".nosto-swiper">
-  <!-- Swiper configuration -->
   <script type="application/json" swiper-config>
     {
       "direction": "horizontal",
@@ -221,11 +220,8 @@ Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper comp
       "slidesPerView": 3
     }
   </script>
-  <!-- Swiper container -->
   <div class="nosto-swiper">
-    <!-- Swiper wrapper -->
     <div class="swiper-wrapper">
-      <!-- Loop your slides here -->
       <nosto-product product-id="123456" reco-id="78901"> ... </nosto-product>
     </div>
   </div>
@@ -234,7 +230,7 @@ Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper comp
 
 #### Modules
 
-In order to use Swiper modules the names must be passed as strings. This is due to loading the modules on demand.
+In order to use Swiper modules the names must be passed as *strings*. This is due to the handling of the modules on demand.
 
 ```html
 <nosto-swiper container-selector=".nosto-swiper">
@@ -243,7 +239,7 @@ In order to use Swiper modules the names must be passed as strings. This is due 
       "direction": "horizontal",
       "loop": true,
       "slidesPerView": 3,
-      "modules": ["navigation"], //Module passed 
+      "modules": ["navigation"]
       "navigation": {
         "nextEl": ".swiper-button-next",
         "prevEl": ".swiper-button-prev"
