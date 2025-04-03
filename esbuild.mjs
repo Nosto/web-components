@@ -1,12 +1,30 @@
 import esbuild from "esbuild"
 
+const external = ["liquidjs", "handlebars", "swiper"]
+
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
   bundle: true,
   minify: true,
   target: "es2018",
   sourcemap: true,
-  external: ["liquidjs", "handlebars", "swiper"]
+  external
+}
+
+export const stubExternal = {
+  name: "stub-external",
+  setup(build) {
+    build.onResolve({ filter: new RegExp(`^(${external.join("|")})$`) }, args => {
+      return { path: args.path, namespace: "stub" }
+    })
+
+    build.onLoad({ filter: /.*/, namespace: "stub" }, args => {
+      return {
+        contents: "export default undefined;",
+        loader: "js"
+      }
+    })
+  }
 }
 
 async function build() {
@@ -21,6 +39,13 @@ async function build() {
       ...sharedConfig,
       outfile: "dist/main.es.js",
       format: "esm"
+    })
+
+    await esbuild.build({
+      ...sharedConfig,
+      outfile: "dist/main.es.bundle.js",
+      format: "esm",
+      plugins: [stubExternal]
     })
 
     console.log("Build completed successfully.")
