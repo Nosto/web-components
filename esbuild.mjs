@@ -14,13 +14,17 @@ const sharedConfig = {
 export const stubExternal = {
   name: "stub-external",
   setup(build) {
+    const overrides = {
+      liquidjs: "export const Liquid = undefined;"
+    }
+
     build.onResolve({ filter: new RegExp(`^(${external.join("|")})$`) }, args => {
       return { path: args.path, namespace: "stub" }
     })
 
     build.onLoad({ filter: /.*/, namespace: "stub" }, args => {
       return {
-        contents: "export default undefined;",
+        contents: overrides[args.path] ?? `export default undefined;`,
         loader: "js"
       }
     })

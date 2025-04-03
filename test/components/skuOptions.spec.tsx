@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { NostoProduct } from "@/components/NostoProduct"
 import "@/components/NostoSkuOptions"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
 describe("sku options integration", () => {

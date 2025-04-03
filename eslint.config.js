@@ -26,6 +26,17 @@ export default tseslint.config(
       "barrel-files/avoid-re-export-all": 2
     }
   },
+  {
+    files: ["**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "createElement"
+        }
+      ]
+    }
+  },
   eslintConfigPrettier,
   eslintPluginPrettierRecommended
 )

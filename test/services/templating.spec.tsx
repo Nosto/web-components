@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { evaluate } from "../../src/services/templating"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
 describe("evaluate", () => {
