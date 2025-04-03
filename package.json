@@ -14,6 +14,7 @@
   "exports": {
     ".": {
       "import": "./dist/main.es.js",
+      "browser": "./dist/main.es.bundle.js",
       "require": "./dist/main.cjs.js"
     }
   },
@@ -60,13 +61,13 @@
   },
   "peerDependenciesMeta": {
     "handlebars": {
-        "optional": true
+      "optional": true
     },
     "liquidjs": {
-        "optional": true
+      "optional": true
     },
     "swiper": {
-        "optional": true
+      "optional": true
     }
   },
   "engines": {
