@@ -1,6 +1,5 @@
 import { NostoProductCard } from "../../src/components/NostoProductCard"
 import { describe, beforeEach, expect, it, vi } from "vitest"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
 
 describe("NostoProductCard", () => {

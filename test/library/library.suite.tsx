@@ -1,18 +1,17 @@
 import { expect, it } from "vitest"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createElement } from "../utils/jsx"
-import type { NostoProductCard } from "../../src/components/NostoProductCard"
-import type { NostoProduct } from "../../src/components/NostoProduct"
-import type { NostoSkuOptions } from "../../src/components/NostoSkuOptions"
+import type { NostoProductCard } from "@/components/NostoProductCard"
+import type { NostoProduct } from "@/components/NostoProduct"
+import type { NostoSkuOptions } from "@/components/NostoSkuOptions"
 import type { NostoShopify } from "@/components/NostoShopify"
 import type { NostoSwiper } from "@/components/NostoSwiper"
 
 export async function validateLibrary(importPath: string) {
   const exports = await import(importPath)
 
-  it("NostoProductCard", async () => {
+  it("inits NostoProductCard", async () => {
     expect(exports.NostoProductCard).toBeDefined()
-    document.body.append(<template id="product-card-template" type="text/liquid"></template>)
+    document.body.append(<template id="product-card-template" type="text/liquid" />)
 
     const card = new exports.NostoProductCard() as NostoProductCard
     card.recoId = "123456"
@@ -20,7 +19,7 @@ export async function validateLibrary(importPath: string) {
     await card.connectedCallback()
   })
 
-  it("NostoProduct", async () => {
+  it("inits NostoProduct", async () => {
     expect(exports.NostoProduct).toBeDefined()
 
     const product = new exports.NostoProduct() as NostoProduct
@@ -29,7 +28,7 @@ export async function validateLibrary(importPath: string) {
     await product.connectedCallback()
   })
 
-  it("NostoSkuOptions", async () => {
+  it("inits NostoSkuOptions", async () => {
     expect(exports.NostoSkuOptions).toBeDefined()
 
     const skuOptions = new exports.NostoSkuOptions() as NostoSkuOptions
@@ -37,7 +36,7 @@ export async function validateLibrary(importPath: string) {
     await skuOptions.connectedCallback()
   })
 
-  it("NostoShopify", async () => {
+  it("inits NostoShopify", async () => {
     expect(exports.NostoShopify).toBeDefined()
 
     const wrapper = <div class="nosto_element" id="test-campaign"></div>
@@ -46,7 +45,7 @@ export async function validateLibrary(importPath: string) {
     await shopify.connectedCallback()
   })
 
-  it("NostoSwiper", async () => {
+  it("inits NostoSwiper", async () => {
     expect(exports.NostoSwiper).toBeDefined()
 
     const swiper = new exports.NostoSwiper() as NostoSwiper
