@@ -1,5 +1,5 @@
 /* eslint-disable barrel-files/avoid-namespace-import */
-import * as _Liquid from "liquidjs"
+import { Liquid as _Liquid } from "liquidjs"
 import _Handlebars from "handlebars"
 import type { Template } from "liquidjs"
 
@@ -25,8 +25,8 @@ const liquidCache = new Map<string, Template[]>()
 const handlebarsCache = new Map<string, HandlebarsTemplateDelegate>()
 
 async function evaluateLiquid(templateEl: HTMLElement, context: object) {
-  const Liquid = _Liquid ?? (await import(liquidJs))
-  const engine = new Liquid.Liquid()
+  const Liquid = _Liquid ?? (await import(liquidJs)).Liquid
+  const engine = new Liquid()
   let tmpl = liquidCache.get(templateEl.id)
   if (!tmpl) {
     tmpl = engine.parse(templateEl.innerHTML)
@@ -36,7 +36,7 @@ async function evaluateLiquid(templateEl: HTMLElement, context: object) {
 }
 
 async function evaluateHandlebars(templateEl: HTMLElement, context: object) {
-  const Handlebars = _Handlebars ?? (await import(handlebarsJs))
+  const Handlebars = _Handlebars ?? (await import(handlebarsJs)).default
   let tmpl = handlebarsCache.get(templateEl.id)
   if (!tmpl) {
     tmpl = Handlebars.compile(templateEl.innerHTML)
