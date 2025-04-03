@@ -1,58 +1,44 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      mode:
-        type: choice
-        description: "Release mode"
-        required: true
-        default: patch
-        options:
-          - patch
-          - minor
-          - major
-
-concurrency:
-  group: nwc
-  cancel-in-progress: false
+  push:
+    branches: ["main"]
 
 jobs:
-  github-release:
-    runs-on:
-      group: Personalisation
-      labels: [self-hosted, linux, x64]
+  release:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout current branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          ref: ${{ github.head_ref || github.ref_name }}
-          token: ${{ secrets.RELEASE_PAT_TOKEN }}
+          persist-credentials: false
 
-      - name: Setup Node
+      - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: "npm"
 
-      - name: Create tag
-        id: tag-changelog
-        shell: bash
-        working-directory: ${{ github.workspace }}/.github/workflows
-        env:
-          mode: ${{ inputs.mode }}
-          workspace: ${{ github.workspace }}
-        run: ./scripts/release.sh
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Create Github Release
-        if: success() && steps.tag-changelog.outputs.new_version != ''
+      - name: Run build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Publish project
+        uses: cycjimmy/semantic-release-action@v4
+        id: semantic
+        with:
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+          branches: |
+            [
+              "main"
+            ]
         env:
-          tag: ${{ steps.tag-changelog.outputs.new_version }}
-          GH_TOKEN: ${{ secrets.RELEASE_PAT_TOKEN }}
-        shell: bash
-        run: |
-          gh release create "$tag" \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "${GITHUB_REPOSITORY#*/} ${tag#v}" \
-            --generate-notes \
-            --verify-tag
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPMJS_TOKEN }}
