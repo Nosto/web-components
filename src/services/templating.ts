@@ -1,7 +1,7 @@
 /* eslint-disable barrel-files/avoid-namespace-import */
 import * as _Liquid from "liquidjs"
-import * as _Handlebars from "handlebars"
-import { Template } from "liquidjs"
+import _Handlebars from "handlebars"
+import type { Template } from "liquidjs"
 
 const liquidJs = "https://cdn.jsdelivr.net/npm/liquidjs@latest/dist/liquid.browser.esm.js"
 const handlebarsJs = "https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"
