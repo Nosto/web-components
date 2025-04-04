@@ -15,6 +15,7 @@ export const stubExternal = {
   name: "stub-external",
   setup(build) {
     const overrides = {
+      // for liquidjs the named export Liquid is used instead
       liquidjs: "export const Liquid = undefined;"
     }
 

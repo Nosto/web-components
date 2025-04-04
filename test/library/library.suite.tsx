@@ -11,12 +11,23 @@ export async function validateLibrary(importPath: string) {
 
   it("inits NostoProductCard", async () => {
     expect(exports.NostoProductCard).toBeDefined()
-    document.body.append(<template id="product-card-template" type="text/liquid" />)
+    document.body.append(
+      <template id="product-card-template" type="text/liquid">
+        <h1>{"{{ product.name }} {{ data.title}}"}</h1>
+      </template>
+    )
 
     const card = new exports.NostoProductCard() as NostoProductCard
+    card.append(
+      <script type="application/json" product-data>
+        {JSON.stringify({ name: "Test" })}
+      </script>
+    )
     card.recoId = "123456"
     card.template = "product-card-template"
+    card.dataset.title = "Product"
     await card.connectedCallback()
+    expect(card.children[1].outerHTML).toBe("<h1>Test Product</h1>")
   })
 
   it("inits NostoProduct", async () => {
@@ -26,6 +37,7 @@ export async function validateLibrary(importPath: string) {
     product.productId = "123456"
     product.recoId = "654321"
     await product.connectedCallback()
+    // TODO add assertions
   })
 
   it("inits NostoSkuOptions", async () => {
@@ -34,6 +46,7 @@ export async function validateLibrary(importPath: string) {
     const skuOptions = new exports.NostoSkuOptions() as NostoSkuOptions
     skuOptions.name = "color"
     await skuOptions.connectedCallback()
+    // TODO add assertions
   })
 
   it("inits NostoShopify", async () => {
@@ -43,6 +56,7 @@ export async function validateLibrary(importPath: string) {
     const shopify = new exports.NostoShopify() as NostoShopify
     wrapper.append(shopify)
     await shopify.connectedCallback()
+    // TODO add assertions
   })
 
   it("inits NostoSwiper", async () => {
@@ -60,5 +74,6 @@ export async function validateLibrary(importPath: string) {
       </div>
     )
     await swiper.connectedCallback()
+    expect(swiper.querySelector(".nosto-swiper")?.classList).toContain("swiper-initialized")
   })
 }
