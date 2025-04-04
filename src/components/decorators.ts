@@ -2,17 +2,21 @@ type FieldType<T> = T extends string ? StringConstructor : T extends boolean ? B
 
 type ConstructorMetadata<T extends HTMLElement> = {
   new (): T
+  observedAttributes?: string[]
   attributes?: { [K in keyof T]?: FieldType<T[K]> }
 }
 
 export function customElement<T extends HTMLElement>(tagName: string) {
   return function (constructor: ConstructorMetadata<T>) {
     if (constructor.attributes) {
+      const attributes: string[] = []
       Object.entries(constructor.attributes).forEach(([fieldName, type]) => {
         const attribute = toKebabCase(fieldName)
+        attributes.push(attribute)
         const property = (type === String ? stringAttribute : booleanAttribute)(attribute)
         Object.defineProperty(constructor.prototype, fieldName, property)
       })
+      constructor.observedAttributes = attributes
     }
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
