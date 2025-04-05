@@ -9,7 +9,7 @@ const swiperJs = `${swiperURLBase}/swiper.mjs`
 
 /**
  * Custom element that wraps the Swiper library to create slideshows and carousels.
- * 
+ *
  * @property {string} containerSelector - Selector for the swiper container element
  *
  * @example

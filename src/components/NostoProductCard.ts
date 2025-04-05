@@ -10,7 +10,7 @@ import { evaluate } from "@/services/templating"
  * @property {boolean} wrap - Whether to wrap the rendered content in a NostoProduct element.
  *
  * @throws {Error} - Throws an error if recoId or template is not provided.
- * 
+ *
  * @example
  * ```html
  * <nosto-product-card reco-id="789011" template="product-card-template">

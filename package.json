@@ -27,6 +27,7 @@
     "dev": "vite dev",
     "preview": "vite preview",
     "lint": "eslint",
+    "lint-fix": "eslint --fix",
     "test": "vitest --run --silent",
     "typedoc": "typedoc src/main.ts"
   },

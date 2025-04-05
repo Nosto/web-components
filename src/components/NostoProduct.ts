@@ -3,7 +3,7 @@ import { customElement } from "./decorators"
 
 /**
  * Custom element that represents a Nosto product component.
- * 
+ *
  * This component manages product selection, SKU selection, and add-to-cart functionality.
  * It creates a store and provides methods to interact with product and SKU data.
  *

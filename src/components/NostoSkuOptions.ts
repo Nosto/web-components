@@ -19,20 +19,20 @@ function setAvailability(elements: Element[]) {
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
- * 
+ *
  * This component handles two different implementation styles:
  * 1. Elements with the `n-option` attribute for direct option selection
  * 2. A `<select>` element with options having `n-skus` attributes
- * 
+ *
  * The component manages:
  * - Option selection state
  * - Disabling unavailable options based on other selections
  * - Handling preselected options
  * - Registering click events for options
  * - Listening for state changes to update UI
- * 
+ *
  * @property {string} name - Required. The identifier for this option group
- * 
+ *
  * @example
  * ```html
  * <nosto-sku-options name="color">
