@@ -17,11 +17,11 @@ export class NostoProductCard extends HTMLElement {
 
   connectedCallback() {
     assertRequired(this, "recoId", "template")
-    return render(this)
+    return initProductCard(this)
   }
 }
 
-async function render(element: NostoProductCard) {
+async function initProductCard(element: NostoProductCard) {
   element.toggleAttribute("loading", true)
   const product = getData(element)
   const html = await evaluate(element.template, { product, data: element.dataset })
