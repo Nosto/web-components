@@ -19,38 +19,38 @@ export class NostoProductCard extends HTMLElement {
   }
 
   connectedCallback() {
-    this.validate()
-    return this.render()
+    validate(this)
+    return render(this)
   }
+}
 
-  private validate() {
-    if (!this.recoId) {
-      throw new Error("Slot ID is required.")
-    }
-    if (!this.template) {
-      throw new Error("Template is required.")
-    }
+function validate(element: NostoProductCard) {
+  if (!element.recoId) {
+    throw new Error("Slot ID is required.")
   }
-
-  private async render() {
-    this.toggleAttribute("loading", true)
-    const product = this.getData()
-    const html = await evaluate(this.template, { product, data: this.dataset })
-
-    if (this.wrap) {
-      const wrapper = new NostoProduct()
-      wrapper.recoId = this.recoId
-      wrapper.productId = product.id
-      wrapper.innerHTML = html
-      this.appendChild(wrapper)
-    } else {
-      this.insertAdjacentHTML("beforeend", html)
-    }
-    this.toggleAttribute("loading", false)
+  if (!element.template) {
+    throw new Error("Template is required.")
   }
+}
 
-  private getData() {
-    const data = this.querySelector("script[product-data]")
-    return data ? JSON.parse(data.textContent!) : {}
+async function render(element: NostoProductCard) {
+  element.toggleAttribute("loading", true)
+  const product = getData(element)
+  const html = await evaluate(element.template, { product, data: element.dataset })
+
+  if (element.wrap) {
+    const wrapper = new NostoProduct()
+    wrapper.recoId = element.recoId
+    wrapper.productId = product.id
+    wrapper.innerHTML = html
+    element.appendChild(wrapper)
+  } else {
+    element.insertAdjacentHTML("beforeend", html)
   }
+  element.toggleAttribute("loading", false)
+}
+
+function getData(element: HTMLElement) {
+  const data = element.querySelector("script[product-data]")
+  return data ? JSON.parse(data.textContent!) : {}
 }
