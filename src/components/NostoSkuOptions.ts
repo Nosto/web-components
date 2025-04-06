@@ -10,10 +10,6 @@ export class NostoSkuOptions extends HTMLElement {
 
   name!: string
 
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
     validate(this)
     injectStore(this, store => initSkuOptions(this, store))

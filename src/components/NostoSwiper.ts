@@ -15,10 +15,6 @@ export class NostoSwiper extends HTMLElement {
 
   containerSelector!: string
 
-  constructor() {
-    super()
-  }
-
   async connectedCallback() {
     return initSwiper(this)
   }

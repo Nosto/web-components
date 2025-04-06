@@ -14,10 +14,6 @@ export class NostoProduct extends HTMLElement {
   recoId!: string
   skuSelected!: boolean
 
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
     initProduct(this)
   }

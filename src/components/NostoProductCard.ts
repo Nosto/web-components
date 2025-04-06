@@ -14,10 +14,6 @@ export class NostoProductCard extends HTMLElement {
   template!: string
   wrap!: boolean
 
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
     validate(this)
     return render(this)

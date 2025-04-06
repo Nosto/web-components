@@ -9,10 +9,6 @@ export class NostoShopify extends HTMLElement {
 
   markets!: boolean
 
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
     initShopify(this)
   }
