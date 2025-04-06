@@ -1,6 +1,7 @@
 import { customElement } from "./decorators"
 import { NostoProduct } from "./NostoProduct"
 import { evaluate } from "@/services/templating"
+import { assertRequired } from "@/utils"
 
 @customElement("nosto-product-card")
 export class NostoProductCard extends HTMLElement {
@@ -15,17 +16,8 @@ export class NostoProductCard extends HTMLElement {
   wrap!: boolean
 
   connectedCallback() {
-    validate(this)
+    assertRequired(this, "recoId", "template")
     return render(this)
-  }
-}
-
-function validate(element: NostoProductCard) {
-  if (!element.recoId) {
-    throw new Error("Slot ID is required.")
-  }
-  if (!element.template) {
-    throw new Error("Template is required.")
   }
 }
 

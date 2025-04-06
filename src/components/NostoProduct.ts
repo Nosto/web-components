@@ -1,3 +1,4 @@
+import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "../store"
 import { customElement } from "./decorators"
 
@@ -15,12 +16,12 @@ export class NostoProduct extends HTMLElement {
   skuSelected!: boolean
 
   connectedCallback() {
+    assertRequired(this, "productId", "recoId")
     initProduct(this)
   }
 }
 
 function initProduct(element: NostoProduct) {
-  validate(element)
   const store = createStore(element)
   provideStore(element, store)
   store.listen("selectedSkuId", selectedSkuId => {
@@ -30,15 +31,6 @@ function initProduct(element: NostoProduct) {
   registerSKUSelectors(element, store)
   registerSKUIds(element, store)
   registerATCButtons(element, store)
-}
-
-function validate(element: NostoProduct) {
-  if (!element.productId) {
-    throw new Error("Product ID is required.")
-  }
-  if (!element.recoId) {
-    throw new Error("Slot ID is required.")
-  }
 }
 
 function registerSKUSelectors(element: NostoProduct, { selectSkuId }: Store) {

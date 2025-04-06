@@ -1,4 +1,4 @@
-import { intersectionOf } from "@/utils"
+import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
 import { customElement } from "./decorators"
 
@@ -11,14 +11,8 @@ export class NostoSkuOptions extends HTMLElement {
   name!: string
 
   connectedCallback() {
-    validate(this)
+    assertRequired(this, "name")
     injectStore(this, store => initSkuOptions(this, store))
-  }
-}
-
-function validate(element: NostoSkuOptions) {
-  if (!element.name) {
-    throw new Error("Name is required.")
   }
 }
 
