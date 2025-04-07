@@ -7,7 +7,7 @@ import { evaluate } from "@/services/templating"
  *
  * @property {string} recoId - The recommendation ID to associate with this product card.
  * @property {string} template - The id of the template element to use for rendering the product card.
- * @property {boolean} wrap - Whether to wrap the rendered content in a NostoProduct element.
+ * @property {boolean} [wrap] - Whether to wrap the rendered content in a NostoProduct element.
  *
  * @throws {Error} - Throws an error if recoId or template is not provided.
  *
