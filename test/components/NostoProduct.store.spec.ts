@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest"
-import { createStore, Events } from "@/store"
+import { createStore, Events } from "@/components/NostoProduct/store"
 import { NostoProduct } from "@/components/NostoProduct"
 
 describe("createStore", () => {
