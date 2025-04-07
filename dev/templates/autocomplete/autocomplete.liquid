@@ -1,0 +1,41 @@
+<nosto-autocomplete>
+  <form>
+    <input type="text" ns-input placeholder="search" />
+    <button type="submit" id="search-button">Search</button>
+    <div ns-results className="ns-autocomplete"></div>
+  </form>
+  <template>
+
+  </template>
+  <script type="application/json">
+    {
+        "inputSelector": "#search",
+        "dropdownSelector": "#dropdown",
+        "render": "(container, state) => { container.innerHTML = ` <div> <h1>${state.query}</h1> <ul> ${state.response.products .map((product) => `<li>${product.name}</li>`) .join('')} </ul> </div> `; }",
+        "fetch": {
+            "products": {
+                "fields": [
+                    "name",
+                    "url",
+                    "imageUrl",
+                    "price",
+                    "listPrice",
+                    "brand"
+                ],
+                "size": 5
+            },
+            "keywords": {
+                "size": 5,
+                "fields": [
+                    "keyword",
+                    "_highlight.keyword"
+                ],
+                "highlight": {
+                    "preTag": "<strong>",
+                    "postTag": "</strong>"
+                }
+            }
+        }
+    }
+  </script>
+</nosto-autocomplete>
