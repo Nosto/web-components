@@ -1,5 +1,5 @@
 import { NostoProduct } from "@/main"
-import { triggerEvent } from "@/store/placement-events"
+import { triggerEvent } from "@/components/NostoProduct/events"
 import { intersectionOf } from "@/utils"
 import { addSkuToCart } from "@nosto/nosto-js"
 

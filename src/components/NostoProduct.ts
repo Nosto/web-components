@@ -1,5 +1,5 @@
 import { assertRequired } from "@/utils"
-import { createStore, provideStore, Store } from "../store"
+import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 
 /**
