@@ -7,6 +7,31 @@ const swiperURLBase = "https://cdn.jsdelivr.net/npm/swiper@latest"
 // Swiper core excludes modules by default
 const swiperJs = `${swiperURLBase}/swiper.mjs`
 
+/**
+ * Custom element that wraps the Swiper library to create slideshows and carousels.
+ *
+ * @property {string} containerSelector - Selector for the swiper container element
+ *
+ * @example
+ * ```html
+ * <nosto-swiper container-selector=".my-swiper">
+ *   <script swiper-config>
+ *     {
+ *       "slidesPerView": 3,
+ *       "spaceBetween": 10,
+ *       "modules": ["navigation", "pagination"]
+ *     }
+ *   </script>
+ *   <div class="my-swiper">
+ *     <div class="swiper-wrapper">
+ *       <div class="swiper-slide">Slide 1</div>
+ *       <div class="swiper-slide">Slide 2</div>
+ *       <div class="swiper-slide">Slide 3</div>
+ *     </div>
+ *   </div>
+ * </nosto-swiper>
+ * ```
+ */
 @customElement("nosto-swiper")
 export class NostoSwiper extends HTMLElement {
   static attributes = {

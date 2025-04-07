@@ -2,6 +2,31 @@ import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "../store"
 import { customElement } from "./decorators"
 
+/**
+ * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
+ *
+ * This component handles two different implementation styles:
+ * 1. Elements with the `n-option` attribute for direct option selection
+ * 2. A `<select>` element with options having `n-skus` attributes
+ *
+ * The component manages:
+ * - Option selection state
+ * - Disabling unavailable options based on other selections
+ * - Handling preselected options
+ * - Registering click events for options
+ * - Listening for state changes to update UI
+ *
+ * @property {string} name - Required. The identifier for this option group
+ *
+ * @example
+ * ```html
+ * <nosto-sku-options name="color">
+ *   <span n-option n-skus="123,145">Black</span>
+ *   <span n-option n-skus="223,234,245">White</span>
+ *   <span n-option n-skus="334,345">Blue</span>
+ * </nosto-sku-options>
+ * ```
+ */
 @customElement("nosto-sku-options")
 export class NostoSkuOptions extends HTMLElement {
   static attributes = {

@@ -1,4 +1,3 @@
-/* eslint-disable barrel-files/avoid-namespace-import */
 import { Liquid as _Liquid } from "liquidjs"
 import _Handlebars from "handlebars"
 import type { Template } from "liquidjs"
