@@ -1,6 +1,7 @@
 import { customElement } from "./decorators"
 import { NostoProduct } from "./NostoProduct"
 import { evaluate } from "@/services/templating"
+import { assertRequired } from "@/utils"
 
 /**
  * A custom element that renders a product card based on Nosto recommendation data.
@@ -49,43 +50,30 @@ export class NostoProductCard extends HTMLElement {
   template!: string
   wrap!: boolean
 
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
-    this.validate()
-    return this.render()
+    assertRequired(this, "recoId", "template")
+    return initProductCard(this)
   }
+}
 
-  private validate() {
-    if (!this.recoId) {
-      throw new Error("Slot ID is required.")
-    }
-    if (!this.template) {
-      throw new Error("Template is required.")
-    }
+async function initProductCard(element: NostoProductCard) {
+  element.toggleAttribute("loading", true)
+  const product = getData(element)
+  const html = await evaluate(element.template, { product, data: element.dataset })
+
+  if (element.wrap) {
+    const wrapper = new NostoProduct()
+    wrapper.recoId = element.recoId
+    wrapper.productId = product.id
+    wrapper.innerHTML = html
+    element.appendChild(wrapper)
+  } else {
+    element.insertAdjacentHTML("beforeend", html)
   }
+  element.toggleAttribute("loading", false)
+}
 
-  private async render() {
-    this.toggleAttribute("loading", true)
-    const product = this.getData()
-    const html = await evaluate(this.template, { product, data: this.dataset })
-
-    if (this.wrap) {
-      const wrapper = new NostoProduct()
-      wrapper.recoId = this.recoId
-      wrapper.productId = product.id
-      wrapper.innerHTML = html
-      this.appendChild(wrapper)
-    } else {
-      this.insertAdjacentHTML("beforeend", html)
-    }
-    this.toggleAttribute("loading", false)
-  }
-
-  private getData() {
-    const data = this.querySelector("script[product-data]")
-    return data ? JSON.parse(data.textContent!) : {}
-  }
+function getData(element: HTMLElement) {
+  const data = element.querySelector("script[product-data]")
+  return data ? JSON.parse(data.textContent!) : {}
 }

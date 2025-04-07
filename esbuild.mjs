@@ -5,7 +5,8 @@ const external = ["liquidjs", "handlebars", "swiper"]
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
   bundle: true,
-  minify: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
   target: "es2018",
   sourcemap: true,
   external
@@ -48,6 +49,7 @@ async function build() {
 
     await esbuild.build({
       ...sharedConfig,
+      minifyWhitespace: true,
       outfile: "dist/main.es.bundle.js",
       format: "esm",
       plugins: [stubExternal]
