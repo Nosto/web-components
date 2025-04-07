@@ -1,4 +1,4 @@
-import { migrateToShopifyMarket } from "@/store/actions"
+import { migrateToShopifyMarket } from "@/components/NostoShopify/actions/migrateToShopifyMarket"
 import { customElement } from "./decorators"
 
 /**

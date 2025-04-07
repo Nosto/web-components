@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
-import { EventName } from "@/store/placement-events"
+import { EventName } from "@/components/NostoProduct/events"
 import { createElement } from "../utils/jsx"
 
 describe("NostoProduct", () => {

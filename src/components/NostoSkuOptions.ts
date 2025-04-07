@@ -1,5 +1,5 @@
 import { assertRequired, intersectionOf } from "@/utils"
-import { injectStore, Store } from "../store"
+import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 
 /**
