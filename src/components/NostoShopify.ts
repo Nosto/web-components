@@ -12,9 +12,11 @@ import { customElement } from "./decorators"
  * @throws Error - When there is no parent element with class 'nosto_element'
  *
  * @example
+ * ```html
  * <div id="campaign123" class="nosto_element">
  *   <nosto-shopify markets></nosto-shopify>
  * </div>
+ * ```
  */
 @customElement("nosto-shopify")
 export class NostoShopify extends HTMLElement {
