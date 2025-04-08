@@ -15,7 +15,7 @@ const swiperJs = `${swiperURLBase}/swiper.mjs`
  * @example
  * ```html
  * <nosto-swiper container-selector=".my-swiper">
- *   <script swiper-config>
+ *   <script type="application/json" swiper-config>
  *     {
  *       "slidesPerView": 3,
  *       "spaceBetween": 10,
