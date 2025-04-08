@@ -9,6 +9,7 @@ interface State {
   optionGroupCount: number
   skuImage?: string
   skuAltImage?: string
+  selectedElements: Record<string, HTMLElement | undefined>
 }
 
 export type Events = Pick<State, "selectedSkuId" | "skuOptions" | "skuImage" | "skuAltImage">
@@ -20,7 +21,8 @@ export function createStore(element: NostoProduct) {
   const state: State = {
     selectedSkuId: undefined,
     skuOptions: {},
-    optionGroupCount: 0
+    optionGroupCount: 0,
+    selectedElements: {}
   }
 
   const listeners: { [K in keyof Events]?: Listener<K>[] } = {}
@@ -38,9 +40,16 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function selectSkuId(skuId: string) {
+  function selectSkuId(skuId: string, optionElement?: HTMLElement) {
     state.selectedSkuId = skuId
     notify("selectedSkuId", skuId)
+
+    if (optionElement?.getAttribute("n-skus")?.includes(skuId)) {
+      const img = optionElement.getAttribute("ns-img")
+      const altImg = optionElement.getAttribute("ns-alt-img") ?? undefined
+
+      if (img) setSkuImages(img, altImg)
+    }
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
@@ -52,12 +61,19 @@ export function createStore(element: NostoProduct) {
     if (totalSelection === state.optionGroupCount) {
       const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
       if (selectedSkuIds.length === 1) {
-        selectSkuId(selectedSkuIds[0])
+        const skuId = selectedSkuIds[0]
+
+        const elementWithImage = Object.values(state.selectedElements).find(
+          el => el?.getAttribute("n-skus")?.split(",").includes(skuId) && el?.hasAttribute("ns-img")
+        )
+
+        selectSkuId(skuId, elementWithImage)
       }
     }
   }
 
   function setSkuImages(image: string, altImage?: string) {
+    if (!state.selectedSkuId) return
     state.skuImage = image
     notify("skuImage", image)
 
@@ -68,6 +84,14 @@ export function createStore(element: NostoProduct) {
       const preload = new Image()
       preload.src = altImage
     }
+  }
+
+  function getSelectedSkuId() {
+    return state.selectedSkuId
+  }
+
+  function setSelectedElement(optionId: string, el: HTMLElement) {
+    state.selectedElements[optionId] = el
   }
 
   function registerOptionGroup() {
@@ -90,7 +114,9 @@ export function createStore(element: NostoProduct) {
     selectSkuOption,
     selectSkuId,
     registerOptionGroup,
-    setSkuImages
+    setSkuImages,
+    getSelectedSkuId,
+    setSelectedElement
   }
 }
 

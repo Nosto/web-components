@@ -114,7 +114,7 @@ function handlePreselection(optionId: string, { selectSkuOption }: Store, option
 
 function registerClickEvents(
   optionId: string,
-  { selectSkuOption, setSkuImages }: Store,
+  { selectSkuOption, setSelectedElement }: Store,
   optionElements: HTMLElement[]
 ) {
   optionElements.forEach(option => {
@@ -125,14 +125,8 @@ function registerClickEvents(
       const skuIds = getAllSkus(option)
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
+      setSelectedElement(optionId, option)
       selectSkuOption(optionId, skuIds)
-
-      const img = option.getAttribute("ns-img")
-
-      if (img) {
-        const altImg = option.getAttribute("ns-alt-img") ?? undefined
-        setSkuImages(img, altImg)
-      }
     })
   })
 }

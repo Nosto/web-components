@@ -340,4 +340,56 @@ describe("NostoSkuOptions", () => {
       })
     })
   })
+  describe("SKU image handling", () => {
+    beforeEach(() => {
+      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      window.Nosto = { addSkuToCart: vi.fn() }
+    })
+    it("should not update image when SKU selection is incomplete", () => {
+      document.body.replaceChildren(
+        <nosto-product product-id="123" reco-id="789">
+          <nosto-sku-options name="color">
+            <span n-option n-skus="sku123" ns-img="image.jpg" />
+          </nosto-sku-options>
+          <nosto-sku-options name="size">
+            <span n-option n-skus="sku123" />
+          </nosto-sku-options>
+        </nosto-product>
+      )
+
+      nostoProduct = document.querySelector("nosto-product")!
+      const color = nostoProduct.querySelector("nosto-sku-options[name='color'] [n-option]")!
+
+      color.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).not.toBe("url(image.jpg)")
+    })
+
+    it("should update product images when all option groups are selected and intersect", () => {
+      document.body.replaceChildren(
+        <nosto-product product-id="123" reco-id="789">
+          <nosto-sku-options name="color">
+            <span n-option n-skus="sku123" ns-img="image.jpg" ns-alt-img="alt-image.jpg" />
+          </nosto-sku-options>
+          <nosto-sku-options name="size">
+            <span n-option n-skus="sku123" />
+          </nosto-sku-options>
+        </nosto-product>
+      )
+
+      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      const color = nostoProduct.querySelector("nosto-sku-options[name='color'] [n-option]")!
+      const size = nostoProduct.querySelector("nosto-sku-options[name='size'] [n-option]")!
+
+      // Initially nothing should be set
+      color.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toBe("")
+      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toBe("")
+
+      // Now second selection completes the valid SKU
+      size.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("image.jpg")
+      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("alt-image.jpg")
+    })
+  })
 })

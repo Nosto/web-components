@@ -2,8 +2,6 @@ import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
 import { EventName } from "@/components/NostoProduct/events"
 import { createElement } from "../utils/jsx"
-import { injectStore } from "@/components/NostoProduct/store"
-import { NostoSkuOptions } from "@/components/NostoSkuOptions"
 
 describe("NostoProduct", () => {
   let element: NostoProduct
@@ -206,112 +204,6 @@ describe("NostoProduct", () => {
 
       await checkSkuAddToCartCompleteEvent("456")
       await checkSkuAddToCartCompleteEvent("101")
-    })
-  })
-  describe("SKU image switching", () => {
-    it("should update style properties when setSkuImages is called", () => {
-      element.setAttribute("product-id", PROD_ID)
-      element.setAttribute("reco-id", RECO_ID)
-      element.connectedCallback()
-
-      const imgUrl = "image.jpg"
-      const altImgUrl = "alt-image.jpg"
-
-      element.connectedCallback()
-      injectStore(element, store => {
-        store.setSkuImages(imgUrl, altImgUrl)
-      })
-
-      expect(element.style.getPropertyValue("--ns-img")).toContain(imgUrl)
-      expect(element.style.getPropertyValue("--ns-alt-img")).toContain(altImgUrl)
-    })
-
-    it("should update images when SKU option is selected", async () => {
-      element.setAttribute("product-id", PROD_ID)
-      element.setAttribute("reco-id", RECO_ID)
-
-      const option = document.createElement("span")
-      option.setAttribute("n-option", "")
-      option.setAttribute("n-skus", "123")
-      option.setAttribute("ns-img", "image.jpg")
-      option.setAttribute("ns-alt-img", "alt-image.jpg")
-
-      const skuOptions = new NostoSkuOptions()
-      skuOptions.setAttribute("name", "color")
-      skuOptions.appendChild(option)
-
-      element.appendChild(skuOptions)
-      document.body.append(element)
-
-      element.connectedCallback()
-      await Promise.resolve()
-
-      option.click()
-
-      expect(element.style.getPropertyValue("--ns-img")).toContain("image.jpg")
-      expect(element.style.getPropertyValue("--ns-alt-img")).toContain("alt-image.jpg")
-    })
-    it("should not select a SKU if only one of two option groups is selected", async () => {
-      element.setAttribute("product-id", PROD_ID)
-      element.setAttribute("reco-id", RECO_ID)
-
-      const colorOption = document.createElement("span")
-      colorOption.setAttribute("n-option", "")
-      colorOption.setAttribute("n-skus", "sku123")
-      colorOption.setAttribute("ns-img", "color.jpg")
-
-      const sizeOption = document.createElement("span")
-      sizeOption.setAttribute("n-option", "")
-      sizeOption.setAttribute("n-skus", "sku123")
-
-      const colorGroup = new NostoSkuOptions()
-      colorGroup.setAttribute("name", "color")
-      colorGroup.appendChild(colorOption)
-
-      const sizeGroup = new NostoSkuOptions()
-      sizeGroup.setAttribute("name", "size")
-      sizeGroup.appendChild(sizeOption)
-
-      element.append(colorGroup, sizeGroup)
-      document.body.appendChild(element)
-
-      element.connectedCallback()
-      await Promise.resolve()
-
-      colorOption.click()
-
-      expect(element.selectedSkuId).toBeUndefined()
-    })
-    it("should select SKU when all option groups are selected and intersect", async () => {
-      element.setAttribute("product-id", PROD_ID)
-      element.setAttribute("reco-id", RECO_ID)
-
-      const colorOption = document.createElement("span")
-      colorOption.setAttribute("n-option", "")
-      colorOption.setAttribute("n-skus", "sku123")
-
-      const sizeOption = document.createElement("span")
-      sizeOption.setAttribute("n-option", "")
-      sizeOption.setAttribute("n-skus", "sku123")
-
-      const colorGroup = new NostoSkuOptions()
-      colorGroup.setAttribute("name", "color")
-      colorGroup.appendChild(colorOption)
-
-      const sizeGroup = new NostoSkuOptions()
-      sizeGroup.setAttribute("name", "size")
-      sizeGroup.appendChild(sizeOption)
-
-      element.append(colorGroup, sizeGroup)
-      document.body.appendChild(element)
-
-      element.connectedCallback()
-      await Promise.resolve()
-
-      colorOption.click()
-      sizeOption.click()
-
-      expect(element.selectedSkuId).toBe("sku123")
     })
   })
 })
