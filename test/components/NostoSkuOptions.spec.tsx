@@ -354,9 +354,9 @@ describe("NostoSkuOptions", () => {
       )
 
       nostoProduct = document.querySelector("nosto-product")!
-      const color = nostoProduct.querySelector("nosto-sku-options[name='color'] [n-option]")!
+      const color = nostoProduct.querySelector<HTMLElement>("nosto-sku-options[name='color'] [n-option]")!
 
-      color.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+      color.click()
 
       expect(nostoProduct.style.getPropertyValue("--ns-img")).not.toBe("url(image.jpg)")
     })
@@ -374,16 +374,16 @@ describe("NostoSkuOptions", () => {
       )
 
       nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
-      const color = nostoProduct.querySelector("nosto-sku-options[name='color'] [n-option]")!
-      const size = nostoProduct.querySelector("nosto-sku-options[name='size'] [n-option]")!
+      const color = nostoProduct.querySelector<HTMLElement>("nosto-sku-options[name='color'] [n-option]")!
+      const size = nostoProduct.querySelector<HTMLElement>("nosto-sku-options[name='size'] [n-option]")!
 
       // Initially nothing should be set
-      color.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+      color.click()
       expect(nostoProduct.style.getPropertyValue("--ns-img")).toBe("")
       expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toBe("")
 
       // Now second selection completes the valid SKU
-      size.dispatchEvent(new MouseEvent("click", { bubbles: true }))
+      size.click()
       expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("image.jpg")
       expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("alt-image.jpg")
     })

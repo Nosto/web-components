@@ -9,7 +9,6 @@ interface State {
   optionGroupCount: number
   skuImage?: string
   skuAltImage?: string
-  selectedElements: Record<string, HTMLElement | undefined>
 }
 
 export type Events = Pick<State, "selectedSkuId" | "skuOptions" | "skuImage" | "skuAltImage">
@@ -21,8 +20,7 @@ export function createStore(element: NostoProduct) {
   const state: State = {
     selectedSkuId: undefined,
     skuOptions: {},
-    optionGroupCount: 0,
-    selectedElements: {}
+    optionGroupCount: 0
   }
 
   const listeners: { [K in keyof Events]?: Listener<K>[] } = {}
@@ -40,34 +38,25 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function selectSkuId(skuId: string, optionElement?: HTMLElement) {
+  function selectSkuId(skuId: string, meta?: { image?: string; altImage?: string }) {
     state.selectedSkuId = skuId
     notify("selectedSkuId", skuId)
 
-    if (optionElement?.getAttribute("n-skus")?.includes(skuId)) {
-      const img = optionElement.getAttribute("ns-img")
-      const altImg = optionElement.getAttribute("ns-alt-img") ?? undefined
-
-      if (img) setSkuImages(img, altImg)
+    if (meta?.image) {
+      setSkuImages(meta.image, meta.altImage)
     }
   }
 
-  function selectSkuOption(optionId: string, skuIds: string[]) {
+  function selectSkuOption(optionId: string, skuIds: string[], meta?: { image?: string; altImage?: string }) {
     state.skuOptions[optionId] = skuIds
     notify("skuOptions", state.skuOptions)
-
     const totalSelection = Object.keys(state.skuOptions).length
 
     if (totalSelection === state.optionGroupCount) {
       const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
       if (selectedSkuIds.length === 1) {
         const skuId = selectedSkuIds[0]
-
-        const elementWithImage = Object.values(state.selectedElements).find(
-          el => el?.getAttribute("n-skus")?.split(",").includes(skuId) && el?.hasAttribute("ns-img")
-        )
-
-        selectSkuId(skuId, elementWithImage)
+        selectSkuId(skuId, meta)
       }
     }
   }
@@ -80,18 +69,7 @@ export function createStore(element: NostoProduct) {
     if (altImage) {
       state.skuAltImage = altImage
       notify("skuAltImage", altImage)
-
-      const preload = new Image()
-      preload.src = altImage
     }
-  }
-
-  function getSelectedSkuId() {
-    return state.selectedSkuId
-  }
-
-  function setSelectedElement(optionId: string, el: HTMLElement) {
-    state.selectedElements[optionId] = el
   }
 
   function registerOptionGroup() {
@@ -114,9 +92,7 @@ export function createStore(element: NostoProduct) {
     selectSkuOption,
     selectSkuId,
     registerOptionGroup,
-    setSkuImages,
-    getSelectedSkuId,
-    setSelectedElement
+    setSkuImages
   }
 }
 
