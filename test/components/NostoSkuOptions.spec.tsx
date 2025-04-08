@@ -341,10 +341,6 @@ describe("NostoSkuOptions", () => {
     })
   })
   describe("SKU image handling", () => {
-    beforeEach(() => {
-      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
-      window.Nosto = { addSkuToCart: vi.fn() }
-    })
     it("should not update image when SKU selection is incomplete", () => {
       document.body.replaceChildren(
         <nosto-product product-id="123" reco-id="789">
@@ -390,6 +386,31 @@ describe("NostoSkuOptions", () => {
       size.dispatchEvent(new MouseEvent("click", { bubbles: true }))
       expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("image.jpg")
       expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("alt-image.jpg")
+    })
+
+    it("should remain unselected when no SKU option is clicked", () => {
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="123,145" ns-img="img-black.jpg" ns-alt-img="alt-black.jpg"></span>
+            <span white n-option n-skus="223,234,245" ns-img="img-white.jpg" ns-alt-img="alt-white.jpg"></span>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span l n-option n-skus="123,223"></span>
+            <span m n-option n-skus="234,334"></span>
+          </nosto-sku-options>
+          <span n-atc>Add to cart</span>
+        </nosto-product>
+      )
+
+      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      window.Nosto = { addSkuToCart: vi.fn() }
+
+      expect(nostoProduct.selectedSkuId).toBeUndefined()
+      expect(nostoProduct.hasAttribute("sku-selected")).toBe(false)
+
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toBe("")
+      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toBe("")
     })
   })
 })
