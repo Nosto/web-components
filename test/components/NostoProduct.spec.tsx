@@ -243,7 +243,7 @@ describe("NostoProduct", () => {
       element.appendChild(skuOptions)
       document.body.append(element)
 
-      element.connectedCallback() // triggers initProduct
+      element.connectedCallback()
       await Promise.resolve()
 
       option.click()
