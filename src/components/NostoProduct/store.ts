@@ -57,11 +57,14 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function setSkuImages(image?: string, altImage?: string) {
+  function setSkuImages(image: string, altImage?: string) {
     state.skuImage = image
-    state.skuAltImage = altImage
     notify("skuImage", image)
-    notify("skuAltImage", altImage)
+
+    if (altImage) {
+      state.skuAltImage = altImage
+      notify("skuAltImage", altImage)
+    }
   }
 
   function registerOptionGroup() {

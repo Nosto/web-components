@@ -128,8 +128,10 @@ function registerClickEvents(
       selectSkuOption(optionId, skuIds)
 
       const img = option.getAttribute("ns-img")
-      const altImg = option.getAttribute("ns-alt-img")
-      setSkuImages?.(img || undefined, altImg || undefined)
+      const altImg = option.getAttribute("ns-alt-img") ?? undefined
+      if (img) {
+        setSkuImages(img, altImg)
+      }
     })
   })
 }
