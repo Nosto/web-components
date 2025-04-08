@@ -251,5 +251,67 @@ describe("NostoProduct", () => {
       expect(element.style.getPropertyValue("--ns-img")).toContain("image.jpg")
       expect(element.style.getPropertyValue("--ns-alt-img")).toContain("alt-image.jpg")
     })
+    it("should not select a SKU if only one of two option groups is selected", async () => {
+      element.setAttribute("product-id", PROD_ID)
+      element.setAttribute("reco-id", RECO_ID)
+
+      const colorOption = document.createElement("span")
+      colorOption.setAttribute("n-option", "")
+      colorOption.setAttribute("n-skus", "sku123")
+      colorOption.setAttribute("ns-img", "color.jpg")
+
+      const sizeOption = document.createElement("span")
+      sizeOption.setAttribute("n-option", "")
+      sizeOption.setAttribute("n-skus", "sku123")
+
+      const colorGroup = new NostoSkuOptions()
+      colorGroup.setAttribute("name", "color")
+      colorGroup.appendChild(colorOption)
+
+      const sizeGroup = new NostoSkuOptions()
+      sizeGroup.setAttribute("name", "size")
+      sizeGroup.appendChild(sizeOption)
+
+      element.append(colorGroup, sizeGroup)
+      document.body.appendChild(element)
+
+      element.connectedCallback()
+      await Promise.resolve()
+
+      colorOption.click()
+
+      expect(element.selectedSkuId).toBeUndefined()
+    })
+    it("should select SKU when all option groups are selected and intersect", async () => {
+      element.setAttribute("product-id", PROD_ID)
+      element.setAttribute("reco-id", RECO_ID)
+
+      const colorOption = document.createElement("span")
+      colorOption.setAttribute("n-option", "")
+      colorOption.setAttribute("n-skus", "sku123")
+
+      const sizeOption = document.createElement("span")
+      sizeOption.setAttribute("n-option", "")
+      sizeOption.setAttribute("n-skus", "sku123")
+
+      const colorGroup = new NostoSkuOptions()
+      colorGroup.setAttribute("name", "color")
+      colorGroup.appendChild(colorOption)
+
+      const sizeGroup = new NostoSkuOptions()
+      sizeGroup.setAttribute("name", "size")
+      sizeGroup.appendChild(sizeOption)
+
+      element.append(colorGroup, sizeGroup)
+      document.body.appendChild(element)
+
+      element.connectedCallback()
+      await Promise.resolve()
+
+      colorOption.click()
+      sizeOption.click()
+
+      expect(element.selectedSkuId).toBe("sku123")
+    })
   })
 })
