@@ -122,9 +122,9 @@ function registerClickEvents(optionId: string, { selectSkuOption }: Store, optio
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
 
-      const img = option.getAttribute("ns-img") ?? undefined
-      const altImg = option.getAttribute("ns-alt-img") ?? undefined
-      const meta = img ? { image: img, altImage: altImg } : undefined
+      const image = option.getAttribute("ns-img") ?? undefined
+      const altImage = option.getAttribute("ns-alt-img") ?? undefined
+      const meta = image ? { image, altImage } : undefined
       selectSkuOption(optionId, skuIds, meta)
     })
   })
