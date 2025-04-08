@@ -43,7 +43,13 @@ export function createStore(element: NostoProduct) {
     notify("selectedSkuId", skuId)
 
     if (meta?.image) {
-      setSkuImages(meta.image, meta.altImage)
+      state.skuImage = meta.image
+      notify("skuImage", meta.image)
+
+      if (meta?.altImage) {
+        state.skuAltImage = meta.altImage
+        notify("skuAltImage", meta.altImage)
+      }
     }
   }
 
@@ -58,17 +64,6 @@ export function createStore(element: NostoProduct) {
         const skuId = selectedSkuIds[0]
         selectSkuId(skuId, meta)
       }
-    }
-  }
-
-  function setSkuImages(image: string, altImage?: string) {
-    if (!state.selectedSkuId) return
-    state.skuImage = image
-    notify("skuImage", image)
-
-    if (altImage) {
-      state.skuAltImage = altImage
-      notify("skuAltImage", altImage)
     }
   }
 
@@ -91,8 +86,7 @@ export function createStore(element: NostoProduct) {
     listen,
     selectSkuOption,
     selectSkuId,
-    registerOptionGroup,
-    setSkuImages
+    registerOptionGroup
   }
 }
 
