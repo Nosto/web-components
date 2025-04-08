@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi } from "vitest"
 import { NostoProduct } from "../../src/components/NostoProduct"
 import { EventName } from "@/components/NostoProduct/events"
 import { createElement } from "../utils/jsx"
+import { injectStore } from "@/components/NostoProduct/store"
+import { NostoSkuOptions } from "@/components/NostoSkuOptions"
 
 describe("NostoProduct", () => {
   let element: NostoProduct
@@ -204,6 +206,50 @@ describe("NostoProduct", () => {
 
       await checkSkuAddToCartCompleteEvent("456")
       await checkSkuAddToCartCompleteEvent("101")
+    })
+  })
+  describe("SKU image switching", () => {
+    it("should update style properties when setSkuImages is called", () => {
+      element.setAttribute("product-id", PROD_ID)
+      element.setAttribute("reco-id", RECO_ID)
+      element.connectedCallback()
+
+      const imgUrl = "image.jpg"
+      const altImgUrl = "alt-image.jpg"
+
+      element.connectedCallback()
+      injectStore(element, store => {
+        store.setSkuImages(imgUrl, altImgUrl)
+      })
+
+      expect(element.style.getPropertyValue("--ns-img")).toContain(imgUrl)
+      expect(element.style.getPropertyValue("--ns-alt-img")).toContain(altImgUrl)
+    })
+
+    it("should update images when SKU option is selected", async () => {
+      element.setAttribute("product-id", PROD_ID)
+      element.setAttribute("reco-id", RECO_ID)
+
+      const option = document.createElement("span")
+      option.setAttribute("n-option", "")
+      option.setAttribute("n-skus", "123")
+      option.setAttribute("ns-img", "image.jpg")
+      option.setAttribute("ns-alt-img", "alt-image.jpg")
+
+      const skuOptions = new NostoSkuOptions()
+      skuOptions.setAttribute("name", "color")
+      skuOptions.appendChild(option)
+
+      element.appendChild(skuOptions)
+      document.body.append(element)
+
+      element.connectedCallback() // triggers initProduct
+      await Promise.resolve()
+
+      option.click()
+
+      expect(element.style.getPropertyValue("--ns-img")).toContain("image.jpg")
+      expect(element.style.getPropertyValue("--ns-alt-img")).toContain("alt-image.jpg")
     })
   })
 })

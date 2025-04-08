@@ -64,6 +64,9 @@ export function createStore(element: NostoProduct) {
     if (altImage) {
       state.skuAltImage = altImage
       notify("skuAltImage", altImage)
+
+      const preload = new Image()
+      preload.src = altImage
     }
   }
 

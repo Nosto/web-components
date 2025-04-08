@@ -63,14 +63,10 @@ function initProduct(element: NostoProduct) {
     element.skuSelected = !!selectedSkuId
   })
   store.listen("skuImage", image => {
-    if (image) {
-      element.style.setProperty("--ns-img", `url(${image})`)
-    }
+    element.style.setProperty("--ns-img", `url(${image})`)
   })
   store.listen("skuAltImage", altImage => {
-    if (altImage) {
-      element.style.setProperty("--ns-alt-img", `url(${altImage})`)
-    }
+    element.style.setProperty("--ns-alt-img", `url(${altImage})`)
   })
   registerSKUSelectors(element, store)
   registerSKUIds(element, store)
