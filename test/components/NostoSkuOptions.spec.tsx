@@ -346,7 +346,7 @@ describe("NostoSkuOptions", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
           <nosto-sku-options name="colors">
-            <span n-option n-skus="sku123" ns-img="image.jpg" />
+            <span black n-option n-skus="sku123" ns-img="image.jpg" />
           </nosto-sku-options>
           <nosto-sku-options name="sizes">
             <span n-option n-skus="sku123" />
@@ -355,8 +355,7 @@ describe("NostoSkuOptions", () => {
       )
 
       nostoProduct = document.querySelector("nosto-product")!
-      const color = nostoProduct.querySelector<HTMLElement>("nosto-sku-options[name='colors'] [n-option]")!
-      color.click()
+      element("black").click()
       expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("url(image.jpg)")
     })
 
@@ -389,10 +388,10 @@ describe("NostoSkuOptions", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
           <nosto-sku-options name="materials">
-            <span n-option n-skus="sku123" ns-img="leather.jpg" ns-alt-img="leather-alt.jpg">
-              Leather
+            <span silk n-option n-skus="sku123" ns-img="silk.jpg" ns-alt-img="silk-alt.jpg">
+              Silk
             </span>
-            <span n-option n-skus="sku456">
+            <span cotton n-option n-skus="sku456">
               Cotton
             </span>
           </nosto-sku-options>
@@ -404,29 +403,27 @@ describe("NostoSkuOptions", () => {
       )
 
       nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
-      const leather = nostoProduct.querySelector<HTMLElement>('nosto-sku-options[name="materials"] [n-option][ns-img]')!
+      element("silk").click()
 
-      leather.click()
-
-      expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("leather.jpg")
-      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("leather-alt.jpg")
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("silk.jpg")
+      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("silk-alt.jpg")
     })
 
     it("should update image and complete SKU selection when all 3 options intersect", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
           <nosto-sku-options name="sizes">
-            <span n-option n-skus="sku123">
+            <span m n-option n-skus="sku123">
               M
             </span>
           </nosto-sku-options>
           <nosto-sku-options name="colors">
-            <span n-option n-skus="sku123" ns-img="color.jpg" ns-alt-img="color-alt.jpg">
-              Red
+            <span white n-option n-skus="sku123" ns-img="color.jpg" ns-alt-img="color-alt.jpg">
+              White
             </span>
           </nosto-sku-options>
           <nosto-sku-options name="materials">
-            <span n-option n-skus="sku123">
+            <span cotton n-option n-skus="sku123">
               Cotton
             </span>
           </nosto-sku-options>
@@ -434,13 +431,9 @@ describe("NostoSkuOptions", () => {
       )
 
       nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
-      const size = nostoProduct.querySelector<HTMLElement>('nosto-sku-options[name="sizes"] [n-option]')!
-      const color = nostoProduct.querySelector<HTMLElement>('nosto-sku-options[name="colors"] [n-option]')!
-      const material = nostoProduct.querySelector<HTMLElement>('nosto-sku-options[name="materials"] [n-option]')!
-
-      size.click()
-      color.click()
-      material.click()
+      element("m").click()
+      element("white").click()
+      element("cotton").click()
 
       expect(nostoProduct.selectedSkuId).toBe("sku123")
       expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("color.jpg")
