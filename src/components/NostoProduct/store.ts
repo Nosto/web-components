@@ -38,19 +38,9 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function selectSkuId(skuId: string, meta?: { image?: string; altImage?: string }) {
+  function selectSkuId(skuId: string) {
     state.selectedSkuId = skuId
     notify("selectedSkuId", skuId)
-
-    if (meta?.image) {
-      state.skuImage = meta.image
-      notify("skuImage", meta.image)
-
-      if (meta?.altImage) {
-        state.skuAltImage = meta.altImage
-        notify("skuAltImage", meta.altImage)
-      }
-    }
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
@@ -63,6 +53,16 @@ export function createStore(element: NostoProduct) {
       if (selectedSkuIds.length === 1) {
         selectSkuId(selectedSkuIds[0])
       }
+    }
+  }
+
+  function setSkuImages(image: string, altImage?: string) {
+    state.skuImage = image
+    notify("skuImage", image)
+
+    if (altImage) {
+      state.skuAltImage = altImage
+      notify("skuAltImage", altImage)
     }
   }
 
@@ -87,7 +87,8 @@ export function createStore(element: NostoProduct) {
     listen,
     selectSkuOption,
     selectSkuId,
-    registerOptionGroup
+    registerOptionGroup,
+    setSkuImages
   }
 }
 
