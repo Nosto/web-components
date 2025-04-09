@@ -356,7 +356,7 @@ describe("NostoSkuOptions", () => {
 
       nostoProduct = document.querySelector("nosto-product")!
       element("black").click()
-      expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("url(image.jpg)")
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toEqual("url(image.jpg)")
     })
 
     it("should not update SKU or image when no options are selected", () => {
@@ -405,8 +405,8 @@ describe("NostoSkuOptions", () => {
       nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
       element("silk").click()
 
-      expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("silk.jpg")
-      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("silk-alt.jpg")
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toEqual("url(silk.jpg)")
+      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toEqual("url(silk-alt.jpg)")
     })
 
     it("should update image and complete SKU selection when all 3 options intersect", () => {
@@ -436,8 +436,8 @@ describe("NostoSkuOptions", () => {
       element("cotton").click()
 
       expect(nostoProduct.selectedSkuId).toBe("sku123")
-      expect(nostoProduct.style.getPropertyValue("--ns-img")).toContain("color.jpg")
-      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toContain("color-alt.jpg")
+      expect(nostoProduct.style.getPropertyValue("--ns-img")).toEqual("url(color.jpg)")
+      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toEqual("url(color-alt.jpg)")
     })
   })
 })
