@@ -53,7 +53,7 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function selectSkuOption(optionId: string, skuIds: string[], meta?: { image?: string; altImage?: string }) {
+  function selectSkuOption(optionId: string, skuIds: string[]) {
     state.skuOptions[optionId] = skuIds
     notify("skuOptions", state.skuOptions)
     const totalSelection = Object.keys(state.skuOptions).length
@@ -61,8 +61,7 @@ export function createStore(element: NostoProduct) {
     if (totalSelection === state.optionGroupCount) {
       const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
       if (selectedSkuIds.length === 1) {
-        const skuId = selectedSkuIds[0]
-        selectSkuId(skuId, meta)
+        selectSkuId(selectedSkuIds[0])
       }
     }
   }
@@ -78,7 +77,9 @@ export function createStore(element: NostoProduct) {
   function listen<T extends keyof Events>(k: T, cb: Listener<T>) {
     const mapping: Listener<T>[] = listeners[k] || (listeners[k] = [])
     mapping.push(cb)
-    cb(state[k])
+    if (state[k] !== undefined && state[k] !== null) {
+      cb(state[k])
+    }
   }
 
   return {
