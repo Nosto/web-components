@@ -344,7 +344,7 @@ describe("NostoSkuOptions", () => {
   describe("SKU image handling", () => {
     it("should update image on color SKU selection", () => {
       document.body.replaceChildren(
-        <nosto-product product-id="123" reco-id="789">
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
           <nosto-sku-options name="color">
             <span n-option n-skus="sku123" ns-img="image.jpg" />
           </nosto-sku-options>
