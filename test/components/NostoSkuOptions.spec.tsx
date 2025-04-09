@@ -389,7 +389,7 @@ describe("NostoSkuOptions", () => {
 
   it("should update image when material option with ns-img is clicked", () => {
     document.body.replaceChildren(
-      <nosto-product product-id="123" reco-id="789">
+      <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
         <nosto-sku-options name="material">
           <span n-option n-skus="sku123" ns-img="leather.jpg" ns-alt-img="leather-alt.jpg">
             Leather
@@ -416,7 +416,7 @@ describe("NostoSkuOptions", () => {
 
   it("should update image and complete SKU selection when all 3 options intersect", () => {
     document.body.replaceChildren(
-      <nosto-product product-id="123" reco-id="789">
+      <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
         <nosto-sku-options name="size">
           <span n-option n-skus="sku123">
             M
