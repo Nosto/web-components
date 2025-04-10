@@ -112,7 +112,11 @@ function handlePreselection(optionId: string, { selectSkuOption }: Store, option
   setAvailability(optionElements)
 }
 
-function registerClickEvents(optionId: string, { selectSkuOption }: Store, optionElements: HTMLElement[]) {
+function registerClickEvents(
+  optionId: string,
+  { selectSkuOption, setSkuImages }: Store,
+  optionElements: HTMLElement[]
+) {
   optionElements.forEach(option => {
     option.addEventListener("click", () => {
       if (option.hasAttribute("disabled") || option.hasAttribute("unavailable")) {
@@ -122,6 +126,12 @@ function registerClickEvents(optionId: string, { selectSkuOption }: Store, optio
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
       selectSkuOption(optionId, skuIds)
+
+      const image = option.getAttribute("ns-img")
+      const altImage = option.getAttribute("ns-alt-img")
+      if (image) {
+        setSkuImages(image, altImage || undefined)
+      }
     })
   })
 }

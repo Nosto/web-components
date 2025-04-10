@@ -7,9 +7,11 @@ interface State {
   selectedSkuId: string | undefined
   skuOptions: Record<string, string[]>
   optionGroupCount: number
+  skuImage?: string
+  skuAltImage?: string
 }
 
-export type Events = Pick<State, "selectedSkuId" | "skuOptions">
+export type Events = Pick<State, "selectedSkuId" | "skuOptions" | "skuImage" | "skuAltImage">
 
 type Listener<T extends keyof Events> = (value: Events[T]) => void
 
@@ -44,7 +46,6 @@ export function createStore(element: NostoProduct) {
   function selectSkuOption(optionId: string, skuIds: string[]) {
     state.skuOptions[optionId] = skuIds
     notify("skuOptions", state.skuOptions)
-
     const totalSelection = Object.keys(state.skuOptions).length
 
     if (totalSelection === state.optionGroupCount) {
@@ -52,6 +53,16 @@ export function createStore(element: NostoProduct) {
       if (selectedSkuIds.length === 1) {
         selectSkuId(selectedSkuIds[0])
       }
+    }
+  }
+
+  function setSkuImages(image: string, altImage?: string) {
+    state.skuImage = image
+    notify("skuImage", image)
+
+    if (altImage) {
+      state.skuAltImage = altImage
+      notify("skuAltImage", altImage)
     }
   }
 
@@ -66,7 +77,9 @@ export function createStore(element: NostoProduct) {
   function listen<T extends keyof Events>(k: T, cb: Listener<T>) {
     const mapping: Listener<T>[] = listeners[k] || (listeners[k] = [])
     mapping.push(cb)
-    cb(state[k])
+    if (state[k] !== undefined && state[k] !== null) {
+      cb(state[k])
+    }
   }
 
   return {
@@ -74,7 +87,8 @@ export function createStore(element: NostoProduct) {
     listen,
     selectSkuOption,
     selectSkuId,
-    registerOptionGroup
+    registerOptionGroup,
+    setSkuImages
   }
 }
 
