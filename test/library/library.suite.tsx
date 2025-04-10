@@ -63,17 +63,14 @@ export async function validateLibrary(importPath: string) {
     expect(exports.NostoSwiper).toBeDefined()
 
     const swiper = new exports.NostoSwiper() as NostoSwiper
-    swiper.containerSelector = ".nosto-swiper"
     swiper.append(
-      <div class="nosto-swiper">
-        <div class="swiper-wrapper">
-          <div className="swiper-slide">Slide 1</div>
-          <div className="swiper-slide">Slide 2</div>
-          <div className="swiper-slide">Slide 3</div>
-        </div>
+      <div class="swiper-wrapper">
+        <div className="swiper-slide">Slide 1</div>
+        <div className="swiper-slide">Slide 2</div>
+        <div className="swiper-slide">Slide 3</div>
       </div>
     )
     await swiper.connectedCallback()
-    expect(swiper.querySelector(".nosto-swiper")?.classList).toContain("swiper-initialized")
+    expect(swiper.classList).toContain("swiper-initialized")
   })
 }

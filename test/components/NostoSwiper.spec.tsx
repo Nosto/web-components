@@ -22,36 +22,31 @@ describe("NostoSwiper", () => {
     expect(customElements.get("nosto-swiper")).toBe(NostoSwiper)
   })
 
-  it("should throw error on missing container element", async () => {
-    const element = new NostoSwiper()
-    await expect(element.connectedCallback()).rejects.toThrow("Swiper container not found.")
-  })
-
   it("should throw error on invalid JSON in config script", async () => {
-    const element = swiperExample("swiper-test", config)
+    const element = swiperExample(config)
     element.querySelector("script")!.textContent = "invalid JSON"
     await expect(element.connectedCallback()).rejects.toThrow(/Unexpected token/)
   })
 
   it("should initialize with valid setup", async () => {
-    const element = swiperExample("swiper-test", config)
+    const element = swiperExample(config)
 
     await element.connectedCallback()
-    expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
+    expect(element.classList).toContain("swiper-initialized")
   })
 
   it("should detect slide structure and utilize them", async () => {
-    const element = swiperExample("swiper-test", config)
+    const element = swiperExample(config)
 
     await element.connectedCallback()
-    expect(element.querySelector(".swiper-test")?.classList).toContain("swiper-initialized")
+    expect(element.classList).toContain("swiper-initialized")
     expect(element.querySelectorAll("[data-swiper-slide-index]").length).toBe(3)
   })
 
   it("should load and initialize Swiper modules from CDN", async () => {
     const modulesConfig = { ...config, modules: ["navigation"] }
     //@ts-expect-error string is not assignable to SwiperModule
-    const element = swiperExample("swiper-test-modules", modulesConfig)
+    const element = swiperExample(modulesConfig)
 
     const swiper = await element.connectedCallback()
     const module = swiper?.modules?.find(module => module.name === "Navigation")
@@ -59,10 +54,10 @@ describe("NostoSwiper", () => {
   })
 })
 
-function swiperExample(containerClass: string, config: SwiperOptions) {
+function swiperExample(config: SwiperOptions) {
   return (
-    <nosto-swiper container-selector={`.${containerClass}`}>
-      <div className={containerClass}>
+    <nosto-swiper>
+      <div class="swiper-wrapper">
         <div className="swiper-slide">Slide 1</div>
         <div className="swiper-slide">Slide 2</div>
         <div className="swiper-slide">Slide 3</div>
