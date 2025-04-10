@@ -204,9 +204,8 @@ Usage with select elements
 | `n-option`   | Marks an element as SKU option element                                                                                                                                                           |
 | `n-skus`     | Comma-separated value of linked available SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
 | `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered.                               |
-| `ns-img`     | Image url for SKU option which will be applied to NostoProduct wrapper on click as CSS variable |
-| `ns-alt-img` | Alternate image url for SKU option which will be applied to NostoProduct wrapper on click as CSS variable |
-
+| `ns-img`     | Image URL for SKU option which will be applied to NostoProduct wrapper on click as CSS variable |
+| `ns-alt-img` | Alternate image URL for SKU option which will be applied to NostoProduct wrapper on click as CSS variable |
 Disabled options that are not available due to selections in other groups are marked with the `disabled` attribute and unavailable options that are Out of stock are marked with the `unavailable` attribute. Both should be styled distinctly.
 
 ### NostoSwiper
