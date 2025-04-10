@@ -73,8 +73,8 @@ This component requires the following attributes to parse the markup, extract pr
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `n-sku-selector` | Marks the SKU select dropdown. Attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. |
 | `n-sku-id`       | Relevant when SKU options are rendered as "Add to cart" button. Supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button.       |
-| `ns-img`        | Image url for SKU which will be applied to NostoProduct wrapper on click as CSS variable |
-| `ns-alt-img`    | Alternate image url for SKU which will be applied to NostoProduct wrapper on click as CSS variable |
+| `ns-img`        | Image URL for SKU which will be applied to NostoProduct wrapper on click as CSS variable |
+| `ns-alt-img`    | Alternate image URL for SKU which will be applied to NostoProduct wrapper on click as CSS variable |
 
 ```html
 <div n-sku-id="456">
