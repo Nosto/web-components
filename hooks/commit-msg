@@ -20,13 +20,11 @@
 RED='\033[0;31m'
 NC='\033[0m'
 
-TYPE='feat|fix'
-
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 MSG_HISTORY=$(git cherry -v main | cut -d ' ' -f 3-)
 
-PATTERN="^$TYPE\(.*\)?:"
+PATTERN="^fix|feat(\(.*\))?\!?:"
 
 if [ -z "$(grep -E -i "$PATTERN" "$1")" ]; then
 	for i in $MSG_HISTORY; do
