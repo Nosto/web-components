@@ -41,3 +41,19 @@ jobs:
 
       - name: Run lint
         run: npm run lint
+
+  check-commits:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    name: Validate Conventional Commits
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check Conventional Commits
+        uses: webiny/action-conventional-commits@v1.1.0
+        with:
+          commentOnPR: true        
+
