@@ -86,8 +86,8 @@ function registerSKUIds(element: NostoProduct, { selectSkuId, setSkuImages }: St
       selectSkuId(element.getAttribute("n-sku-id")!)
 
       const image = element.getAttribute("ns-img")
-      const altImage = element.getAttribute("ns-alt-img")
       if (image) {
+        const altImage = element.getAttribute("ns-alt-img")
         setSkuImages(image, altImage || undefined)
       }
     })
