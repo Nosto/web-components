@@ -80,10 +80,16 @@ function registerSKUSelectors(element: NostoProduct, { selectSkuId }: Store) {
   })
 }
 
-function registerSKUIds(element: NostoProduct, { selectSkuId }: Store) {
+function registerSKUIds(element: NostoProduct, { selectSkuId, setSkuImages }: Store) {
   element.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
     element.addEventListener("click", () => {
       selectSkuId(element.getAttribute("n-sku-id")!)
+
+      const image = element.getAttribute("ns-img")
+      const altImage = element.getAttribute("ns-alt-img")
+      if (image) {
+        setSkuImages(image, altImage || undefined)
+      }
     })
   })
 }

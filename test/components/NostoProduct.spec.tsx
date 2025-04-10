@@ -173,6 +173,25 @@ describe("NostoProduct", () => {
       checkProductAddToCart()
     })
 
+    it("should update images on [n-sku-id] clicks", () => {
+      element.append(
+        <div n-sku-id="234" ns-img="blue.jpg" ns-alt-img="green.jpg">
+          1st sku
+        </div>,
+        <div n-sku-id="345">end sku</div>,
+        <div n-atc>Add to cart</div>
+      )
+      element.connectedCallback()
+
+      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(element.style.getPropertyValue("--ns-img")).toBe("")
+      expect(element.style.getPropertyValue("--ns-alt-img")).toBe("")
+
+      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(element.style.getPropertyValue("--ns-img")).toBe("url(blue.jpg)")
+      expect(element.style.getPropertyValue("--ns-alt-img")).toBe("url(green.jpg)")
+    })
+
     it("should trigger nosto:atc:complete after product add to cart", async () => {
       const placementElement = document.createElement("div")
       placementElement.classList.add("nosto_element")
