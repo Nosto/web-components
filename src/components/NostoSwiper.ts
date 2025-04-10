@@ -14,7 +14,12 @@ const swiperJs = `${swiperURLBase}/swiper.mjs`
  *
  * @example
  * ```html
- * <nosto-swiper container-selector=".my-swiper">
+ * <nosto-swiper>
+ *   <div class="swiper-wrapper">
+ *     <div class="swiper-slide">Slide 1</div>
+ *     <div class="swiper-slide">Slide 2</div>
+ *     <div class="swiper-slide">Slide 3</div>
+ *   </div>
  *   <script type="application/json" swiper-config>
  *     {
  *       "slidesPerView": 3,
@@ -22,30 +27,18 @@ const swiperJs = `${swiperURLBase}/swiper.mjs`
  *       "modules": ["navigation", "pagination"]
  *     }
  *   </script>
- *   <div class="my-swiper">
- *     <div class="swiper-wrapper">
- *       <div class="swiper-slide">Slide 1</div>
- *       <div class="swiper-slide">Slide 2</div>
- *       <div class="swiper-slide">Slide 3</div>
- *     </div>
- *   </div>
  * </nosto-swiper>
  * ```
  */
 @customElement("nosto-swiper")
 export class NostoSwiper extends HTMLElement {
-  static attributes = {
-    containerSelector: String
-  }
-
-  containerSelector!: string
-
   async connectedCallback() {
     return initSwiper(this)
   }
 }
 
 async function initSwiper(element: NostoSwiper) {
+  element.classList.add("swiper")
   const config = getConfigFromScript(element)
   // Load Swiper from store context or fallback to CDN
   const Swiper = _Swiper ?? (await import(swiperJs)).default
@@ -60,17 +53,10 @@ async function initSwiper(element: NostoSwiper) {
       config.modules.map(module => import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default))
     )
   }
-
-  const swiperContainer = element.querySelector<HTMLElement>(element.containerSelector || ".swiper")
-
-  if (!swiperContainer) {
-    throw new Error("Swiper container not found.")
-  }
-
-  return new Swiper(swiperContainer!, config)
+  return new Swiper(element, config)
 }
 
 function getConfigFromScript(element: HTMLElement): SwiperOptions {
   const config = element.querySelector("script[swiper-config]")
-  return config ? JSON.parse(config.textContent!) : {}
+  return config?.textContent ? JSON.parse(config.textContent) : {}
 }

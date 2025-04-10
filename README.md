@@ -212,19 +212,17 @@ Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper comp
 **Example**:
 
 ```html
-<nosto-swiper container-selector=".nosto-swiper">
+<nosto-swiper>
+  <div class="swiper-wrapper">
+    <nosto-product product-id="123456" reco-id="78901"> ... </nosto-product>
+  </div>
   <script type="application/json" swiper-config>
     {
       "direction": "horizontal",
       "loop": true,
       "slidesPerView": 3
     }
-  </script>
-  <div class="nosto-swiper">
-    <div class="swiper-wrapper">
-      <nosto-product product-id="123456" reco-id="78901"> ... </nosto-product>
-    </div>
-  </div>
+  </script>  
 </nosto-swiper>
 ```
 
@@ -233,7 +231,7 @@ Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper comp
 In order to use Swiper modules the names must be passed as *strings*. This is due to the handling of the modules on demand.
 
 ```html
-<nosto-swiper container-selector=".nosto-swiper">
+<nosto-swiper>
   <script type="application/json" swiper-config>
     {
       "direction": "horizontal",
@@ -254,7 +252,6 @@ In order to use Swiper modules the names must be passed as *strings*. This is du
 
 | Attribute            | Description                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
-| `container-selector` | HTML element selector. This will be used to initialize Swiper.              |
 | `swiper-config`      | Marks the `<script type="application/json">` block as Swiper configuration. |
 
 ### NostoShopify

@@ -8,8 +8,7 @@
   <div class="block__recommendation {{ divId }}">
     <span class="reco-title">{{ title }}</span>
     <div class="products">
-        <nosto-swiper 
-            container-selector=".swiper">
+        <nosto-swiper >
             <script type="application/json" swiper-config>
             {
                 "direction": "horizontal",
@@ -23,8 +22,7 @@
                 }
             }
             </script>
-            <div class="swiper">
-                <div class="swiper-wrapper">
+            <div class="swiper-wrapper">
                     {%- for product in products %}
                         <nosto-product product-id="{{ product.productId }}" reco-id="{{ resultId }}" class="nosto__product swiper-slide">
                         <div class="nosto__product-image">
@@ -49,7 +47,6 @@
                         </div>
                         </nosto-product>
                     {%- endfor %}
-                </div>
             </div>
         </nosto-swiper>
     </div>
