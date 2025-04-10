@@ -228,7 +228,7 @@ Lightweight [Swiper](https://swiperjs.com/get-started) wrapper. NostoSwiper comp
 
 #### Modules
 
-In order to use Swiper modules the names must be passed as *strings*. This is due to the handling of the modules on demand.
+In order to use Swiper modules the module names to be loaded must be passed as an array.
 
 ```html
 <nosto-swiper>
@@ -252,7 +252,7 @@ In order to use Swiper modules the names must be passed as *strings*. This is du
 
 | Attribute            | Description                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
-| `swiper-config`      | Marks the `<script type="application/json">` block as Swiper configuration. |
+| `swiper-config`      | Marks the `<script type="application/json">` child block as Swiper configuration. |
 
 ### NostoShopify
 
