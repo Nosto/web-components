@@ -232,6 +232,9 @@ In order to use Swiper modules the module names to be loaded must be passed as a
 
 ```html
 <nosto-swiper>
+  <div class="swiper-wrapper">
+    <!-- Swiper slides -->
+  </div>  
   <script type="application/json" swiper-config>
     {
       "direction": "horizontal",
@@ -244,7 +247,6 @@ In order to use Swiper modules the module names to be loaded must be passed as a
       }
     }
   </script>
-  <!-- Rest of the Swiper markup -->
 </nosto-swiper>
 ```
 
