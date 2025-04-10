@@ -23,6 +23,7 @@
     "url": "git+https://github.com/Nosto/web-components.git"
   },
   "scripts": {
+    "preinstall": "git config core.hooksPath hooks",
     "build": "tsc && node esbuild.mjs && npm run typedoc",
     "dev": "vite dev",
     "preview": "vite preview",
