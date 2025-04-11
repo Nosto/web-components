@@ -29,7 +29,8 @@
     "lint": "eslint",
     "lint-fix": "eslint --fix",
     "test": "vitest --run --silent",
-    "typedoc": "typedoc src/main.ts"
+    "typedoc": "typedoc src/main.ts",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@nosto/nosto-js": "^1.7.0",
@@ -45,6 +46,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "express": "^4.21.2",
     "handlebars": "^4.7.8",
+    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "liquidjs": "^10.20.2",
     "prettier": "^3.3.3",
