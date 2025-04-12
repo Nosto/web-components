@@ -33,27 +33,23 @@ const swiperJs = `${swiperURLBase}/swiper.mjs`
 @customElement("nosto-swiper")
 export class NostoSwiper extends HTMLElement {
   async connectedCallback() {
-    return initSwiper(this)
-  }
-}
+    this.classList.add("swiper")
+    const config = getConfigFromScript(this)
+    // Load Swiper from store context or fallback to CDN
+    const Swiper = _Swiper ?? (await import(swiperJs)).default
 
-async function initSwiper(element: NostoSwiper) {
-  element.classList.add("swiper")
-  const config = getConfigFromScript(element)
-  // Load Swiper from store context or fallback to CDN
-  const Swiper = _Swiper ?? (await import(swiperJs)).default
+    if (typeof Swiper === "undefined") {
+      throw new Error("Swiper library is not loaded.")
+    }
 
-  if (typeof Swiper === "undefined") {
-    throw new Error("Swiper library is not loaded.")
+    // Load Swiper modules present in the config
+    if (config.modules) {
+      config.modules = await Promise.all(
+        config.modules.map(module => import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default))
+      )
+    }
+    return new Swiper(this, config)
   }
-
-  // Load Swiper modules present in the config
-  if (config.modules) {
-    config.modules = await Promise.all(
-      config.modules.map(module => import(`${swiperURLBase}/modules/${module}.mjs`).then(mod => mod.default))
-    )
-  }
-  return new Swiper(element, config)
 }
 
 function getConfigFromScript(element: HTMLElement): SwiperOptions {

@@ -50,27 +50,23 @@ export class NostoProductCard extends HTMLElement {
   template!: string
   wrap!: boolean
 
-  connectedCallback() {
+  async connectedCallback() {
     assertRequired(this, "recoId", "template")
-    return initProductCard(this)
-  }
-}
+    this.toggleAttribute("loading", true)
+    const product = getData(this)
+    const html = await evaluate(this.template, { product, data: this.dataset })
 
-async function initProductCard(element: NostoProductCard) {
-  element.toggleAttribute("loading", true)
-  const product = getData(element)
-  const html = await evaluate(element.template, { product, data: element.dataset })
-
-  if (element.wrap) {
-    const wrapper = new NostoProduct()
-    wrapper.recoId = element.recoId
-    wrapper.productId = product.id
-    wrapper.innerHTML = html
-    element.appendChild(wrapper)
-  } else {
-    element.insertAdjacentHTML("beforeend", html)
+    if (this.wrap) {
+      const wrapper = new NostoProduct()
+      wrapper.recoId = this.recoId
+      wrapper.productId = product.id
+      wrapper.innerHTML = html
+      this.appendChild(wrapper)
+    } else {
+      this.insertAdjacentHTML("beforeend", html)
+    }
+    this.toggleAttribute("loading", false)
   }
-  element.toggleAttribute("loading", false)
 }
 
 function getData(element: HTMLElement) {

@@ -27,16 +27,12 @@ export class NostoShopify extends HTMLElement {
   markets!: boolean
 
   connectedCallback() {
-    initShopify(this)
-  }
-}
-
-function initShopify(element: NostoShopify) {
-  const campaignId = element.closest(".nosto_element")?.id
-  if (!campaignId) {
-    throw new Error("Found no wrapper element with class 'nosto_element'")
-  }
-  if (element.markets) {
-    migrateToShopifyMarket(campaignId)
+    const campaignId = this.closest(".nosto_element")?.id
+    if (!campaignId) {
+      throw new Error("Found no wrapper element with class 'nosto_element'")
+    }
+    if (this.markets) {
+      migrateToShopifyMarket(campaignId)
+    }
   }
 }
