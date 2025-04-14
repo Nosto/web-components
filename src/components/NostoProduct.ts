@@ -51,26 +51,22 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     assertRequired(this, "productId", "recoId")
-    initProduct(this)
+    const store = createStore(this)
+    provideStore(this, store)
+    store.listen("selectedSkuId", selectedSkuId => {
+      this.selectedSkuId = selectedSkuId
+      this.skuSelected = !!selectedSkuId
+    })
+    store.listen("image", image => {
+      this.style.setProperty("--ns-img", `url(${image})`)
+    })
+    store.listen("altImage", altImage => {
+      this.style.setProperty("--ns-alt-img", `url(${altImage})`)
+    })
+    registerSKUSelectors(this, store)
+    registerSKUIds(this, store)
+    registerATCButtons(this, store)
   }
-}
-
-function initProduct(element: NostoProduct) {
-  const store = createStore(element)
-  provideStore(element, store)
-  store.listen("selectedSkuId", selectedSkuId => {
-    element.selectedSkuId = selectedSkuId
-    element.skuSelected = !!selectedSkuId
-  })
-  store.listen("image", image => {
-    element.style.setProperty("--ns-img", `url(${image})`)
-  })
-  store.listen("altImage", altImage => {
-    element.style.setProperty("--ns-alt-img", `url(${altImage})`)
-  })
-  registerSKUSelectors(element, store)
-  registerSKUIds(element, store)
-  registerATCButtons(element, store)
 }
 
 function registerSKUSelectors(element: NostoProduct, { selectSkuId }: Store) {

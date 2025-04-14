@@ -11,13 +11,13 @@ describe("NostoProductCard", () => {
   it("should throw an error if recoId is not provided", () => {
     const card = new NostoProductCard()
     card.template = "test"
-    expect(() => card.connectedCallback()).toThrowError("Property recoId is required.")
+    expect(card.connectedCallback()).rejects.toThrowError("Property recoId is required.")
   })
 
   it("should throw an error if template is not provided", () => {
     const card = new NostoProductCard()
     card.recoId = "test"
-    expect(() => card.connectedCallback()).toThrowError("Property template is required.")
+    expect(card.connectedCallback()).rejects.toThrowError("Property template is required.")
   })
 
   it("should render the product", async () => {
