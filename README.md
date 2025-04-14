@@ -9,11 +9,13 @@ This package doesn't render HTML markups on its own and the template should be p
 
 This package provides the following web components:
 
-- NostoProduct
-- NostoProductCard
-- NostoSkuOptions
-- NostoShopify
-- NostoSwiper
+| Component         | Status            |
+| ----------------- | ----------------- |
+| NostoProduct      | PRODUCTION        |
+| NostoProductCard  | ALPHA             |
+| NostoSkuOptions   | PRODUCTION        |
+| NostoShopify      | ALPHA             |
+| NostoSwiper       | BETA              |
 
 ### NostoProduct
 
