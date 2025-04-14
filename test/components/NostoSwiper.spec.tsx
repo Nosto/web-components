@@ -15,6 +15,7 @@ describe("NostoSwiper", () => {
   } satisfies SwiperOptions
 
   beforeEach(() => {
+    document.body.innerHTML = ""
     vi.restoreAllMocks()
   })
 
@@ -52,6 +53,28 @@ describe("NostoSwiper", () => {
     const module = swiper?.modules?.find(module => module.name === "Navigation")
     expect(module).toBeDefined()
   })
+
+  it("should consider only direct script children", async () => {
+    const element = swiperExample(config)
+    element.querySelector("script")!.remove()
+    element.append(
+      <div>
+        <script swiper-config>not valid JSON</script>
+      </div>
+    )
+    await expect(element.connectedCallback())
+  })
+
+  it("should support nesting", async () => {
+    const element = swiperExample(config)
+    const nestedElement = swiperExample(config)
+
+    element.append(nestedElement)
+    document.body.append(element)
+
+    expect(element.classList).toContain("swiper-initialized")
+    expect(nestedElement.classList).toContain("swiper-initialized")
+  })
 })
 
 function swiperExample(config: SwiperOptions) {
@@ -62,7 +85,9 @@ function swiperExample(config: SwiperOptions) {
         <div className="swiper-slide">Slide 2</div>
         <div className="swiper-slide">Slide 3</div>
       </div>
-      <script swiper-config>{JSON.stringify(config)}</script>
+      <script type="application/json" swiper-config>
+        {JSON.stringify(config)}
+      </script>
     </nosto-swiper>
   ) as NostoSwiper
 }
