@@ -15,6 +15,7 @@ describe("NostoSwiper", () => {
   } satisfies SwiperOptions
 
   beforeEach(() => {
+    document.body.innerHTML = ""
     vi.restoreAllMocks()
   })
 
@@ -63,6 +64,17 @@ describe("NostoSwiper", () => {
     )
     await expect(element.connectedCallback())
   })
+
+  it("should support nesting", async () => {
+    const element = swiperExample(config)
+    const nestedElement = swiperExample(config)
+
+    element.append(nestedElement)
+    document.body.append(element)
+
+    expect(element.classList).toContain("swiper-initialized")
+    expect(nestedElement.classList).toContain("swiper-initialized")
+  })
 })
 
 function swiperExample(config: SwiperOptions) {
@@ -73,7 +85,9 @@ function swiperExample(config: SwiperOptions) {
         <div className="swiper-slide">Slide 2</div>
         <div className="swiper-slide">Slide 3</div>
       </div>
-      <script swiper-config>{JSON.stringify(config)}</script>
+      <script type="application/json" swiper-config>
+        {JSON.stringify(config)}
+      </script>
     </nosto-swiper>
   ) as NostoSwiper
 }
