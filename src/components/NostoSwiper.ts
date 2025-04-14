@@ -53,6 +53,6 @@ export class NostoSwiper extends HTMLElement {
 }
 
 function getConfigFromScript(element: HTMLElement): SwiperOptions {
-  const config = element.querySelector("script[swiper-config]")
+  const config = Array.from(element.children).find(child => child.matches("script[swiper-config]"))
   return config?.textContent ? JSON.parse(config.textContent) : {}
 }

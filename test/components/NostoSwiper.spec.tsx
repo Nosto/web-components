@@ -52,6 +52,17 @@ describe("NostoSwiper", () => {
     const module = swiper?.modules?.find(module => module.name === "Navigation")
     expect(module).toBeDefined()
   })
+
+  it("should consider only direct script children", async () => {
+    const element = swiperExample(config)
+    element.querySelector("script")!.remove()
+    element.append(
+      <div>
+        <script swiper-config>not valid JSON</script>
+      </div>
+    )
+    await expect(element.connectedCallback())
+  })
 })
 
 function swiperExample(config: SwiperOptions) {
