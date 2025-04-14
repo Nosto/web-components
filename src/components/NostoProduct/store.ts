@@ -7,11 +7,11 @@ interface State {
   selectedSkuId: string | undefined
   skuOptions: Record<string, string[]>
   optionGroupCount: number
-  skuImage?: string
-  skuAltImage?: string
+  image?: string
+  altImage?: string
 }
 
-export type Events = Pick<State, "selectedSkuId" | "skuOptions" | "skuImage" | "skuAltImage">
+export type Events = Pick<State, "selectedSkuId" | "skuOptions" | "image" | "altImage">
 
 type Listener<T extends keyof Events> = (value: Events[T]) => void
 
@@ -56,13 +56,13 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function setSkuImages(image: string, altImage?: string) {
-    state.skuImage = image
-    notify("skuImage", image)
+  function setImages(image: string, altImage?: string) {
+    state.image = image
+    notify("image", image)
 
     if (altImage) {
-      state.skuAltImage = altImage
-      notify("skuAltImage", altImage)
+      state.altImage = altImage
+      notify("altImage", altImage)
     }
   }
 
@@ -88,7 +88,7 @@ export function createStore(element: NostoProduct) {
     selectSkuOption,
     selectSkuId,
     registerOptionGroup,
-    setSkuImages
+    setImages
   }
 }
 
