@@ -15,6 +15,7 @@ describe("NostoSwiper", () => {
   } satisfies SwiperOptions
 
   beforeEach(() => {
+    document.head.innerHTML = ""
     document.body.innerHTML = ""
     vi.restoreAllMocks()
   })
@@ -46,12 +47,29 @@ describe("NostoSwiper", () => {
 
   it("should load and initialize Swiper modules from CDN", async () => {
     const modulesConfig = { ...config, modules: ["navigation"] }
-    //@ts-expect-error string is not assignable to SwiperModule
     const element = swiperExample(modulesConfig)
 
     const swiper = await element.connectedCallback()
     const module = swiper?.modules?.find(module => module.name === "Navigation")
     expect(module).toBeDefined()
+  })
+
+  it("should load CSS when injectCss property is set", async () => {
+    const element = swiperExample(config)
+    element.injectCss = true
+    expect(document.querySelector("link")).toBeNull()
+    await element.connectedCallback()
+
+    expect(document.querySelector("link")).toBeDefined()
+  })
+
+  it("should load CSS with modules when injectCss and modules is set", async () => {
+    const element = swiperExample({ ...config, modules: ["navigation"] })
+    element.injectCss = true
+    expect(document.querySelector("link")).toBeNull()
+    await element.connectedCallback()
+
+    expect(Array.from(document.querySelectorAll("link")).length).toBe(2)
   })
 
   it("should consider only direct script children", async () => {
@@ -77,7 +95,9 @@ describe("NostoSwiper", () => {
   })
 })
 
-function swiperExample(config: SwiperOptions) {
+type CustomConfig = Omit<SwiperOptions, "modules"> & { modules?: string[] }
+
+function swiperExample(config: CustomConfig) {
   return (
     <nosto-swiper>
       <div class="swiper-wrapper">

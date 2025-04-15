@@ -260,6 +260,7 @@ In order to use Swiper modules the module names to be loaded must be passed as a
 | Attribute            | Description                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
 | `swiper-config`      | Marks the `<script type="application/json">` child block as Swiper configuration. |
+| `inject-css`         | To be used on NostoSwiper level to trigger loading of Swiper CSS |
 
 ### NostoShopify
 
