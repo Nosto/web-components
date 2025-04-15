@@ -132,6 +132,19 @@ describe("NostoSkuOptions", () => {
       element("l").click()
       expect(element("l").hasAttribute("selected")).toBeFalsy()
     })
+
+    it("should directly add to cart when n-atc attribute is present on n-option", () => {
+      element("l").toggleAttribute("n-atc")
+      element("black").click()
+      element("l").click()
+
+      expect(nostoProduct.selectedSkuId).toBe("123")
+      expect(window.Nosto!.addSkuToCart).toBeCalledWith(
+        { productId: PROD_ID, skuId: nostoProduct.selectedSkuId },
+        RECO_ID,
+        1
+      )
+    })
   })
 
   describe("Two sku option groups in select", () => {

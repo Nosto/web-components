@@ -91,7 +91,7 @@ function registerSKUIds(element: NostoProduct, { selectSkuId, setImages }: Store
 }
 
 function registerATCButtons(element: NostoProduct, { addToCart, selectSkuId }: Store) {
-  element.querySelectorAll("[n-atc]").forEach(element =>
+  element.querySelectorAll("[n-atc]:not([n-option])").forEach(element =>
     element.addEventListener("click", async () => {
       const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
       if (skuId) {
