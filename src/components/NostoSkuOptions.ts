@@ -112,7 +112,11 @@ function handlePreselection(optionId: string, { selectSkuOption }: Store, option
   setAvailability(optionElements)
 }
 
-function registerClickEvents(optionId: string, { addToCart, selectSkuOption, setImages }: Store, optionElements: HTMLElement[]) {
+function registerClickEvents(
+  optionId: string,
+  { addToCart, selectSkuOption, setImages }: Store,
+  optionElements: HTMLElement[]
+) {
   optionElements.forEach(option => {
     option.addEventListener("click", () => {
       if (option.hasAttribute("disabled") || option.hasAttribute("unavailable")) {
