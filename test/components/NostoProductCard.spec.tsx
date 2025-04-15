@@ -28,9 +28,9 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test1" type="text/liquid">
+      <script id="test1" type="text/liquid">
         <h1>{"{{ product.title }}"}</h1>
-      </template>
+      </script>
     )
     card.append(
       <script type="application/json" product-data>
@@ -51,9 +51,9 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test2" type="text/liquid">
+      <script id="test2" type="text/liquid">
         <h1>{"{{ product.title }}"}</h1>
-      </template>
+      </script>
     )
     card.append(
       <script type="application/json" product-data>
@@ -75,9 +75,9 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test3" type="text/liquid">
+      <script id="test3" type="text/liquid">
         <h1>{"{{ product.title }} {{ data.test }}"}</h1>
-      </template>
+      </script>
     )
     card.append(
       <script type="application/json" product-data>
@@ -98,9 +98,9 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <template id="test4" type="text/liquid">
+      <script id="test4" type="text/liquid">
         <h1>{"{{ product.title }}"}</h1>
-      </template>
+      </script>
     )
     card.append(
       <script type="application/json" product-data>

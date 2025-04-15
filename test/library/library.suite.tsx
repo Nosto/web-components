@@ -12,9 +12,9 @@ export async function validateLibrary(importPath: string) {
   it("inits NostoProductCard", async () => {
     expect(exports.NostoProductCard).toBeDefined()
     document.body.append(
-      <template id="product-card-template" type="text/liquid">
+      <script id="product-card-template" type="text/liquid">
         <h1>{"{{ product.name }} {{ data.title}}"}</h1>
-      </template>
+      </script>
     )
 
     const card = new exports.NostoProductCard() as NostoProductCard

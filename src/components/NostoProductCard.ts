@@ -26,7 +26,7 @@ import { assertRequired } from "@/utils"
  *   </script>
  * </nosto-product-card>
  *
- * <template id="product-card-template" type="text/liquid">
+ * <script id="product-card-template" type="text/liquid">
  *   <img src="{{ product.image }}" alt="{{ product.title }}" class="product-image" />
  *   <h1>{{ product.title }}</h1>
  *   <p class="price">
@@ -35,7 +35,7 @@ import { assertRequired } from "@/utils"
  *   <p class="list-price">
  *     <span n-list-price>{{ product.listPrice }}</span>
  *   </p>
- * </template>
+ * </script>
  * ```
  */
 @customElement("nosto-product-card")
