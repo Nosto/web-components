@@ -16,9 +16,9 @@ describe("evaluate", () => {
 
   it("should throw an error if the template type is not supported", async () => {
     document.body.append(
-      <template id="unsupported-template" type="text/unsupported">
+      <script id="unsupported-template" type="text/unsupported">
         content
-      </template>
+      </script>
     )
     await expect(evaluate("unsupported-template", {})).rejects.toThrowError(
       'Unsupported template type "text/unsupported".'
@@ -27,9 +27,9 @@ describe("evaluate", () => {
 
   it("should evaluate a liquid template", async () => {
     document.body.append(
-      <template id="liquid-template" type="text/liquid">
+      <script id="liquid-template" type="text/liquid">
         {"Hello {{ name }}!"}
-      </template>
+      </script>
     )
     const result = await evaluate("liquid-template", { name: "World" })
     expect(result).toBe("Hello World!")
@@ -37,9 +37,9 @@ describe("evaluate", () => {
 
   it("should evaluate a handlebars template", async () => {
     document.body.append(
-      <template id="handlebars-template" type="text/handlebars">
+      <script id="handlebars-template" type="text/handlebars">
         {"Hello {{ name }}!"}
-      </template>
+      </script>
     )
     const result = await evaluate("handlebars-template", { name: "World" })
     expect(result).toBe("Hello World!")
