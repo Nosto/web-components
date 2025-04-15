@@ -145,6 +145,14 @@ describe("NostoSkuOptions", () => {
         1
       )
     })
+
+    it("should not add to cart when n-atc attribute is not present on n-option", () => {
+      element("black").click()
+      element("l").click()
+
+      expect(nostoProduct.selectedSkuId).toBe("123")
+      expect(window.Nosto!.addSkuToCart).not.toHaveBeenCalled()
+    })
   })
 
   describe("Two sku option groups in select", () => {
