@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/Nosto/web-components/compare/v3.2.0...v3.3.0) (2025-04-15)
+
+
+### Features
+
+* support ATC on SKU option ([b77779b](https://github.com/Nosto/web-components/commit/b77779be9617ae9e313e8b65932af6a0f902ca25))
+
 # [3.2.0](https://github.com/Nosto/web-components/compare/v3.1.0...v3.2.0) (2025-04-14)
 
 
