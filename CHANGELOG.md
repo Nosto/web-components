@@ -1,3 +1,10 @@
+## [3.4.1](https://github.com/Nosto/web-components/compare/v3.4.0...v3.4.1) (2025-04-16)
+
+
+### Bug Fixes
+
+* use official template script types ([bec9dc6](https://github.com/Nosto/web-components/commit/bec9dc6bac3b9c1730c692512962f85bdfad7384))
+
 # [3.4.0](https://github.com/Nosto/web-components/compare/v3.3.0...v3.4.0) (2025-04-16)
 
 
