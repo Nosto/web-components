@@ -27,7 +27,7 @@ describe("evaluate", () => {
 
   it("should evaluate a liquid template", async () => {
     document.body.append(
-      <script id="liquid-template" type="text/liquid">
+      <script id="liquid-template" type="text/x-liquid-template">
         {"Hello {{ name }}!"}
       </script>
     )
@@ -37,7 +37,7 @@ describe("evaluate", () => {
 
   it("should evaluate a handlebars template", async () => {
     document.body.append(
-      <script id="handlebars-template" type="text/handlebars">
+      <script id="handlebars-template" type="text/x-handlebars-template">
         {"Hello {{ name }}!"}
       </script>
     )

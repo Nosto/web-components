@@ -106,7 +106,7 @@ Unlike `NostoProduct`, this component doesn't include any side effects or platfo
   </script>
 </nosto-product-card>
 
-<script id="product-card-template" type="text/liquid">
+<script id="product-card-template" type="text/x-liquid-template">
   <img src="{{ product.image }}" alt="{{ product.title }}" class="product-image" />
   <h1>{{ product.title }}</h1>
   <p class="price">
