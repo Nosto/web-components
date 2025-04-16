@@ -26,7 +26,7 @@ import { assertRequired } from "@/utils"
  *   </script>
  * </nosto-product-card>
  *
- * <script id="product-card-template" type="text/liquid">
+ * <script id="product-card-template" type="text/x-liquid-template">
  *   <img src="{{ product.image }}" alt="{{ product.title }}" class="product-image" />
  *   <h1>{{ product.title }}</h1>
  *   <p class="price">

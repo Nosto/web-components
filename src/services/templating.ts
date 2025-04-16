@@ -11,8 +11,10 @@ export async function evaluate(templateId: string, context: object) {
     throw new Error(`Template with id "${templateId}" not found.`)
   }
   switch (templateEl.getAttribute("type")) {
+    case "text/x-liquid-template":
     case "text/liquid":
       return evaluateLiquid(templateEl, context)
+    case "text/x-handlebars-template":
     case "text/handlebars":
       return evaluateHandlebars(templateEl, context)
     default:

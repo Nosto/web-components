@@ -28,7 +28,7 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <script id="test1" type="text/liquid">
+      <script id="test1" type="text/x-liquid-template">
         <h1>{"{{ product.title }}"}</h1>
       </script>
     )
@@ -51,7 +51,7 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <script id="test2" type="text/liquid">
+      <script id="test2" type="text/x-liquid-template">
         <h1>{"{{ product.title }}"}</h1>
       </script>
     )
@@ -75,7 +75,7 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <script id="test3" type="text/liquid">
+      <script id="test3" type="text/x-liquid-template">
         <h1>{"{{ product.title }} {{ data.test }}"}</h1>
       </script>
     )
@@ -98,7 +98,7 @@ describe("NostoProductCard", () => {
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
-      <script id="test4" type="text/liquid">
+      <script id="test4" type="text/x-liquid-template">
         <h1>{"{{ product.title }}"}</h1>
       </script>
     )
