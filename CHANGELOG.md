@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/Nosto/web-components/compare/v3.3.0...v3.4.0) (2025-04-16)
+
+
+### Features
+
+* load Swiper CSS ([9398343](https://github.com/Nosto/web-components/commit/9398343a67bd0bad2fbc1947012aa53e4d9d32b8))
+
 # [3.3.0](https://github.com/Nosto/web-components/compare/v3.2.0...v3.3.0) (2025-04-15)
 
 
