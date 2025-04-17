@@ -360,6 +360,28 @@ describe("NostoSkuOptions", () => {
         disabled: ["l"]
       })
     })
+
+    it("should preserve unavailable state even after selecting a matching available option", () => {
+      verify({
+        unavailable: ["l"],
+        disabled: []
+      })
+
+      element("black").click()
+      verify({
+        selected: ["black"],
+        unavailable: ["l"],
+        disabled: ["m"]
+      })
+
+      element("s").click()
+      expect(nostoProduct.selectedSkuId).toBe("145")
+      verify({
+        selected: ["black", "s"],
+        unavailable: ["l"],
+        disabled: ["m"]
+      })
+    })
   })
 
   describe("SKU option image updates", () => {
