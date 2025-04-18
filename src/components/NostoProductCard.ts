@@ -8,6 +8,7 @@ import { assertRequired } from "@/utils"
  *
  * @property {string} recoId - The recommendation ID to associate with this product card.
  * @property {string} template - The id of the template element to use for rendering the product card.
+ * @property {string} [handle] - The product handle to fetch product data from the server.
  * @property {boolean} [wrap] - Whether to wrap the rendered content in a NostoProduct element.
  *
  * @throws {Error} - Throws an error if recoId or template is not provided.
@@ -43,17 +44,19 @@ export class NostoProductCard extends HTMLElement {
   static attributes = {
     recoId: String,
     template: String,
+    handle: String,
     wrap: Boolean
   }
 
   recoId!: string
   template!: string
+  handle!: string
   wrap!: boolean
 
   async connectedCallback() {
     assertRequired(this, "recoId", "template")
     this.toggleAttribute("loading", true)
-    const product = getData(this)
+    const product = await getData(this)
     const html = await evaluate(this.template, { product, data: this.dataset })
 
     if (this.wrap) {
@@ -69,7 +72,15 @@ export class NostoProductCard extends HTMLElement {
   }
 }
 
-function getData(element: HTMLElement) {
+async function getData(element: NostoProductCard) {
+  if (element.handle) {
+    const response = await fetch(`/products/${element.handle}.js`)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch product data: ${response.statusText}`)
+    }
+    return await response.json()
+    // TODO map Shopify response to Nosto product data model?
+  }
   const data = element.querySelector("script[product-data]")
   return data ? JSON.parse(data.textContent!) : {}
 }
