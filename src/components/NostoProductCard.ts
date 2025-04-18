@@ -55,13 +55,20 @@ export class NostoProductCard extends HTMLElement {
     this.toggleAttribute("loading", true)
     const product = getData(this)
     const html = await evaluate(this.template, { product, data: this.dataset })
+    const placeholder = this.querySelector<HTMLElement>(".placeholder")
 
     if (this.wrap) {
       const wrapper = new NostoProduct()
       wrapper.recoId = this.recoId
       wrapper.productId = product.id
       wrapper.innerHTML = html
-      this.appendChild(wrapper)
+      if (placeholder) {
+        placeholder.replaceChildren(wrapper)
+      } else {
+        this.appendChild(wrapper)
+      }
+    } else if (placeholder) {
+      placeholder.innerHTML = html
     } else {
       this.insertAdjacentHTML("beforeend", html)
     }
