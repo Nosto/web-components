@@ -1,6 +1,7 @@
 import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
+import { syncImages, syncPrices } from "./NostoProduct/common"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -128,19 +129,8 @@ function registerClickEvents(
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
       selectSkuOption(optionId, skuIds)
-
-      const image = option.getAttribute("n-img")
-      if (image) {
-        const altImage = option.getAttribute("n-alt-img")
-        setImages(image, altImage || undefined)
-      }
-
-      const price = option.getAttribute("n-price")
-      if (price) {
-        const listPrice = option.getAttribute("n-list-price")
-        setPrices(price, listPrice || undefined)
-      }
-
+      syncImages(option, setImages)
+      syncPrices(option, setPrices)
       if (option.matches("[n-atc]")) {
         addToCart()
       }
