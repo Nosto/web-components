@@ -127,9 +127,9 @@ function registerClickEvents(
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
       selectSkuOption(optionId, skuIds)
 
-      const image = option.getAttribute("ns-img")
+      const image = option.getAttribute("n-img")
       if (image) {
-        const altImage = option.getAttribute("ns-alt-img")
+        const altImage = option.getAttribute("n-alt-img")
         setImages(image, altImage || undefined)
       }
 

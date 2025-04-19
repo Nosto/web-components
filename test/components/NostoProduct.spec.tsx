@@ -175,7 +175,7 @@ describe("NostoProduct", () => {
 
     it("should update images on [n-sku-id] clicks", () => {
       element.append(
-        <div n-sku-id="234" ns-img="blue.jpg" ns-alt-img="green.jpg">
+        <div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">
           1st sku
         </div>,
         <div n-sku-id="345">end sku</div>,
@@ -184,12 +184,33 @@ describe("NostoProduct", () => {
       element.connectedCallback()
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      expect(element.style.getPropertyValue("--ns-img")).toBe("")
-      expect(element.style.getPropertyValue("--ns-alt-img")).toBe("")
+      expect(element.style.getPropertyValue("--n-img")).toBe("")
+      expect(element.style.getPropertyValue("--n-alt-img")).toBe("")
 
       element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
-      expect(element.style.getPropertyValue("--ns-img")).toBe("url(blue.jpg)")
-      expect(element.style.getPropertyValue("--ns-alt-img")).toBe("url(green.jpg)")
+      expect(element.style.getPropertyValue("--n-img")).toBe("url(blue.jpg)")
+      expect(element.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
+    })
+
+    it("should update images elements on [n-sku-id] clicks", () => {
+      element.append(
+        <div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">
+          1st sku
+        </div>,
+        <img n-img />,
+        <img n-alt-img />,
+        <div n-sku-id="345">end sku</div>,
+        <div n-atc>Add to cart</div>
+      )
+      element.connectedCallback()
+
+      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(element.querySelector<HTMLImageElement>("img[n-img]")?.src).toBe("")
+      expect(element.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("")
+
+      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(element.querySelector<HTMLImageElement>("img[n-img]")?.src).toBe("http://localhost:3000/blue.jpg")
+      expect(element.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("http://localhost:3000/green.jpg")
     })
 
     it("should trigger nosto:atc:complete after product add to cart", async () => {

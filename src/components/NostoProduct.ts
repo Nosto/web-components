@@ -58,10 +58,12 @@ export class NostoProduct extends HTMLElement {
       this.skuSelected = !!selectedSkuId
     })
     store.listen("image", image => {
-      this.style.setProperty("--ns-img", `url(${image})`)
+      this.style.setProperty("--n-img", `url(${image})`)
+      this.querySelector("img[n-img]")?.setAttribute("src", image!)
     })
     store.listen("altImage", altImage => {
-      this.style.setProperty("--ns-alt-img", `url(${altImage})`)
+      this.style.setProperty("--n-alt-img", `url(${altImage})`)
+      this.querySelector("img[n-alt-img]")?.setAttribute("src", altImage!)
     })
     registerSKUSelectors(this, store)
     registerSKUIds(this, store)
@@ -81,9 +83,9 @@ function registerSKUIds(element: NostoProduct, { selectSkuId, setImages }: Store
     element.addEventListener("click", () => {
       selectSkuId(element.getAttribute("n-sku-id")!)
 
-      const image = element.getAttribute("ns-img")
+      const image = element.getAttribute("n-img")
       if (image) {
-        const altImage = element.getAttribute("ns-alt-img")
+        const altImage = element.getAttribute("n-alt-img")
         setImages(image, altImage || undefined)
       }
     })
