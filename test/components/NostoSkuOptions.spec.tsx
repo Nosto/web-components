@@ -367,7 +367,7 @@ describe("NostoSkuOptions", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
           <nosto-sku-options name="colors">
-            <span black n-option n-skus="sku123" ns-img="image.jpg" />
+            <span black n-option n-skus="sku123" n-img="image.jpg" />
           </nosto-sku-options>
           <nosto-sku-options name="sizes">
             <span n-option n-skus="sku123" />
@@ -377,15 +377,15 @@ describe("NostoSkuOptions", () => {
 
       nostoProduct = document.querySelector("nosto-product")!
       element("black").click()
-      expect(nostoProduct.style.getPropertyValue("--ns-img")).toEqual("url(image.jpg)")
+      expect(nostoProduct.style.getPropertyValue("--n-img")).toEqual("url(image.jpg)")
     })
 
     it("should not update SKU or image when no options are selected", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
           <nosto-sku-options name="colors">
-            <span black n-option n-skus="123,145" ns-img="img-black.jpg" ns-alt-img="alt-black.jpg"></span>
-            <span white n-option n-skus="223,234,245" ns-img="img-white.jpg" ns-alt-img="alt-white.jpg"></span>
+            <span black n-option n-skus="123,145" n-img="img-black.jpg" n-alt-img="alt-black.jpg"></span>
+            <span white n-option n-skus="223,234,245" n-img="img-white.jpg" n-alt-img="alt-white.jpg"></span>
           </nosto-sku-options>
           <nosto-sku-options name="sizes">
             <span l n-option n-skus="123,223"></span>
@@ -401,8 +401,33 @@ describe("NostoSkuOptions", () => {
       expect(nostoProduct.selectedSkuId).toBeUndefined()
       expect(nostoProduct.hasAttribute("sku-selected")).toBe(false)
 
-      expect(nostoProduct.style.getPropertyValue("--ns-img")).toBe("")
-      expect(nostoProduct.style.getPropertyValue("--ns-alt-img")).toBe("")
+      expect(nostoProduct.style.getPropertyValue("--n-img")).toBe("")
+      expect(nostoProduct.style.getPropertyValue("--n-alt-img")).toBe("")
+    })
+  })
+
+  describe("SKU option price updates", () => {
+    it("should update price when option with price is selected", () => {
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="sku123" />
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span l n-option n-skus="sku123" n-price="10€" n-list-price="15€" />
+          </nosto-sku-options>
+          <div n-price>20€</div>
+          <div n-list-price>30€</div>
+        </nosto-product>
+      )
+
+      nostoProduct = document.querySelector("nosto-product")!
+      element("l").click()
+      expect(nostoProduct.querySelector("div[n-price]")?.innerHTML).toEqual("10€")
+      expect(nostoProduct.querySelector("div[n-list-price]")?.innerHTML).toEqual("15€")
+
+      // assert that n-option element contents are not affected
+      expect(element("l").innerHTML).toBe("")
     })
   })
 })
