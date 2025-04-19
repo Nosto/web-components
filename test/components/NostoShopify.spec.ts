@@ -37,7 +37,40 @@ describe("NostoShopify", () => {
       defaultVariantIdAttribute: "[n-variant-id]",
       descriptionElement: "[n-description]"
     })
+  })
 
-    document.body.removeChild(wrapper)
+  it("should use mapping overrides in migrateToShopifyMarket call", () => {
+    const mockNosto = {
+      migrateToShopifyMarket: vi.fn()
+    }
+    window.Nosto = mockNosto
+
+    const wrapper = document.createElement("div")
+    wrapper.classList.add("nosto_element")
+    wrapper.id = "test-campaign"
+    document.body.replaceChildren(wrapper)
+
+    element.product = "custom-product-selector"
+    element.url = "custom-url-selector"
+    element.title = "custom-title-selector"
+    element.handle = "custom-handle-selector"
+    element.price = "custom-price-selector"
+    element.listPrice = "custom-list-price-selector"
+    element.defaultVariantId = "custom-variant-id-selector"
+    element.description = "custom-description-selector"
+
+    element.setAttribute("markets", "")
+    wrapper.appendChild(element)
+
+    expect(mockNosto.migrateToShopifyMarket).toHaveBeenCalledWith({
+      productSectionElement: "#test-campaign custom-product-selector",
+      productUrlElement: "custom-url-selector",
+      productTitleElement: "custom-title-selector",
+      productHandleAttribute: "custom-handle-selector",
+      priceElement: "custom-price-selector",
+      listPriceElement: "custom-list-price-selector",
+      defaultVariantIdAttribute: "custom-variant-id-selector",
+      descriptionElement: "custom-description-selector"
+    })
   })
 })

@@ -5,7 +5,7 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import barrelFiles from "eslint-plugin-barrel-files"
 
 export default tseslint.config(
-  { ignores: ["dist", "src/client"] },
+  { ignores: ["dist", "docs"] },
   {
     extends: [...tseslint.configs.recommended],
     files: ["**/*.{js,ts,tsx}"],
