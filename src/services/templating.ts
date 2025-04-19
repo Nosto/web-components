@@ -10,15 +10,13 @@ export async function evaluate(templateId: string, context: object) {
   if (!templateEl) {
     throw new Error(`Template with id "${templateId}" not found.`)
   }
-  switch (templateEl.getAttribute("type")) {
-    case "text/x-liquid-template":
-    case "text/liquid":
-      return evaluateLiquid(templateEl, context)
-    case "text/x-handlebars-template":
-    case "text/handlebars":
-      return evaluateHandlebars(templateEl, context)
-    default:
-      throw new Error(`Unsupported template type "${templateEl.getAttribute("type")}".`)
+  const type = templateEl.getAttribute("type") ?? ""
+  if (/liquid/.test(type)) {
+    return evaluateLiquid(templateEl, context)
+  } else if (/handlebars/.test(type)) {
+    return evaluateHandlebars(templateEl, context)
+  } else {
+    throw new Error(`Unsupported template type "${type}".`)
   }
 }
 
