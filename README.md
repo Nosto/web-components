@@ -75,8 +75,10 @@ This component requires the following attributes to parse the markup, extract pr
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `n-sku-selector` | Marks the SKU select dropdown. Attaches an `onchange` event to the element. Clicking on the "Add to cart" button adds the SKU value selected from the dropdown to the cart. |
 | `n-sku-id`       | Relevant when SKU options are rendered as "Add to cart" button. Supplies the ID of the SKU option value and should be supplied on the parent of "Add to cart" button.       |
-| `n-img`        | Image URL for SKU which will be applied to NostoProduct wrapper on click as CSS variable |
-| `n-alt-img`    | Alternate image URL for SKU which will be applied to NostoProduct wrapper on click as CSS variable |
+| `n-img`        | Image URL for SKU which will be applied to NostoProduct wrapper on click |
+| `n-alt-img`    | Alternate image URL for SKU which will be applied to NostoProduct wrapper on |
+| `n-price`      | Price for SKU which will be applied to NostoProduct wrapper on click |
+| `n-list-price` | List price for SKU which will be applied to NostoProduct wrapper price on click |
 
 ```html
 <div n-sku-id="456">
@@ -206,8 +208,11 @@ Usage with select elements
 | `n-option`   | Marks an element as SKU option element                                                                                                                                                           |
 | `n-skus`     | Comma-separated value of linked available SKU Ids. `$!product.getSkuAggregateOptions` method in templates provides the Sku aggregates for the supplied custom field (color/size/material etc...) |
 | `n-skus-oos` | Comma-separated value of linked unavailable SKU Ids. The usage of this parameter is optional and should be considered when Out of stock SKUs should be considered.                               |
-| `n-img`     | Image URL for SKU option which will be applied to NostoProduct wrapper on click as CSS variable |
-| `n-alt-img` | Alternate image URL for SKU option which will be applied to NostoProduct wrapper on click as CSS variable |
+| `n-img`     | Image URL for SKU option which will be applied to NostoProduct wrapper on click  |
+| `n-alt-img` | Alternate image URL for SKU option which will be applied to NostoProduct wrapper on click  |
+| `n-price`      | Price for SKU option which will be applied to NostoProduct wrapper on click |
+| `n-list-price` | List price for SKU option which will be applied to NostoProduct wrapper price on click |
+
 Disabled options that are not available due to selections in other groups are marked with the `disabled` attribute and unavailable options that are Out of stock are marked with the `unavailable` attribute. Both should be styled distinctly.
 
 ### NostoSwiper

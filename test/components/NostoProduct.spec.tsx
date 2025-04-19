@@ -213,6 +213,33 @@ describe("NostoProduct", () => {
       expect(element.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("http://localhost:3000/green.jpg")
     })
 
+    it("should update prices on [n-sku-id] clicks", () => {
+      element.append(
+        <div n-sku-id="234" n-price="10€" n-list-price="15€">
+          1st sku
+        </div>,
+        <span n-price>20€</span>,
+        <span n-list-price>30€</span>,
+        <div n-sku-id="345" n-price="12€" n-list-price="17€">
+          2nd sku
+        </div>,
+        <div n-atc>Add to cart</div>
+      )
+      element.connectedCallback()
+
+      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(element.querySelector<HTMLImageElement>("span[n-price]")?.innerHTML).toBe("12€")
+      expect(element.querySelector<HTMLImageElement>("span[n-list-price]")?.innerHTML).toBe("17€")
+
+      // assert that SKU element contents are not affected
+      expect(element.querySelector<HTMLElement>("[n-sku-id='234']")?.innerHTML).toBe("1st sku")
+      expect(element.querySelector<HTMLElement>("[n-sku-id='345']")?.innerHTML).toBe("2nd sku")
+
+      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(element.querySelector<HTMLImageElement>("span[n-price]")?.innerHTML).toBe("10€")
+      expect(element.querySelector<HTMLImageElement>("span[n-list-price]")?.innerHTML).toBe("15€")
+    })
+
     it("should trigger nosto:atc:complete after product add to cart", async () => {
       const placementElement = document.createElement("div")
       placementElement.classList.add("nosto_element")
