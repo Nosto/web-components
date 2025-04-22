@@ -4,21 +4,22 @@ import { intersectionOf } from "@/utils"
 import { addSkuToCart } from "@nosto/nosto-js"
 
 interface State {
-  selectedSkuId: string | undefined
   skuOptions: Record<string, string[]>
   optionGroupCount: number
+  selectedSkuId?: string
   image?: string
   altImage?: string
+  price?: string
+  listPrice?: string
 }
 
-export type Events = Pick<State, "selectedSkuId" | "skuOptions" | "image" | "altImage">
+export type Events = Omit<State, "optionGroupCount">
 
 type Listener<T extends keyof Events> = (value: Events[T]) => void
 
 export function createStore(element: NostoProduct) {
   const { productId, recoId } = element
   const state: State = {
-    selectedSkuId: undefined,
     skuOptions: {},
     optionGroupCount: 0
   }
@@ -66,6 +67,16 @@ export function createStore(element: NostoProduct) {
     }
   }
 
+  function setPrices(price: string, listPrice?: string) {
+    state.price = price
+    notify("price", price)
+
+    if (listPrice) {
+      state.listPrice = listPrice
+      notify("listPrice", listPrice)
+    }
+  }
+
   function registerOptionGroup() {
     state.optionGroupCount++
   }
@@ -88,7 +99,8 @@ export function createStore(element: NostoProduct) {
     selectSkuOption,
     selectSkuId,
     registerOptionGroup,
-    setImages
+    setImages,
+    setPrices
   }
 }
 

@@ -1,6 +1,7 @@
 import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
+import { syncImages, syncPrices } from "./common"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -47,6 +48,7 @@ function initSkuOptions(element: NostoSkuOptions, store: Store) {
   // implementation via [n-option] elements
   const optionElements = Array.from(element.querySelectorAll<HTMLElement>("[n-option]"))
   if (optionElements.length) {
+    optionElements.forEach(element => (element.dataset.tracked = "true"))
     registerClickEvents(optionId, store, optionElements)
     registerStateChange(optionId, store, optionElements)
     handlePreselection(optionId, store, optionElements)
@@ -55,6 +57,7 @@ function initSkuOptions(element: NostoSkuOptions, store: Store) {
   // implementation via <select> element
   const select = element.querySelector<HTMLSelectElement>("select[n-target]")
   if (select) {
+    select.dataset.tracked = "true"
     registerSelectChange(optionId, store, select)
     registerStateChange(optionId, store, Array.from(select.querySelectorAll("option")))
     handleSelectPreselection(optionId, store, select)
@@ -114,7 +117,7 @@ function handlePreselection(optionId: string, { selectSkuOption }: Store, option
 
 function registerClickEvents(
   optionId: string,
-  { addToCart, selectSkuOption, setImages }: Store,
+  { addToCart, selectSkuOption, setImages, setPrices }: Store,
   optionElements: HTMLElement[]
 ) {
   optionElements.forEach(option => {
@@ -126,13 +129,8 @@ function registerClickEvents(
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
       selectSkuOption(optionId, skuIds)
-
-      const image = option.getAttribute("ns-img")
-      if (image) {
-        const altImage = option.getAttribute("ns-alt-img")
-        setImages(image, altImage || undefined)
-      }
-
+      syncImages(option, setImages)
+      syncPrices(option, setPrices)
       if (option.matches("[n-atc]")) {
         addToCart()
       }

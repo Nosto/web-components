@@ -1,6 +1,7 @@
 import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
+import { syncImages, syncPrices } from "./common"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -53,45 +54,56 @@ export class NostoProduct extends HTMLElement {
     assertRequired(this, "productId", "recoId")
     const store = createStore(this)
     provideStore(this, store)
-    store.listen("selectedSkuId", selectedSkuId => {
-      this.selectedSkuId = selectedSkuId
-      this.skuSelected = !!selectedSkuId
-    })
-    store.listen("image", image => {
-      this.style.setProperty("--ns-img", `url(${image})`)
-    })
-    store.listen("altImage", altImage => {
-      this.style.setProperty("--ns-alt-img", `url(${altImage})`)
-    })
+    addListeners(this, store)
     registerSKUSelectors(this, store)
     registerSKUIds(this, store)
     registerATCButtons(this, store)
   }
 }
 
+function addListeners(element: NostoProduct, { listen }: Store) {
+  listen("selectedSkuId", selectedSkuId => {
+    element.selectedSkuId = selectedSkuId
+    element.skuSelected = !!selectedSkuId
+  })
+  listen("image", image => {
+    element.style.setProperty("--n-img", `url(${image})`)
+    element.querySelector("img[n-img]:not([data-tracked])")?.setAttribute("src", image!)
+  })
+  listen("altImage", altImage => {
+    element.style.setProperty("--n-alt-img", `url(${altImage})`)
+    element.querySelector("img[n-alt-img]:not([data-tracked])")?.setAttribute("src", altImage!)
+  })
+  listen("price", price => {
+    element.querySelectorAll<HTMLElement>("[n-price]:not([data-tracked])").forEach(e => (e.innerHTML = price!))
+  })
+  listen("listPrice", listPrice => {
+    element.querySelectorAll("[n-list-price]:not([data-tracked])").forEach(e => (e.innerHTML = listPrice!))
+  })
+}
+
 function registerSKUSelectors(element: NostoProduct, { selectSkuId }: Store) {
   element.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
+    element.dataset.tracked = "true"
     selectSkuId(element.value)
     element.addEventListener("change", () => selectSkuId(element.value))
   })
 }
 
-function registerSKUIds(element: NostoProduct, { selectSkuId, setImages }: Store) {
-  element.querySelectorAll("[n-sku-id]:not([n-atc])").forEach(element => {
+function registerSKUIds(element: NostoProduct, { selectSkuId, setImages, setPrices }: Store) {
+  element.querySelectorAll<HTMLElement>("[n-sku-id]:not([n-atc])").forEach(element => {
+    element.dataset.tracked = "true"
     element.addEventListener("click", () => {
       selectSkuId(element.getAttribute("n-sku-id")!)
-
-      const image = element.getAttribute("ns-img")
-      if (image) {
-        const altImage = element.getAttribute("ns-alt-img")
-        setImages(image, altImage || undefined)
-      }
+      syncImages(element, setImages)
+      syncPrices(element, setPrices)
     })
   })
 }
 
 function registerATCButtons(element: NostoProduct, { addToCart, selectSkuId }: Store) {
-  element.querySelectorAll("[n-atc]:not([n-option])").forEach(element =>
+  element.querySelectorAll<HTMLElement>("[n-atc]:not([n-option])").forEach(element => {
+    element.dataset.tracked = "true"
     element.addEventListener("click", async () => {
       const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
       if (skuId) {
@@ -99,5 +111,5 @@ function registerATCButtons(element: NostoProduct, { addToCart, selectSkuId }: S
       }
       await addToCart()
     })
-  )
+  })
 }
