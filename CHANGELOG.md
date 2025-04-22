@@ -1,3 +1,10 @@
+## [3.4.2](https://github.com/Nosto/web-components/compare/v3.4.1...v3.4.2) (2025-04-22)
+
+
+### Bug Fixes
+
+* use regex for template language match ([7c23982](https://github.com/Nosto/web-components/commit/7c239827373a293f9dc5e9fbe16269c2ce7e1de0))
+
 ## [3.4.1](https://github.com/Nosto/web-components/compare/v3.4.0...v3.4.1) (2025-04-16)
 
 
