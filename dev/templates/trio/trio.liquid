@@ -11,7 +11,7 @@
           </div>
           <div class="nosto__product-details--card">
             <div class="nosto__product-name">{{ product.name }}</div>
-            <div class="nosto__product-price">EUR {{ product.price }}</div>
+            <div class="nosto__product-price" n-price>EUR {{ product.price }}</div>
             <div class="nosto__product-skus">
               <!-- OOS = 145, 234 -->
               <nosto-sku-options name="colors">
@@ -20,9 +20,9 @@
                 <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">Blue</span>
               </nosto-sku-options>
               <nosto-sku-options name="sizes">
-                <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk">L</span>
-                <span m n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk">M</span>
-                <span s n-option n-skus="245,345" n-skus-oos="145" title="Black,White,Blue,Cotton,Silk,Wool">S</span>
+                <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="EUR 20">L</span>
+                <span m n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk" n-price="EUR 15">M</span>
+                <span s n-option n-skus="245,345" n-skus-oos="145" title="Black,White,Blue,Cotton,Silk,Wool" n-price="EUR 10">S</span>
               </nosto-sku-options>
               <nosto-sku-options name="materials">
                 <span cotton n-option n-skus="123,345" n-skus-oos="234" title="Black,White,Blue,L,M,S">Cotton</span>
