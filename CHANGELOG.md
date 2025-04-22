@@ -1,3 +1,18 @@
+# [4.0.0](https://github.com/Nosto/web-components/compare/v3.4.2...v4.0.0) (2025-04-22)
+
+
+* fix!: adjust attribute prefixes ([4ffb1b3](https://github.com/Nosto/web-components/commit/4ffb1b32edfe701a55c21f5428dcc3bf8690035a))
+
+
+### Features
+
+* add price mapping ([3314638](https://github.com/Nosto/web-components/commit/3314638e26e685df5cd33ed2a66c65ba8ecee6d6))
+
+
+### BREAKING CHANGES
+
+* ns- prefix changed to n-
+
 ## [3.4.2](https://github.com/Nosto/web-components/compare/v3.4.1...v3.4.2) (2025-04-22)
 
 
