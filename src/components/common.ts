@@ -1,4 +1,4 @@
-import { Store } from "./store"
+import { Store } from "./NostoProduct/store"
 
 export function syncPrices(element: HTMLElement, setter: Store["setPrices"]) {
   const price = element.getAttribute("n-price")

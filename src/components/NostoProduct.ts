@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
-import { syncImages, syncPrices } from "./NostoProduct/common"
+import { syncImages, syncPrices } from "./common"
 
 /**
  * Custom element that represents a Nosto product component.

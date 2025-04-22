@@ -1,7 +1,7 @@
 import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
-import { syncImages, syncPrices } from "./NostoProduct/common"
+import { syncImages, syncPrices } from "./common"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
