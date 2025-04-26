@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
-import { syncImages, syncPrices } from "./common"
+import { syncSkuData } from "./common"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -55,9 +55,10 @@ export class NostoProduct extends HTMLElement {
     const store = createStore(this)
     provideStore(this, store)
     addListeners(this, store)
-    registerSKUSelectors(this, store)
-    registerSKUIds(this, store)
-    registerATCButtons(this, store)
+    registerSkuSelectors(this, store)
+    registerSkuIds(this, store)
+    registerAtcButtons(this, store)
+    registerSkuData(this, store)
   }
 }
 
@@ -82,7 +83,7 @@ function addListeners(element: NostoProduct, { listen }: Store) {
   })
 }
 
-function registerSKUSelectors(element: NostoProduct, { selectSkuId }: Store) {
+function registerSkuSelectors(element: NostoProduct, { selectSkuId }: Store) {
   element.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
     element.dataset.tracked = "true"
     selectSkuId(element.value)
@@ -90,18 +91,17 @@ function registerSKUSelectors(element: NostoProduct, { selectSkuId }: Store) {
   })
 }
 
-function registerSKUIds(element: NostoProduct, { selectSkuId, setImages, setPrices }: Store) {
+function registerSkuIds(element: NostoProduct, { selectSkuId, setSkuData }: Store) {
   element.querySelectorAll<HTMLElement>("[n-sku-id]:not([n-atc])").forEach(element => {
     element.dataset.tracked = "true"
     element.addEventListener("click", () => {
       selectSkuId(element.getAttribute("n-sku-id")!)
-      syncImages(element, setImages)
-      syncPrices(element, setPrices)
+      syncSkuData(element, setSkuData)
     })
   })
 }
 
-function registerATCButtons(element: NostoProduct, { addToCart, selectSkuId }: Store) {
+function registerAtcButtons(element: NostoProduct, { addToCart, selectSkuId }: Store) {
   element.querySelectorAll<HTMLElement>("[n-atc]:not([n-option])").forEach(element => {
     element.dataset.tracked = "true"
     element.addEventListener("click", async () => {
@@ -112,4 +112,11 @@ function registerATCButtons(element: NostoProduct, { addToCart, selectSkuId }: S
       await addToCart()
     })
   })
+}
+
+function registerSkuData(element: NostoProduct, { setSkus }: Store) {
+  const dataEl = element.querySelector("script[n-sku-data]")
+  if (dataEl) {
+    setSkus(JSON.parse(dataEl.innerHTML))
+  }
 }

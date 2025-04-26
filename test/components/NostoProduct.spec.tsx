@@ -192,6 +192,26 @@ describe("NostoProduct", () => {
       expect(element.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
     })
 
+    it("should update images based on sku data", () => {
+      element.append(
+        <div n-sku-id="234">1st sku</div>,
+        <div n-sku-id="345">end sku</div>,
+        <script type="application/json" n-sku-data>
+          {JSON.stringify([{ id: "234", image: "blue.jpg", altImage: "green.jpg" }, { id: "345" }])}
+        </script>,
+        <div n-atc>Add to cart</div>
+      )
+      element.connectedCallback()
+
+      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(element.style.getPropertyValue("--n-img")).toBe("")
+      expect(element.style.getPropertyValue("--n-alt-img")).toBe("")
+
+      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(element.style.getPropertyValue("--n-img")).toBe("url(blue.jpg)")
+      expect(element.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
+    })
+
     it("should update images elements on [n-sku-id] clicks", () => {
       element.append(
         <div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">

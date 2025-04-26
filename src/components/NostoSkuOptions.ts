@@ -1,7 +1,7 @@
 import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
-import { syncImages, syncPrices } from "./common"
+import { syncSkuData } from "./common"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -117,7 +117,7 @@ function handlePreselection(optionId: string, { selectSkuOption }: Store, option
 
 function registerClickEvents(
   optionId: string,
-  { addToCart, selectSkuOption, setImages, setPrices }: Store,
+  { addToCart, selectSkuOption, setSkuData }: Store,
   optionElements: HTMLElement[]
 ) {
   optionElements.forEach(option => {
@@ -129,8 +129,7 @@ function registerClickEvents(
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
       selectSkuOption(optionId, skuIds)
-      syncImages(option, setImages)
-      syncPrices(option, setPrices)
+      syncSkuData(option, setSkuData)
       if (option.matches("[n-atc]")) {
         addToCart()
       }

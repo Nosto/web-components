@@ -3,8 +3,17 @@ import { triggerEvent } from "@/components/NostoProduct/events"
 import { intersectionOf } from "@/utils"
 import { addSkuToCart } from "@nosto/nosto-js"
 
+interface Sku {
+  id: string
+  price?: string
+  listPrice?: string
+  image?: string
+  altImage?: string
+}
+
 interface State {
   skuOptions: Record<string, string[]>
+  skuData?: Sku[]
   optionGroupCount: number
   selectedSkuId?: string
   image?: string
@@ -40,41 +49,50 @@ export function createStore(element: NostoProduct) {
   }
 
   function selectSkuId(skuId: string) {
-    state.selectedSkuId = skuId
-    notify("selectedSkuId", skuId)
+    notify("selectedSkuId", (state.selectedSkuId = skuId))
+    const sku = state.skuData?.find(sku => sku.id === skuId)
+    if (sku) {
+      setSkuData(sku)
+    }
   }
 
   function selectSkuOption(optionId: string, skuIds: string[]) {
     state.skuOptions[optionId] = skuIds
     notify("skuOptions", state.skuOptions)
     const totalSelection = Object.keys(state.skuOptions).length
+    const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
 
-    if (totalSelection === state.optionGroupCount) {
-      const selectedSkuIds = intersectionOf(...Object.values(state.skuOptions))
-      if (selectedSkuIds.length === 1) {
+    if (selectedSkuIds.length === 1) {
+      if (totalSelection === state.optionGroupCount) {
         selectSkuId(selectedSkuIds[0])
+      } else if (state.skuData) {
+        const sku = state.skuData.find(sku => sku.id === selectedSkuIds[0])
+        if (sku) {
+          setSkuData(sku)
+        }
       }
+    } else if (state.skuData) {
+      const skus = state.skuData.filter(sku => selectedSkuIds.includes(sku.id))
+      setSkuData({
+        price: getSkuValue(skus, "price"),
+        listPrice: getSkuValue(skus, "listPrice"),
+        image: getSkuValue(skus, "image"),
+        altImage: getSkuValue(skus, "altImage")
+      })
     }
   }
 
-  function setImages(image: string, altImage?: string) {
-    state.image = image
-    notify("image", image)
-
-    if (altImage) {
-      state.altImage = altImage
-      notify("altImage", altImage)
-    }
+  function setSkuData(sku: Omit<Sku, "id">) {
+    const fields = ["image", "altImage", "price", "listPrice"] as const
+    fields
+      .filter(field => sku[field])
+      .forEach(field => {
+        notify(field, (state[field] = sku[field]))
+      })
   }
 
-  function setPrices(price: string, listPrice?: string) {
-    state.price = price
-    notify("price", price)
-
-    if (listPrice) {
-      state.listPrice = listPrice
-      notify("listPrice", listPrice)
-    }
+  function setSkus(data: Sku[]) {
+    notify("skuData", (state.skuData = data))
   }
 
   function registerOptionGroup() {
@@ -99,8 +117,8 @@ export function createStore(element: NostoProduct) {
     selectSkuOption,
     selectSkuId,
     registerOptionGroup,
-    setImages,
-    setPrices
+    setSkus,
+    setSkuData
   }
 }
 
@@ -121,3 +139,8 @@ export function injectStore(element: HTMLElement, cb: Callback) {
 }
 
 export type Store = ReturnType<typeof createStore>
+
+function getSkuValue<T extends keyof Sku>(skus: Sku[], key: T) {
+  const values = new Set(skus.map(sku => sku[key]))
+  return values.size === 1 ? [...values][0] : undefined
+}
