@@ -117,6 +117,10 @@ function registerAtcButtons(element: NostoProduct, { addToCart, selectSkuId }: S
 function registerSkuData(element: NostoProduct, { setSkus }: Store) {
   const dataEl = element.querySelector("script[n-sku-data]")
   if (dataEl) {
-    setSkus(JSON.parse(dataEl.innerHTML))
+    const parsed = JSON.parse(dataEl.innerHTML)
+    if (!Array.isArray(parsed)) {
+      throw new Error("Invalid SKU data format. Expected an array.")
+    }
+    setSkus(parsed)
   }
 }
