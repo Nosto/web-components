@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/Nosto/web-components/compare/v4.0.0...v4.1.0) (2025-04-29)
+
+
+### Features
+
+* add extended SKU data support ([9ad386f](https://github.com/Nosto/web-components/commit/9ad386ff67bd5e6f5214d360200135172e3f61e5))
+
 # [4.0.0](https://github.com/Nosto/web-components/compare/v3.4.2...v4.0.0) (2025-04-22)
 
 
