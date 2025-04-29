@@ -91,12 +91,12 @@ function registerSkuSelectors(element: NostoProduct, { selectSkuId }: Store) {
   })
 }
 
-function registerSkuIds(element: NostoProduct, { selectSkuId, setSkuData }: Store) {
+function registerSkuIds(element: NostoProduct, { selectSkuId, setSkuFields }: Store) {
   element.querySelectorAll<HTMLElement>("[n-sku-id]:not([n-atc])").forEach(element => {
     element.dataset.tracked = "true"
     element.addEventListener("click", () => {
       selectSkuId(element.getAttribute("n-sku-id")!)
-      syncSkuData(element, setSkuData)
+      syncSkuData(element, setSkuFields)
     })
   })
 }

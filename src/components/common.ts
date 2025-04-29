@@ -1,6 +1,6 @@
 import { Store } from "./NostoProduct/store"
 
-export function syncSkuData(element: HTMLElement, setter: Store["setSkuData"]) {
+export function syncSkuData(element: HTMLElement, setter: Store["setSkuFields"]) {
   setter({
     image: element.getAttribute("n-img") ?? undefined,
     altImage: element.getAttribute("n-alt-img") ?? undefined,

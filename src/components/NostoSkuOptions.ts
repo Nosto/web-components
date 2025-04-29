@@ -117,7 +117,7 @@ function handlePreselection(optionId: string, { selectSkuOption }: Store, option
 
 function registerClickEvents(
   optionId: string,
-  { addToCart, selectSkuOption, setSkuData }: Store,
+  { addToCart, selectSkuOption, setSkuFields }: Store,
   optionElements: HTMLElement[]
 ) {
   optionElements.forEach(option => {
@@ -129,7 +129,7 @@ function registerClickEvents(
       option.toggleAttribute("selected", true)
       optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
       selectSkuOption(optionId, skuIds)
-      syncSkuData(option, setSkuData)
+      syncSkuData(option, setSkuFields)
       if (option.matches("[n-atc]")) {
         addToCart()
       }

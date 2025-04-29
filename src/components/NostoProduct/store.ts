@@ -52,7 +52,7 @@ export function createStore(element: NostoProduct) {
     notify("selectedSkuId", (state.selectedSkuId = skuId))
     const sku = state.skuData?.find(sku => sku.id === skuId)
     if (sku) {
-      setSkuData(sku)
+      setSkuFields(sku)
     }
   }
 
@@ -68,12 +68,12 @@ export function createStore(element: NostoProduct) {
       } else if (state.skuData) {
         const sku = state.skuData.find(sku => sku.id === selectedSkuIds[0])
         if (sku) {
-          setSkuData(sku)
+          setSkuFields(sku)
         }
       }
     } else if (state.skuData) {
       const skus = state.skuData.filter(sku => selectedSkuIds.includes(sku.id))
-      setSkuData({
+      setSkuFields({
         price: getSkuValue(skus, "price"),
         listPrice: getSkuValue(skus, "listPrice"),
         image: getSkuValue(skus, "image"),
@@ -82,7 +82,7 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function setSkuData(sku: Omit<Sku, "id">) {
+  function setSkuFields(sku: Omit<Sku, "id">) {
     const fields = ["image", "altImage", "price", "listPrice"] as const
     fields
       .filter(field => sku[field])
@@ -118,7 +118,7 @@ export function createStore(element: NostoProduct) {
     selectSkuId,
     registerOptionGroup,
     setSkus,
-    setSkuData
+    setSkuFields
   }
 }
 
