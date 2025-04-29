@@ -29,6 +29,7 @@ Two mandatory component attributes:
 | ------------ | -------------------------------------------------------------------------------------------------------------------- |
 | `product-id` | Id of the product being rendered. `$!product.productId` provides the Product Id in templates.                        |
 | `reco-id`    | The Id of the recommendation being rendered. `$!product.attributionKey` provides the Recommendation Id in templates. |
+| `n-sku-data` | To be applied on an optional script element with SKU data as a JSON array of { price, listPrice, image, altImage } entries |
 
 **Note**:
 The following examples of rendering product SKUs are applicable only for simple use-cases. For complex cases, like multi-directional SKU selections where selecting color renders the matching size and vice-versa, consider using the `NostoSkuOptions` component.
