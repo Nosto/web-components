@@ -19,13 +19,24 @@
                 <span n-option n-skus="334,345">Blue</span>
               </nosto-sku-options>
               <nosto-sku-options name="sizes">
-                <span n-option n-skus="123,223" n-price="EUR 20">L</span>
-                <span n-option n-skus="234,334" n-price="EUR 15">M</span>
-                <span n-option n-skus="145,245,345" n-price="EUR 10">S</span>
+                <span n-option n-skus="123,223">L</span>
+                <span n-option n-skus="234,334">M</span>
+                <span n-option n-skus="145,245,345">S</span>
               </nosto-sku-options>
             </div>
             <button class="btn__atc" n-atc>Add to cart</button>
           </div>
+          <script type="application/json" n-sku-data>
+          [
+            { "id": "123", "price": "EUR 20" }, 
+            { "id": "223", "price": "EUR 20" },
+            { "id": "234", "price": "EUR 15" },
+            { "id": "334", "price": "EUR 15" },
+            { "id": "145", "price": "EUR 10" },
+            { "id": "245", "price": "EUR 10" },
+            { "id": "345", "price": "EUR 10" }
+          ]
+          </script>
         </nosto-product>
       {%- endfor %}
     </div>

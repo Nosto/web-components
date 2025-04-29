@@ -425,7 +425,6 @@ describe("NostoSkuOptions", () => {
       expect(nostoProduct.querySelector("span[n-list-price]")?.innerHTML).toEqual("")
     })
 
-
     it("should not update SKU or image when no options are selected", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
