@@ -380,6 +380,52 @@ describe("NostoSkuOptions", () => {
       expect(nostoProduct.style.getPropertyValue("--n-img")).toEqual("url(image.jpg)")
     })
 
+    it("should update image, price and listPrice from SKU data", () => {
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <span n-price></span>
+          <span n-list-price></span>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="sku123" />
+          </nosto-sku-options>
+          <script type="application/json" n-sku-data>
+            {JSON.stringify([{ id: "sku123", image: "image.jpg", price: "10€", listPrice: "15€" }])}
+          </script>
+        </nosto-product>
+      )
+
+      nostoProduct = document.querySelector("nosto-product")!
+      element("black").click()
+      expect(nostoProduct.style.getPropertyValue("--n-img")).toEqual("url(image.jpg)")
+      expect(nostoProduct.querySelector("span[n-price]")?.innerHTML).toEqual("10€")
+      expect(nostoProduct.querySelector("span[n-list-price]")?.innerHTML).toEqual("15€")
+    })
+
+    it("should skip updates of non-unique SKU data", () => {
+      document.body.replaceChildren(
+        <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
+          <span n-price></span>
+          <span n-list-price></span>
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="sku123,sku234" />
+          </nosto-sku-options>
+          <script type="application/json" n-sku-data>
+            {JSON.stringify([
+              { id: "sku123", image: "image.jpg", price: "10€", listPrice: "15€" },
+              { id: "sku123", image: "image.jpg", price: "12€", listPrice: "17€" }
+            ])}
+          </script>
+        </nosto-product>
+      )
+
+      nostoProduct = document.querySelector("nosto-product")!
+      element("black").click()
+      expect(nostoProduct.style.getPropertyValue("--n-img")).toEqual("url(image.jpg)")
+      expect(nostoProduct.querySelector("span[n-price]")?.innerHTML).toEqual("")
+      expect(nostoProduct.querySelector("span[n-list-price]")?.innerHTML).toEqual("")
+    })
+
+
     it("should not update SKU or image when no options are selected", () => {
       document.body.replaceChildren(
         <nosto-product product-id={PROD_ID} reco-id={RECO_ID}>
