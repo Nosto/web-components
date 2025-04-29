@@ -121,6 +121,9 @@ function registerSkuData(element: NostoProduct, { setSkus }: Store) {
     if (!Array.isArray(parsed)) {
       throw new Error("Invalid SKU data format. Expected an array.")
     }
+    if (parsed.some(entry => typeof entry !== "object")) {
+      throw new Error("Invalid SKU data format. Expected an array of objects.")
+    }
     setSkus(parsed)
   }
 }
