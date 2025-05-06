@@ -23,6 +23,13 @@ export default defineConfig(() => ({
     port: 8080
   },
   test: {
+    coverage: {
+      include: ["src/**/*.{js,ts}"],
+      skipFull: true,
+      thresholds: {
+        functions: 80
+      }
+    },
     environment: "jsdom"
   }
 }))
