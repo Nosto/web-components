@@ -3,7 +3,6 @@ import { createElement } from "../utils/jsx"
 import type { NostoProductCard } from "@/components/NostoProductCard"
 import type { NostoProduct } from "@/components/NostoProduct"
 import type { NostoSkuOptions } from "@/components/NostoSkuOptions"
-import type { NostoShopify } from "@/components/NostoShopify"
 import type { NostoSwiper } from "@/components/NostoSwiper"
 
 export async function validateLibrary(importPath: string) {
@@ -46,16 +45,6 @@ export async function validateLibrary(importPath: string) {
     const skuOptions = new exports.NostoSkuOptions() as NostoSkuOptions
     skuOptions.name = "color"
     await skuOptions.connectedCallback()
-    // TODO add assertions
-  })
-
-  it("inits NostoShopify", async () => {
-    expect(exports.NostoShopify).toBeDefined()
-
-    const wrapper = <div class="nosto_element" id="test-campaign"></div>
-    const shopify = new exports.NostoShopify() as NostoShopify
-    wrapper.append(shopify)
-    await shopify.connectedCallback()
     // TODO add assertions
   })
 

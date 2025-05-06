@@ -11,7 +11,6 @@ This package provides the following web components:
 | NostoProduct      | PRODUCTION        |
 | NostoProductCard  | ALPHA             |
 | NostoSkuOptions   | PRODUCTION        |
-| NostoShopify      | ALPHA             |
 | NostoSwiper       | BETA              |
 
 ## Documentation
