@@ -4,7 +4,7 @@
   "author": {
     "name": "Nosto Solutions Oy"
   },
-  "version": "4.1.0",
+  "version": "5.0.0",
   "type": "module",
   "files": [
     "dist"

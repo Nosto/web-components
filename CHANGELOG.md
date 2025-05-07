@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/Nosto/web-components/compare/v4.1.0...v5.0.0) (2025-05-07)
+
+
+### Features
+
+* remove NostoShopify ([f568b38](https://github.com/Nosto/web-components/commit/f568b3836d084abae4b8131b3b2fb254e39ae5e5))
+
+
+### BREAKING CHANGES
+
+* NostoShopify support dropped
+
 # [4.1.0](https://github.com/Nosto/web-components/compare/v4.0.0...v4.1.0) (2025-04-29)
 
 
