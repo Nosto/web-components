@@ -27,7 +27,10 @@ export default defineConfig(() => ({
       include: ["src/**/*.{js,ts}"],
       skipFull: true,
       thresholds: {
-        functions: 80
+        statements: 90,
+        branches: 90,
+        lines: 90,
+        functions: 90
       }
     },
     environment: "jsdom"
