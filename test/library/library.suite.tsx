@@ -22,7 +22,6 @@ export async function validateLibrary(importPath: string) {
         {JSON.stringify({ name: "Test" })}
       </script>
     )
-    card.recoId = "123456"
     card.template = "product-card-template"
     card.dataset.title = "Product"
     await card.connectedCallback()
