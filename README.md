@@ -8,6 +8,7 @@ This package provides the following web components:
 
 | Component         | Status            |
 | ----------------- | ----------------- |
+| NostoDynamicCard  | ALPHA             |
 | NostoProduct      | PRODUCTION        |
 | NostoProductCard  | ALPHA             |
 | NostoSkuOptions   | PRODUCTION        |
