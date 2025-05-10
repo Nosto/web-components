@@ -34,7 +34,7 @@ async function getMarkup(element: NostoDynamicCard) {
     throw new Error("Failed to fetch product data")
   }
   const markup = await result.text()
-  if (/<(body|html)/.test(markup)) {
+  if (/<(body|html)/i.test(markup)) {
     throw new Error("Invalid markup for template " + element.template)
   }
   return markup
