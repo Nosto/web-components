@@ -1,3 +1,16 @@
+# [6.0.0](https://github.com/Nosto/web-components/compare/v5.0.0...v6.0.0) (2025-05-12)
+
+
+### Features
+
+* add NostoDynamicCard ([12a885c](https://github.com/Nosto/web-components/commit/12a885ce224873690b2c2aeef6af36af44266473))
+* simplify NostoProductCard ([8e0b3b3](https://github.com/Nosto/web-components/commit/8e0b3b332df372d87e35f7cd65d3e9ee934796d7))
+
+
+### BREAKING CHANGES
+
+* dropping wrap and recoId property handling
+
 # [5.0.0](https://github.com/Nosto/web-components/compare/v4.1.0...v5.0.0) (2025-05-07)
 
 
