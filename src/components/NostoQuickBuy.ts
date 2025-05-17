@@ -1,6 +1,20 @@
 import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 
+/**
+ * A custom web component for rendering a quick-buy interface for products.
+ * 
+ * This component fetches product data based on the `handle` attribute and renders
+ * options for the product, including an Add-To-Cart (ATC) button if multiple options exist.
+ * 
+ * Attributes:
+ * - `handle` (string): The unique identifier for the product to fetch.
+ * 
+ * Example usage:
+ * ```html
+ * <nosto-quick-buy handle="product-handle"></nosto-quick-buy>
+ * ```
+ */
 @customElement("nosto-quick-buy")
 export class NostoQuickBuy extends HTMLElement {
   static attributes = {
