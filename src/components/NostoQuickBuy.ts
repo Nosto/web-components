@@ -44,14 +44,13 @@ export class NostoQuickBuy extends HTMLElement {
       // faceted quick buy with ATC button
       const optionGroups = filtered.map(o => {
         const field = `option${o.position}` as OptionKey
+        const heading = `<h3>${o.name}</h3>`
         const buttons = o.values.map(ov => {
-          const skuIds = variants
-            .filter(v => v[field] === ov)
-            .map(v => String(v.id))
-            .join(",")
-          return `<span n-option n-skus="${skuIds}">${ov}</span>`
+          const skuIds = variants.filter(v => v[field] === ov).map(v => String(v.id))
+          const selected = this.variantId && skuIds.includes(this.variantId)
+          return `<span n-option n-skus="${skuIds.join(",")}" ${selected ? "selected" : ""}>${ov}</span>`
         })
-        return `<nosto-sku-options name=${o.name}>${buttons.join("")}</nosto-sku-options>`
+        return `<nosto-sku-options name=${o.name}>${heading}${buttons.join("")}</nosto-sku-options>`
       })
       const atcButton = `<button n-atc>Add to Cart</button>`
       this.innerHTML = optionGroups.join("") + atcButton
