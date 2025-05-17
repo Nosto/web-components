@@ -3,14 +3,13 @@ import { customElement } from "./decorators"
 
 /**
  * A custom web component for rendering a quick-buy interface for products.
- * 
+ *
  * This component fetches product data based on the `handle` attribute and renders
  * options for the product, including an Add-To-Cart (ATC) button if multiple options exist.
- * 
- * Attributes:
- * - `handle` (string): The unique identifier for the product to fetch.
- * 
- * Example usage:
+ *
+ * @property {string} handle - The unique identifier for the product to fetch.
+ *
+ * @example
  * ```html
  * <nosto-quick-buy handle="product-handle"></nosto-quick-buy>
  * ```
@@ -44,8 +43,15 @@ export class NostoQuickBuy extends HTMLElement {
     } else {
       // faceted quick buy with ATC button
       const optionGroups = filtered.map(o => {
-        const buttons = o.values.map(ov => `<button>${ov}</button>`)
-        return `<div n-option-group=${o.name}>${buttons.join("")}</div>`
+        const field = `option${o.position}` as OptionKey
+        const buttons = o.values.map(ov => {
+          const skuIds = variants
+            .filter(v => v[field] === ov)
+            .map(v => String(v.id))
+            .join(",")
+          return `<span n-option n-skus="${skuIds}">${ov}</span>`
+        })
+        return `<nosto-sku-options name=${o.name}>${buttons.join("")}</nosto-sku-options>`
       })
       const atcButton = `<button n-atc>Add to Cart</button>`
       this.innerHTML = optionGroups.join("") + atcButton
@@ -56,6 +62,7 @@ export class NostoQuickBuy extends HTMLElement {
 type OptionKey = "option1" | "option2" | "option3"
 
 type Data = {
+  id: number
   variants: Variant[]
   options: Option[]
 }

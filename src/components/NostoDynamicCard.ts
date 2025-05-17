@@ -6,9 +6,9 @@ import { customElement } from "./decorators"
  *
  * This component is designed to be used in a Shopify environment and fetches product data dynamically.
  *
- * @attribute {string} handle - The product handle to fetch data for. Required.
- * @attribute {string} template - The template to use for rendering the product. Required.
- * @attribute {string} [variantId] - The variant ID to fetch specific variant data. Optional.
+ * @property {string} handle - The product handle to fetch data for. Required.
+ * @property {string} template - The template to use for rendering the product. Required.
+ * @property {string} [variantId] - The variant ID to fetch specific variant data. Optional.
  *
  * @example
  *  ```html
