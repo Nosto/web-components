@@ -67,19 +67,21 @@ function addListeners(element: NostoProduct, { listen }: Store) {
     element.selectedSkuId = selectedSkuId
     element.skuSelected = !!selectedSkuId
   })
-  listen("image", image => {
-    element.style.setProperty("--n-img", `url(${image})`)
-    element.querySelector("img[n-img]:not([data-tracked])")?.setAttribute("src", image!)
-  })
-  listen("altImage", altImage => {
-    element.style.setProperty("--n-alt-img", `url(${altImage})`)
-    element.querySelector("img[n-alt-img]:not([data-tracked])")?.setAttribute("src", altImage!)
-  })
-  listen("price", price => {
-    element.querySelectorAll<HTMLElement>("[n-price]:not([data-tracked])").forEach(e => (e.innerHTML = price!))
-  })
-  listen("listPrice", listPrice => {
-    element.querySelectorAll("[n-list-price]:not([data-tracked])").forEach(e => (e.innerHTML = listPrice!))
+  listen("skuFields", ({ image, altImage, price, listPrice }) => {
+    if (image) {
+      element.style.setProperty("--n-img", `url(${image})`)
+      element.querySelector("img[n-img]:not([data-tracked])")?.setAttribute("src", image)
+    }
+    if (altImage) {
+      element.style.setProperty("--n-alt-img", `url(${altImage})`)
+      element.querySelector("img[n-alt-img]:not([data-tracked])")?.setAttribute("src", altImage)
+    }
+    if (price) {
+      element.querySelectorAll<HTMLElement>("[n-price]:not([data-tracked])").forEach(e => (e.innerHTML = price))
+    }
+    if (listPrice) {
+      element.querySelectorAll("[n-list-price]:not([data-tracked])").forEach(e => (e.innerHTML = listPrice))
+    }
   })
 }
 
