@@ -11,15 +11,14 @@ interface Sku {
   altImage?: string
 }
 
+type SkuFields = Omit<Sku, "id">
+
 interface State {
-  skuOptions: Record<string, string[]>
-  skuData?: Sku[]
-  optionGroupCount: number
   selectedSkuId?: string
-  image?: string
-  altImage?: string
-  price?: string
-  listPrice?: string
+  skuOptions: Record<string, string[]>
+  optionGroupCount: number
+  skuData?: Sku[]
+  skuFields: SkuFields
 }
 
 export type Events = Omit<State, "optionGroupCount">
@@ -30,6 +29,7 @@ export function createStore(element: NostoProduct) {
   const { productId, recoId } = element
   const state: State = {
     skuOptions: {},
+    skuFields: {},
     optionGroupCount: 0
   }
 
@@ -82,13 +82,8 @@ export function createStore(element: NostoProduct) {
     }
   }
 
-  function setSkuFields(sku: Omit<Sku, "id">) {
-    const fields = ["image", "altImage", "price", "listPrice"] as const
-    fields
-      .filter(field => sku[field])
-      .forEach(field => {
-        notify(field, (state[field] = sku[field]))
-      })
+  function setSkuFields(skuFields: SkuFields) {
+    notify("skuFields", (state.skuFields = skuFields))
   }
 
   function setSkus(data: Sku[]) {
