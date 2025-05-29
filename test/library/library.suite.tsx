@@ -8,26 +8,6 @@ import type { NostoSwiper } from "@/components/NostoSwiper"
 export async function validateLibrary(importPath: string) {
   const exports = await import(importPath)
 
-  it("inits NostoProductCard", async () => {
-    expect(exports.NostoProductCard).toBeDefined()
-    document.body.append(
-      <script id="product-card-template" type="text/x-liquid-template">
-        <h1>{"{{ product.name }} {{ data.title}}"}</h1>
-      </script>
-    )
-
-    const card = new exports.NostoProductCard() as NostoProductCard
-    card.append(
-      <script type="application/json" product-data>
-        {JSON.stringify({ name: "Test" })}
-      </script>
-    )
-    card.template = "product-card-template"
-    card.dataset.title = "Product"
-    await card.connectedCallback()
-    expect(card.children[1].outerHTML).toBe("<h1>Test Product</h1>")
-  })
-
   it("inits NostoProduct", async () => {
     expect(exports.NostoProduct).toBeDefined()
 

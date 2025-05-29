@@ -14,6 +14,7 @@ function generateProducts() {
         thumbUrl: `https://picsum.photos/id/${index + 20}/300/300`,
         productId: getRandomId(index + 1),
         imageUrl: `https://picsum.photos/id/${index + 20}/800/800`,
+        altImageUrl: `https://picsum.photos/id/${index + 21}/800/800`,
         price,
         priceCurrencyCode: "EUR",
         skus: [

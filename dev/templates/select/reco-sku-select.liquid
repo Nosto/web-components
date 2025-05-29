@@ -5,6 +5,19 @@
     <span class="reco-title">{{title }}</span>
     <div class="products">
       {%- for product in products %}
+      <nosto-product-card product-id="{{ product.productId }}" 
+        url="{{ product.url }}"
+        image-url="{{ product.imageUrl }}" 
+        alt-image-url="{{ product.altImageUrl }}">
+        <span slot="ribbon">10% off</span>
+        <div class="nosto__product-name">
+          <a href="{{ product.url }}">{{ product.name }}</a>
+        </div>
+        <div class="nosto__product-price">EUR {{ product.price }}</div>
+      </nosto-product-card>
+
+      {%- endfor %}
+      {%- for product in products %}
         <nosto-product product-id="{{ product.productId }}" reco-id="{{resultId }}" class="nosto__product">
           <div class="nosto__product-image">
             <img src="{{ product.imageUrl }}" alt="{{ product.name }}" width="300" height="300">
