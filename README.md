@@ -16,7 +16,6 @@ This package provides the following web components:
 | NostoProduct      | Progressive Enhancement   |
 | NostoProductCard  | Templating                |
 | NostoSkuOptions   | Progressive Enhancement   |
-| NostoSwiper       | Progressive Enhancement   |
 
 ## Documentation
 
