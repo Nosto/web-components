@@ -1,3 +1,13 @@
+# [7.0.0](https://github.com/Nosto/web-components/compare/v6.0.0...v7.0.0) (2025-06-02)
+
+
+* feat!: remove NostoSwiper ([b1112b1](https://github.com/Nosto/web-components/commit/b1112b14284834230bf1a52281247be185ab288e))
+
+
+### BREAKING CHANGES
+
+* NostoSwiper removal
+
 # [6.0.0](https://github.com/Nosto/web-components/compare/v5.0.0...v6.0.0) (2025-05-12)
 
 
