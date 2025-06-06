@@ -38,20 +38,26 @@ export class NostoDynamicCard extends HTMLElement {
   }
 }
 
-async function getMarkup(element: NostoDynamicCard) {
+interface CardProps {
+  handle: string
+  template: string
+  variantId?: string
+}
+
+export async function getMarkup({ handle, template, variantId }: CardProps) {
   const params = new URLSearchParams()
-  params.set("view", element.template)
+  params.set("view", template)
   params.set("layout", "none")
-  if (element.variantId) {
-    params.set("variant", element.variantId)
+  if (variantId) {
+    params.set("variant", variantId)
   }
-  const result = await fetch(`/products/${element.handle}?${params}`)
+  const result = await fetch(`/products/${handle}?${params}`)
   if (!result.ok) {
     throw new Error("Failed to fetch product data")
   }
   const markup = await result.text()
   if (/<(body|html)/.test(markup)) {
-    throw new Error("Invalid markup for template " + element.template)
+    throw new Error("Invalid markup for template " + template)
   }
   return markup
 }
