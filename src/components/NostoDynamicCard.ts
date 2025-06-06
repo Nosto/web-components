@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 
 /**
- * A custom elements that renders a product by fetching the markup from Shopify based on the provided handle and template.
+ * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
  *
  * This component is designed to be used in a Shopify environment and fetches product data dynamically.
  *
@@ -27,7 +27,7 @@ export class NostoDynamicCard extends HTMLElement {
 
   handle!: string
   template!: string
-  variantId!: string
+  variantId?: string
   // TODO lazy mode to load the markup only when in viewport
 
   async connectedCallback() {
@@ -38,20 +38,22 @@ export class NostoDynamicCard extends HTMLElement {
   }
 }
 
-async function getMarkup(element: NostoDynamicCard) {
+type CardProps = Pick<NostoDynamicCard, "handle" | "template" | "variantId">
+
+export async function getMarkup({ handle, template, variantId }: CardProps) {
   const params = new URLSearchParams()
-  params.set("view", element.template)
+  params.set("view", template)
   params.set("layout", "none")
-  if (element.variantId) {
-    params.set("variant", element.variantId)
+  if (variantId) {
+    params.set("variant", variantId)
   }
-  const result = await fetch(`/products/${element.handle}?${params}`)
+  const result = await fetch(`/products/${handle}?${params}`)
   if (!result.ok) {
     throw new Error("Failed to fetch product data")
   }
   const markup = await result.text()
   if (/<(body|html)/.test(markup)) {
-    throw new Error("Invalid markup for template " + element.template)
+    throw new Error("Invalid markup for template " + template)
   }
   return markup
 }
