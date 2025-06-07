@@ -37,8 +37,27 @@ describe("NostoCampaign", () => {
     await expect(campaign.connectedCallback()).rejects.toThrow("Property placement is required.")
   })
 
+  it("should throw in connectedCallback if template is missing", async () => {
+    const mockBuilder = getMockBuilder({
+      load: vi.fn().mockResolvedValue({
+        recommendations: {
+          "123": {}
+        }
+      })
+    })
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder
+    })
+
+    campaign = new NostoCampaign()
+    campaign.placement = "123"
+    campaign.template = "my-template"
+    await expect(campaign.connectedCallback()).rejects.toThrow('Template with id "my-template" not found.')
+  })
+
   it("should mark element for client injection", async () => {
-    const htmlContent = "<div>recommended content</div>"
+    const htmlContent = "recommended content"
     const mockBuilder = getMockBuilder({
       load: vi.fn().mockResolvedValue({
         recommendations: {
@@ -65,31 +84,27 @@ describe("NostoCampaign", () => {
       template: "inline-template"
     })
 
-    const script = document.createElement("script")
-    script.id = "inline-template"
-    script.type = "text/x-liquid-template"
-    script.textContent = "{{ html }}"
-    document.body.appendChild(script)
+    const template = document.createElement("template")
+    template.id = "inline-template"
+    template.innerHTML = "<span>{{ html }}</span>"
+    document.body.appendChild(template)
 
     await campaign.connectedCallback()
 
     expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
-    expect(campaign.innerHTML).toBe(htmlContent)
+    expect(campaign.innerHTML).toBe(`<span>${htmlContent}</span>`)
   })
 
   it("should render campaign-level templated HTML if template is provided", async () => {
     const templateId = "campaign-template"
-    const script = document.createElement("script")
-    script.id = templateId
-    script.type = "text/x-liquid-template"
-    script.textContent = `
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
     <section>
-      {% for product in products %}
-        <div class="product">{{ product.title }}</div>
-      {% endfor %}
+      <div class="product" v-for="product in products">{{ product.title }}</div>
     </section>
   `
-    document.body.appendChild(script)
+    document.body.appendChild(template)
 
     const mockBuilder = getMockBuilder({
       load: vi.fn().mockResolvedValue({

@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
-import { evaluate } from "@/services/templating"
+import { compile } from "@/services/vue"
 
 @customElement("nosto-campaign")
 export class NostoCampaign extends HTMLElement {
@@ -61,8 +61,15 @@ export async function loadCampaign(element: NostoCampaign) {
   const rec = recommendations[element.placement!]
   if (rec) {
     if (element.template) {
-      const html = await evaluate(element.template, rec as JSONResult)
-      element.innerHTML = html
+      const template = document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
+      if (!template) {
+        throw new Error(`Template with id "${element.template}" not found.`)
+      }
+      const content = template.content.cloneNode(true) as DocumentFragment
+      const wrapper = document.createElement("div")
+      wrapper.appendChild(content)
+      compile(wrapper, rec as JSONResult)
+      element.append(...wrapper.children)
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(
