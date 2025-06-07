@@ -4,7 +4,7 @@ This repository contains a collection of web components designed to integrate No
 
 ## Usage
 
-Usage options for this library documented [here](https://docs.nosto.com/techdocs/apis/frontend/oss/web-components/loading-web-components)
+Usage options for this library are documented [here](https://docs.nosto.com/techdocs/apis/frontend/oss/web-components/loading-web-components)
 
 ## Components
 
@@ -19,6 +19,6 @@ This package provides the following web components:
 
 ## Documentation
 
-Read [Nosto Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-components) for more information on how to use these components.
+Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-components) for more information on how to use these components.
 
 [Library TypeDoc page](https://nosto.github.io/web-components) includes detailed library documentation.
