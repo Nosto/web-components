@@ -9,6 +9,7 @@ import { customElement } from "./decorators"
  * @property {string} handle - The product handle to fetch data for. Required.
  * @property {string} template - The template to use for rendering the product. Required.
  * @property {string} [variantId] - The variant ID to fetch specific variant data. Optional.
+ * @property {boolean} [lazy] - If true, the component will only render when it comes into view. Default is false.
  *
  * @example
  *  ```html
@@ -22,20 +23,35 @@ export class NostoDynamicCard extends HTMLElement {
   static attributes = {
     handle: String,
     template: String,
-    variantId: String
+    variantId: String,
+    lazy: Boolean
   }
 
   handle!: string
   template!: string
-  variantId!: string
-  // TODO lazy mode to load the markup only when in viewport
+  variantId?: string
+  lazy?: boolean
 
   async connectedCallback() {
     assertRequired(this, "handle", "template")
     this.toggleAttribute("loading", true)
-    this.innerHTML = await getMarkup(this)
-    this.toggleAttribute("loading", false)
+    if (this.lazy) {
+      const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          observer.disconnect()
+          render(this)
+        }
+      })
+      observer.observe(this)
+    } else {
+      render(this)
+    }
   }
+}
+
+async function render(element: NostoDynamicCard) {
+  element.innerHTML = await getMarkup(element)
+  element.toggleAttribute("loading", false)
 }
 
 async function getMarkup(element: NostoDynamicCard) {
