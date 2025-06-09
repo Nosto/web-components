@@ -5,7 +5,6 @@ import { nostojs } from "@nosto/nosto-js"
 export class NostoCampaign extends HTMLElement {
   static attributes = {
     placement: String,
-    "div-id": String,
     product: String,
     variant: String
   }
@@ -14,14 +13,8 @@ export class NostoCampaign extends HTMLElement {
   product?: string
   variant?: string
 
-  constructor() {
-    super()
-  }
-
   connectedCallback() {
-    this.placement = this.getAttribute("placement") || this.getAttribute("div-id") || undefined
-    this.product = this.getAttribute("product") ?? undefined
-    this.variant = this.getAttribute("variant") ?? undefined
+    this.placement = this.placement || this.getAttribute("div-id") || undefined
 
     if (!this.placement) {
       console.error('<nosto-campaign> requires a "placement" or "div-id" attribute.')
