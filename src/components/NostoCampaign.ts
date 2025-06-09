@@ -13,45 +13,39 @@ export class NostoCampaign extends HTMLElement {
   product?: string
   variant?: string
 
-  connectedCallback() {
-    this.placement = this.placement || this.getAttribute("div-id") || undefined
-
+  async connectedCallback() {
     if (!this.placement) {
       console.error('<nosto-campaign> requires a "placement" or "div-id" attribute.')
       return
     }
 
-    this.loadCampaign()
+    await this.loadCampaign()
   }
 
   async loadCampaign() {
-    try {
-      const api = await new Promise(nostojs)
-      const request = api
-        .createRecommendationRequest({ includeTagging: true })
-        .disableCampaignInjection()
-        .setElements([this.placement!])
-        .setResponseMode("HTML")
+    const api = await new Promise(nostojs)
+    const request = api
+      .createRecommendationRequest({ includeTagging: true })
+      .disableCampaignInjection()
+      .setElements([this.placement!])
+      .setResponseMode("HTML")
 
-      if (this.product) {
-        const product = { product_id: this.product }
-        request.setProducts([product])
-      }
+    if (this.product) {
+      request.setProducts([
+        {
+          product_id: this.product,
+          ...(this.variant ? { sku_id: this.variant } : {})
+        }
+      ])
+    }
 
-      if (this.variant) {
-        request.addCurrentVariation(this.variant)
-      }
+    const result = await request.load()
+    const html = result.recommendations[this.placement!]
 
-      const result = await request.load()
-      const html = result.recommendations[this.placement!]
-
-      if (html && typeof html === "string") {
-        this.innerHTML = html
-      } else {
-        console.warn(`No recommendation result for div ID: ${this.placement}`)
-      }
-    } catch (error) {
-      console.error("Failed to load campaign", error)
+    if (html && typeof html === "string") {
+      this.innerHTML = html
+    } else {
+      console.warn(`No recommendation result for div ID: ${this.placement}`)
     }
   }
 }

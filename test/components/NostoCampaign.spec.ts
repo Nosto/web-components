@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import "@/components/NostoCampaign"
-import type { NostoCampaign } from "@/components/NostoCampaign"
+import { NostoCampaign } from "@/components/NostoCampaign"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
@@ -10,9 +10,9 @@ describe("NostoCampaign", () => {
   })
 
   function mount(attrs: Record<string, string> = {}) {
-    campaign = document.createElement("nosto-campaign") as NostoCampaign
+    campaign = new NostoCampaign()
 
-    Object.entries(attrs).forEach(([k, v]) => campaign.setAttribute(k, v))
+    Object.assign(campaign, attrs)
 
     document.body.appendChild(campaign)
     return campaign
@@ -36,7 +36,6 @@ describe("NostoCampaign", () => {
       product: "123",
       variant: "var1"
     })
-    await new Promise(resolve => setTimeout(resolve, 0))
     const spy = vi.spyOn(campaign, "loadCampaign").mockImplementation(async () => {})
     await campaign.connectedCallback()
     expect(campaign.placement).toBe("789")
