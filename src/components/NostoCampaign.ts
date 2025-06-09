@@ -38,19 +38,5 @@ export class NostoCampaign extends HTMLElement {
     }
 
     await request.load()
-    // const rec = result.recommendations[this.placement!]
-
-    // const html =
-    //   typeof rec === "string"
-    //     ? rec
-    //     : typeof rec === "object" && rec !== null && "html" in rec
-    //       ? (rec as { html: string }).html
-    //       : undefined
-
-    // if (html) {
-    //   this.innerHTML = html
-    // } else {
-    //   console.warn(`No recommendation result for div ID: ${this.placement}`)
-    // }
   }
 }
