@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/Nosto/web-components/compare/v7.0.0...v7.1.0) (2025-06-09)
+
+
+### Features
+
+* add lazy loading support ([debdf24](https://github.com/Nosto/web-components/commit/debdf24f3fff52b76aa9b39710bbb83bc55f538d))
+
 # [7.0.0](https://github.com/Nosto/web-components/compare/v6.0.0...v7.0.0) (2025-06-02)
 
 
