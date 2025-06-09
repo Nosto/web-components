@@ -46,18 +46,13 @@ describe("NostoCampaign", () => {
     spy.mockRestore()
   })
 
-  it("should inject string HTML from recommendation result", async () => {
+  it("should mark element for client injection", async () => {
     const mockBuilder = {
       disableCampaignInjection: () => mockBuilder,
       setElements: () => mockBuilder,
       setResponseMode: () => mockBuilder,
       setProducts: () => mockBuilder,
-      load: () =>
-        Promise.resolve({
-          recommendations: {
-            "test-placement": "<div>Mocked HTML</div>"
-          }
-        })
+      load: vi.fn().mockResolvedValue({})
     } as unknown as RequestBuilder
 
     mockNostojs({
@@ -71,35 +66,9 @@ describe("NostoCampaign", () => {
     })
 
     await campaign.connectedCallback()
-    expect(campaign.innerHTML).toContain("Mocked HTML")
-  })
 
-  it("should inject HTML from recommendation result object", async () => {
-    const mockBuilder = {
-      disableCampaignInjection: () => mockBuilder,
-      setElements: () => mockBuilder,
-      setResponseMode: () => mockBuilder,
-      setProducts: () => mockBuilder,
-      load: () =>
-        Promise.resolve({
-          recommendations: {
-            "test-placement": {
-              html: "<div>Mocked HTML from object</div>"
-            }
-          }
-        })
-    } as unknown as RequestBuilder
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
-    })
-
-    campaign = mount({
-      placement: "test-placement",
-      product: "p2"
-    })
-
-    await campaign.connectedCallback()
-    expect(campaign.innerHTML).toContain("Mocked HTML from object")
+    expect(campaign.classList.contains("nosto_element")).toBe(true)
+    expect(campaign.id).toBe("test-placement")
+    expect(mockBuilder.load).toHaveBeenCalled()
   })
 })
