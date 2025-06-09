@@ -60,15 +60,15 @@ describe("NostoCampaign", () => {
     })
 
     campaign = mount({
-      placement: "test-placement",
-      product: "p1",
-      variant: "v1"
+      placement: "789",
+      product: "123",
+      variant: "var1"
     })
 
     await campaign.connectedCallback()
 
     expect(campaign.classList.contains("nosto_element")).toBe(true)
-    expect(campaign.id).toBe("test-placement")
+    expect(campaign.id).toBe("789")
     expect(mockBuilder.load).toHaveBeenCalled()
   })
 })
