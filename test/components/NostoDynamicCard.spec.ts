@@ -25,7 +25,7 @@ describe("NostoDynamicCard", () => {
     expect(card.innerHTML).toBe(validMarkup)
   })
 
-  it("loads placeholder content when placeholder attribute is set", async () => {
+  it("uses placeholder content when placeholder attribute is set and template matches", async () => {
     const validMarkup = "<div>Product Info</div>"
     const fakeResponse = {
       ok: true,
