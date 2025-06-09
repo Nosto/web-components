@@ -10,16 +10,16 @@ export class NostoCampaign extends HTMLElement {
     variant: String
   }
 
-  placement: string | undefined
-  product: string | undefined
-  variant: string | undefined
+  placement?: string
+  product?: string
+  variant?: string
 
   constructor() {
     super()
   }
 
   connectedCallback() {
-    this.placement = this.getAttribute("placement") || this.getAttribute("div-id")!
+    this.placement = this.getAttribute("placement") || this.getAttribute("div-id") || undefined
     this.product = this.getAttribute("product") ?? undefined
     this.variant = this.getAttribute("variant") ?? undefined
 
