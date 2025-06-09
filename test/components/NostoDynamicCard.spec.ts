@@ -25,6 +25,43 @@ describe("NostoDynamicCard", () => {
     expect(card.innerHTML).toBe(validMarkup)
   })
 
+  it("loads placeholder content when placeholder attribute is set", async () => {
+    const validMarkup = "<div>Product Info</div>"
+    const fakeResponse = {
+      ok: true,
+      text: vi.fn().mockResolvedValue(validMarkup)
+    }
+    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    // @ts-expect-error partial mock assignment
+    global.IntersectionObserver = vi.fn(() => ({
+      observe: vi.fn(),
+      disconnect: vi.fn()
+    }))
+
+    const card = new NostoDynamicCard()
+    card.handle = "test-handle"
+    card.template = "default"
+    await card.connectedCallback()
+
+    // placeholder is used, since template is the same
+    const card2 = new NostoDynamicCard()
+    card2.handle = "test-handle2"
+    card2.template = "default"
+    card2.placeholder = true
+    card2.lazy = true
+    await card2.connectedCallback()
+    expect(card2.innerHTML).toBe(validMarkup)
+
+    // placeholder is not used, since template is different
+    const card3 = new NostoDynamicCard()
+    card3.handle = "test-handle3"
+    card3.template = "custom"
+    card3.placeholder = true
+    card3.lazy = true
+    await card3.connectedCallback()
+    expect(card3.innerHTML).toBe("")
+  })
+
   it("fetches product lazily when lazy attribute is set", async () => {
     const validMarkup = "<div>Lazy Loaded Product Info</div>"
     const fakeResponse = {

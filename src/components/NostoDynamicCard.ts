@@ -9,6 +9,7 @@ import { customElement } from "./decorators"
  * @property {string} handle - The product handle to fetch data for. Required.
  * @property {string} template - The template to use for rendering the product. Required.
  * @property {string} [variantId] - The variant ID to fetch specific variant data. Optional.
+ * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
  *
  * @example
@@ -24,18 +25,22 @@ export class NostoDynamicCard extends HTMLElement {
     handle: String,
     template: String,
     variantId: String,
+    placeholder: Boolean,
     lazy: Boolean
   }
 
   handle!: string
   template!: string
   variantId?: string
+  placeholder?: boolean
   lazy?: boolean
 
   async connectedCallback() {
     assertRequired(this, "handle", "template")
     this.toggleAttribute("loading", true)
-    // TODO add placeholder content support
+    if (this.placeholder && placeholders.has(this.template)) {
+      this.innerHTML = placeholders.get(this.template) || ""
+    }
     if (this.lazy) {
       const observer = new IntersectionObserver(async entries => {
         if (entries[0].isIntersecting) {
@@ -52,6 +57,8 @@ export class NostoDynamicCard extends HTMLElement {
   }
 }
 
+const placeholders = new Map<string, string>()
+
 async function getMarkup(element: NostoDynamicCard) {
   const params = new URLSearchParams()
   params.set("view", element.template)
@@ -64,6 +71,7 @@ async function getMarkup(element: NostoDynamicCard) {
     throw new Error("Failed to fetch product data")
   }
   const markup = await result.text()
+  placeholders.set(element.template, markup)
   if (/<(body|html)/.test(markup)) {
     throw new Error("Invalid markup for template " + element.template)
   }
