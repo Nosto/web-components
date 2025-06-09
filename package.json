@@ -66,5 +66,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "petite-vue": "^0.4.1"
   }
 }

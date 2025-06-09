@@ -1,6 +1,6 @@
 import { customElement } from "./decorators"
 import { assertRequired } from "@/utils"
-import { compile } from "@/services/vue"
+import { createApp } from "petite-vue"
 
 /**
  * A custom element that renders a product card using a Vue template.
@@ -65,7 +65,8 @@ export class NostoProductCard extends HTMLElement {
     const content = template.content.cloneNode(true) as DocumentFragment
     const wrapper = document.createElement("div")
     wrapper.appendChild(content)
-    compile(wrapper, { product })
+    //compile(wrapper, { product })
+    createApp({ product }).mount(wrapper)
     this.append(...wrapper.children)
     this.toggleAttribute("loading", false)
   }
