@@ -1,3 +1,4 @@
+import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
 
@@ -14,11 +15,7 @@ export class NostoCampaign extends HTMLElement {
   variant?: string
 
   async connectedCallback() {
-    if (!this.placement) {
-      console.error('<nosto-campaign> requires a "placement" or "div-id" attribute.')
-      return
-    }
-
+    assertRequired(this, "placement")
     await this.loadCampaign()
   }
 
