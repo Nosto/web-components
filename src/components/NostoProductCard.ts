@@ -1,6 +1,5 @@
 import { customElement } from "./decorators"
 import { assertRequired } from "@/utils"
-import { compile } from "@/services/vue"
 
 /**
  * A custom element that renders a product card using a Vue template.
@@ -24,13 +23,13 @@ import { compile } from "@/services/vue"
  * </nosto-product-card>
  *
  * <template id="product-card-template">
- *   <img :src="product.image" :alt="product.title" class="product-image" />
- *   <h1 v-text="product.title"></h1>
+ *   <img src="${product.image}" alt="${product.title}" />
+ *   <h1>${product.title}</h1>
  *   <p class="price">
- *     <span n-price v-text="product.price"></span>
+ *     <span n-price>${product.price}</span>
  *   </p>
  *   <p class="list-price">
- *     <span n-list-price v-text="product.listPrice"></span>
+ *     <span n-list-price>${product.listPrice}</span>
  *   </p>
  * </template>
  * ```
@@ -62,13 +61,16 @@ export class NostoProductCard extends HTMLElement {
       throw new Error(`Template with id "${this.template}" not found.`)
     }
     const product = getData(this) ?? this.dataset
-    const content = template.content.cloneNode(true) as DocumentFragment
-    const wrapper = document.createElement("div")
-    wrapper.appendChild(content)
-    compile(wrapper, { product })
-    this.append(...wrapper.children)
+    const markup = evaluate(template.innerHTML, { product })
+    const fragment = document.createRange().createContextualFragment(markup)
+    this.append(fragment)
     this.toggleAttribute("loading", false)
   }
+}
+
+function evaluate(template: string, context: object) {
+  const fn = new Function("$data", "with ($data) { return `" + template + "`; }")
+  return fn(context)
 }
 
 function getData(element: HTMLElement) {
