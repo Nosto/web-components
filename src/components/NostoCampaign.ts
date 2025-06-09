@@ -40,9 +40,16 @@ export class NostoCampaign extends HTMLElement {
     }
 
     const result = await request.load()
-    const html = result.recommendations[this.placement!]
+    const rec = result.recommendations[this.placement!]
 
-    if (html && typeof html === "string") {
+    const html =
+      typeof rec === "string"
+        ? rec
+        : typeof rec === "object" && rec !== null && "html" in rec
+          ? (rec as { html: string }).html
+          : undefined
+
+    if (html) {
       this.innerHTML = html
     } else {
       console.warn(`No recommendation result for div ID: ${this.placement}`)

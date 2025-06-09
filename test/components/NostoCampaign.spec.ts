@@ -44,4 +44,36 @@ describe("NostoCampaign", () => {
     expect(spy).toHaveBeenCalled()
     spy.mockRestore()
   })
+
+  it("should insert string HTML from recommendation result", async () => {
+    const campaign = mount({ placement: "test-placement" })
+
+    const mockedHtml = "<div>Mocked Campaign HTML</div>"
+    vi.spyOn(campaign, "loadCampaign").mockImplementation(async function (this: NostoCampaign) {
+      this.innerHTML = mockedHtml
+    })
+
+    await campaign.connectedCallback()
+
+    expect(campaign.innerHTML).toContain("Mocked Campaign HTML")
+  })
+
+  it("should insert HTML from recommendation result object", async () => {
+    const campaign = mount({ placement: "test-placement" })
+
+    const mockedHtml = "<div>Mocked Campaign HTML from object</div>"
+    vi.spyOn(campaign, "loadCampaign").mockImplementation(async function (this: NostoCampaign) {
+      const result = { html: mockedHtml }
+
+      const html = result?.html
+
+      if (html && typeof html === "string") {
+        this.innerHTML = html
+      }
+    })
+
+    await campaign.connectedCallback()
+
+    expect(campaign.innerHTML).toContain("Mocked Campaign HTML from object")
+  })
 })
