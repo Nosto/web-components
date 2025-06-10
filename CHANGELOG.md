@@ -1,3 +1,10 @@
+# [7.2.0](https://github.com/Nosto/web-components/compare/v7.1.0...v7.2.0) (2025-06-10)
+
+
+### Features
+
+* add support for placeholder content ([9780cce](https://github.com/Nosto/web-components/commit/9780cce294b1693c55d693b645af1663ae7cc5d0))
+
 # [7.1.0](https://github.com/Nosto/web-components/compare/v7.0.0...v7.1.0) (2025-06-09)
 
 
