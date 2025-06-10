@@ -1,17 +1,21 @@
 import { assertRequired } from "@/utils"
-import { customElement } from "../decorators"
+import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
+import { evaluate } from "@/services/templating"
+
 @customElement("nosto-campaign")
 export class NostoCampaign extends HTMLElement {
   static attributes = {
     placement: String,
     product: String,
-    variant: String
+    variant: String,
+    template: String
   }
 
   placement!: string
   product!: string
   variant?: string
+  template!: string
 
   async connectedCallback() {
     assertRequired(this, "placement")
@@ -28,7 +32,7 @@ export async function loadCampaign(element: NostoCampaign) {
     // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
     .disableCampaignInjection()
     .setElements([element.placement!])
-    .setResponseMode("HTML")
+    .setResponseMode(element.template ? "JSON_ORIGINAL" : "HTML")
 
   if (element.product) {
     request.setProducts([
@@ -41,17 +45,14 @@ export async function loadCampaign(element: NostoCampaign) {
 
   const result = await request.load()
   const rec = result.recommendations[element.placement!]
-  const html =
-    typeof rec === "string"
-      ? rec
-      : typeof rec === "object" && rec !== null && "html" in rec
-        ? (rec as { html: string }).html
-        : undefined
-
-  if (html) {
-    // TODO: this is missing attribution handling and HTML preprocessing which will be added later
-    element.innerHTML = html
-  } else {
-    console.warn(`No recommendation result for div ID: ${element.placement}`)
+  if (element.template && typeof rec === "object" && rec !== null && "products" in rec) {
+    element.toggleAttribute("loading", true)
+    for (const product of rec.products) {
+      const html = await evaluate(element.template, { product, data: element.dataset })
+      element.insertAdjacentHTML("beforeend", html)
+    }
+    element.toggleAttribute("loading", false)
+  } else if (typeof rec === "object" && "html" in rec) {
+    element.innerHTML = rec.html
   }
 }

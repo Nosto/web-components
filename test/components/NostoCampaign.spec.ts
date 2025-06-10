@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import "@/components/NostoCampaign/NostoCampaign"
-import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
+import "@/components/NostoCampaign"
+import { NostoCampaign } from "@/components/NostoCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 
 describe("NostoCampaign", () => {
@@ -56,5 +56,47 @@ describe("NostoCampaign", () => {
     expect(campaign.id).toBe("789")
     expect(mockBuilder.load).toHaveBeenCalled()
     expect(campaign.innerHTML).toBe(htmlContent)
+  })
+
+  it("should render templated HTML for each product if template is provided", async () => {
+    const templateId = "product-card-template"
+    const script = document.createElement("script")
+    script.id = templateId
+    script.type = "text/x-liquid-template"
+    script.textContent = `<div>{{ product.title }}</div>`
+    document.body.appendChild(script)
+
+    const mockBuilder = {
+      disableCampaignInjection: () => mockBuilder,
+      setElements: () => mockBuilder,
+      setResponseMode: () => mockBuilder,
+      setProducts: () => mockBuilder,
+      load: vi.fn().mockResolvedValue({
+        recommendations: {
+          "789": {
+            products: [
+              { id: "123", title: "Test Product A" },
+              { id: "456", title: "Test Product B" }
+            ]
+          }
+        }
+      })
+    } as unknown as RequestBuilder
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder
+    })
+
+    const campaign = new NostoCampaign()
+    campaign.placement = "789"
+    campaign.product = "123"
+    campaign.template = templateId
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(campaign.innerHTML).toContain("Test Product A")
+    expect(campaign.innerHTML).toContain("Test Product B")
+    expect(mockBuilder.load).toHaveBeenCalled()
   })
 })
