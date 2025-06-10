@@ -5,6 +5,8 @@ export async function loadCampaign(element: NostoCampaign) {
   const api = await new Promise(nostojs)
   const request = api
     .createRecommendationRequest({ includeTagging: true })
+    // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
+    .disableCampaignInjection()
     .setElements([element.placement!])
     .setResponseMode("HTML")
 
@@ -17,5 +19,19 @@ export async function loadCampaign(element: NostoCampaign) {
     ])
   }
 
-  await request.load()
+  const result = await request.load()
+  // TODO: Replace manual innerHTML assignment once injectCampaigns() can target contextual containers
+  const rec = result.recommendations[element.placement!]
+  const html =
+    typeof rec === "string"
+      ? rec
+      : typeof rec === "object" && rec !== null && "html" in rec
+        ? (rec as { html: string }).html
+        : undefined
+
+  if (html) {
+    element.innerHTML = html
+  } else {
+    console.warn(`No recommendation result for div ID: ${element.placement}`)
+  }
 }

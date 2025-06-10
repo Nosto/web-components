@@ -48,12 +48,17 @@ describe("NostoCampaign", () => {
   })
 
   it("should mark element for client injection", async () => {
+    const htmlContent = "<div>recommended content</div>"
     const mockBuilder = {
       disableCampaignInjection: () => mockBuilder,
       setElements: () => mockBuilder,
       setResponseMode: () => mockBuilder,
       setProducts: () => mockBuilder,
-      load: vi.fn().mockResolvedValue({})
+      load: vi.fn().mockResolvedValue({
+        recommendations: {
+          "789": { html: htmlContent }
+        }
+      })
     } as unknown as RequestBuilder
 
     mockNostojs({
@@ -71,5 +76,6 @@ describe("NostoCampaign", () => {
     expect(campaign.classList.contains("nosto_element")).toBe(true)
     expect(campaign.id).toBe("789")
     expect(mockBuilder.load).toHaveBeenCalled()
+    expect(campaign.innerHTML).toBe(htmlContent)
   })
 })
