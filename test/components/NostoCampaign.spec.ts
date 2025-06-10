@@ -1,7 +1,9 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import "@/components/NostoCampaign"
-import { NostoCampaign } from "@/components/NostoCampaign"
+import "@/components/NostoCampaign/NostoCampaign"
+import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
+import * as campaignUtils from "@/components/NostoCampaign/loadCampaign"
+
 import { RequestBuilder } from "@nosto/nosto-js/client"
 
 describe("NostoCampaign", () => {
@@ -14,7 +16,6 @@ describe("NostoCampaign", () => {
   function mount(attrs: Record<string, string> = {}) {
     campaign = new NostoCampaign()
     Object.assign(campaign, attrs)
-    document.body.appendChild(campaign)
     return campaign
   }
 
@@ -28,13 +29,13 @@ describe("NostoCampaign", () => {
   })
 
   it("should call loadCampaign() with placement, product, and variant", async () => {
+    const spy = vi.spyOn(campaignUtils, "loadCampaign").mockImplementation(async () => Promise.resolve())
+
     campaign = mount({
       placement: "789",
       product: "123",
       variant: "var1"
     })
-
-    const spy = vi.spyOn(campaign, "loadCampaign").mockImplementation(async () => Promise.resolve())
 
     await campaign.connectedCallback()
 
