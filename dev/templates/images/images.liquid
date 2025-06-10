@@ -1,0 +1,6 @@
+<script type="module" src="../src/main.ts"></script>
+
+<span class="reco-title">{{title }}</span>
+{%- for product in imageProducts %}
+    <nosto-image src="{{ product.imageUrl }}" alt="{{ product.name }}" width="300" height="300" ></nosto-image>
+{%- endfor %}
