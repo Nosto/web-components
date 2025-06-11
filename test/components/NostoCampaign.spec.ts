@@ -53,8 +53,8 @@ describe("NostoCampaign", () => {
 
     campaign = mount({
       placement: "789",
-      product: "123",
-      variant: "var1"
+      productId: "123",
+      variantId: "var1"
     })
 
     await campaign.connectedCallback()
@@ -97,7 +97,7 @@ describe("NostoCampaign", () => {
 
     const campaign = new NostoCampaign()
     campaign.placement = "789"
-    campaign.product = "123"
+    campaign.productId = "123"
     campaign.template = templateId
     document.body.appendChild(campaign)
 

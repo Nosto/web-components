@@ -7,14 +7,14 @@ import { evaluate } from "@/services/templating"
 export class NostoCampaign extends HTMLElement {
   static attributes = {
     placement: String,
-    product: String,
-    variant: String,
+    productId: String,
+    variantId: String,
     template: String
   }
 
   placement!: string
-  product!: string
-  variant?: string
+  productId!: string
+  variantId?: string
   template!: string
 
   async connectedCallback() {
@@ -33,11 +33,11 @@ export async function loadCampaign(element: NostoCampaign) {
     .setElements([element.placement!])
     .setResponseMode(element.template ? "JSON_ORIGINAL" : "HTML")
 
-  if (element.product) {
+  if (element.productId) {
     request.setProducts([
       {
-        product_id: element.product,
-        ...(element.variant ? { sku_id: element.variant } : {})
+        product_id: element.productId,
+        ...(element.variantId ? { sku_id: element.variantId } : {})
       }
     ])
   }
