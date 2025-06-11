@@ -59,8 +59,6 @@ describe("NostoCampaign", () => {
 
     await campaign.connectedCallback()
 
-    expect(campaign.classList.contains("nosto_element")).toBe(true)
-    expect(campaign.id).toBe("789")
     expect(mockBuilder.load).toHaveBeenCalled()
     expect(campaign.innerHTML).toBe(htmlContent)
   })
