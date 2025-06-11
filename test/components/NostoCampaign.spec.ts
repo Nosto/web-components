@@ -58,12 +58,18 @@ describe("NostoCampaign", () => {
     expect(campaign.innerHTML).toBe(htmlContent)
   })
 
-  it("should render templated HTML for each product if template is provided", async () => {
-    const templateId = "product-card-template"
+  it("should render campaign-level templated HTML if template is provided", async () => {
+    const templateId = "campaign-template"
     const script = document.createElement("script")
     script.id = templateId
     script.type = "text/x-liquid-template"
-    script.textContent = `<div>{{ product.title }}</div>`
+    script.textContent = `
+    <section>
+      {% for product in products %}
+        <div class="product">{{ product.title }}</div>
+      {% endfor %}
+    </section>
+  `
     document.body.appendChild(script)
 
     const mockBuilder = {
@@ -74,6 +80,7 @@ describe("NostoCampaign", () => {
       load: vi.fn().mockResolvedValue({
         recommendations: {
           "789": {
+            title: "Recommended for you",
             products: [
               { id: "123", title: "Test Product A" },
               { id: "456", title: "Test Product B" }

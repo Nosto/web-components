@@ -26,6 +26,7 @@ export class NostoCampaign extends HTMLElement {
 }
 
 export async function loadCampaign(element: NostoCampaign) {
+  element.toggleAttribute("loading", true)
   const api = await new Promise(nostojs)
   const request = api
     .createRecommendationRequest({ includeTagging: true })
@@ -45,12 +46,18 @@ export async function loadCampaign(element: NostoCampaign) {
 
   const result = await request.load()
   const rec = result.recommendations[element.placement!]
-  if (element.template && typeof rec === "object" && rec !== null && "products" in rec) {
-    element.toggleAttribute("loading", true)
-    const html = await evaluate(element.template, { recommendation: rec, data: element.dataset })
+  if (element.template && rec && typeof rec === "object" && "products" in rec) {
+    const html = await evaluate(element.template, rec)
     element.innerHTML = html
     element.toggleAttribute("loading", false)
-  } else if (typeof rec === "object" && "html" in rec) {
-    element.innerHTML = rec.html
+    return
   }
+
+  if (rec && typeof rec === "object" && "html" in rec) {
+    element.innerHTML = rec.html
+    element.toggleAttribute("loading", false)
+    return
+  }
+
+  element.toggleAttribute("loading", false)
 }
