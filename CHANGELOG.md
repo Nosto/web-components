@@ -1,3 +1,10 @@
+## [7.4.1](https://github.com/Nosto/web-components/compare/v7.4.0...v7.4.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* minor adjustments ([62d0253](https://github.com/Nosto/web-components/commit/62d02533b93261fec974a95270566e6835fb5c9f))
+
 # [7.4.0](https://github.com/Nosto/web-components/compare/v7.3.0...v7.4.0) (2025-06-11)
 
 
