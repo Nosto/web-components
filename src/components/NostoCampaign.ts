@@ -19,8 +19,6 @@ export class NostoCampaign extends HTMLElement {
 
   async connectedCallback() {
     assertRequired(this, "placement")
-    this.classList.add("nosto_element")
-    this.id = this.placement!
     await loadCampaign(this)
   }
 }
@@ -44,18 +42,17 @@ export async function loadCampaign(element: NostoCampaign) {
     ])
   }
 
-  const result = await request.load()
-  const rec = result.recommendations[element.placement!]
-  if (rec && typeof rec === "object") {
-    if (element.template && "products" in rec) {
-      const html = await evaluate(element.template, rec)
+  const { recommendations } = await request.load()
+  const rec = recommendations[element.placement!]
+  if (rec) {
+    if (element.template) {
+      const html = await evaluate(element.template, rec as object)
       element.innerHTML = html
-    } else if ("html" in rec) {
+    } else if (typeof rec === "object" && "html" in rec) {
       element.innerHTML = rec.html
+    } else if (typeof rec === "string") {
+      element.innerHTML = rec
     }
-    element.toggleAttribute("loading", false)
-    return
   }
-
   element.toggleAttribute("loading", false)
 }
