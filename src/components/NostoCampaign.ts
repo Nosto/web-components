@@ -42,7 +42,13 @@ export async function loadCampaign(element: NostoCampaign) {
     ])
   }
 
-  const { recommendations } = await request.load()
+  const flags = {
+    skipPageViews: true,
+    // track events for contextual recommendations
+    skipEvents: !element.productId
+  }
+
+  const { recommendations } = await request.load(flags)
   const rec = recommendations[element.placement!]
   if (rec) {
     if (element.template) {

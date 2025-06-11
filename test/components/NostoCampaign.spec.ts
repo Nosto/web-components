@@ -59,7 +59,7 @@ describe("NostoCampaign", () => {
 
     await campaign.connectedCallback()
 
-    expect(mockBuilder.load).toHaveBeenCalled()
+    expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
     expect(campaign.innerHTML).toBe(htmlContent)
   })
 
@@ -105,6 +105,6 @@ describe("NostoCampaign", () => {
 
     expect(campaign.innerHTML).toContain("Test Product A")
     expect(campaign.innerHTML).toContain("Test Product B")
-    expect(mockBuilder.load).toHaveBeenCalled()
+    expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
   })
 })
