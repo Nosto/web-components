@@ -17,6 +17,17 @@ describe("NostoCampaign", () => {
     return campaign
   }
 
+  function getMockBuilder(overrides: Partial<RequestBuilder> = {}): RequestBuilder {
+    const base: Partial<RequestBuilder> = {
+      disableCampaignInjection: () => base as RequestBuilder,
+      setElements: () => base as RequestBuilder,
+      setResponseMode: () => base as RequestBuilder,
+      setProducts: () => base as RequestBuilder,
+      ...overrides
+    }
+    return base as RequestBuilder
+  }
+
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-campaign")).toBeDefined()
   })
@@ -28,17 +39,13 @@ describe("NostoCampaign", () => {
 
   it("should mark element for client injection", async () => {
     const htmlContent = "<div>recommended content</div>"
-    const mockBuilder = {
-      disableCampaignInjection: () => mockBuilder,
-      setElements: () => mockBuilder,
-      setResponseMode: () => mockBuilder,
-      setProducts: () => mockBuilder,
+    const mockBuilder = getMockBuilder({
       load: vi.fn().mockResolvedValue({
         recommendations: {
           "789": { html: htmlContent }
         }
       })
-    } as unknown as RequestBuilder
+    })
 
     mockNostojs({
       createRecommendationRequest: () => mockBuilder
@@ -72,11 +79,7 @@ describe("NostoCampaign", () => {
   `
     document.body.appendChild(script)
 
-    const mockBuilder = {
-      disableCampaignInjection: () => mockBuilder,
-      setElements: () => mockBuilder,
-      setResponseMode: () => mockBuilder,
-      setProducts: () => mockBuilder,
+    const mockBuilder = getMockBuilder({
       load: vi.fn().mockResolvedValue({
         recommendations: {
           "789": {
@@ -88,7 +91,7 @@ describe("NostoCampaign", () => {
           }
         }
       })
-    } as unknown as RequestBuilder
+    })
 
     mockNostojs({
       createRecommendationRequest: () => mockBuilder

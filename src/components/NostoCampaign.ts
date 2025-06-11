@@ -46,15 +46,13 @@ export async function loadCampaign(element: NostoCampaign) {
 
   const result = await request.load()
   const rec = result.recommendations[element.placement!]
-  if (element.template && rec && typeof rec === "object" && "products" in rec) {
-    const html = await evaluate(element.template, rec)
-    element.innerHTML = html
-    element.toggleAttribute("loading", false)
-    return
-  }
-
-  if (rec && typeof rec === "object" && "html" in rec) {
-    element.innerHTML = rec.html
+  if (rec && typeof rec === "object") {
+    if (element.template && "products" in rec) {
+      const html = await evaluate(element.template, rec)
+      element.innerHTML = html
+    } else if ("html" in rec) {
+      element.innerHTML = rec.html
+    }
     element.toggleAttribute("loading", false)
     return
   }
