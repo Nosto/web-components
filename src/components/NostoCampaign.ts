@@ -47,10 +47,8 @@ export async function loadCampaign(element: NostoCampaign) {
   const rec = result.recommendations[element.placement!]
   if (element.template && typeof rec === "object" && rec !== null && "products" in rec) {
     element.toggleAttribute("loading", true)
-    for (const product of rec.products) {
-      const html = await evaluate(element.template, { product, data: element.dataset })
-      element.insertAdjacentHTML("beforeend", html)
-    }
+    const html = await evaluate(element.template, { recommendation: rec, data: element.dataset })
+    element.innerHTML = html
     element.toggleAttribute("loading", false)
   } else if (typeof rec === "object" && "html" in rec) {
     element.innerHTML = rec.html
