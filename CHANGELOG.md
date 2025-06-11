@@ -1,3 +1,17 @@
+# [7.4.0](https://github.com/Nosto/web-components/compare/v7.3.0...v7.4.0) (2025-06-11)
+
+
+### Bug Fixes
+
+* updates ([b167608](https://github.com/Nosto/web-components/commit/b16760892c4640d1a0ea96b171b91822ad603685))
+* updates ([aa58a01](https://github.com/Nosto/web-components/commit/aa58a0162e1e5639cb5081456b5fc695e7787e34))
+* updates after review ([14aa00c](https://github.com/Nosto/web-components/commit/14aa00cbecf0bb7b24eea9048aa009238b4e82ad))
+
+
+### Features
+
+* fetch JSON results and use templating ([dde82c5](https://github.com/Nosto/web-components/commit/dde82c5bc5a277e55260bfb22121d6d5f954a1a9))
+
 # [7.3.0](https://github.com/Nosto/web-components/compare/v7.2.0...v7.3.0) (2025-06-10)
 
 
