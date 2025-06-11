@@ -1,3 +1,10 @@
+## [7.4.2](https://github.com/Nosto/web-components/compare/v7.4.1...v7.4.2) (2025-06-11)
+
+
+### Bug Fixes
+
+* expose NostoCampaign ([d11224e](https://github.com/Nosto/web-components/commit/d11224e23bb290d4d7428f9606e853a71d8c2b5d))
+
 ## [7.4.1](https://github.com/Nosto/web-components/compare/v7.4.0...v7.4.1) (2025-06-11)
 
 
