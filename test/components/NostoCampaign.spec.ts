@@ -48,14 +48,28 @@ describe("NostoCampaign", () => {
     })
 
     mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns: vi.fn(async (campaigns, targets) => {
+          const target = targets["789"]
+          target.innerHTML = campaigns["789"]
+        })
+      },
+      attributeProductClicksInCampaign: vi.fn()
     })
 
     campaign = mount({
       placement: "789",
       productId: "123",
-      variantId: "var1"
+      variantId: "var1",
+      template: "inline-template"
     })
+
+    const script = document.createElement("script")
+    script.id = "inline-template"
+    script.type = "text/x-liquid-template"
+    script.textContent = "{{ html }}"
+    document.body.appendChild(script)
 
     await campaign.connectedCallback()
 
@@ -92,7 +106,14 @@ describe("NostoCampaign", () => {
     })
 
     mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns: vi.fn(async (campaigns, targets) => {
+          const target = targets["789"]
+          target.innerHTML = campaigns["789"]
+        })
+      },
+      attributeProductClicksInCampaign: vi.fn()
     })
 
     const campaign = new NostoCampaign()
@@ -106,5 +127,36 @@ describe("NostoCampaign", () => {
     expect(campaign.innerHTML).toContain("Test Product A")
     expect(campaign.innerHTML).toContain("Test Product B")
     expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
+  })
+
+  it('should not auto-load campaign if init="false"', async () => {
+    const mockBuilder = getMockBuilder({
+      load: vi.fn()
+    })
+
+    const injectCampaigns = vi.fn()
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns
+      }
+    })
+
+    campaign = mount({
+      placement: "789",
+      productId: "123",
+      variantId: "var1",
+      template: "inline-template"
+    })
+
+    campaign.setAttribute("init", "false")
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(mockBuilder.load).not.toHaveBeenCalled()
+    expect(injectCampaigns).not.toHaveBeenCalled()
+    expect(campaign.hasAttribute("loading")).toBe(false)
   })
 })

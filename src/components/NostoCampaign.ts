@@ -1,6 +1,7 @@
 import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
+import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { evaluate } from "@/services/templating"
 
 @customElement("nosto-campaign")
@@ -9,16 +10,24 @@ export class NostoCampaign extends HTMLElement {
     placement: String,
     productId: String,
     variantId: String,
-    template: String
+    template: String,
+    init: String
   }
 
   placement!: string
   productId!: string
   variantId?: string
   template!: string
+  init?: string
 
   async connectedCallback() {
     assertRequired(this, "placement")
+    if (this.init !== "false") {
+      await loadCampaign(this)
+    }
+  }
+
+  async load() {
     await loadCampaign(this)
   }
 }
@@ -52,12 +61,14 @@ export async function loadCampaign(element: NostoCampaign) {
   const rec = recommendations[element.placement!]
   if (rec) {
     if (element.template) {
-      const html = await evaluate(element.template, rec as object)
+      const html = await evaluate(element.template, rec as JSONResult)
       element.innerHTML = html
-    } else if (typeof rec === "object" && "html" in rec) {
-      element.innerHTML = rec.html
-    } else if (typeof rec === "string") {
-      element.innerHTML = rec
+      api.attributeProductClicksInCampaign(element, rec as JSONResult)
+    } else {
+      await api.placements.injectCampaigns(
+        { [element.placement]: rec as string | AttributedCampaignResult },
+        { [element.placement]: element }
+      )
     }
   }
   element.toggleAttribute("loading", false)
