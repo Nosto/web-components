@@ -34,12 +34,12 @@ export class NostoCampaign extends HTMLElement {
 export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
   const api = await new Promise(nostojs)
-  const isJsonMode = Boolean(element.template)
-  const responseMode = isJsonMode ? "JSON_ORIGINAL" : "HTML"
   const request = api
     .createRecommendationRequest({ includeTagging: true })
+    // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
+    .disableCampaignInjection()
     .setElements([element.placement!])
-    .setResponseMode(responseMode)
+    .setResponseMode(element.template ? "JSON_ORIGINAL" : "HTML")
 
   if (element.productId) {
     request.setProducts([
@@ -53,7 +53,7 @@ export async function loadCampaign(element: NostoCampaign) {
   const { recommendations } = await request.load()
   const rec = recommendations[element.placement!]
   if (rec) {
-    if (isJsonMode) {
+    if (element.template) {
       const html = await evaluate(element.template, rec as object)
       element.innerHTML = html
       api.attributeProductClicksInCampaign(element, rec)
