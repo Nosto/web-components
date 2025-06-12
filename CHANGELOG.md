@@ -1,3 +1,18 @@
+# [7.5.0](https://github.com/Nosto/web-components/compare/v7.4.3...v7.5.0) (2025-06-12)
+
+
+### Bug Fixes
+
+* update test ([312ce42](https://github.com/Nosto/web-components/commit/312ce428a91cd183c1bfa0bfb2692b351209c660))
+* updates ([ef7619e](https://github.com/Nosto/web-components/commit/ef7619e0fffe8d57387cf70fd22a845ba062f4e8))
+* updates ([aadb43a](https://github.com/Nosto/web-components/commit/aadb43acfd09ced3e15e816e56b0d549d58d9710))
+
+
+### Features
+
+* support init false to defer campaign loading ([aea1c1d](https://github.com/Nosto/web-components/commit/aea1c1d3c15f4f50ac1f31b591250eec72840ced))
+* update injection logic ([0b4a0d8](https://github.com/Nosto/web-components/commit/0b4a0d8a50bfc30a6fb9140adf9d25a254b8df25))
+
 ## [7.4.3](https://github.com/Nosto/web-components/compare/v7.4.2...v7.4.3) (2025-06-12)
 
 
