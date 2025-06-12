@@ -1,3 +1,10 @@
+## [7.4.3](https://github.com/Nosto/web-components/compare/v7.4.2...v7.4.3) (2025-06-12)
+
+
+### Bug Fixes
+
+* add flags to call ([851bfd9](https://github.com/Nosto/web-components/commit/851bfd9c7704e83c5436a771a029c2974fd58674))
+
 ## [7.4.2](https://github.com/Nosto/web-components/compare/v7.4.1...v7.4.2) (2025-06-11)
 
 
