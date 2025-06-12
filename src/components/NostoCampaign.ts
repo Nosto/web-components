@@ -9,17 +9,21 @@ export class NostoCampaign extends HTMLElement {
     placement: String,
     productId: String,
     variantId: String,
-    template: String
+    template: String,
+    init: String
   }
 
   placement!: string
   productId!: string
   variantId?: string
   template!: string
+  init?: string
 
   async connectedCallback() {
     assertRequired(this, "placement")
-    await loadCampaign(this)
+    if (this.init !== "false") {
+      await loadCampaign(this)
+    }
   }
 }
 

@@ -126,4 +126,35 @@ describe("NostoCampaign", () => {
     expect(campaign.innerHTML).toContain("Test Product B")
     expect(mockBuilder.load).toHaveBeenCalled()
   })
+
+  it('should not auto-load campaign if init="false"', async () => {
+    const mockBuilder = getMockBuilder({
+      load: vi.fn()
+    })
+
+    const injectCampaigns = vi.fn()
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns
+      }
+    })
+
+    campaign = mount({
+      placement: "789",
+      productId: "123",
+      variantId: "var1",
+      template: "inline-template"
+    })
+
+    campaign.setAttribute("init", "false")
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(mockBuilder.load).not.toHaveBeenCalled()
+    expect(injectCampaigns).not.toHaveBeenCalled()
+    expect(campaign.hasAttribute("loading")).toBe(false)
+  })
 })
