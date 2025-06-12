@@ -1,6 +1,7 @@
 import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
+import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { evaluate } from "@/services/templating"
 
 @customElement("nosto-campaign")
@@ -54,11 +55,14 @@ export async function loadCampaign(element: NostoCampaign) {
   const rec = recommendations[element.placement!]
   if (rec) {
     if (element.template) {
-      const html = await evaluate(element.template, rec as object)
+      const html = await evaluate(element.template, rec as JSONResult)
       element.innerHTML = html
-      api.attributeProductClicksInCampaign(element, rec)
+      api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
-      await api.placements.injectCampaigns({ [element.placement]: rec.html }, { [element.placement]: element })
+      await api.placements.injectCampaigns(
+        { [element.placement]: rec as string | AttributedCampaignResult },
+        { [element.placement]: element }
+      )
     }
   }
   element.toggleAttribute("loading", false)
