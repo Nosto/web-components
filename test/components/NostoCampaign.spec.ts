@@ -54,7 +54,8 @@ describe("NostoCampaign", () => {
           const target = targets["789"]
           target.innerHTML = campaigns["789"]
         })
-      }
+      },
+      attributeProductClicksInCampaign: vi.fn()
     })
 
     campaign = mount({
@@ -111,7 +112,8 @@ describe("NostoCampaign", () => {
           const target = targets["789"]
           target.innerHTML = campaigns["789"]
         })
-      }
+      },
+      attributeProductClicksInCampaign: vi.fn()
     })
 
     const campaign = new NostoCampaign()
