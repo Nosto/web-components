@@ -28,8 +28,6 @@ export async function loadCampaign(element: NostoCampaign) {
   const api = await new Promise(nostojs)
   const request = api
     .createRecommendationRequest({ includeTagging: true })
-    // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
-    .disableCampaignInjection()
     .setElements([element.placement!])
     .setResponseMode(element.template ? "JSON_ORIGINAL" : "HTML")
 
@@ -44,15 +42,9 @@ export async function loadCampaign(element: NostoCampaign) {
 
   const { recommendations } = await request.load()
   const rec = recommendations[element.placement!]
-  if (rec) {
-    if (element.template) {
-      const html = await evaluate(element.template, rec as object)
-      element.innerHTML = html
-    } else if (typeof rec === "object" && "html" in rec) {
-      element.innerHTML = rec.html
-    } else if (typeof rec === "string") {
-      element.innerHTML = rec
-    }
+  if (rec && element.template) {
+    const html = await evaluate(element.template, rec as object)
+    await api.placements.injectCampaigns({ [element.placement]: html }, { [element.placement]: element })
   }
   element.toggleAttribute("loading", false)
 }

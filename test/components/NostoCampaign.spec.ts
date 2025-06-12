@@ -48,14 +48,27 @@ describe("NostoCampaign", () => {
     })
 
     mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns: vi.fn(async (campaigns, targets) => {
+          const target = targets["789"]
+          target.innerHTML = campaigns["789"]
+        })
+      }
     })
 
     campaign = mount({
       placement: "789",
       productId: "123",
-      variantId: "var1"
+      variantId: "var1",
+      template: "inline-template"
     })
+
+    const script = document.createElement("script")
+    script.id = "inline-template"
+    script.type = "text/x-liquid-template"
+    script.textContent = "{{ html }}"
+    document.body.appendChild(script)
 
     await campaign.connectedCallback()
 
@@ -92,7 +105,13 @@ describe("NostoCampaign", () => {
     })
 
     mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns: vi.fn(async (campaigns, targets) => {
+          const target = targets["789"]
+          target.innerHTML = campaigns["789"]
+        })
+      }
     })
 
     const campaign = new NostoCampaign()
