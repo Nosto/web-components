@@ -1,11 +1,11 @@
 import { customElement } from "./decorators"
-import { evaluate } from "@/services/templating"
 import { assertRequired } from "@/utils"
+import { compile } from "@/services/vue"
 
 /**
- * A custom element that renders a product card based on Nosto recommendation data.
+ * A custom element that renders a product card using a Vue template.
  *
- * @property {string} template - The id of the template element to use for rendering the product card.
+ * @property {string} template - The id of the Vue template element to use for rendering the product card.
  *
  * @throws {Error} - Throws an error if recoId or template is not provided.
  *
@@ -13,18 +13,18 @@ import { assertRequired } from "@/utils"
  * ```html
  * <nosto-product-card template="product-card-template">
  *   <script type="application/json" product-data>
- *   {
- *     "id": "1223456",
- *     "image": "https://example.com/images/awesome-product.jpg",
- *     "title": "Awesome Product",
- *     "price": "19.99",
- *     "listPrice": "29.99"
- *   }
+ *     {
+ *       "id": "1223456",
+ *       "image": "https://example.com/images/awesome-product.jpg",
+ *       "title": "Awesome Product",
+ *       "price": "19.99",
+ *       "listPrice": "29.99"
+ *     }
  *   </script>
  * </nosto-product-card>
  *
- * <script id="product-card-template" type="text/x-liquid-template">
- *   <img src="{{ product.image }}" alt="{{ product.title }}" class="product-image" />
+ * <template id="product-card-template">
+ *   <img :src="product.image" :alt="product.title" class="product-image" />
  *   <h1>{{ product.title }}</h1>
  *   <p class="price">
  *     <span n-price>{{ product.price }}</span>
@@ -32,7 +32,18 @@ import { assertRequired } from "@/utils"
  *   <p class="list-price">
  *     <span n-list-price>{{ product.listPrice }}</span>
  *   </p>
- * </script>
+ * </template>
+ * ```
+ *
+ * @example
+ * ```html
+ * <nosto-product-card template="product-card-template"
+ *   data-id="1223456"
+ *   data-image="https://example.com/images/awesome-product.jpg"
+ *   data-title="Awesome Product"
+ *   data-price="19.99"
+ *   data-list-price="29.99">
+ * </nosto-product-card>
  * ```
  */
 @customElement("nosto-product-card")
@@ -46,14 +57,21 @@ export class NostoProductCard extends HTMLElement {
   async connectedCallback() {
     assertRequired(this, "template")
     this.toggleAttribute("loading", true)
-    const product = getData(this)
-    const html = await evaluate(this.template, { product, data: this.dataset })
-    this.insertAdjacentHTML("beforeend", html)
+    const template = document.querySelector<HTMLTemplateElement>(`template#${this.template}`)
+    if (!template) {
+      throw new Error(`Template with id "${this.template}" not found.`)
+    }
+    const product = getData(this) ?? this.dataset
+    const content = template.content.cloneNode(true) as DocumentFragment
+    const wrapper = document.createElement("div")
+    wrapper.appendChild(content)
+    compile(wrapper, { product })
+    this.append(...wrapper.children)
     this.toggleAttribute("loading", false)
   }
 }
 
 function getData(element: HTMLElement) {
   const data = element.querySelector("script[product-data]")
-  return data ? JSON.parse(data.textContent!) : {}
+  return data ? JSON.parse(data.textContent!) : undefined
 }
