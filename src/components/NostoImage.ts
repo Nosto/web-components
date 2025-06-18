@@ -12,27 +12,45 @@ export class NostoImage extends HTMLElement {
   }
 
   src!: string
-  width?: string
-  height?: string
+  width!: string
+  height!: string
+  transformer!: typeof transformUrl | typeof transformBigcommerce
 
   connectedCallback() {
-    assertRequired(this, "src")
+    assertRequired(this, "src", "width", "height")
     const { src, width, height } = this
 
-    const transormer = this.getProvider() === "bigcommerce" ? transformBigcommerce : transformUrl
-    const transformedUrl = transormer({
+    this.transformer = this.getProvider() === "bigcommerce" ? transformBigcommerce : transformUrl
+    const transformedUrl = this.transformer({
       url: src,
-      width: width ? parseInt(width, 10) : 300,
-      height: height ? parseInt(height, 10) : 300
+      width: parseInt(width, 10),
+      height: parseInt(height, 10)
     })
+
     const imageHtml = `
       <img 
         src="${transformedUrl}" 
         width="${width}" 
         height="${height}" 
+        sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        srcset="${this.generateSrcset()}"
         loading="lazy">
     `
     this.innerHTML = imageHtml
+  }
+
+  generateSrcset(): string {
+    const widths = [300, 600, 900, 1200]
+    return widths
+      .map(width => {
+        const url = this.transformer({
+          url: this.src,
+          width,
+          height: Math.round((width / 4) * 3)
+        })
+        return `${url} ${width}w`
+      })
+      .join(", ")
   }
 
   getProvider() {
