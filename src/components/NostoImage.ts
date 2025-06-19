@@ -1,7 +1,6 @@
 import { customElement } from "./decorators"
 import { assertRequired } from "@/utils"
-import { transformUrl } from "unpic"
-import { transformBigcommerce } from "./NostoImge/bigcommerceHandler"
+import { transformUrl } from "./NostoImge/transformUrl"
 
 @customElement("nosto-image")
 export class NostoImage extends HTMLElement {
@@ -14,17 +13,18 @@ export class NostoImage extends HTMLElement {
   src!: string
   width!: string
   height!: string
-  transformer!: typeof transformUrl | typeof transformBigcommerce
+  transformer!: typeof transformUrl
 
   connectedCallback() {
     assertRequired(this, "src", "width", "height")
     const { src, width, height } = this
 
-    this.transformer = this.getProvider() === "bigcommerce" ? transformBigcommerce : transformUrl
+    this.transformer = transformUrl
     const transformedUrl = this.transformer({
       url: src,
       width: parseInt(width, 10),
-      height: parseInt(height, 10)
+      height: parseInt(height, 10),
+      provider: this.getProvider()
     })
 
     const imageHtml = `
@@ -48,7 +48,8 @@ export class NostoImage extends HTMLElement {
         const url = this.transformer({
           url: this.src,
           width,
-          height
+          height,
+          provider: this.getProvider()
         })
         return `${url} ${width}w`
       })
