@@ -43,14 +43,20 @@ export class NostoImage extends HTMLElement {
     const widths = [300, 600, 900, 1200]
     return widths
       .map(width => {
+        const aspectRatio = this.getAspectRatio()
+        const height = Math.round(width / aspectRatio)
         const url = this.transformer({
           url: this.src,
           width,
-          height: Math.round((width / 4) * 3)
+          height
         })
         return `${url} ${width}w`
       })
       .join(", ")
+  }
+
+  getAspectRatio(): number {
+    return parseInt(this.width, 10) / parseInt(this.height)
   }
 
   getProvider() {
