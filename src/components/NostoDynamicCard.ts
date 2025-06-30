@@ -73,7 +73,9 @@ async function getMarkup(element: NostoDynamicCard) {
   const markup = await result.text()
   placeholders.set(element.template, markup)
   if (/<(body|html)/.test(markup)) {
-    throw new Error("Invalid markup for template " + element.template)
+    throw new Error(
+      `Invalid markup for template ${element.template}, make sure that no <body> or <html> tags are included.`
+    )
   }
   return markup
 }
