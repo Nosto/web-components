@@ -1,4 +1,4 @@
-import { getSrcSet, Layout, Operations } from "@unpic/core"
+import { getSrcSet, type Layout, type Operations } from "@unpic/core/base"
 import { transformUrl } from "unpic/transform"
 import { generateCacheKey, withCache } from "./cache"
 

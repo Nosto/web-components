@@ -1,4 +1,4 @@
-import { Layout } from "@unpic/core"
+import type { Layout } from "@unpic/core/base"
 
 let imageCacheInstance: ReturnType<typeof createImageCache> | null = null
 

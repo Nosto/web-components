@@ -1,8 +1,8 @@
 import { customElement } from "./decorators"
 import { checkRequired } from "@/utils"
 import { useTransformer } from "@/image/transformers"
-import { Layout } from "@unpic/core"
-import { CoreImageAttributes, Operations, transformBaseImageProps, UnpicBaseImageProps } from "@unpic/core/base"
+import type { Layout, CoreImageAttributes, Operations, UnpicBaseImageProps } from "@unpic/core/base"
+import { transformBaseImageProps } from "@unpic/core/base"
 
 @customElement("nosto-image")
 export class NostoImage extends HTMLElement {
