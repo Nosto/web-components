@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
-import { compile } from "@/services/vue"
+import { createApp } from "petite-vue"
 
 @customElement("nosto-campaign")
 export class NostoCampaign extends HTMLElement {
@@ -68,7 +68,7 @@ export async function loadCampaign(element: NostoCampaign) {
       const content = template.content.cloneNode(true) as DocumentFragment
       const wrapper = document.createElement("div")
       wrapper.appendChild(content)
-      compile(wrapper, rec as JSONResult)
+      createApp(rec as JSONResult).mount(wrapper)
       element.append(...wrapper.children)
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
