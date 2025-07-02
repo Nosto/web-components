@@ -50,7 +50,7 @@ export class NostoProduct extends HTMLElement {
   recoId!: string
   skuSelected!: boolean
 
-  async connectedCallback() {
+  connectedCallback() {
     assertRequired(this, "productId", "recoId")
     maybeLogFirstUsage()
     const store = createStore(this)
