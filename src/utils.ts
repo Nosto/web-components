@@ -17,11 +17,9 @@ export function assertRequired<T>(object: T, ...properties: (keyof T & string)[]
   })
 }
 
-let hasLogged = false
-
 export async function logFirstUsage() {
-  if (hasLogged) return
-  hasLogged = true
+  if (localStorage.getItem("nosto:web-components:logged")) return
+  localStorage.setItem("nosto:web-components:logged", "true")
 
   const api = await new Promise(nostojs)
   api.internal.logger.info("Nosto/web-components: First component initialized.")
