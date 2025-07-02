@@ -27,7 +27,6 @@ export class NostoCampaign extends HTMLElement {
     template: String,
     init: String
   }
-  static hasLoggedUsage = false
 
   placement!: string
   productId!: string
