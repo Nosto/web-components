@@ -23,13 +23,13 @@ function transformUrl(url: string) {
     case "shopify":
       return {
         transformer: (src: string | URL, { width, height }: Operations, options?: { crop?: Crop }) => {
-          return shopifyTransform({ imageUrl: src.toString(), width, height, crop: options?.crop }) || src.toString()
+          return shopifyTransform({ imageUrl: src.toString(), width, height, ...(options || {}) }) || src.toString()
         }
       }
     case "bigcommerce":
       return {
-        transformer: (src: string | URL, { width, height }: Operations, _options?: unknown) => {
-          return bcTransform({ imageUrl: src.toString(), width, height }) || src.toString()
+        transformer: (src: string | URL, { width, height }: Operations, options?: unknown) => {
+          return bcTransform({ imageUrl: src.toString(), width, height, ...(options || {}) }) || src.toString()
         }
       }
   }
@@ -54,7 +54,7 @@ export function transform(props: NostoImageProps) {
       .map(([k, v]) => [toCamelCase(k), v])
   )
 
-  let sanitizedStyles = Object.fromEntries(
+  const sanitizedStyles = Object.fromEntries(
     Object.entries(transformedImagePros.style || {}).map(([k, v]) => [toCamelCase(k), v])
   )
 

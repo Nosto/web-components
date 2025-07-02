@@ -5,7 +5,7 @@ function parseUrl(url: string) {
   const regex =
     /^(?<name>[a-z0-9-]+)(_(?<dimen>pico|icon|thumb|small|compact|medium|large|grande|original|master|(\d+x\d+))(_(?<crop>[a-z_]+))?)?\.(?<format>[a-z]+)(\?(?<params>.*))?$/g
 
-  var lastURLSegment = url.substring(url.lastIndexOf("/") + 1)
+  const lastURLSegment = url.substring(url.lastIndexOf("/") + 1)
 
   const match = [...lastURLSegment.matchAll(regex)]
 
@@ -18,8 +18,12 @@ function applyDimension(
   pathSegments: string[] = [],
   params: URLSearchParams
 ) {
-  width && params.set("width", width)
-  height && params.set("height", height)
+  if (width) {
+    params.set("width", width)
+  }
+  if (height) {
+    params.set("height", height)
+  }
 
   // checking params object to make sure dimensions is not populated from extracted params
   const dimenMissing = !params.has("width") || !params.has("width")
