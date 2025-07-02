@@ -1,4 +1,4 @@
-import { assertRequired, maybeLogFirstUsage } from "@/utils"
+import { assertRequired, logFirstUsage } from "@/utils"
 import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
@@ -37,7 +37,7 @@ export class NostoCampaign extends HTMLElement {
   async connectedCallback() {
     assertRequired(this, "placement")
 
-    maybeLogFirstUsage()
+    await logFirstUsage()
 
     if (this.init !== "false") {
       await loadCampaign(this)

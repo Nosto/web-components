@@ -1,4 +1,4 @@
-import { assertRequired, maybeLogFirstUsage } from "@/utils"
+import { assertRequired, logFirstUsage } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
@@ -52,7 +52,7 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     assertRequired(this, "productId", "recoId")
-    maybeLogFirstUsage()
+    logFirstUsage()
     const store = createStore(this)
     provideStore(this, store)
     addListeners(this, store)

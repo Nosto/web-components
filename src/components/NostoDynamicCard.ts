@@ -1,4 +1,4 @@
-import { assertRequired, maybeLogFirstUsage } from "@/utils"
+import { assertRequired, logFirstUsage } from "@/utils"
 import { customElement } from "./decorators"
 
 /**
@@ -37,7 +37,7 @@ export class NostoDynamicCard extends HTMLElement {
 
   async connectedCallback() {
     assertRequired(this, "handle", "template")
-    maybeLogFirstUsage()
+    logFirstUsage()
     this.toggleAttribute("loading", true)
     if (this.placeholder && placeholders.has(this.template)) {
       this.innerHTML = placeholders.get(this.template) || ""

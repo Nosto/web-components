@@ -19,11 +19,10 @@ export function assertRequired<T>(object: T, ...properties: (keyof T & string)[]
 
 let hasLogged = false
 
-export function maybeLogFirstUsage() {
+export async function logFirstUsage() {
   if (hasLogged) return
   hasLogged = true
 
-  new Promise(nostojs).then(api => {
-    api.internal.logger.info("Nosto/web-components: First component initialized.")
-  })
+  const api = await new Promise(nostojs)
+  api.internal.logger.info("Nosto/web-components: First component initialized.")
 }
