@@ -2,6 +2,7 @@ import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -38,6 +39,7 @@ export class NostoSkuOptions extends HTMLElement {
 
   connectedCallback() {
     assertRequired(this, "name")
+    logFirstUsage()
     injectStore(this, store => initSkuOptions(this, store))
   }
 }

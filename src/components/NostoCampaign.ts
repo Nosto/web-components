@@ -3,6 +3,7 @@ import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { evaluate } from "@/services/templating"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -36,6 +37,9 @@ export class NostoCampaign extends HTMLElement {
 
   async connectedCallback() {
     assertRequired(this, "placement")
+
+    logFirstUsage()
+
     if (this.init !== "false") {
       await loadCampaign(this)
     }

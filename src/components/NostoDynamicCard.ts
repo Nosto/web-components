@@ -1,5 +1,6 @@
 import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom elements that renders a product by fetching the markup from Shopify based on the provided handle and template.
@@ -37,6 +38,7 @@ export class NostoDynamicCard extends HTMLElement {
 
   async connectedCallback() {
     assertRequired(this, "handle", "template")
+    logFirstUsage()
     this.toggleAttribute("loading", true)
     if (this.placeholder && placeholders.has(this.template)) {
       this.innerHTML = placeholders.get(this.template) || ""

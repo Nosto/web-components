@@ -1,3 +1,4 @@
+import { logFirstUsage } from "@/logger"
 import { customElement } from "./decorators"
 import { evaluate } from "@/services/templating"
 import { assertRequired } from "@/utils"
@@ -45,6 +46,7 @@ export class NostoProductCard extends HTMLElement {
 
   async connectedCallback() {
     assertRequired(this, "template")
+    logFirstUsage()
     this.toggleAttribute("loading", true)
     const product = getData(this)
     const html = await evaluate(this.template, { product, data: this.dataset })
