@@ -1,3 +1,5 @@
+import { nostojs } from "@nosto/nosto-js"
+
 export function intersectionOf(...arrays: string[][]) {
   if (arrays.length === 0) {
     return []
@@ -12,5 +14,16 @@ export function assertRequired<T>(object: T, ...properties: (keyof T & string)[]
     if (object[property] === undefined || object[property] === null) {
       throw new Error(`Property ${property} is required.`)
     }
+  })
+}
+
+let hasLogged = false
+
+export function maybeLogFirstUsage() {
+  if (hasLogged) return
+  hasLogged = true
+
+  new Promise(nostojs).then(api => {
+    api.internal.logger.info("Nosto/web-components: First component initialized.")
   })
 }

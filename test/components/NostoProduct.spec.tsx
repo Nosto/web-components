@@ -20,17 +20,17 @@ describe("NostoProduct", () => {
     })
 
     it("should throw an error if no attribute is provided", () => {
-      expect(() => element.connectedCallback()).toThrow("Property productId is required.")
+      expect(() => element.connectedCallback()).rejects.toThrow("Property productId is required.")
     })
 
     it("should throw an error if product-id is not provided", () => {
       element.setAttribute("reco-id", RECO_ID)
-      expect(() => element.connectedCallback()).toThrow("Property productId is required.")
+      expect(() => element.connectedCallback()).rejects.toThrow("Property productId is required.")
     })
 
     it("should throw an error if reco-id is not provided", () => {
       element.setAttribute("product-id", PROD_ID)
-      expect(() => element.connectedCallback()).toThrow("Property recoId is required.")
+      expect(() => element.connectedCallback()).rejects.toThrow("Property recoId is required.")
     })
   })
 

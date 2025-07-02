@@ -1,4 +1,4 @@
-import { assertRequired, intersectionOf } from "@/utils"
+import { assertRequired, intersectionOf, maybeLogFirstUsage } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
@@ -36,8 +36,9 @@ export class NostoSkuOptions extends HTMLElement {
 
   name!: string
 
-  connectedCallback() {
+  async connectedCallback() {
     assertRequired(this, "name")
+    maybeLogFirstUsage()
     injectStore(this, store => initSkuOptions(this, store))
   }
 }
