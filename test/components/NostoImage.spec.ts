@@ -12,10 +12,10 @@ describe("NostoImage", () => {
   // Register the custom element before tests
   beforeEach(() => {
     document.body.innerHTML = ""
-    nostoImage = new NostoImage()
   })
 
-  function mount(attrs: Record<string, string> = {}) {
+  function initComp(attrs: Record<string, string> = {}) {
+    nostoImage = new NostoImage()
     Object.assign(nostoImage, attrs)
     return nostoImage
   }
@@ -29,58 +29,58 @@ describe("NostoImage", () => {
   }
 
   it("throws when invalid layout value is used", () => {
-    mount({ src: "https://example.com/image.jpg", layout: "invalid" })
+    initComp({ src: "https://example.com/image.jpg", layout: "invalid" })
     expect(() => nostoImage.connectedCallback()).toThrowError(/Invalid layout/)
   })
 
   describe("Constrained Layout", () => {
     it("throws when width, height and aspectRadio are missing", () => {
-      mount({ src: "https://example.com/image.jpg" })
+      initComp({ src: "https://example.com/image.jpg" })
       expect(() => nostoImage.connectedCallback()).toThrowError(
         "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
       )
     })
 
     it("throws when only width prop is provided", () => {
-      mount({ src: "https://example.com/image.jpg" })
+      initComp({ src: "https://example.com/image.jpg" })
       expect(() => nostoImage.connectedCallback()).toThrowError(
         "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
       )
     })
 
     it("throws when only height prop is provided", () => {
-      mount({ src: "https://example.com/image.jpg" })
+      initComp({ src: "https://example.com/image.jpg" })
       expect(() => nostoImage.connectedCallback()).toThrowError(
         "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
       )
     })
 
     it("renders an image with srcset, sizes and style with width and height props", () => {
-      mount({ src: shopifyUrl, width: "300", height: "200" })
+      initComp({ src: shopifyUrl, width: "300", height: "200" })
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      mount({ src: bigCommerceUrl, width: "300", height: "200" })
+      initComp({ src: bigCommerceUrl, width: "300", height: "200" })
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with width and aspect ratio props", () => {
-      mount({ src: shopifyUrl, width: "800", aspectRatio: "1.77" })
+      initComp({ src: shopifyUrl, width: "800", aspectRatio: "1.77" })
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      mount({ src: bigCommerceUrl, width: "800", aspectRatio: "1.77" })
+      initComp({ src: bigCommerceUrl, width: "800", aspectRatio: "1.77" })
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with height and aspect ratio props", () => {
-      mount({ src: shopifyUrl, height: "300", aspectRatio: "1.33" })
+      initComp({ src: shopifyUrl, height: "300", aspectRatio: "1.33" })
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      mount({ src: bigCommerceUrl, height: "300", aspectRatio: "1.33" })
+      initComp({ src: bigCommerceUrl, height: "300", aspectRatio: "1.33" })
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
@@ -88,31 +88,31 @@ describe("NostoImage", () => {
 
   describe("FullWidth Layout", () => {
     it("renders an image with srcset, when no width, height or aspectRatio props are provided", () => {
-      mount({ src: shopifyUrl, layout: "fullWidth" })
+      initComp({ src: shopifyUrl, layout: "fullWidth" })
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      mount({ src: bigCommerceUrl, layout: "fullWidth" })
+      initComp({ src: bigCommerceUrl, layout: "fullWidth" })
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with only height prop", () => {
-      mount({ src: shopifyUrl, height: "300", layout: "fullWidth" })
+      initComp({ src: shopifyUrl, height: "300", layout: "fullWidth" })
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      mount({ src: bigCommerceUrl, height: "300", layout: "fullWidth" })
+      initComp({ src: bigCommerceUrl, height: "300", layout: "fullWidth" })
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with height and aspectRatio prop", () => {
-      mount({ src: shopifyUrl, width: "300", aspectRatio: "1.33", layout: "fullWidth" })
+      initComp({ src: shopifyUrl, width: "300", aspectRatio: "1.33", layout: "fullWidth" })
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      mount({ src: bigCommerceUrl, width: "300", aspectRatio: "1.33", layout: "fullWidth" })
+      initComp({ src: bigCommerceUrl, width: "300", aspectRatio: "1.33", layout: "fullWidth" })
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })

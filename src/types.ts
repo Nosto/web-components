@@ -108,3 +108,11 @@ export interface SkuVM {
   productId: string
   url: string
 }
+
+export type Crop = "center" | "top" | "left" | "right" | "bottom"
+
+export type BaseTransformerProps = {
+  imageUrl: string
+  width?: string | number
+  height?: string | number
+}

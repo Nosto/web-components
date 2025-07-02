@@ -1,46 +1,45 @@
+import type { Crop } from "@/types"
 import { customElement } from "./decorators"
 import { checkRequired } from "@/utils"
-import { useTransformer } from "@/image/transformers"
-import type { Layout, CoreImageAttributes, Operations, UnpicBaseImageProps } from "@unpic/core/base"
-import { transformBaseImageProps } from "@unpic/core/base"
+import type { Layout } from "@unpic/core/base"
+import { transform } from "@/image/transformers"
 
 @customElement("nosto-image")
 export class NostoImage extends HTMLElement {
   static attributes = {
     src: String,
-    width: String,
-    height: String,
-    aspectRatio: String,
-    layout: String
+    width: Number,
+    height: Number,
+    aspectRatio: Number,
+    layout: String,
+    crop: String
   }
 
   src!: string
-  width?: string
-  height?: string
-  aspectRatio?: string
+  width?: number
+  height?: number
+  aspectRatio?: number
   layout?: Layout
+  crop?: Crop
 
   connectedCallback() {
     this.validateProps()
-    const { src, width, height, layout = "constrained" } = this
+    const { src, width, height, layout, aspectRatio, crop } = this
 
-    const { transformer } = useTransformer(src, layout)
-
-    const imageProps = {
+    const { props, style } = transform({
       src,
-      ...(width && { width: parseInt(width, 10) }),
-      ...(height && { height: parseInt(height, 10) }),
-      ...(this.aspectRatio && { aspectRatio: parseFloat(this.aspectRatio) }),
-      layout: layout || ("constrained" as Layout),
-      transformer
-    } as UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<unknown>>
+      width,
+      height,
+      aspectRatio,
+      layout: layout || "constrained",
+      crop
+    })
 
-    const transformedImagePros = transformBaseImageProps(imageProps)
+    const imageElement = document.createElement("img")
+    Object.assign(imageElement, props)
+    Object.assign(imageElement.style, style)
 
-    const imageHtml = `
-      <img ${convertAttributesToHTMLProps(transformedImagePros)}>
-    `
-    this.innerHTML = imageHtml
+    this.appendChild(imageElement)
   }
 
   validateProps() {
@@ -54,17 +53,4 @@ export class NostoImage extends HTMLElement {
       }
     }
   }
-}
-
-function convertAttributesToHTMLProps(props: CoreImageAttributes<unknown>) {
-  const attributes = Object.entries(props)
-    .filter(([key, value]) => key !== "style" && value !== undefined && value !== null)
-    .map(([key, value]) => `${key}="${value}"`)
-    .join(" ")
-
-  const styles = Object.entries(props.style as object)
-    .map(([k, v]) => `${k}:${v}`)
-    .join(";")
-
-  return `${attributes} style="${styles}"`.trim()
 }
