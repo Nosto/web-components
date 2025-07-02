@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
-import { logFirstUsage } from "@/logger"
+import { NostoElement } from "./NostoElement"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -39,7 +39,7 @@ import { logFirstUsage } from "@/logger"
  *
  */
 @customElement("nosto-product")
-export class NostoProduct extends HTMLElement {
+export class NostoProduct extends NostoElement {
   static attributes = {
     productId: String,
     recoId: String,
@@ -53,7 +53,6 @@ export class NostoProduct extends HTMLElement {
 
   connectedCallback() {
     assertRequired(this, "productId", "recoId")
-    logFirstUsage()
     const store = createStore(this)
     provideStore(this, store)
     addListeners(this, store)

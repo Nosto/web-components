@@ -2,7 +2,7 @@ import { assertRequired, intersectionOf } from "@/utils"
 import { injectStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
-import { logFirstUsage } from "@/logger"
+import { NostoElement } from "./NostoElement"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -30,7 +30,7 @@ import { logFirstUsage } from "@/logger"
  * ```
  */
 @customElement("nosto-sku-options")
-export class NostoSkuOptions extends HTMLElement {
+export class NostoSkuOptions extends NostoElement {
   static attributes = {
     name: String
   }
@@ -39,7 +39,6 @@ export class NostoSkuOptions extends HTMLElement {
 
   connectedCallback() {
     assertRequired(this, "name")
-    logFirstUsage()
     injectStore(this, store => initSkuOptions(this, store))
   }
 }

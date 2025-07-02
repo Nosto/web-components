@@ -1,7 +1,7 @@
-import { logFirstUsage } from "@/logger"
 import { customElement } from "./decorators"
 import { evaluate } from "@/services/templating"
 import { assertRequired } from "@/utils"
+import { NostoElement } from "./NostoElement"
 
 /**
  * A custom element that renders a product card based on Nosto recommendation data.
@@ -37,7 +37,7 @@ import { assertRequired } from "@/utils"
  * ```
  */
 @customElement("nosto-product-card")
-export class NostoProductCard extends HTMLElement {
+export class NostoProductCard extends NostoElement {
   static attributes = {
     template: String
   }
@@ -46,7 +46,6 @@ export class NostoProductCard extends HTMLElement {
 
   async connectedCallback() {
     assertRequired(this, "template")
-    logFirstUsage()
     this.toggleAttribute("loading", true)
     const product = getData(this)
     const html = await evaluate(this.template, { product, data: this.dataset })
