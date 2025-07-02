@@ -1,5 +1,6 @@
-import { assertRequired, logFirstUsage } from "@/utils"
+import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom elements that renders a product by fetching the markup from Shopify based on the provided handle and template.

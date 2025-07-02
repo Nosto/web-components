@@ -1,7 +1,8 @@
-import { assertRequired, logFirstUsage } from "@/utils"
+import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
+import { logFirstUsage } from "@/logger"
 
 /**
  * Custom element that represents a Nosto product component.
