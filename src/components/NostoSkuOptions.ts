@@ -36,7 +36,7 @@ export class NostoSkuOptions extends HTMLElement {
 
   name!: string
 
-  async connectedCallback() {
+  connectedCallback() {
     assertRequired(this, "name")
     maybeLogFirstUsage()
     injectStore(this, store => initSkuOptions(this, store))
