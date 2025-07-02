@@ -38,7 +38,7 @@ export class NostoCampaign extends HTMLElement {
   async connectedCallback() {
     assertRequired(this, "placement")
 
-    await logFirstUsage()
+    logFirstUsage()
 
     if (this.init !== "false") {
       await loadCampaign(this)
