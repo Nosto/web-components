@@ -36,13 +36,14 @@ export class NostoCampaign extends HTMLElement {
   init?: string
 
   async connectedCallback() {
+    assertRequired(this, "placement")
+
     if (!NostoCampaign.hasLoggedUsage) {
       const api = await new Promise(nostojs)
       api.internal.logger.info("Nosto/web-components: NostoCampaign component initialized.")
       NostoCampaign.hasLoggedUsage = true
     }
 
-    assertRequired(this, "placement")
     if (this.init !== "false") {
       await loadCampaign(this)
     }
