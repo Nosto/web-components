@@ -1,3 +1,10 @@
+## [7.6.1](https://github.com/Nosto/web-components/compare/v7.6.0...v7.6.1) (2025-07-02)
+
+
+### Bug Fixes
+
+* move logFirstUsage to superclass ([49d242b](https://github.com/Nosto/web-components/commit/49d242b0ae40f0cab298d62e9a23324770c9898f))
+
 # [7.6.0](https://github.com/Nosto/web-components/compare/v7.5.0...v7.6.0) (2025-07-02)
 
 
