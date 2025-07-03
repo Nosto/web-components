@@ -48,7 +48,11 @@ export class NostoImage extends HTMLElement {
     }
 
     if (this.layout !== "fullWidth") {
-      if (checkRequired(this, "width", "aspectRatio") || checkRequired(this, "height", "aspectRatio")) {
+      if (
+        !checkRequired(this, "width", "height") &&
+        !checkRequired(this, "width", "aspectRatio") &&
+        !checkRequired(this, "height", "aspectRatio")
+      ) {
         throw new Error("Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided.")
       }
     }

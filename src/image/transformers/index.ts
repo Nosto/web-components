@@ -49,9 +49,7 @@ export function transform(props: NostoImageProps) {
   const transformedImagePros = transformBaseImageProps(imageProps)
 
   const sanitizedProps = Object.fromEntries(
-    Object.entries(transformedImagePros)
-      .filter(([k, v]) => k !== "style" && !!v)
-      .map(([k, v]) => [toCamelCase(k), v])
+    Object.entries(transformedImagePros).filter(([k, v]) => k !== "style" && !!v)
   )
 
   const sanitizedStyles = Object.fromEntries(
