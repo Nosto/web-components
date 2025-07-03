@@ -26,7 +26,7 @@ describe("NostoProductCard", () => {
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
       <template id="test1">
-        <h1 v-text="product.title"></h1>
+        <h1 n-text="product.title"></h1>
       </template>
     )
     card.append(
@@ -47,7 +47,7 @@ describe("NostoProductCard", () => {
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
       <template id="test2">
-        <h1 v-text="product.title"></h1>
+        <h1 n-text="product.title"></h1>
       </template>
     )
     card.append(
@@ -69,7 +69,7 @@ describe("NostoProductCard", () => {
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
       <template id="test3">
-        <h1 v-text="product.title"></h1>
+        <h1 n-text="product.title"></h1>
       </template>
     )
     card.append(
@@ -122,19 +122,19 @@ describe("NostoProductCard", () => {
     card.template = "test3"
     card.dataset.test = "test"
 
-    // NOTE more verbose v-bind: syntax is used due to TSX limitations with shorthand syntax in this context.
+    // NOTE more verbose n-bind: syntax is used due to TSX limitations with shorthand syntax in this context.
     document.body.append(
       <template id="test3">
         <div class="product">
-          <a v-bind:href="product.url" class="product-link">
-            <img v-bind:src="product.image_url" v-bind:alt="product.name" class="product-image" />
+          <a n-bind:href="product.url" class="product-link">
+            <img n-bind:src="product.image_url" n-bind:alt="product.name" class="product-image" />
           </a>
-          <h1 v-text="product.name"></h1>
-          <span class="product-material" v-text="product.custom_fields.material"></span>
-          <span class="product-description" v-text="product.description"></span>
-          <span class="product-price" v-text="product.price"></span>
-          <span class="product-list-price" v-text="product.list_price"></span>
-          <span class="product-rating" v-text="product.rating_value"></span>
+          <h1 n-text="product.name"></h1>
+          <span class="product-material" n-text="product.custom_fields.material"></span>
+          <span class="product-description" n-text="product.description"></span>
+          <span class="product-price" n-text="product.price"></span>
+          <span class="product-list-price" n-text="product.list_price"></span>
+          <span class="product-rating" n-text="product.rating_value"></span>
         </div>
       </template>
     )

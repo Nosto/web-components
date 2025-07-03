@@ -101,7 +101,7 @@ describe("NostoCampaign", () => {
     template.id = templateId
     template.innerHTML = `
     <section>
-      <div class="product" v-for="product in products">{{ product.title }}</div>
+      <div class="product" n-for="product in products">{{ product.title }}</div>
     </section>
   `
     document.body.appendChild(template)

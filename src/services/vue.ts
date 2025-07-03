@@ -2,9 +2,9 @@
  * A minimal Vue template compiler for HTML elements.
  *
  * Supported directives:
- *   v-text, v-html, v-show, v-if, v-else, v-elseif (TODO), v-for, v-pre, v-cloak
+ *   n-text, n-html, n-show, n-if, n-else, n-elseif (TODO), n-for, n-pre, n-cloak
  * Unsupported:
- *   v-on, v-model, v-slot, v-once
+ *   n-on, n-model, n-slot, n-once
  */
 export function compile(root: HTMLElement, context: object) {
   processElement(root, context)
@@ -34,63 +34,63 @@ function setAttribute(el: Element, name: string, value: unknown) {
 }
 
 function processElement(el: Element, context: object) {
-  if (el.hasAttribute("v-pre")) {
-    // Skip processing for elements with v-pre directive.
-    el.removeAttribute("v-pre")
+  if (el.hasAttribute("n-pre")) {
+    // Skip processing for elements with n-pre directive.
+    el.removeAttribute("n-pre")
     return
   }
 
-  // Process v-if directive: remove element if condition is false.
-  if (el.hasAttribute("v-if")) {
-    const condition = el.getAttribute("v-if")!
+  // Process n-if directive: remove element if condition is false.
+  if (el.hasAttribute("n-if")) {
+    const condition = el.getAttribute("n-if")!
     if (!evaluate(condition, context)) {
       el.remove()
       return
     }
-    el.removeAttribute("v-if")
-    // @ts-expect-error flag for v-else
+    el.removeAttribute("n-if")
+    // @ts-expect-error flag for n-else
     el.vif = true
   }
 
-  if (el.hasAttribute("v-else-if")) {
+  if (el.hasAttribute("n-else-if")) {
     const prevSibling = el.previousElementSibling
-    // @ts-expect-error vif flag set by v-if handling
+    // @ts-expect-error vif flag set by n-if handling
     if (prevSibling && prevSibling.vif) {
       el.remove()
       return
     }
-    const condition = el.getAttribute("v-else-if")!
+    const condition = el.getAttribute("n-else-if")!
     if (!evaluate(condition, context)) {
       el.remove()
       return
     }
-    el.removeAttribute("v-else-if")
-    // @ts-expect-error flag for v-else
+    el.removeAttribute("n-else-if")
+    // @ts-expect-error flag for n-else
     el.vif = true
   }
 
-  // Process v-else directive: remove element if the previous v-if flagged element was not removed.
-  if (el.hasAttribute("v-else")) {
-    // v-else should be processed only if the previous element was removed.
+  // Process n-else directive: remove element if the previous n-if flagged element was not removed.
+  if (el.hasAttribute("n-else")) {
+    // n-else should be processed only if the previous element was removed.
     const prevSibling = el.previousElementSibling
-    // @ts-expect-error vif flag set by v-if handling
+    // @ts-expect-error vif flag set by n-if handling
     if (prevSibling && prevSibling.vif) {
       el.remove()
       return
     }
-    el.removeAttribute("v-else")
+    el.removeAttribute("n-else")
   }
 
-  if (el instanceof HTMLElement && el.hasAttribute("v-show")) {
-    // v-show directive: toggle visibility based on condition.
-    const condition = el.getAttribute("v-show")!
+  if (el instanceof HTMLElement && el.hasAttribute("n-show")) {
+    // n-show directive: toggle visibility based on condition.
+    const condition = el.getAttribute("n-show")!
     el.style.display = evaluate(condition, context) ? "" : "none"
-    el.removeAttribute("v-show")
+    el.removeAttribute("n-show")
   }
 
-  // Process v-for directive: clone element for each item in the list.
-  if (el.hasAttribute("v-for")) {
-    const directive = el.getAttribute("v-for")!
+  // Process n-for directive: clone element for each item in the list.
+  if (el.hasAttribute("n-for")) {
+    const directive = el.getAttribute("n-for")!
     const match = parseVfor(directive)
     if (match) {
       const { aliasExp, indexExp, listExp } = match
@@ -99,9 +99,9 @@ function processElement(el: Element, context: object) {
         const parent = el.parentElement
         if (parent) {
           list.forEach((item, index) => {
-            // Clone the element and remove the v-for attribute.
+            // Clone the element and remove the n-for attribute.
             const clone = el.cloneNode(true) as HTMLElement
-            clone.removeAttribute("v-for")
+            clone.removeAttribute("n-for")
             // Extend context with the current item and index.
             const childContext = { ...context, [aliasExp]: item, [indexExp]: index }
             processElement(clone, childContext)
@@ -115,16 +115,16 @@ function processElement(el: Element, context: object) {
     }
   }
 
-  // Process v-bind and v-text on the current element.
+  // Process n-bind and n-text on the current element.
   Array.from(el.attributes).forEach(attr => {
-    // v-bind:property
-    if (attr.name.startsWith("v-bind:")) {
-      const prop = attr.name.slice("v-bind:".length)
+    // n-bind:property
+    if (attr.name.startsWith("n-bind:")) {
+      const prop = attr.name.slice("n-bind:".length)
       const val = evaluate(attr.value, context)
       setAttribute(el, prop, val)
       el.removeAttribute(attr.name)
     }
-    // shorthand for v-bind:property
+    // shorthand for n-bind:property
     if (attr.name.startsWith(":")) {
       const prop = attr.name.slice(1)
       const val = evaluate(attr.value, context)
@@ -139,23 +139,23 @@ function processElement(el: Element, context: object) {
       el[prop] = val
       el.removeAttribute(attr.name)
     }
-    // v-html: set innerHTML to evaluated expression.
-    if (attr.name === "v-html") {
+    // n-html: set innerHTML to evaluated expression.
+    if (attr.name === "n-html") {
       el.innerHTML = String(evaluate(attr.value, context))
-      el.removeAttribute("v-html")
+      el.removeAttribute("n-html")
     }
-    // v-text: set textContent to evaluated expression.
-    if (attr.name === "v-text") {
+    // n-text: set textContent to evaluated expression.
+    if (attr.name === "n-text") {
       el.textContent = String(evaluate(attr.value, context))
-      el.removeAttribute("v-text")
+      el.removeAttribute("n-text")
     }
-    // v-bind: set attributes from an object.
-    if (attr.name === "v-bind") {
+    // n-bind: set attributes from an object.
+    if (attr.name === "n-bind") {
       const bindings = evaluate(attr.value, context) as object
       for (const [key, value] of Object.entries(bindings)) {
         setAttribute(el, key, value)
       }
-      el.removeAttribute("v-bind")
+      el.removeAttribute("n-bind")
     }
   })
 
@@ -172,9 +172,9 @@ function processElement(el: Element, context: object) {
     }
   })
 
-  if (el.hasAttribute("v-cloak")) {
-    // Remove v-cloak attribute to hide the element after processing.
-    el.removeAttribute("v-cloak")
+  if (el.hasAttribute("n-cloak")) {
+    // Remove n-cloak attribute to hide the element after processing.
+    el.removeAttribute("n-cloak")
   }
 }
 
