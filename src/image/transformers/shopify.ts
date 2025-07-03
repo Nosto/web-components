@@ -1,5 +1,5 @@
-import type { Crop } from "@/types"
-import type { Dimension, ShopifyTransformerProps, ShopifyUrlGroups } from "./types"
+import type { Crop } from "../types"
+import type { Dimension, ShopifyTransformerProps, ShopifyUrlGroups } from "../types"
 
 function parseUrl(url: string) {
   const regex =

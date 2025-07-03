@@ -1,5 +1,5 @@
-import type { BaseTransformerProps } from "@/types"
-import { BigCommerceUrlGroups } from "./types"
+import type { BaseTransformerProps } from "../types"
+import { BigCommerceUrlGroups } from "../types"
 
 function parseUrl(url: string) {
   const regex =

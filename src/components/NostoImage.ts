@@ -1,5 +1,5 @@
-import type { Crop } from "@/types"
-import { customElement } from "./decorators"
+import type { Crop } from "../image/types"
+import { customElement } from "../components/decorators"
 import { checkRequired } from "@/utils"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "@/image/transformers"

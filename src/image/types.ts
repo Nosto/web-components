@@ -1,5 +1,12 @@
-import type { BaseTransformerProps, Crop } from "@/types"
 import type { CoreImageAttributes, Layout, Operations, UnpicBaseImageProps } from "@unpic/core/base"
+
+export type Crop = "center" | "top" | "left" | "right" | "bottom"
+
+export type BaseTransformerProps = {
+  imageUrl: string
+  width?: string | number
+  height?: string | number
+}
 
 export type Provider = "shopify" | "bigcommerce"
 

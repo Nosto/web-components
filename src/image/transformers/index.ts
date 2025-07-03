@@ -1,6 +1,6 @@
-import type { Crop } from "@/types"
+import type { Crop } from "../types"
 import { transformBaseImageProps, type Operations } from "@unpic/core/base"
-import type { BaseImagePropsType, NostoImageProps, Provider } from "./types"
+import type { BaseImagePropsType, NostoImageProps, Provider } from "../types"
 import type { Maybe } from "@nosto/nosto-js/client"
 import { transform as bcTransform } from "./bigcommerce"
 import { transform as shopifyTransform } from "./shopify"

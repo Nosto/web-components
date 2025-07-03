@@ -1,3 +1,30 @@
+## [7.6.1](https://github.com/Nosto/web-components/compare/v7.6.0...v7.6.1) (2025-07-02)
+
+
+### Bug Fixes
+
+* move logFirstUsage to superclass ([49d242b](https://github.com/Nosto/web-components/commit/49d242b0ae40f0cab298d62e9a23324770c9898f))
+
+# [7.6.0](https://github.com/Nosto/web-components/compare/v7.5.0...v7.6.0) (2025-07-02)
+
+
+### Bug Fixes
+
+* clean up ([a017fa9](https://github.com/Nosto/web-components/commit/a017fa90f36215bf77fb02f3a5859ed4ed5859b2))
+* clean up ([0f2afc5](https://github.com/Nosto/web-components/commit/0f2afc5ebe085416367b4dd36b48296ea5e2babe))
+* clean up ([468791c](https://github.com/Nosto/web-components/commit/468791c3de707a4f459503ca5978f9613107861f))
+* reorder assertRequired ([c5a078c](https://github.com/Nosto/web-components/commit/c5a078c6394f4381c43c4aca7def99da758679b5))
+* update after review ([9ab6516](https://github.com/Nosto/web-components/commit/9ab6516fab72f5c7d6ece0f0f14d3f71aa1f10a3))
+* update after review ([106cb2a](https://github.com/Nosto/web-components/commit/106cb2aa45fdfb3caf26786bfd2ded787a5ce841))
+* update after review ([8d4c0ee](https://github.com/Nosto/web-components/commit/8d4c0eef15975376909dea750a32e5dce56e575c))
+
+
+### Features
+
+* add logging ([d7d9078](https://github.com/Nosto/web-components/commit/d7d90785600531af3756f7c4b7de5ae2a7e268f0))
+* log the first instantiation of any component ([d64c298](https://github.com/Nosto/web-components/commit/d64c298583d9524c27c78b3a19e1fecf9b9f9778))
+* persist logged status in localStorage ([16c63ab](https://github.com/Nosto/web-components/commit/16c63ab87909c100b764a32006a9e8fe0c224595))
+
 # [7.5.0](https://github.com/Nosto/web-components/compare/v7.4.3...v7.5.0) (2025-06-12)
 
 

@@ -2,6 +2,7 @@ import { assertRequired } from "@/utils"
 import { createStore, provideStore, Store } from "./NostoProduct/store"
 import { customElement } from "./decorators"
 import { syncSkuData } from "./common"
+import { NostoElement } from "./NostoElement"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -38,7 +39,7 @@ import { syncSkuData } from "./common"
  *
  */
 @customElement("nosto-product")
-export class NostoProduct extends HTMLElement {
+export class NostoProduct extends NostoElement {
   static attributes = {
     productId: String,
     recoId: String,
