@@ -28,7 +28,7 @@ describe("shopify.transform", () => {
   })
 
   it("extracts dimensions and crop from URL", () => {
-    const imageUrl = base + "image_200x300_center.jpg"
+    const imageUrl = base + "image_200x300_crop_center.jpg"
     const result = transform({ imageUrl })
     expect(result).toBe(`${base}image.jpg?width=200&height=300&crop=center`)
   })
@@ -74,7 +74,7 @@ describe("shopify.transform", () => {
     sizes.forEach(size => {
       const imageUrl = base + `image_${size}.jpg`
       const result = transform({ imageUrl, crop: "center" })
-      expect(result).toBe(`${imageUrl}?crop=center`)
+      expect(result).toBe(`${base}image.jpg?crop=center`)
     })
   })
 

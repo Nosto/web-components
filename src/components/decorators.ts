@@ -1,9 +1,9 @@
 type FieldType<T> = T extends string
   ? StringConstructor
-  : T extends boolean
-    ? BooleanConstructor
-    : T extends number
-      ? NumberConstructor
+  : T extends number
+    ? NumberConstructor
+    : T extends boolean
+      ? BooleanConstructor
       : never
 
 type ConstructorMetadata<T extends HTMLElement> = {

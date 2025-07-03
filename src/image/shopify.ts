@@ -12,30 +12,15 @@ function parseUrl(url: string) {
   return match.length ? (match[0].groups as ShopifyUrlGroups) : null
 }
 
-function applyDimension(
-  { width, height }: Dimension,
-  extractedDimension: string | undefined,
-  pathSegments: string[] = [],
-  params: URLSearchParams
-) {
-  if (width) {
-    params.set("width", width)
-  }
-  if (height) {
-    params.set("height", height)
+function applyDimension({ width, height }: Dimension, params: URLSearchParams, extractedDimension = "") {
+  const [partW, partH] = /^\d+x\d+$/.test(extractedDimension) ? extractedDimension.split("x") : []
+
+  if (width || partW) {
+    params.set("width", width || partW)
   }
 
-  // checking params object to make sure dimensions is not populated from extracted params
-  const dimenMissing = !params.has("width") || !params.has("height")
-
-  if (dimenMissing && extractedDimension) {
-    if (/^\d+x\d+$/.test(extractedDimension)) {
-      const [partW, partH] = extractedDimension.split("x")
-      params.set("width", width || partW)
-      params.set("height", height || partH)
-    } else {
-      pathSegments.push(extractedDimension)
-    }
+  if (height || partH) {
+    params.set("height", height || partH)
   }
 }
 
@@ -44,7 +29,9 @@ function applyCrop(provided: Crop | undefined, extracted: Crop | undefined, para
     return
   }
 
-  const cropValue = (provided || extracted)!
+  const cropPosition = extracted?.includes("_") ? extracted.split("_")[1] : undefined
+
+  const cropValue = (provided || cropPosition)!
   params.set("crop", cropValue)
 }
 
@@ -61,12 +48,11 @@ export function transform({ imageUrl, width, height, crop }: ShopifyTransformerP
 
   const { name, dimen, crop: cropMatch = crop, format, params } = parseResult
   const searchParams = new URLSearchParams(params)
-  const lastPathSegments = [name]
 
-  applyDimension({ width: width?.toString(), height: height?.toString() }, dimen, lastPathSegments, searchParams)
+  applyDimension({ width: width?.toString(), height: height?.toString() }, searchParams, dimen)
   applyCrop(crop, cropMatch, searchParams)
 
-  const url = new URL(`${lastPathSegments.join("_")}.${format}`, baseUrlPrefix)
+  const url = new URL(`${name}.${format}`, baseUrlPrefix)
   url.search = searchParams.toString()
   return url.toString()
 }

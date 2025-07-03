@@ -53,7 +53,7 @@ describe("image/transform", () => {
     })
 
     it("handles crop from url if not provided as prop", () => {
-      const imageUrlWithCrop = `${baseUrl}image_200x300_center.jpg`
+      const imageUrlWithCrop = `${baseUrl}image_200x300_crop_center.jpg`
       const result = transform({ src: imageUrlWithCrop, width: 100, height: 200 })
       expect(result.props.src).toBe(`${baseUrl}image.jpg?width=100&height=200&crop=center`)
       expect(result.props.crop).toBeUndefined()
@@ -62,7 +62,7 @@ describe("image/transform", () => {
     it("handles named dimensions like master/original", () => {
       const imageUrlMaster = `${baseUrl}image_master.jpg`
       const result = transform({ src: imageUrlMaster })
-      expect(result.props.src).toBe(`${baseUrl}image_master.jpg`)
+      expect(result.props.src).toBe(`${baseUrl}image.jpg`)
     })
 
     it("prioritizes provided width/height over named dimensions", () => {
