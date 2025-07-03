@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { transform } from "@/image/transformers/shopify"
+import { transform } from "@/image/shopify"
 
 describe("shopify.transform", () => {
   const base = "https://cdn.shopify.com/s/files/1/1183/1048/products/"
