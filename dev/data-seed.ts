@@ -63,12 +63,13 @@ function generateProducts() {
 const imageTestProducts = [
   {
     name: "Big commerce product",
-    imageUrl: `https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg`,
+    imageUrl:
+      "https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg",
     productId: getRandomId(1)
   },
   {
     name: "Shopify product",
-    imageUrl: `https://cdn.shopify.com/s/files/1/1183/1048/products/boat-shoes.jpeg?v=1459175177`,
+    imageUrl: "https://cdn.shopify.com/s/files/1/1183/1048/products/boat-shoes.jpeg?v=1459175177",
     productId: getRandomId(1)
   }
 ]

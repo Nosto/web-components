@@ -26,13 +26,13 @@ function applyDimension(
   }
 
   // checking params object to make sure dimensions is not populated from extracted params
-  const dimenMissing = !params.has("width") || !params.has("width")
+  const dimenMissing = !params.has("width") || !params.has("height")
 
   if (dimenMissing && extractedDimension) {
     if (/^\d+x\d+$/.test(extractedDimension)) {
       const [partW, partH] = extractedDimension.split("x")
-      params.set("width", partW)
-      params.set("height", partH)
+      params.set("width", width || partW)
+      params.set("height", height || partH)
     } else {
       pathSegments.push(extractedDimension)
     }
