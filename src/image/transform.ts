@@ -1,5 +1,5 @@
-import type { Crop } from "./types"
-import { transformBaseImageProps, type Operations } from "@unpic/core/base"
+import type { Crop, StyleAttributes } from "./types"
+import { transformBaseImageProps, type CoreImageAttributes, type Operations } from "@unpic/core/base"
 import type { BaseImagePropsType, NostoImageProps, Provider } from "./types"
 import type { Maybe } from "@nosto/nosto-js/client"
 import { transform as bcTransform } from "./bigcommerce"
@@ -16,9 +16,7 @@ function getProvider(url: string): Maybe<Provider> {
   return undefined
 }
 
-function transformUrl(url: string) {
-  const provider = getProvider(url)
-
+function transformUrl(provider: string | undefined) {
   switch (provider) {
     case "shopify":
       return {
@@ -36,17 +34,22 @@ function transformUrl(url: string) {
 }
 
 export default function transform(props: NostoImageProps) {
-  const { transformer } = transformUrl(props.src) || {}
+  const provider = getProvider(props.src)
+  const { transformer } = transformUrl(provider) || {}
 
   const imageProps = {
     ...props,
     transformer,
-    options: {
-      crop: props.crop
-    }
+    ...(provider === "shopify" && {
+      options: {
+        crop: props.crop
+      }
+    })
   } as BaseImagePropsType
 
-  const transformedImagePros = transformBaseImageProps(imageProps)
+  const transformedImagePros = transformBaseImageProps<Operations, unknown, CoreImageAttributes<StyleAttributes>>(
+    imageProps
+  )
 
   const sanitizedProps = Object.fromEntries(
     Object.entries(transformedImagePros).filter(([k, v]) => k !== "style" && !!v)
@@ -54,7 +57,7 @@ export default function transform(props: NostoImageProps) {
 
   const sanitizedStyles = Object.fromEntries(
     Object.entries(transformedImagePros.style || {}).map(([k, v]) => [toCamelCase(k), v])
-  )
+  ) as unknown as CSSStyleDeclaration
 
   return {
     props: sanitizedProps,

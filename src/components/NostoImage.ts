@@ -66,7 +66,9 @@ export class NostoImage extends HTMLElement {
     })
 
     const imageElement = document.createElement("img")
-    Object.assign(imageElement, props)
+    Object.entries(props).forEach(([key, value]) => {
+      imageElement.setAttribute(key, value as string)
+    })
     Object.assign(imageElement.style, style)
 
     this.appendChild(imageElement)

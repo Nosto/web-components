@@ -48,4 +48,18 @@ export type NostoImageProps = {
   crop?: Crop
 }
 
-export type BaseImagePropsType = UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<unknown>>
+type CamelToKebab<S extends string> = S extends `${infer T}${infer U}`
+  ? T extends Lowercase<T>
+    ? `${T}${CamelToKebab<U>}`
+    : `-${Lowercase<T>}${CamelToKebab<U>}`
+  : S
+
+type ExcludeFunctions<T> = T extends (...args: string[] | undefined[] | null[] | unknown[]) => unknown ? never : T
+
+export type StyleAttributes = {
+  [K in keyof CSSStyleDeclaration as CSSStyleDeclaration[ExcludeFunctions<K>] extends string
+    ? CamelToKebab<K & string>
+    : never]: CSSStyleDeclaration[K]
+}
+
+export type BaseImagePropsType = UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<StyleAttributes>>
