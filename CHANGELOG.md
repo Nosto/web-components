@@ -1,3 +1,19 @@
+# [7.7.0](https://github.com/Nosto/web-components/compare/v7.6.1...v7.7.0) (2025-07-04)
+
+
+### Bug Fixes
+
+* address comment and fix checkRequired ([7d05a37](https://github.com/Nosto/web-components/commit/7d05a3793c6dedb8059aca228a081e5b358195a9))
+* address lint ond improvements ([aed18b7](https://github.com/Nosto/web-components/commit/aed18b72216eb7427835b64071775bbb7075e611))
+* exclude main.ts from test coverage ([f10cfd8](https://github.com/Nosto/web-components/commit/f10cfd851dbc44ac804174be69dbcff2a4458081))
+* import types ([5ad440a](https://github.com/Nosto/web-components/commit/5ad440abc9d65abb8215c698b200162ee7bc7e15))
+* use attribute binding instead of property binding ([615d5d7](https://github.com/Nosto/web-components/commit/615d5d7f8308e20541739f702dab49512c9d5cf6))
+
+
+### Features
+
+* introduce NostoImage component for rendering responsive images ([745a354](https://github.com/Nosto/web-components/commit/745a354ddacf6baf8808c4c61b3d77c4c4058ba9))
+
 ## [7.6.1](https://github.com/Nosto/web-components/compare/v7.6.0...v7.6.1) (2025-07-02)
 
 
