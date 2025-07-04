@@ -3,6 +3,7 @@ import { customElement } from "../components/decorators"
 import { checkRequired } from "@/utils"
 import type { Layout } from "@unpic/core/base"
 import transform from "@/image/transform"
+import { NostoElement } from "./NostoElement"
 
 /**
  * @alpha
@@ -35,7 +36,7 @@ import transform from "@/image/transform"
  * ```
  */
 @customElement("nosto-image")
-export class NostoImage extends HTMLElement {
+export class NostoImage extends NostoElement {
   static attributes = {
     src: String,
     width: Number,
