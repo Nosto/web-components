@@ -1,3 +1,10 @@
+## [7.7.1](https://github.com/Nosto/web-components/compare/v7.7.0...v7.7.1) (2025-07-04)
+
+
+### Bug Fixes
+
+* extend from NostoElement ([438025d](https://github.com/Nosto/web-components/commit/438025dca00c0db6c7ebd19da60a7c3446a8a743))
+
 # [7.7.0](https://github.com/Nosto/web-components/compare/v7.6.1...v7.7.0) (2025-07-04)
 
 
