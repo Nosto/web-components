@@ -1,0 +1,110 @@
+<script type="module" src="../src/main.ts"></script>
+<link rel="stylesheet" href="images/images.css">
+
+<span class="reco-title">{{ title }}</span>
+<div class="nosto__image-container">
+  <div class="tabbed">
+    <input type="radio" id="tab-constrained" name="image-layout-tab" checked>
+    <input type="radio" id="tab-full-width" name="image-layout-tab">
+    <input type="radio" id="tab-fixed" name="image-layout-tab">
+
+    <ul class="tabs">
+      <li class="tab"><label for="tab-constrained">Constrained Layout (default)</label></li>
+      <li class="tab"><label for="tab-full-width">Full Width Layout</label></li>
+      <li class="tab"><label for="tab-fixed">Fixed Layout</label></li>
+    </ul>
+
+    <div class="tab-content nosto_image-container__layout nosto_image-container__constrained">
+      <span class="nosto__image-container__title">Layout: Constrained (default)</span>
+      <span class="nosto__image-container__sub-title">Width (300) and Height (800)</span>
+      {%- for product in imageProducts %}
+        <nosto-image src="{{ product.imageUrl }}" height="300" width="800" alt="{{ product.name }}"></nosto-image>
+      {%- endfor %}
+
+      <span class="nosto__image-container__sub-title">Height (300) and AspectRatio (1.33)</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          height="300"
+          aspect-ratio="1.33"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+
+      <span class="nosto__image-container__sub-title">Width (800) and AspectRatio (1.77)</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          aspect-ratio="1.77"
+          width="800"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+    </div>
+
+    <div class="tab-content nosto_image-container__layout  nosto_image-container__full-width">
+      <span class="nosto__image-container__title">Layout: Full Width</span>
+      <span class="nosto__image-container__sub-title">Without width and height</span>
+      {%- for product in imageProducts %}
+        <nosto-image src="{{ product.imageUrl }}" layout="fullWidth" alt="{{ product.name }}"></nosto-image>
+      {%- endfor %}
+
+      <span class="nosto__image-container__sub-title">Height (300) only</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          height="300"
+          layout="fullWidth"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+
+      <span class="nosto__image-container__sub-title">Height (300) and AspectRatio (1.33)</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          height="300"
+          aspect-ratio="1.33"
+          layout="fullWidth"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+    </div>
+
+    <div class="tab-content nosto_image-container__layout  nosto_image-container__fixed">
+      <span class="nosto__image-container__title">Layout: Fixed</span>
+      <span class="nosto__image-container__sub-title">Width (700) and Height (300)</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          height="300"
+          width="700"
+          layout="fixed"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+
+      <span class="nosto__image-container__sub-title">Height (300) and AspectRatio (1.33)</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          height="300"
+          aspect-ratio="1.33"
+          layout="fixed"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+
+      <span class="nosto__image-container__sub-title">Width (600) and AspectRatio (1.77)</span>
+      {%- for product in imageProducts %}
+        <nosto-image
+          src="{{ product.imageUrl }}"
+          aspect-ratio="1.77"
+          width="600"
+          layout="fixed"
+          alt="{{ product.name }}"
+        ></nosto-image>
+      {%- endfor %}
+    </div>
+  </div>
+</div>

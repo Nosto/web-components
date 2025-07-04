@@ -25,6 +25,7 @@ export default defineConfig(() => ({
   test: {
     coverage: {
       include: ["src/**/*.{js,ts}"],
+      exclude: ["src/main.ts"],
       skipFull: true,
       thresholds: {
         statements: 90,
