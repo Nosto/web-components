@@ -15,11 +15,6 @@ export function assertRequired<T>(object: T, ...properties: (keyof T & string)[]
   })
 }
 
-export function checkRequired<T>(object: T, ...properties: (keyof T & string)[]) {
-  // check if all properties are present and not null
-  return properties.every(property => object[property] !== null && object[property] !== undefined)
-}
-
 export function toCamelCase(str: string) {
   return str.replace(/-([a-z])/g, (_, l) => l.toUpperCase())
 }

@@ -1,26 +1,42 @@
-import type { BaseTransformerProps } from "./types"
-import { BigCommerceUrlGroups } from "./types"
+import type { Operations } from "unpic/types"
+
+type BigCommerceUrlGroups = {
+  prefix: string
+  suffix: string
+  productId: string
+  imageId: string
+  format: string
+  params?: string
+  width: string
+  height: string
+}
 
 function parseUrl(url: string) {
   const regex =
-    /^(?<prefix>https:\/\/[a-z0-9.]+\/[a-z0-9-]+\/)products\/(?<productId>\d+)\/images\/(?<imageId>\d+)(?<suffix>\/[a-zA-Z0-9_-]+\.\d+)\.(?<width>\d+)\.(?<height>\d+)\.(?<format>.*)(\?(?<params>.*))?$/g
-
+    /^(?<prefix>\/[a-z0-9-]+\/)products\/(?<productId>\d+)\/images\/(?<imageId>\d+)(?<suffix>\/[a-zA-Z0-9_-]+\.\d+)\.(?<width>\d+)\.(?<height>\d+)\.(?<format>.*)$/g
   const match = [...url.matchAll(regex)]
-
   return match.length ? (match[0].groups as BigCommerceUrlGroups) : null
 }
 
-export function transform({ imageUrl, width, height }: BaseTransformerProps) {
-  const parseResult = parseUrl(imageUrl)
+function dimensionString(width: string | number | undefined, height: string | number | undefined) {
+  return height ? `${width}x${height}` : `${width}w`
+}
+
+export function transform(src: string | URL, { width, height }: Operations) {
+  const u = new URL(src.toString())
+  if (u.pathname.includes("/images/stencil/")) {
+    const dimenStr = dimensionString(width, height)
+    u.pathname = u.pathname.replace(/images\/stencil\/[^/]+/, `images/stencil/${dimenStr}`)
+    return u.toString()
+  }
+  const parseResult = parseUrl(u.pathname)
 
   if (!parseResult) {
-    return imageUrl
+    return src.toString()
   }
 
-  const { prefix, suffix, productId, imageId, params, format, width: extractedW, height: extractedH } = parseResult
-
-  const dimenH = height || extractedH
-  const dimenW = width || extractedW
-  const dimenStr = dimenH ? `${dimenW}x${dimenH}` : `${dimenW}w`
-  return `${prefix}images/stencil/${dimenStr}/products/${productId}/${imageId}${suffix}.${format}${params ? `?${params}` : ""}`
+  const { prefix, suffix, productId, imageId, format, width: pathWidth, height: pathHeight } = parseResult
+  const dimenStr = dimensionString(width || pathWidth, height || pathHeight)
+  u.pathname = `${prefix}images/stencil/${dimenStr}/products/${productId}/${imageId}${suffix}.${format}`
+  return u.toString()
 }

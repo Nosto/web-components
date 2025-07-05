@@ -13,20 +13,19 @@ describe("bigcommerce.transform", () => {
 
   it("returns original url if not matching pattern (invalid URL)", () => {
     const invalidUrl = "https://store.example.com/abc/products/123/other/456/image_name.200.300.jpg"
-    expect(
-      transform({
-        imageUrl: invalidUrl,
-        width: 100,
-        height: 100
-      })
-    ).toBe(invalidUrl)
-    expect(transform({ imageUrl: "not-a-url", width: 100, height: 100 })).toBe("not-a-url")
+    expect(transform(invalidUrl, { width: 100, height: 100 })).toBe(invalidUrl)
   })
 
   it("returns original url if already a CDN11 stencil url", () => {
-    expect(transform({ imageUrl: cdn11Base, width: 600, height: 300 })).toBe(stencilUrl.replace("{DIMEN}", "600x300"))
-    expect(transform({ imageUrl: cdn11WithParams, width: 800, height: 400 })).toBe(
+    expect(transform(cdn11Base, { width: 600, height: 300 })).toBe(stencilUrl.replace("{DIMEN}", "600x300"))
+    expect(transform(cdn11WithParams, { width: 800, height: 400 })).toBe(
       stencilUrlWithParams.replace("{DIMEN}", "800x400")
     )
+  })
+
+  it("returns transformed stencil URL", () => {
+    const input = stencilUrlWithParams.replace("{DIMEN}", "300x200")
+    const output = stencilUrlWithParams.replace("{DIMEN}", "600x400")
+    expect(transform(input, { width: 600, height: 400 })).toBe(output)
   })
 })

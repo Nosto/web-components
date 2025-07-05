@@ -1,58 +1,28 @@
-import type { Crop } from "./types"
-import type { Dimension, ShopifyTransformerProps, ShopifyUrlGroups } from "./types"
+import type { Operations } from "unpic/types"
+import { Crop } from "./types"
 
-function parseUrl(url: string) {
-  const regex =
-    /^(?<name>[a-z0-9-]+)(_(?<dimen>pico|icon|thumb|small|compact|medium|large|grande|original|master|(\d+x\d+))(_(?<crop>[a-z_]+))?)?\.(?<format>[a-z]+)(\?(?<params>.*))?$/g
+export function transform(src: string | URL, { width, height, crop }: Operations & { crop?: Crop } = {}): string {
+  const u = new URL(src.toString())
 
-  const lastURLSegment = url.substring(url.lastIndexOf("/") + 1)
+  // Extract path and extension
+  const pathMatch = u.pathname.match(
+    /^(.*\/[^\/]+?)(?:_(?:pico|icon|thumb|small|compact|medium|large|grande|original|master))?(?:_([0-9]*)x([0-9]*)(?:_(?:crop_)?([a-zA-Z0-9]+))?)?(\.[a-z0-9]+)$/i
+  )
+  if (!pathMatch) return src.toString()
+  const [, base, wStr, hStr, cropStr, ext] = pathMatch
 
-  const match = [...lastURLSegment.matchAll(regex)]
+  // Remove size/crop from path, restore original filename
+  u.pathname = `${base}${ext}`
 
-  return match.length ? (match[0].groups as ShopifyUrlGroups) : null
-}
-
-function applyDimension({ width, height }: Dimension, params: URLSearchParams, extractedDimension = "") {
-  const [partW, partH] = /^\d+x\d+$/.test(extractedDimension) ? extractedDimension.split("x") : []
-
-  if (width || partW) {
-    params.set("width", width || partW)
+  const params = {
+    width: width ?? (wStr && parseInt(wStr, 10)),
+    height: height ?? (hStr && parseInt(hStr, 10)),
+    crop: crop ?? cropStr
   }
-
-  if (height || partH) {
-    params.set("height", height || partH)
-  }
-}
-
-function applyCrop(provided: Crop | undefined, extracted: Crop | undefined, params: URLSearchParams) {
-  if (!extracted && !provided) {
-    return
-  }
-
-  const cropPosition = extracted?.includes("_") ? extracted.split("_")[1] : undefined
-
-  const cropValue = (provided || cropPosition)!
-  params.set("crop", cropValue)
-}
-
-// TODO: support as many params as possible from unpic documentation
-// https://unpic.pics/providers/shopify/
-export function transform({ imageUrl, width, height, crop }: ShopifyTransformerProps) {
-  const baseUrlPrefix = imageUrl.substring(0, imageUrl.lastIndexOf("/") + 1)
-
-  const parseResult = parseUrl(imageUrl)
-
-  if (!parseResult) {
-    return imageUrl
-  }
-
-  const { name, dimen, crop: cropMatch = crop, format, params } = parseResult
-  const searchParams = new URLSearchParams(params)
-
-  applyDimension({ width: width?.toString(), height: height?.toString() }, searchParams, dimen)
-  applyCrop(crop, cropMatch, searchParams)
-
-  const url = new URL(`${name}.${format}`, baseUrlPrefix)
-  url.search = searchParams.toString()
-  return url.toString()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      u.searchParams.set(key, String(value))
+    }
+  })
+  return u.toString()
 }

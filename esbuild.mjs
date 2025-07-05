@@ -1,4 +1,5 @@
 import esbuild from "esbuild"
+import fs from "fs"
 
 const external = ["liquidjs", "handlebars", "swiper"]
 
@@ -47,13 +48,16 @@ async function build() {
       format: "esm"
     })
 
-    await esbuild.build({
+    const result = await esbuild.build({
       ...sharedConfig,
       minifyWhitespace: true,
       outfile: "dist/main.es.bundle.js",
       format: "esm",
+      metafile: true,
       plugins: [stubExternal]
     })
+
+    fs.writeFileSync("meta.json", JSON.stringify(result.metafile))
 
     console.log("Build completed successfully.")
   } catch (error) {

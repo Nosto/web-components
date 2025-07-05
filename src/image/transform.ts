@@ -1,66 +1,38 @@
-import type { Crop, StyleAttributes } from "./types"
-import { transformBaseImageProps, type CoreImageAttributes, type Operations } from "@unpic/core/base"
-import type { BaseImagePropsType, NostoImageProps, Provider } from "./types"
-import type { Maybe } from "@nosto/nosto-js/client"
+import { transformBaseImageProps } from "@unpic/core/base"
+import type { BaseImageProps, NostoImageProps } from "./types"
 import { transform as bcTransform } from "./bigcommerce"
 import { transform as shopifyTransform } from "./shopify"
 import { toCamelCase } from "@/utils"
 
-function getProvider(url: string): Maybe<Provider> {
+function getTransformer(url: string) {
   if (url.includes("shopify")) {
-    return "shopify"
+    return shopifyTransform
   }
   if (url.includes("bigcommerce")) {
-    return "bigcommerce"
+    return bcTransform
   }
-  return undefined
+  // TODO nailgun image support
 }
 
-function transformUrl(provider: string | undefined) {
-  switch (provider) {
-    case "shopify":
-      return {
-        transformer: (src: string | URL, { width, height }: Operations, options?: { crop?: Crop }) => {
-          return shopifyTransform({ imageUrl: src.toString(), width, height, ...(options || {}) }) || src.toString()
-        }
-      }
-    case "bigcommerce":
-      return {
-        transformer: (src: string | URL, { width, height }: Operations, options?: unknown) => {
-          return bcTransform({ imageUrl: src.toString(), width, height, ...(options || {}) }) || src.toString()
-        }
-      }
-  }
-}
-
-export default function transform(props: NostoImageProps) {
-  const provider = getProvider(props.src)
-  const { transformer } = transformUrl(provider) || {}
+export default function transform({ crop, ...props }: NostoImageProps) {
+  const transformer = getTransformer(props.src)!
 
   const imageProps = {
     ...props,
     transformer,
-    ...(provider === "shopify" && {
-      options: {
-        crop: props.crop
-      }
-    })
-  } as BaseImagePropsType
+    operations: {
+      crop
+    }
+  } as BaseImageProps
 
-  const transformedImagePros = transformBaseImageProps<Operations, unknown, CoreImageAttributes<StyleAttributes>>(
-    imageProps
-  )
+  const transformedProps = transformBaseImageProps(imageProps)
 
-  const sanitizedProps = Object.fromEntries(
-    Object.entries(transformedImagePros).filter(([k, v]) => k !== "style" && !!v)
-  )
-
-  const sanitizedStyles = Object.fromEntries(
-    Object.entries(transformedImagePros.style || {}).map(([k, v]) => [toCamelCase(k), v])
+  const normalizedStyles = Object.fromEntries(
+    Object.entries(transformedProps.style || {}).map(([k, v]) => [toCamelCase(k), v])
   ) as unknown as CSSStyleDeclaration
 
   return {
-    props: sanitizedProps,
-    style: sanitizedStyles
+    ...transformedProps,
+    style: normalizedStyles
   }
 }
