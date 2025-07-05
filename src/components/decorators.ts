@@ -14,9 +14,10 @@ type ConstructorMetadata<T extends HTMLElement> = {
 export function customElement<T extends HTMLElement>(tagName: string) {
   return function (constructor: ConstructorMetadata<T>) {
     if (constructor.attributes) {
-      Object.entries(constructor.attributes).forEach(([fieldName, type]) =>
-        defineProperty(constructor.prototype, fieldName, type)
-      )
+      Object.entries(constructor.attributes).forEach(([fieldName, type]) => {
+        const propertyDescriptor = getPropertyDescriptor(fieldName, type)
+        Object.defineProperty(constructor.prototype, fieldName, propertyDescriptor)
+      })
     }
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
@@ -24,15 +25,14 @@ export function customElement<T extends HTMLElement>(tagName: string) {
   }
 }
 
-function defineProperty(target: unknown, propertyName: string, type: unknown) {
+function getPropertyDescriptor(propertyName: string, type: unknown) {
   const attributeName = toKebabCase(propertyName)
   if (type === Boolean) {
-    Object.defineProperty(target, propertyName, booleanAttribute(attributeName))
+    return booleanAttribute(attributeName)
   } else if (type === Number) {
-    Object.defineProperty(target, propertyName, numberAttribute(attributeName))
-  } else {
-    Object.defineProperty(target, propertyName, stringAttribute(attributeName))
+    return numberAttribute(attributeName)
   }
+  return stringAttribute(attributeName)
 }
 
 function toKebabCase(str: string) {
