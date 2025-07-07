@@ -1,3 +1,10 @@
+# [7.8.0](https://github.com/Nosto/web-components/compare/v7.7.1...v7.8.0) (2025-07-07)
+
+
+### Features
+
+* replace liquid and handlebars with vue templating ([baa63c4](https://github.com/Nosto/web-components/commit/baa63c49944117eec07a434caa655afbb3d2e462))
+
 ## [7.7.1](https://github.com/Nosto/web-components/compare/v7.7.0...v7.7.1) (2025-07-04)
 
 
