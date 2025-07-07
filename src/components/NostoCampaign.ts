@@ -49,13 +49,14 @@ export class NostoCampaign extends NostoElement {
 
 export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
+  const hasTemplate = element.template || element.firstChild instanceof HTMLTemplateElement
   const api = await new Promise(nostojs)
   const request = api
     .createRecommendationRequest({ includeTagging: true })
     // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
     .disableCampaignInjection()
     .setElements([element.placement!])
-    .setResponseMode(element.template ? "JSON_ORIGINAL" : "HTML")
+    .setResponseMode(hasTemplate ? "JSON_ORIGINAL" : "HTML")
 
   if (element.productId) {
     request.setProducts([
@@ -75,8 +76,10 @@ export async function loadCampaign(element: NostoCampaign) {
   const { recommendations } = await request.load(flags)
   const rec = recommendations[element.placement!]
   if (rec) {
-    if (element.template) {
-      const template = document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
+    if (hasTemplate) {
+      const template = element.template
+        ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
+        : (element.firstChild as HTMLTemplateElement)
       if (!template) {
         throw new Error(`Template with id "${element.template}" not found.`)
       }

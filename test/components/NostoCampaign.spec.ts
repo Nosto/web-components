@@ -80,19 +80,17 @@ describe("NostoCampaign", () => {
     campaign = mount({
       placement: "789",
       productId: "123",
-      variantId: "var1",
-      template: "inline-template"
+      variantId: "var1"
     })
 
     const template = document.createElement("template")
-    template.id = "inline-template"
     template.innerHTML = "<span>{{ html }}</span>"
-    document.body.appendChild(template)
+    campaign.appendChild(template)
 
     await campaign.connectedCallback()
 
     expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
-    expect(campaign.innerHTML).toBe(`<span>${htmlContent}</span>`)
+    expect(campaign.innerHTML).toBe(`<template><span>{{ html }}</span></template><span>recommended content</span>`)
   })
 
   it("should render campaign-level templated HTML if template is provided", async () => {
