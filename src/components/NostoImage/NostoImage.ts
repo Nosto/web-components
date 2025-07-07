@@ -1,8 +1,8 @@
-import type { Crop } from "../image/types"
-import { customElement } from "../components/decorators"
+import type { Crop } from "./types"
+import { customElement } from "../decorators"
 import type { Layout } from "@unpic/core/base"
-import transform from "@/image/transform"
-import { NostoElement } from "./NostoElement"
+import { transform } from "./transform"
+import { NostoElement } from "../NostoElement"
 
 /**
  * @alpha

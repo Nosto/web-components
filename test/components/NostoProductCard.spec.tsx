@@ -1,4 +1,4 @@
-import { NostoProductCard } from "../../src/components/NostoProductCard"
+import { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
 import { describe, beforeEach, expect, it, vi } from "vitest"
 import { createElement } from "../utils/jsx"
 

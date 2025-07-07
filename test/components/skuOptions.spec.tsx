@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { NostoProduct } from "@/components/NostoProduct"
-import "@/components/NostoSkuOptions"
+import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
+import "@/components/NostoSkuOptions/NostoSkuOptions"
 import { createElement } from "../utils/jsx"
 
 describe("sku options integration", () => {

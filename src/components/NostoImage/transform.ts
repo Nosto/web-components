@@ -14,7 +14,7 @@ function getTransformer(url: string) {
   // TODO nailgun image support
 }
 
-export default function transform({ crop, ...props }: NostoImageProps) {
+export function transform({ crop, ...props }: NostoImageProps) {
   const transformer = getTransformer(props.src)!
 
   const imageProps = {

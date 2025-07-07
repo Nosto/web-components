@@ -1,7 +1,7 @@
-import { customElement } from "./decorators"
+import { customElement } from "../decorators"
 import { assertRequired } from "@/utils"
-import { compile } from "@/services/vue"
-import { NostoElement } from "./NostoElement"
+import { compile } from "@/vue"
+import { NostoElement } from "../NostoElement"
 
 /**
  * A custom element that renders a product card using a Vue-like template.

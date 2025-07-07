@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { NostoImage } from "@/components/NostoImage"
+import { NostoImage } from "@/components/NostoImage/NostoImage"
 
 // TODO: extend this to check the presence of width and height attributes in resulting URL
 describe("NostoImage", () => {
