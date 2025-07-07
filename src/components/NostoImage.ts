@@ -67,7 +67,7 @@ export class NostoImage extends NostoElement {
 
     const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
-      img.setAttribute(key, value as string)
+      img.setAttribute(key, String(value))
     })
     Object.assign(img.style, style)
 
