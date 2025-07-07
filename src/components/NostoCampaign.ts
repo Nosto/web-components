@@ -80,11 +80,7 @@ export async function loadCampaign(element: NostoCampaign) {
       if (!template) {
         throw new Error(`Template with id "${element.template}" not found.`)
       }
-      const content = template.content.cloneNode(true) as DocumentFragment
-      const wrapper = document.createElement("div")
-      wrapper.appendChild(content)
-      compile(wrapper, rec as JSONResult)
-      element.append(...wrapper.children)
+      compile(element, template, rec as JSONResult)
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(

@@ -1,13 +1,17 @@
 /**
- * A minimal Vue template compiler for HTML elements.
+ * A minimal Vue-like template compiler for HTML elements.
  *
  * Supported directives:
  *   v-text, v-html, v-show, v-if, v-else, v-elseif (TODO), v-for, v-pre, v-cloak
  * Unsupported:
  *   v-on, v-model, v-slot, v-once
  */
-export function compile(root: HTMLElement, context: object) {
-  processElement(root, context)
+export function compile(root: HTMLElement, template: HTMLTemplateElement, context: object) {
+  const content = template.content.cloneNode(true) as DocumentFragment
+  const wrapper = document.createElement("div")
+  wrapper.appendChild(content)
+  processElement(wrapper, context)
+  root.append(...wrapper.children)
 }
 
 function parseVfor(directive: string) {
@@ -33,7 +37,7 @@ function setAttribute(el: Element, name: string, value: unknown) {
   }
 }
 
-function processElement(el: Element, context: object) {
+export function processElement(el: Element, context: object) {
   if (el.hasAttribute("v-pre")) {
     // Skip processing for elements with v-pre directive.
     el.removeAttribute("v-pre")

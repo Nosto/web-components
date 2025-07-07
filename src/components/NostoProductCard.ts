@@ -4,9 +4,9 @@ import { compile } from "@/services/vue"
 import { NostoElement } from "./NostoElement"
 
 /**
- * A custom element that renders a product card using a Vue template.
+ * A custom element that renders a product card using a Vue-like template.
  *
- * @property {string} template - The id of the Vue template element to use for rendering the product card.
+ * @property {string} template - The id of the Vue-like template element to use for rendering the product card.
  *
  * @throws {Error} - Throws an error if recoId or template is not provided.
  *
@@ -63,11 +63,7 @@ export class NostoProductCard extends NostoElement {
       throw new Error(`Template with id "${this.template}" not found.`)
     }
     const product = getData(this) ?? this.dataset
-    const content = template.content.cloneNode(true) as DocumentFragment
-    const wrapper = document.createElement("div")
-    wrapper.appendChild(content)
-    compile(wrapper, { product })
-    this.append(...wrapper.children)
+    compile(this, template, { product })
     this.toggleAttribute("loading", false)
   }
 }
