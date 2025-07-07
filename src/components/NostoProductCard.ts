@@ -1,6 +1,7 @@
 import { customElement } from "./decorators"
 import { assertRequired } from "@/utils"
 import { compile } from "@/services/vue"
+import { NostoElement } from "./NostoElement"
 
 /**
  * A custom element that renders a product card using a Vue template.
@@ -47,7 +48,7 @@ import { compile } from "@/services/vue"
  * ```
  */
 @customElement("nosto-product-card")
-export class NostoProductCard extends HTMLElement {
+export class NostoProductCard extends NostoElement {
   static attributes = {
     template: String
   }

@@ -33,18 +33,22 @@ describe("customElement", () => {
     class constructor extends HTMLElement {
       static attributes = {
         foo: String,
-        bar: Boolean
+        bar: Boolean,
+        baz: Number
       }
 
       foo!: string
       bar!: boolean
+      baz!: number
     }
 
     const e = new constructor()
     e.foo = "hello"
     e.bar = true
+    e.baz = 42
 
     expect(e.getAttribute("foo")).toBe("hello")
     expect(e.getAttribute("bar")).toBe("")
+    expect(e.getAttribute("baz")).toBe("42")
   })
 })

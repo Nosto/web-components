@@ -3,9 +3,24 @@ import { customElement } from "./decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/services/vue"
+import { NostoElement } from "./NostoElement"
 
+/**
+ * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
+ * This component fetches campaign data from Nosto and injects it into the DOM.
+ * It supports both HTML and JSON response modes, allowing for flexible rendering.
+ *
+ * @property {string} placement - The placement identifier for the campaign.
+ * @property {string} productId - The ID of the product to associate with
+ * the campaign.
+ * @property {string} [variantId] - The variant ID of the product.
+ * @property {string} template - The ID of the template to use for rendering
+ * the campaign. If provided, the campaign will be rendered using this template.
+ * @property {string} [init] - If set to "false", the component will not
+ * automatically load the campaign on connection. Defaults to "true".
+ */
 @customElement("nosto-campaign")
-export class NostoCampaign extends HTMLElement {
+export class NostoCampaign extends NostoElement {
   static attributes = {
     placement: String,
     productId: String,

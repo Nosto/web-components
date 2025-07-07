@@ -1,5 +1,6 @@
 import { assertRequired } from "@/utils"
 import { customElement } from "./decorators"
+import { NostoElement } from "./NostoElement"
 
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
@@ -20,7 +21,7 @@ import { customElement } from "./decorators"
  * ```
  */
 @customElement("nosto-dynamic-card")
-export class NostoDynamicCard extends HTMLElement {
+export class NostoDynamicCard extends NostoElement {
   static attributes = {
     handle: String,
     template: String,

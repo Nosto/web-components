@@ -14,3 +14,7 @@ export function assertRequired<T>(object: T, ...properties: (keyof T & string)[]
     }
   })
 }
+
+export function toCamelCase(str: string) {
+  return str.replace(/-([a-z])/g, (_, l) => l.toUpperCase())
+}

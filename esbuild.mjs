@@ -1,4 +1,5 @@
 import esbuild from "esbuild"
+import fs from "fs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -23,12 +24,14 @@ async function build() {
       format: "esm"
     })
 
-    // currently no difference to main.es.js, but keeping for future compatibility
-    await esbuild.build({
+    const result = await esbuild.build({
       ...sharedConfig,
       outfile: "dist/main.es.bundle.js",
-      format: "esm"
+      format: "esm",
+      metafile: true
     })
+
+    fs.writeFileSync("meta.json", JSON.stringify(result.metafile))
 
     console.log("Build completed successfully.")
   } catch (error) {
