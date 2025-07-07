@@ -1,6 +1,5 @@
 import type { Crop } from "../image/types"
 import { customElement } from "../components/decorators"
-import { checkRequired } from "@/utils"
 import type { Layout } from "@unpic/core/base"
 import transform from "@/image/transform"
 import { NostoElement } from "./NostoElement"
@@ -54,10 +53,10 @@ export class NostoImage extends NostoElement {
   crop?: Crop
 
   connectedCallback() {
-    this.validateProps()
+    validateProps(this)
     const { src, width, height, layout, aspectRatio, crop } = this
 
-    const { props, style } = transform({
+    const { style, ...props } = transform({
       src,
       width,
       height,
@@ -66,28 +65,23 @@ export class NostoImage extends NostoElement {
       crop
     })
 
-    const imageElement = document.createElement("img")
+    const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
-      imageElement.setAttribute(key, value as string)
+      img.setAttribute(key, String(value))
     })
-    Object.assign(imageElement.style, style)
+    Object.assign(img.style, style)
 
-    this.appendChild(imageElement)
+    this.appendChild(img)
   }
+}
 
-  validateProps() {
-    if (this.layout && !["fixed", "constrained", "fullWidth"].includes(this.layout)) {
-      throw new Error(`Invalid layout: ${this.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
-    }
-
-    if (this.layout !== "fullWidth") {
-      if (
-        !checkRequired(this, "width", "height") &&
-        !checkRequired(this, "width", "aspectRatio") &&
-        !checkRequired(this, "height", "aspectRatio")
-      ) {
-        throw new Error("Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided.")
-      }
+function validateProps(element: NostoImage) {
+  if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
+    throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
+  }
+  if (element.layout !== "fullWidth") {
+    if ((["width", "height", "aspectRatio"] as const).filter(prop => element[prop]).length < 2) {
+      throw new Error("Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided.")
     }
   }
 }
