@@ -1,7 +1,7 @@
 /* eslint-disable barrel-files/avoid-barrel-files */
-export { NostoCampaign } from "./components/NostoCampaign"
-export { NostoDynamicCard } from "./components/NostoDynamicCard"
-export { NostoProduct } from "./components/NostoProduct"
-export { NostoProductCard } from "./components/NostoProductCard"
-export { NostoSkuOptions } from "./components/NostoSkuOptions"
-export { NostoImage } from "./components/NostoImage"
+export { NostoCampaign } from "./components/NostoCampaign/NostoCampaign"
+export { NostoDynamicCard } from "./components/NostoDynamicCard/NostoDynamicCard"
+export { NostoImage } from "./components/NostoImage/NostoImage"
+export { NostoProduct } from "./components/NostoProduct/NostoProduct"
+export { NostoProductCard } from "./components/NostoProductCard/NostoProductCard"
+export { NostoSkuOptions } from "./components/NostoSkuOptions/NostoSkuOptions"

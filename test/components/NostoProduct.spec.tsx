@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
-import { NostoProduct } from "../../src/components/NostoProduct"
+import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
 import { EventName } from "@/components/NostoProduct/events"
 import { createElement } from "../utils/jsx"
 

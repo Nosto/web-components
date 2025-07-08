@@ -37,44 +37,55 @@ function setAttribute(el: Element, name: string, value: unknown) {
   }
 }
 
+const VPRE = "v-pre"
+const VIF = "v-if"
+const VELSEIF = "v-else-if"
+const VELSE = "v-else"
+const VSHOW = "v-show"
+const VFOR = "v-for"
+const VHTML = "v-html"
+const VTEXT = "v-text"
+const VBIND = "v-bind"
+const VCLOAK = "v-cloak"
+
 export function processElement(el: Element, context: object) {
-  if (el.hasAttribute("v-pre")) {
+  if (el.hasAttribute(VPRE)) {
     // Skip processing for elements with v-pre directive.
-    el.removeAttribute("v-pre")
+    el.removeAttribute(VPRE)
     return
   }
 
   // Process v-if directive: remove element if condition is false.
-  if (el.hasAttribute("v-if")) {
-    const condition = el.getAttribute("v-if")!
+  if (el.hasAttribute(VIF)) {
+    const condition = el.getAttribute(VIF)!
     if (!evaluate(condition, context)) {
       el.remove()
       return
     }
-    el.removeAttribute("v-if")
+    el.removeAttribute(VIF)
     // @ts-expect-error flag for v-else
     el.vif = true
   }
 
-  if (el.hasAttribute("v-else-if")) {
+  if (el.hasAttribute(VELSEIF)) {
     const prevSibling = el.previousElementSibling
     // @ts-expect-error vif flag set by v-if handling
     if (prevSibling && prevSibling.vif) {
       el.remove()
       return
     }
-    const condition = el.getAttribute("v-else-if")!
+    const condition = el.getAttribute(VELSEIF)!
     if (!evaluate(condition, context)) {
       el.remove()
       return
     }
-    el.removeAttribute("v-else-if")
+    el.removeAttribute(VELSEIF)
     // @ts-expect-error flag for v-else
     el.vif = true
   }
 
   // Process v-else directive: remove element if the previous v-if flagged element was not removed.
-  if (el.hasAttribute("v-else")) {
+  if (el.hasAttribute(VELSE)) {
     // v-else should be processed only if the previous element was removed.
     const prevSibling = el.previousElementSibling
     // @ts-expect-error vif flag set by v-if handling
@@ -82,19 +93,19 @@ export function processElement(el: Element, context: object) {
       el.remove()
       return
     }
-    el.removeAttribute("v-else")
+    el.removeAttribute(VELSE)
   }
 
-  if (el instanceof HTMLElement && el.hasAttribute("v-show")) {
+  if (el instanceof HTMLElement && el.hasAttribute(VSHOW)) {
     // v-show directive: toggle visibility based on condition.
-    const condition = el.getAttribute("v-show")!
+    const condition = el.getAttribute(VSHOW)!
     el.style.display = evaluate(condition, context) ? "" : "none"
-    el.removeAttribute("v-show")
+    el.removeAttribute(VSHOW)
   }
 
   // Process v-for directive: clone element for each item in the list.
-  if (el.hasAttribute("v-for")) {
-    const directive = el.getAttribute("v-for")!
+  if (el.hasAttribute(VFOR)) {
+    const directive = el.getAttribute(VFOR)!
     const match = parseVfor(directive)
     if (match) {
       const { aliasExp, indexExp, listExp } = match
@@ -105,7 +116,7 @@ export function processElement(el: Element, context: object) {
           list.forEach((item, index) => {
             // Clone the element and remove the v-for attribute.
             const clone = el.cloneNode(true) as HTMLElement
-            clone.removeAttribute("v-for")
+            clone.removeAttribute(VFOR)
             // Extend context with the current item and index.
             const childContext = { ...context, [aliasExp]: item, [indexExp]: index }
             processElement(clone, childContext)
@@ -144,22 +155,22 @@ export function processElement(el: Element, context: object) {
       el.removeAttribute(attr.name)
     }
     // v-html: set innerHTML to evaluated expression.
-    if (attr.name === "v-html") {
+    if (attr.name === VHTML) {
       el.innerHTML = String(evaluate(attr.value, context))
-      el.removeAttribute("v-html")
+      el.removeAttribute(VHTML)
     }
     // v-text: set textContent to evaluated expression.
-    if (attr.name === "v-text") {
+    if (attr.name === VTEXT) {
       el.textContent = String(evaluate(attr.value, context))
-      el.removeAttribute("v-text")
+      el.removeAttribute(VTEXT)
     }
     // v-bind: set attributes from an object.
-    if (attr.name === "v-bind") {
+    if (attr.name === VBIND) {
       const bindings = evaluate(attr.value, context) as object
       for (const [key, value] of Object.entries(bindings)) {
         setAttribute(el, key, value)
       }
-      el.removeAttribute("v-bind")
+      el.removeAttribute(VBIND)
     }
   })
 
@@ -176,9 +187,9 @@ export function processElement(el: Element, context: object) {
     }
   })
 
-  if (el.hasAttribute("v-cloak")) {
+  if (el.hasAttribute(VCLOAK)) {
     // Remove v-cloak attribute to hide the element after processing.
-    el.removeAttribute("v-cloak")
+    el.removeAttribute(VCLOAK)
   }
 }
 
