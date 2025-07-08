@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
-import { processElement } from "@/vue"
-import { createElement } from "./utils/jsx"
+import { processElement } from "@/templating/vue"
+import { createElement } from "../utils/jsx"
 
 describe("vue:compile", () => {
   let container: HTMLElement
@@ -119,6 +119,15 @@ describe("vue:compile", () => {
     const el = container.querySelector("#test") as HTMLElement
     expect(el.getAttribute("title")).toBe("Hello")
     expect(el.getAttribute("data-val")).toBe("123")
+    expect(el.hasAttribute("v-bind")).toBe(false)
+  })
+
+  it("should skip null and undefined values in v-bind", () => {
+    container.append(<div id="test" v-bind="{ title: null, 'data-val': undefined }"></div>)
+    processElement(container, {})
+    const el = container.querySelector("#test") as HTMLElement
+    expect(el.hasAttribute("title")).toBe(false)
+    expect(el.hasAttribute("data-val")).toBe(false)
     expect(el.hasAttribute("v-bind")).toBe(false)
   })
 

@@ -2,7 +2,8 @@ import { assertRequired } from "@/utils"
 import { customElement } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
-import { compile } from "@/vue"
+import { compile } from "@/templating/vue"
+import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
 
 /**
@@ -83,7 +84,7 @@ export async function loadCampaign(element: NostoCampaign) {
       if (!template) {
         throw new Error(`Template with id "${element.template}" not found.`)
       }
-      compile(element, template, rec as JSONResult)
+      compile(element, template, getContext(rec as JSONResult))
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(
