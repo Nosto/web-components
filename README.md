@@ -14,6 +14,7 @@ This package provides the following web components:
 | ----------------- | ------------------------- |
 | NostoCampaign     | Templating                |
 | NostoDynamicCard  | Templating (Shopify only) |
+| NostoImage        | Progressive Enhancement   |
 | NostoProduct      | Progressive Enhancement   |
 | NostoProductCard  | Templating                |
 | NostoSkuOptions   | Progressive Enhancement   |
