@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
-import "@/components/NostoProduct"
-import "@/components/NostoSkuOptions"
-import { NostoProduct } from "@/components/NostoProduct"
+import "@/components/NostoProduct/NostoProduct"
+import "@/components/NostoSkuOptions/NostoSkuOptions"
+import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
 import { createElement } from "../utils/jsx"
 
 const values = ["black", "white", "blue", "l", "m", "s", "cotton", "silk", "wool"] as const

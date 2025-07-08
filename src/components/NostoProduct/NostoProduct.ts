@@ -1,8 +1,8 @@
 import { assertRequired } from "@/utils"
-import { createStore, provideStore, Store } from "./NostoProduct/store"
-import { customElement } from "./decorators"
-import { syncSkuData } from "./common"
-import { NostoElement } from "./NostoElement"
+import { createStore, provideStore, Store } from "./store"
+import { customElement } from "../decorators"
+import { syncSkuData } from "../common"
+import { NostoElement } from "../NostoElement"
 
 /**
  * Custom element that represents a Nosto product component.

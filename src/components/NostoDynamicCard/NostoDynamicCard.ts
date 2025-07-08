@@ -1,6 +1,6 @@
 import { assertRequired } from "@/utils"
-import { customElement } from "./decorators"
-import { NostoElement } from "./NostoElement"
+import { customElement } from "../decorators"
+import { NostoElement } from "../NostoElement"
 
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.

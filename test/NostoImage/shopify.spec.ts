@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
-import { transform } from "@/image/shopify"
+import { transform } from "@/components/NostoImage/shopify"
 
-describe("shopify.transform", () => {
+describe("NostoImage/shopify.transform", () => {
   const base = "https://cdn.shopify.com/s/files/1/1183/1048/products/"
 
   it("returns original url if not matching pattern", () => {

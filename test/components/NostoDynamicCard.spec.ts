@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { NostoDynamicCard } from "../../src/components/NostoDynamicCard"
+import { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
 
 describe("NostoDynamicCard", () => {
   afterEach(() => {

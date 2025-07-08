@@ -1,7 +1,6 @@
-import { transform } from "@/image/shopify"
-import { describe } from "node:test"
+import { transform } from "@/components/NostoImage/shopify"
 import { transform as unpicTransform } from "unpic/providers/shopify"
-import { expect, it } from "vitest"
+import { describe, expect, it } from "vitest"
 
 describe("unpic.transformUrl vs custom transform", () => {
   const baseUrl = "https://cdn.shopify.com/s/files/1/1183/1048/products/"

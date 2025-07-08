@@ -1,7 +1,6 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import "@/components/NostoCampaign"
-import { NostoCampaign } from "@/components/NostoCampaign"
+import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 
 describe("NostoCampaign", () => {

@@ -1,9 +1,9 @@
 import { assertRequired } from "@/utils"
-import { customElement } from "./decorators"
+import { customElement } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
-import { compile } from "@/services/vue"
-import { NostoElement } from "./NostoElement"
+import { compile } from "@/vue"
+import { NostoElement } from "../NostoElement"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
