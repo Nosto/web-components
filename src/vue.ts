@@ -132,21 +132,30 @@ export function processElement(el: Element, context: object) {
 
   // Process v-bind and v-text on the current element.
   Array.from(el.attributes).forEach(attr => {
-    // v-bind:property
-    if (attr.name.startsWith("v-bind:")) {
-      const prop = attr.name.slice("v-bind:".length)
+    // v-bind: property binding
+    if (attr.name.startsWith("v-bind:") || attr.name.startsWith(":")) {
+      const prefix = attr.name.startsWith("v-bind:") ? "v-bind:" : ":"
+      const prop = attr.name.slice(prefix.length)
       const val = evaluate(attr.value, context)
       setAttribute(el, prop, val)
       el.removeAttribute(attr.name)
     }
-    // shorthand for v-bind:property
-    if (attr.name.startsWith(":")) {
-      const prop = attr.name.slice(1)
-      const val = evaluate(attr.value, context)
-      setAttribute(el, prop, val)
+    // v-on: event binding
+    // TODO add support for modifiers like .stop, .prevent, etc.
+    if (attr.name.startsWith("v-on:") || attr.name.startsWith("@")) {
+      const prefix = attr.name.startsWith("v-on:") ? "v-on:" : "@"
+      const event = attr.name.slice(prefix.length)
+      if (attr.value.match(/^\w+(\.\w+)*$/)) {
+        const handler = evaluate(attr.value, context)
+        el.addEventListener(event, handler)
+      } else {
+        el.addEventListener(event, (e: Event) => {
+          evaluate(attr.value, { ...context, $event: e })
+        })
+      }
       el.removeAttribute(attr.name)
     }
-    // property binding
+    // custom property binding
     if (attr.name.startsWith(".")) {
       const prop = attr.name.slice(1)
       const val = evaluate(attr.value, context)
