@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, vi } from "vitest"
 import { processElement } from "@/vue"
 import { createElement } from "./utils/jsx"
 
@@ -135,6 +135,32 @@ describe("vue:compile", () => {
     const p = el.querySelector("p")
     expect(span?.textContent).toBe("nested")
     expect(p?.getAttribute("data-val")).toBe("data")
+  })
+
+  it("should support v-on event binding", () => {
+    container.append(
+      <button id="test" v-on:click="handleClick">
+        Click me
+      </button>
+    )
+    const mockHandler = vi.fn()
+    processElement(container, { handleClick: mockHandler })
+    const button = container.querySelector("#test") as HTMLButtonElement
+    button.click()
+    expect(mockHandler).toHaveBeenCalled()
+  })
+
+  it("should support v-on event binding with expressions", () => {
+    container.append(
+      <button id="test" v-on:click="handleClick($event, 1, 2)">
+        Click me
+      </button>
+    )
+    const mockHandler = vi.fn()
+    processElement(container, { handleClick: mockHandler })
+    const button = container.querySelector("#test") as HTMLButtonElement
+    button.click()
+    expect(mockHandler).toHaveBeenCalled()
   })
 
   it("should support mustache interpolation in text elements", () => {
