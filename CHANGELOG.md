@@ -1,3 +1,10 @@
+## [7.8.1](https://github.com/Nosto/web-components/compare/v7.8.0...v7.8.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* move components to folders ([b213f11](https://github.com/Nosto/web-components/commit/b213f11969cbb081efea8b79c9af7189a05fdc41))
+
 # [7.8.0](https://github.com/Nosto/web-components/compare/v7.7.1...v7.8.0) (2025-07-07)
 
 
