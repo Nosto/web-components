@@ -5,7 +5,6 @@ import { transform } from "./transform"
 import { NostoElement } from "../NostoElement"
 
 /**
- * @alpha
  * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
  * refer https://unpic.dev for more details.
  *
