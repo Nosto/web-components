@@ -1,3 +1,10 @@
+# [7.9.0](https://github.com/Nosto/web-components/compare/v7.8.1...v7.9.0) (2025-07-08)
+
+
+### Features
+
+* add support for template children ([68b3b69](https://github.com/Nosto/web-components/commit/68b3b6905bcf2f84b214006adc7ced19f27d5669))
+
 ## [7.8.1](https://github.com/Nosto/web-components/compare/v7.8.0...v7.8.1) (2025-07-08)
 
 
