@@ -33,7 +33,7 @@ import { NostoElement } from "../NostoElement"
  * <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600" layout="constrained"></nosto-image>
  * ```
  */
-@customElement("nosto-image")
+@customElement("nosto-image", { observe: true })
 export class NostoImage extends NostoElement {
   static attributes = {
     src: String,
@@ -50,6 +50,12 @@ export class NostoImage extends NostoElement {
   aspectRatio?: number
   layout?: Layout
   crop?: Crop
+
+  attributeChangedCallback() {
+    if (this.isConnected) {
+      this.connectedCallback()
+    }
+  }
 
   connectedCallback() {
     validateProps(this)
@@ -69,8 +75,7 @@ export class NostoImage extends NostoElement {
       img.setAttribute(key, String(value))
     })
     Object.assign(img.style, style)
-
-    this.appendChild(img)
+    this.replaceChildren(img)
   }
 }
 

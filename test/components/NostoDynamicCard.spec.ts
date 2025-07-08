@@ -25,6 +25,26 @@ describe("NostoDynamicCard", () => {
     expect(card.innerHTML).toBe(validMarkup)
   })
 
+  it("rerenders when attributes change", async () => {
+    const validMarkup = "<div>Updated Product Info</div>"
+    const fakeResponse = {
+      ok: true,
+      text: vi.fn().mockResolvedValue(validMarkup)
+    }
+    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+
+    const card = new NostoDynamicCard()
+    card.handle = "test-handle"
+    card.template = "default"
+    document.body.appendChild(card)
+
+    card.handle = "updated-handle"
+    await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
+
+    expect(global.fetch).toHaveBeenCalledWith("/products/updated-handle?view=default&layout=none")
+    expect(card.innerHTML).toBe(validMarkup)
+  })
+
   it("uses placeholder content when placeholder attribute is set and template matches", async () => {
     const validMarkup = "<div>Product Info</div>"
     const fakeResponse = {

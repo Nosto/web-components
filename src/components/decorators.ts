@@ -9,15 +9,23 @@ type FieldType<T> = T extends string
 type ConstructorMetadata<T extends HTMLElement> = {
   new (): T
   attributes?: { [K in keyof T]?: FieldType<T[K]> }
+  observedAttributes?: string[]
 }
 
-export function customElement<T extends HTMLElement>(tagName: string) {
+type Flags = {
+  observe?: boolean
+}
+
+export function customElement<T extends HTMLElement>(tagName: string, flags?: Flags) {
   return function (constructor: ConstructorMetadata<T>) {
     if (constructor.attributes) {
       Object.entries(constructor.attributes).forEach(([fieldName, type]) => {
         const propertyDescriptor = getPropertyDescriptor(fieldName, type)
         Object.defineProperty(constructor.prototype, fieldName, propertyDescriptor)
       })
+      if (flags?.observe) {
+        constructor.observedAttributes = Object.keys(constructor.attributes).map(toKebabCase)
+      }
     }
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)

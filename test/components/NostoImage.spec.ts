@@ -33,6 +33,15 @@ describe("NostoImage", () => {
     expect(() => nostoImage.connectedCallback()).toThrowError(/Invalid layout/)
   })
 
+  it("rerenders when attributes are updated", () => {
+    initComp({ src: shopifyUrl, width: "300", height: "200" })
+    document.body.appendChild(nostoImage)
+    const oldSrcSet = nostoImage.querySelector("img")?.getAttribute("srcset")
+    nostoImage.width = 400
+    const newSrcSet = nostoImage.querySelector("img")?.getAttribute("srcset")
+    expect(newSrcSet).not.toBe(oldSrcSet)
+  })
+
   describe("Constrained Layout", () => {
     it("throws when width, height and aspectRadio are missing", () => {
       initComp({ src: "https://example.com/image.jpg" })

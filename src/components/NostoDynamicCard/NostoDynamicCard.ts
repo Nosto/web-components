@@ -20,7 +20,7 @@ import { NostoElement } from "../NostoElement"
  * </nosto-dynamic-card>
  * ```
  */
-@customElement("nosto-dynamic-card")
+@customElement("nosto-dynamic-card", { observe: true })
 export class NostoDynamicCard extends NostoElement {
   static attributes = {
     handle: String,
@@ -35,6 +35,14 @@ export class NostoDynamicCard extends NostoElement {
   variantId?: string
   placeholder?: boolean
   lazy?: boolean
+
+  async attributeChangedCallback() {
+    if (this.isConnected) {
+      this.toggleAttribute("loading", true)
+      this.innerHTML = await getMarkup(this)
+      this.toggleAttribute("loading", false)
+    }
+  }
 
   async connectedCallback() {
     assertRequired(this, "handle", "template")
