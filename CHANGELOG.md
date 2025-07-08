@@ -1,3 +1,11 @@
+# [7.10.0](https://github.com/Nosto/web-components/compare/v7.9.0...v7.10.0) (2025-07-08)
+
+
+### Features
+
+* add v-on support ([5b0d40b](https://github.com/Nosto/web-components/commit/5b0d40b17240b633b17a9668b46d0dd59b361e3f))
+* expose NostoImage ([de60350](https://github.com/Nosto/web-components/commit/de60350b770403fcddeff55e70a28c865beb048a))
+
 # [7.9.0](https://github.com/Nosto/web-components/compare/v7.8.1...v7.9.0) (2025-07-08)
 
 
