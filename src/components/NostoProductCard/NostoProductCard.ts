@@ -1,7 +1,8 @@
 import { customElement } from "../decorators"
 import { assertRequired } from "@/utils"
-import { compile } from "@/vue"
+import { compile } from "@/templating/vue"
 import { NostoElement } from "../NostoElement"
+import { getContext } from "../../templating/context"
 
 /**
  * A custom element that renders a product card using a Vue-like template.
@@ -63,7 +64,7 @@ export class NostoProductCard extends NostoElement {
       throw new Error(`Template with id "${this.template}" not found.`)
     }
     const product = getData(this) ?? this.dataset
-    compile(this, template, { product })
+    compile(this, template, getContext({ product }))
     this.toggleAttribute("loading", false)
   }
 }

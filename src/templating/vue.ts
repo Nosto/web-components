@@ -28,10 +28,12 @@ function parseVfor(directive: string) {
 }
 
 function setAttribute(el: Element, name: string, value: unknown) {
+  if (value === undefined || value === null) {
+    el.removeAttribute(name)
+    return
+  }
   if (el instanceof HTMLElement && name === "style" && value && typeof value === "object") {
-    Object.entries(value).forEach(([key, val]) => {
-      el.style.setProperty(key, String(val))
-    })
+    Object.assign(el.style, value)
   } else {
     el.setAttribute(name, String(value))
   }
