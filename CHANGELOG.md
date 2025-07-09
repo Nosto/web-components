@@ -1,3 +1,10 @@
+# [7.11.0](https://github.com/Nosto/web-components/compare/v7.10.0...v7.11.0) (2025-07-09)
+
+
+### Features
+
+* add attribute change listeners ([5a22b18](https://github.com/Nosto/web-components/commit/5a22b18f9619c703351296f8533535686ed69538))
+
 # [7.10.0](https://github.com/Nosto/web-components/compare/v7.9.0...v7.10.0) (2025-07-08)
 
 
