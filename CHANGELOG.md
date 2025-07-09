@@ -1,3 +1,10 @@
+# [7.12.0](https://github.com/Nosto/web-components/compare/v7.11.0...v7.12.0) (2025-07-09)
+
+
+### Features
+
+* extend template context ([3cf8e9c](https://github.com/Nosto/web-components/commit/3cf8e9c8509594e471a929c9c9b1ad041f8d9c90))
+
 # [7.11.0](https://github.com/Nosto/web-components/compare/v7.10.0...v7.11.0) (2025-07-09)
 
 
