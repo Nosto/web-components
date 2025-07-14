@@ -35,6 +35,7 @@ import { NostoElement } from "../NostoElement"
  */
 @customElement("nosto-image", { observe: true })
 export class NostoImage extends NostoElement {
+  /** @private */
   static attributes = {
     src: String,
     width: Number,

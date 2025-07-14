@@ -22,6 +22,7 @@ import { NostoElement } from "../NostoElement"
  */
 @customElement("nosto-campaign")
 export class NostoCampaign extends NostoElement {
+  /** @private */
   static attributes = {
     placement: String,
     productId: String,

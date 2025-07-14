@@ -40,6 +40,7 @@ import { NostoElement } from "../NostoElement"
  */
 @customElement("nosto-product")
 export class NostoProduct extends NostoElement {
+  /** @private */
   static attributes = {
     productId: String,
     recoId: String,

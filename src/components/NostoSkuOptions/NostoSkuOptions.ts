@@ -31,6 +31,7 @@ import { NostoElement } from "../NostoElement"
  */
 @customElement("nosto-sku-options")
 export class NostoSkuOptions extends NostoElement {
+  /** @private */
   static attributes = {
     name: String
   }
