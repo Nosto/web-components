@@ -127,14 +127,14 @@ describe("NostoProductCard", () => {
       <template id="test3">
         <div class="product">
           <a v-bind:href="product.url" class="product-link">
-            <img v-bind:src="product.image_url" v-bind:alt="product.name" class="product-image" />
+            <img v-bind:src="product.imageUrl" v-bind:alt="product.name" class="product-image" />
           </a>
           <h1 v-text="product.name"></h1>
-          <span class="product-material" v-text="product.custom_fields.material"></span>
+          <span class="product-material" v-text="product.customFields.material"></span>
           <span class="product-description" v-text="product.description"></span>
           <span class="product-price" v-text="product.price"></span>
-          <span class="product-list-price" v-text="product.list_price"></span>
-          <span class="product-rating" v-text="product.rating_value"></span>
+          <span class="product-list-price" v-text="product.listPrice"></span>
+          <span class="product-rating" v-text="product.ratingValue"></span>
         </div>
       </template>
     )
