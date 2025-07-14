@@ -33,7 +33,9 @@ describe("NostoCampaign", () => {
 
   it("should throw in connectedCallback if placement is missing", async () => {
     campaign = new NostoCampaign()
-    await expect(campaign.connectedCallback()).rejects.toThrow("Property placement is required.")
+    await expect(campaign.connectedCallback()).rejects.toThrow(
+      "placement or id attribute is required for NostoCampaign"
+    )
   })
 
   it("should throw in connectedCallback if template is missing", async () => {
