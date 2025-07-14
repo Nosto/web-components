@@ -22,6 +22,7 @@ import { NostoElement } from "../NostoElement"
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class NostoDynamicCard extends NostoElement {
+  /** @private */
   static attributes = {
     handle: String,
     template: String,

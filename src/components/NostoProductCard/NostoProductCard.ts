@@ -50,6 +50,7 @@ import { getContext } from "../../templating/context"
  */
 @customElement("nosto-product-card")
 export class NostoProductCard extends NostoElement {
+  /** @private */
   static attributes = {
     template: String
   }
