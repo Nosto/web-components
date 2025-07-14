@@ -1,3 +1,15 @@
+# [8.0.0](https://github.com/Nosto/web-components/compare/v7.12.1...v8.0.0) (2025-07-14)
+
+
+### Features
+
+* normalize context to camelCase ([74a4ca3](https://github.com/Nosto/web-components/commit/74a4ca39e6cb50f67eb3aa92c24b95d1d76e5528))
+
+
+### BREAKING CHANGES
+
+* snake case to camel case context treatment
+
 ## [7.12.1](https://github.com/Nosto/web-components/compare/v7.12.0...v7.12.1) (2025-07-14)
 
 
