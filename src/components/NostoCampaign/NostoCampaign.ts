@@ -1,4 +1,3 @@
-import { assertRequired } from "@/utils"
 import { customElement } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
@@ -10,8 +9,9 @@ import { NostoElement } from "../NostoElement"
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
  * This component fetches campaign data from Nosto and injects it into the DOM.
  * It supports both HTML and JSON response modes, allowing for flexible rendering.
+ * The placement or id attribute will be used as the identifier of the placement to be fetched.
  *
- * @property {string} placement - The placement identifier for the campaign.
+ * @property {string} placement (or id) - The placement identifier for the campaign.
  * @property {string} productId - The ID of the product to associate with
  * the campaign.
  * @property {string} [variantId] - The variant ID of the product.
@@ -38,7 +38,9 @@ export class NostoCampaign extends NostoElement {
   init?: string
 
   async connectedCallback() {
-    assertRequired(this, "placement")
+    if (!this.placement && !this.id) {
+      throw new Error("placement or id attribute is required for NostoCampaign")
+    }
     if (this.init !== "false") {
       await loadCampaign(this)
     }
@@ -52,12 +54,13 @@ export class NostoCampaign extends NostoElement {
 export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
   const useTemplate = element.template || element.querySelector(":scope > template")
+  const placement = element.placement ?? element.id
   const api = await new Promise(nostojs)
   const request = api
     .createRecommendationRequest({ includeTagging: true })
     // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
     .disableCampaignInjection()
-    .setElements([element.placement!])
+    .setElements([placement])
     .setResponseMode(useTemplate ? "JSON_ORIGINAL" : "HTML")
 
   if (element.productId) {
@@ -76,7 +79,7 @@ export async function loadCampaign(element: NostoCampaign) {
   }
 
   const { recommendations } = await request.load(flags)
-  const rec = recommendations[element.placement!]
+  const rec = recommendations[placement]
   if (rec) {
     if (useTemplate) {
       const template = element.template
@@ -89,8 +92,8 @@ export async function loadCampaign(element: NostoCampaign) {
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(
-        { [element.placement]: rec as string | AttributedCampaignResult },
-        { [element.placement]: element }
+        { [placement]: rec as string | AttributedCampaignResult },
+        { [placement]: element }
       )
     }
   }
