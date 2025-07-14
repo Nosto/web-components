@@ -1,3 +1,10 @@
+## [7.12.1](https://github.com/Nosto/web-components/compare/v7.12.0...v7.12.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* hide attributes from typedoc ([2e45f99](https://github.com/Nosto/web-components/commit/2e45f99a8c92050fa681ca5532705a6b5a3b4e5c))
+
 # [7.12.0](https://github.com/Nosto/web-components/compare/v7.11.0...v7.12.0) (2025-07-09)
 
 
