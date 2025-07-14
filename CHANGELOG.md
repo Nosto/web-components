@@ -1,3 +1,10 @@
+## [8.0.1](https://github.com/Nosto/web-components/compare/v8.0.0...v8.0.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* use id as alias for placement ([fb48c39](https://github.com/Nosto/web-components/commit/fb48c39f9363d22a7234cdbdeeca678b3f857d9f))
+
 # [8.0.0](https://github.com/Nosto/web-components/compare/v7.12.1...v8.0.0) (2025-07-14)
 
 
