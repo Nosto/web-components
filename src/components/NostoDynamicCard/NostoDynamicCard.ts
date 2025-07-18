@@ -90,9 +90,9 @@ async function getMarkup(element: NostoDynamicCard) {
   }
   let markup = await result.text()
   if (element.section) {
-    const wrapper = document.createElement("div")
-    wrapper.innerHTML = markup.trim()
-    markup = (wrapper.firstChild as HTMLElement)?.innerHTML?.trim()
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(markup, "text/html")
+    markup = doc.body.firstElementChild?.innerHTML?.trim() || markup
   }
   const key = element.template || element.section || ""
   placeholders.set(key, markup)
