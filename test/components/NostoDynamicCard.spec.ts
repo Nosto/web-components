@@ -25,6 +25,25 @@ describe("NostoDynamicCard", () => {
     expect(card.innerHTML).toBe(validMarkup)
   })
 
+  it("supports section rendering", async () => {
+    const validMarkup = "<section><div>Product Info</div></section>"
+    const fakeResponse = {
+      ok: true,
+      text: vi.fn().mockResolvedValue(`<section>${validMarkup}</section>`)
+    }
+    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+
+    const card = new NostoDynamicCard()
+    card.handle = "test-handle"
+    card.section = "product-card"
+
+    // Call connectedCallback manually since it's not automatically triggered in tests.
+    await card.connectedCallback()
+
+    expect(global.fetch).toHaveBeenCalledWith("/products/test-handle?section_id=product-card")
+    expect(card.innerHTML).toBe(validMarkup)
+  })
+
   it("rerenders when attributes change", async () => {
     const validMarkup = "<div>Updated Product Info</div>"
     const fakeResponse = {

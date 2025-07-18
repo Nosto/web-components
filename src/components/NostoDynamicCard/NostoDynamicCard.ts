@@ -8,7 +8,8 @@ import { NostoElement } from "../NostoElement"
  * This component is designed to be used in a Shopify environment and fetches product data dynamically.
  *
  * @property {string} handle - The product handle to fetch data for. Required.
- * @property {string} template - The template to use for rendering the product. Required.
+ * @property {string} section - The section to use for rendering the product. section or template is required.
+ * @property {string} template - The template to use for rendering the product. section or template is required.
  * @property {string} [variantId] - The variant ID to fetch specific variant data. Optional.
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
@@ -25,6 +26,7 @@ export class NostoDynamicCard extends NostoElement {
   /** @private */
   static attributes = {
     handle: String,
+    section: String,
     template: String,
     variantId: String,
     placeholder: Boolean,
@@ -32,7 +34,8 @@ export class NostoDynamicCard extends NostoElement {
   }
 
   handle!: string
-  template!: string
+  section?: string
+  template?: string
   variantId?: string
   placeholder?: boolean
   lazy?: boolean
@@ -46,10 +49,11 @@ export class NostoDynamicCard extends NostoElement {
   }
 
   async connectedCallback() {
-    assertRequired(this, "handle", "template")
+    assertRequired(this, "handle")
     this.toggleAttribute("loading", true)
-    if (this.placeholder && placeholders.has(this.template)) {
-      this.innerHTML = placeholders.get(this.template) || ""
+    const key = this.template || this.section || ""
+    if (this.placeholder && placeholders.has(key)) {
+      this.innerHTML = placeholders.get(key) || ""
     }
     if (this.lazy) {
       const observer = new IntersectionObserver(async entries => {
@@ -71,8 +75,12 @@ const placeholders = new Map<string, string>()
 
 async function getMarkup(element: NostoDynamicCard) {
   const params = new URLSearchParams()
-  params.set("view", element.template)
-  params.set("layout", "none")
+  if (element.template) {
+    params.set("view", element.template)
+    params.set("layout", "none")
+  } else if (element.section) {
+    params.set("section_id", element.section)
+  }
   if (element.variantId) {
     params.set("variant", element.variantId)
   }
@@ -80,8 +88,14 @@ async function getMarkup(element: NostoDynamicCard) {
   if (!result.ok) {
     throw new Error("Failed to fetch product data")
   }
-  const markup = await result.text()
-  placeholders.set(element.template, markup)
+  let markup = await result.text()
+  if (element.section) {
+    const wrapper = document.createElement("div")
+    wrapper.innerHTML = markup.trim()
+    markup = (wrapper.firstChild as HTMLElement)?.innerHTML?.trim()
+  }
+  const key = element.template || element.section || ""
+  placeholders.set(key, markup)
   if (/<(body|html)/.test(markup)) {
     throw new Error(
       `Invalid markup for template ${element.template}, make sure that no <body> or <html> tags are included.`
