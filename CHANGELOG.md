@@ -1,3 +1,10 @@
+# [8.1.0](https://github.com/Nosto/web-components/compare/v8.0.1...v8.1.0) (2025-07-18)
+
+
+### Features
+
+* support sections in addition to custom templates ([2126753](https://github.com/Nosto/web-components/commit/212675361af5cfd022e3fbfcea48b74dae16ef24))
+
 ## [8.0.1](https://github.com/Nosto/web-components/compare/v8.0.0...v8.0.1) (2025-07-14)
 
 
