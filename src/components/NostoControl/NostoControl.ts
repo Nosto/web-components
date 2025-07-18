@@ -4,7 +4,7 @@ import { NostoElement } from "../NostoElement"
 
 /**
  * This component replaces its children with the content of the first template
- * that matches the current search session segment.
+ * that matches any of the current user's Nosto segments.
  */
 @customElement("nosto-control")
 export class NostoControl extends NostoElement {
