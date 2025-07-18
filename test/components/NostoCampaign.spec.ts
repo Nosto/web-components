@@ -2,12 +2,15 @@ import { describe, it, beforeEach, expect, vi } from "vitest"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
+import { RequestOrchestrator } from "@/components/NostoCampaign/RequestOrchestrator"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
 
   beforeEach(() => {
     document.body.innerHTML = ""
+    // Reset the singleton instance for each test
+    ;(RequestOrchestrator as unknown as { instance: RequestOrchestrator | null }).instance = null
   })
 
   function mount(attrs: Record<string, string> = {}) {

@@ -4,6 +4,7 @@ import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
+import { RequestOrchestrator } from "./RequestOrchestrator"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -55,22 +56,6 @@ export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
   const useTemplate = element.template || element.querySelector(":scope > template")
   const placement = element.placement ?? element.id
-  const api = await new Promise(nostojs)
-  const request = api
-    .createRecommendationRequest({ includeTagging: true })
-    // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
-    .disableCampaignInjection()
-    .setElements([placement])
-    .setResponseMode(useTemplate ? "JSON_ORIGINAL" : "HTML")
-
-  if (element.productId) {
-    request.setProducts([
-      {
-        product_id: element.productId,
-        ...(element.variantId ? { sku_id: element.variantId } : {})
-      }
-    ])
-  }
 
   const flags = {
     skipPageViews: true,
@@ -78,24 +63,41 @@ export async function loadCampaign(element: NostoCampaign) {
     skipEvents: !element.productId
   }
 
-  const { recommendations } = await request.load(flags)
-  const rec = recommendations[placement]
-  if (rec) {
-    if (useTemplate) {
-      const template = element.template
-        ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
-        : element.querySelector<HTMLTemplateElement>(":scope > template")
-      if (!template) {
-        throw new Error(`Template with id "${element.template}" not found.`)
-      }
-      compile(element, template, getContext(rec as JSONResult))
-      api.attributeProductClicksInCampaign(element, rec as JSONResult)
-    } else {
-      await api.placements.injectCampaigns(
-        { [placement]: rec as string | AttributedCampaignResult },
-        { [placement]: element }
-      )
-    }
+  const requestConfig = {
+    placement,
+    responseMode: useTemplate ? ("JSON_ORIGINAL" as const) : ("HTML" as const),
+    productId: element.productId,
+    variantId: element.variantId,
+    flags
   }
-  element.toggleAttribute("loading", false)
+
+  try {
+    const orchestrator = RequestOrchestrator.getInstance()
+    const rec = await orchestrator.scheduleRequest(requestConfig)
+
+    if (rec) {
+      if (useTemplate) {
+        const template = element.template
+          ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
+          : element.querySelector<HTMLTemplateElement>(":scope > template")
+        if (!template) {
+          throw new Error(`Template with id "${element.template}" not found.`)
+        }
+        compile(element, template, getContext(rec as JSONResult))
+        const api = await new Promise(nostojs)
+        api.attributeProductClicksInCampaign(element, rec as JSONResult)
+      } else {
+        const api = await new Promise(nostojs)
+        await api.placements.injectCampaigns(
+          { [placement]: rec as string | AttributedCampaignResult },
+          { [placement]: element }
+        )
+      }
+    }
+  } catch (error) {
+    console.error("Failed to load campaign:", error)
+    throw error
+  } finally {
+    element.toggleAttribute("loading", false)
+  }
 }
