@@ -1,3 +1,10 @@
+# [8.2.0](https://github.com/Nosto/web-components/compare/v8.1.0...v8.2.0) (2025-07-18)
+
+
+### Features
+
+* create NostoControl for conditional rendering ([6ef28f0](https://github.com/Nosto/web-components/commit/6ef28f0bf063d5a232e6b6e2e7be4f1d4883227f))
+
 # [8.1.0](https://github.com/Nosto/web-components/compare/v8.0.1...v8.1.0) (2025-07-18)
 
 
