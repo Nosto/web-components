@@ -4,7 +4,7 @@ import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
-import { RequestOrchestrator } from "./RequestOrchestrator"
+import { scheduleRequest } from "./RequestOrchestrator"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -72,8 +72,7 @@ export async function loadCampaign(element: NostoCampaign) {
   }
 
   try {
-    const orchestrator = RequestOrchestrator.getInstance()
-    const rec = await orchestrator.scheduleRequest(requestConfig)
+    const rec = await scheduleRequest(requestConfig)
 
     if (rec) {
       if (useTemplate) {

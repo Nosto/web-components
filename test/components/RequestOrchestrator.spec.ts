@@ -1,21 +1,12 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
-import { RequestOrchestrator } from "@/components/NostoCampaign/RequestOrchestrator"
+import { scheduleRequest, resetOrchestrator } from "@/components/NostoCampaign/RequestOrchestrator"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 
 describe("RequestOrchestrator", () => {
-  let orchestrator: RequestOrchestrator
-
   beforeEach(() => {
-    // Reset the singleton instance for each test
-    RequestOrchestrator["instance"] = null
-    orchestrator = RequestOrchestrator.getInstance()
+    // Reset the orchestrator state for each test
+    resetOrchestrator()
     vi.clearAllMocks()
-  })
-
-  it("should return singleton instance", () => {
-    const instance1 = RequestOrchestrator.getInstance()
-    const instance2 = RequestOrchestrator.getInstance()
-    expect(instance1).toBe(instance2)
   })
 
   it("should batch compatible requests", async () => {
@@ -52,10 +43,7 @@ describe("RequestOrchestrator", () => {
     }
 
     // Schedule both requests
-    const [result1, result2] = await Promise.all([
-      orchestrator.scheduleRequest(config1),
-      orchestrator.scheduleRequest(config2)
-    ])
+    const [result1, result2] = await Promise.all([scheduleRequest(config1), scheduleRequest(config2)])
 
     // Verify both requests were batched into a single API call
     expect(mockBuilder.createRecommendationRequest).toHaveBeenCalledTimes(1)
@@ -103,10 +91,7 @@ describe("RequestOrchestrator", () => {
     }
 
     // Schedule both requests
-    const [result1, result2] = await Promise.all([
-      orchestrator.scheduleRequest(config1),
-      orchestrator.scheduleRequest(config2)
-    ])
+    const [result1, result2] = await Promise.all([scheduleRequest(config1), scheduleRequest(config2)])
 
     // Verify both requests resulted in separate API calls
     expect(mockBuilder.createRecommendationRequest).toHaveBeenCalledTimes(2)
@@ -139,7 +124,7 @@ describe("RequestOrchestrator", () => {
       flags: { skipPageViews: true, skipEvents: true }
     }
 
-    await expect(orchestrator.scheduleRequest(config)).rejects.toThrow("API Error")
+    await expect(scheduleRequest(config)).rejects.toThrow("API Error")
   })
 
   it("should batch requests with products correctly", async () => {
@@ -179,7 +164,7 @@ describe("RequestOrchestrator", () => {
       flags: { skipPageViews: true, skipEvents: false }
     }
 
-    await Promise.all([orchestrator.scheduleRequest(config1), orchestrator.scheduleRequest(config2)])
+    await Promise.all([scheduleRequest(config1), scheduleRequest(config2)])
 
     // Verify setProducts was called with the correct product info
     expect(mockBuilder.createRecommendationRequest().setProducts).toHaveBeenCalledWith([
