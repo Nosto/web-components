@@ -20,7 +20,7 @@ import { NostoElement } from "../NostoElement"
  * @property {string} [init] - If set to "false", the component will not
  * automatically load the campaign on connection. Defaults to "true".
  */
-@customElement("nosto-campaign")
+@customElement("nosto-campaign", { observe: true })
 export class NostoCampaign extends NostoElement {
   /** @private */
   static attributes = {
@@ -36,6 +36,12 @@ export class NostoCampaign extends NostoElement {
   variantId?: string
   template!: string
   init?: string
+
+  attributeChangedCallback() {
+    if (this.isConnected) {
+      this.connectedCallback()
+    }
+  }
 
   async connectedCallback() {
     if (!this.placement && !this.id) {

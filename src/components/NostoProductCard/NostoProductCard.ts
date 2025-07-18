@@ -48,7 +48,7 @@ import { getContext } from "../../templating/context"
  * </nosto-product-card>
  * ```
  */
-@customElement("nosto-product-card")
+@customElement("nosto-product-card", { observe: true })
 export class NostoProductCard extends NostoElement {
   /** @private */
   static attributes = {
@@ -56,6 +56,12 @@ export class NostoProductCard extends NostoElement {
   }
 
   template!: string
+
+  attributeChangedCallback() {
+    if (this.isConnected) {
+      this.connectedCallback()
+    }
+  }
 
   async connectedCallback() {
     assertRequired(this, "template")

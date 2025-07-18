@@ -38,7 +38,7 @@ import { NostoElement } from "../NostoElement"
  * ```
  *
  */
-@customElement("nosto-product")
+@customElement("nosto-product", { observe: true })
 export class NostoProduct extends NostoElement {
   /** @private */
   static attributes = {
@@ -51,6 +51,12 @@ export class NostoProduct extends NostoElement {
   productId!: string
   recoId!: string
   skuSelected!: boolean
+
+  attributeChangedCallback() {
+    if (this.isConnected) {
+      this.connectedCallback()
+    }
+  }
 
   connectedCallback() {
     assertRequired(this, "productId", "recoId")

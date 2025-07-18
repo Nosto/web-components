@@ -6,8 +6,14 @@ import { NostoElement } from "../NostoElement"
  * This component replaces its children with the content of the first template
  * that matches any of the current user's Nosto segments.
  */
-@customElement("nosto-control")
+@customElement("nosto-control", { observe: true })
 export class NostoControl extends NostoElement {
+  attributeChangedCallback() {
+    if (this.isConnected) {
+      this.connectedCallback()
+    }
+  }
+
   async connectedCallback() {
     const api = await new Promise(nostojs)
     const { segments } = await api.getSearchSessionParams()

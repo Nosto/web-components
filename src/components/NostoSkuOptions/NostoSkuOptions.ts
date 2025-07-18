@@ -29,7 +29,7 @@ import { NostoElement } from "../NostoElement"
  * </nosto-sku-options>
  * ```
  */
-@customElement("nosto-sku-options")
+@customElement("nosto-sku-options", { observe: true })
 export class NostoSkuOptions extends NostoElement {
   /** @private */
   static attributes = {
@@ -37,6 +37,12 @@ export class NostoSkuOptions extends NostoElement {
   }
 
   name!: string
+
+  attributeChangedCallback() {
+    if (this.isConnected) {
+      this.connectedCallback()
+    }
+  }
 
   connectedCallback() {
     assertRequired(this, "name")
