@@ -91,20 +91,14 @@ function groupCompatibleRequests(requests: CampaignRequest[]): CampaignRequest[]
 /**
  * Determines if two requests can be batched together
  */
-function areRequestsCompatible(a: CampaignRequestConfig, b: CampaignRequestConfig): boolean {
-  return (
-    a.responseMode === b.responseMode &&
-    a.flags.skipPageViews === b.flags.skipPageViews &&
-    a.flags.skipEvents === b.flags.skipEvents &&
-    a.productId === b.productId &&
-    a.variantId === b.variantId
-  )
+function areRequestsCompatible(a: CampaignRequestConfig, b: CampaignRequestConfig) {
+  return a.responseMode === b.responseMode && a.productId === b.productId && a.variantId === b.variantId
 }
 
 /**
  * Executes a group of compatible requests as a single batched API call
  */
-async function executeGroup(group: CampaignRequest[]): Promise<void> {
+async function executeGroup(group: CampaignRequest[]) {
   try {
     const api = await new Promise(nostojs)
     const representative = group[0].config
@@ -141,7 +135,7 @@ async function executeGroup(group: CampaignRequest[]): Promise<void> {
 /**
  * Resets the orchestrator state (useful for testing)
  */
-export function resetOrchestrator(): void {
+export function resetOrchestrator() {
   pendingRequests = []
   if (batchTimeout) {
     clearTimeout(batchTimeout)
