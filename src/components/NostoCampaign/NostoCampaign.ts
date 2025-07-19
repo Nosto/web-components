@@ -71,32 +71,27 @@ export async function loadCampaign(element: NostoCampaign) {
     flags
   }
 
-  try {
-    const rec = await scheduleRequest(requestConfig)
+  const rec = await scheduleRequest(requestConfig)
 
-    if (rec) {
-      if (useTemplate) {
-        const template = element.template
-          ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
-          : element.querySelector<HTMLTemplateElement>(":scope > template")
-        if (!template) {
-          throw new Error(`Template with id "${element.template}" not found.`)
-        }
-        compile(element, template, getContext(rec as JSONResult))
-        const api = await new Promise(nostojs)
-        api.attributeProductClicksInCampaign(element, rec as JSONResult)
-      } else {
-        const api = await new Promise(nostojs)
-        await api.placements.injectCampaigns(
-          { [placement]: rec as string | AttributedCampaignResult },
-          { [placement]: element }
-        )
+  if (rec) {
+    const api = await new Promise(nostojs)
+
+    if (useTemplate) {
+      const template = element.template
+        ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
+        : element.querySelector<HTMLTemplateElement>(":scope > template")
+      if (!template) {
+        throw new Error(`Template with id "${element.template}" not found.`)
       }
+      compile(element, template, getContext(rec as JSONResult))
+      api.attributeProductClicksInCampaign(element, rec as JSONResult)
+    } else {
+      await api.placements.injectCampaigns(
+        { [placement]: rec as string | AttributedCampaignResult },
+        { [placement]: element }
+      )
     }
-  } catch (error) {
-    console.error("Failed to load campaign:", error)
-    throw error
-  } finally {
-    element.toggleAttribute("loading", false)
   }
+
+  element.toggleAttribute("loading", false)
 }

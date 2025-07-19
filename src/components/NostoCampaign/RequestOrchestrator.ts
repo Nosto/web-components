@@ -101,25 +101,25 @@ function areRequestsCompatible(a: CampaignRequestConfig, b: CampaignRequestConfi
 async function executeGroup(group: CampaignRequest[]) {
   try {
     const api = await new Promise(nostojs)
-    const representative = group[0].config
+    const config = group[0].config
     const placements = group.map(req => req.config.placement)
 
     const request = api
       .createRecommendationRequest({ includeTagging: true })
       .disableCampaignInjection()
       .setElements(placements)
-      .setResponseMode(representative.responseMode)
+      .setResponseMode(config.responseMode)
 
-    if (representative.productId) {
+    if (config.productId) {
       request.setProducts([
         {
-          product_id: representative.productId,
-          ...(representative.variantId ? { sku_id: representative.variantId } : {})
+          product_id: config.productId,
+          ...(config.variantId ? { sku_id: config.variantId } : {})
         }
       ])
     }
 
-    const { recommendations } = await request.load(representative.flags)
+    const { recommendations } = await request.load(config.flags)
 
     // Distribute results back to individual requests
     group.forEach(({ config, resolve }) => {
