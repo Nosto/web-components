@@ -3,6 +3,7 @@ import { assertRequired } from "@/utils"
 import { compile } from "@/templating/vue"
 import { NostoElement } from "../NostoElement"
 import { getContext } from "../../templating/context"
+import { getTemplate } from "../common"
 
 /**
  * A custom element that renders a product card using a Vue-like template.
@@ -56,14 +57,12 @@ export class NostoProductCard extends NostoElement {
   }
 
   template!: string
+  templateElement?: HTMLTemplateElement
 
   async connectedCallback() {
     assertRequired(this, "template")
     this.toggleAttribute("loading", true)
-    const template = document.querySelector<HTMLTemplateElement>(`template#${this.template}`)
-    if (!template) {
-      throw new Error(`Template with id "${this.template}" not found.`)
-    }
+    const template = getTemplate(this)
     const product = getData(this) ?? this.dataset
     compile(this, template, getContext({ product }))
     this.toggleAttribute("loading", false)

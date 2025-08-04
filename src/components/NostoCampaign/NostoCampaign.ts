@@ -4,6 +4,7 @@ import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
+import { getTemplate } from "../common"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -37,6 +38,8 @@ export class NostoCampaign extends NostoElement {
   template!: string
   init?: string
 
+  templateElement?: HTMLTemplateElement
+
   async connectedCallback() {
     if (!this.placement && !this.id) {
       throw new Error("placement or id attribute is required for NostoCampaign")
@@ -53,7 +56,7 @@ export class NostoCampaign extends NostoElement {
 
 export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
-  const useTemplate = element.template || element.querySelector(":scope > template")
+  const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
   const placement = element.placement ?? element.id
   const api = await new Promise(nostojs)
   const request = api
@@ -82,12 +85,7 @@ export async function loadCampaign(element: NostoCampaign) {
   const rec = recommendations[placement]
   if (rec) {
     if (useTemplate) {
-      const template = element.template
-        ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
-        : element.querySelector<HTMLTemplateElement>(":scope > template")
-      if (!template) {
-        throw new Error(`Template with id "${element.template}" not found.`)
-      }
+      const template = getTemplate(element)
       compile(element, template, getContext(rec as JSONResult))
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {

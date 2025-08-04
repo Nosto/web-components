@@ -37,7 +37,7 @@ describe("NostoProductCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.children[1].outerHTML).toBe("<h1>Test Product</h1>")
+    expect(card.innerHTML).toBe("<h1>Test Product</h1>")
   })
 
   it("should render the product from DOM data", async () => {
@@ -58,7 +58,7 @@ describe("NostoProductCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.children[1].outerHTML).toBe("<h1>Test Product</h1>")
+    expect(card.innerHTML).toBe("<h1>Test Product</h1>")
   })
 
   it("should expose dataset to template context", async () => {
@@ -80,7 +80,7 @@ describe("NostoProductCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.children[1].outerHTML).toBe("<h1>Test Product</h1>")
+    expect(card.innerHTML).toBe("<h1>Test Product</h1>")
   })
 
   it("should scale to complex examples", async () => {
@@ -166,6 +166,6 @@ describe("NostoProductCard", () => {
       </div>
     )
 
-    expect(card.children[1].outerHTML).toBe(expected.outerHTML)
+    expect(card.innerHTML).toBe(expected.outerHTML)
   })
 })
