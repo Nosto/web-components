@@ -56,18 +56,28 @@ export class NostoProductCard extends NostoElement {
   }
 
   template!: string
+  templateElement?: HTMLTemplateElement
 
   async connectedCallback() {
     assertRequired(this, "template")
     this.toggleAttribute("loading", true)
-    const template = document.querySelector<HTMLTemplateElement>(`template#${this.template}`)
-    if (!template) {
-      throw new Error(`Template with id "${this.template}" not found.`)
-    }
+    const template = getTemplate(this)
     const product = getData(this) ?? this.dataset
     compile(this, template, getContext({ product }))
     this.toggleAttribute("loading", false)
   }
+}
+
+function getTemplate(element: NostoProductCard) {
+  if (element.templateElement) {
+    return element.templateElement
+  }
+  const template = document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
+  if (!template) {
+    throw new Error(`Template with id "${element.template}" not found.`)
+  }
+  element.templateElement = template
+  return template
 }
 
 function getData(element: HTMLElement) {

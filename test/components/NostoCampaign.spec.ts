@@ -91,7 +91,7 @@ describe("NostoCampaign", () => {
     await campaign.connectedCallback()
 
     expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
-    expect(campaign.innerHTML).toBe(`<template><span>{{ html }}</span></template><span>recommended content</span>`)
+    expect(campaign.innerHTML).toBe(`<span>recommended content</span>`)
   })
 
   it("should render campaign-level templated HTML if template is provided", async () => {
@@ -141,6 +141,11 @@ describe("NostoCampaign", () => {
     expect(campaign.innerHTML).toContain("Test Product A")
     expect(campaign.innerHTML).toContain("Test Product B")
     expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
+
+    // support for re-rendering
+    const markup = campaign.innerHTML
+    await campaign.connectedCallback()
+    expect(campaign.innerHTML).toBe(markup)
   })
 
   it('should not auto-load campaign if init="false"', async () => {

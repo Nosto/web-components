@@ -11,7 +11,7 @@ export function compile(root: HTMLElement, template: HTMLTemplateElement, contex
   const wrapper = document.createElement("div")
   wrapper.appendChild(content)
   processElement(wrapper, context)
-  root.append(...wrapper.children)
+  root.replaceChildren(...wrapper.children)
 }
 
 function parseVfor(directive: string) {
