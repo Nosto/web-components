@@ -48,7 +48,7 @@ function scheduleBatch() {
   }, batchDelay)
 }
 
-async function processBatch(): Promise<void> {
+async function processBatch() {
   if (pendingRequests.length === 0) {
     return
   }
@@ -63,7 +63,7 @@ async function processBatch(): Promise<void> {
   await Promise.all(groups.map(group => processGroup(group)))
 }
 
-function groupRequests(requests: CampaignRequest[]): RequestGroup[] {
+function groupRequests(requests: CampaignRequest[]) {
   const groups: RequestGroup[] = []
 
   for (const request of requests) {
@@ -84,11 +84,11 @@ function groupRequests(requests: CampaignRequest[]): RequestGroup[] {
   return groups
 }
 
-function areCompatibleFlags(flags1: RecommendationRequestFlags, flags2: RecommendationRequestFlags): boolean {
+function areCompatibleFlags(flags1: RecommendationRequestFlags, flags2: RecommendationRequestFlags) {
   return flags1.skipPageViews === flags2.skipPageViews && flags1.skipEvents === flags2.skipEvents
 }
 
-async function processGroup(group: RequestGroup): Promise<void> {
+async function processGroup(group: RequestGroup) {
   try {
     const api = await new Promise(nostojs)
     const request = api
