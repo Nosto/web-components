@@ -3,6 +3,7 @@ import { assertRequired } from "@/utils"
 import { compile } from "@/templating/vue"
 import { NostoElement } from "../NostoElement"
 import { getContext } from "../../templating/context"
+import { getTemplate } from "../common"
 
 /**
  * A custom element that renders a product card using a Vue-like template.
@@ -66,18 +67,6 @@ export class NostoProductCard extends NostoElement {
     compile(this, template, getContext({ product }))
     this.toggleAttribute("loading", false)
   }
-}
-
-function getTemplate(element: NostoProductCard) {
-  if (element.templateElement) {
-    return element.templateElement
-  }
-  const template = document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
-  if (!template) {
-    throw new Error(`Template with id "${element.template}" not found.`)
-  }
-  element.templateElement = template
-  return template
 }
 
 function getData(element: HTMLElement) {

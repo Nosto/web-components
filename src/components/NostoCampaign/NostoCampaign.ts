@@ -4,6 +4,7 @@ import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
+import { getTemplate } from "../common"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -51,20 +52,6 @@ export class NostoCampaign extends NostoElement {
   async load() {
     await loadCampaign(this)
   }
-}
-
-function getTemplate(element: NostoCampaign): HTMLTemplateElement {
-  if (element.templateElement) {
-    return element.templateElement
-  }
-  const template = element.template
-    ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
-    : element.querySelector<HTMLTemplateElement>(":scope > template")
-  if (!template) {
-    throw new Error(`Template with id "${element.template}" not found.`)
-  }
-  element.templateElement = template
-  return template
 }
 
 export async function loadCampaign(element: NostoCampaign) {
