@@ -1,3 +1,10 @@
+# [8.3.0](https://github.com/Nosto/web-components/compare/v8.2.0...v8.3.0) (2025-08-04)
+
+
+### Features
+
+* support for template rerendering ([6f54202](https://github.com/Nosto/web-components/commit/6f54202c3e2a003fd2beef4798d16f30cfd9695b))
+
 # [8.2.0](https://github.com/Nosto/web-components/compare/v8.1.0...v8.2.0) (2025-07-18)
 
 
