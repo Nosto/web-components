@@ -5,7 +5,7 @@ import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
 import { getTemplate } from "../common"
-import { requestOrchestrator } from "./requestOrchestrator"
+import { addRequest } from "./requestOrchestrator"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -71,33 +71,27 @@ export async function loadCampaign(element: NostoCampaign) {
     skipEvents: !element.productId
   }
 
-  try {
-    const rec = await requestOrchestrator.addRequest({
-      placement,
-      productId: element.productId,
-      variantId: element.variantId,
-      responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML",
-      flags
-    })
+  const rec = await addRequest({
+    placement,
+    productId: element.productId,
+    variantId: element.variantId,
+    responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML",
+    flags
+  })
 
-    if (rec) {
-      if (useTemplate) {
-        const template = getTemplate(element)
-        compile(element, template, getContext(rec as JSONResult))
-        const api = await new Promise(nostojs)
-        api.attributeProductClicksInCampaign(element, rec as JSONResult)
-      } else {
-        const api = await new Promise(nostojs)
-        await api.placements.injectCampaigns(
-          { [placement]: rec as string | AttributedCampaignResult },
-          { [placement]: element }
-        )
-      }
+  if (rec) {
+    if (useTemplate) {
+      const template = getTemplate(element)
+      compile(element, template, getContext(rec as JSONResult))
+      const api = await new Promise(nostojs)
+      api.attributeProductClicksInCampaign(element, rec as JSONResult)
+    } else {
+      const api = await new Promise(nostojs)
+      await api.placements.injectCampaigns(
+        { [placement]: rec as string | AttributedCampaignResult },
+        { [placement]: element }
+      )
     }
-  } catch (error) {
-    // Handle error gracefully - you might want to add logging here
-    console.error("Failed to load campaign:", error)
-  } finally {
-    element.toggleAttribute("loading", false)
   }
+  element.toggleAttribute("loading", false)
 }

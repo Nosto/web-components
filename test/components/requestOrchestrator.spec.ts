@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
-import { requestOrchestrator } from "@/components/NostoCampaign/requestOrchestrator"
+import { addRequest } from "@/components/NostoCampaign/requestOrchestrator"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 
@@ -41,13 +41,13 @@ describe("requestOrchestrator", () => {
     const flags = { skipPageViews: true, skipEvents: false }
 
     // Start two requests with compatible parameters
-    const promise1 = requestOrchestrator.addRequest({
+    const promise1 = addRequest({
       placement: "placement1",
       responseMode: "JSON_ORIGINAL",
       flags
     })
 
-    const promise2 = requestOrchestrator.addRequest({
+    const promise2 = addRequest({
       placement: "placement2",
       responseMode: "JSON_ORIGINAL",
       flags
@@ -87,13 +87,13 @@ describe("requestOrchestrator", () => {
     const flags = { skipPageViews: true, skipEvents: false }
 
     // Start two requests with different response modes
-    const promise1 = requestOrchestrator.addRequest({
+    const promise1 = addRequest({
       placement: "placement1",
       responseMode: "JSON_ORIGINAL",
       flags
     })
 
-    const promise2 = requestOrchestrator.addRequest({
+    const promise2 = addRequest({
       placement: "placement2",
       responseMode: "HTML",
       flags
@@ -123,13 +123,13 @@ describe("requestOrchestrator", () => {
     })
 
     // Start two requests with different flags
-    const promise1 = requestOrchestrator.addRequest({
+    const promise1 = addRequest({
       placement: "placement1",
       responseMode: "JSON_ORIGINAL",
       flags: { skipPageViews: true, skipEvents: false }
     })
 
-    const promise2 = requestOrchestrator.addRequest({
+    const promise2 = addRequest({
       placement: "placement2",
       responseMode: "JSON_ORIGINAL",
       flags: { skipPageViews: true, skipEvents: true }
@@ -161,7 +161,7 @@ describe("requestOrchestrator", () => {
     const flags = { skipPageViews: true, skipEvents: false }
 
     // Start two requests with products
-    const promise1 = requestOrchestrator.addRequest({
+    const promise1 = addRequest({
       placement: "placement1",
       productId: "prod1",
       variantId: "var1",
@@ -169,7 +169,7 @@ describe("requestOrchestrator", () => {
       flags
     })
 
-    const promise2 = requestOrchestrator.addRequest({
+    const promise2 = addRequest({
       placement: "placement2",
       productId: "prod2",
       responseMode: "JSON_ORIGINAL",
@@ -199,7 +199,7 @@ describe("requestOrchestrator", () => {
 
     const flags = { skipPageViews: true, skipEvents: false }
 
-    const promise = requestOrchestrator.addRequest({
+    const promise = addRequest({
       placement: "placement1",
       responseMode: "JSON_ORIGINAL",
       flags
