@@ -38,19 +38,15 @@ describe("requestOrchestrator", () => {
       createRecommendationRequest: () => mockBuilder
     })
 
-    const flags = { skipPageViews: true, skipEvents: false }
-
     // Start two requests with compatible parameters
     const promise1 = addRequest({
       placement: "placement1",
-      responseMode: "JSON_ORIGINAL",
-      flags
+      responseMode: "JSON_ORIGINAL"
     })
 
     const promise2 = addRequest({
       placement: "placement2",
-      responseMode: "JSON_ORIGINAL",
-      flags
+      responseMode: "JSON_ORIGINAL"
     })
 
     // Advance timers to trigger batching
@@ -60,7 +56,7 @@ describe("requestOrchestrator", () => {
 
     // Should have made only one API call
     expect(loadSpy).toHaveBeenCalledTimes(1)
-    expect(loadSpy).toHaveBeenCalledWith(flags)
+    expect(loadSpy).toHaveBeenCalledWith()
 
     // Should have set elements for both placements
     expect(mockBuilder.setElements).toHaveBeenCalledWith(["placement1", "placement2"])
@@ -84,19 +80,15 @@ describe("requestOrchestrator", () => {
       createRecommendationRequest: () => mockBuilder
     })
 
-    const flags = { skipPageViews: true, skipEvents: false }
-
     // Start two requests with different response modes
     const promise1 = addRequest({
       placement: "placement1",
-      responseMode: "JSON_ORIGINAL",
-      flags
+      responseMode: "JSON_ORIGINAL"
     })
 
     const promise2 = addRequest({
       placement: "placement2",
-      responseMode: "HTML",
-      flags
+      responseMode: "HTML"
     })
 
     // Advance timers to trigger batching
@@ -105,42 +97,6 @@ describe("requestOrchestrator", () => {
     await Promise.all([promise1, promise2])
 
     // Should have made two separate API calls due to different response modes
-    expect(loadSpy).toHaveBeenCalledTimes(2)
-  })
-
-  it("should separate requests with different flags", async () => {
-    const mockBuilder = getMockBuilder()
-    const loadSpy = vi.fn().mockResolvedValue({
-      recommendations: {
-        placement1: { id: "rec1" },
-        placement2: { id: "rec2" }
-      }
-    })
-    mockBuilder.load = loadSpy
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
-    })
-
-    // Start two requests with different flags
-    const promise1 = addRequest({
-      placement: "placement1",
-      responseMode: "JSON_ORIGINAL",
-      flags: { skipPageViews: true, skipEvents: false }
-    })
-
-    const promise2 = addRequest({
-      placement: "placement2",
-      responseMode: "JSON_ORIGINAL",
-      flags: { skipPageViews: true, skipEvents: true }
-    })
-
-    // Advance timers to trigger batching
-    vi.advanceTimersByTime(100)
-
-    await Promise.all([promise1, promise2])
-
-    // Should have made two separate API calls due to different flags
     expect(loadSpy).toHaveBeenCalledTimes(2)
   })
 
@@ -158,22 +114,18 @@ describe("requestOrchestrator", () => {
       createRecommendationRequest: () => mockBuilder
     })
 
-    const flags = { skipPageViews: true, skipEvents: false }
-
     // Start two requests with products
     const promise1 = addRequest({
       placement: "placement1",
       productId: "prod1",
       variantId: "var1",
-      responseMode: "JSON_ORIGINAL",
-      flags
+      responseMode: "JSON_ORIGINAL"
     })
 
     const promise2 = addRequest({
       placement: "placement2",
       productId: "prod2",
-      responseMode: "JSON_ORIGINAL",
-      flags
+      responseMode: "JSON_ORIGINAL"
     })
 
     // Advance timers to trigger batching
@@ -197,12 +149,9 @@ describe("requestOrchestrator", () => {
       createRecommendationRequest: () => mockBuilder
     })
 
-    const flags = { skipPageViews: true, skipEvents: false }
-
     const promise = addRequest({
       placement: "placement1",
-      responseMode: "JSON_ORIGINAL",
-      flags
+      responseMode: "JSON_ORIGINAL"
     })
 
     // Advance timers to trigger batching

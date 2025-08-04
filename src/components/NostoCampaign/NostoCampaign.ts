@@ -60,23 +60,11 @@ export async function loadCampaign(element: NostoCampaign) {
   const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
   const placement = element.placement ?? element.id
 
-  // Validate template early if needed - this should throw if template is missing
-  if (useTemplate && element.template) {
-    getTemplate(element)
-  }
-
-  const flags = {
-    skipPageViews: true,
-    // track events for contextual recommendations
-    skipEvents: !element.productId
-  }
-
   const rec = await addRequest({
     placement,
     productId: element.productId,
     variantId: element.variantId,
-    responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML",
-    flags
+    responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML"
   })
 
   if (rec) {
