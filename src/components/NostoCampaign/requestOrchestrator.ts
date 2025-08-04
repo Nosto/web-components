@@ -37,7 +37,7 @@ export async function addRequest(request: Omit<CampaignRequest, "resolve" | "rej
   })
 }
 
-function scheduleBatch(): void {
+function scheduleBatch() {
   if (batchTimer !== null) {
     return // Timer already scheduled
   }
