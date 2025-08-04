@@ -5,6 +5,7 @@ import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
 import { getTemplate } from "../common"
+import { requestOrchestrator } from "./requestOrchestrator"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -58,21 +59,10 @@ export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
   const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
   const placement = element.placement ?? element.id
-  const api = await new Promise(nostojs)
-  const request = api
-    .createRecommendationRequest({ includeTagging: true })
-    // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
-    .disableCampaignInjection()
-    .setElements([placement])
-    .setResponseMode(useTemplate ? "JSON_ORIGINAL" : "HTML")
 
-  if (element.productId) {
-    request.setProducts([
-      {
-        product_id: element.productId,
-        ...(element.variantId ? { sku_id: element.variantId } : {})
-      }
-    ])
+  // Validate template early if needed - this should throw if template is missing
+  if (useTemplate && element.template) {
+    getTemplate(element)
   }
 
   const flags = {
@@ -81,19 +71,33 @@ export async function loadCampaign(element: NostoCampaign) {
     skipEvents: !element.productId
   }
 
-  const { recommendations } = await request.load(flags)
-  const rec = recommendations[placement]
-  if (rec) {
-    if (useTemplate) {
-      const template = getTemplate(element)
-      compile(element, template, getContext(rec as JSONResult))
-      api.attributeProductClicksInCampaign(element, rec as JSONResult)
-    } else {
-      await api.placements.injectCampaigns(
-        { [placement]: rec as string | AttributedCampaignResult },
-        { [placement]: element }
-      )
+  try {
+    const rec = await requestOrchestrator.addRequest({
+      placement,
+      productId: element.productId,
+      variantId: element.variantId,
+      responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML",
+      flags
+    })
+
+    if (rec) {
+      if (useTemplate) {
+        const template = getTemplate(element)
+        compile(element, template, getContext(rec as JSONResult))
+        const api = await new Promise(nostojs)
+        api.attributeProductClicksInCampaign(element, rec as JSONResult)
+      } else {
+        const api = await new Promise(nostojs)
+        await api.placements.injectCampaigns(
+          { [placement]: rec as string | AttributedCampaignResult },
+          { [placement]: element }
+        )
+      }
     }
+  } catch (error) {
+    // Handle error gracefully - you might want to add logging here
+    console.error("Failed to load campaign:", error)
+  } finally {
+    element.toggleAttribute("loading", false)
   }
-  element.toggleAttribute("loading", false)
 }
