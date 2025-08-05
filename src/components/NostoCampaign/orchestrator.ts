@@ -85,17 +85,17 @@ function groupRequests(requests: CampaignRequest[]) {
   return groups
 }
 
-async function processGroup(group: RequestGroup) {
+async function processGroup({ requests }: RequestGroup) {
   try {
     const api = await new Promise(nostojs)
     const request = api
       .createRecommendationRequest({ includeTagging: true })
       .disableCampaignInjection()
-      .setElements(group.requests.map(r => r.placement))
-      .setResponseMode(group.requests[0].responseMode)
+      .setElements(requests.map(r => r.placement))
+      .setResponseMode(requests[0].responseMode)
 
-    if (group.requests[0].productId) {
-      const { productId, variantId } = group.requests[0]
+    if (requests[0].productId) {
+      const { productId, variantId } = requests[0]
       request.setProducts([
         {
           product_id: productId,
@@ -107,19 +107,19 @@ async function processGroup(group: RequestGroup) {
     const flags = {
       skipPageViews: true,
       // track events for contextual recommendations
-      skipEvents: !group.requests[0].productId
+      skipEvents: !requests[0].productId
     }
 
     const { recommendations } = await request.load(flags)
 
     // Distribute results back to individual requests
-    group.requests.forEach(req => {
+    requests.forEach(req => {
       req.resolve(recommendations[req.placement])
     })
   } catch (error) {
     // If the batch request fails, reject all requests in the group
     const errorObj = error instanceof Error ? error : new Error(String(error))
-    group.requests.forEach(req => {
+    requests.forEach(req => {
       req.reject(errorObj)
     })
   }
