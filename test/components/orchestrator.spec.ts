@@ -136,6 +136,7 @@ describe("orchestrator", () => {
     await Promise.all([promise1, promise2])
 
     // Should have combined products
+    expect(mockBuilder.setProducts).toHaveBeenCalledTimes(1)
     expect(mockBuilder.setProducts).toHaveBeenCalledWith([{ product_id: "prod1" }])
   })
 
