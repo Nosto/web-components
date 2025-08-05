@@ -104,13 +104,7 @@ async function processGroup({ requests }: RequestGroup) {
       ])
     }
 
-    const flags = {
-      skipPageViews: true,
-      // track events for contextual recommendations
-      skipEvents: !requests[0].productId
-    }
-
-    const { recommendations } = await request.load(flags)
+    const { recommendations } = await request.load()
 
     // Distribute results back to individual requests
     requests.forEach(req => {

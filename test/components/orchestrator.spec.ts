@@ -56,10 +56,6 @@ describe("orchestrator", () => {
 
     // Should have made only one API call
     expect(loadSpy).toHaveBeenCalledTimes(1)
-    expect(loadSpy).toHaveBeenCalledWith({
-      skipEvents: true,
-      skipPageViews: true
-    })
 
     // Should have set elements for both placements
     expect(mockBuilder.setElements).toHaveBeenCalledWith(["placement1", "placement2"])
