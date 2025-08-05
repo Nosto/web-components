@@ -10,7 +10,7 @@ import { NostoElement } from "../NostoElement"
 export class NostoControl extends NostoElement {
   async connectedCallback() {
     const api = await new Promise(nostojs)
-    const { segments } = await api.getSearchSessionParams()
+    const segments = await api.internal.getSegments()
     const template = Array.from(this.querySelectorAll<HTMLTemplateElement>(":scope > template[segment]")).find(el =>
       // TODO provide more filtering options: schedule, affinities etc
       segments?.includes(el.getAttribute("segment")!)
