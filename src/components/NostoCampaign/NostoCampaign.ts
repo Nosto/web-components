@@ -5,6 +5,7 @@ import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
 import { getTemplate } from "../common"
+import { addRequest } from "./orchestrator"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -59,30 +60,14 @@ export async function loadCampaign(element: NostoCampaign) {
   const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
   const placement = element.placement ?? element.id
   const api = await new Promise(nostojs)
-  const request = api
-    .createRecommendationRequest({ includeTagging: true })
-    // TODO: Temporary workaround – once injectCampaigns() supports full context, update NostoCampaign
-    .disableCampaignInjection()
-    .setElements([placement])
-    .setResponseMode(useTemplate ? "JSON_ORIGINAL" : "HTML")
 
-  if (element.productId) {
-    request.setProducts([
-      {
-        product_id: element.productId,
-        ...(element.variantId ? { sku_id: element.variantId } : {})
-      }
-    ])
-  }
+  const rec = await addRequest({
+    placement,
+    productId: element.productId,
+    variantId: element.variantId,
+    responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML"
+  })
 
-  const flags = {
-    skipPageViews: true,
-    // track events for contextual recommendations
-    skipEvents: !element.productId
-  }
-
-  const { recommendations } = await request.load(flags)
-  const rec = recommendations[placement]
   if (rec) {
     if (useTemplate) {
       const template = getTemplate(element)
