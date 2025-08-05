@@ -6,6 +6,7 @@ import { getContext } from "../../templating/context"
 import { NostoElement } from "../NostoElement"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
+import { Renderer } from "./types"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -19,6 +20,9 @@ import { addRequest } from "./orchestrator"
  * @property {string} [variantId] - The variant ID of the product.
  * @property {string} template - The ID of the template to use for rendering
  * the campaign. If provided, the campaign will be rendered using this template.
+ * @property {string} [renderer] - The name of a global function that will
+ * be called to render the campaign. This function should accept the campaign
+ * data and the context as parameters and return a Promise.
  * @property {string} [init] - If set to "false", the component will not
  * automatically load the campaign on connection. Defaults to "true".
  */
@@ -30,7 +34,8 @@ export class NostoCampaign extends NostoElement {
     productId: String,
     variantId: String,
     template: String,
-    init: String
+    init: String,
+    renderer: String
   }
 
   placement!: string
@@ -38,6 +43,7 @@ export class NostoCampaign extends NostoElement {
   variantId?: string
   template!: string
   init?: string
+  renderer?: string
 
   templateElement?: HTMLTemplateElement
 
@@ -58,6 +64,7 @@ export class NostoCampaign extends NostoElement {
 export async function loadCampaign(element: NostoCampaign) {
   element.toggleAttribute("loading", true)
   const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
+  const useJson = useTemplate || element.renderer
   const placement = element.placement ?? element.id
   const api = await new Promise(nostojs)
 
@@ -65,11 +72,16 @@ export async function loadCampaign(element: NostoCampaign) {
     placement,
     productId: element.productId,
     variantId: element.variantId,
-    responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML"
+    responseMode: useJson ? "JSON_ORIGINAL" : "HTML"
   })
 
   if (rec) {
-    if (useTemplate) {
+    if (element.renderer) {
+      // @ts-expect-error unsafe access to window
+      const fn = window[element.renderer] as Renderer
+      await fn(rec as AttributedCampaignResult, element)
+      api.attributeProductClicksInCampaign(element, rec as JSONResult)
+    } else if (useTemplate) {
       const template = getTemplate(element)
       compile(element, template, getContext(rec as JSONResult))
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
