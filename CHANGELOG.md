@@ -1,3 +1,10 @@
+# [8.4.0](https://github.com/Nosto/web-components/compare/v8.3.0...v8.4.0) (2025-08-05)
+
+
+### Features
+
+* combine requests ([80f5eef](https://github.com/Nosto/web-components/commit/80f5eef730f520e19d132c609026f49f020adacf))
+
 # [8.3.0](https://github.com/Nosto/web-components/compare/v8.2.0...v8.3.0) (2025-08-04)
 
 
