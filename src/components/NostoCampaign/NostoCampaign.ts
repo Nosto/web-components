@@ -79,7 +79,7 @@ export async function loadCampaign(element: NostoCampaign) {
     if (element.renderer) {
       // @ts-expect-error unsafe access to window
       const fn = window[element.renderer] as Renderer
-      await fn(rec as AttributedCampaignResult, element)
+      await fn(rec as JSONResult, element)
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else if (useTemplate) {
       const template = getTemplate(element)
