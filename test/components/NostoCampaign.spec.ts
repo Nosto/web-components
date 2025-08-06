@@ -90,7 +90,7 @@ describe("NostoCampaign", () => {
 
     await campaign.connectedCallback()
 
-    expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
+    expect(mockBuilder.load).toHaveBeenCalledWith()
     expect(campaign.innerHTML).toBe(`<span>recommended content</span>`)
   })
 
@@ -140,7 +140,7 @@ describe("NostoCampaign", () => {
 
     expect(campaign.innerHTML).toContain("Test Product A")
     expect(campaign.innerHTML).toContain("Test Product B")
-    expect(mockBuilder.load).toHaveBeenCalledWith({ skipEvents: false, skipPageViews: true })
+    expect(mockBuilder.load).toHaveBeenCalledWith()
 
     // support for re-rendering
     const markup = campaign.innerHTML
