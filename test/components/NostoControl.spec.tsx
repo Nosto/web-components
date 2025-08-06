@@ -8,7 +8,9 @@ describe("NostoControl", () => {
     document.body.innerHTML = ""
     vi.resetAllMocks()
     mockNostojs({
-      getSearchSessionParams: () => Promise.resolve({ segments: ["test"] })
+      internal: {
+        getSegments: () => Promise.resolve(["test"])
+      }
     })
   })
 
