@@ -1,3 +1,11 @@
+## [8.4.1](https://github.com/Nosto/web-components/compare/v8.4.0...v8.4.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* drop flags usage ([916e2bc](https://github.com/Nosto/web-components/commit/916e2bcf8af0e0961133840d471dfd665a7812d4))
+* improve segments access ([b45086e](https://github.com/Nosto/web-components/commit/b45086eb7f2bd1b3332157d02fb7a99bc986cd92))
+
 # [8.4.0](https://github.com/Nosto/web-components/compare/v8.3.0...v8.4.0) (2025-08-05)
 
 
