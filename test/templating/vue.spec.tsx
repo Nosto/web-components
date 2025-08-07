@@ -202,4 +202,29 @@ describe("vue:compile", () => {
     expect(container.outerHTML).toContain("test-product1")
     expect(container.outerHTML).toContain("test-product2")
   })
+
+  it("should replace nested templates with content", () => {
+    container.innerHTML = `
+      <div id="test">
+        <template v-if="condition">
+          <span>Nested Content</span>
+        </template>
+      </div>`
+
+    processElement(container, { condition: true })
+    const el = container.querySelector("#test")
+    expect(el?.innerHTML.trim()).toEqual("<span>Nested Content</span>")
+  })
+
+  it("should render v-for on template elements correctly", () => {
+    container.innerHTML = `
+      <template v-for="item in items">
+        <div class="item">{{ item }}</div>
+      </template>`
+
+    processElement(container, { items: ["Item 1", "Item 2", "Item 3"] })
+    expect(container.innerHTML.trim().replace(/\s+/g, " ")).toEqual(
+      `<div class="item">{{ item }}</div> <div class="item">{{ item }}</div> <div class="item">{{ item }}</div>`
+    )
+  })
 })
