@@ -111,23 +111,109 @@ export function processElement(el: Element, context: object) {
     const match = parseVfor(directive)
     if (match) {
       const { aliasExp, indexExp, listExp } = match
-      const list = evaluate(listExp, context)
-      if (Array.isArray(list)) {
-        const parent = el.parentElement
-        if (parent) {
-          list.forEach((item, index) => {
-            // Clone the element and remove the v-for attribute.
-            const clone = el.cloneNode(true) as HTMLElement
-            clone.removeAttribute(VFOR)
-            // Extend context with the current item and index.
-            const childContext = { ...context, [aliasExp]: item, [indexExp]: index }
-            processElement(clone, childContext)
-            parent.insertBefore(clone, el)
-          })
-          // Remove original element after processing.
-          el.remove()
-          return
+      try {
+        const list = evaluate(listExp, context)
+        if (Array.isArray(list) && list.length > 0) {
+          const parent = el.parentElement
+          if (parent) {
+            list.forEach((item, index) => {
+              // Extend context with the current item and index.
+              const childContext = { ...context, [aliasExp]: item, [indexExp]: index }
+              
+              if (el.tagName === "TEMPLATE") {
+                // For template elements with v-for, clone the template content instead of the template itself
+                const template = el as HTMLTemplateElement
+                const content = template.content.cloneNode(true) as DocumentFragment
+                
+                // Insert the content first, then process the inserted nodes
+                const insertedNodes = Array.from(content.childNodes)
+                parent.insertBefore(content, el)
+                
+                // Process the inserted nodes which are now in the DOM
+                insertedNodes.forEach(child => {
+                  if (child.nodeType === Node.TEXT_NODE) {
+                    child.textContent = child.textContent!.replace(/\{\{(.*?)\}\}/g, (_, expr) => {
+                      return evaluate(expr.trim(), childContext) || ""
+                    })
+                  } else if (child.nodeType === Node.ELEMENT_NODE) {
+                    processElement(child as Element, childContext)
+                  }
+                })
+              } else {
+                // Clone the element and remove the v-for attribute.
+                const clone = el.cloneNode(true) as HTMLElement
+                clone.removeAttribute(VFOR)
+                processElement(clone, childContext)
+                parent.insertBefore(clone, el)
+              }
+            })
+            // Remove original element after processing.
+            el.remove()
+            return
+          }
+        } else if (el.tagName === "TEMPLATE") {
+          // If v-for failed but it's a template element, still replace with content
+          const template = el as HTMLTemplateElement
+          const parent = template.parentElement
+          if (parent) {
+            const content = template.content.cloneNode(true) as DocumentFragment
+            const nodesToProcess = Array.from(content.childNodes)
+            nodesToProcess.forEach(child => {
+              if (child.nodeType === Node.TEXT_NODE) {
+                child.textContent = child.textContent!.replace(/\{\{(.*?)\}\}/g, (_, expr) => {
+                  return evaluate(expr.trim(), context) || ""
+                })
+              } else if (child.nodeType === Node.ELEMENT_NODE) {
+                processElement(child as Element, context)
+              }
+            })
+            parent.insertBefore(content, template)
+            template.remove()
+            return
+          }
         }
+      } catch (error) {
+        // If evaluation fails and it's a template, still replace with content
+        if (el.tagName === "TEMPLATE") {
+          const template = el as HTMLTemplateElement
+          const parent = template.parentElement
+          if (parent) {
+            const content = template.content.cloneNode(true) as DocumentFragment
+            const nodesToProcess = Array.from(content.childNodes)
+            nodesToProcess.forEach(child => {
+              if (child.nodeType === Node.TEXT_NODE) {
+                child.textContent = child.textContent!.replace(/\{\{(.*?)\}\}/g, (_, expr) => {
+                  return evaluate(expr.trim(), context) || ""
+                })
+              } else if (child.nodeType === Node.ELEMENT_NODE) {
+                processElement(child as Element, context)
+              }
+            })
+            parent.insertBefore(content, template)
+            template.remove()
+            return
+          }
+        }
+      }
+    } else if (el.tagName === "TEMPLATE") {
+      // If v-for parsing failed but it's a template element, still replace with content
+      const template = el as HTMLTemplateElement
+      const parent = template.parentElement
+      if (parent) {
+        const content = template.content.cloneNode(true) as DocumentFragment
+        const nodesToProcess = Array.from(content.childNodes)
+        nodesToProcess.forEach(child => {
+          if (child.nodeType === Node.TEXT_NODE) {
+            child.textContent = child.textContent!.replace(/\{\{(.*?)\}\}/g, (_, expr) => {
+              return evaluate(expr.trim(), context) || ""
+            })
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            processElement(child as Element, context)
+          }
+        })
+        parent.insertBefore(content, template)
+        template.remove()
+        return
       }
     }
   }
@@ -184,6 +270,31 @@ export function processElement(el: Element, context: object) {
       el.removeAttribute(VBIND)
     }
   })
+
+  // Handle template elements without directives: replace template with its content
+  if (el.tagName === "TEMPLATE") {
+    const template = el as HTMLTemplateElement
+    const parent = template.parentElement
+    if (parent) {
+      // Clone the template content
+      const content = template.content.cloneNode(true) as DocumentFragment
+      // Process each child in the content
+      Array.from(content.childNodes).forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          child.textContent = child.textContent!.replace(/\{\{(.*?)\}\}/g, (_, expr) => {
+            return evaluate(expr.trim(), context) || ""
+          })
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          processElement(child as Element, context)
+        }
+      })
+      // Insert the processed content before the template
+      parent.insertBefore(content, template)
+      // Remove the template element
+      template.remove()
+    }
+    return
+  }
 
   // Recursively process child elements.
   Array.from(el.childNodes).forEach(child => {

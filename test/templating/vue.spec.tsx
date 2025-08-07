@@ -202,4 +202,104 @@ describe("vue:compile", () => {
     expect(container.outerHTML).toContain("test-product1")
     expect(container.outerHTML).toContain("test-product2")
   })
+
+  it("should replace template elements with their content", () => {
+    container.innerHTML = `
+      <div>
+        <template>
+          <span>Template content</span>
+          <p>Another element</p>
+        </template>
+      </div>`
+
+    processElement(container, {})
+    expect(container.querySelector("template")).toBeNull()
+    expect(container.querySelector("span")?.textContent).toBe("Template content")
+    expect(container.querySelector("p")?.textContent).toBe("Another element")
+  })
+
+  it("should handle template elements with Vue directives", () => {
+    container.innerHTML = `
+      <div>
+        <template v-if="show">
+          <span>Conditional content</span>
+        </template>
+      </div>`
+
+    processElement(container, { show: true })
+    expect(container.querySelector("template")).toBeNull()
+    expect(container.querySelector("span")?.textContent).toBe("Conditional content")
+  })
+
+  it("should not render template elements when v-if is false", () => {
+    container.innerHTML = `
+      <div>
+        <template v-if="show">
+          <span>Conditional content</span>
+        </template>
+      </div>`
+
+    processElement(container, { show: false })
+    expect(container.querySelector("template")).toBeNull()
+    expect(container.querySelector("span")).toBeNull()
+  })
+
+  it("should handle template elements with v-for", () => {
+    container.innerHTML = `
+      <div>
+        <template v-for="item in items">
+          <div class="item">{{item.name}}</div>
+          <span class="desc">{{item.desc}}</span>
+        </template>
+      </div>`
+
+    processElement(container, { 
+      items: [
+        { name: "Item 1", desc: "Description 1" }, 
+        { name: "Item 2", desc: "Description 2" }
+      ] 
+    })
+    
+    expect(container.querySelector("template")).toBeNull()
+    const itemDivs = container.querySelectorAll(".item")
+    const descSpans = container.querySelectorAll(".desc")
+    
+    expect(itemDivs.length).toBe(2)
+    expect(descSpans.length).toBe(2)
+    expect(itemDivs[0].textContent).toBe("Item 1")
+    expect(descSpans[0].textContent).toBe("Description 1")
+    expect(itemDivs[1].textContent).toBe("Item 2")
+    expect(descSpans[1].textContent).toBe("Description 2")
+  })
+
+  it("should handle nested template elements", () => {
+    container.innerHTML = `
+      <div>
+        <template v-for="group in groups">
+          <h3>{{group.title}}</h3>
+          <template v-for="item in group.items">
+            <span>{{item}}</span>
+          </template>
+        </template>
+      </div>`
+
+    processElement(container, { 
+      groups: [
+        { title: "Group 1", items: ["A", "B"] },
+        { title: "Group 2", items: ["C"] }
+      ]
+    })
+    
+    expect(container.querySelector("template")).toBeNull()
+    const headers = container.querySelectorAll("h3")
+    const spans = container.querySelectorAll("span")
+    
+    expect(headers.length).toBe(2)
+    expect(spans.length).toBe(3)
+    expect(headers[0].textContent).toBe("Group 1")
+    expect(headers[1].textContent).toBe("Group 2")
+    expect(spans[0].textContent).toBe("A")
+    expect(spans[1].textContent).toBe("B")
+    expect(spans[2].textContent).toBe("C")
+  })
 })
