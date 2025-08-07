@@ -122,7 +122,12 @@ export function processElement(el: Element, context: object) {
             // Extend context with the current item and index.
             const childContext = { ...context, [aliasExp]: item, [indexExp]: index }
             processElement(clone, childContext)
-            parent.insertBefore(clone, el)
+            if (clone instanceof HTMLTemplateElement) {
+              // If the clone is a template, append its content.
+              parent.insertBefore(clone.content.cloneNode(true), el)
+            } else {
+              parent.insertBefore(clone, el)
+            }
           })
           // Remove original element after processing.
           el.remove()
@@ -201,6 +206,10 @@ export function processElement(el: Element, context: object) {
   if (el.hasAttribute(VCLOAK)) {
     // Remove v-cloak attribute to hide the element after processing.
     el.removeAttribute(VCLOAK)
+  }
+
+  if (el instanceof HTMLTemplateElement) {
+    el.replaceWith(el.content.cloneNode(true))
   }
 }
 
