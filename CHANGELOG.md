@@ -1,3 +1,10 @@
+## [8.4.2](https://github.com/Nosto/web-components/compare/v8.4.1...v8.4.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* handle template elements correctly ([7779bf3](https://github.com/Nosto/web-components/commit/7779bf3a97793c5b841458742258fc309e16795d))
+
 ## [8.4.1](https://github.com/Nosto/web-components/compare/v8.4.0...v8.4.1) (2025-08-06)
 
 
