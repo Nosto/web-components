@@ -27,10 +27,6 @@ export class NostoTemplate extends NostoElement {
   async connectedCallback() {
     await loadTemplate(this)
   }
-
-  async reload() {
-    await loadTemplate(this)
-  }
 }
 
 export async function loadTemplate(element: NostoTemplate) {

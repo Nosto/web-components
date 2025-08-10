@@ -233,46 +233,4 @@ describe("NostoTemplate", () => {
 
     await expect(template.connectedCallback()).rejects.toThrow()
   })
-
-  it("should support reload method", async () => {
-    const mockTaggingData = {
-      pageType: "home",
-      customer: undefined,
-      products: [],
-      cart: undefined,
-      variation: undefined,
-      restoreLink: undefined,
-      order: undefined,
-      searchTerms: undefined,
-      brands: undefined,
-      categories: undefined,
-      categoryIds: undefined,
-      parentCategoryIds: undefined,
-      tags: undefined,
-      customFields: undefined,
-      elements: undefined,
-      affinitySignals: undefined,
-      sortOrder: undefined,
-      pluginVersion: undefined
-    }
-
-    const pageTaggingMock = vi.fn().mockReturnValue(mockTaggingData)
-    mockNostojs({
-      pageTagging: pageTaggingMock
-    })
-
-    template = mount()
-    const templateEl = createTemplate(`
-      <div class="page-type">{{ pageType }}</div>
-    `)
-    template.appendChild(templateEl)
-
-    await template.connectedCallback()
-    expect(pageTaggingMock).toHaveBeenCalledTimes(1)
-    expect(template.querySelector(".page-type")?.textContent).toBe("home")
-
-    // Call reload
-    await template.reload()
-    expect(pageTaggingMock).toHaveBeenCalledTimes(2)
-  })
 })
