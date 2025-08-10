@@ -82,7 +82,7 @@ describe("NostoExpression", () => {
     expect(element.textContent).toBe("")
   })
 
-  it("should handle errors gracefully and display empty string", async () => {
+  it("should throw error when expression is invalid", async () => {
     const mockPageTagging = {}
 
     mockNostojs({
@@ -92,15 +92,7 @@ describe("NostoExpression", () => {
     const element = new NostoExpression()
     element.expr = "invalid.syntax(("
 
-    // Spy on console.error to check if error is logged
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
-
-    await element.connectedCallback()
-
-    expect(element.textContent).toBe("")
-    expect(consoleSpy).toHaveBeenCalledWith("NostoExpression evaluation error:", expect.any(Error))
-
-    consoleSpy.mockRestore()
+    await expect(element.connectedCallback()).rejects.toThrow()
   })
 
   it("should update content when expr attribute changes", async () => {
