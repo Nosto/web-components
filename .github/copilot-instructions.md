@@ -21,12 +21,8 @@
 
 ## Build
 
+* `npm ci` - Install dependencies (preferred over `npm install` for CI/CD and clean installs)
 * `npm run build` - Main build script: compiles TypeScript, bundles with esbuild, and generates documentation
-* `npm run dev` - Start development server with Vite for local development
-* `npm run preview` - Start preview server to test the built application
 * `npm run lint` - Run ESLint to check code quality and style
-* `npm run lint-fix` - Run ESLint with auto-fix to automatically resolve linting issues
+* `npm run lint-fix` - Run ESLint with auto-fix to automatically resolve linting issues (run before commit)
 * `npm test` - Run test suite with vitest including coverage reporting
-* `npm run typedoc` - Generate TypeScript documentation
-* `npm run visualize` - Generate bundle visualization to analyze build output
-* `npm run prepare` - Set up Husky git hooks (runs automatically after install)
