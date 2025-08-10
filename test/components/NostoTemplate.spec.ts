@@ -31,9 +31,7 @@ describe("NostoTemplate", () => {
         firstName: "John",
         lastName: "Doe"
       },
-      products: [
-        { productId: "123", name: "Test Product" }
-      ],
+      products: [{ productId: "123", name: "Test Product" }],
       cart: undefined,
       variation: undefined,
       restoreLink: undefined,
@@ -202,7 +200,7 @@ describe("NostoTemplate", () => {
 
     expect(template.querySelector(".cart-id")?.textContent).toBe("Cart: cart123")
     expect(template.querySelector(".cart-count")?.textContent).toBe("Items: 2")
-    
+
     const cartItems = template.querySelectorAll(".cart-item")
     expect(cartItems).toHaveLength(2)
     expect(cartItems[0]?.textContent?.trim()).toBe("Cart Item 1 - 19.99")
