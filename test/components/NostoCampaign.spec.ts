@@ -178,4 +178,118 @@ describe("NostoCampaign", () => {
     expect(injectCampaigns).not.toHaveBeenCalled()
     expect(campaign.hasAttribute("loading")).toBe(false)
   })
+
+  it("should load campaign lazily when lazy attribute is set", async () => {
+    const htmlContent = "lazy loaded content"
+    const mockBuilder = getMockBuilder({
+      load: vi.fn().mockResolvedValue({
+        recommendations: {
+          "456": htmlContent
+        }
+      })
+    })
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder,
+      placements: {
+        injectCampaigns: vi.fn(async (campaigns, targets) => {
+          const target = targets["456"]
+          target.innerHTML = campaigns["456"]
+        })
+      },
+      attributeProductClicksInCampaign: vi.fn()
+    })
+
+    // Mock IntersectionObserver
+    const mockObserver = {
+      observe: vi.fn(),
+      disconnect: vi.fn()
+    }
+    // @ts-expect-error partial mock assignment
+    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    campaign = mount({
+      placement: "456",
+      productId: "123"
+    })
+    campaign.lazy = true
+
+    await campaign.connectedCallback()
+
+    // Should not load immediately
+    expect(mockBuilder.load).not.toHaveBeenCalled()
+    expect(mockObserver.observe).toHaveBeenCalledWith(campaign)
+
+    // Simulate intersection - get the callback function and call it
+    const observerCallback = (global.IntersectionObserver as any).mock.calls[0][0]
+    await observerCallback([{ isIntersecting: true }])
+
+    expect(mockBuilder.load).toHaveBeenCalled()
+    expect(mockObserver.disconnect).toHaveBeenCalled()
+    expect(campaign.innerHTML).toBe(htmlContent)
+  })
+
+  it("should not load campaign lazily when intersection is false", async () => {
+    const mockBuilder = getMockBuilder({
+      load: vi.fn()
+    })
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder
+    })
+
+    // Mock IntersectionObserver
+    const mockObserver = {
+      observe: vi.fn(),
+      disconnect: vi.fn()
+    }
+    // @ts-expect-error partial mock assignment
+    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    campaign = mount({
+      placement: "456",
+      productId: "123"
+    })
+    campaign.lazy = true
+
+    await campaign.connectedCallback()
+
+    // Simulate no intersection - get the callback function and call it
+    const observerCallback = (global.IntersectionObserver as any).mock.calls[0][0]
+    await observerCallback([{ isIntersecting: false }])
+
+    expect(mockBuilder.load).not.toHaveBeenCalled()
+    expect(mockObserver.disconnect).not.toHaveBeenCalled()
+  })
+
+  it('should respect init="false" even when lazy is set', async () => {
+    const mockBuilder = getMockBuilder({
+      load: vi.fn()
+    })
+
+    mockNostojs({
+      createRecommendationRequest: () => mockBuilder
+    })
+
+    // Mock IntersectionObserver
+    const mockObserver = {
+      observe: vi.fn(),
+      disconnect: vi.fn()
+    }
+    // @ts-expect-error partial mock assignment
+    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    campaign = mount({
+      placement: "456",
+      productId: "123",
+      init: "false"
+    })
+    campaign.lazy = true
+
+    await campaign.connectedCallback()
+
+    // Should not create observer or load when init="false"
+    expect(mockObserver.observe).not.toHaveBeenCalled()
+    expect(mockBuilder.load).not.toHaveBeenCalled()
+  })
 })
