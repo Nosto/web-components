@@ -54,7 +54,13 @@ export class NostoCampaign extends NostoElement {
         const observer = new IntersectionObserver(async entries => {
           if (entries[0].isIntersecting) {
             observer.disconnect()
-            await loadCampaign(this)
+        const observer = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            observer.disconnect()
+            loadCampaign(this).catch(error => {
+              // Optionally log or handle the error
+              console.error("Failed to load campaign:", error);
+            });
           }
         })
         observer.observe(this)
