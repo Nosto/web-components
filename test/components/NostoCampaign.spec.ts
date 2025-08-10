@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from "vitest"
+import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
@@ -221,7 +221,7 @@ describe("NostoCampaign", () => {
     expect(mockObserver.observe).toHaveBeenCalledWith(campaign)
 
     // Simulate intersection - get the callback function and call it
-    const observerCallback = (global.IntersectionObserver as any).mock.calls[0][0]
+    const observerCallback = (global.IntersectionObserver as Mock).mock.calls[0][0]
     await observerCallback([{ isIntersecting: true }])
 
     expect(mockBuilder.load).toHaveBeenCalled()
@@ -255,7 +255,7 @@ describe("NostoCampaign", () => {
     await campaign.connectedCallback()
 
     // Simulate no intersection - get the callback function and call it
-    const observerCallback = (global.IntersectionObserver as any).mock.calls[0][0]
+    const observerCallback = (global.IntersectionObserver as Mock).mock.calls[0][0]
     await observerCallback([{ isIntersecting: false }])
 
     expect(mockBuilder.load).not.toHaveBeenCalled()
