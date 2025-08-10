@@ -207,14 +207,12 @@ describe("NostoTemplate", () => {
     expect(cartItems[1]?.textContent?.trim()).toBe("Cart Item 2 - 59.98")
   })
 
-  it("should handle errors gracefully", async () => {
+  it("should throw errors when API fails", async () => {
     mockNostojs({
       pageTagging: vi.fn().mockImplementation(() => {
         throw new Error("API Error")
       })
     })
-
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
 
     template = mount()
     const templateEl = createTemplate(`
@@ -222,12 +220,7 @@ describe("NostoTemplate", () => {
     `)
     template.appendChild(templateEl)
 
-    await template.connectedCallback()
-
-    expect(template.innerHTML).toBe("")
-    expect(consoleSpy).toHaveBeenCalledWith("NostoTemplate: Failed to load template", expect.any(Error))
-
-    consoleSpy.mockRestore()
+    await expect(template.connectedCallback()).rejects.toThrow("API Error")
   })
 
   it("should throw error when template is missing", async () => {
@@ -235,17 +228,10 @@ describe("NostoTemplate", () => {
       pageTagging: vi.fn().mockReturnValue({})
     })
 
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
-
     template = mount()
     // No template element provided
 
-    await template.connectedCallback()
-
-    expect(template.innerHTML).toBe("")
-    expect(consoleSpy).toHaveBeenCalledWith("NostoTemplate: Failed to load template", expect.any(Error))
-
-    consoleSpy.mockRestore()
+    await expect(template.connectedCallback()).rejects.toThrow()
   })
 
   it("should support reload method", async () => {

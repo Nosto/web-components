@@ -34,19 +34,13 @@ export class NostoTemplate extends NostoElement {
 }
 
 export async function loadTemplate(element: NostoTemplate) {
-  try {
-    const template = getTemplate(element)
-    const api = await new Promise(nostojs)
-    const taggingData = api.pageTagging()
+  const template = getTemplate(element)
+  const api = await new Promise(nostojs)
+  const taggingData = api.pageTagging()
 
-    // Use the existing context processor to ensure consistent data transformation
-    const context = getContext(taggingData)
+  // Use the existing context processor to ensure consistent data transformation
+  const context = getContext(taggingData)
 
-    // Compile and render the template with the tagging data as context
-    compile(element, template, context)
-  } catch (error) {
-    console.error("NostoTemplate: Failed to load template", error)
-    // Clear content on error to avoid displaying broken templates
-    element.innerHTML = ""
-  }
+  // Compile and render the template with the tagging data as context
+  compile(element, template, context)
 }
