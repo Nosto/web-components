@@ -1,3 +1,20 @@
+# [8.5.0](https://github.com/Nosto/web-components/compare/v8.4.2...v8.5.0) (2025-08-11)
+
+
+### Bug Fixes
+
+* **test:** replace any casts with proper Mock type from vitest ([2d3dc8e](https://github.com/Nosto/web-components/commit/2d3dc8e33d26673e9485e79aaaca7d33bbb69ba1))
+
+
+### Features
+
+* **NostoCampaign:** add lazy loading with IntersectionObserver ([a068536](https://github.com/Nosto/web-components/commit/a068536b9cab4acca758fbeebaa0b18b0e96a2ad)), closes [#222](https://github.com/Nosto/web-components/issues/222)
+
+
+### Reverts
+
+* remove non-conventional commits to start fresh ([69e2dcc](https://github.com/Nosto/web-components/commit/69e2dcc9b075fcf533fba01e02f5858ab793d135))
+
 ## [8.4.2](https://github.com/Nosto/web-components/compare/v8.4.1...v8.4.2) (2025-08-07)
 
 
