@@ -29,7 +29,7 @@
 
 ## Commits
 
-* Use conventional commits format: `<type>(<scope>): <subject>`
+* Use conventional commits format: `<type>(<optional scope>): <subject>`
 
 ## Build
 
