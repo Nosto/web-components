@@ -11,6 +11,14 @@
 * Use individual named exports over bulk exports
 * Favor named exports over default exports
 
+## Web components conventions
+
+* Use `Nosto` prefix for custom element class names and `nosto-` prefix for custom element tags
+* Register classes via the `customElement` decorator
+* Define attributes using the static `attributes` object and matching property definitions
+* Implement mainly `connectedCallback` and `disconnectedCallback` lifecycle methods and use module level functions for other logic
+* Use `{ observe: true }` for reactive custom elements that should re-render on attribute changes
+
 ## Testing
 
 * Use vitest as the test framework 
@@ -22,3 +30,11 @@
 ## Commits
 
 * Use conventional commits format: `<type>(<scope>): <subject>`
+
+## Build
+
+* `npm ci` - Install dependencies (preferred over `npm install` for CI/CD and clean installs)
+* `npm run build` - Main build script: compiles TypeScript, bundles with esbuild, and generates documentation
+* `npm run lint` - Run ESLint to check code quality and style
+* `npm run lint-fix` - Run ESLint with auto-fix to automatically resolve linting issues (run before commit)
+* `npm test` - Run test suite with vitest including coverage reporting

@@ -21,6 +21,8 @@ import { addRequest } from "./orchestrator"
  * the campaign. If provided, the campaign will be rendered using this template.
  * @property {string} [init] - If set to "false", the component will not
  * automatically load the campaign on connection. Defaults to "true".
+ * @property {boolean} [lazy] - If true, the component will only load the campaign
+ * when it comes into view using IntersectionObserver. Defaults to false.
  */
 @customElement("nosto-campaign")
 export class NostoCampaign extends NostoElement {
@@ -30,7 +32,8 @@ export class NostoCampaign extends NostoElement {
     productId: String,
     variantId: String,
     template: String,
-    init: String
+    init: String,
+    lazy: Boolean
   }
 
   placement!: string
@@ -38,6 +41,7 @@ export class NostoCampaign extends NostoElement {
   variantId?: string
   template!: string
   init?: string
+  lazy?: boolean
 
   templateElement?: HTMLTemplateElement
 
@@ -46,7 +50,17 @@ export class NostoCampaign extends NostoElement {
       throw new Error("placement or id attribute is required for NostoCampaign")
     }
     if (this.init !== "false") {
-      await loadCampaign(this)
+      if (this.lazy) {
+        const observer = new IntersectionObserver(async entries => {
+          if (entries[0].isIntersecting) {
+            observer.disconnect()
+            await loadCampaign(this)
+          }
+        })
+        observer.observe(this)
+      } else {
+        await loadCampaign(this)
+      }
     }
   }
 
