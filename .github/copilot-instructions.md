@@ -19,23 +19,6 @@
 - The project will work with Node.js 20.x but will show warnings during `npm ci`.
 - If available, install Node.js 22+ for optimal compatibility.
 
-## Validation Scenarios
-
-**ALWAYS test complete user scenarios after making changes:**
-
-1. **Start dev server validation:**
-   - Run `npm run dev` 
-   - Navigate to http://localhost:8080
-   - Verify that the Nosto recommendation component loads with 10 product cards
-
-2. **Web component interaction testing:**
-   - Test size selector dropdowns on product cards (click and select different sizes)
-   - Test "Add to cart" buttons (expected to show "Nosto addSkuToCart function is not available" error in dev environment - this is normal)
-   - Verify product images, names, and prices display correctly
-
-3. **Build validation:**
-   - Ensure `npm run build` creates dist/ folder with main.cjs.js, main.es.js, and main.es.bundle.js
-   - Verify docs/ folder is generated with TypeDoc documentation
 
 ## Core Commands & Timing
 
@@ -111,17 +94,7 @@
 - Build job: npm ci → npm run build → npm test
 - Lint job: npm ci → npm run lint
 
-## Development Server Details
 
-The dev server (npm run dev) provides:
-- Express server with Liquid templating
-- Static file serving from dist/
-- Multiple demo pages:
-  - `/` - Main recommendation page with SKU selection
-  - `/sku-overlay` - SKU overlay demo
-  - `/dual` - Dual SKU demo
-  - `/trio` - Trio demo
-- Favicon and asset serving
 
 ## Common Troubleshooting
 
