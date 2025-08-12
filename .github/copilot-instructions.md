@@ -98,10 +98,9 @@
 
 ## Common Troubleshooting
 
-- **Node.js version warnings**: Expected with Node.js < 22.12.0, but builds still work
+- **Node.js version warnings**: Expected with Node.js &lt; 22.12.0, but builds still work
 - **Picsum.photos blocked images**: Normal in development environment, doesn't affect component functionality
 - **"Nosto addSkuToCart function is not available"**: Expected error in dev environment when testing cart functionality
-- **Build artifacts**: Exclude dist/, docs/, node_modules/, coverage/ from commits (already in .gitignore)
 
 ## Commits
 
