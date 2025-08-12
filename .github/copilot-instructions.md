@@ -9,10 +9,6 @@
 2. `npm run build` -- compiles TypeScript, bundles with esbuild, and generates TypeDoc documentation. Takes ~8 seconds. NEVER CANCEL. Set timeout to 30+ seconds.
 3. `npm test` -- runs test suite with vitest and coverage reporting. Takes ~7 seconds. NEVER CANCEL. Set timeout to 30+ seconds.
 
-**Run the development server:**
-- `npm run dev` -- starts Vite dev server on http://localhost:8080. Starts in ~300ms.
-- **CRITICAL**: Always run bootstrapping steps first (npm ci, npm run build) before starting dev server.
-
 **Validation steps:**
 - Always run `npm run lint` (takes ~4 seconds) and `npm run lint-fix` (takes ~4 seconds) before committing.
 - **ALWAYS validate changes** by running the dev server and testing web component functionality.
