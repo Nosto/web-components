@@ -17,7 +17,6 @@
 
 **CRITICAL**: This project requires Node.js >= 22.12.0 and npm >= 10.9.0 as specified in package.json engines.
 - The project will work with Node.js 20.x but will show warnings during `npm ci`.
-- If available, install Node.js 22+ for optimal compatibility.
 
 
 ## Core Commands & Timing
@@ -98,7 +97,6 @@
 
 ## Common Troubleshooting
 
-- **Node.js version warnings**: Expected with Node.js &lt; 22.12.0, but builds still work
 - **Picsum.photos blocked images**: Normal in development environment, doesn't affect component functionality
 - **"Nosto addSkuToCart function is not available"**: Expected error in dev environment when testing cart functionality
 
