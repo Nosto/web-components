@@ -1,3 +1,18 @@
+# [8.6.0](https://github.com/Nosto/web-components/compare/v8.5.0...v8.6.0) (2025-08-12)
+
+
+### Bug Fixes
+
+* correct Node.js version reference and remove build artifacts line ([e23bc84](https://github.com/Nosto/web-components/commit/e23bc8418d23f9e23672a8021d9844c825bffbe3))
+* remove development server section from Quick Start as requested ([1580f12](https://github.com/Nosto/web-components/commit/1580f12e26369ef4c042fe335cfe7782badc0268))
+* remove Node.js installation guidance and version warnings as requested ([1250330](https://github.com/Nosto/web-components/commit/1250330e82a3ee330f135a0940bf63c925a7ea35))
+* remove Validation Scenarios and Development Server Details sections ([9dab44e](https://github.com/Nosto/web-components/commit/9dab44e679d73208c7da93b380a1fd7163a57659))
+
+
+### Features
+
+* expand GitHub Copilot instructions with comprehensive build and development guidance ([0df88fd](https://github.com/Nosto/web-components/commit/0df88fd3a720d20b74840ed154bc75ea951d00f5))
+
 # [8.5.0](https://github.com/Nosto/web-components/compare/v8.4.2...v8.5.0) (2025-08-11)
 
 
