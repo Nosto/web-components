@@ -10,14 +10,22 @@ Usage options for this library are documented [here](https://docs.nosto.com/tech
 
 This package provides the following web components:
 
-| Component         | Category                  |
-| ----------------- | ------------------------- |
-| NostoCampaign     | Templating                |
-| NostoDynamicCard  | Templating (Shopify only) |
-| NostoImage        | Progressive Enhancement   |
-| NostoProduct      | Progressive Enhancement   |
-| NostoProductCard  | Templating                |
-| NostoSkuOptions   | Progressive Enhancement   |
+### Store level templating
+
+| Component     | Description                                           |
+| ------------- | ----------------------------------------------------- |
+| NostoCampaign | Campaign rendering and product recommendation display |
+| NostoControl  | Conditional content rendering based on user segments |
+
+### Campaign level templating
+
+| Component         | Description                                                         |
+| ----------------- | ------------------------------------------------------------------- |
+| NostoDynamicCard  | Dynamic product card templating (Shopify only)                     |
+| NostoImage        | Progressive image enhancement with optimization                     |
+| NostoProduct      | Product interaction and cart management                             |
+| NostoProductCard  | Product card templating for recommendations                         |
+| NostoSkuOptions   | Product variant and SKU selection interface                         |
 
 ## Documentation
 
