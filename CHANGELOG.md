@@ -1,3 +1,11 @@
+# [8.7.0](https://github.com/Nosto/web-components/compare/v8.6.0...v8.7.0) (2025-08-13)
+
+
+### Features
+
+* add Dependabot workflow for monthly GitHub Actions SHA updates ([ad84dab](https://github.com/Nosto/web-components/commit/ad84dab0ef139c5f85d0c8976e9a1b5809aa415a))
+* update GitHub Actions to latest commit SHAs for enhanced security ([e4d172c](https://github.com/Nosto/web-components/commit/e4d172ceb8db305f19b0e3b5a103e08762eee94e))
+
 # [8.6.0](https://github.com/Nosto/web-components/compare/v8.5.0...v8.6.0) (2025-08-12)
 
 
