@@ -4,12 +4,7 @@ import { vi } from "vitest"
 
 type MockResult = { products: Partial<JSONProduct>[] } | { html: string } | Record<string, unknown> | string
 
-export function mockNostoRecs(recommendations: Record<string, MockResult>): {
-  load: ReturnType<typeof vi.fn>
-  mockBuilder: Partial<RequestBuilder>
-  attributeProductClicksInCampaign: ReturnType<typeof vi.fn>
-  injectCampaigns: ReturnType<typeof vi.fn>
-} {
+export function mockNostoRecs(recommendations: Record<string, MockResult>) {
   const load = vi.fn().mockResolvedValue({ recommendations })
 
   const mockBuilder: Partial<RequestBuilder> = {
