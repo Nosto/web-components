@@ -8,15 +8,44 @@ describe("NostoDynamicCard", () => {
     vi.clearAllMocks()
   })
 
+  // Helper function to create product handlers with configurable responses
+  const createProductHandler = (
+    responses: Record<string, { markup?: string; status?: number; params?: Record<string, string> }>
+  ) => {
+    return http.get("/products/:handle", ({ request, params }) => {
+      const url = new URL(request.url)
+      const handle = params.handle as string
+      const response = responses[handle]
+
+      if (!response) {
+        return new HttpResponse(null, { status: 404 })
+      }
+
+      // Check if specific parameters are required
+      if (response.params) {
+        for (const [key, value] of Object.entries(response.params)) {
+          if (url.searchParams.get(key) !== value) {
+            return new HttpResponse(null, { status: 404 })
+          }
+        }
+      }
+
+      if (response.status && response.status !== 200) {
+        return HttpResponse.text(response.markup || "Error", { status: response.status })
+      }
+
+      return HttpResponse.text(response.markup || "")
+    })
+  }
+
   it("fetches product data and sets innerHTML when markup is valid", async () => {
     const validMarkup = "<div>Product Info</div>"
     addHandlers(
-      http.get("/products/test-handle", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text(validMarkup)
+      createProductHandler({
+        "test-handle": {
+          markup: validMarkup,
+          params: { view: "default", layout: "none" }
         }
-        return new HttpResponse(null, { status: 404 })
       })
     )
 
@@ -33,12 +62,11 @@ describe("NostoDynamicCard", () => {
   it("supports section rendering", async () => {
     const validMarkup = "<section><div>Product Info</div></section>"
     addHandlers(
-      http.get("/products/test-handle", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("section_id") === "product-card") {
-          return HttpResponse.text(`<section>${validMarkup}</section>`)
+      createProductHandler({
+        "test-handle": {
+          markup: `<section>${validMarkup}</section>`,
+          params: { section_id: "product-card" }
         }
-        return new HttpResponse(null, { status: 404 })
       })
     )
 
@@ -55,19 +83,15 @@ describe("NostoDynamicCard", () => {
   it("rerenders when attributes change", async () => {
     const validMarkup = "<div>Updated Product Info</div>"
     addHandlers(
-      http.get("/products/test-handle", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text("<div>Initial Product Info</div>")
+      createProductHandler({
+        "test-handle": {
+          markup: "<div>Initial Product Info</div>",
+          params: { view: "default", layout: "none" }
+        },
+        "updated-handle": {
+          markup: validMarkup,
+          params: { view: "default", layout: "none" }
         }
-        return new HttpResponse(null, { status: 404 })
-      }),
-      http.get("/products/updated-handle", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text(validMarkup)
-        }
-        return new HttpResponse(null, { status: 404 })
       })
     )
 
@@ -85,26 +109,19 @@ describe("NostoDynamicCard", () => {
   it("uses placeholder content when placeholder attribute is set and template matches", async () => {
     const validMarkup = "<div>Product Info</div>"
     addHandlers(
-      http.get("/products/test-handle", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text(validMarkup)
+      createProductHandler({
+        "test-handle": {
+          markup: validMarkup,
+          params: { view: "default", layout: "none" }
+        },
+        "test-handle2": {
+          markup: validMarkup,
+          params: { view: "default", layout: "none" }
+        },
+        "test-handle3": {
+          markup: "<div>Custom Product Info</div>",
+          params: { view: "custom", layout: "none" }
         }
-        return new HttpResponse(null, { status: 404 })
-      }),
-      http.get("/products/test-handle2", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text(validMarkup)
-        }
-        return new HttpResponse(null, { status: 404 })
-      }),
-      http.get("/products/test-handle3", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "custom" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text("<div>Custom Product Info</div>")
-        }
-        return new HttpResponse(null, { status: 404 })
       })
     )
     // @ts-expect-error partial mock assignment
@@ -140,12 +157,11 @@ describe("NostoDynamicCard", () => {
   it("fetches product lazily when lazy attribute is set", async () => {
     const validMarkup = "<div>Lazy Loaded Product Info</div>"
     addHandlers(
-      http.get("/products/lazy-handle", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text(validMarkup)
+      createProductHandler({
+        "lazy-handle": {
+          markup: validMarkup,
+          params: { view: "default", layout: "none" }
         }
-        return new HttpResponse(null, { status: 404 })
       })
     )
 
@@ -176,8 +192,11 @@ describe("NostoDynamicCard", () => {
 
   it("throws error when fetch response is not ok", async () => {
     addHandlers(
-      http.get("/products/handle-error", () => {
-        return HttpResponse.text("Error", { status: 500 })
+      createProductHandler({
+        "handle-error": {
+          markup: "Error",
+          status: 500
+        }
       })
     )
 
@@ -191,12 +210,11 @@ describe("NostoDynamicCard", () => {
   it("throws error when markup is invalid", async () => {
     const invalidMarkup = "<html>Not allowed</html>"
     addHandlers(
-      http.get("/products/handle-invalid", ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
-          return HttpResponse.text(invalidMarkup)
+      createProductHandler({
+        "handle-invalid": {
+          markup: invalidMarkup,
+          params: { view: "default", layout: "none" }
         }
-        return new HttpResponse(null, { status: 404 })
       })
     )
 
