@@ -1,3 +1,10 @@
+# [8.8.0](https://github.com/Nosto/web-components/compare/v8.7.0...v8.8.0) (2025-08-22)
+
+
+### Features
+
+* add NostoSection custom element ([db2c051](https://github.com/Nosto/web-components/commit/db2c05124a7f66238213a3d1396cba931c56d981))
+
 # [8.7.0](https://github.com/Nosto/web-components/compare/v8.6.0...v8.7.0) (2025-08-13)
 
 
