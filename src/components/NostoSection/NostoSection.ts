@@ -14,7 +14,6 @@ export class NostoSection extends NostoElement {
 
   placement!: string
   section!: string
-  // TODO init & lazy attributes can be added later if needed
 
   async connectedCallback() {
     this.toggleAttribute("loading", true)
@@ -25,9 +24,7 @@ export class NostoSection extends NostoElement {
         responseMode: "JSON_ORIGINAL" // TODO use a responseMode that returns only the needed data
       })) as JSONResult
       if (rec) {
-        const handles = rec.products.map(product => product.handle).join(":")
-        const markup = await getSectionMarkup(this, handles)
-        // TODO inject extra substitutions if needed (heading, etc.)
+        const markup = await getSectionMarkup(this, rec)
         this.innerHTML = markup
         api.attributeProductClicksInCampaign(this, rec)
       }
@@ -37,7 +34,8 @@ export class NostoSection extends NostoElement {
   }
 }
 
-async function getSectionMarkup(element: NostoSection, handles: string) {
+async function getSectionMarkup(element: NostoSection, rec: JSONResult) {
+  const handles = rec.products.map(product => product.handle).join(":")
   const target = new URL("/search", window.location.href)
   target.searchParams.set("section_id", element.section)
   target.searchParams.set("q", handles)
@@ -48,5 +46,11 @@ async function getSectionMarkup(element: NostoSection, handles: string) {
   const sectionHtml = await result.text()
   const parser = new DOMParser()
   const doc = parser.parseFromString(sectionHtml, "text/html")
+  if (rec.title) {
+    const headingEl = doc.querySelector("h1, h2, h3, h4, h5, h6")
+    if (headingEl) {
+      headingEl.textContent = rec.title
+    }
+  }
   return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }
