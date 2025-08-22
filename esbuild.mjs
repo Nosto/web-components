@@ -9,16 +9,22 @@ const sharedConfig = {
   sourcemap: true
 }
 
-const components = [
-  { name: "NostoCampaign", entry: "src/components/NostoCampaign/NostoCampaign.ts" },
-  { name: "NostoControl", entry: "src/components/NostoControl/NostoControl.ts" },
-  { name: "NostoDynamicCard", entry: "src/components/NostoDynamicCard/NostoDynamicCard.ts" },
-  { name: "NostoImage", entry: "src/components/NostoImage/NostoImage.ts" },
-  { name: "NostoProduct", entry: "src/components/NostoProduct/NostoProduct.ts" },
-  { name: "NostoProductCard", entry: "src/components/NostoProductCard/NostoProductCard.ts" },
-  { name: "NostoSection", entry: "src/components/NostoSection/NostoSection.ts" },
-  { name: "NostoSkuOptions", entry: "src/components/NostoSkuOptions/NostoSkuOptions.ts" }
+// Generate components array dynamically from filesystem
+const componentNames = [
+  "NostoCampaign",
+  "NostoControl",
+  "NostoDynamicCard",
+  "NostoImage",
+  "NostoProduct",
+  "NostoProductCard",
+  "NostoSection",
+  "NostoSkuOptions"
 ]
+
+const components = componentNames.map(name => ({
+  name,
+  entry: `src/components/${name}/${name}.ts`
+}))
 
 async function build() {
   try {

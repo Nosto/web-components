@@ -93,6 +93,8 @@ Each component directory may contain additional supporting files (types, transfo
 - Use 'expect' for assertions
 - Maintain 90%+ coverage on statements, branches, lines, and functions
 - Tests run in jsdom environment
+- **Avoid code duplication in tests**: Use parametrized tests with `it.each()` when testing similar behavior across multiple inputs or components
+- Create shared test data arrays for testing multiple components or scenarios to reduce repetition
 
 ## CI/CD Validation
 

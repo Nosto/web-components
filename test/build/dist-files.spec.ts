@@ -2,11 +2,12 @@ import { describe, it, expect } from "vitest"
 import fs from "fs"
 import path from "path"
 
-describe("Built individual component exports", () => {
+describe("Built bundle files", () => {
   const distPath = path.resolve(__dirname, "../../dist")
 
-  it("should have built all individual component ES modules", () => {
-    const expectedFiles = [
+  it("should have built all expected files in dist directory", () => {
+    // Individual component ES modules
+    const componentFiles = [
       "NostoCampaign.es.js",
       "NostoControl.es.js",
       "NostoDynamicCard.es.js",
@@ -17,16 +18,12 @@ describe("Built individual component exports", () => {
       "NostoSkuOptions.es.js"
     ]
 
-    for (const file of expectedFiles) {
-      const filePath = path.join(distPath, file)
-      expect(fs.existsSync(filePath), `${file} should exist in dist`).toBe(true)
-    }
-  })
-
-  it("should still have the main bundle files", () => {
+    // Main bundle files
     const mainFiles = ["main.es.js", "main.cjs.js", "main.es.bundle.js"]
 
-    for (const file of mainFiles) {
+    // Check all files exist
+    const allFiles = [...componentFiles, ...mainFiles]
+    for (const file of allFiles) {
       const filePath = path.join(distPath, file)
       expect(fs.existsSync(filePath), `${file} should exist in dist`).toBe(true)
     }
