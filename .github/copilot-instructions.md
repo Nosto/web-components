@@ -45,7 +45,7 @@
 
 **Component File Structure:**
 Each component follows a consistent directory structure under `src/components/`:
-- `src/components/NostoCampaign/NostoCampaign.ts` - Main component implementation
+- `src/components/NostoCampaign/NostoCampaign.ts` - Campaign fetching component
 - `src/components/NostoControl/NostoControl.ts` - Control component
 - `src/components/NostoDynamicCard/NostoDynamicCard.ts` - Dynamic card component
 - `src/components/NostoImage/NostoImage.ts` - Image component with platform-specific transforms
