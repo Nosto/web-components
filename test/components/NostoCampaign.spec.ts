@@ -1,7 +1,6 @@
 import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
-import { mockNostojs } from "@nosto/nosto-js/testing"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
-import { RequestBuilder } from "@nosto/nosto-js/client"
+import { mockNostoRecs } from "../mockNostoRecs"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
@@ -16,17 +15,6 @@ describe("NostoCampaign", () => {
     return campaign
   }
 
-  function getMockBuilder(overrides: Partial<RequestBuilder> = {}): RequestBuilder {
-    const base: Partial<RequestBuilder> = {
-      disableCampaignInjection: () => base as RequestBuilder,
-      setElements: () => base as RequestBuilder,
-      setResponseMode: () => base as RequestBuilder,
-      setProducts: () => base as RequestBuilder,
-      ...overrides
-    }
-    return base as RequestBuilder
-  }
-
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-campaign")).toBeDefined()
   })
@@ -39,17 +27,7 @@ describe("NostoCampaign", () => {
   })
 
   it("should throw in connectedCallback if template is missing", async () => {
-    const mockBuilder = getMockBuilder({
-      load: vi.fn().mockResolvedValue({
-        recommendations: {
-          "123": {}
-        }
-      })
-    })
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
-    })
+    mockNostoRecs("123", {})
 
     campaign = new NostoCampaign()
     campaign.placement = "123"
@@ -59,24 +37,18 @@ describe("NostoCampaign", () => {
 
   it("should mark element for client injection", async () => {
     const htmlContent = "recommended content"
-    const mockBuilder = getMockBuilder({
-      load: vi.fn().mockResolvedValue({
-        recommendations: {
-          "789": { html: htmlContent }
+    const { mockBuilder } = mockNostoRecs(
+      "789",
+      { html: htmlContent },
+      {
+        placements: {
+          injectCampaigns: vi.fn(async (campaigns, targets) => {
+            const target = targets["789"]
+            target.innerHTML = campaigns["789"]
+          })
         }
-      })
-    })
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder,
-      placements: {
-        injectCampaigns: vi.fn(async (campaigns, targets) => {
-          const target = targets["789"]
-          target.innerHTML = campaigns["789"]
-        })
-      },
-      attributeProductClicksInCampaign: vi.fn()
-    })
+      }
+    )
 
     campaign = mount({
       placement: "789",
@@ -105,30 +77,24 @@ describe("NostoCampaign", () => {
   `
     document.body.appendChild(template)
 
-    const mockBuilder = getMockBuilder({
-      load: vi.fn().mockResolvedValue({
-        recommendations: {
-          "789": {
-            title: "Recommended for you",
-            products: [
-              { id: "123", title: "Test Product A" },
-              { id: "456", title: "Test Product B" }
-            ]
-          }
-        }
-      })
-    })
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder,
-      placements: {
-        injectCampaigns: vi.fn(async (campaigns, targets) => {
-          const target = targets["789"]
-          target.innerHTML = campaigns["789"]
-        })
+    const { mockBuilder } = mockNostoRecs(
+      "789",
+      {
+        title: "Recommended for you",
+        products: [
+          { id: "123", title: "Test Product A" },
+          { id: "456", title: "Test Product B" }
+        ]
       },
-      attributeProductClicksInCampaign: vi.fn()
-    })
+      {
+        placements: {
+          injectCampaigns: vi.fn(async (campaigns, targets) => {
+            const target = targets["789"]
+            target.innerHTML = campaigns["789"]
+          })
+        }
+      }
+    )
 
     const campaign = new NostoCampaign()
     campaign.placement = "789"
@@ -149,18 +115,7 @@ describe("NostoCampaign", () => {
   })
 
   it('should not auto-load campaign if init="false"', async () => {
-    const mockBuilder = getMockBuilder({
-      load: vi.fn()
-    })
-
-    const injectCampaigns = vi.fn()
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder,
-      placements: {
-        injectCampaigns
-      }
-    })
+    const { mockBuilder, injectCampaigns } = mockNostoRecs("789", {})
 
     campaign = mount({
       placement: "789",
@@ -181,23 +136,13 @@ describe("NostoCampaign", () => {
 
   it("should load campaign lazily when lazy attribute is set", async () => {
     const htmlContent = "lazy loaded content"
-    const mockBuilder = getMockBuilder({
-      load: vi.fn().mockResolvedValue({
-        recommendations: {
-          "456": htmlContent
-        }
-      })
-    })
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder,
+    const { mockBuilder } = mockNostoRecs("456", htmlContent, {
       placements: {
         injectCampaigns: vi.fn(async (campaigns, targets) => {
           const target = targets["456"]
           target.innerHTML = campaigns["456"]
         })
-      },
-      attributeProductClicksInCampaign: vi.fn()
+      }
     })
 
     // Mock IntersectionObserver
@@ -230,13 +175,7 @@ describe("NostoCampaign", () => {
   })
 
   it("should not load campaign lazily when intersection is false", async () => {
-    const mockBuilder = getMockBuilder({
-      load: vi.fn()
-    })
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
-    })
+    const { mockBuilder } = mockNostoRecs("456", {})
 
     // Mock IntersectionObserver
     const mockObserver = {
@@ -263,13 +202,7 @@ describe("NostoCampaign", () => {
   })
 
   it('should respect init="false" even when lazy is set', async () => {
-    const mockBuilder = getMockBuilder({
-      load: vi.fn()
-    })
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
-    })
+    const { mockBuilder } = mockNostoRecs("456", {})
 
     // Mock IntersectionObserver
     const mockObserver = {

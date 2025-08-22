@@ -1,7 +1,6 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { addRequest } from "@/components/NostoCampaign/orchestrator"
-import { mockNostojs } from "@nosto/nosto-js/testing"
-import { RequestBuilder } from "@nosto/nosto-js/client"
+import { mockNostoRecs } from "../mockNostoRecs"
 
 describe("orchestrator", () => {
   beforeEach(() => {
@@ -10,32 +9,10 @@ describe("orchestrator", () => {
     vi.useFakeTimers()
   })
 
-  function getMockBuilder(overrides: Partial<RequestBuilder> = {}): RequestBuilder {
-    const base: Partial<RequestBuilder> = {
-      disableCampaignInjection: () => base as RequestBuilder,
-      setElements: vi.fn(() => base as RequestBuilder),
-      setResponseMode: vi.fn(() => base as RequestBuilder),
-      setProducts: vi.fn(() => base as RequestBuilder),
-      load: vi.fn().mockResolvedValue({
-        recommendations: {}
-      }),
-      ...overrides
-    }
-    return base as RequestBuilder
-  }
-
   it("should batch multiple compatible requests", async () => {
-    const mockBuilder = getMockBuilder()
-    const loadSpy = vi.fn().mockResolvedValue({
-      recommendations: {
-        placement1: { id: "rec1" },
-        placement2: { id: "rec2" }
-      }
-    })
-    mockBuilder.load = loadSpy
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+    const { load, mockBuilder } = mockNostoRecs({
+      placement1: { id: "rec1" },
+      placement2: { id: "rec2" }
     })
 
     // Start two requests with compatible parameters
@@ -55,7 +32,7 @@ describe("orchestrator", () => {
     const [result1, result2] = await Promise.all([promise1, promise2])
 
     // Should have made only one API call
-    expect(loadSpy).toHaveBeenCalledTimes(1)
+    expect(load).toHaveBeenCalledTimes(1)
 
     // Should have set elements for both placements
     expect(mockBuilder.setElements).toHaveBeenCalledWith(["placement1", "placement2"])
@@ -66,17 +43,9 @@ describe("orchestrator", () => {
   })
 
   it("should separate requests with different response modes", async () => {
-    const mockBuilder = getMockBuilder()
-    const loadSpy = vi.fn().mockResolvedValue({
-      recommendations: {
-        placement1: { id: "rec1" },
-        placement2: { id: "rec2" }
-      }
-    })
-    mockBuilder.load = loadSpy
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+    const { load } = mockNostoRecs({
+      placement1: { id: "rec1" },
+      placement2: { id: "rec2" }
     })
 
     // Start two requests with different response modes
@@ -96,21 +65,13 @@ describe("orchestrator", () => {
     await Promise.all([promise1, promise2])
 
     // Should have made two separate API calls due to different response modes
-    expect(loadSpy).toHaveBeenCalledTimes(2)
+    expect(load).toHaveBeenCalledTimes(2)
   })
 
   it("should combine products from multiple requests", async () => {
-    const mockBuilder = getMockBuilder()
-    const loadSpy = vi.fn().mockResolvedValue({
-      recommendations: {
-        placement1: { id: "rec1" },
-        placement2: { id: "rec2" }
-      }
-    })
-    mockBuilder.load = loadSpy
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
+    const { mockBuilder } = mockNostoRecs({
+      placement1: { id: "rec1" },
+      placement2: { id: "rec2" }
     })
 
     // Start two requests with products
@@ -137,13 +98,10 @@ describe("orchestrator", () => {
   })
 
   it("should handle errors gracefully", async () => {
-    const mockBuilder = getMockBuilder()
-    const loadSpy = vi.fn().mockRejectedValue(new Error("API Error"))
-    mockBuilder.load = loadSpy
-
-    mockNostojs({
-      createRecommendationRequest: () => mockBuilder
-    })
+    const errorLoad = vi.fn().mockRejectedValue(new Error("API Error"))
+    const { mockBuilder } = mockNostoRecs({})
+    // Override the load function to simulate error
+    mockBuilder.load = errorLoad
 
     const promise = addRequest({
       placement: "placement1",
