@@ -23,24 +23,6 @@ describe("Built individual component exports", () => {
     }
   })
 
-  it("should have built all individual component CommonJS modules", () => {
-    const expectedFiles = [
-      "NostoCampaign.cjs.js",
-      "NostoControl.cjs.js",
-      "NostoDynamicCard.cjs.js",
-      "NostoImage.cjs.js",
-      "NostoProduct.cjs.js",
-      "NostoProductCard.cjs.js",
-      "NostoSection.cjs.js",
-      "NostoSkuOptions.cjs.js"
-    ]
-
-    for (const file of expectedFiles) {
-      const filePath = path.join(distPath, file)
-      expect(fs.existsSync(filePath), `${file} should exist in dist`).toBe(true)
-    }
-  })
-
   it("should still have the main bundle files", () => {
     const mainFiles = ["main.es.js", "main.cjs.js", "main.es.bundle.js"]
 

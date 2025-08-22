@@ -55,13 +55,6 @@ async function build() {
         outfile: `dist/${component.name}.es.js`,
         format: "esm"
       })
-
-      await esbuild.build({
-        ...sharedConfig,
-        entryPoints: [component.entry],
-        outfile: `dist/${component.name}.cjs.js`,
-        format: "cjs"
-      })
     }
 
     console.log("Build completed successfully.")

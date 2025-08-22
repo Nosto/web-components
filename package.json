@@ -18,36 +18,28 @@
       "require": "./dist/main.cjs.js"
     },
     "./NostoCampaign": {
-      "import": "./dist/NostoCampaign.es.js",
-      "require": "./dist/NostoCampaign.cjs.js"
+      "import": "./dist/NostoCampaign.es.js"
     },
     "./NostoControl": {
-      "import": "./dist/NostoControl.es.js",
-      "require": "./dist/NostoControl.cjs.js"
+      "import": "./dist/NostoControl.es.js"
     },
     "./NostoDynamicCard": {
-      "import": "./dist/NostoDynamicCard.es.js",
-      "require": "./dist/NostoDynamicCard.cjs.js"
+      "import": "./dist/NostoDynamicCard.es.js"
     },
     "./NostoImage": {
-      "import": "./dist/NostoImage.es.js",
-      "require": "./dist/NostoImage.cjs.js"
+      "import": "./dist/NostoImage.es.js"
     },
     "./NostoProduct": {
-      "import": "./dist/NostoProduct.es.js",
-      "require": "./dist/NostoProduct.cjs.js"
+      "import": "./dist/NostoProduct.es.js"
     },
     "./NostoProductCard": {
-      "import": "./dist/NostoProductCard.es.js",
-      "require": "./dist/NostoProductCard.cjs.js"
+      "import": "./dist/NostoProductCard.es.js"
     },
     "./NostoSection": {
-      "import": "./dist/NostoSection.es.js",
-      "require": "./dist/NostoSection.cjs.js"
+      "import": "./dist/NostoSection.es.js"
     },
     "./NostoSkuOptions": {
-      "import": "./dist/NostoSkuOptions.es.js",
-      "require": "./dist/NostoSkuOptions.cjs.js"
+      "import": "./dist/NostoSkuOptions.es.js"
     }
   },
   "repository": {
