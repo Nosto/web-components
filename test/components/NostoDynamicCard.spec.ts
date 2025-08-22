@@ -13,6 +13,9 @@ describe("NostoDynamicCard", () => {
       http.get("/products/:handle", ({ params }) => {
         const handle = params.handle as string
         const response = responses[handle]
+        if (!response) {
+          return HttpResponse.text("", { status: 404 })
+        }
         return HttpResponse.text(response.markup || "", { status: response.status || 200 })
       })
     )
