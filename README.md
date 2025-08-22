@@ -6,6 +6,37 @@ This repository contains a collection of web components designed to integrate No
 
 Usage options for this library are documented [here](https://docs.nosto.com/techdocs/apis/frontend/oss/web-components/loading-web-components)
 
+### Individual Component Imports
+
+You can import individual components for smaller bundle sizes:
+
+```javascript
+// Import only the specific component you need
+import { NostoImage } from '@nosto/web-components/nosto-image'
+import { NostoProduct } from '@nosto/web-components/nosto-product'
+import { NostoCampaign } from '@nosto/web-components/nosto-campaign'
+```
+
+Or import the entire bundle:
+
+```javascript
+// Import all components
+import { NostoCampaign, NostoImage, NostoProduct } from '@nosto/web-components'
+```
+
+### CDN Usage
+
+Individual components can also be loaded via CDN:
+
+```html
+<!-- Load only specific components -->
+<script type="module" src="https://unpkg.com/@nosto/web-components/dist/nosto-image.es.js"></script>
+<script type="module" src="https://unpkg.com/@nosto/web-components/dist/nosto-product.es.js"></script>
+
+<!-- Or load the complete bundle -->
+<script type="module" src="https://unpkg.com/@nosto/web-components/dist/main.es.bundle.js"></script>
+```
+
 ## Components
 
 This package provides the following web components:
