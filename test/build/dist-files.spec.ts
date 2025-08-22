@@ -7,14 +7,14 @@ describe("Built individual component exports", () => {
 
   it("should have built all individual component ES modules", () => {
     const expectedFiles = [
-      "nosto-campaign.es.js",
-      "nosto-control.es.js",
-      "nosto-dynamic-card.es.js",
-      "nosto-image.es.js",
-      "nosto-product.es.js",
-      "nosto-product-card.es.js",
-      "nosto-section.es.js",
-      "nosto-sku-options.es.js"
+      "NostoCampaign.es.js",
+      "NostoControl.es.js",
+      "NostoDynamicCard.es.js",
+      "NostoImage.es.js",
+      "NostoProduct.es.js",
+      "NostoProductCard.es.js",
+      "NostoSection.es.js",
+      "NostoSkuOptions.es.js"
     ]
 
     for (const file of expectedFiles) {
@@ -25,14 +25,14 @@ describe("Built individual component exports", () => {
 
   it("should have built all individual component CommonJS modules", () => {
     const expectedFiles = [
-      "nosto-campaign.cjs.js",
-      "nosto-control.cjs.js",
-      "nosto-dynamic-card.cjs.js",
-      "nosto-image.cjs.js",
-      "nosto-product.cjs.js",
-      "nosto-product-card.cjs.js",
-      "nosto-section.cjs.js",
-      "nosto-sku-options.cjs.js"
+      "NostoCampaign.cjs.js",
+      "NostoControl.cjs.js",
+      "NostoDynamicCard.cjs.js",
+      "NostoImage.cjs.js",
+      "NostoProduct.cjs.js",
+      "NostoProductCard.cjs.js",
+      "NostoSection.cjs.js",
+      "NostoSkuOptions.cjs.js"
     ]
 
     for (const file of expectedFiles) {

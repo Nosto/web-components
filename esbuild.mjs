@@ -10,14 +10,14 @@ const sharedConfig = {
 }
 
 const components = [
-  { name: "nosto-campaign", entry: "src/nosto-campaign.ts" },
-  { name: "nosto-control", entry: "src/nosto-control.ts" },
-  { name: "nosto-dynamic-card", entry: "src/nosto-dynamic-card.ts" },
-  { name: "nosto-image", entry: "src/nosto-image.ts" },
-  { name: "nosto-product", entry: "src/nosto-product.ts" },
-  { name: "nosto-product-card", entry: "src/nosto-product-card.ts" },
-  { name: "nosto-section", entry: "src/nosto-section.ts" },
-  { name: "nosto-sku-options", entry: "src/nosto-sku-options.ts" }
+  { name: "NostoCampaign", entry: "src/components/NostoCampaign/NostoCampaign.ts" },
+  { name: "NostoControl", entry: "src/components/NostoControl/NostoControl.ts" },
+  { name: "NostoDynamicCard", entry: "src/components/NostoDynamicCard/NostoDynamicCard.ts" },
+  { name: "NostoImage", entry: "src/components/NostoImage/NostoImage.ts" },
+  { name: "NostoProduct", entry: "src/components/NostoProduct/NostoProduct.ts" },
+  { name: "NostoProductCard", entry: "src/components/NostoProductCard/NostoProductCard.ts" },
+  { name: "NostoSection", entry: "src/components/NostoSection/NostoSection.ts" },
+  { name: "NostoSkuOptions", entry: "src/components/NostoSkuOptions/NostoSkuOptions.ts" }
 ]
 
 async function build() {

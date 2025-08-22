@@ -12,9 +12,9 @@ You can import individual components for smaller bundle sizes:
 
 ```javascript
 // Import only the specific component you need
-import { NostoImage } from '@nosto/web-components/nosto-image'
-import { NostoProduct } from '@nosto/web-components/nosto-product'
-import { NostoCampaign } from '@nosto/web-components/nosto-campaign'
+import { NostoImage } from '@nosto/web-components/NostoImage'
+import { NostoProduct } from '@nosto/web-components/NostoProduct'
+import { NostoCampaign } from '@nosto/web-components/NostoCampaign'
 ```
 
 Or import the entire bundle:
@@ -30,8 +30,8 @@ Individual components can also be loaded via CDN:
 
 ```html
 <!-- Load only specific components -->
-<script type="module" src="https://unpkg.com/@nosto/web-components/dist/nosto-image.es.js"></script>
-<script type="module" src="https://unpkg.com/@nosto/web-components/dist/nosto-product.es.js"></script>
+<script type="module" src="https://unpkg.com/@nosto/web-components/dist/NostoImage.es.js"></script>
+<script type="module" src="https://unpkg.com/@nosto/web-components/dist/NostoProduct.es.js"></script>
 
 <!-- Or load the complete bundle -->
 <script type="module" src="https://unpkg.com/@nosto/web-components/dist/main.es.bundle.js"></script>

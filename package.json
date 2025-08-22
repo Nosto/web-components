@@ -17,37 +17,37 @@
       "browser": "./dist/main.es.bundle.js",
       "require": "./dist/main.cjs.js"
     },
-    "./nosto-campaign": {
-      "import": "./dist/nosto-campaign.es.js",
-      "require": "./dist/nosto-campaign.cjs.js"
+    "./NostoCampaign": {
+      "import": "./dist/NostoCampaign.es.js",
+      "require": "./dist/NostoCampaign.cjs.js"
     },
-    "./nosto-control": {
-      "import": "./dist/nosto-control.es.js",
-      "require": "./dist/nosto-control.cjs.js"
+    "./NostoControl": {
+      "import": "./dist/NostoControl.es.js",
+      "require": "./dist/NostoControl.cjs.js"
     },
-    "./nosto-dynamic-card": {
-      "import": "./dist/nosto-dynamic-card.es.js",
-      "require": "./dist/nosto-dynamic-card.cjs.js"
+    "./NostoDynamicCard": {
+      "import": "./dist/NostoDynamicCard.es.js",
+      "require": "./dist/NostoDynamicCard.cjs.js"
     },
-    "./nosto-image": {
-      "import": "./dist/nosto-image.es.js",
-      "require": "./dist/nosto-image.cjs.js"
+    "./NostoImage": {
+      "import": "./dist/NostoImage.es.js",
+      "require": "./dist/NostoImage.cjs.js"
     },
-    "./nosto-product": {
-      "import": "./dist/nosto-product.es.js",
-      "require": "./dist/nosto-product.cjs.js"
+    "./NostoProduct": {
+      "import": "./dist/NostoProduct.es.js",
+      "require": "./dist/NostoProduct.cjs.js"
     },
-    "./nosto-product-card": {
-      "import": "./dist/nosto-product-card.es.js",
-      "require": "./dist/nosto-product-card.cjs.js"
+    "./NostoProductCard": {
+      "import": "./dist/NostoProductCard.es.js",
+      "require": "./dist/NostoProductCard.cjs.js"
     },
-    "./nosto-section": {
-      "import": "./dist/nosto-section.es.js",
-      "require": "./dist/nosto-section.cjs.js"
+    "./NostoSection": {
+      "import": "./dist/NostoSection.es.js",
+      "require": "./dist/NostoSection.cjs.js"
     },
-    "./nosto-sku-options": {
-      "import": "./dist/nosto-sku-options.es.js",
-      "require": "./dist/nosto-sku-options.cjs.js"
+    "./NostoSkuOptions": {
+      "import": "./dist/NostoSkuOptions.es.js",
+      "require": "./dist/NostoSkuOptions.cjs.js"
     }
   },
   "repository": {
