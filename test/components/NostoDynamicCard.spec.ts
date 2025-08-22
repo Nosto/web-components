@@ -8,25 +8,25 @@ describe("NostoDynamicCard", () => {
     vi.clearAllMocks()
   })
 
-  // Helper function to create product handlers with configurable responses
-  function createProductHandler(responses: Record<string, { markup?: string; status?: number }>) {
-    return http.get("/products/:handle", ({ params }) => {
-      const handle = params.handle as string
-      const response = responses[handle]
+  // Helper function to add product handlers with configurable responses
+  function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
+    addHandlers(
+      http.get("/products/:handle", ({ params }) => {
+        const handle = params.handle as string
+        const response = responses[handle]
 
-      return HttpResponse.text(response.markup || "", { status: response.status || 200 })
-    })
+        return HttpResponse.text(response.markup || "", { status: response.status || 200 })
+      })
+    )
   }
 
   it("fetches product data and sets innerHTML when markup is valid", async () => {
     const validMarkup = "<div>Product Info</div>"
-    addHandlers(
-      createProductHandler({
-        "test-handle": {
-          markup: validMarkup
-        }
-      })
-    )
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      }
+    })
 
     const card = new NostoDynamicCard()
     card.handle = "test-handle"
@@ -40,13 +40,11 @@ describe("NostoDynamicCard", () => {
 
   it("supports section rendering", async () => {
     const validMarkup = "<section><div>Product Info</div></section>"
-    addHandlers(
-      createProductHandler({
-        "test-handle": {
-          markup: `<section>${validMarkup}</section>`
-        }
-      })
-    )
+    addProductHandlers({
+      "test-handle": {
+        markup: `<section>${validMarkup}</section>`
+      }
+    })
 
     const card = new NostoDynamicCard()
     card.handle = "test-handle"
@@ -60,16 +58,14 @@ describe("NostoDynamicCard", () => {
 
   it("rerenders when attributes change", async () => {
     const validMarkup = "<div>Updated Product Info</div>"
-    addHandlers(
-      createProductHandler({
-        "test-handle": {
-          markup: "<div>Initial Product Info</div>"
-        },
-        "updated-handle": {
-          markup: validMarkup
-        }
-      })
-    )
+    addProductHandlers({
+      "test-handle": {
+        markup: "<div>Initial Product Info</div>"
+      },
+      "updated-handle": {
+        markup: validMarkup
+      }
+    })
 
     const card = new NostoDynamicCard()
     card.handle = "test-handle"
@@ -84,19 +80,17 @@ describe("NostoDynamicCard", () => {
 
   it("uses placeholder content when placeholder attribute is set and template matches", async () => {
     const validMarkup = "<div>Product Info</div>"
-    addHandlers(
-      createProductHandler({
-        "test-handle": {
-          markup: validMarkup
-        },
-        "test-handle2": {
-          markup: validMarkup
-        },
-        "test-handle3": {
-          markup: "<div>Custom Product Info</div>"
-        }
-      })
-    )
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      },
+      "test-handle2": {
+        markup: validMarkup
+      },
+      "test-handle3": {
+        markup: "<div>Custom Product Info</div>"
+      }
+    })
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => ({
       observe: vi.fn(),
@@ -129,13 +123,11 @@ describe("NostoDynamicCard", () => {
 
   it("fetches product lazily when lazy attribute is set", async () => {
     const validMarkup = "<div>Lazy Loaded Product Info</div>"
-    addHandlers(
-      createProductHandler({
-        "lazy-handle": {
-          markup: validMarkup
-        }
-      })
-    )
+    addProductHandlers({
+      "lazy-handle": {
+        markup: validMarkup
+      }
+    })
 
     const card = new NostoDynamicCard()
     card.handle = "lazy-handle"
@@ -163,14 +155,12 @@ describe("NostoDynamicCard", () => {
   })
 
   it("throws error when fetch response is not ok", async () => {
-    addHandlers(
-      createProductHandler({
-        "handle-error": {
-          markup: "Error",
-          status: 500
-        }
-      })
-    )
+    addProductHandlers({
+      "handle-error": {
+        markup: "Error",
+        status: 500
+      }
+    })
 
     const card = new NostoDynamicCard()
     card.handle = "handle-error"
@@ -181,13 +171,11 @@ describe("NostoDynamicCard", () => {
 
   it("throws error when markup is invalid", async () => {
     const invalidMarkup = "<html>Not allowed</html>"
-    addHandlers(
-      createProductHandler({
-        "handle-invalid": {
-          markup: invalidMarkup
-        }
-      })
-    )
+    addProductHandlers({
+      "handle-invalid": {
+        markup: invalidMarkup
+      }
+    })
 
     const card = new NostoDynamicCard()
     card.handle = "handle-invalid"
