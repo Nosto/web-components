@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
+import { addHandlers } from "../msw.setup"
+import { http, HttpResponse } from "msw"
 
 describe("NostoDynamicCard", () => {
   afterEach(() => {
@@ -8,11 +10,15 @@ describe("NostoDynamicCard", () => {
 
   it("fetches product data and sets innerHTML when markup is valid", async () => {
     const validMarkup = "<div>Product Info</div>"
-    const fakeResponse = {
-      ok: true,
-      text: vi.fn().mockResolvedValue(validMarkup)
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/test-handle", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text(validMarkup)
+        }
+        return new HttpResponse(null, { status: 404 })
+      })
+    )
 
     const card = new NostoDynamicCard()
     card.handle = "test-handle"
@@ -21,17 +27,20 @@ describe("NostoDynamicCard", () => {
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
 
-    expect(global.fetch).toHaveBeenCalledWith("/products/test-handle?view=default&layout=none")
     expect(card.innerHTML).toBe(validMarkup)
   })
 
   it("supports section rendering", async () => {
     const validMarkup = "<section><div>Product Info</div></section>"
-    const fakeResponse = {
-      ok: true,
-      text: vi.fn().mockResolvedValue(`<section>${validMarkup}</section>`)
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/test-handle", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("section_id") === "product-card") {
+          return HttpResponse.text(`<section>${validMarkup}</section>`)
+        }
+        return new HttpResponse(null, { status: 404 })
+      })
+    )
 
     const card = new NostoDynamicCard()
     card.handle = "test-handle"
@@ -40,17 +49,27 @@ describe("NostoDynamicCard", () => {
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
 
-    expect(global.fetch).toHaveBeenCalledWith("/products/test-handle?section_id=product-card")
     expect(card.innerHTML).toBe(validMarkup)
   })
 
   it("rerenders when attributes change", async () => {
     const validMarkup = "<div>Updated Product Info</div>"
-    const fakeResponse = {
-      ok: true,
-      text: vi.fn().mockResolvedValue(validMarkup)
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/test-handle", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text("<div>Initial Product Info</div>")
+        }
+        return new HttpResponse(null, { status: 404 })
+      }),
+      http.get("/products/updated-handle", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text(validMarkup)
+        }
+        return new HttpResponse(null, { status: 404 })
+      })
+    )
 
     const card = new NostoDynamicCard()
     card.handle = "test-handle"
@@ -60,17 +79,34 @@ describe("NostoDynamicCard", () => {
     card.handle = "updated-handle"
     await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
 
-    expect(global.fetch).toHaveBeenCalledWith("/products/updated-handle?view=default&layout=none")
     expect(card.innerHTML).toBe(validMarkup)
   })
 
   it("uses placeholder content when placeholder attribute is set and template matches", async () => {
     const validMarkup = "<div>Product Info</div>"
-    const fakeResponse = {
-      ok: true,
-      text: vi.fn().mockResolvedValue(validMarkup)
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/test-handle", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text(validMarkup)
+        }
+        return new HttpResponse(null, { status: 404 })
+      }),
+      http.get("/products/test-handle2", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text(validMarkup)
+        }
+        return new HttpResponse(null, { status: 404 })
+      }),
+      http.get("/products/test-handle3", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "custom" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text("<div>Custom Product Info</div>")
+        }
+        return new HttpResponse(null, { status: 404 })
+      })
+    )
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => ({
       observe: vi.fn(),
@@ -103,11 +139,15 @@ describe("NostoDynamicCard", () => {
 
   it("fetches product lazily when lazy attribute is set", async () => {
     const validMarkup = "<div>Lazy Loaded Product Info</div>"
-    const fakeResponse = {
-      ok: true,
-      text: vi.fn().mockResolvedValue(validMarkup)
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/lazy-handle", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text(validMarkup)
+        }
+        return new HttpResponse(null, { status: 404 })
+      })
+    )
 
     const card = new NostoDynamicCard()
     card.handle = "lazy-handle"
@@ -130,17 +170,16 @@ describe("NostoDynamicCard", () => {
     // @ts-expect-error IntersectionObserver is not typed as a mock
     global.IntersectionObserver.mock.calls[0][0]([{ isIntersecting: true }])
 
-    expect(global.fetch).toHaveBeenCalledWith("/products/lazy-handle?view=default&layout=none")
     await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
     expect(card.innerHTML).toBe(validMarkup)
   })
 
   it("throws error when fetch response is not ok", async () => {
-    const fakeResponse = {
-      ok: false,
-      text: vi.fn().mockResolvedValue("Error")
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/handle-error", () => {
+        return HttpResponse.text("Error", { status: 500 })
+      })
+    )
 
     const card = new NostoDynamicCard()
     card.handle = "handle-error"
@@ -151,11 +190,15 @@ describe("NostoDynamicCard", () => {
 
   it("throws error when markup is invalid", async () => {
     const invalidMarkup = "<html>Not allowed</html>"
-    const fakeResponse = {
-      ok: true,
-      text: vi.fn().mockResolvedValue(invalidMarkup)
-    }
-    global.fetch = vi.fn().mockResolvedValue(fakeResponse)
+    addHandlers(
+      http.get("/products/handle-invalid", ({ request }) => {
+        const url = new URL(request.url)
+        if (url.searchParams.get("view") === "default" && url.searchParams.get("layout") === "none") {
+          return HttpResponse.text(invalidMarkup)
+        }
+        return new HttpResponse(null, { status: 404 })
+      })
+    )
 
     const card = new NostoDynamicCard()
     card.handle = "handle-invalid"
