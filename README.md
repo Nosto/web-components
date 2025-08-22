@@ -15,13 +15,14 @@ This package provides the following web components:
 | Component     | Description                                           |
 | ------------- | ----------------------------------------------------- |
 | NostoCampaign | Campaign rendering and product recommendation display |
-| NostoControl  | Conditional content rendering based on user segments |
+| NostoControl  | Conditional content rendering based on user segments  |
+| NostoSection  | Campaign rendering using the Section Rendering API (Shopify only) |
 
 ### Campaign level templating
 
 | Component         | Description                                                         |
 | ----------------- | ------------------------------------------------------------------- |
-| NostoDynamicCard  | Dynamic product card templating (Shopify only)                     |
+| NostoDynamicCard  | Dynamic product card templating (Shopify only)                      |
 | NostoImage        | Progressive image enhancement with optimization                     |
 | NostoProduct      | Product interaction and cart management                             |
 | NostoProductCard  | Product card templating for recommendations                         |
