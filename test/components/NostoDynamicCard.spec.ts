@@ -8,13 +8,11 @@ describe("NostoDynamicCard", () => {
     vi.clearAllMocks()
   })
 
-  // Helper function to add product handlers with configurable responses
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
     addHandlers(
       http.get("/products/:handle", ({ params }) => {
         const handle = params.handle as string
         const response = responses[handle]
-
         return HttpResponse.text(response.markup || "", { status: response.status || 200 })
       })
     )
