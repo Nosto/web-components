@@ -18,19 +18,24 @@ export class NostoSection extends NostoElement {
   async connectedCallback() {
     this.toggleAttribute("loading", true)
     try {
-      const api = await new Promise(nostojs)
-      const rec = (await addRequest({
-        placement: this.placement,
-        responseMode: "JSON_ORIGINAL" // TODO use a responseMode that returns only the needed data
-      })) as JSONResult
-      if (rec) {
-        const markup = await getSectionMarkup(this, rec)
-        this.innerHTML = markup
-        api.attributeProductClicksInCampaign(this, rec)
-      }
+      initializeMarkup();
     } finally {
       this.toggleAttribute("loading", false)
     }
+  }
+  
+  async initializeMarkup() {
+    const api = await new Promise(nostojs)
+    const rec = (await addRequest({
+      placement: this.placement,
+      responseMode: "JSON_ORIGINAL" // TODO use a responseMode that returns only the needed data
+    })) as JSONResult
+    if (!rec) {
+      return
+    }
+    const markup = await getSectionMarkup(this, rec)
+    this.innerHTML = markup
+    api.attributeProductClicksInCampaign(this, rec)
   }
 }
 
