@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from "vitest"
+import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { NostoSection } from "@/components/NostoSection/NostoSection"
 import { JSONProduct, RequestBuilder } from "@nosto/nosto-js/client"
@@ -41,7 +41,7 @@ describe("NostoSection", () => {
 
     expect(load).toHaveBeenCalled()
     // Batching may invoke setElements with duplicates; ensure placement present
-    const callArg = (mockBuilder.setElements as unknown as { mock: { calls: [string[]][] } }).mock.calls[0][0]
+    const callArg = (mockBuilder.setElements as Mock<RequestBuilder["setElements"]>).mock.calls[0][0]
     expect(callArg).toContain("placement1")
 
     expect(el.innerHTML).toBe(`<div class=\"wrapper\"><div class=\"inner\">Rendered Section</div></div>`)
