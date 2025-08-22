@@ -1,3 +1,11 @@
+# [8.9.0](https://github.com/Nosto/web-components/compare/v8.8.0...v8.9.0) (2025-08-22)
+
+
+### Features
+
+* **test:** replace global.fetch mocking with MSW usage ([0293e7e](https://github.com/Nosto/web-components/commit/0293e7e6c12ed1795b04c82862de433aec3fe306))
+* **test:** return 404 response when handler response is falsy ([428de30](https://github.com/Nosto/web-components/commit/428de30eb7e2cd1a2ca7502a2312263a62f8117d))
+
 # [8.8.0](https://github.com/Nosto/web-components/compare/v8.7.0...v8.8.0) (2025-08-22)
 
 
