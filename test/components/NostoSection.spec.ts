@@ -5,11 +5,6 @@ import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../mockNostoRecs"
 
-// TODO replace with vi fake timers
-async function flushBatches() {
-  await new Promise(r => setTimeout(r, 60))
-}
-
 describe("NostoSection", () => {
   beforeEach(() => {
     document.body.innerHTML = ""
@@ -37,7 +32,6 @@ describe("NostoSection", () => {
     document.body.appendChild(el)
 
     await el.connectedCallback()
-    await flushBatches()
 
     expect(load).toHaveBeenCalled()
     // Batching may invoke setElements with duplicates; ensure placement present
