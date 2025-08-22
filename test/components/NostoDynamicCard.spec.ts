@@ -9,32 +9,12 @@ describe("NostoDynamicCard", () => {
   })
 
   // Helper function to create product handlers with configurable responses
-  const createProductHandler = (
-    responses: Record<string, { markup?: string; status?: number; params?: Record<string, string> }>
-  ) => {
-    return http.get("/products/:handle", ({ request, params }) => {
-      const url = new URL(request.url)
+  const createProductHandler = (responses: Record<string, { markup?: string; status?: number }>) => {
+    return http.get("/products/:handle", ({ params }) => {
       const handle = params.handle as string
       const response = responses[handle]
 
-      if (!response) {
-        return new HttpResponse(null, { status: 404 })
-      }
-
-      // Check if specific parameters are required
-      if (response.params) {
-        for (const [key, value] of Object.entries(response.params)) {
-          if (url.searchParams.get(key) !== value) {
-            return new HttpResponse(null, { status: 404 })
-          }
-        }
-      }
-
-      if (response.status && response.status !== 200) {
-        return HttpResponse.text(response.markup || "Error", { status: response.status })
-      }
-
-      return HttpResponse.text(response.markup || "")
+      return HttpResponse.text(response.markup || "", { status: response.status || 200 })
     })
   }
 
@@ -43,8 +23,7 @@ describe("NostoDynamicCard", () => {
     addHandlers(
       createProductHandler({
         "test-handle": {
-          markup: validMarkup,
-          params: { view: "default", layout: "none" }
+          markup: validMarkup
         }
       })
     )
@@ -64,8 +43,7 @@ describe("NostoDynamicCard", () => {
     addHandlers(
       createProductHandler({
         "test-handle": {
-          markup: `<section>${validMarkup}</section>`,
-          params: { section_id: "product-card" }
+          markup: `<section>${validMarkup}</section>`
         }
       })
     )
@@ -85,12 +63,10 @@ describe("NostoDynamicCard", () => {
     addHandlers(
       createProductHandler({
         "test-handle": {
-          markup: "<div>Initial Product Info</div>",
-          params: { view: "default", layout: "none" }
+          markup: "<div>Initial Product Info</div>"
         },
         "updated-handle": {
-          markup: validMarkup,
-          params: { view: "default", layout: "none" }
+          markup: validMarkup
         }
       })
     )
@@ -111,16 +87,13 @@ describe("NostoDynamicCard", () => {
     addHandlers(
       createProductHandler({
         "test-handle": {
-          markup: validMarkup,
-          params: { view: "default", layout: "none" }
+          markup: validMarkup
         },
         "test-handle2": {
-          markup: validMarkup,
-          params: { view: "default", layout: "none" }
+          markup: validMarkup
         },
         "test-handle3": {
-          markup: "<div>Custom Product Info</div>",
-          params: { view: "custom", layout: "none" }
+          markup: "<div>Custom Product Info</div>"
         }
       })
     )
@@ -159,8 +132,7 @@ describe("NostoDynamicCard", () => {
     addHandlers(
       createProductHandler({
         "lazy-handle": {
-          markup: validMarkup,
-          params: { view: "default", layout: "none" }
+          markup: validMarkup
         }
       })
     )
@@ -212,8 +184,7 @@ describe("NostoDynamicCard", () => {
     addHandlers(
       createProductHandler({
         "handle-invalid": {
-          markup: invalidMarkup,
-          params: { view: "default", layout: "none" }
+          markup: invalidMarkup
         }
       })
     )
