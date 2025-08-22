@@ -1,20 +1,15 @@
-import { JSONProduct, RequestBuilder, API } from "@nosto/nosto-js/client"
+import { JSONProduct, RequestBuilder } from "@nosto/nosto-js/client"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { vi } from "vitest"
 
 type MockResult = { products: Partial<JSONProduct>[] } | { html: string } | Record<string, unknown> | string
 
-export function mockNostoRecs(
-  recommendations: Record<string, MockResult>,
-  options?: Partial<API>
-): {
+export function mockNostoRecs(recommendations: Record<string, MockResult>): {
   load: ReturnType<typeof vi.fn>
   mockBuilder: Partial<RequestBuilder>
   attributeProductClicksInCampaign: ReturnType<typeof vi.fn>
   injectCampaigns: ReturnType<typeof vi.fn>
 } {
-  const resolvedOptions = options || {}
-
   const load = vi.fn().mockResolvedValue({ recommendations })
 
   const mockBuilder: Partial<RequestBuilder> = {
@@ -49,7 +44,7 @@ export function mockNostoRecs(
     createRecommendationRequest: () => mockBuilder as RequestBuilder,
     attributeProductClicksInCampaign,
     placements: {
-      injectCampaigns: resolvedOptions.placements?.injectCampaigns || injectCampaigns
+      injectCampaigns
     }
   }
   mockNostojs(api)
