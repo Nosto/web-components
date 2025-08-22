@@ -16,6 +16,11 @@
       "import": "./dist/main.es.js",
       "browser": "./dist/main.es.bundle.js",
       "require": "./dist/main.cjs.js"
+    },
+    "./shopify": {
+      "import": "./dist/shopify.es.js",
+      "browser": "./dist/shopify.es.bundle.js",
+      "require": "./dist/shopify.cjs.js"
     }
   },
   "repository": {
@@ -29,7 +34,7 @@
     "lint": "eslint",
     "lint-fix": "eslint --fix",
     "test": "vitest run --silent --coverage",
-    "typedoc": "typedoc src/main.ts",
+    "typedoc": "typedoc src/main.ts src/shopify.ts",
     "prepare": "husky",
     "visualize": "esbuild-visualizer --metadata ./meta.json"
   },
