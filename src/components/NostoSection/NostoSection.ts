@@ -18,13 +18,13 @@ export class NostoSection extends NostoElement {
   async connectedCallback() {
     this.toggleAttribute("loading", true)
     try {
-      initializeMarkup();
+      await this.#initializeMarkup()
     } finally {
       this.toggleAttribute("loading", false)
     }
   }
-  
-  async initializeMarkup() {
+
+  async #initializeMarkup() {
     const api = await new Promise(nostojs)
     const rec = (await addRequest({
       placement: this.placement,
