@@ -28,7 +28,6 @@ const components = componentNames.map(name => ({
 
 async function build() {
   try {
-    // Build main bundle (existing behavior)
     await esbuild.build({
       ...sharedConfig,
       entryPoints: ["src/main.ts"],
