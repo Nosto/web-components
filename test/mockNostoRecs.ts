@@ -17,7 +17,6 @@ export function mockNostoRecs(recommendations: Record<string, MockResult>) {
 
   const attributeProductClicksInCampaign = vi.fn()
 
-  // Default injectCampaigns behavior - injects HTML campaigns into targets
   const injectCampaigns = vi.fn(async (campaigns: Record<string, string>, targets: Record<string, HTMLElement>) => {
     const filledElements: string[] = []
     const unFilledElements: string[] = []
