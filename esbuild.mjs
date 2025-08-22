@@ -6,7 +6,8 @@ const sharedConfig = {
   minifyIdentifiers: true,
   minifySyntax: true,
   target: "es2018",
-  sourcemap: true
+  sourcemap: true,
+  entryPoints: ["src/main.ts"]
 }
 
 // Generate components array dynamically from filesystem
@@ -30,21 +31,18 @@ async function build() {
   try {
     await esbuild.build({
       ...sharedConfig,
-      entryPoints: ["src/main.ts"],
       outfile: "dist/main.cjs.js",
       format: "cjs"
     })
 
     await esbuild.build({
       ...sharedConfig,
-      entryPoints: ["src/main.ts"],
       outfile: "dist/main.es.js",
       format: "esm"
     })
 
     const result = await esbuild.build({
       ...sharedConfig,
-      entryPoints: ["src/main.ts"],
       outfile: "dist/main.es.bundle.js",
       format: "esm",
       metafile: true
