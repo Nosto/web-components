@@ -27,7 +27,7 @@ describe("NostoCampaign", () => {
   })
 
   it("should throw in connectedCallback if template is missing", async () => {
-    mockNostoRecs("123", {})
+    mockNostoRecs({ "123": {} })
 
     campaign = new NostoCampaign()
     campaign.placement = "123"
@@ -38,8 +38,7 @@ describe("NostoCampaign", () => {
   it("should mark element for client injection", async () => {
     const htmlContent = "recommended content"
     const { mockBuilder } = mockNostoRecs(
-      "789",
-      { html: htmlContent },
+      { "789": { html: htmlContent } },
       {
         placements: {
           injectCampaigns: vi.fn(async (campaigns, targets) => {
@@ -78,13 +77,14 @@ describe("NostoCampaign", () => {
     document.body.appendChild(template)
 
     const { mockBuilder } = mockNostoRecs(
-      "789",
       {
-        title: "Recommended for you",
-        products: [
-          { id: "123", title: "Test Product A" },
-          { id: "456", title: "Test Product B" }
-        ]
+        "789": {
+          title: "Recommended for you",
+          products: [
+            { id: "123", title: "Test Product A" },
+            { id: "456", title: "Test Product B" }
+          ]
+        }
       },
       {
         placements: {
@@ -115,7 +115,7 @@ describe("NostoCampaign", () => {
   })
 
   it('should not auto-load campaign if init="false"', async () => {
-    const { mockBuilder, injectCampaigns } = mockNostoRecs("789", {})
+    const { mockBuilder, injectCampaigns } = mockNostoRecs({ "789": {} })
 
     campaign = mount({
       placement: "789",
@@ -136,14 +136,17 @@ describe("NostoCampaign", () => {
 
   it("should load campaign lazily when lazy attribute is set", async () => {
     const htmlContent = "lazy loaded content"
-    const { mockBuilder } = mockNostoRecs("456", htmlContent, {
-      placements: {
-        injectCampaigns: vi.fn(async (campaigns, targets) => {
-          const target = targets["456"]
-          target.innerHTML = campaigns["456"]
-        })
+    const { mockBuilder } = mockNostoRecs(
+      { "456": htmlContent },
+      {
+        placements: {
+          injectCampaigns: vi.fn(async (campaigns, targets) => {
+            const target = targets["456"]
+            target.innerHTML = campaigns["456"]
+          })
+        }
       }
-    })
+    )
 
     // Mock IntersectionObserver
     const mockObserver = {
@@ -175,7 +178,7 @@ describe("NostoCampaign", () => {
   })
 
   it("should not load campaign lazily when intersection is false", async () => {
-    const { mockBuilder } = mockNostoRecs("456", {})
+    const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
     const mockObserver = {
@@ -202,7 +205,7 @@ describe("NostoCampaign", () => {
   })
 
   it('should respect init="false" even when lazy is set', async () => {
-    const { mockBuilder } = mockNostoRecs("456", {})
+    const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
     const mockObserver = {
