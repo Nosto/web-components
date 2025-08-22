@@ -70,5 +70,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "msw": "^2.10.5"
   }
 }
