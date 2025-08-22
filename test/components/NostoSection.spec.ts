@@ -17,7 +17,7 @@ describe("NostoSection", () => {
 
   it("renders section markup from product handles and attributes product clicks", async () => {
     const products = [{ handle: "product-a" }, { handle: "product-b" }]
-    const { attributeProductClicksInCampaign, load, mockBuilder } = mockNostoRecs("placement1", { products })
+    const { attributeProductClicksInCampaign, load, mockBuilder } = mockNostoRecs({ placement1: { products } })
 
     const sectionHTML = `<div class=\"wrapper\"><div class=\"inner\">Rendered Section</div></div>`
     addHandlers(
@@ -44,7 +44,7 @@ describe("NostoSection", () => {
   })
 
   it("throws when section fetch fails", async () => {
-    mockNostoRecs("placement1", { products: [{ handle: "x" }] })
+    mockNostoRecs({ placement1: { products: [{ handle: "x" }] } })
 
     addHandlers(http.get("/search", () => HttpResponse.text("Error", { status: 500 })))
 
