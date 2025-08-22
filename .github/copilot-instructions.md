@@ -84,6 +84,7 @@ Each component directory may contain additional supporting files (types, transfo
 - Use async/await instead of Promise chaining
 - Use individual named exports over bulk exports
 - Favor named exports over default exports
+- Don't add comments unless they match the style of other comments in the file or are necessary to explain a complex change
 
 ## Testing
 

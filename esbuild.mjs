@@ -10,7 +10,6 @@ const sharedConfig = {
   entryPoints: ["src/main.ts"]
 }
 
-// Generate components array dynamically from filesystem
 const componentNames = [
   "NostoCampaign",
   "NostoControl",
