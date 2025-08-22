@@ -2,13 +2,29 @@ import esbuild from "esbuild"
 import fs from "fs"
 
 const sharedConfig = {
-  entryPoints: ["src/main.ts"],
   bundle: true,
   minifyIdentifiers: true,
   minifySyntax: true,
   target: "es2018",
-  sourcemap: true
+  sourcemap: true,
+  entryPoints: ["src/main.ts"]
 }
+
+const componentNames = [
+  "NostoCampaign",
+  "NostoControl",
+  "NostoDynamicCard",
+  "NostoImage",
+  "NostoProduct",
+  "NostoProductCard",
+  "NostoSection",
+  "NostoSkuOptions"
+]
+
+const components = componentNames.map(name => ({
+  name,
+  entry: `src/components/${name}/${name}.ts`
+}))
 
 async function build() {
   try {
@@ -32,6 +48,16 @@ async function build() {
     })
 
     fs.writeFileSync("meta.json", JSON.stringify(result.metafile))
+
+    // Build individual component bundles
+    for (const component of components) {
+      await esbuild.build({
+        ...sharedConfig,
+        entryPoints: [component.entry],
+        outfile: `dist/${component.name}.es.js`,
+        format: "esm"
+      })
+    }
 
     console.log("Build completed successfully.")
   } catch (error) {
