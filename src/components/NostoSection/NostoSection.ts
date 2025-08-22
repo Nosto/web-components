@@ -52,7 +52,7 @@ async function getSectionMarkup(element: NostoSection, rec: JSONResult) {
   const parser = new DOMParser()
   const doc = parser.parseFromString(sectionHtml, "text/html")
   if (rec.title) {
-    const headingEl = doc.querySelector("h1, h2, h3, h4, h5, h6")
+    const headingEl = doc.querySelector("[nosto-title]")
     if (headingEl) {
       headingEl.textContent = rec.title
     }
