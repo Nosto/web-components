@@ -1,3 +1,10 @@
+# [8.10.0](https://github.com/Nosto/web-components/compare/v8.9.0...v8.10.0) (2025-08-22)
+
+
+### Features
+
+* drop single placement signature from mockNostoRecs ([80f23e8](https://github.com/Nosto/web-components/commit/80f23e807020a8aaaf6505e577202251d95f41d8))
+
 # [8.9.0](https://github.com/Nosto/web-components/compare/v8.8.0...v8.9.0) (2025-08-22)
 
 
