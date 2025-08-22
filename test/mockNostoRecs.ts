@@ -1,18 +1,12 @@
-import { JSONProduct, RequestBuilder } from "@nosto/nosto-js/client"
+import { JSONProduct, RequestBuilder, API } from "@nosto/nosto-js/client"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { vi } from "vitest"
 
 type MockResult = { products: Partial<JSONProduct>[] } | { html: string } | Record<string, unknown> | string
 
-interface MockNostoRecsOptions {
-  placements?: {
-    injectCampaigns?: (...args: unknown[]) => unknown
-  }
-}
-
 export function mockNostoRecs(
   recommendations: Record<string, MockResult>,
-  options?: MockNostoRecsOptions
+  options?: Partial<API>
 ): {
   load: ReturnType<typeof vi.fn>
   mockBuilder: Partial<RequestBuilder>
@@ -32,13 +26,30 @@ export function mockNostoRecs(
   }
 
   const attributeProductClicksInCampaign = vi.fn()
-  const injectCampaigns = vi.fn(resolvedOptions.placements?.injectCampaigns)
+
+  // Default injectCampaigns behavior - injects HTML campaigns into targets
+  const injectCampaigns = vi.fn(async (campaigns: Record<string, string>, targets: Record<string, HTMLElement>) => {
+    const filledElements: string[] = []
+    const unFilledElements: string[] = []
+
+    Object.keys(campaigns).forEach(placementId => {
+      const target = targets[placementId]
+      if (target) {
+        target.innerHTML = campaigns[placementId]
+        filledElements.push(placementId)
+      } else {
+        unFilledElements.push(placementId)
+      }
+    })
+
+    return { filledElements, unFilledElements }
+  })
 
   const api = {
     createRecommendationRequest: () => mockBuilder as RequestBuilder,
     attributeProductClicksInCampaign,
     placements: {
-      injectCampaigns
+      injectCampaigns: resolvedOptions.placements?.injectCampaigns || injectCampaigns
     }
   }
   mockNostojs(api)

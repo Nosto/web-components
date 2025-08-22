@@ -37,17 +37,7 @@ describe("NostoCampaign", () => {
 
   it("should mark element for client injection", async () => {
     const htmlContent = "recommended content"
-    const { mockBuilder } = mockNostoRecs(
-      { "789": { html: htmlContent } },
-      {
-        placements: {
-          injectCampaigns: vi.fn(async (campaigns, targets) => {
-            const target = targets["789"]
-            target.innerHTML = campaigns["789"]
-          })
-        }
-      }
-    )
+    const { mockBuilder } = mockNostoRecs({ "789": { html: htmlContent } })
 
     campaign = mount({
       placement: "789",
@@ -76,25 +66,15 @@ describe("NostoCampaign", () => {
   `
     document.body.appendChild(template)
 
-    const { mockBuilder } = mockNostoRecs(
-      {
-        "789": {
-          title: "Recommended for you",
-          products: [
-            { id: "123", title: "Test Product A" },
-            { id: "456", title: "Test Product B" }
-          ]
-        }
-      },
-      {
-        placements: {
-          injectCampaigns: vi.fn(async (campaigns, targets) => {
-            const target = targets["789"]
-            target.innerHTML = campaigns["789"]
-          })
-        }
+    const { mockBuilder } = mockNostoRecs({
+      "789": {
+        title: "Recommended for you",
+        products: [
+          { id: "123", title: "Test Product A" },
+          { id: "456", title: "Test Product B" }
+        ]
       }
-    )
+    })
 
     const campaign = new NostoCampaign()
     campaign.placement = "789"
@@ -136,17 +116,7 @@ describe("NostoCampaign", () => {
 
   it("should load campaign lazily when lazy attribute is set", async () => {
     const htmlContent = "lazy loaded content"
-    const { mockBuilder } = mockNostoRecs(
-      { "456": htmlContent },
-      {
-        placements: {
-          injectCampaigns: vi.fn(async (campaigns, targets) => {
-            const target = targets["456"]
-            target.innerHTML = campaigns["456"]
-          })
-        }
-      }
-    )
+    const { mockBuilder } = mockNostoRecs({ "456": htmlContent })
 
     // Mock IntersectionObserver
     const mockObserver = {
