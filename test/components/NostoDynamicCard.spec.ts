@@ -9,7 +9,7 @@ describe("NostoDynamicCard", () => {
   })
 
   // Helper function to create product handlers with configurable responses
-  const createProductHandler = (responses: Record<string, { markup?: string; status?: number }>) => {
+  function createProductHandler(responses: Record<string, { markup?: string; status?: number }>) {
     return http.get("/products/:handle", ({ params }) => {
       const handle = params.handle as string
       const response = responses[handle]
