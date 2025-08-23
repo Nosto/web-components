@@ -16,7 +16,5 @@ function toCamelCase<T>(context: T): T {
 }
 
 export function getContext(context: object) {
-  return {
-    ...toCamelCase(context)
-  }
+  return toCamelCase(context)
 }
