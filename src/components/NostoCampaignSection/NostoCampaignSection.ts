@@ -4,8 +4,8 @@ import { NostoElement } from "../NostoElement"
 import { addRequest } from "../NostoCampaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
-@customElement("nosto-section")
-export class NostoSection extends NostoElement {
+@customElement("nosto-campaign-section")
+export class NostoCampaignSection extends NostoElement {
   /** @private */
   static attributes = {
     placement: String,
@@ -39,7 +39,7 @@ export class NostoSection extends NostoElement {
   }
 }
 
-async function getSectionMarkup(element: NostoSection, rec: JSONResult) {
+async function getSectionMarkup(element: NostoCampaignSection, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
   const target = new URL("/search", window.location.href)
   target.searchParams.set("section_id", element.section)

@@ -1,18 +1,18 @@
 import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
-import { NostoSection } from "@/components/NostoSection/NostoSection"
+import { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../mockNostoRecs"
 
-describe("NostoSection", () => {
+describe("NostoCampaignSection", () => {
   beforeEach(() => {
     document.body.innerHTML = ""
     vi.restoreAllMocks()
   })
 
   it("should be defined as a custom element", () => {
-    expect(customElements.get("nosto-section")).toBeDefined()
+    expect(customElements.get("nosto-campaign-section")).toBeDefined()
   })
 
   it("renders section markup from product handles and attributes product clicks", async () => {
@@ -26,7 +26,7 @@ describe("NostoSection", () => {
       })
     )
 
-    const el = new NostoSection()
+    const el = new NostoCampaignSection()
     el.placement = "placement1"
     el.section = "featured-section"
     document.body.appendChild(el)
@@ -48,7 +48,7 @@ describe("NostoSection", () => {
 
     addHandlers(http.get("/search", () => HttpResponse.text("Error", { status: 500 })))
 
-    const el = new NostoSection()
+    const el = new NostoCampaignSection()
     el.placement = "placement1"
     el.section = "missing-section"
 

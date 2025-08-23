@@ -5,5 +5,5 @@ export { NostoDynamicCard } from "./components/NostoDynamicCard/NostoDynamicCard
 export { NostoImage } from "./components/NostoImage/NostoImage"
 export { NostoProduct } from "./components/NostoProduct/NostoProduct"
 export { NostoProductCard } from "./components/NostoProductCard/NostoProductCard"
-export { NostoSection } from "./components/NostoSection/NostoSection"
+export { NostoCampaignSection } from "./components/NostoCampaignSection/NostoCampaignSection"
 export { NostoSkuOptions } from "./components/NostoSkuOptions/NostoSkuOptions"
