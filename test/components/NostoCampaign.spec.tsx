@@ -1,7 +1,6 @@
 import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
-import { createElement } from "../utils/jsx"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
