@@ -22,7 +22,7 @@ describe("NostoCampaign", () => {
   })
 
   it("should throw in connectedCallback if placement is missing", async () => {
-    campaign = (<nosto-campaign />) as NostoCampaign
+    campaign = <nosto-campaign />
     await expect(campaign.connectedCallback()).rejects.toThrow(
       "placement or id attribute is required for NostoCampaign"
     )
@@ -31,7 +31,7 @@ describe("NostoCampaign", () => {
   it("should throw in connectedCallback if template is missing", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = (<nosto-campaign placement="123" template="my-template" />) as NostoCampaign
+    campaign = <nosto-campaign placement="123" template="my-template" />
     await expect(campaign.connectedCallback()).rejects.toThrow('Template with id "my-template" not found.')
   })
 
@@ -39,7 +39,7 @@ describe("NostoCampaign", () => {
     const htmlContent = "recommended content"
     const { mockBuilder } = mockNostoRecs({ "789": { html: htmlContent } })
 
-    campaign = (<nosto-campaign placement="789" productId="123" variantId="var1" />) as NostoCampaign
+    campaign = <nosto-campaign placement="789" productId="123" variantId="var1" />
 
     const template = document.createElement("template")
     template.innerHTML = "<span>{{ html }}</span>"
@@ -72,7 +72,7 @@ describe("NostoCampaign", () => {
       }
     })
 
-    const campaign = (<nosto-campaign placement="789" productId="123" template={templateId} />) as NostoCampaign
+    const campaign = <nosto-campaign placement="789" productId="123" template={templateId} />
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -92,7 +92,7 @@ describe("NostoCampaign", () => {
 
     campaign = (
       <nosto-campaign placement="789" productId="123" variantId="var1" template="inline-template" />
-    ) as NostoCampaign
+    )
 
     campaign.setAttribute("init", "false")
     document.body.appendChild(campaign)
@@ -116,7 +116,7 @@ describe("NostoCampaign", () => {
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => mockObserver)
 
-    campaign = (<nosto-campaign placement="456" productId="123" lazy="true" />) as NostoCampaign
+    campaign = <nosto-campaign placement="456" productId="123" lazy="true" />
 
     await campaign.connectedCallback()
 
@@ -144,7 +144,7 @@ describe("NostoCampaign", () => {
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => mockObserver)
 
-    campaign = (<nosto-campaign placement="456" productId="123" lazy="true" />) as NostoCampaign
+    campaign = <nosto-campaign placement="456" productId="123" lazy="true" />
 
     await campaign.connectedCallback()
 
@@ -167,7 +167,7 @@ describe("NostoCampaign", () => {
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => mockObserver)
 
-    campaign = (<nosto-campaign placement="456" productId="123" init="false" lazy="true" />) as NostoCampaign
+    campaign = <nosto-campaign placement="456" productId="123" init="false" lazy="true" />
 
     await campaign.connectedCallback()
 
