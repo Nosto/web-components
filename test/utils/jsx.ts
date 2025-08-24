@@ -20,38 +20,13 @@ declare global {
     type Element = CustomElementTypeMap[keyof CustomElementTypeMap] | HTMLElement
     type IntrinsicElements = {
       "nosto-campaign": Partial<NostoCampaign> & GlobalEventHandlersMapping
-      "nosto-control": Record<string, unknown> & GlobalEventHandlersMapping
-      "nosto-dynamic-card": Partial<{
-        handle: string
-        section: string
-        template: string
-        variantId: string
-        placeholder: string
-        lazy: string
-      }> & GlobalEventHandlersMapping
-      "nosto-image": Partial<{
-        src: string
-        width: string
-        height: string
-        aspectRatio: string
-        layout: string
-        crop: string
-      }> & GlobalEventHandlersMapping
-      "nosto-product": Partial<{
-        productId: string
-        recoId: string
-        skuSelected: string
-      }> & GlobalEventHandlersMapping
-      "nosto-product-card": Partial<{
-        template: string
-      }> & GlobalEventHandlersMapping
-      "nosto-section": Partial<{
-        placement: string
-        section: string
-      }> & GlobalEventHandlersMapping
-      "nosto-sku-options": Partial<{
-        name: string
-      }> & GlobalEventHandlersMapping
+      "nosto-control": Partial<NostoControl> & GlobalEventHandlersMapping
+      "nosto-dynamic-card": Partial<NostoDynamicCard> & GlobalEventHandlersMapping
+      "nosto-image": Partial<NostoImage> & GlobalEventHandlersMapping
+      "nosto-product": Partial<NostoProduct> & GlobalEventHandlersMapping
+      "nosto-product-card": Partial<NostoProductCard> & GlobalEventHandlersMapping
+      "nosto-section": Partial<NostoSection> & GlobalEventHandlersMapping
+      "nosto-sku-options": Partial<NostoSkuOptions> & GlobalEventHandlersMapping
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
@@ -83,19 +58,11 @@ const aliases: Record<string, string> = {
 /**
  * Create an HTML element based on the given JSX type, props and children
  */
-export function createElement<T extends keyof CustomElementTypeMap>(
-  type: T,
-  props: Props,
-  ...children: Children
-): CustomElementTypeMap[T]
-export function createElement(type: string, props: Props, ...children: Children): HTMLElement
-export function createElement(type: Type, props: Props, ...children: Children): HTMLElement
 export function createElement(type: Type, props: Props, ...children: Children): HTMLElement {
   if (typeof type === "function") {
     return children?.length ? type({ ...props, children }) : type(props)
   }
 
-  // For custom elements, use document.createElement to get the proper class instance
   const element = document.createElement(type)
   applyProperties(element, props ?? {})
   children?.forEach(child => appendChild(element, child))
