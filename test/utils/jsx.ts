@@ -17,7 +17,7 @@ type GlobalEventHandlersMapping = {
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
-    type Element = CustomElementTypeMap[keyof CustomElementTypeMap] | HTMLElement
+    type Element = HTMLElement
     type IntrinsicElements = {
       "nosto-campaign": Partial<NostoCampaign> & GlobalEventHandlersMapping
       "nosto-control": Partial<NostoControl> & GlobalEventHandlersMapping
@@ -37,18 +37,6 @@ type Props = Record<string, unknown>
 type Type = string | ((props: Props) => HTMLElement)
 type Child = unknown
 type Children = Array<Child>
-
-// Map custom element tag names to their class types
-type CustomElementTypeMap = {
-  "nosto-campaign": NostoCampaign
-  "nosto-control": NostoControl
-  "nosto-dynamic-card": NostoDynamicCard
-  "nosto-image": NostoImage
-  "nosto-product": NostoProduct
-  "nosto-product-card": NostoProductCard
-  "nosto-section": NostoSection
-  "nosto-sku-options": NostoSkuOptions
-}
 
 const aliases: Record<string, string> = {
   className: "class",
