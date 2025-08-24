@@ -81,6 +81,33 @@
 - Maintain 90%+ coverage on statements, branches, lines, and functions
 - Tests run in jsdom environment
 
+### JSX/TSX Testing Patterns
+
+**Prefer JSX/TSX syntax for component creation in tests:**
+- Use `.tsx` file extension for test files that create custom elements
+- Add `/** @jsx createElement */` pragma at the top of TSX test files
+- Import `createElement` from `../utils/jsx` and the custom element classes
+- Use explicit custom element registration in `beforeAll()` blocks:
+  ```typescript
+  beforeAll(() => {
+    if (!customElements.get("nosto-campaign")) {
+      customElements.define("nosto-campaign", NostoCampaign)
+    }
+  })
+  ```
+- Create components using JSX syntax with TypeScript type assertions:
+  ```typescript
+  // Preferred JSX/TSX pattern
+  const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as NostoDynamicCard
+  
+  // Instead of imperative pattern
+  const card = new NostoDynamicCard()
+  card.handle = "test-handle"
+  card.template = "default"
+  ```
+- Use parentheses for multi-line JSX expressions
+- Always preserve custom element imports as they trigger `@customElement` decorator registration
+
 ## CI/CD Validation
 
 **Before committing, ALWAYS run these commands to ensure CI passes:**
