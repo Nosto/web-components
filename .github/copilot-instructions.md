@@ -95,10 +95,10 @@
     }
   })
   ```
-- Create components using JSX syntax with TypeScript type assertions:
+- Create components using JSX syntax with proper TypeScript typing:
   ```typescript
   // Preferred JSX/TSX pattern
-  const card = (<custom-element handle="test-handle" template="default" />) as CustomElement
+  const card = <custom-element handle="test-handle" template="default" />
   
   // Instead of imperative pattern
   const card = new CustomElement()
