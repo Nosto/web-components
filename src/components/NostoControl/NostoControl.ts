@@ -21,3 +21,9 @@ export class NostoControl extends NostoElement {
     }
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-control": NostoControl
+  }
+}
