@@ -17,17 +17,9 @@ type GlobalEventHandlersMapping = {
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
-    type Element = HTMLElement
+    type Element = CustomElementTypeMap[keyof CustomElementTypeMap] | HTMLElement
     type IntrinsicElements = {
-      "nosto-campaign": Partial<{
-        placement: string
-        productId: string
-        variantId: string
-        template: string
-        init: string
-        lazy: string
-        id: string
-      }> & GlobalEventHandlersMapping
+      "nosto-campaign": Partial<NostoCampaign> & GlobalEventHandlersMapping
       "nosto-control": Record<string, unknown> & GlobalEventHandlersMapping
       "nosto-dynamic-card": Partial<{
         handle: string
