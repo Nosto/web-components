@@ -90,18 +90,18 @@
 - Use explicit custom element registration in `beforeAll()` blocks:
   ```typescript
   beforeAll(() => {
-    if (!customElements.get("nosto-campaign")) {
-      customElements.define("nosto-campaign", NostoCampaign)
+    if (!customElements.get("custom-element")) {
+      customElements.define("custom-element", CustomElement)
     }
   })
   ```
 - Create components using JSX syntax with TypeScript type assertions:
   ```typescript
   // Preferred JSX/TSX pattern
-  const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as NostoDynamicCard
+  const card = (<custom-element handle="test-handle" template="default" />) as CustomElement
   
   // Instead of imperative pattern
-  const card = new NostoDynamicCard()
+  const card = new CustomElement()
   card.handle = "test-handle"
   card.template = "default"
   ```
