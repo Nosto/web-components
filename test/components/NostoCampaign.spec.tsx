@@ -1,11 +1,17 @@
 /** @jsx createElement */
-import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
+import { describe, it, beforeEach, beforeAll, expect, vi, Mock } from "vitest"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
+
+  beforeAll(() => {
+    if (!customElements.get("nosto-campaign")) {
+      customElements.define("nosto-campaign", NostoCampaign)
+    }
+  })
 
   beforeEach(() => {
     document.body.innerHTML = ""

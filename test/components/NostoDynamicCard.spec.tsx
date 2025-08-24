@@ -1,11 +1,17 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, afterEach } from "vitest"
+import { describe, it, expect, vi, afterEach, beforeAll } from "vitest"
 import { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../utils/jsx"
 
 describe("NostoDynamicCard", () => {
+  beforeAll(() => {
+    if (!customElements.get("nosto-dynamic-card")) {
+      customElements.define("nosto-dynamic-card", NostoDynamicCard)
+    }
+  })
+
   afterEach(() => {
     vi.clearAllMocks()
   })
