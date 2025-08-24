@@ -2,22 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest"
 import { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
-
-// Helper function that provides JSX-like object syntax while using reliable construction
-function createNostoDynamicCard(
-  props: {
-    handle?: string
-    section?: string
-    template?: string
-    variantId?: string
-    placeholder?: boolean
-    lazy?: boolean
-  } = {}
-): NostoDynamicCard {
-  const element = new NostoDynamicCard()
-  Object.assign(element, props)
-  return element
-}
+import { createElement } from "../utils/jsx"
 
 describe("NostoDynamicCard", () => {
   afterEach(() => {
@@ -45,7 +30,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = createNostoDynamicCard({ handle: "test-handle", template: "default" })
+    const card = <nosto-dynamic-card handle="test-handle" template="default" /> as NostoDynamicCard
 
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
@@ -61,7 +46,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = createNostoDynamicCard({ handle: "test-handle", section: "product-card" })
+    const card = <nosto-dynamic-card handle="test-handle" section="product-card" /> as NostoDynamicCard
 
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
@@ -80,7 +65,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = createNostoDynamicCard({ handle: "test-handle", template: "default" })
+    const card = <nosto-dynamic-card handle="test-handle" template="default" /> as NostoDynamicCard
     document.body.appendChild(card)
 
     card.handle = "updated-handle"
@@ -108,26 +93,16 @@ describe("NostoDynamicCard", () => {
       disconnect: vi.fn()
     }))
 
-    const card = createNostoDynamicCard({ handle: "test-handle", template: "default" })
+    const card = <nosto-dynamic-card handle="test-handle" template="default" /> as NostoDynamicCard
     await card.connectedCallback()
 
     // placeholder is used, since template is the same
-    const card2 = createNostoDynamicCard({
-      handle: "test-handle2",
-      template: "default",
-      placeholder: true,
-      lazy: true
-    })
+    const card2 = <nosto-dynamic-card handle="test-handle2" template="default" placeholder="true" lazy="true" /> as NostoDynamicCard
     await card2.connectedCallback()
     expect(card2.innerHTML).toBe(validMarkup)
 
     // placeholder is not used, since template is different
-    const card3 = createNostoDynamicCard({
-      handle: "test-handle3",
-      template: "custom",
-      placeholder: true,
-      lazy: true
-    })
+    const card3 = <nosto-dynamic-card handle="test-handle3" template="custom" placeholder="true" lazy="true" /> as NostoDynamicCard
     await card3.connectedCallback()
     expect(card3.innerHTML).toBe("")
   })
@@ -140,11 +115,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = createNostoDynamicCard({
-      handle: "lazy-handle",
-      template: "default",
-      lazy: true
-    })
+    const card = <nosto-dynamic-card handle="lazy-handle" template="default" lazy="true" /> as NostoDynamicCard
 
     // Mock IntersectionObserver
     const mockObserver = {
@@ -174,7 +145,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = createNostoDynamicCard({ handle: "handle-error", template: "default" })
+    const card = <nosto-dynamic-card handle="handle-error" template="default" /> as NostoDynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Failed to fetch product data")
   })
@@ -187,7 +158,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = createNostoDynamicCard({ handle: "handle-invalid", template: "default" })
+    const card = <nosto-dynamic-card handle="handle-invalid" template="default" /> as NostoDynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
   })

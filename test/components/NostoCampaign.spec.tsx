@@ -1,6 +1,7 @@
 import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
+import { createElement } from "../utils/jsx"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
@@ -9,18 +10,12 @@ describe("NostoCampaign", () => {
     document.body.innerHTML = ""
   })
 
-  function mount(attrs: Record<string, string> = {}) {
-    campaign = new NostoCampaign()
-    Object.assign(campaign, attrs)
-    return campaign
-  }
-
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-campaign")).toBeDefined()
   })
 
   it("should throw in connectedCallback if placement is missing", async () => {
-    campaign = new NostoCampaign()
+    campaign = <nosto-campaign /> as NostoCampaign
     await expect(campaign.connectedCallback()).rejects.toThrow(
       "placement or id attribute is required for NostoCampaign"
     )
@@ -29,9 +24,7 @@ describe("NostoCampaign", () => {
   it("should throw in connectedCallback if template is missing", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = new NostoCampaign()
-    campaign.placement = "123"
-    campaign.template = "my-template"
+    campaign = <nosto-campaign placement="123" template="my-template" /> as NostoCampaign
     await expect(campaign.connectedCallback()).rejects.toThrow('Template with id "my-template" not found.')
   })
 
@@ -39,11 +32,7 @@ describe("NostoCampaign", () => {
     const htmlContent = "recommended content"
     const { mockBuilder } = mockNostoRecs({ "789": { html: htmlContent } })
 
-    campaign = mount({
-      placement: "789",
-      productId: "123",
-      variantId: "var1"
-    })
+    campaign = <nosto-campaign placement="789" productId="123" variantId="var1" /> as NostoCampaign
 
     const template = document.createElement("template")
     template.innerHTML = "<span>{{ html }}</span>"
@@ -76,10 +65,7 @@ describe("NostoCampaign", () => {
       }
     })
 
-    const campaign = new NostoCampaign()
-    campaign.placement = "789"
-    campaign.productId = "123"
-    campaign.template = templateId
+    const campaign = <nosto-campaign placement="789" productId="123" template={templateId} /> as NostoCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -97,12 +83,7 @@ describe("NostoCampaign", () => {
   it('should not auto-load campaign if init="false"', async () => {
     const { mockBuilder, injectCampaigns } = mockNostoRecs({ "789": {} })
 
-    campaign = mount({
-      placement: "789",
-      productId: "123",
-      variantId: "var1",
-      template: "inline-template"
-    })
+    campaign = <nosto-campaign placement="789" productId="123" variantId="var1" template="inline-template" /> as NostoCampaign
 
     campaign.setAttribute("init", "false")
     document.body.appendChild(campaign)
@@ -126,11 +107,7 @@ describe("NostoCampaign", () => {
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => mockObserver)
 
-    campaign = mount({
-      placement: "456",
-      productId: "123"
-    })
-    campaign.lazy = true
+    campaign = <nosto-campaign placement="456" productId="123" lazy="true" /> as NostoCampaign
 
     await campaign.connectedCallback()
 
@@ -158,11 +135,7 @@ describe("NostoCampaign", () => {
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => mockObserver)
 
-    campaign = mount({
-      placement: "456",
-      productId: "123"
-    })
-    campaign.lazy = true
+    campaign = <nosto-campaign placement="456" productId="123" lazy="true" /> as NostoCampaign
 
     await campaign.connectedCallback()
 
@@ -185,12 +158,7 @@ describe("NostoCampaign", () => {
     // @ts-expect-error partial mock assignment
     global.IntersectionObserver = vi.fn(() => mockObserver)
 
-    campaign = mount({
-      placement: "456",
-      productId: "123",
-      init: "false"
-    })
-    campaign.lazy = true
+    campaign = <nosto-campaign placement="456" productId="123" init="false" lazy="true" /> as NostoCampaign
 
     await campaign.connectedCallback()
 
