@@ -14,19 +14,21 @@ type GlobalEventHandlersMapping = {
   [K in keyof GlobalEventHandlersEventMap as `on${Capitalize<K>}`]?: (event: GlobalEventHandlersEventMap[K]) => void
 }
 
+type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
-      "nosto-campaign": Partial<NostoCampaign> & GlobalEventHandlersMapping
-      "nosto-control": Partial<NostoControl> & GlobalEventHandlersMapping
-      "nosto-dynamic-card": Partial<NostoDynamicCard> & GlobalEventHandlersMapping
-      "nosto-image": Partial<NostoImage> & GlobalEventHandlersMapping
-      "nosto-product": Partial<NostoProduct> & GlobalEventHandlersMapping
-      "nosto-product-card": Partial<NostoProductCard> & GlobalEventHandlersMapping
-      "nosto-section": Partial<NostoSection> & GlobalEventHandlersMapping
-      "nosto-sku-options": Partial<NostoSkuOptions> & GlobalEventHandlersMapping
+      "nosto-campaign": ElementMapping<NostoCampaign>
+      "nosto-control": ElementMapping<NostoControl>
+      "nosto-dynamic-card": ElementMapping<NostoDynamicCard>
+      "nosto-image": ElementMapping<NostoImage>
+      "nosto-product": ElementMapping<NostoProduct>
+      "nosto-product-card": ElementMapping<NostoProductCard>
+      "nosto-section": ElementMapping<NostoSection>
+      "nosto-sku-options": ElementMapping<NostoSkuOptions>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
