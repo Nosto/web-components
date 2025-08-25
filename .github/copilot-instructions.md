@@ -102,7 +102,7 @@
 
 ## Commits
 
-Use conventional commits format: `<type>(<optional scope>): <subject>`
+When committing code, ALWAYS use valid conventional commit format.
 
 Examples:
 - `feat(NostoImage): add lazy loading support`
