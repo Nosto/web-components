@@ -1,18 +1,26 @@
-import { describe, it, beforeEach, expect, vi, Mock } from "vitest"
-import { NostoSection } from "@/components/NostoSection/NostoSection"
+/** @jsx createElement */
+import { describe, it, beforeEach, beforeAll, expect, vi, Mock } from "vitest"
+import { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../mockNostoRecs"
+import { createElement } from "../utils/jsx"
 
-describe("NostoSection", () => {
+describe("NostoCampaignSection", () => {
+  beforeAll(() => {
+    if (!customElements.get("nosto-campaign-section")) {
+      customElements.define("nosto-campaign-section", NostoCampaignSection)
+    }
+  })
+
   beforeEach(() => {
     document.body.innerHTML = ""
     vi.restoreAllMocks()
   })
 
   it("should be defined as a custom element", () => {
-    expect(customElements.get("nosto-section")).toBeDefined()
+    expect(customElements.get("nosto-campaign-section")).toBeDefined()
   })
 
   it("renders section markup from product handles and attributes product clicks", async () => {
@@ -26,9 +34,7 @@ describe("NostoSection", () => {
       })
     )
 
-    const el = new NostoSection()
-    el.placement = "placement1"
-    el.section = "featured-section"
+    const el = (<nosto-campaign-section placement="placement1" section="featured-section" />) as NostoCampaignSection
     document.body.appendChild(el)
 
     await el.connectedCallback()
@@ -48,9 +54,7 @@ describe("NostoSection", () => {
 
     addHandlers(http.get("/search", () => HttpResponse.text("Error", { status: 500 })))
 
-    const el = new NostoSection()
-    el.placement = "placement1"
-    el.section = "missing-section"
+    const el = (<nosto-campaign-section placement="placement1" section="missing-section" />) as NostoCampaignSection
 
     await expect(el.connectedCallback()).rejects.toThrow("Failed to fetch section missing-section")
     expect(el.hasAttribute("loading")).toBe(false)
@@ -69,9 +73,7 @@ describe("NostoSection", () => {
       })
     )
 
-    const el = new NostoSection()
-    el.placement = "placement1"
-    el.section = "featured-section"
+    const el = (<nosto-campaign-section placement="placement1" section="featured-section" />) as NostoCampaignSection
     document.body.appendChild(el)
 
     await el.connectedCallback()
@@ -96,9 +98,7 @@ describe("NostoSection", () => {
       })
     )
 
-    const el = new NostoSection()
-    el.placement = "placement1"
-    el.section = "featured-section"
+    const el = (<nosto-campaign-section placement="placement1" section="featured-section" />) as NostoCampaignSection
     document.body.appendChild(el)
 
     await el.connectedCallback()
