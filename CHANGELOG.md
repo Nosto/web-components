@@ -1,3 +1,10 @@
+# [8.12.0](https://github.com/Nosto/web-components/compare/v8.11.0...v8.12.0) (2025-08-25)
+
+
+### Features
+
+* remove unpic and thumb functionality from templating context ([0422889](https://github.com/Nosto/web-components/commit/04228893f7c70c839e3e25dbb86fe379fe7fcea9))
+
 # [8.11.0](https://github.com/Nosto/web-components/compare/v8.10.0...v8.11.0) (2025-08-25)
 
 
