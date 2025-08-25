@@ -1,3 +1,16 @@
+# [8.13.0](https://github.com/Nosto/web-components/compare/v8.12.0...v8.13.0) (2025-08-25)
+
+
+### Bug Fixes
+
+* resolve merge conflicts after updating branch with main ([c3c1328](https://github.com/Nosto/web-components/commit/c3c132818596e00031223f6fa0cd748d039eefde))
+
+
+### Features
+
+* convert NostoCampaignSection test to use TSX syntax ([866b4f1](https://github.com/Nosto/web-components/commit/866b4f15c5bdc21ce4edb559d85daa44af1c95d5))
+* rename NostoSection to NostoCampaignSection with updated docs ([0eb393f](https://github.com/Nosto/web-components/commit/0eb393fb0080f7f448e17fe2aa8191652a21169e))
+
 # [8.12.0](https://github.com/Nosto/web-components/compare/v8.11.0...v8.12.0) (2025-08-25)
 
 
