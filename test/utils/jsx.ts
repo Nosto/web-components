@@ -1,3 +1,12 @@
+import type { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
+import type { NostoControl } from "@/components/NostoControl/NostoControl"
+import type { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
+import type { NostoImage } from "@/components/NostoImage/NostoImage"
+import type { NostoProduct } from "@/components/NostoProduct/NostoProduct"
+import type { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
+import type { NostoSection } from "@/components/NostoSection/NostoSection"
+import type { NostoSkuOptions } from "@/components/NostoSkuOptions/NostoSkuOptions"
+
 type MaybeArray<T> = T | T[]
 
 // remaps entries in GlobalEventHandlersEventMap to their respective React style event handlers
@@ -5,11 +14,22 @@ type GlobalEventHandlersMapping = {
   [K in keyof GlobalEventHandlersEventMap as `on${Capitalize<K>}`]?: (event: GlobalEventHandlersEventMap[K]) => void
 }
 
+type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
+      "nosto-campaign": ElementMapping<NostoCampaign>
+      "nosto-control": ElementMapping<NostoControl>
+      "nosto-dynamic-card": ElementMapping<NostoDynamicCard>
+      "nosto-image": ElementMapping<NostoImage>
+      "nosto-product": ElementMapping<NostoProduct>
+      "nosto-product-card": ElementMapping<NostoProductCard>
+      "nosto-section": ElementMapping<NostoSection>
+      "nosto-sku-options": ElementMapping<NostoSkuOptions>
+      // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
   }

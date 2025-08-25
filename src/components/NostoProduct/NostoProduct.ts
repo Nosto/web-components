@@ -131,3 +131,9 @@ function registerSkuData(element: NostoProduct, { setSkus }: Store) {
     setSkus(parsed)
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-product": NostoProduct
+  }
+}

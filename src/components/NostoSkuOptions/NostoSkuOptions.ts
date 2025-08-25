@@ -153,3 +153,9 @@ function setAvailability(elements: Element[]) {
     o.toggleAttribute("unavailable", !o.getAttribute("n-skus"))
   })
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-sku-options": NostoSkuOptions
+  }
+}

@@ -90,3 +90,9 @@ function validateProps(element: NostoImage) {
     }
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-image": NostoImage
+  }
+}

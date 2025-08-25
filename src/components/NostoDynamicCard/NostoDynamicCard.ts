@@ -103,3 +103,9 @@ async function getMarkup(element: NostoDynamicCard) {
   }
   return markup
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-dynamic-card": NostoDynamicCard
+  }
+}

@@ -73,3 +73,9 @@ function getData(element: HTMLElement) {
   const data = element.querySelector("script[product-data]")
   return data ? JSON.parse(data.textContent!) : undefined
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-product-card": NostoProductCard
+  }
+}

@@ -59,3 +59,9 @@ async function getSectionMarkup(element: NostoSection, rec: JSONResult) {
   }
   return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-section": NostoSection
+  }
+}

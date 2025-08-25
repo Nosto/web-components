@@ -96,3 +96,9 @@ export async function loadCampaign(element: NostoCampaign) {
   }
   element.toggleAttribute("loading", false)
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "nosto-campaign": NostoCampaign
+  }
+}
