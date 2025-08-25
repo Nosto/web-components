@@ -1,12 +1,10 @@
-import { describe, beforeEach, it, expect, vi } from "vitest"
+import { describe, beforeEach, it, expect } from "vitest"
 import { NostoControl } from "@/components/NostoControl/NostoControl"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { createElement } from "../utils/jsx"
 
 describe("NostoControl", () => {
   beforeEach(() => {
-    document.body.innerHTML = ""
-    vi.resetAllMocks()
     mockNostojs({
       internal: {
         getSegments: () => Promise.resolve(["test"])
