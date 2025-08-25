@@ -12,10 +12,11 @@ This package provides the following web components:
 
 ### Store level templating
 
-| Component     | Description                                           |
-| ------------- | ----------------------------------------------------- |
-| NostoCampaign | Campaign rendering and product recommendation display |
-| NostoControl  | Conditional content rendering based on user segments |
+| Component            | Description                                                          |
+| -------------------- | -------------------------------------------------------------------- |
+| NostoCampaign        | Campaign rendering and product recommendation display                |
+| NostoCampaignSection | Campaign rendering using the Section Rendering API (Shopify only)   |
+| NostoControl         | Conditional content rendering based on user segments                |
 
 ### Campaign level templating
 
