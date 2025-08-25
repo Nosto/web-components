@@ -1,3 +1,23 @@
+# [8.11.0](https://github.com/Nosto/web-components/compare/v8.10.0...v8.11.0) (2025-08-25)
+
+
+### Bug Fixes
+
+* **tests:** remove unused JSX import from NostoCampaign.spec.tsx ([448d876](https://github.com/Nosto/web-components/commit/448d876df05cac35a538dfc49e25e5bd3f07ccc9))
+
+
+### Features
+
+* **jsx:** add custom element type definitions and remove type assertions ([282e43b](https://github.com/Nosto/web-components/commit/282e43b32a73f365514eeeaee0d342b5a1c84366))
+* **jsx:** update IntrinsicElements to use Partial class types and simplify createElement ([b60bd9b](https://github.com/Nosto/web-components/commit/b60bd9bf2d455e0f4df075edd671eec7038c240e))
+* **jsx:** use Partial<NostoCampaign> for attribute type definitions ([4ef959a](https://github.com/Nosto/web-components/commit/4ef959a6e1882f486f366475d80787ee28a7a65b))
+* **tests:** add explicit custom element registration using beforeAll ([e48e0dd](https://github.com/Nosto/web-components/commit/e48e0dd09b54e49e269bc6c8c59bd32e8097dcd2))
+* **tests:** add type assertions back to JSX elements in test files ([bad7e7e](https://github.com/Nosto/web-components/commit/bad7e7e6995678bacd25f7c6cc1de53488d8318a))
+* **tests:** convert NostoDynamicCard.spec.ts to .tsx with JSX patterns ([56268d7](https://github.com/Nosto/web-components/commit/56268d79af276c122ea989e87a25da5e9b76758a))
+* **tests:** convert to actual TSX syntax with JSX createElement ([ff7fcc7](https://github.com/Nosto/web-components/commit/ff7fcc7a0fe4892f021777ef6ae0baa64a98aa77))
+* **tests:** convert to actual TSX syntax without explicit createElement import ([b9abd05](https://github.com/Nosto/web-components/commit/b9abd05212316a83475182e8dacb29a70709d860))
+* **tests:** implement JSX-like syntax for component creation in NostoDynamicCard tests ([f06a575](https://github.com/Nosto/web-components/commit/f06a57502d47267d0ae70e77e88f45a496262449))
+
 # [8.10.0](https://github.com/Nosto/web-components/compare/v8.9.0...v8.10.0) (2025-08-22)
 
 
