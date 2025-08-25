@@ -69,6 +69,6 @@ async function getSectionMarkup(element: NostoCampaignSection, rec: JSONResult) 
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-section": NostoSection
+    "nosto-campaign-section": NostoCampaignSection
   }
 }
