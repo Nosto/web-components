@@ -1,17 +1,11 @@
 /** @jsx createElement */
-import { describe, it, beforeAll, expect, vi, Mock } from "vitest"
+import { describe, it, expect, vi, Mock } from "vitest"
 import { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
 describe("NostoCampaign", () => {
   let campaign: NostoCampaign
-
-  beforeAll(() => {
-    if (!customElements.get("nosto-campaign")) {
-      customElements.define("nosto-campaign", NostoCampaign)
-    }
-  })
 
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-campaign")).toBeDefined()

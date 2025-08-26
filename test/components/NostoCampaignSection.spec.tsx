@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, beforeAll, expect, Mock } from "vitest"
+import { describe, it, expect, Mock } from "vitest"
 import { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
@@ -8,12 +8,6 @@ import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
 describe("NostoCampaignSection", () => {
-  beforeAll(() => {
-    if (!customElements.get("nosto-campaign-section")) {
-      customElements.define("nosto-campaign-section", NostoCampaignSection)
-    }
-  })
-
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-campaign-section")).toBeDefined()
   })
