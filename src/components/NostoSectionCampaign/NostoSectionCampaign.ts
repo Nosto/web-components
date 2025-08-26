@@ -5,14 +5,14 @@ import { addRequest } from "../NostoCampaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
 /**
- * NostoCampaignSection is a custom element that fetches Nosto placement results and renders the results
+ * NostoSectionCampaign is a custom element that fetches Nosto placement results and renders the results
  * using a Shopify section template via the Section Rendering API.
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
  */
-@customElement("nosto-campaign-section")
-export class NostoCampaignSection extends NostoElement {
+@customElement("nosto-section-campaign")
+export class NostoSectionCampaign extends NostoElement {
   /** @private */
   static attributes = {
     placement: String,
@@ -46,7 +46,7 @@ export class NostoCampaignSection extends NostoElement {
   }
 }
 
-async function getSectionMarkup(element: NostoCampaignSection, rec: JSONResult) {
+async function getSectionMarkup(element: NostoSectionCampaign, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
   const target = new URL("/search", window.location.href)
   target.searchParams.set("section_id", element.section)
@@ -69,6 +69,6 @@ async function getSectionMarkup(element: NostoCampaignSection, rec: JSONResult) 
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-campaign-section": NostoCampaignSection
+    "nosto-section-campaign": NostoSectionCampaign
   }
 }

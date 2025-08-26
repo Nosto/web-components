@@ -1,15 +1,15 @@
 /** @jsx createElement */
 import { describe, it, expect, Mock } from "vitest"
-import { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
+import { NostoSectionCampaign } from "@/components/NostoSectionCampaign/NostoSectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
-describe("NostoCampaignSection", () => {
+describe("NostoSectionCampaign", () => {
   it("should be defined as a custom element", () => {
-    expect(customElements.get("nosto-campaign-section")).toBeDefined()
+    expect(customElements.get("nosto-section-campaign")).toBeDefined()
   })
 
   it("renders section markup from product handles and attributes product clicks", async () => {
@@ -23,7 +23,7 @@ describe("NostoCampaignSection", () => {
       })
     )
 
-    const el = (<nosto-campaign-section placement="placement1" section="featured-section" />) as NostoCampaignSection
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as NostoSectionCampaign
     document.body.appendChild(el)
 
     await el.connectedCallback()
@@ -43,7 +43,7 @@ describe("NostoCampaignSection", () => {
 
     addHandlers(http.get("/search", () => HttpResponse.text("Error", { status: 500 })))
 
-    const el = (<nosto-campaign-section placement="placement1" section="missing-section" />) as NostoCampaignSection
+    const el = (<nosto-section-campaign placement="placement1" section="missing-section" />) as NostoSectionCampaign
 
     await expect(el.connectedCallback()).rejects.toThrow("Failed to fetch section missing-section")
     expect(el.hasAttribute("loading")).toBe(false)
@@ -62,7 +62,7 @@ describe("NostoCampaignSection", () => {
       })
     )
 
-    const el = (<nosto-campaign-section placement="placement1" section="featured-section" />) as NostoCampaignSection
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as NostoSectionCampaign
     document.body.appendChild(el)
 
     await el.connectedCallback()
@@ -87,7 +87,7 @@ describe("NostoCampaignSection", () => {
       })
     )
 
-    const el = (<nosto-campaign-section placement="placement1" section="featured-section" />) as NostoCampaignSection
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as NostoSectionCampaign
     document.body.appendChild(el)
 
     await el.connectedCallback()
