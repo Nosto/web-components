@@ -58,6 +58,9 @@ describe("NostoSimpleCampaign", () => {
     expect(campaign.innerHTML).toContain("Test Product 2")
     expect(campaign.innerHTML).toContain("$19.99")
     expect(campaign.innerHTML).toContain("$29.99")
+
+    // Assert the whole response structure
+    expect(campaign.innerHTML).toMatchSnapshot()
   })
 
   it("should render in carousel mode when specified", async () => {
@@ -78,6 +81,9 @@ describe("NostoSimpleCampaign", () => {
     expect(campaign.innerHTML).toContain('class="nosto-simple-campaign nosto-carousel"')
     expect(campaign.innerHTML).toContain('class="nosto-carousel-container"')
     expect(campaign.innerHTML).toContain("Carousel Product")
+
+    // Assert the whole response structure
+    expect(campaign.innerHTML).toMatchSnapshot()
   })
 
   it("should render in bundle mode when specified", async () => {

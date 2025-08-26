@@ -1,17 +1,8 @@
 import { customElement } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
-import { JSONResult } from "@nosto/nosto-js/client"
+import { JSONResult, JSONProduct } from "@nosto/nosto-js/client"
 import { NostoElement } from "../NostoElement"
 import { addRequest } from "../NostoCampaign/orchestrator"
-
-interface NostoProduct {
-  name?: string
-  price_text?: string
-  thumb_url?: string
-  url?: string
-  handle?: string
-  product_id?: string
-}
 
 /**
  * A Shopify-specific custom element that renders a Nosto campaign with different display modes.
@@ -21,8 +12,6 @@ interface NostoProduct {
  * @property {string} placement - The placement identifier for the campaign. Required.
  * @property {string} [mode] - The rendering mode: 'grid', 'carousel', or 'bundle'. Defaults to 'grid'.
  * @property {string} [card] - If provided, delegates card rendering to Shopify via NostoDynamicCard.
- * @property {string} [productId] - The ID of the product to associate with the campaign.
- * @property {string} [variantId] - The variant ID of the product.
  *
  * @example
  * ```html
@@ -87,7 +76,7 @@ export class NostoSimpleCampaign extends NostoElement {
   }
 
   async #renderCampaign(rec: JSONResult, mode: string): Promise<string> {
-    const products = (rec.products || []) as NostoProduct[]
+    const products = (rec.products || []) as JSONProduct[]
 
     if (products.length === 0) {
       return ""
@@ -100,37 +89,33 @@ export class NostoSimpleCampaign extends NostoElement {
     }
   }
 
-  #renderWithDynamicCards(products: NostoProduct[], mode: string): string {
+  #renderWithDynamicCards(products: JSONProduct[], mode: string): string {
     const containerClass = this.#getContainerClass(mode)
     const productCards = products
-      .map((product: NostoProduct) => {
+      .map((product: JSONProduct) => {
         const handle = this.#extractProductHandle(product)
         if (!handle) return ""
 
-        return (
-          `<nosto-dynamic-card
+        return `<nosto-dynamic-card
             handle="${handle}"
             template="${this.card}"
             ${this.variantId ? `variant-id="${this.variantId}"` : ""}
           ></nosto-dynamic-card>`
-        )
       })
       .filter(card => card !== "")
       .join("")
 
-    return (
-      `<div class="nosto-simple-campaign nosto-${mode}">
+    return `<div class="nosto-simple-campaign nosto-${mode}">
         ${containerClass ? `<div class="${containerClass}">` : ""}
           ${productCards}
         ${containerClass ? "</div>" : ""}
       </div>`
-    )
   }
 
-  #renderWithBasicCards(products: NostoProduct[], mode: string): string {
+  #renderWithBasicCards(products: JSONProduct[], mode: string): string {
     const containerClass = this.#getContainerClass(mode)
     const productCards = products
-      .map((product: NostoProduct) => {
+      .map((product: JSONProduct) => {
         return `<div class="nosto-product-card">
         <div class="nosto-product-image">
           ${product.thumb_url ? `<img src="${product.thumb_url}" alt="${product.name || ""}" />` : ""}
@@ -158,7 +143,7 @@ export class NostoSimpleCampaign extends NostoElement {
     }
   }
 
-  #extractProductHandle(product: NostoProduct): string | null {
+  #extractProductHandle(product: JSONProduct): string | null {
     // Try to extract Shopify product handle from various possible fields
     if (product.url) {
       // Extract handle from URL like "/products/product-handle", ignoring query params and hash
@@ -166,7 +151,7 @@ export class NostoSimpleCampaign extends NostoElement {
       if (match) return match[1]
     }
 
-    // Fallback to product_id or handle if available
+    // Fallback to handle or product_id if available
     return product.handle || product.product_id || null
   }
 }
