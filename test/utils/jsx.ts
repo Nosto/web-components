@@ -74,6 +74,10 @@ function isEventListener(key: string, value: unknown): value is EventListener {
   return key.startsWith("on") && typeof value === "function"
 }
 
+function toKebabCase(str: string) {
+  return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
+}
+
 function applyProperties(element: HTMLElement, props: Props) {
   Object.entries(props).forEach(([key, value]) => {
     if (isEventListener(key, value)) {
@@ -81,7 +85,7 @@ function applyProperties(element: HTMLElement, props: Props) {
     } else if (key === "style") {
       Object.assign(element.style, value)
     } else {
-      const normKey = aliases[key] ?? key
+      const normKey = aliases[key] ?? toKebabCase(key)
       element.setAttribute(normKey, String(value))
     }
   })
