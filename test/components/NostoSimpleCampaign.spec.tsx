@@ -1,14 +1,8 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, beforeAll, afterEach } from "vitest"
+import { describe, it, expect, vi, afterEach } from "vitest"
 import { NostoSimpleCampaign } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
-
-beforeAll(() => {
-  if (!customElements.get("nosto-simple-campaign")) {
-    customElements.define("nosto-simple-campaign", NostoSimpleCampaign)
-  }
-})
 
 describe("NostoSimpleCampaign", () => {
   let campaign: NostoSimpleCampaign
