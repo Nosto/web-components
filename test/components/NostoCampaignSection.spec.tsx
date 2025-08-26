@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, beforeEach, beforeAll, expect, vi, Mock } from "vitest"
+import { describe, it, beforeAll, expect, Mock } from "vitest"
 import { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
@@ -12,11 +12,6 @@ describe("NostoCampaignSection", () => {
     if (!customElements.get("nosto-campaign-section")) {
       customElements.define("nosto-campaign-section", NostoCampaignSection)
     }
-  })
-
-  beforeEach(() => {
-    document.body.innerHTML = ""
-    vi.restoreAllMocks()
   })
 
   it("should be defined as a custom element", () => {

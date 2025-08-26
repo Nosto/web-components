@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect } from "vitest"
 import { NostoImage } from "@/components/NostoImage/NostoImage"
 
 // TODO: extend this to check the presence of width and height attributes in resulting URL
@@ -8,11 +8,6 @@ describe("NostoImage", () => {
   const bigCommerceUrl =
     "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/products/15493/images/80390/5SqIsKoR7VMPHGrsnseGPkhhpWHT9tLcY7Uwop7FCMzm5jcxKgU2d7P7zbgqcs8r__09669.1741105378.1280.1280.jpg?c=2"
   const stencilUrlPrefix = "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/images/stencil/"
-
-  // Register the custom element before tests
-  beforeEach(() => {
-    document.body.innerHTML = ""
-  })
 
   function initComp(attrs: Record<string, string> = {}) {
     nostoImage = new NostoImage()

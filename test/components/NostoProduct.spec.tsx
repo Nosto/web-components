@@ -11,7 +11,6 @@ describe("NostoProduct", () => {
 
   beforeEach(() => {
     element = new NostoProduct()
-    document.body.innerHTML = ""
   })
 
   describe("verify setup & validation", () => {

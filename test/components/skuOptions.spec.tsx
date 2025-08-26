@@ -1,14 +1,10 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect } from "vitest"
 import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
 import "@/components/NostoSkuOptions/NostoSkuOptions"
 import { createElement } from "../utils/jsx"
 
 describe("sku options integration", () => {
   const element = (selector: string) => document.querySelector<HTMLElement>(selector)!
-
-  beforeEach(() => {
-    document.body.innerHTML = ""
-  })
 
   it("should prune selections", () => {
     const nostoProduct = new NostoProduct()

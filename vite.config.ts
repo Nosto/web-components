@@ -35,6 +35,6 @@ export default defineConfig(() => ({
       }
     },
     environment: "jsdom",
-    setupFiles: ["./test/msw.setup.ts"]
+    setupFiles: ["./test/setup.ts", "./test/msw.setup.ts"]
   }
 }))

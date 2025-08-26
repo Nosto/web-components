@@ -1,13 +1,8 @@
 import { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
-import { describe, beforeEach, expect, it, vi } from "vitest"
+import { describe, expect, it } from "vitest"
 import { createElement } from "../utils/jsx"
 
 describe("NostoProductCard", () => {
-  beforeEach(() => {
-    document.body.innerHTML = ""
-    vi.resetAllMocks()
-  })
-
   it("should throw an error if template is not provided", () => {
     const card = new NostoProductCard()
     expect(card.connectedCallback()).rejects.toThrowError("Property template is required.")
