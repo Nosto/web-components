@@ -107,16 +107,24 @@ export class NostoSimpleCampaign extends NostoElement {
         const handle = this.#extractProductHandle(product)
         if (!handle) return ""
 
-        return `<nosto-dynamic-card 
-        handle="${handle}" 
-        template="${this.card}"
-        ${this.variantId ? `variant-id="${this.variantId}"` : ""}
-      ></nosto-dynamic-card>`
+        return (
+          `<nosto-dynamic-card
+            handle="${handle}"
+            template="${this.card}"
+            ${this.variantId ? `variant-id="${this.variantId}"` : ""}
+          ></nosto-dynamic-card>`
+        )
       })
       .filter(card => card !== "")
       .join("")
 
-    return `<div class="nosto-simple-campaign nosto-${mode}">${containerClass ? `<div class="${containerClass}">` : ""}${productCards}${containerClass ? "</div>" : ""}</div>`
+    return (
+      `<div class="nosto-simple-campaign nosto-${mode}">
+        ${containerClass ? `<div class="${containerClass}">` : ""}
+          ${productCards}
+        ${containerClass ? "</div>" : ""}
+      </div>`
+    )
   }
 
   #renderWithBasicCards(products: NostoProduct[], mode: string): string {
