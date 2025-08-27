@@ -18,7 +18,6 @@ const sampleImages = [
   }
 ]
 
-// Helper function for creating image grids
 function createImageGrid(
   images: typeof sampleImages,
   layout?: string,
