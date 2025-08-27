@@ -5,8 +5,7 @@ import {
   loadSimpleCampaign,
   renderCampaign,
   renderGrid,
-  createProductElement,
-  extractHandleFromUrl
+  createProductElement
 } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { addHandlers } from "../msw.setup"
@@ -114,7 +113,7 @@ describe("NostoSimpleCampaign", () => {
 
   it("should use NostoDynamicCard when card attribute is provided", async () => {
     const mockResult = {
-      products: [{ name: "Product 1", price: "$10", url: "/products/test-handle" }]
+      products: [{ name: "Product 1", price: "$10", handle: "test-handle" }]
     }
     mockNostoRecs({ "test-placement": mockResult })
 
@@ -131,7 +130,7 @@ describe("NostoSimpleCampaign", () => {
 
   it("should fall back to basic product display when card attribute is provided but no handle found", async () => {
     const mockResult = {
-      products: [{ name: "Product 1", price: "$10", url: "/invalid-url" }]
+      products: [{ name: "Product 1", price: "$10" }]
     }
     mockNostoRecs({ "test-placement": mockResult })
 
@@ -161,25 +160,6 @@ describe("NostoSimpleCampaign", () => {
 })
 
 describe("NostoSimpleCampaign utility functions", () => {
-  describe("extractHandleFromUrl", () => {
-    it("should extract handle from Shopify product URL", () => {
-      expect(extractHandleFromUrl("/products/awesome-product")).toBe("awesome-product")
-      expect(extractHandleFromUrl("/products/test-handle-123")).toBe("test-handle-123")
-      expect(extractHandleFromUrl("https://shop.example.com/products/my-product")).toBe("my-product")
-    })
-
-    it("should return null for invalid URLs", () => {
-      expect(extractHandleFromUrl("/invalid-url")).toBe(null)
-      expect(extractHandleFromUrl("/collections/test")).toBe(null)
-      expect(extractHandleFromUrl("")).toBe(null)
-    })
-
-    it("should handle URLs with query parameters", () => {
-      expect(extractHandleFromUrl("/products/test-product?variant=123")).toBe("test-product")
-      expect(extractHandleFromUrl("/products/another-product?utm_source=email")).toBe("another-product")
-    })
-  })
-
   describe("createProductElement", () => {
     let element: NostoSimpleCampaign
 
@@ -187,30 +167,30 @@ describe("NostoSimpleCampaign utility functions", () => {
       element = document.createElement("nosto-simple-campaign") as NostoSimpleCampaign
     })
 
-    it("should create NostoDynamicCard when card attribute and valid URL provided", async () => {
+    it("should create NostoDynamicCard when card attribute and handle provided", () => {
       element.setAttribute("card", "product-card")
       element.card = "product-card"
 
       const product = {
         name: "Test Product",
-        url: "/products/test-handle"
+        handle: "test-handle"
       }
 
-      const result = await createProductElement(element, product)
+      const result = createProductElement(element, product)
 
       expect(result.tagName.toLowerCase()).toBe("nosto-dynamic-card")
       expect(result.getAttribute("handle")).toBe("test-handle")
       expect(result.getAttribute("template")).toBe("product-card")
     })
 
-    it("should create basic product element when no card attribute", async () => {
+    it("should create basic product element when no card attribute", () => {
       const product = {
         name: "Test Product",
         price: 25,
         image_url: "https://example.com/image.jpg"
       }
 
-      const result = await createProductElement(element, product)
+      const result = createProductElement(element, product)
 
       expect(result.tagName.toLowerCase()).toBe("div")
       expect(result.className).toBe("nosto-product")
@@ -219,10 +199,10 @@ describe("NostoSimpleCampaign utility functions", () => {
       expect(result.innerHTML).toContain('src="https://example.com/image.jpg"')
     })
 
-    it("should handle product with missing optional fields", async () => {
+    it("should handle product with missing optional fields", () => {
       const product = { name: "Basic Product" }
 
-      const result = await createProductElement(element, product)
+      const result = createProductElement(element, product)
 
       expect(result.className).toBe("nosto-product")
       expect(result.innerHTML).toContain("Basic Product")
@@ -237,12 +217,12 @@ describe("NostoSimpleCampaign utility functions", () => {
 
     beforeEach(() => {
       element = document.createElement("nosto-simple-campaign") as NostoSimpleCampaign
-      mockCampaign = ({
+      mockCampaign = {
         products: [
           { name: "Product 1", price: 10 },
           { name: "Product 2", price: 20 }
         ]
-      } as unknown) as JSONResult
+      } as unknown as JSONResult
     })
 
     it("should call renderGrid for grid mode", async () => {
@@ -288,14 +268,8 @@ describe("NostoSimpleCampaign utility functions", () => {
       const { mockBuilder } = mockNostoRecs({})
       mockBuilder.load = vi.fn().mockRejectedValue(new Error("API Error"))
 
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
-
-      await loadSimpleCampaign(element)
-
+      await expect(loadSimpleCampaign(element)).rejects.toThrow("API Error")
       expect(element.hasAttribute("loading")).toBe(false)
-      expect(consoleSpy).toHaveBeenCalledWith("NostoSimpleCampaign: Failed to load campaign", expect.any(Error))
-
-      consoleSpy.mockRestore()
     })
 
     it("should handle null campaign results", async () => {

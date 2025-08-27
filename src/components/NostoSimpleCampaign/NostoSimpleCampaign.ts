@@ -53,14 +53,11 @@ export async function loadSimpleCampaign(element: NostoSimpleCampaign) {
       responseMode: "JSON_ORIGINAL"
     })) as JSONResult
 
-    if (rec && rec.products && rec.products.length > 0) {
+    if (rec?.products?.length > 0) {
       const mode = element.mode || "grid"
       await renderCampaign(element, rec, mode)
       api.attributeProductClicksInCampaign(element, rec)
     }
-  } catch (error) {
-    // Silently handle errors to prevent breaking the page
-    console.error("NostoSimpleCampaign: Failed to load campaign", error)
   } finally {
     element.toggleAttribute("loading", false)
   }
@@ -92,7 +89,7 @@ export async function renderGrid(element: NostoSimpleCampaign, campaign: JSONRes
   container.className = "nosto-grid"
 
   for (const product of campaign.products) {
-    const productElement = await createProductElement(element, product)
+    const productElement = createProductElement(element, product)
     container.appendChild(productElement)
   }
 
@@ -107,7 +104,7 @@ export async function renderCarousel(element: NostoSimpleCampaign, campaign: JSO
   container.className = "nosto-carousel"
 
   for (const product of campaign.products) {
-    const productElement = await createProductElement(element, product)
+    const productElement = createProductElement(element, product)
     container.appendChild(productElement)
   }
 
@@ -122,7 +119,7 @@ export async function renderBundle(element: NostoSimpleCampaign, campaign: JSONR
   container.className = "nosto-bundle"
 
   for (const product of campaign.products) {
-    const productElement = await createProductElement(element, product)
+    const productElement = createProductElement(element, product)
     container.appendChild(productElement)
   }
 
@@ -132,16 +129,12 @@ export async function renderBundle(element: NostoSimpleCampaign, campaign: JSONR
 /**
  * Creates a product element, optionally using NostoDynamicCard if card attribute is specified.
  */
-export async function createProductElement(element: NostoSimpleCampaign, product: Partial<JSONProduct>) {
-  if (element.card && product.url) {
-    // Extract handle from product URL for Shopify
-    const handle = extractHandleFromUrl(product.url)
-    if (handle) {
-      const dynamicCard = document.createElement("nosto-dynamic-card")
-      dynamicCard.setAttribute("handle", handle)
-      dynamicCard.setAttribute("template", element.card)
-      return dynamicCard
-    }
+export function createProductElement(element: NostoSimpleCampaign, product: Partial<JSONProduct>) {
+  if (element.card && product.handle) {
+    const dynamicCard = document.createElement("nosto-dynamic-card")
+    dynamicCard.setAttribute("handle", product.handle)
+    dynamicCard.setAttribute("template", element.card)
+    return dynamicCard
   }
 
   // Fallback to basic product display
@@ -156,15 +149,6 @@ export async function createProductElement(element: NostoSimpleCampaign, product
   `
 
   return productDiv
-}
-
-/**
- * Extracts product handle from Shopify product URL.
- */
-export function extractHandleFromUrl(url: string): string | null {
-  // Handle Shopify product URLs like /products/product-handle
-  const match = url.match(/\/products\/([^/?]+)/)
-  return match ? match[1] : null
 }
 
 declare global {
