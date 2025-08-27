@@ -307,7 +307,9 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" mode={"unknown-mode" as any} />) as NostoSimpleCampaign
+    campaign = (
+      <nosto-simple-campaign placement="test-placement" mode={"unknown-mode" as "grid" | "carousel" | "bundle"} />
+    ) as NostoSimpleCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()

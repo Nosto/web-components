@@ -40,9 +40,6 @@ export class NostoSimpleCampaign extends NostoElement {
   }
 }
 
-/**
- * Loads and renders the campaign data for a NostoSimpleCampaign element.
- */
 async function loadSimpleCampaign(element: NostoSimpleCampaign) {
   element.toggleAttribute("loading", true)
 
