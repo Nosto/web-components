@@ -31,6 +31,7 @@
 - `npm run typedoc` -- Generates documentation in docs/ folder
 - `npm run visualize` -- Creates bundle size visualization
 - `npm run storybook` -- Starts Storybook development server on port 6006
+- `npm run build-storybook` -- 5 seconds (timeout: 30+ seconds) - Builds Storybook for production deployment
 
 ## Repository Structure & Navigation
 
@@ -123,10 +124,12 @@
 2. `npm run lint-fix` -- to automatically fix linting issues
 3. `npm run build` -- must complete successfully
 4. `npm test` -- must pass all tests with 90%+ coverage
+5. `npm run build-storybook` -- must build Storybook successfully
 
 **GitHub Actions will run:**
 - Build job: npm ci → npm run build → npm test
 - Lint job: npm ci → npm run lint
+- Storybook build job: npm ci → npm run build-storybook
 
 
 
