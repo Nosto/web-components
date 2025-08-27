@@ -29,7 +29,7 @@ export class NostoSimpleCampaign extends NostoElement {
   }
 
   placement!: string
-  mode?: string
+  mode?: "grid" | "carousel" | "bundle"
   card?: string
 
   async connectedCallback() {
@@ -66,7 +66,11 @@ async function loadSimpleCampaign(element: NostoSimpleCampaign) {
 /**
  * Renders the campaign based on the specified mode.
  */
-async function renderCampaign(element: NostoSimpleCampaign, campaign: JSONResult, mode: string) {
+async function renderCampaign(
+  element: NostoSimpleCampaign,
+  campaign: JSONResult,
+  mode: "grid" | "carousel" | "bundle"
+) {
   switch (mode) {
     case "carousel":
       await renderCarousel(element, campaign)
@@ -88,10 +92,8 @@ async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-grid"
 
-  for (const product of campaign.products) {
-    const productElement = createProductElement(element, product)
-    container.appendChild(productElement)
-  }
+  const productElements = campaign.products.map(product => createProductElement(element, product))
+  container.append(...productElements)
 
   element.replaceChildren(container)
 }
@@ -103,10 +105,8 @@ async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult
   const container = document.createElement("div")
   container.className = "nosto-carousel"
 
-  for (const product of campaign.products) {
-    const productElement = createProductElement(element, product)
-    container.appendChild(productElement)
-  }
+  const productElements = campaign.products.map(product => createProductElement(element, product))
+  container.append(...productElements)
 
   element.replaceChildren(container)
 }
@@ -118,10 +118,8 @@ async function renderBundle(element: NostoSimpleCampaign, campaign: JSONResult) 
   const container = document.createElement("div")
   container.className = "nosto-bundle"
 
-  for (const product of campaign.products) {
-    const productElement = createProductElement(element, product)
-    container.appendChild(productElement)
-  }
+  const productElements = campaign.products.map(product => createProductElement(element, product))
+  container.append(...productElements)
 
   element.replaceChildren(container)
 }
