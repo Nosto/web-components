@@ -6,10 +6,7 @@ export { NostoDynamicCard } from "./components/NostoDynamicCard/NostoDynamicCard
 export { NostoImage } from "./components/NostoImage/NostoImage"
 export { NostoProduct } from "./components/NostoProduct/NostoProduct"
 export { NostoProductCard } from "./components/NostoProductCard/NostoProductCard"
-export {
-  NostoBaseCampaign,
-  NostoGridCampaign,
-  NostoCarouselCampaign,
-  NostoBundleCampaign
-} from "./components/NostoSimpleCampaign/NostoSimpleCampaign"
+export { NostoGridCampaign } from "./components/NostoGridCampaign/NostoGridCampaign"
+export { NostoCarouselCampaign } from "./components/NostoCarouselCampaign/NostoCarouselCampaign"
+export { NostoBundleCampaign } from "./components/NostoBundleCampaign/NostoBundleCampaign"
 export { NostoSkuOptions } from "./components/NostoSkuOptions/NostoSkuOptions"

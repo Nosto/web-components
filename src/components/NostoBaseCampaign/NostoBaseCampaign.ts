@@ -1,4 +1,3 @@
-import { customElement } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { JSONResult, JSONProduct } from "@nosto/nosto-js/client"
 import { NostoElement } from "../NostoElement"
@@ -65,65 +64,5 @@ export abstract class NostoBaseCampaign extends NostoElement {
     `
 
     return productDiv
-  }
-}
-
-/**
- * Grid layout campaign component.
- */
-@customElement("nosto-grid-campaign")
-export class NostoGridCampaign extends NostoBaseCampaign {
-  protected async render(campaign: JSONResult) {
-    const container = document.createElement("div")
-    container.className = "nosto-grid"
-
-    const productElements = campaign.products.map(product => this.createProductElement(product))
-    container.append(...productElements)
-
-    this.replaceChildren(container)
-  }
-}
-
-/**
- * Carousel layout campaign component with Swiper structure.
- */
-@customElement("nosto-carousel-campaign")
-export class NostoCarouselCampaign extends NostoBaseCampaign {
-  protected async render(campaign: JSONResult) {
-    const container = document.createElement("swiper-container")
-    container.className = "nosto-carousel"
-
-    const productSlides = campaign.products.map(product => {
-      const slide = document.createElement("swiper-slide")
-      slide.appendChild(this.createProductElement(product))
-      return slide
-    })
-    container.append(...productSlides)
-
-    this.replaceChildren(container)
-  }
-}
-
-/**
- * Bundle layout campaign component.
- */
-@customElement("nosto-bundle-campaign")
-export class NostoBundleCampaign extends NostoBaseCampaign {
-  protected async render(campaign: JSONResult) {
-    const container = document.createElement("div")
-    container.className = "nosto-bundle"
-
-    const productElements = campaign.products.map(product => this.createProductElement(product))
-    container.append(...productElements)
-
-    this.replaceChildren(container)
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    "nosto-grid-campaign": NostoGridCampaign
-    "nosto-carousel-campaign": NostoCarouselCampaign
-    "nosto-bundle-campaign": NostoBundleCampaign
   }
 }

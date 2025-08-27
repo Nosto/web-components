@@ -5,11 +5,9 @@ import type { NostoImage } from "@/components/NostoImage/NostoImage"
 import type { NostoProduct } from "@/components/NostoProduct/NostoProduct"
 import type { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
 import type { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
-import type {
-  NostoGridCampaign,
-  NostoCarouselCampaign,
-  NostoBundleCampaign
-} from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
+import type { NostoGridCampaign } from "@/components/NostoGridCampaign/NostoGridCampaign"
+import type { NostoCarouselCampaign } from "@/components/NostoCarouselCampaign/NostoCarouselCampaign"
+import type { NostoBundleCampaign } from "@/components/NostoBundleCampaign/NostoBundleCampaign"
 import type { NostoSkuOptions } from "@/components/NostoSkuOptions/NostoSkuOptions"
 
 type MaybeArray<T> = T | T[]
