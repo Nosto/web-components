@@ -43,8 +43,6 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-
-
 // Mock Nosto cart function for stories
 if (typeof window !== "undefined") {
   interface NostoWindow extends Window {
