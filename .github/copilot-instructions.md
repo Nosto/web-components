@@ -89,20 +89,37 @@
 - Maintain 90%+ coverage on statements, branches, lines, and functions
 - Tests run in jsdom environment
 
+### Vitest Setup Infrastructure
+
+**Global Setup (test/setup.ts):**
+- **Automatic Component Registration**: All components from `src/main.ts` are automatically registered as custom elements using kebab-case conversion (e.g., `NostoSimpleCampaign` → `nosto-simple-campaign`)
+- **Document Cleanup**: `document.body.innerHTML = ""` is automatically run before each test
+- **Mock Reset**: All `vi` mocks are automatically reset before each test
+- **No Manual Registration Needed**: Since components are auto-registered, avoid manual `beforeAll()` blocks for component registration
+
+**MSW Setup (test/msw.setup.ts):**
+- **HTTP Mocking Server**: MSW server is automatically started/stopped for all tests
+- **Handler Management**: Use `addHandlers()` function to add HTTP request handlers for specific tests
+- **Automatic Cleanup**: Request handlers are automatically reset after each test
+- **Error on Unhandled**: Server configured with `onUnhandledRequest: "error"` to catch missing mocks
+
+**Mock Utilities (test/mockNostoRecs.ts):**
+- **Nosto API Mocking**: Use `mockNostoRecs(recommendations)` to mock Nosto recommendation responses
+- **Campaign Injection**: Provides mock implementations for `injectCampaigns` and related API calls
+- **Request Builder**: Mock `RequestBuilder` with chainable methods for testing
+
+**JSX Test Utilities (test/utils/jsx.ts):**
+- **Custom createElement**: Handles JSX syntax in tests with proper attribute mapping and event listeners
+- **Type Safety**: Full TypeScript support for all Nosto components in JSX
+- **Attribute Handling**: Automatic kebab-case conversion and event listener attachment
+
 ### JSX/TSX Testing Patterns
 
 **Prefer JSX/TSX syntax for component creation in tests:**
 - Use `.tsx` file extension for test files that create custom elements
 - Add `/** @jsx createElement */` pragma at the top of TSX test files
 - Import `createElement` from `../utils/jsx` and the custom element classes
-- Use explicit custom element registration in `beforeAll()` blocks:
-  ```typescript
-  beforeAll(() => {
-    if (!customElements.get("custom-element")) {
-      customElements.define("custom-element", CustomElement)
-    }
-  })
-  ```
+- **Avoid manual component registration**: Components are auto-registered by `test/setup.ts`, so avoid `beforeAll()` blocks for registration
 - Create components using JSX syntax with proper TypeScript typing:
   ```typescript
   // Preferred JSX/TSX pattern
@@ -115,6 +132,51 @@
   ```
 - Use parentheses for multi-line JSX expressions
 - Always preserve custom element imports as they trigger `@customElement` decorator registration
+
+**Test Structure Best Practices:**
+- Use `afterEach()` for component cleanup instead of `beforeEach()` for setup
+- Create helper functions for HTTP mocking (e.g., `addProductHandlers()`) that call `addHandlers()` from MSW setup
+- Use `mockNostoRecs()` utility for mocking Nosto API responses
+- Leverage automatic document cleanup - no need to manually clear `document.body`
+- Rely on automatic mock reset - no need to manually reset mocks in `beforeEach()`
+
+**Example Test Structure:**
+```typescript
+/** @jsx createElement */
+import { describe, it, expect, afterEach } from "vitest"
+import { CustomElement } from "@/components/CustomElement/CustomElement"
+import { createElement } from "../utils/jsx"
+import { addHandlers } from "../msw.setup"
+import { mockNostoRecs } from "../mockNostoRecs"
+import { http, HttpResponse } from "msw"
+
+describe("CustomElement", () => {
+  let element: CustomElement
+  
+  function addProductHandlers() {
+    addHandlers(
+      http.get("/products/:handle", ({ params }) => {
+        return HttpResponse.text(`<div>${params.handle}</div>`)
+      })
+    )
+  }
+  
+  afterEach(() => {
+    element?.remove?.()
+  })
+  
+  it("should render correctly", async () => {
+    const mockResult = { products: [{ name: "Test Product" }] }
+    mockNostoRecs({ "test-placement": mockResult })
+    
+    element = <custom-element placement="test-placement" />
+    document.body.appendChild(element)
+    
+    await element.connectedCallback()
+    expect(element.innerHTML).toContain("Test Product")
+  })
+}
+```
 
 ## CI/CD Validation
 
