@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
 import "./NostoSkuOptions.stories.css"
 
-// Helper function for creating demo product
 function createDemoProduct(
   productId: string,
   productName: string,

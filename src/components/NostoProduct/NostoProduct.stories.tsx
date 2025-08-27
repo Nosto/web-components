@@ -17,7 +17,6 @@ function generateSampleProducts() {
     })
 }
 
-// Helper function for creating product cards
 function createProductCard(
   product: ReturnType<typeof generateSampleProducts>[0],
   skuContent: unknown,
@@ -43,7 +42,6 @@ function createProductCard(
   `
 }
 
-// Helper function for creating recommendation sections
 function createRecommendationSection(title: string, products: unknown[]) {
   return html`
     <div class="story-container">

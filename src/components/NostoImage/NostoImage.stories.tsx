@@ -46,7 +46,6 @@ function createImageGrid(
   `
 }
 
-// Helper function for creating demo sections
 function createDemoSection(title: string, content: unknown) {
   return html`
     <div class="story-container">
