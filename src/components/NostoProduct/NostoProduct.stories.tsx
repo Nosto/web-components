@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import "./NostoProduct.stories.css"
 
 function generateSampleProducts() {
   return Array.from(new Array(3).keys())
@@ -42,126 +43,7 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-const storyStyles = html`
-  <style>
-    .story-container {
-      font-family:
-        Albert Sans,
-        sans-serif;
-      padding: 20px;
-    }
 
-    .block__recommendation {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .reco-title {
-      font-weight: bold;
-      font-size: larger;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-
-    .products {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      overflow: auto hidden;
-      scrollbar-width: none;
-    }
-
-    nosto-product {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-width: 300px;
-    }
-
-    .nosto__product-image > img {
-      border-radius: 10px;
-      object-fit: cover;
-      width: 300px;
-      height: 300px;
-    }
-
-    .nosto__product-details--card {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .nosto__product-name {
-      color: #ff66bf;
-      font-weight: 600;
-    }
-
-    .nosto__product-price {
-      font-size: large;
-      font-weight: bold;
-    }
-
-    .nosto__product-skus {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    nosto-sku-options {
-      display: flex;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    nosto-sku-options span {
-      padding: 5px 10px;
-      border: 1px solid #ff66bf;
-      border-radius: 4px;
-      background: white;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    nosto-sku-options span[selected] {
-      background-color: #ff66bf;
-      color: white;
-    }
-
-    nosto-sku-options span[disabled] {
-      opacity: 0.2;
-      cursor: not-allowed;
-    }
-
-    .btn__atc {
-      padding: 10px 20px;
-      border-radius: 50px;
-      border: none;
-      background: #ff66bf;
-      color: #fff;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.2s;
-    }
-
-    .btn__atc:hover {
-      background: #e555a8;
-    }
-
-    .btn__atc:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .select__product {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      fontsize: 14px;
-      margin-bottom: 10px;
-    }
-  </style>
-`
 
 // Mock Nosto cart function for stories
 if (typeof window !== "undefined") {
@@ -183,7 +65,6 @@ export const DualSkuSelection: Story = {
     const products = generateSampleProducts()
 
     return html`
-      ${storyStyles}
       <div class="story-container">
         <div class="block__recommendation">
           <span class="reco-title">Dual SKU Selection</span>
@@ -245,7 +126,6 @@ export const TripleSkuSelection: Story = {
     const products = generateSampleProducts().slice(0, 2) // Show fewer products for this complex example
 
     return html`
-      ${storyStyles}
       <div class="story-container">
         <div class="block__recommendation">
           <span class="reco-title">Triple SKU Selection</span>
@@ -316,7 +196,6 @@ export const DropdownSkuSelection: Story = {
     const products = generateSampleProducts()
 
     return html`
-      ${storyStyles}
       <div class="story-container">
         <div class="block__recommendation">
           <span class="reco-title">Dropdown SKU Selection</span>
@@ -359,7 +238,6 @@ export const DropdownSkuSelection: Story = {
 
 export const SingleProduct: Story = {
   render: () => html`
-    ${storyStyles}
     <div class="story-container">
       <nosto-product product-id="demo-product" reco-id="demo-reco">
         <div class="nosto__product-image">
