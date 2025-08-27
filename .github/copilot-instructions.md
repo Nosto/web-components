@@ -13,6 +13,8 @@
 - Always run `npm run lint` (takes ~4 seconds) and `npm run lint-fix` (takes ~4 seconds) before committing.
 - **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing web component functionality.
 
+**When taking Storybook screenshots, always close the controls section first** using the "Hide addons [alt A]" button for cleaner screenshots and **wait for `#storybook-root .storybook-wrapper` to be available** before capturing the screenshot.
+
 ## Node.js Requirements
 
 **CRITICAL**: This project requires Node.js >= 22.12.0 and npm >= 10.9.0 as specified in package.json engines.
