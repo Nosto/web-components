@@ -60,9 +60,6 @@ async function loadSimpleCampaign(element: NostoSimpleCampaign) {
   }
 }
 
-/**
- * Renders the campaign based on the specified mode.
- */
 async function renderCampaign(
   element: NostoSimpleCampaign,
   campaign: JSONResult,
@@ -82,9 +79,6 @@ async function renderCampaign(
   }
 }
 
-/**
- * Renders the campaign in grid layout.
- */
 async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-grid"
@@ -95,9 +89,6 @@ async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
   element.replaceChildren(container)
 }
 
-/**
- * Renders the campaign in carousel layout.
- */
 async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-carousel"
@@ -108,9 +99,6 @@ async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult
   element.replaceChildren(container)
 }
 
-/**
- * Renders the campaign in bundle layout.
- */
 async function renderBundle(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-bundle"
@@ -121,9 +109,6 @@ async function renderBundle(element: NostoSimpleCampaign, campaign: JSONResult) 
   element.replaceChildren(container)
 }
 
-/**
- * Creates a product element, optionally using NostoDynamicCard if card attribute is specified.
- */
 function createProductElement(element: NostoSimpleCampaign, product: Partial<JSONProduct>) {
   if (element.card && product.handle) {
     const dynamicCard = document.createElement("nosto-dynamic-card")
