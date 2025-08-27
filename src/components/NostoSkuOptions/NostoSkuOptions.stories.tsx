@@ -1,32 +1,23 @@
-import type { Meta, StoryObj } from '@storybook/web-components'
-import { html } from 'lit'
-import { NostoSkuOptions } from './NostoSkuOptions'
-import { NostoProduct } from '../NostoProduct/NostoProduct'
-
-// Register custom elements
-if (!customElements.get("nosto-sku-options")) {
-  customElements.define("nosto-sku-options", NostoSkuOptions)
-}
-if (!customElements.get("nosto-product")) {
-  customElements.define("nosto-product", NostoProduct)
-}
+import type { Meta, StoryObj } from "@storybook/web-components"
+import { html } from "lit"
 
 const meta: Meta = {
-  title: 'Components/NostoSkuOptions',
-  component: 'nosto-sku-options',
+  title: "Components/NostoSkuOptions",
+  component: "nosto-sku-options",
   parameters: {
     docs: {
       description: {
-        component: 'A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface. Must be used within a NostoProduct component.',
-      },
-    },
+        component:
+          "A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface. Must be used within a NostoProduct component."
+      }
+    }
   },
   argTypes: {
     name: {
-      control: 'text',
-      description: 'Required. The identifier for this option group.',
-    },
-  },
+      control: "text",
+      description: "Required. The identifier for this option group."
+    }
+  }
 }
 
 export default meta
@@ -35,7 +26,9 @@ type Story = StoryObj
 const storyStyles = html`
   <style>
     .story-container {
-      font-family: Albert Sans, sans-serif;
+      font-family:
+        Albert Sans,
+        sans-serif;
       padding: 20px;
     }
 
@@ -182,11 +175,22 @@ const storyStyles = html`
       font-size: 0;
     }
 
-    .color-option.black { background-color: #000; }
-    .color-option.white { background-color: #fff; border: 2px solid #ddd; }
-    .color-option.blue { background-color: #007bff; }
-    .color-option.red { background-color: #dc3545; }
-    .color-option.green { background-color: #28a745; }
+    .color-option.black {
+      background-color: #000;
+    }
+    .color-option.white {
+      background-color: #fff;
+      border: 2px solid #ddd;
+    }
+    .color-option.blue {
+      background-color: #007bff;
+    }
+    .color-option.red {
+      background-color: #dc3545;
+    }
+    .color-option.green {
+      background-color: #28a745;
+    }
 
     .size-option {
       min-width: 40px;
@@ -200,10 +204,15 @@ const storyStyles = html`
 `
 
 // Mock Nosto cart function for stories
-if (typeof window !== 'undefined') {
-  (window as any).Nosto = {
+if (typeof window !== "undefined") {
+  interface NostoWindow extends Window {
+    Nosto?: {
+      addSkuToCart: (skuId: string, productId: string, recoId: string) => void
+    }
+  }
+  ;(window as NostoWindow).Nosto = {
     addSkuToCart: (skuId: string, productId: string, recoId: string) => {
-      console.log('Add to cart clicked:', { skuId, productId, recoId })
+      console.log("Add to cart clicked:", { skuId, productId, recoId })
       alert(`Added SKU ${skuId} of product ${productId} to cart`)
     }
   }
@@ -215,14 +224,12 @@ export const BasicColorOptions: Story = {
     <div class="story-container">
       <div class="demo-section">
         <div class="demo-title">Basic Color Options</div>
-        <div class="demo-description">
-          Simple color selection with visual feedback. One option is preselected.
-        </div>
+        <div class="demo-description">Simple color selection with visual feedback. One option is preselected.</div>
         <nosto-product product-id="demo-product-1" reco-id="storybook-demo">
           <div class="product-image">Product Image</div>
           <div class="product-name">Stylish T-Shirt</div>
           <div class="product-price" n-price>$29.99</div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Color</div>
             <nosto-sku-options name="colors">
@@ -231,18 +238,20 @@ export const BasicColorOptions: Story = {
               <span n-option n-skus="334,345">Blue</span>
             </nosto-sku-options>
           </div>
-          
+
           <button class="btn__atc" n-atc>Add to cart</button>
-          
-          <script type="application/json" n-sku-data>${JSON.stringify([
-            { "id": "123", "price": "$29.99" }, 
-            { "id": "145", "price": "$29.99" },
-            { "id": "223", "price": "$29.99" },
-            { "id": "234", "price": "$29.99" },
-            { "id": "245", "price": "$29.99" },
-            { "id": "334", "price": "$29.99" },
-            { "id": "345", "price": "$29.99" }
-          ])}</script>
+
+          <script type="application/json" n-sku-data>
+            ${JSON.stringify([
+              { id: "123", price: "$29.99" },
+              { id: "145", price: "$29.99" },
+              { id: "223", price: "$29.99" },
+              { id: "234", price: "$29.99" },
+              { id: "245", price: "$29.99" },
+              { id: "334", price: "$29.99" },
+              { id: "345", price: "$29.99" }
+            ])}
+          </script>
         </nosto-product>
       </div>
     </div>
@@ -250,10 +259,10 @@ export const BasicColorOptions: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Basic color selection options with one preselected option.',
-      },
-    },
-  },
+        story: "Basic color selection options with one preselected option."
+      }
+    }
+  }
 }
 
 export const ColorAndSizeOptions: Story = {
@@ -269,7 +278,7 @@ export const ColorAndSizeOptions: Story = {
           <div class="product-image">Product Image</div>
           <div class="product-name">Designer Jeans</div>
           <div class="product-price" n-price>$89.99</div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Color</div>
             <nosto-sku-options name="colors">
@@ -278,7 +287,7 @@ export const ColorAndSizeOptions: Story = {
               <span n-option n-skus="334,345">Blue</span>
             </nosto-sku-options>
           </div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Size</div>
             <nosto-sku-options name="sizes">
@@ -287,7 +296,7 @@ export const ColorAndSizeOptions: Story = {
               <span n-option n-skus="145,245,345" class="size-option">S</span>
             </nosto-sku-options>
           </div>
-          
+
           <button class="btn__atc" n-atc>Add to cart</button>
         </nosto-product>
       </div>
@@ -296,10 +305,10 @@ export const ColorAndSizeOptions: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Two option groups (color and size) that work together to select different SKUs.',
-      },
-    },
-  },
+        story: "Two option groups (color and size) that work together to select different SKUs."
+      }
+    }
+  }
 }
 
 export const OutOfStockHandling: Story = {
@@ -315,7 +324,7 @@ export const OutOfStockHandling: Story = {
           <div class="product-image">Product Image</div>
           <div class="product-name">Premium Hoodie</div>
           <div class="product-price" n-price>$69.99</div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Color</div>
             <nosto-sku-options name="colors">
@@ -324,16 +333,34 @@ export const OutOfStockHandling: Story = {
               <span n-option n-skus="334,345" title="M,S,Cotton,Silk">Blue</span>
             </nosto-sku-options>
           </div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Size</div>
             <nosto-sku-options name="sizes">
-              <span n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="$69.99" class="size-option">L</span>
-              <span n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk" n-price="$64.99" class="size-option">M</span>
-              <span n-option n-skus="245,345" n-skus-oos="145" title="Black,White,Blue,Cotton,Silk,Wool" n-price="$59.99" class="size-option">S</span>
+              <span n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="$69.99" class="size-option"
+                >L</span
+              >
+              <span
+                n-option
+                n-skus="334"
+                n-skus-oos="234"
+                title="White,Blue,Cotton,Silk"
+                n-price="$64.99"
+                class="size-option"
+                >M</span
+              >
+              <span
+                n-option
+                n-skus="245,345"
+                n-skus-oos="145"
+                title="Black,White,Blue,Cotton,Silk,Wool"
+                n-price="$59.99"
+                class="size-option"
+                >S</span
+              >
             </nosto-sku-options>
           </div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Material</div>
             <nosto-sku-options name="materials">
@@ -342,7 +369,7 @@ export const OutOfStockHandling: Story = {
               <span n-option n-skus="245" title="White,S">Wool</span>
             </nosto-sku-options>
           </div>
-          
+
           <button class="btn__atc" n-atc>Add to cart</button>
         </nosto-product>
       </div>
@@ -351,33 +378,43 @@ export const OutOfStockHandling: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Three option groups (colors, sizes, materials) with out-of-stock handling. Some options become disabled based on availability.',
-      },
-    },
-  },
+        story:
+          "Three option groups (colors, sizes, materials) with out-of-stock handling. Some options become disabled based on availability."
+      }
+    }
+  }
 }
 
 export const VisualColorOptions: Story = {
   render: () => html`
     ${storyStyles}
     <style>
-      .color-option.black { background-color: #000; }
-      .color-option.white { background-color: #fff; border: 2px solid #ddd; }
-      .color-option.blue { background-color: #007bff; }
-      .color-option.red { background-color: #dc3545; }
-      .color-option.green { background-color: #28a745; }
+      .color-option.black {
+        background-color: #000;
+      }
+      .color-option.white {
+        background-color: #fff;
+        border: 2px solid #ddd;
+      }
+      .color-option.blue {
+        background-color: #007bff;
+      }
+      .color-option.red {
+        background-color: #dc3545;
+      }
+      .color-option.green {
+        background-color: #28a745;
+      }
     </style>
     <div class="story-container">
       <div class="demo-section">
         <div class="demo-title">Visual Color Options</div>
-        <div class="demo-description">
-          Color options displayed as colored circles for better visual representation.
-        </div>
+        <div class="demo-description">Color options displayed as colored circles for better visual representation.</div>
         <nosto-product product-id="demo-product-4" reco-id="storybook-demo">
           <div class="product-image">Product Image</div>
           <div class="product-name">Canvas Sneakers</div>
           <div class="product-price" n-price>$79.99</div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Color</div>
             <nosto-sku-options name="colors">
@@ -388,7 +425,7 @@ export const VisualColorOptions: Story = {
               <span n-option n-skus="500" class="color-option green" title="Green">Green</span>
             </nosto-sku-options>
           </div>
-          
+
           <button class="btn__atc" n-atc>Add to cart</button>
         </nosto-product>
       </div>
@@ -397,10 +434,10 @@ export const VisualColorOptions: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Color options displayed as visual color swatches instead of text.',
-      },
-    },
-  },
+        story: "Color options displayed as visual color swatches instead of text."
+      }
+    }
+  }
 }
 
 export const PricingChanges: Story = {
@@ -416,7 +453,7 @@ export const PricingChanges: Story = {
           <div class="product-image">Product Image</div>
           <div class="product-name">Premium Watch</div>
           <div class="product-price" n-price>$199.99</div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Size</div>
             <nosto-sku-options name="sizes">
@@ -425,7 +462,7 @@ export const PricingChanges: Story = {
               <span n-option n-skus="watch-46" n-price="$299.99" class="size-option">46mm</span>
             </nosto-sku-options>
           </div>
-          
+
           <div class="sku-options-group">
             <div class="sku-group-label">Band Material</div>
             <nosto-sku-options name="bands">
@@ -434,7 +471,7 @@ export const PricingChanges: Story = {
               <span n-option n-skus="watch-38-metal,watch-42-metal,watch-46-metal">Metal</span>
             </nosto-sku-options>
           </div>
-          
+
           <button class="btn__atc" n-atc>Add to cart</button>
         </nosto-product>
       </div>
@@ -443,8 +480,8 @@ export const PricingChanges: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Demonstrates how selecting different options can change the displayed price dynamically.',
-      },
-    },
-  },
+        story: "Demonstrates how selecting different options can change the displayed price dynamically."
+      }
+    }
+  }
 }
