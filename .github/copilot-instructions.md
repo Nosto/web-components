@@ -5,11 +5,13 @@
 ## Quick Start & Working Effectively
 
 **Bootstrap, build, and test the repository:**
+
 1. `npm ci` -- installs dependencies. Takes ~60 seconds. NEVER CANCEL. Set timeout to 90+ seconds.
 2. `npm run build` -- compiles TypeScript, bundles with esbuild, and generates TypeDoc documentation. Takes ~8 seconds. NEVER CANCEL. Set timeout to 30+ seconds.
 3. `npm test` -- runs test suite with vitest and coverage reporting. Takes ~7 seconds. NEVER CANCEL. Set timeout to 30+ seconds.
 
 **Validation steps:**
+
 - Always run `npm run lint` (takes ~4 seconds) and `npm run lint-fix` (takes ~4 seconds) before committing.
 - **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing web component functionality.
 
@@ -18,8 +20,8 @@
 ## Node.js Requirements
 
 **CRITICAL**: This project requires Node.js >= 22.12.0 and npm >= 10.9.0 as specified in package.json engines.
-- The project will work with Node.js 20.x but will show warnings during `npm ci`.
 
+- The project will work with Node.js 20.x but will show warnings during `npm ci`.
 
 ## Core Commands & Timing
 
@@ -38,6 +40,7 @@
 ## Repository Structure & Navigation
 
 **Key directories:**
+
 - `src/` - Source code for all web components
 - `src/components/` - Main web component implementations (NostoCampaign, NostoImage, NostoProduct, etc.)
 - `src/templating/` - Templating utilities (context.ts, vue.ts)
@@ -47,6 +50,7 @@
 - `docs/` - Generated TypeDoc documentation
 
 **Key files to check when making changes:**
+
 - `src/main.ts` - Main entry point, exports all components
 - `package.json` - Project dependencies and scripts
 - `tsconfig.json` - TypeScript configuration
@@ -57,6 +61,7 @@
 ## Web Components Conventions
 
 **Follow these patterns when working with components:**
+
 - Use `Nosto` prefix for custom element class names and `nosto-` prefix for custom element tags
 - Register classes via the `customElement` decorator
 - Define attributes using the static `attributes` object and matching property definitions
@@ -95,6 +100,7 @@
 ### JSX/TSX Testing Patterns
 
 **Prefer JSX/TSX syntax for component creation in tests:**
+
 - Use `.tsx` file extension for test files that create custom elements
 - Add `/** @jsx createElement */` pragma at the top of TSX test files
 - Import `createElement` from `../utils/jsx` and the custom element classes
@@ -107,21 +113,24 @@
   })
   ```
 - Create components using JSX syntax with proper TypeScript typing:
+
   ```typescript
   // Preferred JSX/TSX pattern
   const card = <custom-element handle="test-handle" template="default" />
-  
+
   // Instead of imperative pattern
   const card = new CustomElement()
   card.handle = "test-handle"
   card.template = "default"
   ```
+
 - Use parentheses for multi-line JSX expressions
 - Always preserve custom element imports as they trigger `@customElement` decorator registration
 
 ## CI/CD Validation
 
 **Before committing, ALWAYS run these commands to ensure CI passes:**
+
 1. `npm run lint` -- must pass without errors
 2. `npm run lint-fix` -- to automatically fix linting issues
 3. `npm run build` -- must complete successfully
@@ -129,11 +138,10 @@
 5. `npm run build-storybook` -- must build Storybook successfully
 
 **GitHub Actions will run:**
+
 - Build job: npm ci → npm run build → npm test
 - Lint job: npm ci → npm run lint
 - Storybook build job: npm ci → npm run build-storybook
-
-
 
 ## Common Troubleshooting
 
@@ -145,6 +153,7 @@
 When committing code, ALWAYS use valid conventional commit format.
 
 Examples:
+
 - `feat(NostoImage): add lazy loading support`
 - `fix(build): resolve TypeScript compilation error`
 - `test(NostoProduct): add SKU selection test cases`
