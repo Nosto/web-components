@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest"
+import { describe, it, expect, afterEach } from "vitest"
 import { NostoSimpleCampaign } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { addHandlers } from "../msw.setup"
@@ -9,24 +9,17 @@ import { http, HttpResponse } from "msw"
 describe("NostoSimpleCampaign", () => {
   let campaign: NostoSimpleCampaign
 
-  beforeAll(() => {
-    if (!customElements.get("nosto-simple-campaign")) {
-      customElements.define("nosto-simple-campaign", NostoSimpleCampaign)
-    }
-  })
-
-  beforeEach(() => {
-    document.body.innerHTML = ""
-    // Add MSW handlers for dynamic card requests
+  function addProductHandlers() {
     addHandlers(
       http.get("/products/:handle", ({ params }) => {
         const handle = params.handle as string
         return HttpResponse.text(`<div class="product-card">${handle}</div>`, { status: 200 })
       })
     )
-  })
+  }
 
   afterEach(() => {
+    document.body.innerHTML = ""
     campaign?.remove?.()
   })
 
@@ -105,6 +98,7 @@ describe("NostoSimpleCampaign", () => {
   })
 
   it("should use NostoDynamicCard when card attribute is provided", async () => {
+    addProductHandlers()
     const mockResult = {
       products: [{ name: "Product 1", price: "$10", handle: "test-handle" }]
     }
@@ -122,6 +116,7 @@ describe("NostoSimpleCampaign", () => {
   })
 
   it("should fall back to basic product display when card attribute is provided but no handle found", async () => {
+    addProductHandlers()
     const mockResult = {
       products: [{ name: "Product 1", price: "$10" }]
     }
@@ -152,6 +147,7 @@ describe("NostoSimpleCampaign", () => {
   })
 
   it("should create NostoDynamicCard elements when card and handle are provided", async () => {
+    addProductHandlers()
     const mockResult = {
       products: [
         { name: "Product 1", handle: "test-handle-1" },
@@ -173,6 +169,7 @@ describe("NostoSimpleCampaign", () => {
   })
 
   it("should fallback to basic product elements when card is provided but no handle", async () => {
+    addProductHandlers()
     const mockResult = {
       products: [
         { name: "Product 1", price: "$10" }, // no handle
@@ -255,6 +252,7 @@ describe("NostoSimpleCampaign", () => {
   })
 
   it("should render different modes correctly with mixed product types", async () => {
+    addProductHandlers()
     const mockResult = {
       products: [
         { name: "Product 1", handle: "handle-1" },
