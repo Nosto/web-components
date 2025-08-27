@@ -5,6 +5,7 @@ import type { NostoImage } from "@/components/NostoImage/NostoImage"
 import type { NostoProduct } from "@/components/NostoProduct/NostoProduct"
 import type { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
 import type { NostoCampaignSection } from "@/components/NostoCampaignSection/NostoCampaignSection"
+import type { NostoSimpleCampaign } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import type { NostoSkuOptions } from "@/components/NostoSkuOptions/NostoSkuOptions"
 
 type MaybeArray<T> = T | T[]
@@ -28,6 +29,7 @@ declare global {
       "nosto-product": ElementMapping<NostoProduct>
       "nosto-product-card": ElementMapping<NostoProductCard>
       "nosto-campaign-section": ElementMapping<NostoCampaignSection>
+      "nosto-simple-campaign": ElementMapping<NostoSimpleCampaign>
       "nosto-sku-options": ElementMapping<NostoSkuOptions>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
