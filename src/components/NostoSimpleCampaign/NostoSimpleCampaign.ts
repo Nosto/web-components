@@ -43,7 +43,7 @@ export class NostoSimpleCampaign extends NostoElement {
 /**
  * Loads and renders the campaign data for a NostoSimpleCampaign element.
  */
-export async function loadSimpleCampaign(element: NostoSimpleCampaign) {
+async function loadSimpleCampaign(element: NostoSimpleCampaign) {
   element.toggleAttribute("loading", true)
 
   try {
@@ -66,7 +66,7 @@ export async function loadSimpleCampaign(element: NostoSimpleCampaign) {
 /**
  * Renders the campaign based on the specified mode.
  */
-export async function renderCampaign(element: NostoSimpleCampaign, campaign: JSONResult, mode: string) {
+async function renderCampaign(element: NostoSimpleCampaign, campaign: JSONResult, mode: string) {
   switch (mode) {
     case "carousel":
       await renderCarousel(element, campaign)
@@ -84,7 +84,7 @@ export async function renderCampaign(element: NostoSimpleCampaign, campaign: JSO
 /**
  * Renders the campaign in grid layout.
  */
-export async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
+async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-grid"
 
@@ -99,7 +99,7 @@ export async function renderGrid(element: NostoSimpleCampaign, campaign: JSONRes
 /**
  * Renders the campaign in carousel layout.
  */
-export async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult) {
+async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-carousel"
 
@@ -114,7 +114,7 @@ export async function renderCarousel(element: NostoSimpleCampaign, campaign: JSO
 /**
  * Renders the campaign in bundle layout.
  */
-export async function renderBundle(element: NostoSimpleCampaign, campaign: JSONResult) {
+async function renderBundle(element: NostoSimpleCampaign, campaign: JSONResult) {
   const container = document.createElement("div")
   container.className = "nosto-bundle"
 
@@ -129,7 +129,7 @@ export async function renderBundle(element: NostoSimpleCampaign, campaign: JSONR
 /**
  * Creates a product element, optionally using NostoDynamicCard if card attribute is specified.
  */
-export function createProductElement(element: NostoSimpleCampaign, product: Partial<JSONProduct>) {
+function createProductElement(element: NostoSimpleCampaign, product: Partial<JSONProduct>) {
   if (element.card && product.handle) {
     const dynamicCard = document.createElement("nosto-dynamic-card")
     dynamicCard.setAttribute("handle", product.handle)

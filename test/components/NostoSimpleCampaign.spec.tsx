@@ -1,16 +1,9 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest"
-import {
-  NostoSimpleCampaign,
-  loadSimpleCampaign,
-  renderCampaign,
-  renderGrid,
-  createProductElement
-} from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
+import { NostoSimpleCampaign } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { addHandlers } from "../msw.setup"
 import { createElement } from "../utils/jsx"
-import { JSONResult } from "@nosto/nosto-js/client"
 import { http, HttpResponse } from "msw"
 
 describe("NostoSimpleCampaign", () => {
@@ -157,128 +150,181 @@ describe("NostoSimpleCampaign", () => {
     await loadingPromise
     expect(campaign.hasAttribute("loading")).toBe(false)
   })
-})
 
-describe("NostoSimpleCampaign utility functions", () => {
-  describe("createProductElement", () => {
-    let element: NostoSimpleCampaign
+  it("should create NostoDynamicCard elements when card and handle are provided", async () => {
+    const mockResult = {
+      products: [
+        { name: "Product 1", handle: "test-handle-1" },
+        { name: "Product 2", handle: "test-handle-2" }
+      ]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
 
-    beforeEach(() => {
-      element = document.createElement("nosto-simple-campaign") as NostoSimpleCampaign
-    })
+    campaign = (<nosto-simple-campaign placement="test-placement" card="product-card" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
 
-    it("should create NostoDynamicCard when card attribute and handle provided", () => {
-      element.setAttribute("card", "product-card")
-      element.card = "product-card"
+    await campaign.connectedCallback()
 
-      const product = {
-        name: "Test Product",
-        handle: "test-handle"
-      }
-
-      const result = createProductElement(element, product)
-
-      expect(result.tagName.toLowerCase()).toBe("nosto-dynamic-card")
-      expect(result.getAttribute("handle")).toBe("test-handle")
-      expect(result.getAttribute("template")).toBe("product-card")
-    })
-
-    it("should create basic product element when no card attribute", () => {
-      const product = {
-        name: "Test Product",
-        price: 25,
-        image_url: "https://example.com/image.jpg"
-      }
-
-      const result = createProductElement(element, product)
-
-      expect(result.tagName.toLowerCase()).toBe("div")
-      expect(result.className).toBe("nosto-product")
-      expect(result.innerHTML).toContain("Test Product")
-      expect(result.innerHTML).toContain("25")
-      expect(result.innerHTML).toContain('src="https://example.com/image.jpg"')
-    })
-
-    it("should handle product with missing optional fields", () => {
-      const product = { name: "Basic Product" }
-
-      const result = createProductElement(element, product)
-
-      expect(result.className).toBe("nosto-product")
-      expect(result.innerHTML).toContain("Basic Product")
-      expect(result.innerHTML).not.toContain("<img")
-      expect(result.innerHTML).not.toContain("price")
-    })
+    const dynamicCards = campaign.querySelectorAll("nosto-dynamic-card")
+    expect(dynamicCards).toHaveLength(2)
+    expect(dynamicCards[0]?.getAttribute("handle")).toBe("test-handle-1")
+    expect(dynamicCards[1]?.getAttribute("handle")).toBe("test-handle-2")
+    expect(dynamicCards[0]?.getAttribute("template")).toBe("product-card")
   })
 
-  describe("renderCampaign", () => {
-    let element: NostoSimpleCampaign
-    let mockCampaign: JSONResult
+  it("should fallback to basic product elements when card is provided but no handle", async () => {
+    const mockResult = {
+      products: [
+        { name: "Product 1", price: "$10" }, // no handle
+        { name: "Product 2", handle: "test-handle" } // has handle
+      ]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
 
-    beforeEach(() => {
-      element = document.createElement("nosto-simple-campaign") as NostoSimpleCampaign
-      mockCampaign = {
-        products: [
-          { name: "Product 1", price: 10 },
-          { name: "Product 2", price: 20 }
-        ]
-      } as unknown as JSONResult
-    })
+    campaign = (<nosto-simple-campaign placement="test-placement" card="product-card" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
 
-    it("should call renderGrid for grid mode", async () => {
-      const renderGridSpy = vi.fn().mockImplementation(renderGrid)
-      vi.doMock("@/components/NostoSimpleCampaign/NostoSimpleCampaign", async () => ({
-        ...(await vi.importActual("@/components/NostoSimpleCampaign/NostoSimpleCampaign")),
-        renderGrid: renderGridSpy
-      }))
+    await campaign.connectedCallback()
 
-      await renderCampaign(element, mockCampaign, "grid")
+    const dynamicCards = campaign.querySelectorAll("nosto-dynamic-card")
+    const basicProducts = campaign.querySelectorAll(".nosto-product")
 
-      expect(element.querySelector(".nosto-grid")).toBeTruthy()
-    })
-
-    it("should call renderCarousel for carousel mode", async () => {
-      await renderCampaign(element, mockCampaign, "carousel")
-
-      expect(element.querySelector(".nosto-carousel")).toBeTruthy()
-    })
-
-    it("should call renderBundle for bundle mode", async () => {
-      await renderCampaign(element, mockCampaign, "bundle")
-
-      expect(element.querySelector(".nosto-bundle")).toBeTruthy()
-    })
-
-    it("should default to grid for unknown mode", async () => {
-      await renderCampaign(element, mockCampaign, "unknown")
-
-      expect(element.querySelector(".nosto-grid")).toBeTruthy()
-    })
+    expect(dynamicCards).toHaveLength(1) // Only product with handle
+    expect(basicProducts).toHaveLength(1) // Only product without handle
+    expect(dynamicCards[0]?.getAttribute("handle")).toBe("test-handle")
   })
 
-  describe("loadSimpleCampaign", () => {
-    let element: NostoSimpleCampaign
+  it("should handle products with complete information in basic fallback", async () => {
+    const mockResult = {
+      products: [
+        {
+          name: "Complete Product",
+          price: "$25.99",
+          image_url: "https://example.com/image.jpg"
+        }
+      ]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
 
-    beforeEach(() => {
-      element = document.createElement("nosto-simple-campaign") as NostoSimpleCampaign
-      element.placement = "test-placement"
-    })
+    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
 
-    it("should handle API errors gracefully", async () => {
-      const { mockBuilder } = mockNostoRecs({})
-      mockBuilder.load = vi.fn().mockRejectedValue(new Error("API Error"))
+    await campaign.connectedCallback()
 
-      await expect(loadSimpleCampaign(element)).rejects.toThrow("API Error")
-      expect(element.hasAttribute("loading")).toBe(false)
-    })
+    const productElement = campaign.querySelector(".nosto-product")
+    expect(productElement).toBeTruthy()
+    expect(productElement?.innerHTML).toContain("Complete Product")
+    expect(productElement?.innerHTML).toContain("$25.99")
+    expect(productElement?.innerHTML).toContain('src="https://example.com/image.jpg"')
+    expect(productElement?.innerHTML).toContain('alt="Complete Product"')
+  })
 
-    it("should handle null campaign results", async () => {
-      mockNostoRecs({ "test-placement": { products: [] } })
+  it("should handle products with minimal information in basic fallback", async () => {
+    const mockResult = {
+      products: [{ name: "Basic Product" }] // Only name, no price or image
+    }
+    mockNostoRecs({ "test-placement": mockResult })
 
-      await loadSimpleCampaign(element)
+    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
 
-      expect(element.innerHTML).toBe("")
-      expect(element.hasAttribute("loading")).toBe(false)
-    })
+    await campaign.connectedCallback()
+
+    const productElement = campaign.querySelector(".nosto-product")
+    expect(productElement).toBeTruthy()
+    expect(productElement?.innerHTML).toContain("Basic Product")
+    expect(productElement?.innerHTML).not.toContain("<img")
+    expect(productElement?.innerHTML).not.toContain("price")
+  })
+
+  it("should handle products with no name gracefully", async () => {
+    const mockResult = {
+      products: [{ price: "$10" }] // No name
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    const productElement = campaign.querySelector(".nosto-product")
+    expect(productElement).toBeTruthy()
+    expect(productElement?.innerHTML).toContain("Unnamed Product")
+    expect(productElement?.innerHTML).toContain("$10")
+  })
+
+  it("should render different modes correctly with mixed product types", async () => {
+    const mockResult = {
+      products: [
+        { name: "Product 1", handle: "handle-1" },
+        { name: "Product 2" } // no handle
+      ]
+    }
+
+    // Test grid mode
+    mockNostoRecs({ "test-placement": mockResult })
+    campaign = (
+      <nosto-simple-campaign placement="test-placement" mode="grid" card="product-card" />
+    ) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector(".nosto-grid")).toBeTruthy()
+    expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
+    expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
+    campaign.remove()
+
+    // Test carousel mode
+    mockNostoRecs({ "test-placement": mockResult })
+    campaign = (
+      <nosto-simple-campaign placement="test-placement" mode="carousel" card="product-card" />
+    ) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector(".nosto-carousel")).toBeTruthy()
+    expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
+    expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
+    campaign.remove()
+
+    // Test bundle mode
+    mockNostoRecs({ "test-placement": mockResult })
+    campaign = (
+      <nosto-simple-campaign placement="test-placement" mode="bundle" card="product-card" />
+    ) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector(".nosto-bundle")).toBeTruthy()
+    expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
+    expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
+  })
+
+  it("should default to grid mode for unknown modes", async () => {
+    const mockResult = {
+      products: [{ name: "Product 1", price: "$10" }]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-simple-campaign placement="test-placement" mode="unknown-mode" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector(".nosto-grid")).toBeTruthy()
+    expect(campaign.querySelector(".nosto-carousel")).toBeFalsy()
+    expect(campaign.querySelector(".nosto-bundle")).toBeFalsy()
+  })
+
+  it("should handle API errors gracefully while maintaining loading state", async () => {
+    const { mockBuilder } = mockNostoRecs({})
+    mockBuilder.load = vi.fn().mockRejectedValue(new Error("API Error"))
+
+    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    document.body.appendChild(campaign)
+
+    await expect(campaign.connectedCallback()).rejects.toThrow("API Error")
+    expect(campaign.hasAttribute("loading")).toBe(false) // Should clean up loading state
   })
 })
