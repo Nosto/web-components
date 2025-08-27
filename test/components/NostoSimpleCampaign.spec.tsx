@@ -1,13 +1,17 @@
 /** @jsx createElement */
 import { describe, it, expect, afterEach } from "vitest"
-import { NostoSimpleCampaign } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
+import {
+  NostoGridCampaign,
+  NostoCarouselCampaign,
+  NostoBundleCampaign
+} from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { addHandlers } from "../msw.setup"
 import { createElement } from "../utils/jsx"
 import { http, HttpResponse } from "msw"
 
-describe("NostoSimpleCampaign", () => {
-  let campaign: NostoSimpleCampaign
+describe("NostoGridCampaign", () => {
+  let campaign: NostoGridCampaign
 
   function addProductHandlers() {
     addHandlers(
@@ -24,17 +28,15 @@ describe("NostoSimpleCampaign", () => {
   })
 
   it("should be defined as a custom element", () => {
-    expect(customElements.get("nosto-simple-campaign")).toBeDefined()
+    expect(customElements.get("nosto-grid-campaign")).toBeDefined()
   })
 
   it("should throw in connectedCallback if placement is missing", async () => {
-    campaign = (<nosto-simple-campaign />) as NostoSimpleCampaign
-    await expect(campaign.connectedCallback()).rejects.toThrow(
-      "placement attribute is required for NostoSimpleCampaign"
-    )
+    campaign = (<nosto-grid-campaign />) as NostoGridCampaign
+    await expect(campaign.connectedCallback()).rejects.toThrow("placement attribute is required")
   })
 
-  it("should load campaign and render in grid mode by default", async () => {
+  it("should load campaign and render in grid layout", async () => {
     const mockResult = {
       products: [
         { name: "Product 1", price: "$10", image_url: "https://example.com/img1.jpg", url: "/products/product-1" },
@@ -43,7 +45,7 @@ describe("NostoSimpleCampaign", () => {
     }
     const { mockBuilder } = mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -54,41 +56,10 @@ describe("NostoSimpleCampaign", () => {
     expect(campaign.hasAttribute("loading")).toBe(false)
   })
 
-  it("should render campaign in carousel mode when mode=carousel", async () => {
-    const mockResult = {
-      products: [{ name: "Product 1", price: "$10", url: "/products/product-1" }]
-    }
-    mockNostoRecs({ "test-placement": mockResult })
-
-    campaign = (<nosto-simple-campaign placement="test-placement" mode="carousel" />) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeTruthy()
-    expect(campaign.querySelector("swiper-slide")).toBeTruthy()
-    expect(campaign.querySelector(".nosto-grid")).toBeFalsy()
-  })
-
-  it("should render campaign in bundle mode when mode=bundle", async () => {
-    const mockResult = {
-      products: [{ name: "Product 1", price: "$10", url: "/products/product-1" }]
-    }
-    mockNostoRecs({ "test-placement": mockResult })
-
-    campaign = (<nosto-simple-campaign placement="test-placement" mode="bundle" />) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector(".nosto-bundle")).toBeTruthy()
-    expect(campaign.querySelector(".nosto-grid")).toBeFalsy()
-  })
-
   it("should handle empty campaign results gracefully", async () => {
     const { mockBuilder } = mockNostoRecs({ "test-placement": { products: [] } })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -105,7 +76,7 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" card="product-card" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" card="product-card" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -116,28 +87,11 @@ describe("NostoSimpleCampaign", () => {
     expect(dynamicCard?.getAttribute("template")).toBe("product-card")
   })
 
-  it("should fall back to basic product display when card attribute is provided but no handle found", async () => {
-    addProductHandlers()
-    const mockResult = {
-      products: [{ name: "Product 1", price: "$10" }]
-    }
-    mockNostoRecs({ "test-placement": mockResult })
-
-    campaign = (<nosto-simple-campaign placement="test-placement" card="product-card" />) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector("nosto-dynamic-card")).toBeFalsy()
-    expect(campaign.querySelector(".nosto-product")).toBeTruthy()
-    expect(campaign.querySelector(".nosto-product")?.textContent).toContain("Product 1")
-  })
-
   it("should handle loading state correctly", async () => {
     const mockResult = { products: [{ name: "Product 1" }] }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     const loadingPromise = campaign.connectedCallback()
@@ -145,6 +99,154 @@ describe("NostoSimpleCampaign", () => {
 
     await loadingPromise
     expect(campaign.hasAttribute("loading")).toBe(false)
+  })
+})
+
+describe("NostoCarouselCampaign", () => {
+  let campaign: NostoCarouselCampaign
+
+  function addProductHandlers() {
+    addHandlers(
+      http.get("/products/:handle", ({ params }) => {
+        const handle = params.handle as string
+        return HttpResponse.text(`<div class="product-card">${handle}</div>`, { status: 200 })
+      })
+    )
+  }
+
+  afterEach(() => {
+    document.body.innerHTML = ""
+    campaign?.remove?.()
+  })
+
+  it("should be defined as a custom element", () => {
+    expect(customElements.get("nosto-carousel-campaign")).toBeDefined()
+  })
+
+  it("should render campaign in carousel mode with Swiper structure", async () => {
+    const mockResult = {
+      products: [{ name: "Product 1", price: "$10", url: "/products/product-1" }]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-carousel-campaign placement="test-placement" />) as NostoCarouselCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeTruthy()
+    expect(campaign.querySelector("swiper-slide")).toBeTruthy()
+    expect(campaign.querySelector(".nosto-grid")).toBeFalsy()
+  })
+
+  it("should use NostoDynamicCard in carousel mode when card attribute is provided", async () => {
+    addProductHandlers()
+    const mockResult = {
+      products: [{ name: "Product 1", price: "$10", handle: "test-handle" }]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-carousel-campaign placement="test-placement" card="product-card" />) as NostoCarouselCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    const dynamicCard = campaign.querySelector("nosto-dynamic-card")
+    expect(dynamicCard).toBeTruthy()
+    expect(dynamicCard?.getAttribute("handle")).toBe("test-handle")
+    expect(dynamicCard?.getAttribute("template")).toBe("product-card")
+    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeTruthy()
+  })
+})
+
+describe("NostoBundleCampaign", () => {
+  let campaign: NostoBundleCampaign
+
+  function addProductHandlers() {
+    addHandlers(
+      http.get("/products/:handle", ({ params }) => {
+        const handle = params.handle as string
+        return HttpResponse.text(`<div class="product-card">${handle}</div>`, { status: 200 })
+      })
+    )
+  }
+
+  afterEach(() => {
+    document.body.innerHTML = ""
+    campaign?.remove?.()
+  })
+
+  it("should be defined as a custom element", () => {
+    expect(customElements.get("nosto-bundle-campaign")).toBeDefined()
+  })
+
+  it("should render campaign in bundle mode", async () => {
+    const mockResult = {
+      products: [{ name: "Product 1", price: "$10", url: "/products/product-1" }]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-bundle-campaign placement="test-placement" />) as NostoBundleCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector(".nosto-bundle")).toBeTruthy()
+    expect(campaign.querySelector(".nosto-grid")).toBeFalsy()
+  })
+
+  it("should use NostoDynamicCard in bundle mode when card attribute is provided", async () => {
+    addProductHandlers()
+    const mockResult = {
+      products: [{ name: "Product 1", price: "$10", handle: "test-handle" }]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-bundle-campaign placement="test-placement" card="product-card" />) as NostoBundleCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    const dynamicCard = campaign.querySelector("nosto-dynamic-card")
+    expect(dynamicCard).toBeTruthy()
+    expect(dynamicCard?.getAttribute("handle")).toBe("test-handle")
+    expect(dynamicCard?.getAttribute("template")).toBe("product-card")
+    expect(campaign.querySelector(".nosto-bundle")).toBeTruthy()
+  })
+})
+
+describe("Shared Campaign Functionality", () => {
+  let campaign: NostoGridCampaign
+
+  function addProductHandlers() {
+    addHandlers(
+      http.get("/products/:handle", ({ params }) => {
+        const handle = params.handle as string
+        return HttpResponse.text(`<div class="product-card">${handle}</div>`, { status: 200 })
+      })
+    )
+  }
+
+  afterEach(() => {
+    document.body.innerHTML = ""
+    campaign?.remove?.()
+  })
+
+  it("should fall back to basic product display when card attribute is provided but no handle found", async () => {
+    addProductHandlers()
+    const mockResult = {
+      products: [{ name: "Product 1", price: "$10" }]
+    }
+    mockNostoRecs({ "test-placement": mockResult })
+
+    campaign = (<nosto-grid-campaign placement="test-placement" card="product-card" />) as NostoGridCampaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(campaign.querySelector("nosto-dynamic-card")).toBeFalsy()
+    expect(campaign.querySelector(".nosto-product")).toBeTruthy()
+    expect(campaign.querySelector(".nosto-product")?.textContent).toContain("Product 1")
   })
 
   it("should create NostoDynamicCard elements when card and handle are provided", async () => {
@@ -157,7 +259,7 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" card="product-card" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" card="product-card" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -179,7 +281,7 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" card="product-card" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" card="product-card" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -204,7 +306,7 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -223,7 +325,7 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -241,7 +343,7 @@ describe("NostoSimpleCampaign", () => {
     }
     mockNostoRecs({ "test-placement": mockResult })
 
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
+    campaign = (<nosto-grid-campaign placement="test-placement" />) as NostoGridCampaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -250,71 +352,5 @@ describe("NostoSimpleCampaign", () => {
     expect(productElement).toBeTruthy()
     expect(productElement?.innerHTML).toContain("Unnamed Product")
     expect(productElement?.innerHTML).toContain("$10")
-  })
-
-  it("should render different modes correctly with mixed product types", async () => {
-    addProductHandlers()
-    const mockResult = {
-      products: [
-        { name: "Product 1", handle: "handle-1" },
-        { name: "Product 2" } // no handle
-      ]
-    }
-
-    // Test grid mode
-    mockNostoRecs({ "test-placement": mockResult })
-    campaign = (
-      <nosto-simple-campaign placement="test-placement" mode="grid" card="product-card" />
-    ) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector(".nosto-grid")).toBeTruthy()
-    expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
-    expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
-    campaign.remove()
-
-    // Test carousel mode
-    mockNostoRecs({ "test-placement": mockResult })
-    campaign = (
-      <nosto-simple-campaign placement="test-placement" mode="carousel" card="product-card" />
-    ) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeTruthy()
-    expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
-    expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
-    campaign.remove()
-
-    // Test bundle mode
-    mockNostoRecs({ "test-placement": mockResult })
-    campaign = (
-      <nosto-simple-campaign placement="test-placement" mode="bundle" card="product-card" />
-    ) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector(".nosto-bundle")).toBeTruthy()
-    expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
-    expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
-  })
-
-  it("should default to grid mode for unknown modes", async () => {
-    const mockResult = {
-      products: [{ name: "Product 1", price: "$10" }]
-    }
-    mockNostoRecs({ "test-placement": mockResult })
-
-    campaign = (
-      <nosto-simple-campaign placement="test-placement" mode={"unknown-mode" as "grid" | "carousel" | "bundle"} />
-    ) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-
-    await campaign.connectedCallback()
-
-    expect(campaign.querySelector(".nosto-grid")).toBeTruthy()
-    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeFalsy()
-    expect(campaign.querySelector(".nosto-bundle")).toBeFalsy()
   })
 })

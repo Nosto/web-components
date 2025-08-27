@@ -5,138 +5,125 @@ import { NostoElement } from "../NostoElement"
 import { addRequest } from "../NostoCampaign/orchestrator"
 
 /**
- * A Shopify-specific custom element that renders Nosto campaigns with configurable display modes.
- * This component fetches campaign data from Nosto and renders it in grid, carousel, or bundle formats.
- * It can optionally delegate card rendering to Shopify via NostoDynamicCard usage.
- *
- * @property {string} placement - The placement identifier for the campaign. Required.
- * @property {string} [mode] - The rendering mode: 'grid', 'carousel', or 'bundle'. Defaults to 'grid'.
- * @property {string} [card] - Optional card template for delegating rendering to NostoDynamicCard.
- *
- * @example
- * ```html
- * <nosto-simple-campaign placement="product-recommendations" mode="grid"></nosto-simple-campaign>
- * <nosto-simple-campaign placement="cart-recommendations" mode="carousel" card="product-card"></nosto-simple-campaign>
- * ```
+ * Base class for Nosto campaign components with shared functionality for campaign loading and product rendering.
  */
-@customElement("nosto-simple-campaign")
-export class NostoSimpleCampaign extends NostoElement {
+export abstract class NostoBaseCampaign extends NostoElement {
   /** @private */
   static attributes = {
     placement: String,
-    mode: String,
     card: String
   }
 
   placement!: string
-  mode?: "grid" | "carousel" | "bundle"
   card?: string
 
   async connectedCallback() {
     if (!this.placement) {
-      throw new Error("placement attribute is required for NostoSimpleCampaign")
+      throw new Error("placement attribute is required")
     }
-    await loadSimpleCampaign(this)
+    await this.loadCampaign()
   }
-}
 
-async function loadSimpleCampaign(element: NostoSimpleCampaign) {
-  element.toggleAttribute("loading", true)
+  private async loadCampaign() {
+    this.toggleAttribute("loading", true)
 
-  try {
-    const api = await new Promise(nostojs)
-    const rec = (await addRequest({
-      placement: element.placement,
-      responseMode: "JSON_ORIGINAL"
-    })) as JSONResult
+    try {
+      const api = await new Promise(nostojs)
+      const rec = (await addRequest({
+        placement: this.placement,
+        responseMode: "JSON_ORIGINAL"
+      })) as JSONResult
 
-    if (rec?.products?.length > 0) {
-      const mode = element.mode || "grid"
-      await renderCampaign(element, rec, mode)
-      api.attributeProductClicksInCampaign(element, rec)
+      if (rec?.products?.length > 0) {
+        await this.renderCampaign(rec)
+        api.attributeProductClicksInCampaign(this, rec)
+      }
+    } finally {
+      this.toggleAttribute("loading", false)
     }
-  } finally {
-    element.toggleAttribute("loading", false)
+  }
+
+  protected abstract renderCampaign(campaign: JSONResult): Promise<void>
+
+  protected createProductElement(product: Partial<JSONProduct>) {
+    if (this.card && product.handle) {
+      const dynamicCard = document.createElement("nosto-dynamic-card")
+      dynamicCard.setAttribute("handle", product.handle)
+      dynamicCard.setAttribute("template", this.card)
+      return dynamicCard
+    }
+
+    // Fallback to basic product display
+    const productDiv = document.createElement("div")
+    productDiv.className = "nosto-product"
+    productDiv.innerHTML = `
+      <div class="nosto-product-info">
+        ${product.image_url ? `<img src="${product.image_url}" alt="${product.name || "Product"}" />` : ""}
+        <h3>${product.name || "Unnamed Product"}</h3>
+        ${product.price ? `<p class="price">${product.price}</p>` : ""}
+      </div>
+    `
+
+    return productDiv
   }
 }
 
-async function renderCampaign(
-  element: NostoSimpleCampaign,
-  campaign: JSONResult,
-  mode: "grid" | "carousel" | "bundle"
-) {
-  switch (mode) {
-    case "carousel":
-      await renderCarousel(element, campaign)
-      break
-    case "bundle":
-      await renderBundle(element, campaign)
-      break
-    case "grid":
-    default:
-      await renderGrid(element, campaign)
-      break
+/**
+ * Grid layout campaign component.
+ */
+@customElement("nosto-grid-campaign")
+export class NostoGridCampaign extends NostoBaseCampaign {
+  protected async renderCampaign(campaign: JSONResult) {
+    const container = document.createElement("div")
+    container.className = "nosto-grid"
+
+    const productElements = campaign.products.map(product => this.createProductElement(product))
+    container.append(...productElements)
+
+    this.replaceChildren(container)
   }
 }
 
-async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
-  const container = document.createElement("div")
-  container.className = "nosto-grid"
+/**
+ * Carousel layout campaign component with Swiper structure.
+ */
+@customElement("nosto-carousel-campaign")
+export class NostoCarouselCampaign extends NostoBaseCampaign {
+  protected async renderCampaign(campaign: JSONResult) {
+    const container = document.createElement("swiper-container")
+    container.className = "nosto-carousel"
 
-  const productElements = campaign.products.map(product => createProductElement(element, product))
-  container.append(...productElements)
+    const productSlides = campaign.products.map(product => {
+      const slide = document.createElement("swiper-slide")
+      slide.appendChild(this.createProductElement(product))
+      return slide
+    })
+    container.append(...productSlides)
 
-  element.replaceChildren(container)
-}
-
-async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult) {
-  const container = document.createElement("swiper-container")
-  container.className = "nosto-carousel"
-
-  const productSlides = campaign.products.map(product => {
-    const slide = document.createElement("swiper-slide")
-    slide.appendChild(createProductElement(element, product))
-    return slide
-  })
-  container.append(...productSlides)
-
-  element.replaceChildren(container)
-}
-
-async function renderBundle(element: NostoSimpleCampaign, campaign: JSONResult) {
-  const container = document.createElement("div")
-  container.className = "nosto-bundle"
-
-  const productElements = campaign.products.map(product => createProductElement(element, product))
-  container.append(...productElements)
-
-  element.replaceChildren(container)
-}
-
-function createProductElement(element: NostoSimpleCampaign, product: Partial<JSONProduct>) {
-  if (element.card && product.handle) {
-    const dynamicCard = document.createElement("nosto-dynamic-card")
-    dynamicCard.setAttribute("handle", product.handle)
-    dynamicCard.setAttribute("template", element.card)
-    return dynamicCard
+    this.replaceChildren(container)
   }
+}
 
-  // Fallback to basic product display
-  const productDiv = document.createElement("div")
-  productDiv.className = "nosto-product"
-  productDiv.innerHTML = `
-    <div class="nosto-product-info">
-      ${product.image_url ? `<img src="${product.image_url}" alt="${product.name || "Product"}" />` : ""}
-      <h3>${product.name || "Unnamed Product"}</h3>
-      ${product.price ? `<p class="price">${product.price}</p>` : ""}
-    </div>
-  `
+/**
+ * Bundle layout campaign component.
+ */
+@customElement("nosto-bundle-campaign")
+export class NostoBundleCampaign extends NostoBaseCampaign {
+  protected async renderCampaign(campaign: JSONResult) {
+    const container = document.createElement("div")
+    container.className = "nosto-bundle"
 
-  return productDiv
+    const productElements = campaign.products.map(product => this.createProductElement(product))
+    container.append(...productElements)
+
+    this.replaceChildren(container)
+  }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-simple-campaign": NostoSimpleCampaign
+    "nosto-grid-campaign": NostoGridCampaign
+    "nosto-carousel-campaign": NostoCarouselCampaign
+    "nosto-bundle-campaign": NostoBundleCampaign
   }
 }
