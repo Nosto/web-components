@@ -35,7 +35,7 @@ export abstract class NostoBaseCampaign extends NostoElement {
       })) as JSONResult
 
       if (rec?.products?.length > 0) {
-        await this.renderCampaign(rec)
+        await this.render(rec)
         api.attributeProductClicksInCampaign(this, rec)
       }
     } finally {
@@ -43,7 +43,7 @@ export abstract class NostoBaseCampaign extends NostoElement {
     }
   }
 
-  protected abstract renderCampaign(campaign: JSONResult): Promise<void>
+  protected abstract render(campaign: JSONResult): Promise<void>
 
   protected createProductElement(product: Partial<JSONProduct>) {
     if (this.card && product.handle) {
@@ -73,7 +73,7 @@ export abstract class NostoBaseCampaign extends NostoElement {
  */
 @customElement("nosto-grid-campaign")
 export class NostoGridCampaign extends NostoBaseCampaign {
-  protected async renderCampaign(campaign: JSONResult) {
+  protected async render(campaign: JSONResult) {
     const container = document.createElement("div")
     container.className = "nosto-grid"
 
@@ -89,7 +89,7 @@ export class NostoGridCampaign extends NostoBaseCampaign {
  */
 @customElement("nosto-carousel-campaign")
 export class NostoCarouselCampaign extends NostoBaseCampaign {
-  protected async renderCampaign(campaign: JSONResult) {
+  protected async render(campaign: JSONResult) {
     const container = document.createElement("swiper-container")
     container.className = "nosto-carousel"
 
@@ -109,7 +109,7 @@ export class NostoCarouselCampaign extends NostoBaseCampaign {
  */
 @customElement("nosto-bundle-campaign")
 export class NostoBundleCampaign extends NostoBaseCampaign {
-  protected async renderCampaign(campaign: JSONResult) {
+  protected async render(campaign: JSONResult) {
     const container = document.createElement("div")
     container.className = "nosto-bundle"
 
