@@ -1,6 +1,8 @@
-body {
-  font-family: Albert Sans, sans-serif;
-  overflow: hidden;
+.story-container {
+  font-family:
+    Albert Sans,
+    sans-serif;
+  padding: 20px;
 }
 
 .block__recommendation {
@@ -13,6 +15,7 @@ body {
   font-weight: bold;
   font-size: larger;
   text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
 .products {
@@ -27,11 +30,14 @@ nosto-product {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 300px;
 }
 
 .nosto__product-image > img {
   border-radius: 10px;
   object-fit: cover;
+  width: 300px;
+  height: 300px;
 }
 
 .nosto__product-details--card {
@@ -42,6 +48,7 @@ nosto-product {
 
 .nosto__product-name {
   color: #ff66bf;
+  font-weight: 600;
 }
 
 .nosto__product-price {
@@ -62,36 +69,48 @@ nosto-sku-options {
 }
 
 nosto-sku-options span {
-  padding: 5px;
+  padding: 5px 10px;
   border: 1px solid #ff66bf;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 nosto-sku-options span[selected] {
   background-color: #ff66bf;
+  color: white;
 }
 
 nosto-sku-options span[disabled] {
   opacity: 0.2;
   cursor: not-allowed;
-  pointer-events: none;
-}
-
-nosto-sku-options span[unavailable] {
-  text-decoration: line-through;
-  cursor: not-allowed;
-  pointer-events: none;
 }
 
 .btn__atc {
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 50px;
   border: none;
   background: #ff66bf;
   color: #fff;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
 }
 
-nosto-product:not([sku-selected]) .btn__atc {
-  background: #ccc;
+.btn__atc:hover {
+  background: #e555a8;
+}
+
+.btn__atc:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.select__product {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
 }

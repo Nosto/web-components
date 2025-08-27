@@ -6,3 +6,5 @@ docs
 coverage
 meta.json
 stats.html
+*storybook.log
+storybook-static

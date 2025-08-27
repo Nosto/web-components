@@ -12,21 +12,21 @@ This package provides the following web components:
 
 ### Store level templating
 
-| Component            | Description                                                          |
-| -------------------- | -------------------------------------------------------------------- |
-| NostoCampaign        | Campaign rendering and product recommendation display                |
-| NostoCampaignSection | Campaign rendering using the Section Rendering API (Shopify only)   |
-| NostoControl         | Conditional content rendering based on user segments                |
+| Component            | Description                                                       |
+| -------------------- | ----------------------------------------------------------------- |
+| NostoCampaign        | Campaign rendering and product recommendation display             |
+| NostoCampaignSection | Campaign rendering using the Section Rendering API (Shopify only) |
+| NostoControl         | Conditional content rendering based on user segments              |
 
 ### Campaign level templating
 
-| Component         | Description                                                         |
-| ----------------- | ------------------------------------------------------------------- |
-| NostoDynamicCard  | Dynamic product card templating (Shopify only)                     |
-| NostoImage        | Progressive image enhancement with optimization                     |
-| NostoProduct      | Product interaction and cart management                             |
-| NostoProductCard  | Product card templating for recommendations                         |
-| NostoSkuOptions   | Product variant and SKU selection interface                         |
+| Component        | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| NostoDynamicCard | Dynamic product card templating (Shopify only)  |
+| NostoImage       | Progressive image enhancement with optimization |
+| NostoProduct     | Product interaction and cart management         |
+| NostoProductCard | Product card templating for recommendations     |
+| NostoSkuOptions  | Product variant and SKU selection interface     |
 
 ## Documentation
 
