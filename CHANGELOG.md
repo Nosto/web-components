@@ -1,3 +1,20 @@
+# [8.14.0](https://github.com/Nosto/web-components/compare/v8.13.0...v8.14.0) (2025-08-27)
+
+
+### Bug Fixes
+
+* **lint:** fix Prettier formatting issues in story CSS files and docs ([cda25fa](https://github.com/Nosto/web-components/commit/cda25fa1cb31e387859c322f68f17c9fcd373c5b))
+
+
+### Features
+
+* **cleanup:** remove dev folder and dependencies after Storybook migration ([4037c1e](https://github.com/Nosto/web-components/commit/4037c1e8c66de85c80242b37e6921415a3906348))
+* **cleanup:** remove liquidjs TypeScript shim declaration ([0c6e3f2](https://github.com/Nosto/web-components/commit/0c6e3f2b0dcb4c8ac0608e8eec3f22c310bb42bf))
+* **stories:** extract NostoImage story styles to external CSS file ([32af433](https://github.com/Nosto/web-components/commit/32af43389220628d8ab84fa7f963d69300294b50))
+* **storybook:** extract NostoProduct story styles to external CSS file ([d1b1e59](https://github.com/Nosto/web-components/commit/d1b1e5975db1e5f766372c8f760044843f1365c3))
+* **storybook:** extract NostoSkuOptions stories CSS to external file ([b58ae30](https://github.com/Nosto/web-components/commit/b58ae3010be29fd9293b8d2c0a3f94caae928313))
+* **storybook:** register all custom elements globally in preview.ts ([2ded449](https://github.com/Nosto/web-components/commit/2ded449cfd98df9c6e3b94374f4b08beeeabdbd4))
+
 # [8.13.0](https://github.com/Nosto/web-components/compare/v8.12.0...v8.13.0) (2025-08-25)
 
 ### Bug Fixes
