@@ -90,11 +90,15 @@ async function renderGrid(element: NostoSimpleCampaign, campaign: JSONResult) {
 }
 
 async function renderCarousel(element: NostoSimpleCampaign, campaign: JSONResult) {
-  const container = document.createElement("div")
+  const container = document.createElement("swiper-container")
   container.className = "nosto-carousel"
 
-  const productElements = campaign.products.map(product => createProductElement(element, product))
-  container.append(...productElements)
+  const productSlides = campaign.products.map(product => {
+    const slide = document.createElement("swiper-slide")
+    slide.appendChild(createProductElement(element, product))
+    return slide
+  })
+  container.append(...productSlides)
 
   element.replaceChildren(container)
 }

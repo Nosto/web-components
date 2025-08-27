@@ -65,7 +65,8 @@ describe("NostoSimpleCampaign", () => {
 
     await campaign.connectedCallback()
 
-    expect(campaign.querySelector(".nosto-carousel")).toBeTruthy()
+    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeTruthy()
+    expect(campaign.querySelector("swiper-slide")).toBeTruthy()
     expect(campaign.querySelector(".nosto-grid")).toBeFalsy()
   })
 
@@ -281,7 +282,7 @@ describe("NostoSimpleCampaign", () => {
     document.body.appendChild(campaign)
     await campaign.connectedCallback()
 
-    expect(campaign.querySelector(".nosto-carousel")).toBeTruthy()
+    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeTruthy()
     expect(campaign.querySelectorAll("nosto-dynamic-card")).toHaveLength(1)
     expect(campaign.querySelectorAll(".nosto-product")).toHaveLength(1)
     campaign.remove()
@@ -313,7 +314,7 @@ describe("NostoSimpleCampaign", () => {
     await campaign.connectedCallback()
 
     expect(campaign.querySelector(".nosto-grid")).toBeTruthy()
-    expect(campaign.querySelector(".nosto-carousel")).toBeFalsy()
+    expect(campaign.querySelector("swiper-container.nosto-carousel")).toBeFalsy()
     expect(campaign.querySelector(".nosto-bundle")).toBeFalsy()
   })
 })
