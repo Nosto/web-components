@@ -11,7 +11,7 @@
 
 **Validation steps:**
 - Always run `npm run lint` (takes ~4 seconds) and `npm run lint-fix` (takes ~4 seconds) before committing.
-- **ALWAYS validate changes** by running the dev server and testing web component functionality.
+- **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing web component functionality.
 
 ## Node.js Requirements
 
@@ -28,9 +28,9 @@
 - `npm test` -- 7 seconds (timeout: 30+ seconds) - Runs vitest with coverage (requires 90%+ coverage on statements, branches, lines, functions)
 - `npm run lint` -- 4 seconds (timeout: 15+ seconds) - ESLint code quality and style checking
 - `npm run lint-fix` -- 4 seconds (timeout: 15+ seconds) - ESLint with auto-fix (run before committing)
-- `npm run dev` -- 300ms startup time - Vite dev server on port 8080
 - `npm run typedoc` -- Generates documentation in docs/ folder
 - `npm run visualize` -- Creates bundle size visualization
+- `npm run storybook` -- Starts Storybook development server on port 6006
 
 ## Repository Structure & Navigation
 
@@ -39,7 +39,7 @@
 - `src/components/` - Main web component implementations (NostoCampaign, NostoImage, NostoProduct, etc.)
 - `src/templating/` - Templating utilities (context.ts, vue.ts)
 - `test/` - Test files using vitest
-- `dev/` - Development server setup with Express and Liquid templates
+- `.storybook/` - Storybook configuration and setup
 - `dist/` - Build outputs (created by npm run build)
 - `docs/` - Generated TypeDoc documentation
 
