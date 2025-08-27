@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import "./NostoImage.stories.css"
 
 const sampleImages = [
   {
@@ -61,54 +62,6 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-const storyStyles = html`
-  <style>
-    .story-container {
-      font-family:
-        Albert Sans,
-        sans-serif;
-      padding: 20px;
-    }
-
-    .image-demo-section {
-      margin-bottom: 40px;
-    }
-
-    .image-demo-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin: 16px 0px;
-      color: #333;
-    }
-
-    .image-demo-sub-title {
-      font-size: 1.2rem;
-      color: #666;
-      margin: 20px 0 8px 0;
-    }
-
-    .image-grid {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .image-item {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-width: 300px;
-    }
-
-    .image-caption {
-      font-size: 0.9rem;
-      color: #888;
-      text-align: center;
-    }
-  </style>
-`
-
 export const Constrained: Story = {
   args: {
     src: "https://picsum.photos/id/25/800/800",
@@ -117,7 +70,6 @@ export const Constrained: Story = {
     layout: "constrained"
   },
   render: args => html`
-    ${storyStyles}
     <div class="story-container">
       <div class="image-demo-section">
         <div class="image-demo-title">Constrained Layout</div>
@@ -135,7 +87,6 @@ export const FullWidth: Story = {
     layout: "fullWidth"
   },
   render: args => html`
-    ${storyStyles}
     <div class="story-container">
       <div class="image-demo-section">
         <div class="image-demo-title">Full Width Layout</div>
@@ -153,7 +104,6 @@ export const Fixed: Story = {
     layout: "fixed"
   },
   render: args => html`
-    ${storyStyles}
     <div class="story-container">
       <div class="image-demo-section">
         <div class="image-demo-title">Fixed Layout</div>
@@ -166,7 +116,6 @@ export const Fixed: Story = {
 
 export const AspectRatioDemo: Story = {
   render: () => html`
-    ${storyStyles}
     <div class="story-container">
       <div class="image-demo-section">
         <div class="image-demo-title">Aspect Ratio Examples</div>
@@ -192,69 +141,6 @@ export const AspectRatioDemo: Story = {
 
 export const AllLayouts: Story = {
   render: () => html`
-    ${storyStyles}
-    <style>
-      .tabbed-container {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .tabbed [type="radio"] {
-        display: none;
-      }
-
-      .tabs {
-        display: flex;
-        align-items: stretch;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        border-bottom: 1px solid #ccc;
-        background: #f5f5f5;
-      }
-
-      .tab > label {
-        display: block;
-        margin-bottom: -1px;
-        padding: 12px 15px;
-        border: none;
-        background: transparent;
-        color: #666;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .tab:hover label {
-        color: #333;
-        background: rgba(183, 33, 255, 0.1);
-      }
-
-      .tab-content {
-        display: none;
-        padding: 20px;
-        color: #777;
-      }
-
-      .tabbed [type="radio"]:nth-of-type(1):checked ~ .tabs .tab:nth-of-type(1) label,
-      .tabbed [type="radio"]:nth-of-type(2):checked ~ .tabs .tab:nth-of-type(2) label,
-      .tabbed [type="radio"]:nth-of-type(3):checked ~ .tabs .tab:nth-of-type(3) label {
-        border-bottom: 2px solid #b721ff;
-        background: #fff;
-        color: #b721ff;
-        font-weight: 700;
-      }
-
-      .tabbed [type="radio"]:nth-of-type(1):checked ~ .tab-content:nth-of-type(1),
-      .tabbed [type="radio"]:nth-of-type(2):checked ~ .tab-content:nth-of-type(2),
-      .tabbed [type="radio"]:nth-of-type(3):checked ~ .tab-content:nth-of-type(3) {
-        display: block;
-      }
-    </style>
     <div class="story-container">
       <div class="tabbed-container">
         <div class="tabbed">
