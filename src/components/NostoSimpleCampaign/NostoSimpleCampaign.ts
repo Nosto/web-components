@@ -95,6 +95,8 @@ function extractProductHandle(product: JSONProduct): string | null {
  * @property {string} placement - The placement identifier for the campaign. Required.
  * @property {string} [mode] - The rendering mode: 'grid', 'carousel', or 'bundle'. Defaults to 'grid'.
  * @property {string} [card] - If provided, delegates card rendering to Shopify via NostoDynamicCard.
+ * @property {string} [productId] - Product context for the campaign.
+ * @property {string} [variantId] - Variant context for the campaign.
  *
  * @example
  * ```html
