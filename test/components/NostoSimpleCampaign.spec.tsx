@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest"
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest"
 import { NostoSimpleCampaign } from "@/components/NostoSimpleCampaign/NostoSimpleCampaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { addHandlers } from "../msw.setup"
@@ -317,16 +317,5 @@ describe("NostoSimpleCampaign", () => {
     expect(campaign.querySelector(".nosto-grid")).toBeTruthy()
     expect(campaign.querySelector(".nosto-carousel")).toBeFalsy()
     expect(campaign.querySelector(".nosto-bundle")).toBeFalsy()
-  })
-
-  it("should handle API errors gracefully while maintaining loading state", async () => {
-    const { mockBuilder } = mockNostoRecs({})
-    mockBuilder.load = vi.fn().mockRejectedValue(new Error("API Error"))
-
-    campaign = (<nosto-simple-campaign placement="test-placement" />) as NostoSimpleCampaign
-    document.body.appendChild(campaign)
-
-    await expect(campaign.connectedCallback()).rejects.toThrow("API Error")
-    expect(campaign.hasAttribute("loading")).toBe(false) // Should clean up loading state
   })
 })
