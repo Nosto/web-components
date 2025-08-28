@@ -12,7 +12,11 @@
 
 **Validation steps:**
 
-- Always run `npm run lint` (takes ~4 seconds), `npm run typecheck` (takes ~3 seconds), `npm test` (takes ~7 seconds), and `npm run lint-fix` (takes ~4 seconds) before committing.
+- Always run the following commands before committing:
+  - `npm run lint` (takes ~4 seconds)
+  - `npm run typecheck` (takes ~3 seconds)
+  - `npm test` (takes ~7 seconds)
+  - `npm run lint-fix` (takes ~4 seconds)
 - **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing web component functionality.
 
 **When taking Storybook screenshots, always close the controls section first** using the "Hide addons [alt A]" button for cleaner screenshots and **wait for `#storybook-root .storybook-wrapper` to be available** before capturing the screenshot.
