@@ -4,7 +4,7 @@
  * @returns Promise that resolves to the response text
  * @throws Error if the fetch request fails
  */
-export async function getText(url: string): Promise<string> {
+export async function getText(url: string) {
   const response = await fetch(url)
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
@@ -18,7 +18,7 @@ export async function getText(url: string): Promise<string> {
  * @returns Promise that resolves to the parsed JSON response
  * @throws Error if the fetch request fails or JSON parsing fails
  */
-export async function getJSON(url: string): Promise<object> {
+export async function getJSON(url: string) {
   const response = await fetch(url)
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
