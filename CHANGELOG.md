@@ -1,3 +1,10 @@
+# [8.15.0](https://github.com/Nosto/web-components/compare/v8.14.0...v8.15.0) (2025-08-29)
+
+
+### Features
+
+* add typecheck script and update copilot instructions ([cbef496](https://github.com/Nosto/web-components/commit/cbef496d7b7e59b3f5307209de9d903d6321451b))
+
 # [8.14.0](https://github.com/Nosto/web-components/compare/v8.13.0...v8.14.0) (2025-08-27)
 
 
