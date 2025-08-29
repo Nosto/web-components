@@ -1,3 +1,10 @@
+# [8.16.0](https://github.com/Nosto/web-components/compare/v8.15.0...v8.16.0) (2025-08-29)
+
+
+### Features
+
+* rename NostoCampaignSection to NostoSectionCampaign ([d363167](https://github.com/Nosto/web-components/commit/d3631673033c94d52a7c7a2e35fe9c9b9d348ced))
+
 # [8.15.0](https://github.com/Nosto/web-components/compare/v8.14.0...v8.15.0) (2025-08-29)
 
 
