@@ -28,6 +28,7 @@
     "lint": "eslint",
     "lint-fix": "eslint --fix",
     "test": "vitest run --silent --coverage",
+    "typecheck": "tsc --noEmit",
     "typedoc": "typedoc src/main.ts",
     "prepare": "husky",
     "visualize": "esbuild-visualizer --metadata ./meta.json",

@@ -12,7 +12,11 @@
 
 **Validation steps:**
 
-- Always run `npm run lint` (takes ~4 seconds) and `npm run lint-fix` (takes ~4 seconds) before committing.
+- Always run the following commands before committing:
+  - `npm run lint` (takes ~4 seconds)
+  - `npm run typecheck` (takes ~3 seconds)
+  - `npm test` (takes ~7 seconds)
+  - `npm run lint-fix` (takes ~4 seconds)
 - **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing web component functionality.
 
 **When taking Storybook screenshots, always close the controls section first** using the "Hide addons [alt A]" button for cleaner screenshots and **wait for `#storybook-root .storybook-wrapper` to be available** before capturing the screenshot.
@@ -32,6 +36,7 @@
 - `npm test` -- 7 seconds (timeout: 30+ seconds) - Runs vitest with coverage (requires 90%+ coverage on statements, branches, lines, functions)
 - `npm run lint` -- 4 seconds (timeout: 15+ seconds) - ESLint code quality and style checking
 - `npm run lint-fix` -- 4 seconds (timeout: 15+ seconds) - ESLint with auto-fix (run before committing)
+- `npm run typecheck` -- 3 seconds (timeout: 15+ seconds) - TypeScript type checking without emitting files (run before committing)
 - `npm run typedoc` -- Generates documentation in docs/ folder
 - `npm run visualize` -- Creates bundle size visualization
 - `npm run storybook` -- Starts Storybook development server on port 6006
@@ -133,10 +138,11 @@
 **Before committing, ALWAYS run these commands to ensure CI passes:**
 
 1. `npm run lint` -- must pass without errors
-2. `npm run lint-fix` -- to automatically fix linting issues
-3. `npm run build` -- must complete successfully
-4. `npm test` -- must pass all tests with 90%+ coverage
-5. `npm run build-storybook` -- must build Storybook successfully
+2. `npm run typecheck` -- must pass without TypeScript errors
+3. `npm run test` -- must pass all tests with 90%+ coverage
+4. `npm run lint-fix` -- to automatically fix linting issues
+5. `npm run build` -- must complete successfully
+6. `npm run build-storybook` -- must build Storybook successfully
 
 **GitHub Actions will run:**
 
