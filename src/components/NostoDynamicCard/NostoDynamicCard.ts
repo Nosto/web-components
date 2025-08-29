@@ -1,4 +1,5 @@
 import { assertRequired } from "@/utils"
+import { getText } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../NostoElement"
 
@@ -84,11 +85,7 @@ async function getMarkup(element: NostoDynamicCard) {
   if (element.variantId) {
     params.set("variant", element.variantId)
   }
-  const result = await fetch(`/products/${element.handle}?${params}`)
-  if (!result.ok) {
-    throw new Error("Failed to fetch product data")
-  }
-  let markup = await result.text()
+  let markup = await getText(`/products/${element.handle}?${params}`)
   if (element.section) {
     const parser = new DOMParser()
     const doc = parser.parseFromString(markup, "text/html")
