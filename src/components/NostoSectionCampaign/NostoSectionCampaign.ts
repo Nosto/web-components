@@ -3,6 +3,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../NostoElement"
 import { addRequest } from "../NostoCampaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
+import { getCampaignSectionMarkup } from "@/utils"
 
 /**
  * NostoSectionCampaign is a custom element that fetches Nosto placement results and renders the results
@@ -40,31 +41,10 @@ export class NostoSectionCampaign extends NostoElement {
     if (!rec) {
       return
     }
-    const markup = await getSectionMarkup(this, rec)
+    const markup = await getCampaignSectionMarkup(this, rec)
     this.innerHTML = markup
     api.attributeProductClicksInCampaign(this, rec)
   }
-}
-
-async function getSectionMarkup(element: NostoSectionCampaign, rec: JSONResult) {
-  const handles = rec.products.map(product => product.handle).join(":")
-  const target = new URL("/search", window.location.href)
-  target.searchParams.set("section_id", element.section)
-  target.searchParams.set("q", handles)
-  const result = await fetch(target)
-  if (!result.ok) {
-    throw new Error(`Failed to fetch section ${element.section}`)
-  }
-  const sectionHtml = await result.text()
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(sectionHtml, "text/html")
-  if (rec.title) {
-    const headingEl = doc.querySelector("[nosto-title]")
-    if (headingEl) {
-      headingEl.textContent = rec.title
-    }
-  }
-  return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }
 
 declare global {

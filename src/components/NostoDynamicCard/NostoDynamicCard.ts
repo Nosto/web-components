@@ -1,4 +1,4 @@
-import { assertRequired } from "@/utils"
+import { assertRequired, fetchProductSectionMarkup, extractSectionContent } from "@/utils"
 import { customElement } from "../decorators"
 import { NostoElement } from "../NostoElement"
 
@@ -79,7 +79,17 @@ async function getMarkup(element: NostoDynamicCard) {
     params.set("view", element.template)
     params.set("layout", "none")
   } else if (element.section) {
-    params.set("section_id", element.section)
+    // Use the helper function for section-based rendering
+    const markup = await fetchProductSectionMarkup(element.handle, element.section, element.variantId)
+    const extractedMarkup = extractSectionContent(markup)
+    const key = element.section
+    placeholders.set(key, extractedMarkup)
+    if (/<(body|html)/.test(extractedMarkup)) {
+      throw new Error(
+        `Invalid markup for template ${element.template}, make sure that no <body> or <html> tags are included.`
+      )
+    }
+    return extractedMarkup
   }
   if (element.variantId) {
     params.set("variant", element.variantId)
@@ -88,12 +98,7 @@ async function getMarkup(element: NostoDynamicCard) {
   if (!result.ok) {
     throw new Error("Failed to fetch product data")
   }
-  let markup = await result.text()
-  if (element.section) {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(markup, "text/html")
-    markup = doc.body.firstElementChild?.innerHTML?.trim() || markup
-  }
+  const markup = await result.text()
   const key = element.template || element.section || ""
   placeholders.set(key, markup)
   if (/<(body|html)/.test(markup)) {
