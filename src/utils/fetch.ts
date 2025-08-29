@@ -1,8 +1,4 @@
 /**
- * Simple fetch facade module that provides convenient methods for common fetch operations.
- */
-
-/**
  * Fetches a URL and returns the response as text.
  * @param url - The URL to fetch
  * @returns Promise that resolves to the response text
