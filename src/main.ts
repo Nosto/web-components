@@ -1,6 +1,6 @@
 /* eslint-disable barrel-files/avoid-barrel-files */
 export { NostoCampaign } from "./components/NostoCampaign/NostoCampaign"
-export { NostoCampaignSection } from "./components/NostoCampaignSection/NostoCampaignSection"
+export { NostoSectionCampaign } from "./components/NostoSectionCampaign/NostoSectionCampaign"
 export { NostoControl } from "./components/NostoControl/NostoControl"
 export { NostoDynamicCard } from "./components/NostoDynamicCard/NostoDynamicCard"
 export { NostoImage } from "./components/NostoImage/NostoImage"
