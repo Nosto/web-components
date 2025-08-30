@@ -1,6 +1,6 @@
 # Nosto Web Components
 
-This repository contains a collection of web components designed to integrate Nosto's personalization and e-commerce solutions into various web platforms.
+This repository contains a collection of custom elements designed to integrate Nosto's personalization and e-commerce solutions into various web platforms.
 
 ## Usage
 
@@ -8,7 +8,7 @@ Usage options for this library are documented [here](https://docs.nosto.com/tech
 
 ## Components
 
-This package provides the following web components:
+This package provides the following custom elements:
 
 ### Store level templating
 

@@ -17,7 +17,7 @@
   - `npm run typecheck` (takes ~3 seconds)
   - `npm test` (takes ~7 seconds)
   - `npm run lint-fix` (takes ~4 seconds)
-- **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing web component functionality.
+- **ALWAYS validate changes** by running Storybook (`npm run storybook`) and testing custom element functionality.
 
 **When taking Storybook screenshots, always close the controls section first** using the "Hide addons [alt A]" button for cleaner screenshots and **wait for `#storybook-root .storybook-wrapper` to be available** before capturing the screenshot.
 
@@ -46,8 +46,8 @@
 
 **Key directories:**
 
-- `src/` - Source code for all web components
-- `src/components/` - Main web component implementations (NostoCampaign, NostoImage, NostoProduct, etc.)
+- `src/` - Source code for all custom elements
+- `src/components/` - Main custom element implementations (NostoCampaign, NostoImage, NostoProduct, etc.)
 - `src/templating/` - Templating utilities (context.ts, vue.ts)
 - `test/` - Test files using vitest
 - `.storybook/` - Storybook configuration and setup
