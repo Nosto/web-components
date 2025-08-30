@@ -1,4 +1,4 @@
-import { Store } from "./NostoProduct/store"
+import { Store } from "./Product/store"
 
 export function syncSkuData(element: HTMLElement, setter: Store["setSkuFields"]) {
   setter({
