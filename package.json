@@ -16,6 +16,30 @@
       "import": "./dist/main.es.js",
       "browser": "./dist/main.es.bundle.js",
       "require": "./dist/main.cjs.js"
+    },
+    "./NostoCampaign": {
+      "import": "./dist/NostoCampaign.es.js"
+    },
+    "./NostoControl": {
+      "import": "./dist/NostoControl.es.js"
+    },
+    "./NostoDynamicCard": {
+      "import": "./dist/NostoDynamicCard.es.js"
+    },
+    "./NostoImage": {
+      "import": "./dist/NostoImage.es.js"
+    },
+    "./NostoProduct": {
+      "import": "./dist/NostoProduct.es.js"
+    },
+    "./NostoProductCard": {
+      "import": "./dist/NostoProductCard.es.js"
+    },
+    "./NostoSection": {
+      "import": "./dist/NostoSection.es.js"
+    },
+    "./NostoSkuOptions": {
+      "import": "./dist/NostoSkuOptions.es.js"
     }
   },
   "repository": {

@@ -54,6 +54,19 @@
 - `dist/` - Build outputs (created by npm run build)
 - `docs/` - Generated TypeDoc documentation
 
+**Component File Structure:**
+Each component follows a consistent directory structure under `src/components/`:
+- `src/components/NostoCampaign/NostoCampaign.ts` - Campaign fetching component
+- `src/components/NostoControl/NostoControl.ts` - Control component
+- `src/components/NostoDynamicCard/NostoDynamicCard.ts` - Dynamic card component
+- `src/components/NostoImage/NostoImage.ts` - Image component with platform-specific transforms
+- `src/components/NostoProduct/NostoProduct.ts` - Product display component
+- `src/components/NostoProductCard/NostoProductCard.ts` - Product card component
+- `src/components/NostoSection/NostoSection.ts` - Section wrapper component
+- `src/components/NostoSkuOptions/NostoSkuOptions.ts` - SKU options component
+
+Each component directory may contain additional supporting files (types, transforms, platform-specific logic).
+
 **Key files to check when making changes:**
 
 - `src/main.ts` - Main entry point, exports all components
@@ -102,6 +115,8 @@
 - Use 'expect' for assertions
 - Maintain 90%+ coverage on statements, branches, lines, and functions
 - Tests run in jsdom environment
+- **Avoid code duplication in tests**: Use parametrized tests with `it.each()` when testing similar behavior across multiple inputs or components
+- Create shared test data arrays for testing multiple components or scenarios to reduce repetition
 
 ### JSX/TSX Testing Patterns
 
