@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
-import "./NostoProduct.stories.css"
+import "./Product.stories.css"
 
 function generateSampleProducts() {
   return Array.from(new Array(3).keys())

@@ -3,7 +3,7 @@ import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
-import { NostoElement } from "../NostoElement"
+import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
 

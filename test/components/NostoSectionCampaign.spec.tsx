@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, Mock } from "vitest"
-import { SectionCampaign } from "@/components/NostoSectionCampaign/NostoSectionCampaign"
+import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"

@@ -1,13 +1,17 @@
 import { beforeAll, beforeEach, vi } from "vitest"
-import * as components from "@/main"
+// Import all components to trigger their @customElement decorators
+import "@/components/Campaign/Campaign"
+import "@/components/Control/Control"
+import "@/components/DynamicCard/DynamicCard"
+import "@/components/Image/Image"
+import "@/components/Product/Product"
+import "@/components/ProductCard/ProductCard"
+import "@/components/SectionCampaign/SectionCampaign"
+import "@/components/SkuOptions/SkuOptions"
 
 beforeAll(() => {
-  Object.entries(components).forEach(([name, component]) => {
-    const kebabCased = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
-    if (!customElements.get(kebabCased)) {
-      customElements.define(kebabCased, component)
-    }
-  })
+  // Components are automatically registered by their @customElement decorators
+  // when the modules are imported above.
 })
 
 beforeEach(() => {

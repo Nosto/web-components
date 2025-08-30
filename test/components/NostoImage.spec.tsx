@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { Image } from "@/components/NostoImage/NostoImage"
+import { Image } from "@/components/Image/Image"
 import { createElement } from "../utils/jsx"
 
 // TODO: extend this to check the presence of width and height attributes in resulting URL

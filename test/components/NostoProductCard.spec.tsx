@@ -1,4 +1,4 @@
-import { ProductCard } from "@/components/NostoProductCard/NostoProductCard"
+import { ProductCard } from "@/components/ProductCard/ProductCard"
 import { describe, expect, it } from "vitest"
 import { createElement } from "../utils/jsx"
 

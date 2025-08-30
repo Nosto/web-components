@@ -1,4 +1,4 @@
-import { transform } from "@/components/NostoImage/shopify"
+import { transform } from "@/components/Image/shopify"
 import { transform as unpicTransform } from "unpic/providers/shopify"
 import { describe, expect, it } from "vitest"
 

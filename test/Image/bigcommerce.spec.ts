@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { transform } from "@/components/NostoImage/bigcommerce"
+import { transform } from "@/components/Image/bigcommerce"
 
 describe("NostoImage/bigcommerce.transform", () => {
   // Real BigCommerce CDN11 URLs

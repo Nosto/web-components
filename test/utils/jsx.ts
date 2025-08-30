@@ -1,11 +1,11 @@
-import type { Campaign } from "@/components/NostoCampaign/NostoCampaign"
-import type { Control } from "@/components/NostoControl/NostoControl"
-import type { DynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
-import type { Image } from "@/components/NostoImage/NostoImage"
-import type { Product } from "@/components/NostoProduct/NostoProduct"
-import type { ProductCard } from "@/components/NostoProductCard/NostoProductCard"
-import type { SectionCampaign } from "@/components/NostoSectionCampaign/NostoSectionCampaign"
-import type { SkuOptions } from "@/components/NostoSkuOptions/NostoSkuOptions"
+import type { Campaign } from "@/components/Campaign/Campaign"
+import type { Control } from "@/components/Control/Control"
+import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
+import type { Image } from "@/components/Image/Image"
+import type { Product } from "@/components/Product/Product"
+import type { ProductCard } from "@/components/ProductCard/ProductCard"
+import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
+import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
 
 type MaybeArray<T> = T | T[]
 

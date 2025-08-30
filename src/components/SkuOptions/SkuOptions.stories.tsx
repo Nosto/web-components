@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
-import "./NostoSkuOptions.stories.css"
+import "./SkuOptions.stories.css"
 
 function createDemoProduct(
   productId: string,

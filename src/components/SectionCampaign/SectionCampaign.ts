@@ -1,7 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
 import { customElement } from "../decorators"
-import { NostoElement } from "../NostoElement"
-import { addRequest } from "../NostoCampaign/orchestrator"
+import { NostoElement } from "../Element"
+import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
 /**

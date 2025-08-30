@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { transform } from "@/components/NostoImage/transform"
+import { transform } from "@/components/Image/transform"
 
 describe("NostoImage/transform", () => {
   it("returns original url and props for unknown provider", () => {

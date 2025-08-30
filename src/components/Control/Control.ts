@@ -1,6 +1,6 @@
 import { nostojs } from "@nosto/nosto-js"
 import { customElement } from "../decorators"
-import { NostoElement } from "../NostoElement"
+import { NostoElement } from "../Element"
 
 /**
  * This component replaces its children with the content of the first template
