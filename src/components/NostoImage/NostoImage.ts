@@ -34,7 +34,7 @@ import { NostoElement } from "../NostoElement"
  * ```
  */
 @customElement("nosto-image", { observe: true })
-export class NostoImage extends NostoElement {
+export class Image extends NostoElement {
   /** @private */
   static attributes = {
     src: String,
@@ -80,7 +80,7 @@ export class NostoImage extends NostoElement {
   }
 }
 
-function validateProps(element: NostoImage) {
+function validateProps(element: Image) {
   if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
@@ -93,6 +93,6 @@ function validateProps(element: NostoImage) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-image": NostoImage
+    "nosto-image": Image
   }
 }

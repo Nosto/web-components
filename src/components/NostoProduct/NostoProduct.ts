@@ -39,7 +39,7 @@ import { NostoElement } from "../NostoElement"
  *
  */
 @customElement("nosto-product")
-export class NostoProduct extends NostoElement {
+export class Product extends NostoElement {
   /** @private */
   static attributes = {
     productId: String,
@@ -64,7 +64,7 @@ export class NostoProduct extends NostoElement {
   }
 }
 
-function addListeners(element: NostoProduct, { listen }: Store) {
+function addListeners(element: Product, { listen }: Store) {
   listen("selectedSkuId", selectedSkuId => {
     element.selectedSkuId = selectedSkuId
     element.skuSelected = !!selectedSkuId
@@ -87,7 +87,7 @@ function addListeners(element: NostoProduct, { listen }: Store) {
   })
 }
 
-function registerSkuSelectors(element: NostoProduct, { selectSkuId }: Store) {
+function registerSkuSelectors(element: Product, { selectSkuId }: Store) {
   element.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
     element.dataset.tracked = "true"
     selectSkuId(element.value)
@@ -95,7 +95,7 @@ function registerSkuSelectors(element: NostoProduct, { selectSkuId }: Store) {
   })
 }
 
-function registerSkuIds(element: NostoProduct, { selectSkuId, setSkuFields }: Store) {
+function registerSkuIds(element: Product, { selectSkuId, setSkuFields }: Store) {
   element.querySelectorAll<HTMLElement>("[n-sku-id]:not([n-atc])").forEach(element => {
     element.dataset.tracked = "true"
     element.addEventListener("click", () => {
@@ -105,7 +105,7 @@ function registerSkuIds(element: NostoProduct, { selectSkuId, setSkuFields }: St
   })
 }
 
-function registerAtcButtons(element: NostoProduct, { addToCart, selectSkuId }: Store) {
+function registerAtcButtons(element: Product, { addToCart, selectSkuId }: Store) {
   element.querySelectorAll<HTMLElement>("[n-atc]:not([n-option])").forEach(element => {
     element.dataset.tracked = "true"
     element.addEventListener("click", async () => {
@@ -118,7 +118,7 @@ function registerAtcButtons(element: NostoProduct, { addToCart, selectSkuId }: S
   })
 }
 
-function registerSkuData(element: NostoProduct, { setSkus }: Store) {
+function registerSkuData(element: Product, { setSkus }: Store) {
   const dataEl = element.querySelector("script[n-sku-data]")
   if (dataEl) {
     const parsed = JSON.parse(dataEl.innerHTML)
@@ -134,6 +134,6 @@ function registerSkuData(element: NostoProduct, { setSkus }: Store) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-product": NostoProduct
+    "nosto-product": Product
   }
 }

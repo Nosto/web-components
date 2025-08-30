@@ -1,9 +1,9 @@
 import { describe, beforeEach, it, expect } from "vitest"
-import { NostoControl } from "@/components/NostoControl/NostoControl"
+import { Control } from "@/components/NostoControl/NostoControl"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { createElement } from "../utils/jsx"
 
-describe("NostoControl", () => {
+describe("Control", () => {
   beforeEach(() => {
     mockNostojs({
       internal: {
@@ -18,7 +18,7 @@ describe("NostoControl", () => {
         <template segment="test">test content</template>
         <template segment="other">other content</template>
       </nosto-control>
-    ) as NostoControl
+    ) as Control
     await control.connectedCallback()
 
     expect(control.innerHTML).toBe("test content")
@@ -30,7 +30,7 @@ describe("NostoControl", () => {
         <template segment="non-existent">test content</template>
         <template segment="other">other content</template>
       </nosto-control>
-    ) as NostoControl
+    ) as Control
     const originalContent = control.innerHTML
     await control.connectedCallback()
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
+import { Product } from "@/components/NostoProduct/NostoProduct"
 import "@/components/NostoSkuOptions/NostoSkuOptions"
 import { createElement } from "../utils/jsx"
 
@@ -7,7 +7,7 @@ describe("sku options integration", () => {
   const element = (selector: string) => document.querySelector<HTMLElement>(selector)!
 
   it("should prune selections", () => {
-    const nostoProduct = new NostoProduct()
+    const nostoProduct = new Product()
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 
@@ -34,7 +34,7 @@ describe("sku options integration", () => {
     expect(element("[m]").hasAttribute("disabled")).toBeTruthy()
     expect(element("[s]").hasAttribute("disabled")).toBeFalsy()
 
-    // no sku should be selected on NostoProduct level yet, since only one dimension has been chosen
+    // no sku should be selected on Product level yet, since only one dimension has been chosen
     expect(nostoProduct.selectedSkuId).toBeUndefined()
 
     // click on other option should select it and deselect the first one
@@ -65,13 +65,13 @@ describe("sku options integration", () => {
     // selected SKU should be 223
     expect(nostoProduct.selectedSkuId).toBe("223")
 
-    // click on s option should change selected SKU on NostoProduct level
+    // click on s option should change selected SKU on Product level
     element("[m]").click()
     expect(nostoProduct.selectedSkuId).toBe("234")
   })
 
   it("should consider preselection (1 option)", () => {
-    const nostoProduct = new NostoProduct()
+    const nostoProduct = new Product()
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 
@@ -101,7 +101,7 @@ describe("sku options integration", () => {
   })
 
   it("should consider preselection (2 options)", () => {
-    const nostoProduct = new NostoProduct()
+    const nostoProduct = new Product()
     nostoProduct.setAttribute("product-id", "123")
     nostoProduct.setAttribute("reco-id", "789")
 

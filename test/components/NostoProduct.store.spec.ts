@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from "vitest"
 import { createStore, Events } from "@/components/NostoProduct/store"
-import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
+import { Product } from "@/components/NostoProduct/NostoProduct"
 
 describe("createStore", () => {
   function newStore(productId: string, recoId: string) {
-    const element = new NostoProduct()
+    const element = new Product()
     element.setAttribute("product-id", productId)
     element.setAttribute("reco-id", recoId)
     const store = createStore(element)

@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import "@/components/NostoProduct/NostoProduct"
 import "@/components/NostoSkuOptions/NostoSkuOptions"
-import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
+import { Product } from "@/components/NostoProduct/NostoProduct"
 import { createElement } from "../utils/jsx"
 
 const values = ["black", "white", "blue", "l", "m", "s", "cotton", "silk", "wool"] as const
@@ -34,7 +34,7 @@ describe("NostoSkuOptions", () => {
   const colors = ["black", "white", "blue"] as const
   const sizes = ["l", "m", "s"] as const
   const materials = ["cotton", "silk", "wool"] as const
-  let nostoProduct: NostoProduct
+  let nostoProduct: Product
 
   function verifyATCInvocation() {
     const atc = nostoProduct.querySelector<HTMLElement>("[n-atc]")
@@ -55,7 +55,7 @@ describe("NostoSkuOptions", () => {
   describe("Two sku option groups", () => {
     beforeEach(() => {
       loadContent()
-      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      nostoProduct = document.querySelector<Product>("nosto-product")!
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -158,7 +158,7 @@ describe("NostoSkuOptions", () => {
   describe("Two sku option groups in select", () => {
     beforeEach(() => {
       loadContent()
-      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      nostoProduct = document.querySelector<Product>("nosto-product")!
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -214,7 +214,7 @@ describe("NostoSkuOptions", () => {
   describe("Sku options with 3 dimensions", () => {
     beforeEach(() => {
       loadContent()
-      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      nostoProduct = document.querySelector<Product>("nosto-product")!
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -312,7 +312,7 @@ describe("NostoSkuOptions", () => {
   describe("Two sku option groups with OOS products", () => {
     beforeEach(() => {
       loadContent()
-      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      nostoProduct = document.querySelector<Product>("nosto-product")!
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -440,7 +440,7 @@ describe("NostoSkuOptions", () => {
         </nosto-product>
       )
 
-      nostoProduct = document.querySelector<NostoProduct>("nosto-product")!
+      nostoProduct = document.querySelector<Product>("nosto-product")!
       window.Nosto = { addSkuToCart: vi.fn() }
 
       expect(nostoProduct.selectedSkuId).toBeUndefined()

@@ -22,7 +22,7 @@ import { NostoElement } from "../NostoElement"
  * ```
  */
 @customElement("nosto-dynamic-card", { observe: true })
-export class NostoDynamicCard extends NostoElement {
+export class DynamicCard extends NostoElement {
   /** @private */
   static attributes = {
     handle: String,
@@ -73,7 +73,7 @@ export class NostoDynamicCard extends NostoElement {
 
 const placeholders = new Map<string, string>()
 
-async function getMarkup(element: NostoDynamicCard) {
+async function getMarkup(element: DynamicCard) {
   const params = new URLSearchParams()
   if (element.template) {
     params.set("view", element.template)
@@ -106,6 +106,6 @@ async function getMarkup(element: NostoDynamicCard) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-dynamic-card": NostoDynamicCard
+    "nosto-dynamic-card": DynamicCard
   }
 }

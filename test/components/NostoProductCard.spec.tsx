@@ -1,20 +1,20 @@
-import { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
+import { ProductCard } from "@/components/NostoProductCard/NostoProductCard"
 import { describe, expect, it } from "vitest"
 import { createElement } from "../utils/jsx"
 
-describe("NostoProductCard", () => {
+describe("ProductCard", () => {
   it("should throw an error if template is not provided", async () => {
-    const card = (<nosto-product-card />) as NostoProductCard
+    const card = (<nosto-product-card />) as ProductCard
     await expect(card.connectedCallback()).rejects.toThrowError("Property template is required.")
   })
 
   it("should throw an error if template cannot be found", async () => {
-    const card = (<nosto-product-card template="non-existent-template" />) as NostoProductCard
+    const card = (<nosto-product-card template="non-existent-template" />) as ProductCard
     await expect(card.connectedCallback()).rejects.toThrowError('Template with id "non-existent-template" not found.')
   })
 
   it("should render the product", async () => {
-    const card = (<nosto-product-card template="test1" />) as NostoProductCard
+    const card = (<nosto-product-card template="test1" />) as ProductCard
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
@@ -34,7 +34,7 @@ describe("NostoProductCard", () => {
   })
 
   it("should render the product from DOM data", async () => {
-    const card = (<nosto-product-card template="test2" />) as NostoProductCard
+    const card = (<nosto-product-card template="test2" />) as ProductCard
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
@@ -54,7 +54,7 @@ describe("NostoProductCard", () => {
   })
 
   it("should expose dataset to template context", async () => {
-    const card = (<nosto-product-card template="test3" data-test="test" />) as NostoProductCard
+    const card = (<nosto-product-card template="test3" data-test="test" />) as ProductCard
 
     const mockProductData = { product: { id: 123, title: "Test Product" } }
     document.body.append(
@@ -108,7 +108,7 @@ describe("NostoProductCard", () => {
       price_currency_code: "EUR"
     }
 
-    const card = (<nosto-product-card template="test3" data-test="test" />) as NostoProductCard
+    const card = (<nosto-product-card template="test3" data-test="test" />) as ProductCard
 
     // NOTE more verbose v-bind: syntax is used due to TSX limitations with shorthand syntax in this context.
     document.body.append(

@@ -58,13 +58,13 @@ function createDemoSection(title: string, content: unknown) {
 }
 
 const meta: Meta = {
-  title: "Components/NostoImage",
+  title: "Components/Image",
   component: "nosto-image",
   parameters: {
     docs: {
       description: {
         component:
-          "NostoImage is a custom element that renders responsive images with support for Shopify and BigCommerce image transformations."
+          "Image is a custom element that renders responsive images with support for Shopify and BigCommerce image transformations."
       }
     }
   },

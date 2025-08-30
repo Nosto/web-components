@@ -39,13 +39,13 @@ function createDemoSection(title: string, description: string, content: unknown)
 }
 
 const meta: Meta = {
-  title: "Components/NostoSkuOptions",
+  title: "Components/SkuOptions",
   component: "nosto-sku-options",
   parameters: {
     docs: {
       description: {
         component:
-          "A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface. Must be used within a NostoProduct component."
+          "A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface. Must be used within a Product component."
       }
     }
   },

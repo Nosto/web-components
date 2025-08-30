@@ -25,7 +25,7 @@ import { addRequest } from "./orchestrator"
  * when it comes into view using IntersectionObserver. Defaults to false.
  */
 @customElement("nosto-campaign")
-export class NostoCampaign extends NostoElement {
+export class Campaign extends NostoElement {
   /** @private */
   static attributes = {
     placement: String,
@@ -47,7 +47,7 @@ export class NostoCampaign extends NostoElement {
 
   async connectedCallback() {
     if (!this.placement && !this.id) {
-      throw new Error("placement or id attribute is required for NostoCampaign")
+      throw new Error("placement or id attribute is required for Campaign")
     }
     if (this.init !== "false") {
       if (this.lazy) {
@@ -69,7 +69,7 @@ export class NostoCampaign extends NostoElement {
   }
 }
 
-export async function loadCampaign(element: NostoCampaign) {
+export async function loadCampaign(element: Campaign) {
   element.toggleAttribute("loading", true)
   const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
   const placement = element.placement ?? element.id
@@ -99,6 +99,6 @@ export async function loadCampaign(element: NostoCampaign) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-campaign": NostoCampaign
+    "nosto-campaign": Campaign
   }
 }

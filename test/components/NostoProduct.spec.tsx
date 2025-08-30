@@ -1,21 +1,21 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
-import { NostoProduct } from "@/components/NostoProduct/NostoProduct"
+import { Product } from "@/components/NostoProduct/NostoProduct"
 import { EventName } from "@/components/NostoProduct/events"
 import { createElement } from "../utils/jsx"
 
-describe("NostoProduct", () => {
-  let element: NostoProduct
+describe("Product", () => {
+  let element: Product
   const PROD_ID = "123"
   const RECO_ID = "789"
   const DIV_ID = "testpage-nosto-1"
 
   beforeEach(() => {
-    element = new NostoProduct()
+    element = new Product()
   })
 
   describe("verify setup & validation", () => {
     it("should be defined as a custom element", () => {
-      expect(customElements.get("nosto-product")).toBe(NostoProduct)
+      expect(customElements.get("nosto-product")).toBe(Product)
     })
 
     it("should throw an error if no attribute is provided", () => {

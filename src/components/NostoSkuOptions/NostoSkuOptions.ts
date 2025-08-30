@@ -30,7 +30,7 @@ import { NostoElement } from "../NostoElement"
  * ```
  */
 @customElement("nosto-sku-options")
-export class NostoSkuOptions extends NostoElement {
+export class SkuOptions extends NostoElement {
   /** @private */
   static attributes = {
     name: String
@@ -44,7 +44,7 @@ export class NostoSkuOptions extends NostoElement {
   }
 }
 
-function initSkuOptions(element: NostoSkuOptions, store: Store) {
+function initSkuOptions(element: SkuOptions, store: Store) {
   store.registerOptionGroup()
   const optionId = element.name
   // implementation via [n-option] elements
@@ -156,6 +156,6 @@ function setAvailability(elements: Element[]) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-sku-options": NostoSkuOptions
+    "nosto-sku-options": SkuOptions
   }
 }

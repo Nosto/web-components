@@ -1,11 +1,11 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
+import { DynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../utils/jsx"
 
-describe("NostoDynamicCard", () => {
+describe("DynamicCard", () => {
   afterEach(() => {
     vi.clearAllMocks()
   })
@@ -31,7 +31,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
 
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
@@ -47,7 +47,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = (<nosto-dynamic-card handle="test-handle" section="product-card" />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="test-handle" section="product-card" />) as DynamicCard
 
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
@@ -66,7 +66,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
     document.body.appendChild(card)
 
     card.handle = "updated-handle"
@@ -94,20 +94,20 @@ describe("NostoDynamicCard", () => {
       disconnect: vi.fn()
     }))
 
-    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
     await card.connectedCallback()
 
     // placeholder is used, since template is the same
     const card2 = (
       <nosto-dynamic-card handle="test-handle2" template="default" placeholder={true} lazy={true} />
-    ) as NostoDynamicCard
+    ) as DynamicCard
     await card2.connectedCallback()
     expect(card2.innerHTML).toBe(validMarkup)
 
     // placeholder is not used, since template is different
     const card3 = (
       <nosto-dynamic-card handle="test-handle3" template="custom" placeholder={true} lazy={true} />
-    ) as NostoDynamicCard
+    ) as DynamicCard
     await card3.connectedCallback()
     expect(card3.innerHTML).toBe("")
   })
@@ -120,7 +120,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = (<nosto-dynamic-card handle="lazy-handle" template="default" lazy={true} />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="lazy-handle" template="default" lazy={true} />) as DynamicCard
 
     // Mock IntersectionObserver
     const mockObserver = {
@@ -150,7 +150,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = (<nosto-dynamic-card handle="handle-error" template="default" />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="handle-error" template="default" />) as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Failed to fetch product data")
   })
@@ -163,7 +163,7 @@ describe("NostoDynamicCard", () => {
       }
     })
 
-    const card = (<nosto-dynamic-card handle="handle-invalid" template="default" />) as NostoDynamicCard
+    const card = (<nosto-dynamic-card handle="handle-invalid" template="default" />) as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
   })

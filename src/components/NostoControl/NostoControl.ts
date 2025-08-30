@@ -7,7 +7,7 @@ import { NostoElement } from "../NostoElement"
  * that matches any of the current user's Nosto segments.
  */
 @customElement("nosto-control")
-export class NostoControl extends NostoElement {
+export class Control extends NostoElement {
   async connectedCallback() {
     const api = await new Promise(nostojs)
     const segments = await api.internal.getSegments()
@@ -24,6 +24,6 @@ export class NostoControl extends NostoElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-control": NostoControl
+    "nosto-control": Control
   }
 }

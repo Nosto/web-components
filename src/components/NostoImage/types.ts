@@ -3,7 +3,7 @@ import type { ShopifyOperations } from "unpic/providers/shopify"
 
 export type Crop = Exclude<ShopifyOperations["crop"], undefined>
 
-export type NostoImageProps = {
+export type ImageProps = {
   src: string
   width?: number
   height?: number

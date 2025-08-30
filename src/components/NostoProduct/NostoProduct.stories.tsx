@@ -54,7 +54,7 @@ function createRecommendationSection(title: string, products: unknown[]) {
 }
 
 const meta: Meta = {
-  title: "Components/NostoProduct",
+  title: "Components/Product",
   component: "nosto-product",
   parameters: {
     docs: {

@@ -1,4 +1,4 @@
-import { NostoProduct } from "@/main"
+import { Product } from "@/main"
 import { triggerEvent } from "@/components/NostoProduct/events"
 import { intersectionOf } from "@/utils"
 import { addSkuToCart } from "@nosto/nosto-js"
@@ -25,7 +25,7 @@ export type Events = Omit<State, "optionGroupCount">
 
 type Listener<T extends keyof Events> = (value: Events[T]) => void
 
-export function createStore(element: NostoProduct) {
+export function createStore(element: Product) {
   const { productId, recoId } = element
   const state: State = {
     skuOptions: {},

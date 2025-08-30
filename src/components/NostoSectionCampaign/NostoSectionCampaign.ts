@@ -12,7 +12,7 @@ import { JSONResult } from "@nosto/nosto-js/client"
  * @property {string} section - The section to be used for Section Rendering API based rendering.
  */
 @customElement("nosto-section-campaign")
-export class NostoSectionCampaign extends NostoElement {
+export class SectionCampaign extends NostoElement {
   /** @private */
   static attributes = {
     placement: String,
@@ -46,7 +46,7 @@ export class NostoSectionCampaign extends NostoElement {
   }
 }
 
-async function getSectionMarkup(element: NostoSectionCampaign, rec: JSONResult) {
+async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
   const target = new URL("/search", window.location.href)
   target.searchParams.set("section_id", element.section)
@@ -69,6 +69,6 @@ async function getSectionMarkup(element: NostoSectionCampaign, rec: JSONResult) 
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-section-campaign": NostoSectionCampaign
+    "nosto-section-campaign": SectionCampaign
   }
 }

@@ -1,11 +1,11 @@
-import type { NostoCampaign } from "@/components/NostoCampaign/NostoCampaign"
-import type { NostoControl } from "@/components/NostoControl/NostoControl"
-import type { NostoDynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
-import type { NostoImage } from "@/components/NostoImage/NostoImage"
-import type { NostoProduct } from "@/components/NostoProduct/NostoProduct"
-import type { NostoProductCard } from "@/components/NostoProductCard/NostoProductCard"
-import type { NostoSectionCampaign } from "@/components/NostoSectionCampaign/NostoSectionCampaign"
-import type { NostoSkuOptions } from "@/components/NostoSkuOptions/NostoSkuOptions"
+import type { Campaign } from "@/components/NostoCampaign/NostoCampaign"
+import type { Control } from "@/components/NostoControl/NostoControl"
+import type { DynamicCard } from "@/components/NostoDynamicCard/NostoDynamicCard"
+import type { Image } from "@/components/NostoImage/NostoImage"
+import type { Product } from "@/components/NostoProduct/NostoProduct"
+import type { ProductCard } from "@/components/NostoProductCard/NostoProductCard"
+import type { SectionCampaign } from "@/components/NostoSectionCampaign/NostoSectionCampaign"
+import type { SkuOptions } from "@/components/NostoSkuOptions/NostoSkuOptions"
 
 type MaybeArray<T> = T | T[]
 
@@ -21,14 +21,14 @@ declare global {
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
-      "nosto-campaign": ElementMapping<NostoCampaign>
-      "nosto-control": ElementMapping<NostoControl>
-      "nosto-dynamic-card": ElementMapping<NostoDynamicCard>
-      "nosto-image": ElementMapping<NostoImage>
-      "nosto-product": ElementMapping<NostoProduct>
-      "nosto-product-card": ElementMapping<NostoProductCard>
-      "nosto-section-campaign": ElementMapping<NostoSectionCampaign>
-      "nosto-sku-options": ElementMapping<NostoSkuOptions>
+      "nosto-campaign": ElementMapping<Campaign>
+      "nosto-control": ElementMapping<Control>
+      "nosto-dynamic-card": ElementMapping<DynamicCard>
+      "nosto-image": ElementMapping<Image>
+      "nosto-product": ElementMapping<Product>
+      "nosto-product-card": ElementMapping<ProductCard>
+      "nosto-section-campaign": ElementMapping<SectionCampaign>
+      "nosto-sku-options": ElementMapping<SkuOptions>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }

@@ -1,5 +1,5 @@
 import { transformBaseImageProps } from "@unpic/core/base"
-import type { BaseImageProps, NostoImageProps } from "./types"
+import type { BaseImageProps, ImageProps } from "./types"
 import { transform as bcTransform } from "./bigcommerce"
 import { transform as shopifyTransform } from "./shopify"
 import { toCamelCase } from "@/utils"
@@ -14,7 +14,7 @@ function getTransformer(url: string) {
   // TODO nailgun image support
 }
 
-export function transform({ crop, ...props }: NostoImageProps) {
+export function transform({ crop, ...props }: ImageProps) {
   const transformer = getTransformer(props.src)!
 
   const imageProps = {

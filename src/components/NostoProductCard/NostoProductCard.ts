@@ -50,7 +50,7 @@ import { getTemplate } from "../common"
  * ```
  */
 @customElement("nosto-product-card")
-export class NostoProductCard extends NostoElement {
+export class ProductCard extends NostoElement {
   /** @private */
   static attributes = {
     template: String
@@ -76,6 +76,6 @@ function getData(element: HTMLElement) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-product-card": NostoProductCard
+    "nosto-product-card": ProductCard
   }
 }
