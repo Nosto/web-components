@@ -19,7 +19,7 @@ export default {
     },
     docs: {
       description: {
-        component: "Web Components developed by Nosto for e-commerce platforms."
+        component: "Custom elements developed by Nosto for e-commerce platforms."
       }
     }
   },

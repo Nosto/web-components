@@ -45,7 +45,7 @@ describe("SectionCampaign", () => {
 
     const el = (<nosto-section-campaign placement="placement1" section="missing-section" />) as SectionCampaign
 
-    await expect(el.connectedCallback()).rejects.toThrow("Failed to fetch section missing-section")
+    await expect(el.connectedCallback()).rejects.toThrow("Failed to fetch http://localhost:3000/search")
     expect(el.hasAttribute("loading")).toBe(false)
   })
 
