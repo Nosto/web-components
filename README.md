@@ -12,21 +12,21 @@ This package provides the following custom elements:
 
 ### Store level templating
 
-| Component            | Description                                                       |
-| -------------------- | ----------------------------------------------------------------- |
-| NostoCampaign        | Campaign rendering and product recommendation display             |
-| NostoSectionCampaign | Campaign rendering using the Section Rendering API (Shopify only) |
-| NostoControl         | Conditional content rendering based on user segments              |
+| Component       | Description                                                       |
+| --------------- | ----------------------------------------------------------------- |
+| Campaign        | Campaign rendering and product recommendation display             |
+| SectionCampaign | Campaign rendering using the Section Rendering API (Shopify only) |
+| Control         | Conditional content rendering based on user segments              |
 
 ### Campaign level templating
 
-| Component        | Description                                     |
-| ---------------- | ----------------------------------------------- |
-| NostoDynamicCard | Dynamic product card templating (Shopify only)  |
-| NostoImage       | Progressive image enhancement with optimization |
-| NostoProduct     | Product interaction and cart management         |
-| NostoProductCard | Product card templating for recommendations     |
-| NostoSkuOptions  | Product variant and SKU selection interface     |
+| Component    | Description                                     |
+| ------------ | ----------------------------------------------- |
+| DynamicCard  | Dynamic product card templating (Shopify only)  |
+| Image        | Progressive image enhancement with optimization |
+| Product      | Product interaction and cart management         |
+| ProductCard  | Product card templating for recommendations     |
+| SkuOptions   | Product variant and SKU selection interface     |
 
 ## Documentation
 
