@@ -1,3 +1,12 @@
+# [8.18.0](https://github.com/Nosto/web-components/compare/v8.17.0...v8.18.0) (2025-09-01)
+
+
+### Features
+
+* drop Nosto prefix from custom element class names ([5ecbc94](https://github.com/Nosto/web-components/commit/5ecbc941fd44febd818c74aa91460aecef9d4a0e))
+* drop Nosto prefix from folder names and module names ([44c8f92](https://github.com/Nosto/web-components/commit/44c8f92e8cbaac33151b7e316efde21b904a01d2))
+* drop Nosto prefix from test file names ([3fb6544](https://github.com/Nosto/web-components/commit/3fb654431376759cc54c583e324418a1a3745b8c))
+
 # [8.17.0](https://github.com/Nosto/web-components/compare/v8.16.0...v8.17.0) (2025-09-01)
 
 
