@@ -1,3 +1,10 @@
+# [8.17.0](https://github.com/Nosto/web-components/compare/v8.16.0...v8.17.0) (2025-09-01)
+
+
+### Features
+
+* introduce simple fetch facade module with getText and getJSON ([b071d0c](https://github.com/Nosto/web-components/commit/b071d0c8388f72906242236a0a0630661b4af7b3))
+
 # [8.16.0](https://github.com/Nosto/web-components/compare/v8.15.0...v8.16.0) (2025-08-29)
 
 
