@@ -1,4 +1,5 @@
 import { nostojs } from "@nosto/nosto-js"
+import { getText } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../NostoElement"
 import { addRequest } from "../NostoCampaign/orchestrator"
@@ -51,11 +52,7 @@ async function getSectionMarkup(element: NostoSectionCampaign, rec: JSONResult) 
   const target = new URL("/search", window.location.href)
   target.searchParams.set("section_id", element.section)
   target.searchParams.set("q", handles)
-  const result = await fetch(target)
-  if (!result.ok) {
-    throw new Error(`Failed to fetch section ${element.section}`)
-  }
-  const sectionHtml = await result.text()
+  const sectionHtml = await getText(target.href)
   const parser = new DOMParser()
   const doc = parser.parseFromString(sectionHtml, "text/html")
   if (rec.title) {
