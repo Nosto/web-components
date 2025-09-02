@@ -45,13 +45,11 @@ export class BundledCampaign extends NostoElement {
     const handles = rec.products.map(product => product.handle).join(":")
 
     // Only fetch new content if handles don't match the existing handles
-    if (handles === this.handles) {
-      api.attributeProductClicksInCampaign(this, rec)
-      return
+    if (handles !== this.handles) {
+      const markup = await getBundledSectionMarkup(this, rec, handles)
+      this.innerHTML = markup
     }
 
-    const markup = await getBundledSectionMarkup(this, rec, handles)
-    this.innerHTML = markup
     api.attributeProductClicksInCampaign(this, rec)
   }
 }
