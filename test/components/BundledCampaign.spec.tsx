@@ -8,11 +8,6 @@ import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
 describe("BundledCampaign", () => {
-  beforeAll(() => {
-    if (!customElements.get("nosto-bundled-campaign")) {
-      customElements.define("nosto-bundled-campaign", BundledCampaign)
-    }
-  })
 
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-bundled-campaign")).toBeDefined()

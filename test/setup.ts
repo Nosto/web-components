@@ -1,5 +1,6 @@
 import { beforeAll, beforeEach, vi } from "vitest"
 // Import all components to trigger their @customElement decorators
+import "@/components/BundledCampaign/BundledCampaign"
 import "@/components/Campaign/Campaign"
 import "@/components/Control/Control"
 import "@/components/DynamicCard/DynamicCard"
