@@ -1,12 +1,12 @@
 import { nostojs } from "@nosto/nosto-js"
-import { getText } from "@/utils/fetch"
+import { postJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
 /**
- * NostoBundledCampaign is a custom element that fetches Nosto placement results and renders the results
+ * BundledCampaign is a custom element that fetches Nosto placement results and renders the results
  * using a Shopify bundled section template via the Cart Update API.
  *
  * @property {string} placement - The placement identifier for the campaign.
@@ -41,34 +41,35 @@ export class BundledCampaign extends NostoElement {
     if (!rec) {
       return
     }
-    const markup = await getBundledSectionMarkup(this, rec)
+
+    const handles = rec.products.map(product => product.handle).join(":")
+
+    // Only fetch new content if handles don't match the existing handles
+    if (handles === this.handles) {
+      api.attributeProductClicksInCampaign(this, rec)
+      return
+    }
+
+    const markup = await getBundledSectionMarkup(this, rec, handles)
     this.innerHTML = markup
     api.attributeProductClicksInCampaign(this, rec)
   }
 }
 
-async function getBundledSectionMarkup(element: BundledCampaign, rec: JSONResult) {
-  const handles = rec.products.map(product => product.handle).join(":")
+async function getBundledSectionMarkup(element: BundledCampaign, rec: JSONResult, handles: string) {
+  const target = new URL("/cart/update.js", window.location.href)
 
-  // Only fetch new content if handles don't match the existing handles
-  if (handles === element.handles) {
-    return ""
-  }
-
-  const target = new URL("/cart/update", window.location.href)
-  target.searchParams.set("nosto_bundled_campaign", `nosto-bundled-campaign[placement="${element.placement}"]`)
-  target.searchParams.set("q", handles)
-
-  const sectionHtml = await getText(target.href)
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(sectionHtml, "text/html")
-
-  if (rec.title) {
-    const headingEl = doc.querySelector("[nosto-title]")
-    if (headingEl) {
-      headingEl.textContent = rec.title
+  const payload = {
+    attributes: {
+      nosto_bundled_campaign: `nosto-bundled-campaign[placement="${element.placement}"]`,
+      nosto_handles: handles,
+      nosto_title: rec.title || ""
     }
   }
+
+  const sectionHtml = await postJSON(target.href, payload)
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(sectionHtml, "text/html")
 
   return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }

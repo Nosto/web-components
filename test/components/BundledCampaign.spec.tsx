@@ -24,7 +24,7 @@ describe("BundledCampaign", () => {
 
     const sectionHTML = `<div class="bundled-wrapper"><div class="bundled-inner">Bundled Section</div></div>`
     addHandlers(
-      http.get("/cart/update", () => {
+      http.post("/cart/update.js", () => {
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
       })
     )
@@ -48,7 +48,7 @@ describe("BundledCampaign", () => {
     const products = [{ handle: "product-a" }, { handle: "product-b" }]
     const { attributeProductClicksInCampaign, load, mockBuilder } = mockNostoRecs({ placement1: { products } })
 
-    // No handlers added since we don't expect any API calls to /cart/update
+    // No handlers added since we don't expect any API calls to /cart/update.js
 
     const el = (<nosto-bundled-campaign placement="placement1" handles="product-a:product-b" />) as BundledCampaign
     document.body.appendChild(el)
@@ -70,7 +70,7 @@ describe("BundledCampaign", () => {
   //   mockNostoRecs({ placement1: { products: [{ handle: "x" }] } })
 
   //   addHandlers(
-  //     http.get("/cart/update", () => {
+  //     http.post("/cart/update.js", () => {
   //       return HttpResponse.text("", { status: 500 })
   //     })
   //   )
@@ -89,7 +89,7 @@ describe("BundledCampaign", () => {
 
     const sectionHTML = `<div class="wrapper"><h2 nosto-title>Regular Heading</h2><div class="inner">Content</div></div>`
     addHandlers(
-      http.get("/cart/update", () => {
+      http.post("/cart/update.js", () => {
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
       })
     )
@@ -100,8 +100,7 @@ describe("BundledCampaign", () => {
     await el.connectedCallback()
 
     expect(load).toHaveBeenCalled()
-    expect(el.innerHTML).toContain("Custom Bundled Title")
-    expect(el.innerHTML).not.toContain("Regular Heading")
+    expect(el.innerHTML).toContain("Regular Heading") // Title not replaced in DOM anymore
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Bundled Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
