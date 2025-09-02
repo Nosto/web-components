@@ -11,17 +11,20 @@ import { JSONResult } from "@nosto/nosto-js/client"
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} handles - The product handles to compare against fetched results.
+ * @property {string} section - The Shopify section to render via the Cart Update API.
  */
 @customElement("nosto-bundled-campaign")
 export class BundledCampaign extends NostoElement {
   /** @private */
   static attributes = {
     placement: String,
-    handles: String
+    handles: String,
+    section: String
   }
 
   placement!: string
   handles!: string
+  section!: string
 
   async connectedCallback() {
     this.toggleAttribute("loading", true)
@@ -58,10 +61,11 @@ async function getBundledSectionMarkup(element: BundledCampaign, rec: JSONResult
   const target = new URL("/cart/update.js", window.location.href)
 
   const payload = {
+    sections: element.section,
     attributes: {
       nosto_bundled_campaign: `nosto-bundled-campaign[placement="${element.placement}"]`,
-      nosto_handles: handles,
-      nosto_title: rec.title || ""
+      [`nosto_${element.placement}_handles`]: handles,
+      [`nosto_${element.placement}_title`]: rec.title || ""
     }
   }
 
