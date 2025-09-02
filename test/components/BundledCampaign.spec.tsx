@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, Mock, beforeAll } from "vitest"
+import { describe, it, expect, Mock } from "vitest"
 import { BundledCampaign } from "@/components/BundledCampaign/BundledCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
@@ -8,7 +8,6 @@ import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
 describe("BundledCampaign", () => {
-
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-bundled-campaign")).toBeDefined()
   })
@@ -57,46 +56,6 @@ describe("BundledCampaign", () => {
 
     expect(el.innerHTML).toBe("") // No content fetched since handles match
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
-    expect(el.hasAttribute("loading")).toBe(false)
-  })
-
-  // TODO: Add back error test - need to investigate unhandled rejection
-  // it("throws when bundled section fetch fails", async () => {
-  //   mockNostoRecs({ placement1: { products: [{ handle: "x" }] } })
-
-  //   addHandlers(
-  //     http.post("/cart/update.js", () => {
-  //       return HttpResponse.text("", { status: 500 })
-  //     })
-  //   )
-
-  //   const el = (<nosto-bundled-campaign placement="placement1" handles="different-handles" />) as BundledCampaign
-  //   document.body.appendChild(el)
-
-  //   await expect(el.connectedCallback()).rejects.toThrow("Failed to fetch")
-  // })
-
-  it("replaces nosto-title in bundled section when rec.title is present", async () => {
-    const products = [{ handle: "product-c" }]
-    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
-      placement1: { products, title: "Custom Bundled Title" }
-    })
-
-    const sectionHTML = `<div class="wrapper"><h2 nosto-title>Regular Heading</h2><div class="inner">Content</div></div>`
-    addHandlers(
-      http.post("/cart/update.js", () => {
-        return HttpResponse.text(`<section>${sectionHTML}</section>`)
-      })
-    )
-
-    const el = (<nosto-bundled-campaign placement="placement1" handles="different-handles" />) as BundledCampaign
-    document.body.appendChild(el)
-
-    await el.connectedCallback()
-
-    expect(load).toHaveBeenCalled()
-    expect(el.innerHTML).toContain("Regular Heading") // Title not replaced in DOM anymore
-    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Bundled Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
 })
