@@ -1,11 +1,12 @@
 /**
  * Internal function to handle common fetch logic with error checking.
  * @param url - The URL to fetch
+ * @param options - Optional fetch options
  * @returns Promise that resolves to the Response object
  * @throws Error if the fetch request fails
  */
-async function fetchWithErrorHandling(url: string) {
-  const response = await fetch(url)
+async function fetchWithErrorHandling(url: string, options?: RequestInit) {
+  const response = await fetch(url, options)
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
   }
@@ -32,4 +33,22 @@ export async function getText(url: string) {
 export async function getJSON(url: string) {
   const response = await fetchWithErrorHandling(url)
   return response.json()
+}
+
+/**
+ * Posts a JSON payload to a URL and returns the response as a JSON object.
+ * @param url - The URL to post to
+ * @param data - The JSON payload to send
+ * @returns Promise that resolves to the parsed JSON response
+ * @throws Error if the fetch request fails or JSON parsing fails
+ */
+export async function postJSON<T extends object>(url: string, data: object) {
+  const response = await fetchWithErrorHandling(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  return response.json() as Promise<T>
 }

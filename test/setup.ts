@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, vi } from "vitest"
+import { beforeEach, vi } from "vitest"
 // Import all components to trigger their @customElement decorators
 import "@/components/Campaign/Campaign"
 import "@/components/Control/Control"
@@ -8,11 +8,6 @@ import "@/components/Product/Product"
 import "@/components/ProductCard/ProductCard"
 import "@/components/SectionCampaign/SectionCampaign"
 import "@/components/SkuOptions/SkuOptions"
-
-beforeAll(() => {
-  // Components are automatically registered by their @customElement decorators
-  // when the modules are imported above.
-})
 
 beforeEach(() => {
   document.body.innerHTML = ""
