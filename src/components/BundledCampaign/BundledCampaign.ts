@@ -63,7 +63,6 @@ async function getBundledSectionMarkup(element: BundledCampaign, rec: JSONResult
   const payload = {
     sections: element.section,
     attributes: {
-      nosto_bundled_campaign: `nosto-bundled-campaign[placement="${element.placement}"]`,
       [`nosto_${element.placement}_handles`]: handles,
       [`nosto_${element.placement}_title`]: rec.title || ""
     }
