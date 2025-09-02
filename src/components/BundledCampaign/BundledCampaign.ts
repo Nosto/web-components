@@ -72,7 +72,8 @@ async function getBundledSectionMarkup(element: BundledCampaign, rec: JSONResult
   const parser = new DOMParser()
   const doc = parser.parseFromString(sectionHtml, "text/html")
 
-  return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
+  const targetElement = doc.querySelector(`nosto-bundled-campaign[placement="${element.placement}"]`)
+  return targetElement?.innerHTML?.trim() || doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }
 
 declare global {
