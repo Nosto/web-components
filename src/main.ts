@@ -1,6 +1,7 @@
 /* eslint-disable barrel-files/avoid-barrel-files */
 export { Campaign } from "./components/Campaign/Campaign"
 export { SectionCampaign } from "./components/SectionCampaign/SectionCampaign"
+export { BundledCampaign } from "./components/BundledCampaign/BundledCampaign"
 export { Control } from "./components/Control/Control"
 export { DynamicCard } from "./components/DynamicCard/DynamicCard"
 export { Image } from "./components/Image/Image"
