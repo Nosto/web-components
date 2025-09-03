@@ -1,3 +1,15 @@
+# [8.19.0](https://github.com/Nosto/web-components/compare/v8.18.0...v8.19.0) (2025-09-03)
+
+
+### Bug Fixes
+
+* **package.json:** add dist/ folder path to main, module, and types fields ([945b8b9](https://github.com/Nosto/web-components/commit/945b8b99e00791c6a92d8419b99f23f219cd70f3))
+
+
+### Features
+
+* add TypeScript type exports for entire module ([102272f](https://github.com/Nosto/web-components/commit/102272fd571564bc0b75f9262fdc29b1e621da43))
+
 # [8.18.0](https://github.com/Nosto/web-components/compare/v8.17.0...v8.18.0) (2025-09-01)
 
 
