@@ -90,7 +90,7 @@ async function getMarkup(element: DynamicCard) {
   const baseUrl = window.Shopify?.routes?.root
     ? new URL(window.Shopify.routes.root, window.location.href).href
     : window.location.href
-  const productUrl = new URL(`products/${element.handle}?${params}`, baseUrl)
+  const productUrl = new URL(`/products/${element.handle}?${params}`, baseUrl)
 
   let markup = await getText(productUrl.href)
   if (element.section) {
