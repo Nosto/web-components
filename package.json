@@ -9,10 +9,12 @@
   "files": [
     "dist"
   ],
-  "main": "main.cjs.js",
-  "module": "main.es.js",
+  "main": "./dist/main.cjs.js",
+  "module": "./dist/main.es.js",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "import": "./dist/main.es.js",
       "browser": "./dist/main.es.bundle.js",
       "require": "./dist/main.cjs.js"
@@ -23,7 +25,7 @@
     "url": "git+https://github.com/Nosto/web-components.git"
   },
   "scripts": {
-    "build": "tsc && node esbuild.mjs && npm run typedoc",
+    "build": "tsc --project tsconfig.types.json && node esbuild.mjs && npm run typedoc",
     "preview": "vite preview",
     "lint": "eslint",
     "lint-fix": "eslint --fix",
