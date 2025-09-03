@@ -4,6 +4,7 @@ import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../utils/jsx"
+import { createShopifyUrl } from "@/utils"
 
 describe("DynamicCard", () => {
   afterEach(() => {
@@ -11,8 +12,12 @@ describe("DynamicCard", () => {
   })
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
+    // Use createShopifyUrl to get the correct path with Shopify root handling
+    const productUrl = createShopifyUrl("products/:handle")
+    const productPath = productUrl.pathname
+
     addHandlers(
-      http.get("/products/:handle", ({ params }) => {
+      http.get(productPath, ({ params }) => {
         const handle = params.handle as string
         const response = responses[handle]
         if (!response) {
@@ -152,7 +157,9 @@ describe("DynamicCard", () => {
 
     const card = (<nosto-dynamic-card handle="handle-error" template="default" />) as DynamicCard
 
-    await expect(card.connectedCallback()).rejects.toThrow("Failed to fetch /products/handle-error")
+    await expect(card.connectedCallback()).rejects.toThrow(
+      "Failed to fetch http://localhost:3000/products/handle-error"
+    )
   })
 
   it("throws error when markup is invalid", async () => {
@@ -166,5 +173,49 @@ describe("DynamicCard", () => {
     const card = (<nosto-dynamic-card handle="handle-invalid" template="default" />) as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
+  })
+
+  it("uses Shopify routes root when available", async () => {
+    // Set up window.Shopify.routes.root
+    vi.stubGlobal("Shopify", { routes: { root: "/en-us/" } })
+
+    const validMarkup = "<div>Product Info</div>"
+
+    // Use addProductHandlers which now supports Shopify root paths
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+
+    // Restore original globals
+    vi.unstubAllGlobals()
+  })
+
+  it("falls back to default root when Shopify routes not available", async () => {
+    // Ensure window.Shopify is undefined
+    vi.stubGlobal("Shopify", undefined)
+
+    const validMarkup = "<div>Product Info</div>"
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+
+    // Restore original globals
+    vi.unstubAllGlobals()
   })
 })
