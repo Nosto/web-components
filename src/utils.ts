@@ -19,7 +19,7 @@ export function toCamelCase(str: string) {
   return str.replace(/-([a-z])/g, (_, l) => l.toUpperCase())
 }
 
-export function createShopifyUrl(url: string): URL {
+export function createShopifyUrl(url: string) {
   const root = window.Shopify?.routes?.root ?? "/"
   return new URL(`${root}${url}`, window.location.href)
 }
