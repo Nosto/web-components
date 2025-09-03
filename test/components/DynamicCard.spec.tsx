@@ -198,6 +198,66 @@ describe("DynamicCard", () => {
     vi.unstubAllGlobals()
   })
 
+  it("emits DynamicCard/loaded event when content is loaded", async () => {
+    const validMarkup = "<div>Product Info</div>"
+    addProductHandlers({
+      "event-test-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="event-test-handle" template="default" />) as DynamicCard
+
+    // Set up event listener to capture the event
+    let eventEmitted = false
+    card.addEventListener("DynamicCard/loaded", () => {
+      eventEmitted = true
+    })
+
+    // Call connectedCallback manually since it's not automatically triggered in tests
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+    expect(eventEmitted).toBe(true)
+  })
+
+  it("emits DynamicCard/loaded event when content is loaded lazily", async () => {
+    const validMarkup = "<div>Lazy Loaded Product Info</div>"
+    addProductHandlers({
+      "lazy-event-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="lazy-event-handle" template="default" lazy={true} />) as DynamicCard
+
+    // Mock IntersectionObserver
+    const mockObserver = {
+      observe: vi.fn(),
+      disconnect: vi.fn()
+    }
+    // @ts-expect-error partial mock assignment
+    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    // Set up event listener to capture the event
+    let eventEmitted = false
+    card.addEventListener("DynamicCard/loaded", () => {
+      eventEmitted = true
+    })
+
+    // Call connectedCallback manually
+    await card.connectedCallback()
+    expect(mockObserver.observe).toHaveBeenCalledWith(card)
+
+    // Simulate intersection
+    // @ts-expect-error IntersectionObserver is not typed as a mock
+    global.IntersectionObserver.mock.calls[0][0]([{ isIntersecting: true }])
+
+    await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
+    expect(card.innerHTML).toBe(validMarkup)
+    expect(eventEmitted).toBe(true)
+  })
+
   it("falls back to default root when Shopify routes not available", async () => {
     // Ensure window.Shopify is undefined
     vi.stubGlobal("Shopify", undefined)
