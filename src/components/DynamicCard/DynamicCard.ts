@@ -1,4 +1,4 @@
-import { assertRequired } from "@/utils"
+import { assertRequired, createShopifyUrl } from "@/utils"
 import { getText } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
@@ -75,8 +75,7 @@ export class DynamicCard extends NostoElement {
 const placeholders = new Map<string, string>()
 
 async function getMarkup(element: DynamicCard) {
-  const root = window.Shopify?.routes?.root ?? "/"
-  const target = new URL(`${root}products/${element.handle}`, window.location.href)
+  const target = createShopifyUrl(`products/${element.handle}`)
 
   if (element.template) {
     target.searchParams.set("view", element.template)
