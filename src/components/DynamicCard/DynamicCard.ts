@@ -75,25 +75,19 @@ export class DynamicCard extends NostoElement {
 const placeholders = new Map<string, string>()
 
 async function getMarkup(element: DynamicCard) {
-  const searchParams: Record<string, string> = {}
-
-  if (element.template) {
-    searchParams.view = element.template
-    searchParams.layout = "none"
-  } else if (element.section) {
-    searchParams.section_id = element.section
-  }
-
-  if (element.variantId) {
-    searchParams.variant = element.variantId
-  }
-
   const root = window.Shopify?.routes?.root ?? "/"
   const target = new URL(`${root}products/${element.handle}`, window.location.href)
 
-  Object.entries(searchParams).forEach(([key, value]) => {
-    target.searchParams.set(key, value)
-  })
+  if (element.template) {
+    target.searchParams.set("view", element.template)
+    target.searchParams.set("layout", "none")
+  } else if (element.section) {
+    target.searchParams.set("section_id", element.section)
+  }
+
+  if (element.variantId) {
+    target.searchParams.set("variant", element.variantId)
+  }
 
   let markup = await getText(target.href)
 
