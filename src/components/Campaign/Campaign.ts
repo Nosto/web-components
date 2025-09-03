@@ -36,7 +36,7 @@ export class Campaign extends NostoElement {
     lazy: Boolean
   }
 
-  placement?: string
+  placement!: string
   productId?: string
   variantId?: string
   template?: string
