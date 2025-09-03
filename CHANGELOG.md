@@ -1,3 +1,10 @@
+# [8.20.0](https://github.com/Nosto/web-components/compare/v8.19.1...v8.20.0) (2025-09-03)
+
+
+### Features
+
+* make Shopify URL creation more precise with dynamic root ([9312673](https://github.com/Nosto/web-components/commit/9312673e457a5de60dec9aec11fed66c19a7c319))
+
 ## [8.19.1](https://github.com/Nosto/web-components/compare/v8.19.0...v8.19.1) (2025-09-03)
 
 
