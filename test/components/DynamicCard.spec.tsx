@@ -167,4 +167,54 @@ describe("DynamicCard", () => {
 
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
   })
+
+  it("uses Shopify routes root when available", async () => {
+    // Set up window.Shopify.routes.root
+    const originalShopify = window.Shopify
+    window.Shopify = { routes: { root: "/collections/" } }
+
+    const validMarkup = "<div>Product Info</div>"
+
+    // Set up handler for the custom root path
+    addHandlers(
+      http.get("/collections/products/:handle", ({ params }) => {
+        const handle = params.handle as string
+        if (handle === "test-handle") {
+          return HttpResponse.text(validMarkup, { status: 200 })
+        }
+        return HttpResponse.text("", { status: 404 })
+      })
+    )
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+
+    // Restore original Shopify object
+    window.Shopify = originalShopify
+  })
+
+  it("falls back to default root when Shopify routes not available", async () => {
+    // Ensure window.Shopify is undefined
+    const originalShopify = window.Shopify
+    window.Shopify = undefined
+
+    const validMarkup = "<div>Product Info</div>"
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+
+    // Restore original Shopify object
+    window.Shopify = originalShopify
+  })
 })

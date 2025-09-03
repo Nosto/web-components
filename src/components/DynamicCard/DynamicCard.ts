@@ -85,7 +85,8 @@ async function getMarkup(element: DynamicCard) {
   if (element.variantId) {
     params.set("variant", element.variantId)
   }
-  let markup = await getText(`/products/${element.handle}?${params}`)
+  const root = window.Shopify?.routes?.root ?? "/"
+  let markup = await getText(`${root}products/${element.handle}?${params}`)
   if (element.section) {
     const parser = new DOMParser()
     const doc = parser.parseFromString(markup, "text/html")

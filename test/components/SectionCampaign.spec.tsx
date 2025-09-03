@@ -98,4 +98,68 @@ describe("SectionCampaign", () => {
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
+
+  it("uses Shopify routes root when available", async () => {
+    // Set up window.Shopify.routes.root
+    const originalShopify = window.Shopify
+    window.Shopify = { routes: { root: "/collections/" } }
+
+    const products = [{ handle: "product-a" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
+      placement1: { products, title: "Custom Title" }
+    })
+
+    const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
+
+    // Set up handler for the custom root path
+    addHandlers(
+      http.get("/collections/search", () => {
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
+    expect(el.hasAttribute("loading")).toBe(false)
+
+    // Restore original Shopify object
+    window.Shopify = originalShopify
+  })
+
+  it("falls back to default root when Shopify routes not available", async () => {
+    // Ensure window.Shopify is undefined
+    const originalShopify = window.Shopify
+    window.Shopify = undefined
+
+    const products = [{ handle: "product-a" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
+      placement1: { products, title: "Custom Title" }
+    })
+
+    const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
+    addHandlers(
+      http.get("/search", () => {
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
+    expect(el.hasAttribute("loading")).toBe(false)
+
+    // Restore original Shopify object
+    window.Shopify = originalShopify
+  })
 })
