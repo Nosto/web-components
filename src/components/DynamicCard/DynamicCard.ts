@@ -46,7 +46,10 @@ export class DynamicCard extends NostoElement {
       this.toggleAttribute("loading", true)
       this.innerHTML = await getMarkup(this)
       this.toggleAttribute("loading", false)
-      emitLoadedEvent(this)
+      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", {
+        bubbles: true,
+        cancelable: true
+      }))
     }
   }
 
@@ -63,27 +66,25 @@ export class DynamicCard extends NostoElement {
           observer.disconnect()
           this.innerHTML = await getMarkup(this)
           this.toggleAttribute("loading", false)
-          emitLoadedEvent(this)
+          this.dispatchEvent(new CustomEvent("DynamicCard/loaded", {
+            bubbles: true,
+            cancelable: true
+          }))
         }
       })
       observer.observe(this)
     } else {
       this.innerHTML = await getMarkup(this)
       this.toggleAttribute("loading", false)
-      emitLoadedEvent(this)
+      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", {
+        bubbles: true,
+        cancelable: true
+      }))
     }
   }
 }
 
 const placeholders = new Map<string, string>()
-
-function emitLoadedEvent(element: DynamicCard) {
-  const event = new CustomEvent("DynamicCard/loaded", {
-    bubbles: true,
-    cancelable: true
-  })
-  element.dispatchEvent(event)
-}
 
 async function getMarkup(element: DynamicCard) {
   const target = createShopifyUrl(`products/${element.handle}`)
