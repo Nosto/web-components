@@ -11,8 +11,12 @@ describe("DynamicCard", () => {
   })
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
+    // Support both default path and Shopify root path
+    const shopifyRoot = (globalThis as { Shopify?: { routes?: { root?: string } } }).Shopify?.routes?.root ?? "/"
+    const productPath = `${shopifyRoot}products/:handle`.replace(/\/+/g, "/") // Remove duplicate slashes
+
     addHandlers(
-      http.get("/products/:handle", ({ params }) => {
+      http.get(productPath, ({ params }) => {
         const handle = params.handle as string
         const response = responses[handle]
         if (!response) {
@@ -176,16 +180,12 @@ describe("DynamicCard", () => {
 
     const validMarkup = "<div>Product Info</div>"
 
-    // Set up handler for the custom root path
-    addHandlers(
-      http.get("/en-us/products/:handle", ({ params }) => {
-        const handle = params.handle as string
-        if (handle === "test-handle") {
-          return HttpResponse.text(validMarkup, { status: 200 })
-        }
-        return HttpResponse.text("", { status: 404 })
-      })
-    )
+    // Use addProductHandlers which now supports Shopify root paths
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      }
+    })
 
     const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
 
