@@ -4,6 +4,7 @@ import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../utils/jsx"
+import { createShopifyUrl } from "@/utils"
 
 describe("DynamicCard", () => {
   afterEach(() => {
@@ -11,9 +12,9 @@ describe("DynamicCard", () => {
   })
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
-    // Support both default path and Shopify root path
-    const shopifyRoot = (globalThis as { Shopify?: { routes?: { root?: string } } }).Shopify?.routes?.root ?? "/"
-    const productPath = `${shopifyRoot}products/:handle`.replace(/\/+/g, "/") // Remove duplicate slashes
+    // Use createShopifyUrl to get the correct path with Shopify root handling
+    const productUrl = createShopifyUrl("products/:handle")
+    const productPath = productUrl.pathname
 
     addHandlers(
       http.get(productPath, ({ params }) => {
