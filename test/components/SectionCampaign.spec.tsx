@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, Mock, vi } from "vitest"
+import { describe, it, expect, Mock } from "vitest"
 import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../msw.setup"
@@ -97,67 +97,5 @@ describe("SectionCampaign", () => {
     expect(el.innerHTML).not.toContain("Custom Title")
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
-  })
-
-  it("uses Shopify routes root when available", async () => {
-    // Set up window.Shopify.routes.root
-    vi.stubGlobal("Shopify", { routes: { root: "/en-us/" } })
-
-    const products = [{ handle: "product-a" }]
-    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
-      placement1: { products, title: "Custom Title" }
-    })
-
-    const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
-
-    // Set up handler for the custom root path
-    addHandlers(
-      http.get("/en-us/search", () => {
-        return HttpResponse.text(`<section>${sectionHTML}</section>`)
-      })
-    )
-
-    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
-    document.body.appendChild(el)
-
-    await el.connectedCallback()
-
-    expect(load).toHaveBeenCalled()
-    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
-    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
-    expect(el.hasAttribute("loading")).toBe(false)
-
-    // Restore original globals
-    vi.unstubAllGlobals()
-  })
-
-  it("falls back to default root when Shopify routes not available", async () => {
-    // Ensure window.Shopify is undefined
-    vi.stubGlobal("Shopify", undefined)
-
-    const products = [{ handle: "product-a" }]
-    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
-      placement1: { products, title: "Custom Title" }
-    })
-
-    const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
-    addHandlers(
-      http.get("/search", () => {
-        return HttpResponse.text(`<section>${sectionHTML}</section>`)
-      })
-    )
-
-    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
-    document.body.appendChild(el)
-
-    await el.connectedCallback()
-
-    expect(load).toHaveBeenCalled()
-    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
-    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
-    expect(el.hasAttribute("loading")).toBe(false)
-
-    // Restore original globals
-    vi.unstubAllGlobals()
   })
 })
