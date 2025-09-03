@@ -47,10 +47,10 @@ export class Product extends NostoElement {
     skuSelected: Boolean
   }
 
-  selectedSkuId: string | undefined
+  selectedSkuId?: string
   productId!: string
   recoId!: string
-  skuSelected!: boolean
+  skuSelected?: boolean
 
   connectedCallback() {
     assertRequired(this, "productId", "recoId")

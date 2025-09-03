@@ -37,9 +37,9 @@ export class Campaign extends NostoElement {
   }
 
   placement!: string
-  productId!: string
+  productId?: string
   variantId?: string
-  template!: string
+  template?: string
   init?: string
   lazy?: boolean
 
