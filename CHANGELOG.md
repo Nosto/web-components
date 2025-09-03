@@ -1,3 +1,13 @@
+## [8.19.1](https://github.com/Nosto/web-components/compare/v8.19.0...v8.19.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* align field types with mandatory/optional semantics ([51492ec](https://github.com/Nosto/web-components/commit/51492ec9c2473dbe5dbaab849f183cdf67c5c2ce))
+* **Campaign:** make placement mandatory as requested ([3a3ad46](https://github.com/Nosto/web-components/commit/3a3ad46fdc9e101bcbcb94c10b8b108d22372038))
+* **Campaign:** make productId optional to align with type semantics ([d58acd0](https://github.com/Nosto/web-components/commit/d58acd0e1aebcb8cbcd21d3bf8710b93254e146e))
+* make template and selectedSkuId optional to align with component semantics ([66db5b9](https://github.com/Nosto/web-components/commit/66db5b9d9ada6c320c3f678e7875cf11b8216f28))
+
 # [8.19.0](https://github.com/Nosto/web-components/compare/v8.18.0...v8.19.0) (2025-09-03)
 
 
