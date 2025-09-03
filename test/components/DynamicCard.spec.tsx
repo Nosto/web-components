@@ -170,14 +170,13 @@ describe("DynamicCard", () => {
 
   it("uses Shopify routes root when available", async () => {
     // Set up window.Shopify.routes.root
-    const originalShopify = window.Shopify
-    window.Shopify = { routes: { root: "/collections/" } }
+    vi.stubGlobal("Shopify", { routes: { root: "/en-us/" } })
 
     const validMarkup = "<div>Product Info</div>"
 
     // Set up handler for the custom root path
     addHandlers(
-      http.get("/collections/products/:handle", ({ params }) => {
+      http.get("/en-us/products/:handle", ({ params }) => {
         const handle = params.handle as string
         if (handle === "test-handle") {
           return HttpResponse.text(validMarkup, { status: 200 })
@@ -192,14 +191,13 @@ describe("DynamicCard", () => {
 
     expect(card.innerHTML).toBe(validMarkup)
 
-    // Restore original Shopify object
-    window.Shopify = originalShopify
+    // Restore original globals
+    vi.unstubAllGlobals()
   })
 
   it("falls back to default root when Shopify routes not available", async () => {
     // Ensure window.Shopify is undefined
-    const originalShopify = window.Shopify
-    window.Shopify = undefined
+    vi.stubGlobal("Shopify", undefined)
 
     const validMarkup = "<div>Product Info</div>"
     addProductHandlers({
@@ -214,7 +212,7 @@ describe("DynamicCard", () => {
 
     expect(card.innerHTML).toBe(validMarkup)
 
-    // Restore original Shopify object
-    window.Shopify = originalShopify
+    // Restore original globals
+    vi.unstubAllGlobals()
   })
 })
