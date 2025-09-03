@@ -54,7 +54,7 @@ async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   const baseUrl = window.Shopify?.routes?.root
     ? new URL(window.Shopify.routes.root, window.location.href).href
     : window.location.href
-  const target = new URL("search", baseUrl)
+  const target = new URL("/search", baseUrl)
 
   target.searchParams.set("section_id", element.section)
   target.searchParams.set("q", handles)
