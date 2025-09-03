@@ -152,7 +152,7 @@ describe("DynamicCard", () => {
 
     const card = (<nosto-dynamic-card handle="handle-error" template="default" />) as DynamicCard
 
-    await expect(card.connectedCallback()).rejects.toThrow("Failed to fetch /products/handle-error")
+    await expect(card.connectedCallback()).rejects.toThrow("Failed to fetch")
   })
 
   it("throws error when markup is invalid", async () => {
@@ -166,5 +166,34 @@ describe("DynamicCard", () => {
     const card = (<nosto-dynamic-card handle="handle-invalid" template="default" />) as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
+  })
+
+  it("uses window.Shopify.routes.root as base URL when available", async () => {
+    const validMarkup = "<div>Product Info</div>"
+
+    // Mock window.Shopify.routes.root
+    const originalShopify = window.Shopify
+    window.Shopify = { routes: { root: "/shop/" } }
+
+    // Set up handler to expect the correct URL
+    addHandlers(
+      http.get("/shop/products/test-handle", ({ request }) => {
+        const url = new URL(request.url)
+        expect(url.pathname).toBe("/shop/products/test-handle")
+        expect(url.searchParams.get("view")).toBe("default")
+        expect(url.searchParams.get("layout")).toBe("none")
+        return HttpResponse.text(validMarkup)
+      })
+    )
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
+
+    try {
+      await card.connectedCallback()
+      expect(card.innerHTML).toBe(validMarkup)
+    } finally {
+      // Restore original Shopify object
+      window.Shopify = originalShopify
+    }
   })
 })

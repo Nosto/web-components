@@ -98,4 +98,42 @@ describe("SectionCampaign", () => {
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
+
+  it("uses window.Shopify.routes.root as base URL when available", async () => {
+    const products = [{ handle: "product-a" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
+      placement1: { products }
+    })
+
+    // Mock window.Shopify.routes.root
+    const originalShopify = window.Shopify
+    window.Shopify = { routes: { root: "/shop/" } }
+
+    const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
+
+    // Set up handler to expect the correct URL
+    addHandlers(
+      http.get("/shop/search", ({ request }) => {
+        const url = new URL(request.url)
+        expect(url.pathname).toBe("/shop/search")
+        expect(url.searchParams.get("section_id")).toBe("featured-section")
+        expect(url.searchParams.get("q")).toBe("product-a")
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    try {
+      await el.connectedCallback()
+      expect(load).toHaveBeenCalled()
+      expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
+      expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+      expect(el.hasAttribute("loading")).toBe(false)
+    } finally {
+      // Restore original Shopify object
+      window.Shopify = originalShopify
+    }
+  })
 })

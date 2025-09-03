@@ -49,7 +49,13 @@ export class SectionCampaign extends NostoElement {
 
 async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
-  const target = new URL("/search", window.location.href)
+
+  // Use Shopify.routes.root as context if available, otherwise use current location
+  const baseUrl = window.Shopify?.routes?.root
+    ? new URL(window.Shopify.routes.root, window.location.href).href
+    : window.location.href
+  const target = new URL("search", baseUrl)
+
   target.searchParams.set("section_id", element.section)
   target.searchParams.set("q", handles)
   const sectionHtml = await getText(target.href)
