@@ -32,7 +32,7 @@
     "test": "vitest run --silent --coverage",
     "typecheck": "tsc --noEmit",
     "typedoc": "typedoc src/main.ts",
-    "typedoc-json": "mkdir -p build && typedoc --json build/typedoc.json src/main.ts",
+    "typedoc-json": "mkdir -p dist && typedoc --json dist/typedoc.json src/main.ts",
     "prepare": "husky",
     "visualize": "esbuild-visualizer --metadata ./meta.json",
     "storybook": "storybook dev -p 6006",
