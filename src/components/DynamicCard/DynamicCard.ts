@@ -46,10 +46,7 @@ export class DynamicCard extends NostoElement {
       this.toggleAttribute("loading", true)
       this.innerHTML = await getMarkup(this)
       this.toggleAttribute("loading", false)
-      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", {
-        bubbles: true,
-        cancelable: true
-      }))
+      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", { bubbles: true, cancelable: true }))
     }
   }
 
@@ -66,20 +63,14 @@ export class DynamicCard extends NostoElement {
           observer.disconnect()
           this.innerHTML = await getMarkup(this)
           this.toggleAttribute("loading", false)
-          this.dispatchEvent(new CustomEvent("DynamicCard/loaded", {
-            bubbles: true,
-            cancelable: true
-          }))
+          this.dispatchEvent(new CustomEvent("DynamicCard/loaded", { bubbles: true, cancelable: true }))
         }
       })
       observer.observe(this)
     } else {
       this.innerHTML = await getMarkup(this)
       this.toggleAttribute("loading", false)
-      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", {
-        bubbles: true,
-        cancelable: true
-      }))
+      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", { bubbles: true, cancelable: true }))
     }
   }
 }
