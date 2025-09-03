@@ -1,78 +1,68 @@
 # [8.20.0](https://github.com/Nosto/web-components/compare/v8.19.1...v8.20.0) (2025-09-03)
 
-
 ### Features
 
-* make Shopify URL creation more precise with dynamic root ([9312673](https://github.com/Nosto/web-components/commit/9312673e457a5de60dec9aec11fed66c19a7c319))
+- make Shopify URL creation more precise with dynamic root ([9312673](https://github.com/Nosto/web-components/commit/9312673e457a5de60dec9aec11fed66c19a7c319))
 
 ## [8.19.1](https://github.com/Nosto/web-components/compare/v8.19.0...v8.19.1) (2025-09-03)
 
-
 ### Bug Fixes
 
-* align field types with mandatory/optional semantics ([51492ec](https://github.com/Nosto/web-components/commit/51492ec9c2473dbe5dbaab849f183cdf67c5c2ce))
-* **Campaign:** make placement mandatory as requested ([3a3ad46](https://github.com/Nosto/web-components/commit/3a3ad46fdc9e101bcbcb94c10b8b108d22372038))
-* **Campaign:** make productId optional to align with type semantics ([d58acd0](https://github.com/Nosto/web-components/commit/d58acd0e1aebcb8cbcd21d3bf8710b93254e146e))
-* make template and selectedSkuId optional to align with component semantics ([66db5b9](https://github.com/Nosto/web-components/commit/66db5b9d9ada6c320c3f678e7875cf11b8216f28))
+- align field types with mandatory/optional semantics ([51492ec](https://github.com/Nosto/web-components/commit/51492ec9c2473dbe5dbaab849f183cdf67c5c2ce))
+- **Campaign:** make placement mandatory as requested ([3a3ad46](https://github.com/Nosto/web-components/commit/3a3ad46fdc9e101bcbcb94c10b8b108d22372038))
+- **Campaign:** make productId optional to align with type semantics ([d58acd0](https://github.com/Nosto/web-components/commit/d58acd0e1aebcb8cbcd21d3bf8710b93254e146e))
+- make template and selectedSkuId optional to align with component semantics ([66db5b9](https://github.com/Nosto/web-components/commit/66db5b9d9ada6c320c3f678e7875cf11b8216f28))
 
 # [8.19.0](https://github.com/Nosto/web-components/compare/v8.18.0...v8.19.0) (2025-09-03)
 
-
 ### Bug Fixes
 
-* **package.json:** add dist/ folder path to main, module, and types fields ([945b8b9](https://github.com/Nosto/web-components/commit/945b8b99e00791c6a92d8419b99f23f219cd70f3))
-
+- **package.json:** add dist/ folder path to main, module, and types fields ([945b8b9](https://github.com/Nosto/web-components/commit/945b8b99e00791c6a92d8419b99f23f219cd70f3))
 
 ### Features
 
-* add TypeScript type exports for entire module ([102272f](https://github.com/Nosto/web-components/commit/102272fd571564bc0b75f9262fdc29b1e621da43))
+- add TypeScript type exports for entire module ([102272f](https://github.com/Nosto/web-components/commit/102272fd571564bc0b75f9262fdc29b1e621da43))
 
 # [8.18.0](https://github.com/Nosto/web-components/compare/v8.17.0...v8.18.0) (2025-09-01)
 
-
 ### Features
 
-* drop Nosto prefix from custom element class names ([5ecbc94](https://github.com/Nosto/web-components/commit/5ecbc941fd44febd818c74aa91460aecef9d4a0e))
-* drop Nosto prefix from folder names and module names ([44c8f92](https://github.com/Nosto/web-components/commit/44c8f92e8cbaac33151b7e316efde21b904a01d2))
-* drop Nosto prefix from test file names ([3fb6544](https://github.com/Nosto/web-components/commit/3fb654431376759cc54c583e324418a1a3745b8c))
+- drop Nosto prefix from custom element class names ([5ecbc94](https://github.com/Nosto/web-components/commit/5ecbc941fd44febd818c74aa91460aecef9d4a0e))
+- drop Nosto prefix from folder names and module names ([44c8f92](https://github.com/Nosto/web-components/commit/44c8f92e8cbaac33151b7e316efde21b904a01d2))
+- drop Nosto prefix from test file names ([3fb6544](https://github.com/Nosto/web-components/commit/3fb654431376759cc54c583e324418a1a3745b8c))
 
 # [8.17.0](https://github.com/Nosto/web-components/compare/v8.16.0...v8.17.0) (2025-09-01)
 
-
 ### Features
 
-* introduce simple fetch facade module with getText and getJSON ([b071d0c](https://github.com/Nosto/web-components/commit/b071d0c8388f72906242236a0a0630661b4af7b3))
+- introduce simple fetch facade module with getText and getJSON ([b071d0c](https://github.com/Nosto/web-components/commit/b071d0c8388f72906242236a0a0630661b4af7b3))
 
 # [8.16.0](https://github.com/Nosto/web-components/compare/v8.15.0...v8.16.0) (2025-08-29)
 
-
 ### Features
 
-* rename NostoCampaignSection to NostoSectionCampaign ([d363167](https://github.com/Nosto/web-components/commit/d3631673033c94d52a7c7a2e35fe9c9b9d348ced))
+- rename NostoCampaignSection to NostoSectionCampaign ([d363167](https://github.com/Nosto/web-components/commit/d3631673033c94d52a7c7a2e35fe9c9b9d348ced))
 
 # [8.15.0](https://github.com/Nosto/web-components/compare/v8.14.0...v8.15.0) (2025-08-29)
 
-
 ### Features
 
-* add typecheck script and update copilot instructions ([cbef496](https://github.com/Nosto/web-components/commit/cbef496d7b7e59b3f5307209de9d903d6321451b))
+- add typecheck script and update copilot instructions ([cbef496](https://github.com/Nosto/web-components/commit/cbef496d7b7e59b3f5307209de9d903d6321451b))
 
 # [8.14.0](https://github.com/Nosto/web-components/compare/v8.13.0...v8.14.0) (2025-08-27)
 
-
 ### Bug Fixes
 
-* **lint:** fix Prettier formatting issues in story CSS files and docs ([cda25fa](https://github.com/Nosto/web-components/commit/cda25fa1cb31e387859c322f68f17c9fcd373c5b))
-
+- **lint:** fix Prettier formatting issues in story CSS files and docs ([cda25fa](https://github.com/Nosto/web-components/commit/cda25fa1cb31e387859c322f68f17c9fcd373c5b))
 
 ### Features
 
-* **cleanup:** remove dev folder and dependencies after Storybook migration ([4037c1e](https://github.com/Nosto/web-components/commit/4037c1e8c66de85c80242b37e6921415a3906348))
-* **cleanup:** remove liquidjs TypeScript shim declaration ([0c6e3f2](https://github.com/Nosto/web-components/commit/0c6e3f2b0dcb4c8ac0608e8eec3f22c310bb42bf))
-* **stories:** extract NostoImage story styles to external CSS file ([32af433](https://github.com/Nosto/web-components/commit/32af43389220628d8ab84fa7f963d69300294b50))
-* **storybook:** extract NostoProduct story styles to external CSS file ([d1b1e59](https://github.com/Nosto/web-components/commit/d1b1e5975db1e5f766372c8f760044843f1365c3))
-* **storybook:** extract NostoSkuOptions stories CSS to external file ([b58ae30](https://github.com/Nosto/web-components/commit/b58ae3010be29fd9293b8d2c0a3f94caae928313))
-* **storybook:** register all custom elements globally in preview.ts ([2ded449](https://github.com/Nosto/web-components/commit/2ded449cfd98df9c6e3b94374f4b08beeeabdbd4))
+- **cleanup:** remove dev folder and dependencies after Storybook migration ([4037c1e](https://github.com/Nosto/web-components/commit/4037c1e8c66de85c80242b37e6921415a3906348))
+- **cleanup:** remove liquidjs TypeScript shim declaration ([0c6e3f2](https://github.com/Nosto/web-components/commit/0c6e3f2b0dcb4c8ac0608e8eec3f22c310bb42bf))
+- **stories:** extract NostoImage story styles to external CSS file ([32af433](https://github.com/Nosto/web-components/commit/32af43389220628d8ab84fa7f963d69300294b50))
+- **storybook:** extract NostoProduct story styles to external CSS file ([d1b1e59](https://github.com/Nosto/web-components/commit/d1b1e5975db1e5f766372c8f760044843f1365c3))
+- **storybook:** extract NostoSkuOptions stories CSS to external file ([b58ae30](https://github.com/Nosto/web-components/commit/b58ae3010be29fd9293b8d2c0a3f94caae928313))
+- **storybook:** register all custom elements globally in preview.ts ([2ded449](https://github.com/Nosto/web-components/commit/2ded449cfd98df9c6e3b94374f4b08beeeabdbd4))
 
 # [8.13.0](https://github.com/Nosto/web-components/compare/v8.12.0...v8.13.0) (2025-08-25)
 
