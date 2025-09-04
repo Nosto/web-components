@@ -12,21 +12,21 @@ This package provides the following custom elements:
 
 ### Store level templating
 
-| Component       | Tag Name                    | Description                                                       |
-| --------------- | --------------------------- | ----------------------------------------------------------------- |
-| Campaign        | `nosto-campaign`            | Campaign rendering and product recommendation display             |
-| SectionCampaign | `nosto-section-campaign`    | Campaign rendering using the Section Rendering API (Shopify only) |
-| Control         | `nosto-control`             | Conditional content rendering based on user segments              |
+| Component       | Tag Name                 | Description                                                       |
+| --------------- | ------------------------ | ----------------------------------------------------------------- |
+| Campaign        | `nosto-campaign`         | Campaign rendering and product recommendation display             |
+| SectionCampaign | `nosto-section-campaign` | Campaign rendering using the Section Rendering API (Shopify only) |
+| Control         | `nosto-control`          | Conditional content rendering based on user segments              |
 
 ### Campaign level templating
 
-| Component    | Tag Name              | Description                                     |
-| ------------ | --------------------- | ----------------------------------------------- |
-| DynamicCard  | `nosto-dynamic-card`  | Dynamic product card templating (Shopify only)  |
-| Image        | `nosto-image`         | Progressive image enhancement with optimization |
-| Product      | `nosto-product`       | Product interaction and cart management         |
-| ProductCard  | `nosto-product-card`  | Product card templating for recommendations     |
-| SkuOptions   | `nosto-sku-options`   | Product variant and SKU selection interface     |
+| Component   | Tag Name             | Description                                     |
+| ----------- | -------------------- | ----------------------------------------------- |
+| DynamicCard | `nosto-dynamic-card` | Dynamic product card templating (Shopify only)  |
+| Image       | `nosto-image`        | Progressive image enhancement with optimization |
+| Product     | `nosto-product`      | Product interaction and cart management         |
+| ProductCard | `nosto-product-card` | Product card templating for recommendations     |
+| SkuOptions  | `nosto-sku-options`  | Product variant and SKU selection interface     |
 
 ## Documentation
 

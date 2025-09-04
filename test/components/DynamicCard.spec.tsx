@@ -198,6 +198,30 @@ describe("DynamicCard", () => {
     vi.unstubAllGlobals()
   })
 
+  it("emits DynamicCard/loaded event when content is loaded", async () => {
+    const validMarkup = "<div>Product Info</div>"
+    addProductHandlers({
+      "event-test-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="event-test-handle" template="default" />) as DynamicCard
+
+    // Set up event listener to capture the event
+    let eventEmitted = false
+    card.addEventListener("@nosto/DynamicCard/loaded", () => {
+      eventEmitted = true
+    })
+
+    // Call connectedCallback manually since it's not automatically triggered in tests
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+    expect(eventEmitted).toBe(true)
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
   it("falls back to default root when Shopify routes not available", async () => {
     // Ensure window.Shopify is undefined
     vi.stubGlobal("Shopify", undefined)
