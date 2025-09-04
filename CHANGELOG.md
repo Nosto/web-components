@@ -1,3 +1,10 @@
+# [8.21.0](https://github.com/Nosto/web-components/compare/v8.20.0...v8.21.0) (2025-09-04)
+
+
+### Features
+
+* add typedoc-json script for JSON output ([516c736](https://github.com/Nosto/web-components/commit/516c736e7928ed1bbcebd995376f3c990b326b17))
+
 # [8.20.0](https://github.com/Nosto/web-components/compare/v8.19.1...v8.20.0) (2025-09-03)
 
 
