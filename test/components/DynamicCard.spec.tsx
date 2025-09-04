@@ -219,6 +219,7 @@ describe("DynamicCard", () => {
 
     expect(card.innerHTML).toBe(validMarkup)
     expect(eventEmitted).toBe(true)
+    expect(card.hasAttribute("loading")).toBe(false)
   })
 
   it("falls back to default root when Shopify routes not available", async () => {
