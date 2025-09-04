@@ -46,39 +46,39 @@ export class DynamicCard extends NostoElement {
 
   async attributeChangedCallback() {
     if (this.isConnected) {
-      this.toggleAttribute("loading", true)
-      this.innerHTML = await getMarkup(this)
-      this.toggleAttribute("loading", false)
-      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+      await loadAndRenderMarkup(this)
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    this.toggleAttribute("loading", true)
     const key = this.template || this.section || ""
     if (this.placeholder && placeholders.has(key)) {
+      this.toggleAttribute("loading", true)
       this.innerHTML = placeholders.get(key) || ""
     }
     if (this.lazy) {
       const observer = new IntersectionObserver(async entries => {
         if (entries[0].isIntersecting) {
           observer.disconnect()
-          this.innerHTML = await getMarkup(this)
-          this.toggleAttribute("loading", false)
-          this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+          await loadAndRenderMarkup(this)
         }
       })
       observer.observe(this)
     } else {
-      this.innerHTML = await getMarkup(this)
-      this.toggleAttribute("loading", false)
-      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+      await loadAndRenderMarkup(this)
     }
   }
 }
 
 const placeholders = new Map<string, string>()
+
+async function loadAndRenderMarkup(element: DynamicCard) {
+  element.toggleAttribute("loading", true)
+  element.innerHTML = await getMarkup(element)
+  element.toggleAttribute("loading", false)
+  element.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+}
 
 async function getMarkup(element: DynamicCard) {
   const target = createShopifyUrl(`products/${element.handle}`)
