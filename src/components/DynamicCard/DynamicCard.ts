@@ -3,6 +3,9 @@ import { getText } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 
+/** Event name for the DynamicCard loaded event */
+const DYNAMIC_CARD_LOADED_EVENT = "DynamicCard/loaded"
+
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
  *
@@ -46,7 +49,7 @@ export class DynamicCard extends NostoElement {
       this.toggleAttribute("loading", true)
       this.innerHTML = await getMarkup(this)
       this.toggleAttribute("loading", false)
-      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", { bubbles: true, cancelable: true }))
+      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
     }
   }
 
@@ -63,14 +66,14 @@ export class DynamicCard extends NostoElement {
           observer.disconnect()
           this.innerHTML = await getMarkup(this)
           this.toggleAttribute("loading", false)
-          this.dispatchEvent(new CustomEvent("DynamicCard/loaded", { bubbles: true, cancelable: true }))
+          this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
         }
       })
       observer.observe(this)
     } else {
       this.innerHTML = await getMarkup(this)
       this.toggleAttribute("loading", false)
-      this.dispatchEvent(new CustomEvent("DynamicCard/loaded", { bubbles: true, cancelable: true }))
+      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
     }
   }
 }
