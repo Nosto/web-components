@@ -1,3 +1,17 @@
+# [8.22.0](https://github.com/Nosto/web-components/compare/v8.21.0...v8.22.0) (2025-09-04)
+
+
+### Bug Fixes
+
+* resolve Prettier formatting issues in CHANGELOG.md, README.md, and tsconfig.types.json ([2cdfd29](https://github.com/Nosto/web-components/commit/2cdfd29fcab3975ce121f4f13e22360451b5e3d9))
+* revert CHANGELOG.md changes and make event name a constant ([02264d0](https://github.com/Nosto/web-components/commit/02264d0a17f358be6ab1476da740195dcfd8848c))
+
+
+### Features
+
+* **DynamicCard:** emit DynamicCard/loaded event when content loads ([4c07877](https://github.com/Nosto/web-components/commit/4c07877accc2f85636ee47bb00f5320dcdb02539))
+* **DynamicCard:** rename event to "@nosto/DynamicCard/loaded" ([59607bb](https://github.com/Nosto/web-components/commit/59607bb2a1f0ca01d35e3be4b95c25d9c1eab176))
+
 # [8.21.0](https://github.com/Nosto/web-components/compare/v8.20.0...v8.21.0) (2025-09-04)
 
 
