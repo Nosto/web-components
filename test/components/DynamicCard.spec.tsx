@@ -210,7 +210,7 @@ describe("DynamicCard", () => {
 
     // Set up event listener to capture the event
     let eventEmitted = false
-    card.addEventListener("DynamicCard/loaded", () => {
+    card.addEventListener("@nosto/DynamicCard/loaded", () => {
       eventEmitted = true
     })
 

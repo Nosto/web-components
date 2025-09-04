@@ -4,7 +4,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 
 /** Event name for the DynamicCard loaded event */
-const DYNAMIC_CARD_LOADED_EVENT = "DynamicCard/loaded"
+const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
