@@ -163,4 +163,48 @@ describe("Campaign", () => {
     expect(mockObserver.observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
   })
+
+  it("should allow subclasses to override createContext method", async () => {
+    // Create a custom campaign that extends the base Campaign
+    class CustomCampaign extends Campaign {
+      createContext(raw: any) {
+        const context = super.createContext(raw)
+        return { ...context, customProperty: "customValue", modified: true }
+      }
+    }
+
+    // Register the custom element
+    if (!customElements.get("custom-campaign")) {
+      customElements.define("custom-campaign", CustomCampaign)
+    }
+
+    const templateId = "custom-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
+      <div class="custom">{{ customProperty }}</div>
+      <div class="modified">{{ modified }}</div>
+      <div class="title">{{ title }}</div>
+    `
+    document.body.appendChild(template)
+
+    const { mockBuilder } = mockNostoRecs({
+      "custom-123": {
+        title: "Custom Campaign Test"
+      }
+    })
+
+    // Create custom element using JSX-like syntax
+    const customCampaign = document.createElement("custom-campaign") as Campaign
+    customCampaign.setAttribute("placement", "custom-123")
+    customCampaign.setAttribute("template", templateId)
+    document.body.appendChild(customCampaign)
+
+    await customCampaign.connectedCallback()
+
+    expect(customCampaign.innerHTML).toContain("customValue")
+    expect(customCampaign.innerHTML).toContain("true")
+    expect(customCampaign.innerHTML).toContain("Custom Campaign Test")
+    expect(mockBuilder.load).toHaveBeenCalledWith()
+  })
 })
