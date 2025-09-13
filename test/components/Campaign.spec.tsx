@@ -1,6 +1,7 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, Mock } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
+import { JSONResult } from "@nosto/nosto-js/client"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
@@ -167,7 +168,7 @@ describe("Campaign", () => {
   it("should allow subclasses to override createContext method", async () => {
     // Create a custom campaign that extends the base Campaign
     class CustomCampaign extends Campaign {
-      createContext(raw: any) {
+      createContext(raw: JSONResult) {
         const context = super.createContext(raw)
         return { ...context, customProperty: "customValue", modified: true }
       }
@@ -194,10 +195,8 @@ describe("Campaign", () => {
       }
     })
 
-    // Create custom element using JSX-like syntax
-    const customCampaign = document.createElement("custom-campaign") as Campaign
-    customCampaign.setAttribute("placement", "custom-123")
-    customCampaign.setAttribute("template", templateId)
+    // Create custom element using JSX syntax
+    const customCampaign = (<custom-campaign placement="custom-123" template={templateId} />) as Campaign
     document.body.appendChild(customCampaign)
 
     await customCampaign.connectedCallback()

@@ -87,8 +87,7 @@ export class Campaign extends NostoElement {
    * }
    * ```
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createContext(raw: JSONResult): any {
+  createContext(raw: JSONResult): object {
     return getContext(raw)
   }
 }
