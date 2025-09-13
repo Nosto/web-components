@@ -64,6 +64,13 @@ export class Campaign extends NostoElement {
     }
   }
 
+  /**
+   * Template method for overriding in subclasses
+   */
+  async getContext(rec: JSONResult) {
+    return getContext(rec)
+  }
+
   async load() {
     await loadCampaign(this)
   }
@@ -85,7 +92,8 @@ export async function loadCampaign(element: Campaign) {
   if (rec) {
     if (useTemplate) {
       const template = getTemplate(element)
-      compile(element, template, getContext(rec as JSONResult))
+      const context = await element.getContext(rec as JSONResult)
+      compile(element, template, context)
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(
