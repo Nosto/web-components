@@ -2,7 +2,7 @@
 import { beforeAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { createElement } from "../utils/jsx"
 import { QuickView } from "../../src/components/QuickView/QuickView"
-import type { ShopifyProduct } from "../../src/types"
+import type { ShopifyProduct } from "../../src/components/QuickView/types"
 
 // Mock product data
 const mockProduct: ShopifyProduct = {

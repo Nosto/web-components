@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct, ShopifyVariant, SelectedOptions, ShopifyCartAddRequest } from "../../types"
+import type { ShopifyProduct, ShopifyVariant, SelectedOptions, ShopifyCartAddRequest } from "./types"
 
 /**
  * Custom element that provides a modal dialog for product quick view with swatches and add to cart.

@@ -1,4 +1,23 @@
 /**
+ * Selected variant option values for QuickView
+ */
+export interface SelectedOptions {
+  [optionName: string]: string
+}
+
+/**
+ * QuickView modal state
+ */
+export interface QuickViewState {
+  isOpen: boolean
+  product: ShopifyProduct | null
+  selectedVariant: ShopifyVariant | null
+  selectedOptions: SelectedOptions
+  loading: boolean
+  error: string | null
+}
+
+/**
  * Shopify product variant type from the product.js API
  */
 export interface ShopifyVariant {
@@ -97,23 +116,4 @@ export interface ShopifyCartAddRequest {
   id: number // variant ID
   quantity?: number
   properties?: Record<string, string>
-}
-
-/**
- * Selected variant option values for QuickView
- */
-export interface SelectedOptions {
-  [optionName: string]: string
-}
-
-/**
- * QuickView modal state
- */
-export interface QuickViewState {
-  isOpen: boolean
-  product: ShopifyProduct | null
-  selectedVariant: ShopifyVariant | null
-  selectedOptions: SelectedOptions
-  loading: boolean
-  error: string | null
 }
