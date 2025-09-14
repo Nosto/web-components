@@ -3,7 +3,7 @@ import * as components from "../src/main"
 
 // Register all custom elements globally for Storybook
 Object.entries(components).forEach(([name, component]) => {
-  const kebabCased = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
+  const kebabCased = "nosto-" + name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
   if (!customElements.get(kebabCased)) {
     customElements.define(kebabCased, component)
   }
