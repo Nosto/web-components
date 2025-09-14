@@ -26,6 +26,7 @@ This package provides the following custom elements:
 | Image       | `nosto-image`        | Progressive image enhancement with optimization |
 | Product     | `nosto-product`      | Product interaction and cart management         |
 | ProductCard | `nosto-product-card` | Product card templating for recommendations     |
+| QuickView   | `nosto-quick-view`   | Modal dialog for product quick view with swatches and add to cart |
 | SkuOptions  | `nosto-sku-options`  | Product variant and SKU selection interface     |
 
 ## Documentation

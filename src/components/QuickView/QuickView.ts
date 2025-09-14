@@ -78,15 +78,15 @@ interface SelectedOptions {
 
 /**
  * A custom element that displays a modal dialog for product quick view.
- * 
+ *
  * This component fetches product data from Shopify's public product API and displays
  * a modal with product image, swatch pickers, title, price, and add to cart functionality.
- * 
+ *
  * @property {string} handle - The product handle to fetch data for. Required.
  * @property {boolean} open - Whether the modal is currently open. Defaults to false.
  * @property {string} [productId] - Optional Nosto product ID for tracking.
  * @property {string} [recoId] - Optional Nosto recommendation ID for tracking.
- * 
+ *
  * @example
  * ```html
  * <nosto-quick-view handle="awesome-product" product-id="123" reco-id="frontpage">
@@ -217,37 +217,41 @@ export class QuickView extends NostoElement {
 
     this.previouslyFocusedElement = document.activeElement as HTMLElement
     this.style.display = "flex"
-    
+
     // Prevent body scroll
     document.body.style.overflow = "hidden"
-    
+
     // Focus the modal
     this.focus()
-    
+
     await this.loadProductData()
-    
-    this.dispatchEvent(new CustomEvent(QUICK_VIEW_OPEN_EVENT, { 
-      bubbles: true, 
-      cancelable: true,
-      detail: { handle: this.handle }
-    }))
+
+    this.dispatchEvent(
+      new CustomEvent(QUICK_VIEW_OPEN_EVENT, {
+        bubbles: true,
+        cancelable: true,
+        detail: { handle: this.handle }
+      })
+    )
   }
 
   private closeModal() {
     this.style.display = "none"
     this.open = false
     this.removeAttribute("open")
-    
+
     // Restore body scroll
     document.body.style.overflow = ""
-    
+
     this.restoreFocus()
-    
-    this.dispatchEvent(new CustomEvent(QUICK_VIEW_CLOSE_EVENT, { 
-      bubbles: true, 
-      cancelable: true,
-      detail: { handle: this.handle }
-    }))
+
+    this.dispatchEvent(
+      new CustomEvent(QUICK_VIEW_CLOSE_EVENT, {
+        bubbles: true,
+        cancelable: true,
+        detail: { handle: this.handle }
+      })
+    )
   }
 
   private restoreFocus() {
@@ -279,7 +283,7 @@ export class QuickView extends NostoElement {
     const focusableElements = this.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>
-    
+
     const firstElement = focusableElements[0]
     const lastElement = focusableElements[focusableElements.length - 1]
 
@@ -304,29 +308,33 @@ export class QuickView extends NostoElement {
 
     try {
       const productUrl = createShopifyUrl(`products/${this.handle}.js`)
-      this.product = await getJSON(productUrl.href) as ShopifyProduct
-      
+      this.product = (await getJSON(productUrl.href)) as ShopifyProduct
+
       // Initialize with first variant if available
       if (this.product.variants.length > 0) {
         this.selectedVariant = this.product.variants[0]
         this.initializeSelectedOptions()
       }
-      
+
       this.renderModal()
-      
-      this.dispatchEvent(new CustomEvent(QUICK_VIEW_LOADED_EVENT, { 
-        bubbles: true, 
-        cancelable: true,
-        detail: { product: this.product }
-      }))
+
+      this.dispatchEvent(
+        new CustomEvent(QUICK_VIEW_LOADED_EVENT, {
+          bubbles: true,
+          cancelable: true,
+          detail: { product: this.product }
+        })
+      )
     } catch (error) {
       this.showError(error instanceof Error ? error.message : "Failed to load product")
-      
-      this.dispatchEvent(new CustomEvent(QUICK_VIEW_ERROR_EVENT, { 
-        bubbles: true, 
-        cancelable: true,
-        detail: { error }
-      }))
+
+      this.dispatchEvent(
+        new CustomEvent(QUICK_VIEW_ERROR_EVENT, {
+          bubbles: true,
+          cancelable: true,
+          detail: { error }
+        })
+      )
     } finally {
       this.isLoading = false
     }
@@ -404,7 +412,7 @@ export class QuickView extends NostoElement {
         min-height: 400px;
       ">
         <img 
-          src="${this.product.featured_image || this.product.images[0] || ''}" 
+          src="${this.product.featured_image || this.product.images[0] || ""}" 
           alt="${this.product.title}"
           style="
             max-width: 100%;
@@ -430,10 +438,10 @@ export class QuickView extends NostoElement {
           <div class="quick-view-price" style="
             font-size: 20px;
             font-weight: 600;
-            ${compareAtPrice ? 'color: #d32f2f;' : ''}
+            ${compareAtPrice ? "color: #d32f2f;" : ""}
           ">
             ${price}
-            ${compareAtPrice ? `<span style="text-decoration: line-through; color: #666; font-weight: normal; margin-left: 8px;">${compareAtPrice}</span>` : ''}
+            ${compareAtPrice ? `<span style="text-decoration: line-through; color: #666; font-weight: normal; margin-left: 8px;">${compareAtPrice}</span>` : ""}
           </div>
         </div>
         
@@ -463,7 +471,7 @@ export class QuickView extends NostoElement {
                 justify-content: center;
                 font-size: 18px;
               "
-              ${!available ? 'disabled' : ''}
+              ${!available ? "disabled" : ""}
             >−</button>
             <input 
               type="number" 
@@ -477,7 +485,7 @@ export class QuickView extends NostoElement {
                 border: 1px solid #ddd;
                 font-size: 16px;
               "
-              ${!available ? 'disabled' : ''}
+              ${!available ? "disabled" : ""}
             />
             <button 
               class="quantity-increase"
@@ -492,29 +500,29 @@ export class QuickView extends NostoElement {
                 justify-content: center;
                 font-size: 18px;
               "
-              ${!available ? 'disabled' : ''}
+              ${!available ? "disabled" : ""}
             >+</button>
           </div>
           
           <button 
             class="add-to-cart-btn"
             style="
-              background: ${available ? '#000' : '#ccc'};
+              background: ${available ? "#000" : "#ccc"};
               color: white;
               border: none;
               padding: 16px 32px;
               font-size: 16px;
               font-weight: 600;
-              cursor: ${available ? 'pointer' : 'not-allowed'};
+              cursor: ${available ? "pointer" : "not-allowed"};
               border-radius: 4px;
               display: flex;
               align-items: center;
               justify-content: center;
               gap: 8px;
             "
-            ${!available ? 'disabled' : ''}
+            ${!available ? "disabled" : ""}
           >
-            <span>🛒</span> ${available ? 'Add to Cart' : 'Sold Out'}
+            <span>🛒</span> ${available ? "Add to Cart" : "Sold Out"}
           </button>
         </div>
       </div>
@@ -528,10 +536,11 @@ export class QuickView extends NostoElement {
       return ""
     }
 
-    return this.product.options.map(option => {
-      const selectedValue = this.selectedOptions[option.name] || option.values[0]
-      
-      return `
+    return this.product.options
+      .map(option => {
+        const selectedValue = this.selectedOptions[option.name] || option.values[0]
+
+        return `
         <div class="swatch-group" data-option="${option.name}">
           <label style="
             display: block;
@@ -546,16 +555,18 @@ export class QuickView extends NostoElement {
             flex-wrap: wrap;
             gap: 8px;
           ">
-            ${option.values.map(value => `
+            ${option.values
+              .map(
+                value => `
               <button 
                 class="swatch-option" 
                 data-option="${option.name}" 
                 data-value="${value}"
                 style="
                   padding: 12px 20px;
-                  border: 2px solid ${selectedValue === value ? '#000' : '#ddd'};
-                  background: ${selectedValue === value ? '#000' : 'white'};
-                  color: ${selectedValue === value ? 'white' : '#000'};
+                  border: 2px solid ${selectedValue === value ? "#000" : "#ddd"};
+                  background: ${selectedValue === value ? "#000" : "white"};
+                  color: ${selectedValue === value ? "white" : "#000"};
                   cursor: pointer;
                   border-radius: 4px;
                   font-size: 14px;
@@ -564,15 +575,18 @@ export class QuickView extends NostoElement {
                   transition: all 0.2s ease;
                 "
                 onmouseover="this.style.borderColor='#000'"
-                onmouseout="this.style.borderColor='${selectedValue === value ? '#000' : '#ddd'}'"
+                onmouseout="this.style.borderColor='${selectedValue === value ? "#000" : "#ddd"}'"
               >
                 ${value}
               </button>
-            `).join("")}
+            `
+              )
+              .join("")}
           </div>
         </div>
       `
-    }).join("")
+      })
+      .join("")
   }
 
   private setupEventListeners() {
@@ -653,14 +667,14 @@ export class QuickView extends NostoElement {
       const addToCartBtn = this.querySelector(".add-to-cart-btn") as HTMLButtonElement
       if (addToCartBtn) {
         addToCartBtn.disabled = true
-        addToCartBtn.innerHTML = '<span>⏳</span> Adding...'
+        addToCartBtn.innerHTML = "<span>⏳</span> Adding..."
       }
 
       // Use Shopify AJAX Cart API directly
       const response = await fetch("/cart/add.js", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           id: this.selectedVariant.id,
@@ -674,36 +688,33 @@ export class QuickView extends NostoElement {
 
       // If we have productId and recoId, also use nosto-js tracking
       if (this.productId && this.recoId) {
-        await addSkuToCart(
-          { productId: this.productId, skuId: String(this.selectedVariant.id) },
-          this.recoId,
-          quantity
-        )
+        await addSkuToCart({ productId: this.productId, skuId: String(this.selectedVariant.id) }, this.recoId, quantity)
       }
 
-      this.dispatchEvent(new CustomEvent(QUICK_VIEW_ADD_TO_CART_EVENT, {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          variant: this.selectedVariant,
-          quantity,
-          productId: this.productId,
-          recoId: this.recoId
-        }
-      }))
+      this.dispatchEvent(
+        new CustomEvent(QUICK_VIEW_ADD_TO_CART_EVENT, {
+          bubbles: true,
+          cancelable: true,
+          detail: {
+            variant: this.selectedVariant,
+            quantity,
+            productId: this.productId,
+            recoId: this.recoId
+          }
+        })
+      )
 
       // Close modal after successful add to cart
       this.closeModal()
-
     } catch (error) {
       console.error("Failed to add to cart:", error)
-      
+
       const addToCartBtn = this.querySelector(".add-to-cart-btn") as HTMLButtonElement
       if (addToCartBtn) {
         addToCartBtn.disabled = false
-        addToCartBtn.innerHTML = '<span>🛒</span> Add to Cart'
+        addToCartBtn.innerHTML = "<span>🛒</span> Add to Cart"
       }
-      
+
       // Could show an error message to user here
       alert(error instanceof Error ? error.message : "Failed to add to cart")
     }

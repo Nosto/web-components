@@ -121,7 +121,7 @@ describe("QuickView", () => {
   function addCartHandlers() {
     addHandlers(
       http.post("/cart/add.js", async ({ request }) => {
-        const body = await request.json()
+        const body = (await request.json()) as { id: number; quantity: number }
         return HttpResponse.json({
           id: body.id,
           quantity: body.quantity,
@@ -154,10 +154,10 @@ describe("QuickView", () => {
     expect(quickView.getAttribute("aria-modal")).toBe("true")
     expect(quickView.style.position).toBe("fixed")
     expect(quickView.style.display).toBe("none")
-    
+
     const modal = quickView.querySelector(".quick-view-modal")
     expect(modal).toBeTruthy()
-    
+
     const closeButton = quickView.querySelector(".quick-view-close")
     expect(closeButton).toBeTruthy()
     expect(closeButton?.getAttribute("aria-label")).toBe("Close quick view")
@@ -170,17 +170,17 @@ describe("QuickView", () => {
 
     const quickView = (<nosto-quick-view handle="test-product" open={true} />) as QuickView
     document.body.appendChild(quickView)
-    
+
     // First, check if the attribute is properly set
     expect(quickView.hasAttribute("open")).toBe(true)
-    
+
     await quickView.connectedCallback()
     // Wait a bit for the async loading to complete
     await new Promise(resolve => setTimeout(resolve, 100))
 
     expect(quickView.style.display).toBe("flex")
     expect(document.body.style.overflow).toBe("hidden")
-    
+
     // Check that product data was loaded and rendered
     const title = quickView.querySelector("#quick-view-title")
     expect(title?.textContent).toBe("Test Product")
@@ -194,7 +194,7 @@ describe("QuickView", () => {
     const quickView = (<nosto-quick-view handle="test-product" />) as QuickView
     document.body.appendChild(quickView)
     quickView.connectedCallback()
-    
+
     // Manually trigger modal opening
     quickView.openQuickView()
     await new Promise(resolve => setTimeout(resolve, 100)) // Wait for async load
@@ -217,7 +217,7 @@ describe("QuickView", () => {
     const quickView = (<nosto-quick-view handle="test-product" />) as QuickView
     document.body.appendChild(quickView)
     quickView.connectedCallback()
-    
+
     // Manually select variant with compare_at_price
     quickView.openQuickView()
     await new Promise(resolve => setTimeout(resolve, 100))
@@ -249,7 +249,7 @@ describe("QuickView", () => {
     document.body.appendChild(quickView)
     quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     const colorSwatches = quickView.querySelectorAll('[data-option="Color"][data-value]')
@@ -272,7 +272,7 @@ describe("QuickView", () => {
     document.body.appendChild(quickView)
     quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     // Initially should show first variant price ($24.95)
@@ -283,7 +283,7 @@ describe("QuickView", () => {
     const whiteOption = quickView.querySelector('[data-option="Color"][data-value="White"]') as HTMLButtonElement
     whiteOption?.click()
 
-    // Click Medium option  
+    // Click Medium option
     const mediumOption = quickView.querySelector('[data-option="Size"][data-value="Medium"]') as HTMLButtonElement
     mediumOption?.click()
 
@@ -303,11 +303,13 @@ describe("QuickView", () => {
     // Mock fetch for cart API
     const fetchSpy = vi.spyOn(window, "fetch")
 
-    const quickView = (<nosto-quick-view handle="test-product" product-id="nosto-123" reco-id="test-reco" />) as QuickView
+    const quickView = (
+      <nosto-quick-view handle="test-product" product-id="nosto-123" reco-id="test-reco" />
+    ) as QuickView
     document.body.appendChild(quickView)
     quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     const addToCartBtn = quickView.querySelector(".add-to-cart-btn") as HTMLButtonElement
@@ -318,14 +320,17 @@ describe("QuickView", () => {
     await new Promise(resolve => setTimeout(resolve, 50))
 
     // Should have called the cart API
-    expect(fetchSpy).toHaveBeenCalledWith("/cart/add.js", expect.objectContaining({
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: 987654321, // First variant ID
-        quantity: 1
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "/cart/add.js",
+      expect.objectContaining({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: 987654321, // First variant ID
+          quantity: 1
+        })
       })
-    }))
+    )
   })
 
   it("handles quantity changes correctly", async () => {
@@ -335,9 +340,9 @@ describe("QuickView", () => {
 
     const quickView = (<nosto-quick-view handle="test-product" />) as QuickView
     document.body.appendChild(quickView)
-    quickView.connectedCallback() 
+    quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     const quantityInput = quickView.querySelector(".quantity-input") as HTMLInputElement
@@ -372,7 +377,7 @@ describe("QuickView", () => {
 
     const quickView = (<nosto-quick-view handle="test-product" open />) as QuickView
     document.body.appendChild(quickView)
-    
+
     await quickView.connectedCallback()
     await new Promise(resolve => setTimeout(resolve, 50)) // Wait for modal to open
     expect(quickView.style.display).toBe("flex")
@@ -392,7 +397,7 @@ describe("QuickView", () => {
 
     const quickView = (<nosto-quick-view handle="test-product" open />) as QuickView
     document.body.appendChild(quickView)
-    
+
     await quickView.connectedCallback()
     await new Promise(resolve => setTimeout(resolve, 50)) // Wait for modal to open
     expect(quickView.style.display).toBe("flex")
@@ -411,7 +416,7 @@ describe("QuickView", () => {
 
     const quickView = (<nosto-quick-view handle="test-product" open />) as QuickView
     document.body.appendChild(quickView)
-    
+
     await quickView.connectedCallback()
     await new Promise(resolve => setTimeout(resolve, 50)) // Wait for modal to open
     expect(quickView.style.display).toBe("flex")
@@ -433,7 +438,7 @@ describe("QuickView", () => {
     document.body.appendChild(quickView)
     quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     const errorElement = quickView.querySelector(".quick-view-error")
@@ -461,7 +466,7 @@ describe("QuickView", () => {
     document.body.appendChild(quickView)
     quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     const addToCartBtn = quickView.querySelector(".add-to-cart-btn") as HTMLButtonElement
@@ -500,7 +505,7 @@ describe("QuickView", () => {
 
     quickView.connectedCallback()
     quickView.openQuickView()
-    
+
     await new Promise(resolve => setTimeout(resolve, 100))
 
     expect(openEventFired).toBe(true)
