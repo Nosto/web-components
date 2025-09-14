@@ -157,14 +157,14 @@ describe("QuickView", () => {
   })
 
   it("should create an instance", () => {
-    const quickView = <nosto-quick-view handle="test-product" /> as QuickView
+    const quickView = (<nosto-quick-view handle="test-product" />) as QuickView
     expect(quickView).toBeInstanceOf(QuickView)
     expect(quickView.handle).toBe("test-product")
   })
 
   it("should require handle attribute", () => {
     // This test verifies that handle is properly defined as required
-    const quickView = <nosto-quick-view handle="test-product" /> as QuickView
+    const quickView = (<nosto-quick-view handle="test-product" />) as QuickView
     expect(quickView).toBeInstanceOf(QuickView)
     expect(quickView.handle).toBe("test-product")
   })
