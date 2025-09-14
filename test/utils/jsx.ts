@@ -4,6 +4,7 @@ import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import type { Image } from "@/components/Image/Image"
 import type { Product } from "@/components/Product/Product"
 import type { ProductCard } from "@/components/ProductCard/ProductCard"
+import type { QuickView } from "@/components/QuickView/QuickView"
 import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
 
@@ -27,6 +28,7 @@ declare global {
       "nosto-image": ElementMapping<Image>
       "nosto-product": ElementMapping<Product>
       "nosto-product-card": ElementMapping<ProductCard>
+      "nosto-quick-view": ElementMapping<QuickView>
       "nosto-section-campaign": ElementMapping<SectionCampaign>
       "nosto-sku-options": ElementMapping<SkuOptions>
       // Keep generic fallback for other HTML elements
