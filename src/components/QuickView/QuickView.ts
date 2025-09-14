@@ -355,7 +355,7 @@ export class QuickView extends NostoElement {
       if (this.backdrop && this.backdrop.parentNode) {
         try {
           document.body.removeChild(this.backdrop)
-        } catch (error) {
+        } catch {
           // Ignore errors if element is already removed
         }
       }

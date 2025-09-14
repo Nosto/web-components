@@ -129,7 +129,7 @@ describe("QuickView", () => {
     // Mock Shopify routes
     window.Shopify = { routes: { root: "/" } }
 
-    element = <nosto-quick-view handle="test-product" />
+    element = (<nosto-quick-view handle="test-product" />) as QuickView
     document.body.appendChild(element)
   })
 
