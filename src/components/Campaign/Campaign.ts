@@ -67,6 +67,29 @@ export class Campaign extends NostoElement {
   async load() {
     await loadCampaign(this)
   }
+
+  /**
+   * Extension point: override to enrich or modify the template context.
+   * This method is called during campaign rendering to create the context object
+   * that will be passed to the template. Subclasses can override this method
+   * to add custom properties, feature flags, or transform the data.
+   *
+   * @param raw - The raw JSON result from the Nosto API
+   * @returns The context object to be used in template rendering
+   *
+   * @example
+   * ```typescript
+   * class CustomCampaign extends Campaign {
+   *   async createContext(raw) {
+   *     const context = await super.createContext(raw);
+   *     return { ...context, customProperty: 'value' };
+   *   }
+   * }
+   * ```
+   */
+  async createContext(raw: JSONResult): Promise<object> {
+    return getContext(raw)
+  }
 }
 
 export async function loadCampaign(element: Campaign) {
@@ -85,7 +108,7 @@ export async function loadCampaign(element: Campaign) {
   if (rec) {
     if (useTemplate) {
       const template = getTemplate(element)
-      compile(element, template, getContext(rec as JSONResult))
+      compile(element, template, await element.createContext(rec as JSONResult))
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(

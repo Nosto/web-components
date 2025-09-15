@@ -1,6 +1,7 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, Mock } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
+import { JSONResult } from "@nosto/nosto-js/client"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
 
@@ -162,5 +163,47 @@ describe("Campaign", () => {
     // Should not create observer or load when init="false"
     expect(mockObserver.observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
+  })
+
+  it("should allow subclasses to override createContext method", async () => {
+    // Create a custom campaign that extends the base Campaign
+    class CustomCampaign extends Campaign {
+      async createContext(raw: JSONResult) {
+        const context = await super.createContext(raw)
+        return { ...context, customProperty: "customValue", modified: true }
+      }
+    }
+
+    // Register the custom element
+    if (!customElements.get("custom-campaign")) {
+      customElements.define("custom-campaign", CustomCampaign)
+    }
+
+    const templateId = "custom-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
+      <div class="custom">{{ customProperty }}</div>
+      <div class="modified">{{ modified }}</div>
+      <div class="title">{{ title }}</div>
+    `
+    document.body.appendChild(template)
+
+    const { mockBuilder } = mockNostoRecs({
+      "custom-123": {
+        title: "Custom Campaign Test"
+      }
+    })
+
+    // Create custom element using JSX syntax
+    const customCampaign = (<custom-campaign placement="custom-123" template={templateId} />) as Campaign
+    document.body.appendChild(customCampaign)
+
+    await customCampaign.connectedCallback()
+
+    expect(customCampaign.innerHTML).toContain("customValue")
+    expect(customCampaign.innerHTML).toContain("true")
+    expect(customCampaign.innerHTML).toContain("Custom Campaign Test")
+    expect(mockBuilder.load).toHaveBeenCalledWith()
   })
 })
