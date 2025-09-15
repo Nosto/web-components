@@ -168,8 +168,8 @@ describe("Campaign", () => {
   it("should allow subclasses to override createContext method", async () => {
     // Create a custom campaign that extends the base Campaign
     class CustomCampaign extends Campaign {
-      createContext(raw: JSONResult) {
-        const context = super.createContext(raw)
+      async createContext(raw: JSONResult) {
+        const context = await super.createContext(raw)
         return { ...context, customProperty: "customValue", modified: true }
       }
     }

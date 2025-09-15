@@ -80,14 +80,14 @@ export class Campaign extends NostoElement {
    * @example
    * ```typescript
    * class CustomCampaign extends Campaign {
-   *   createContext(raw) {
-   *     const context = super.createContext(raw);
+   *   async createContext(raw) {
+   *     const context = await super.createContext(raw);
    *     return { ...context, customProperty: 'value' };
    *   }
    * }
    * ```
    */
-  createContext(raw: JSONResult): object {
+  async createContext(raw: JSONResult): Promise<object> {
     return getContext(raw)
   }
 }
@@ -108,7 +108,7 @@ export async function loadCampaign(element: Campaign) {
   if (rec) {
     if (useTemplate) {
       const template = getTemplate(element)
-      compile(element, template, element.createContext(rec as JSONResult))
+      compile(element, template, await element.createContext(rec as JSONResult))
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(
