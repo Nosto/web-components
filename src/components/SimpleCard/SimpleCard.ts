@@ -6,6 +6,53 @@ import { html, render, TemplateResult } from "lit"
 import type { ShopifyProduct } from "./types"
 
 /**
+ * A custom element that renders a simple product card by fetching Shopify product data.
+ *
+ * This component fetches product data from Shopify and renders it using lit-html templating
+ * in the light DOM.
+ *
+ * @property {string} handle - The product handle to fetch data for. Required.
+ * @property {boolean} [alternate] - Show alternate product on hover. Defaults to false.
+ * @property {boolean} [brand] - Show brand data. Defaults to false.
+ * @property {boolean} [discount] - Show discount data. Defaults to false.
+ * @property {boolean} [rating] - Show rating. Defaults to false.
+ *
+ * @example
+ * ```html
+ * <nosto-simple-card handle="awesome-product" brand discount>
+ * </nosto-simple-card>
+ * ```
+ */
+@customElement("nosto-simple-card", { observe: true })
+export class SimpleCard extends NostoElement {
+  /** @private */
+  static attributes = {
+    handle: String,
+    alternate: Boolean,
+    brand: Boolean,
+    discount: Boolean,
+    rating: Boolean
+  }
+
+  handle!: string
+  alternate?: boolean
+  brand?: boolean
+  discount?: boolean
+  rating?: boolean
+
+  async connectedCallback() {
+    assertRequired(this, "handle")
+    await loadAndRender(this)
+  }
+
+  async attributeChangedCallback() {
+    if (this.isConnected && this.handle) {
+      await loadAndRender(this)
+    }
+  }
+}
+
+/**
  * Fetches product data from Shopify
  */
 async function fetchProductData(handle: string): Promise<ShopifyProduct> {
@@ -142,53 +189,6 @@ async function loadAndRender(element: SimpleCard) {
   
   render(template, element)
   element.toggleAttribute("loading", false)
-}
-
-/**
- * A custom element that renders a simple product card by fetching Shopify product data.
- *
- * This component fetches product data from Shopify and renders it using lit-html templating
- * in the light DOM.
- *
- * @property {string} handle - The product handle to fetch data for. Required.
- * @property {boolean} [alternate] - Show alternate product on hover. Defaults to false.
- * @property {boolean} [brand] - Show brand data. Defaults to false.
- * @property {boolean} [discount] - Show discount data. Defaults to false.
- * @property {boolean} [rating] - Show rating. Defaults to false.
- *
- * @example
- * ```html
- * <nosto-simple-card handle="awesome-product" brand discount>
- * </nosto-simple-card>
- * ```
- */
-@customElement("nosto-simple-card", { observe: true })
-export class SimpleCard extends NostoElement {
-  /** @private */
-  static attributes = {
-    handle: String,
-    alternate: Boolean,
-    brand: Boolean,
-    discount: Boolean,
-    rating: Boolean
-  }
-
-  handle!: string
-  alternate?: boolean
-  brand?: boolean
-  discount?: boolean
-  rating?: boolean
-
-  async connectedCallback() {
-    assertRequired(this, "handle")
-    await loadAndRender(this)
-  }
-
-  async attributeChangedCallback() {
-    if (this.isConnected && this.handle) {
-      await loadAndRender(this)
-    }
-  }
 }
 
 declare global {
