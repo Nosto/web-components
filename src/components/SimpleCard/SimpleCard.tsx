@@ -1,9 +1,14 @@
+/** @jsx createElement */
 import { assertRequired, createShopifyUrl } from "@/utils"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
-import { CardWrapper } from "./CardWrapper"
+import { createElement } from "@/utils/jsx"
+import { Media } from "./Media"
+import { Price } from "./Price"
+import { Brand } from "./Brand"
+import { Badge } from "./Badge"
 
 async function fetchProductData(handle: string): Promise<ShopifyProduct> {
   const url = createShopifyUrl(`products/${handle}.js`)
@@ -54,19 +59,35 @@ export class SimpleCard extends NostoElement {
 
   async loadAndRender() {
     this.toggleAttribute("loading", true)
-    try {
-      const product = await fetchProductData(this.handle)
-      const cardWrapper = CardWrapper(this, product)
-      // Clear existing content and append new card
-      this.innerHTML = ""
-      this.appendChild(cardWrapper)
-    } catch (error) {
-      console.error("Failed to load product data:", error)
-      // Simply clear content on error instead of showing error message
-      this.innerHTML = ""
-    } finally {
-      this.toggleAttribute("loading", false)
-    }
+    const product = await fetchProductData(this.handle)
+
+    // Inline CardWrapper logic - render the card structure directly
+    const cardWrapper = (
+      <div className="card-wrapper product-card-wrapper underline-links-hover">
+        <div className={`card card--standard${product.featured_image ? " card--media" : " card--text"}`}>
+          <a href={product.url} className="full-unstyled-link">
+            <div className="card__inner ratio">
+              {product.featured_image && <Media alternate={this.alternate} product={product} />}
+            </div>
+            <div className="card__content">
+              <div className="card__information">
+                <h3 className="card__heading">{product.title}</h3>
+                <div className="card-information">
+                  {this.brand && product.vendor && <Brand product={product} />}
+                  <Price discount={this.discount} product={product} />
+                </div>
+              </div>
+              <Badge product={product} discount={this.discount} />
+            </div>
+          </a>
+        </div>
+      </div>
+    )
+
+    // Clear existing content and append new card
+    this.innerHTML = ""
+    this.appendChild(cardWrapper)
+    this.toggleAttribute("loading", false)
   }
 }
 

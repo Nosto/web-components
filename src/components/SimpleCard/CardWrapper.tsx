@@ -4,16 +4,10 @@ import { createElement } from "@/utils/jsx"
 import { Media } from "./Media"
 import { Price } from "./Price"
 import { Brand } from "./Brand"
-
 import { Badge } from "./Badge"
+import type { SimpleCard } from "./SimpleCard"
 
-export interface SimpleCardInterface {
-  brand?: boolean
-  discount?: boolean
-  alternate?: boolean
-}
-
-export function CardWrapper(simpleCard: SimpleCardInterface, product: ShopifyProduct): HTMLElement {
+export function CardWrapper(simpleCard: SimpleCard, product: ShopifyProduct): HTMLElement {
   return (
     <div className="card-wrapper product-card-wrapper underline-links-hover">
       <div className={`card card--standard${product.featured_image ? " card--media" : " card--text"}`}>
