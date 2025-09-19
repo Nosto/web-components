@@ -4,12 +4,11 @@ import { createElement } from "@/utils/jsx"
 import { Media } from "./Media"
 import { Price } from "./Price"
 import { Brand } from "./Brand"
-import { Rating } from "./Rating"
+
 import { Badge } from "./Badge"
 
 export interface SimpleCardInterface {
   brand?: boolean
-  rating?: boolean
   discount?: boolean
   alternate?: boolean
 }
@@ -27,7 +26,6 @@ export function CardWrapper(simpleCard: SimpleCardInterface, product: ShopifyPro
               <h3 className="card__heading">{product.title}</h3>
               <div className="card-information">
                 {simpleCard.brand && product.vendor && <Brand product={product} />}
-                {simpleCard.rating && <Rating />}
                 <Price discount={simpleCard.discount} product={product} />
               </div>
             </div>

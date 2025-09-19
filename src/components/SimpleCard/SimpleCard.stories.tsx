@@ -28,7 +28,6 @@ A simple custom element that renders a product card by fetching Shopify product 
 - \`alternate\`: Show alternate product image on hover (default: false)
 - \`brand\`: Show brand/vendor information (default: false)
 - \`discount\`: Show discount badges and compare-at pricing (default: false)
-- \`rating\`: Show rating information (default: false)
 
 **Note:** In Storybook, the Shopify API calls are mocked to show realistic product data.
         `
@@ -51,10 +50,6 @@ A simple custom element that renders a product card by fetching Shopify product 
     discount: {
       control: "boolean",
       description: "Show discount badges and compare-at pricing"
-    },
-    rating: {
-      control: "boolean",
-      description: "Show rating information"
     }
   }
 }
@@ -121,7 +116,6 @@ export const Default: Story = {
       alternate=${args.alternate}
       brand=${args.brand}
       discount=${args.discount}
-      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -137,7 +131,6 @@ export const WithBrand: Story = {
       alternate=${args.alternate}
       brand=${args.brand}
       discount=${args.discount}
-      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -153,7 +146,6 @@ export const WithDiscount: Story = {
       alternate=${args.alternate}
       brand=${args.brand}
       discount=${args.discount}
-      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -169,23 +161,6 @@ export const WithAlternateImage: Story = {
       alternate=${args.alternate}
       brand=${args.brand}
       discount=${args.discount}
-      rating=${args.rating}
-    ></nosto-simple-card>
-  `
-}
-
-export const WithRating: Story = {
-  args: {
-    handle: "premium-cotton-tshirt",
-    rating: true
-  },
-  render: args => html`
-    <nosto-simple-card
-      handle=${args.handle}
-      alternate=${args.alternate}
-      brand=${args.brand}
-      discount=${args.discount}
-      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -195,8 +170,7 @@ export const AllFeatures: Story = {
     handle: "premium-cotton-tshirt",
     alternate: true,
     brand: true,
-    discount: true,
-    rating: true
+    discount: true
   },
   render: args => html`
     <nosto-simple-card
@@ -204,7 +178,6 @@ export const AllFeatures: Story = {
       alternate=${args.alternate}
       brand=${args.brand}
       discount=${args.discount}
-      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -229,7 +202,7 @@ export const Multiple: Story = {
       <nosto-simple-card handle="premium-cotton-tshirt"></nosto-simple-card>
       <nosto-simple-card handle="premium-cotton-tshirt" brand></nosto-simple-card>
       <nosto-simple-card handle="premium-cotton-tshirt" discount></nosto-simple-card>
-      <nosto-simple-card handle="premium-cotton-tshirt" alternate brand discount rating></nosto-simple-card>
+      <nosto-simple-card handle="premium-cotton-tshirt" alternate brand discount></nosto-simple-card>
     </div>
   `,
   parameters: {

@@ -18,7 +18,7 @@ async function fetchProductData(handle: string): Promise<ShopifyProduct> {
  * @property {boolean} [alternate=false] - Show alternate product on hover.
  * @property {boolean} [brand=false] - Show brand data.
  * @property {boolean} [discount=false] - Show discount data.
- * @property {boolean} [rating=false] - Show rating.
+
  *
  * @example
  * ```html
@@ -33,15 +33,13 @@ export class SimpleCard extends NostoElement {
     handle: String,
     alternate: Boolean,
     brand: Boolean,
-    discount: Boolean,
-    rating: Boolean
+    discount: Boolean
   }
 
   handle!: string
   alternate?: boolean
   brand?: boolean
   discount?: boolean
-  rating?: boolean
 
   async attributeChangedCallback() {
     if (this.isConnected) {

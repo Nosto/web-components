@@ -230,21 +230,6 @@ describe("SimpleCard", () => {
     expect(images).toHaveLength(1)
   })
 
-  it("should show rating placeholder when rating attribute is true", async () => {
-    addProductHandlers({
-      "test-product": {
-        product: mockProduct
-      }
-    })
-
-    const card = (<nosto-simple-card handle="test-product" rating />) as SimpleCard
-
-    await card.connectedCallback()
-
-    expect(card.innerHTML).toContain("Rating not available")
-    expect(card.querySelector(".rating")).toBeTruthy()
-  })
-
   it("should show sold out badge when product is not available", async () => {
     const soldOutProduct = { ...mockProduct, available: false }
     addProductHandlers({
@@ -349,7 +334,7 @@ describe("SimpleCard", () => {
       }
     })
 
-    const card = (<nosto-simple-card handle="test-product" alternate brand discount rating />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" alternate brand discount />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -359,9 +344,6 @@ describe("SimpleCard", () => {
     // Should show discount
     expect(card.innerHTML).toContain("$39.99")
     expect(card.innerHTML).toContain("Sale")
-
-    // Should show rating placeholder
-    expect(card.innerHTML).toContain("Rating not available")
 
     // Should have alternate image
     const images = card.querySelectorAll("img")
