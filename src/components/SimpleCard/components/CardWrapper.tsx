@@ -7,7 +7,12 @@ import { Brand } from "./Brand"
 import { Badge } from "./Badge"
 import type { SimpleCard } from "../SimpleCard"
 
-export function CardWrapper(simpleCard: SimpleCard, product: ShopifyProduct): HTMLElement {
+interface CardWrapperProps {
+  simpleCard: SimpleCard
+  product: ShopifyProduct
+}
+
+export function CardWrapper({ simpleCard, product }: CardWrapperProps): HTMLElement {
   return (
     <div className="card-wrapper product-card-wrapper underline-links-hover">
       <div className={`card card--standard${product.featured_image ? " card--media" : " card--text"}`}>
