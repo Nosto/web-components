@@ -1,6 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
 
+interface SimpleCardArgs {
+  handle: string
+  alternate: boolean
+  brand: boolean
+  discount: boolean
+  rating: boolean
+}
+
 const meta = {
   title: "Components/SimpleCard",
   component: "nosto-simple-card",
@@ -36,10 +44,10 @@ const meta = {
     discount: false,
     rating: false
   }
-} satisfies Meta
+} as Meta<SimpleCardArgs>
 
 export default meta
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<SimpleCardArgs>
 
 export const Default: Story = {
   render: args => html`
