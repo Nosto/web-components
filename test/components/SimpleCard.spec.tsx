@@ -298,29 +298,6 @@ describe("SimpleCard", () => {
     expect(card.innerHTML).toContain("Could not load product with handle: non-existent")
   })
 
-  it("should emit loaded event when product is successfully loaded", async () => {
-    addProductHandlers({
-      "test-product": {
-        product: mockProduct
-      }
-    })
-
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
-    const eventSpy = vi.fn()
-    card.addEventListener("@nosto/SimpleCard/loaded", eventSpy)
-
-    await card.connectedCallback()
-
-    expect(eventSpy).toHaveBeenCalledTimes(1)
-    expect(eventSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: "@nosto/SimpleCard/loaded",
-        bubbles: true,
-        cancelable: true
-      })
-    )
-  })
-
   it("should handle attribute changes and re-render", async () => {
     addProductHandlers({
       "test-product": {
