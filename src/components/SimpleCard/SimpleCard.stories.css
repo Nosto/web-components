@@ -1,0 +1,206 @@
+/* Basic styling for SimpleCard Storybook examples */
+nosto-simple-card {
+  display: block;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+/* Card wrapper styling */
+nosto-simple-card .card-wrapper {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+nosto-simple-card .card-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Card structure */
+nosto-simple-card .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Media section */
+nosto-simple-card .card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  background: #f5f5f5;
+}
+
+nosto-simple-card .media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+nosto-simple-card .media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover effect for alternate images */
+nosto-simple-card .media--hover-effect img:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+nosto-simple-card .media--hover-effect img:last-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+nosto-simple-card .media--hover-effect:hover img:first-child {
+  opacity: 0;
+}
+
+/* Content section */
+nosto-simple-card .card__content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+nosto-simple-card .card__information {
+  flex-grow: 1;
+}
+
+nosto-simple-card .card__heading {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+nosto-simple-card .card__heading a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+nosto-simple-card .card__heading a:hover {
+  color: #666;
+}
+
+/* Brand/vendor styling */
+nosto-simple-card .caption-with-letter-spacing {
+  font-size: 0.875rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+/* Rating styling */
+nosto-simple-card .rating {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+/* Price styling */
+nosto-simple-card .price {
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+nosto-simple-card .price-item {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+nosto-simple-card .price-item--regular {
+  color: #333;
+}
+
+nosto-simple-card .price-item--sale {
+  color: #666;
+  text-decoration: line-through;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Badge styling */
+nosto-simple-card .card__badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+}
+
+nosto-simple-card .badge {
+  background: #d73527;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Error state styling */
+nosto-simple-card .card--text {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+nosto-simple-card .card--text .card__heading {
+  color: #d73527;
+  margin-bottom: 1rem;
+}
+
+/* Loading state */
+nosto-simple-card[loading] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+nosto-simple-card[loading]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  nosto-simple-card {
+    max-width: 100%;
+  }
+  
+  nosto-simple-card .card__content {
+    padding: 0.75rem;
+  }
+  
+  nosto-simple-card .card__heading {
+    font-size: 1rem;
+  }
+}
