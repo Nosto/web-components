@@ -2,8 +2,153 @@ import { assertRequired, createShopifyUrl } from "@/utils"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
-import { html } from "@/templating/lit"
-import { renderTemplate } from "@/templating/lit"
+import { html, render, TemplateResult } from "lit"
+import type { ShopifyProduct } from "./types"
+
+/**
+ * Fetches product data from Shopify
+ */
+async function fetchProductData(handle: string): Promise<ShopifyProduct> {
+  const url = createShopifyUrl(`products/${handle}.js`)
+  return await getJSON(url.href)
+}
+
+/**
+ * Formats price from cents to currency string
+ */
+function formatPrice(price?: number): string {
+  if (typeof price !== "number") return ""
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
+  }).format(price / 100) // Shopify prices are in cents
+}
+
+/**
+ * Renders media section (product images)
+ */
+function renderMedia(product: ShopifyProduct, showAlternate: boolean) {
+  if (!product.featured_image) return ""
+  
+  return html`
+    <div class="card__media">
+      <div class="media">
+        <img
+          src="${product.featured_image}"
+          alt="${product.title}"
+          loading="lazy"
+          class="motion-reduce"
+        />
+        ${showAlternate && product.images?.[1]
+          ? html`
+              <img
+                src="${product.images[1]}"
+                alt="${product.title}"
+                loading="lazy"
+                class="motion-reduce media--hover"
+              />
+            `
+          : ""}
+      </div>
+    </div>
+  `
+}
+
+/**
+ * Renders price section with discount handling
+ */
+function renderPrice(product: ShopifyProduct, showDiscount: boolean) {
+  return html`
+    <div class="card__price">
+      ${product.compare_at_price && product.compare_at_price > product.price && showDiscount
+        ? html`
+            <span class="price__sale">
+              <span class="price__current">${formatPrice(product.price)}</span>
+              <span class="price__compare">${formatPrice(product.compare_at_price)}</span>
+            </span>
+            <span class="badge badge--sale">Sale</span>
+          `
+        : html` <span class="price__current">${formatPrice(product.price)}</span> `}
+    </div>
+  `
+}
+
+/**
+ * Renders rating section
+ */
+function renderRating() {
+  return html`
+    <div class="card__rating">
+      <!-- Rating would be implemented based on available data -->
+      <div class="rating" role="img" aria-label="Rating placeholder">★★★★☆</div>
+    </div>
+  `
+}
+
+/**
+ * Renders the complete product card
+ */
+function renderProductCard(
+  product: ShopifyProduct,
+  options: {
+    alternate: boolean
+    brand: boolean
+    discount: boolean
+    rating: boolean
+  }
+) {
+  return html`
+    <div class="card-wrapper product-card-wrapper">
+      <div class="card card--standard card--media">
+        <div class="card__inner">
+          <a href="/products/${product.handle}" class="full-unstyled-link">
+            ${renderMedia(product, options.alternate)}
+            
+            <div class="card__content">
+              <div class="card__information">
+                <h3 class="card__heading">${product.title}</h3>
+                
+                ${options.brand && product.vendor ? html`<div class="card__vendor">${product.vendor}</div>` : ""}
+                
+                ${renderPrice(product, options.discount)}
+
+                ${options.rating ? renderRating() : ""}
+              </div>
+              
+              <div class="card__badge">
+                ${!product.available ? html`<span class="badge badge--sold-out">Sold out</span>` : ""}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  `
+}
+
+/**
+ * Loads and renders the product card
+ */
+async function loadAndRender(element: SimpleCard) {
+  try {
+    element.toggleAttribute("loading", true)
+    const productData = await fetchProductData(element.handle)
+    
+    const template = renderProductCard(productData, {
+      alternate: element.alternate || false,
+      brand: element.brand || false,
+      discount: element.discount || false,
+      rating: element.rating || false
+    })
+    
+    render(template, element)
+  } catch (error) {
+    console.error("Failed to load product data:", error)
+    element.innerHTML = `<p>Failed to load product: ${element.handle}</p>`
+  } finally {
+    element.toggleAttribute("loading", false)
+  }
+}
 
 /**
  * A custom element that renders a simple product card by fetching Shopify product data.
@@ -40,131 +185,15 @@ export class SimpleCard extends NostoElement {
   discount?: boolean
   rating?: boolean
 
-  private productData?: ShopifyProduct
-
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.loadAndRender()
+    await loadAndRender(this)
   }
 
   async attributeChangedCallback() {
     if (this.isConnected && this.handle) {
-      await this.loadAndRender()
+      await loadAndRender(this)
     }
-  }
-
-  private async loadAndRender() {
-    try {
-      this.toggleAttribute("loading", true)
-      this.productData = await this.fetchProductData()
-      this.render()
-    } catch (error) {
-      console.error("Failed to load product data:", error)
-      this.renderError()
-    } finally {
-      this.toggleAttribute("loading", false)
-    }
-  }
-
-  private async fetchProductData(): Promise<ShopifyProduct> {
-    const url = createShopifyUrl(`products/${this.handle}.js`)
-    return await getJSON(url.href)
-  }
-
-  private render() {
-    if (!this.productData) return
-
-    const product = this.productData
-    const template = html`
-      <div class="card-wrapper product-card-wrapper">
-        <div class="card card--standard card--media">
-          <div class="card__inner">
-            ${product.featured_image
-              ? html`
-                  <div class="card__media">
-                    <div class="media">
-                      <img
-                        src="${product.featured_image}"
-                        alt="${product.title}"
-                        loading="lazy"
-                        class="motion-reduce"
-                      />
-                      ${this.alternate && product.images?.[1]
-                        ? html`
-                            <img
-                              src="${product.images[1]}"
-                              alt="${product.title}"
-                              loading="lazy"
-                              class="motion-reduce media--hover"
-                            />
-                          `
-                        : ""}
-                    </div>
-                  </div>
-                `
-              : ""}
-
-            <div class="card__content">
-              <div class="card__information">
-                <h3 class="card__heading">
-                  <a href="/products/${product.handle}" class="full-unstyled-link"> ${product.title} </a>
-                </h3>
-
-                ${this.brand && product.vendor ? html` <div class="card__vendor">${product.vendor}</div> ` : ""}
-
-                <div class="card__price">
-                  ${product.compare_at_price && product.compare_at_price > product.price && this.discount
-                    ? html`
-                        <span class="price__sale">
-                          <span class="price__current">${this.formatPrice(product.price)}</span>
-                          <span class="price__compare">${this.formatPrice(product.compare_at_price)}</span>
-                        </span>
-                        <span class="badge badge--sale">Sale</span>
-                      `
-                    : html` <span class="price__current">${this.formatPrice(product.price)}</span> `}
-                </div>
-
-                ${this.rating
-                  ? html`
-                      <div class="card__rating">
-                        <!-- Rating would be implemented based on available data -->
-                        <div class="rating" role="img" aria-label="Rating placeholder">★★★★☆</div>
-                      </div>
-                    `
-                  : ""}
-              </div>
-
-              <div class="card__badge">
-                ${!product.available ? html` <span class="badge badge--sold-out">Sold out</span> ` : ""}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
-
-    renderTemplate(this, template)
-  }
-
-  private renderError() {
-    const template = html`
-      <div class="card-wrapper product-card-wrapper">
-        <div class="card card--standard">
-          <div class="card__content">
-            <p>Failed to load product: ${this.handle}</p>
-          </div>
-        </div>
-      </div>
-    `
-    renderTemplate(this, template)
-  }
-
-  private formatPrice(price?: number): string {
-    if (typeof price !== "number") return ""
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD"
-    }).format(price / 100) // Shopify prices are in cents
   }
 }
 
