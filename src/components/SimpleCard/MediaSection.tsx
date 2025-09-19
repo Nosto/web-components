@@ -2,11 +2,14 @@
 import type { ShopifyProduct } from "./types"
 import { createElement } from "@/utils/jsx"
 
-export interface SimpleCardInterface {
-  alternate?: boolean
+interface MediaSectionProps {
+  simpleCard: {
+    alternate?: boolean
+  }
+  product: ShopifyProduct
 }
 
-export function createMediaSection(simpleCard: SimpleCardInterface, product: ShopifyProduct): HTMLElement {
+export function MediaSection({ simpleCard, product }: MediaSectionProps): HTMLElement {
   const mediaClass = `media media--transparent${simpleCard.alternate && product.images.length > 1 ? ' media--hover-effect' : ''}`
   
   return (

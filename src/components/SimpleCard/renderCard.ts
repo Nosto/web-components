@@ -1,8 +1,8 @@
 /** @jsx createElement */
 import type { ShopifyProduct } from "./types"
 import { createElement } from "@/utils/jsx"
-import { createMediaSection } from "./createMediaSection"
-import { createPriceSection } from "./createPriceSection"
+import { MediaSection } from "./MediaSection"
+import { PriceSection } from "./PriceSection"
 
 export interface SimpleCardInterface {
   brand?: boolean
@@ -18,7 +18,7 @@ export function renderCard(simpleCard: SimpleCardInterface, product: ShopifyProd
     <div className="card-wrapper product-card-wrapper underline-links-hover">
       <div className={`card card--standard${product.featured_image ? ' card--media' : ' card--text'}`}>
         <div className="card__inner ratio">
-          {product.featured_image && createMediaSection(simpleCard, product)}
+          {product.featured_image && <MediaSection simpleCard={simpleCard} product={product} />}
         </div>
         <div className="card__content">
           <div className="card__information">
@@ -36,7 +36,7 @@ export function renderCard(simpleCard: SimpleCardInterface, product: ShopifyProd
               {simpleCard.rating && (
                 <div className="rating">Rating not available</div>
               )}
-              {createPriceSection(simpleCard, product)}
+              <PriceSection simpleCard={simpleCard} product={product} />
             </div>
           </div>
           {simpleCard.discount && product.compare_at_price && product.compare_at_price > product.price && (

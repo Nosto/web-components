@@ -3,11 +3,14 @@ import type { ShopifyProduct } from "./types"
 import { createElement } from "@/utils/jsx"
 import { formatPrice } from "./formatPrice"
 
-export interface SimpleCardInterface {
-  discount?: boolean
+interface PriceSectionProps {
+  simpleCard: {
+    discount?: boolean
+  }
+  product: ShopifyProduct
 }
 
-export function createPriceSection(simpleCard: SimpleCardInterface, product: ShopifyProduct): HTMLElement {
+export function PriceSection({ simpleCard, product }: PriceSectionProps): HTMLElement {
   return (
     <div className="price">
       <span className="price-item price-item--regular">
