@@ -2,30 +2,25 @@
 import type { ShopifyProduct } from "./types"
 import { createElement } from "@/utils/jsx"
 
-interface MediaSectionProps {
+interface MediaProps {
   alternate?: boolean
   product: ShopifyProduct
 }
 
-export function MediaSection({ alternate, product }: MediaSectionProps): HTMLElement {
-  const mediaClass = `media media--transparent${alternate && product.images.length > 1 ? ' media--hover-effect' : ''}`
-  
+export function Media({ alternate, product }: MediaProps): HTMLElement {
+  const mediaClass = `media media--transparent${alternate && product.images.length > 1 ? " media--hover-effect" : ""}`
+
   return (
     <div className="card__media">
       <div className={mediaClass}>
-        <img 
+        <img
           src={product.featured_image || product.images[0]}
           alt={product.title}
           className="motion-reduce"
           loading="lazy"
         />
         {alternate && product.images.length > 1 && (
-          <img 
-            src={product.images[1]}
-            alt={product.title}
-            className="motion-reduce"
-            loading="lazy"
-          />
+          <img src={product.images[1]} alt={product.title} className="motion-reduce" loading="lazy" />
         )}
       </div>
     </div>

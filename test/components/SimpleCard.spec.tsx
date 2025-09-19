@@ -313,7 +313,7 @@ describe("SimpleCard", () => {
 
     // Change brand attribute
     card.setAttribute("brand", "")
-    
+
     // Manually trigger re-read of attributes and re-render
     card.brand = card.hasAttribute("brand")
     await card.loadAndRender()

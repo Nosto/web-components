@@ -73,22 +73,23 @@ const mockShopifyResponse = {
   compare_at_price: 3999, // $39.99 in cents
   available: true,
   featured_image: "https://picsum.photos/400/500?random=1",
-  images: [
-    "https://picsum.photos/400/500?random=1",
-    "https://picsum.photos/400/500?random=2"
-  ],
+  images: ["https://picsum.photos/400/500?random=1", "https://picsum.photos/400/500?random=2"],
   url: "/products/premium-cotton-tshirt",
-  variants: [{
-    id: 987654321,
-    title: "Default Title",
-    price: 2999,
-    available: true
-  }],
+  variants: [
+    {
+      id: 987654321,
+      title: "Default Title",
+      price: 2999,
+      available: true
+    }
+  ],
   options: [],
-  media: [{
-    alt: "Premium Cotton T-Shirt",
-    src: "https://picsum.photos/400/500?random=1"
-  }]
+  media: [
+    {
+      alt: "Premium Cotton T-Shirt",
+      src: "https://picsum.photos/400/500?random=1"
+    }
+  ]
 }
 
 // Set up MSW-like mocking for Storybook
@@ -96,7 +97,7 @@ if (typeof window !== "undefined") {
   const originalFetch = window.fetch
   window.fetch = async (url, options) => {
     const urlStr = typeof url === "string" ? url : url.toString()
-    
+
     // Mock the Shopify product.js endpoint
     if (urlStr.includes("/products/") && urlStr.endsWith(".js")) {
       return new Response(JSON.stringify(mockShopifyResponse), {
@@ -104,7 +105,7 @@ if (typeof window !== "undefined") {
         headers: { "Content-Type": "application/json" }
       })
     }
-    
+
     // Fall back to original fetch for other requests
     return originalFetch(url, options)
   }
@@ -114,13 +115,13 @@ export const Default: Story = {
   args: {
     handle: "premium-cotton-tshirt"
   },
-  render: (args) => html`
+  render: args => html`
     <nosto-simple-card
       handle=${args.handle}
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      ?rating=${args.rating}
+      alternate=${args.alternate}
+      brand=${args.brand}
+      discount=${args.discount}
+      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -130,13 +131,13 @@ export const WithBrand: Story = {
     handle: "premium-cotton-tshirt",
     brand: true
   },
-  render: (args) => html`
+  render: args => html`
     <nosto-simple-card
       handle=${args.handle}
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      ?rating=${args.rating}
+      alternate=${args.alternate}
+      brand=${args.brand}
+      discount=${args.discount}
+      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -146,13 +147,13 @@ export const WithDiscount: Story = {
     handle: "premium-cotton-tshirt",
     discount: true
   },
-  render: (args) => html`
+  render: args => html`
     <nosto-simple-card
       handle=${args.handle}
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      ?rating=${args.rating}
+      alternate=${args.alternate}
+      brand=${args.brand}
+      discount=${args.discount}
+      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -162,13 +163,13 @@ export const WithAlternateImage: Story = {
     handle: "premium-cotton-tshirt",
     alternate: true
   },
-  render: (args) => html`
+  render: args => html`
     <nosto-simple-card
       handle=${args.handle}
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      ?rating=${args.rating}
+      alternate=${args.alternate}
+      brand=${args.brand}
+      discount=${args.discount}
+      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -178,13 +179,13 @@ export const WithRating: Story = {
     handle: "premium-cotton-tshirt",
     rating: true
   },
-  render: (args) => html`
+  render: args => html`
     <nosto-simple-card
       handle=${args.handle}
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      ?rating=${args.rating}
+      alternate=${args.alternate}
+      brand=${args.brand}
+      discount=${args.discount}
+      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -197,13 +198,13 @@ export const AllFeatures: Story = {
     discount: true,
     rating: true
   },
-  render: (args) => html`
+  render: args => html`
     <nosto-simple-card
       handle=${args.handle}
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      ?rating=${args.rating}
+      alternate=${args.alternate}
+      brand=${args.brand}
+      discount=${args.discount}
+      rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -212,9 +213,7 @@ export const ErrorState: Story = {
   args: {
     handle: "non-existent-product"
   },
-  render: (args) => html`
-    <nosto-simple-card handle=${args.handle}></nosto-simple-card>
-  `,
+  render: args => html` <nosto-simple-card handle=${args.handle}></nosto-simple-card> `,
   parameters: {
     docs: {
       description: {
