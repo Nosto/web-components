@@ -16,7 +16,7 @@ export function CardWrapper(simpleCard: SimpleCardInterface, product: ShopifyPro
     <div className="card-wrapper product-card-wrapper underline-links-hover">
       <div className={`card card--standard${product.featured_image ? ' card--media' : ' card--text'}`}>
         <div className="card__inner ratio">
-          {product.featured_image && <MediaSection simpleCard={simpleCard} product={product} />}
+          {product.featured_image && <MediaSection alternate={simpleCard.alternate} product={product} />}
         </div>
         <div className="card__content">
           <div className="card__information">
@@ -34,7 +34,7 @@ export function CardWrapper(simpleCard: SimpleCardInterface, product: ShopifyPro
               {simpleCard.rating && (
                 <div className="rating">Rating not available</div>
               )}
-              <PriceSection simpleCard={simpleCard} product={product} />
+              <PriceSection discount={simpleCard.discount} product={product} />
             </div>
           </div>
           {simpleCard.discount && product.compare_at_price && product.compare_at_price > product.price && (

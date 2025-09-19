@@ -3,14 +3,12 @@ import type { ShopifyProduct } from "./types"
 import { createElement } from "@/utils/jsx"
 
 interface MediaSectionProps {
-  simpleCard: {
-    alternate?: boolean
-  }
+  alternate?: boolean
   product: ShopifyProduct
 }
 
-export function MediaSection({ simpleCard, product }: MediaSectionProps): HTMLElement {
-  const mediaClass = `media media--transparent${simpleCard.alternate && product.images.length > 1 ? ' media--hover-effect' : ''}`
+export function MediaSection({ alternate, product }: MediaSectionProps): HTMLElement {
+  const mediaClass = `media media--transparent${alternate && product.images.length > 1 ? ' media--hover-effect' : ''}`
   
   return (
     <div className="card__media">
@@ -21,7 +19,7 @@ export function MediaSection({ simpleCard, product }: MediaSectionProps): HTMLEl
           className="motion-reduce"
           loading="lazy"
         />
-        {simpleCard.alternate && product.images.length > 1 && (
+        {alternate && product.images.length > 1 && (
           <img 
             src={product.images[1]}
             alt={product.title}
