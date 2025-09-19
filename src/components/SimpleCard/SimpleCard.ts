@@ -4,17 +4,35 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 
+function element(tagName: string, attributes: Record<string, string> = {}, text = ""): HTMLElement {
+  const el = document.createElement(tagName)
+  
+  // Set attributes
+  Object.entries(attributes).forEach(([key, value]) => {
+    if (key === "className") {
+      el.className = value
+    } else {
+      el.setAttribute(key, value)
+    }
+  })
+  
+  // Set text content if provided
+  if (text) {
+    el.textContent = text
+  }
+  
+  return el
+}
+
 async function fetchProductData(handle: string): Promise<ShopifyProduct> {
   const url = createShopifyUrl(`products/${handle}.js`)
   return getJSON(url.href)
 }
 
-function renderCard(element: SimpleCard, product: ShopifyProduct) {
-  const cardWrapper = document.createElement("div")
-  cardWrapper.className = "card-wrapper product-card-wrapper underline-links-hover"
+function renderCard(simpleCard: SimpleCard, product: ShopifyProduct) {
+  const cardWrapper = element("div", { className: "card-wrapper product-card-wrapper underline-links-hover" })
 
-  const card = document.createElement("div")
-  card.className = "card card--standard"
+  const card = element("div", { className: "card card--standard" })
   if (product.featured_image) {
     card.classList.add("card--media")
   } else {
@@ -22,76 +40,63 @@ function renderCard(element: SimpleCard, product: ShopifyProduct) {
   }
 
   // Create card inner with media
-  const cardInner = document.createElement("div")
-  cardInner.className = "card__inner ratio"
+  const cardInner = element("div", { className: "card__inner ratio" })
 
   if (product.featured_image) {
-    const cardMedia = createMediaSection(element, product)
+    const cardMedia = createMediaSection(simpleCard, product)
     cardInner.appendChild(cardMedia)
   }
 
   // Create card content
-  const cardContent = document.createElement("div")
-  cardContent.className = "card__content"
+  const cardContent = element("div", { className: "card__content" })
 
-  const cardInformation = document.createElement("div")
-  cardInformation.className = "card__information"
+  const cardInformation = element("div", { className: "card__information" })
 
   // Title
-  const heading = document.createElement("h3")
-  heading.className = "card__heading"
-  const link = document.createElement("a")
-  link.href = product.url
-  link.className = "full-unstyled-link"
-  link.textContent = product.title
+  const heading = element("h3", { className: "card__heading" })
+  const link = element("a", { 
+    href: product.url, 
+    className: "full-unstyled-link" 
+  }, product.title)
   heading.appendChild(link)
   cardInformation.appendChild(heading)
 
   // Additional information based on attributes
-  const cardInfo = document.createElement("div")
-  cardInfo.className = "card-information"
+  const cardInfo = element("div", { className: "card-information" })
 
   // Brand/Vendor
-  if (element.brand && product.vendor) {
-    const vendorDiv = document.createElement("div")
-    vendorDiv.className = "caption-with-letter-spacing light"
-    vendorDiv.textContent = product.vendor
+  if (simpleCard.brand && product.vendor) {
+    const vendorDiv = element("div", { 
+      className: "caption-with-letter-spacing light" 
+    }, product.vendor)
     cardInfo.appendChild(vendorDiv)
   }
 
   // Rating placeholder (Shopify doesn't provide rating in .js endpoint by default)
-  if (element.rating) {
-    const ratingDiv = document.createElement("div")
-    ratingDiv.className = "rating"
-    ratingDiv.textContent = "Rating not available"
+  if (simpleCard.rating) {
+    const ratingDiv = element("div", { className: "rating" }, "Rating not available")
     cardInfo.appendChild(ratingDiv)
   }
 
   // Price
-  const priceDiv = createPriceSection(element, product)
+  const priceDiv = createPriceSection(simpleCard, product)
   cardInfo.appendChild(priceDiv)
 
   cardInformation.appendChild(cardInfo)
   cardContent.appendChild(cardInformation)
 
   // Badge for discount
-  if (element.discount && product.compare_at_price && product.compare_at_price > product.price) {
-    const badge = document.createElement("div")
-    badge.className = "card__badge"
-    const span = document.createElement("span")
-    span.className = "badge badge--bottom-left"
-    span.textContent = "Sale"
+  if (simpleCard.discount && product.compare_at_price && product.compare_at_price > product.price) {
+    const badge = element("div", { className: "card__badge" })
+    const span = element("span", { className: "badge badge--bottom-left" }, "Sale")
     badge.appendChild(span)
     cardContent.appendChild(badge)
   }
 
   // Availability badge
   if (!product.available) {
-    const badge = document.createElement("div")
-    badge.className = "card__badge"
-    const span = document.createElement("span")
-    span.className = "badge badge--bottom-left"
-    span.textContent = "Sold out"
+    const badge = element("div", { className: "card__badge" })
+    const span = element("span", { className: "badge badge--bottom-left" }, "Sold out")
     badge.appendChild(span)
     cardContent.appendChild(badge)
   }
@@ -101,34 +106,35 @@ function renderCard(element: SimpleCard, product: ShopifyProduct) {
   cardWrapper.appendChild(card)
 
   // Clear existing content and append new card
-  element.innerHTML = ""
-  element.appendChild(cardWrapper)
+  simpleCard.innerHTML = ""
+  simpleCard.appendChild(cardWrapper)
 }
 
-function createMediaSection(element: SimpleCard, product: ShopifyProduct): HTMLElement {
-  const cardMedia = document.createElement("div")
-  cardMedia.className = "card__media"
+function createMediaSection(simpleCard: SimpleCard, product: ShopifyProduct): HTMLElement {
+  const cardMedia = element("div", { className: "card__media" })
 
-  const media = document.createElement("div")
-  media.className = "media media--transparent"
-  if (element.alternate && product.images.length > 1) {
+  const media = element("div", { className: "media media--transparent" })
+  if (simpleCard.alternate && product.images.length > 1) {
     media.classList.add("media--hover-effect")
   }
 
-  const img = document.createElement("img")
-  img.src = product.featured_image || product.images[0]
-  img.alt = product.title
-  img.className = "motion-reduce"
-  img.loading = "lazy"
+  const img = element("img", {
+    src: product.featured_image || product.images[0],
+    alt: product.title,
+    className: "motion-reduce",
+    loading: "lazy"
+  }) as HTMLImageElement
+
   media.appendChild(img)
 
   // Add alternate image for hover effect
-  if (element.alternate && product.images.length > 1) {
-    const altImg = document.createElement("img")
-    altImg.src = product.images[1]
-    altImg.alt = product.title
-    altImg.className = "motion-reduce"
-    altImg.loading = "lazy"
+  if (simpleCard.alternate && product.images.length > 1) {
+    const altImg = element("img", {
+      src: product.images[1],
+      alt: product.title,
+      className: "motion-reduce",
+      loading: "lazy"
+    }) as HTMLImageElement
     media.appendChild(altImg)
   }
 
@@ -136,20 +142,19 @@ function createMediaSection(element: SimpleCard, product: ShopifyProduct): HTMLE
   return cardMedia
 }
 
-function createPriceSection(element: SimpleCard, product: ShopifyProduct): HTMLElement {
-  const priceDiv = document.createElement("div")
-  priceDiv.className = "price"
+function createPriceSection(simpleCard: SimpleCard, product: ShopifyProduct): HTMLElement {
+  const priceDiv = element("div", { className: "price" })
 
-  const currentPrice = document.createElement("span")
-  currentPrice.className = "price-item price-item--regular"
-  currentPrice.textContent = formatPrice(product.price)
+  const currentPrice = element("span", { 
+    className: "price-item price-item--regular" 
+  }, formatPrice(product.price))
   priceDiv.appendChild(currentPrice)
 
   // Compare at price (original price when on sale)
-  if (element.discount && product.compare_at_price && product.compare_at_price > product.price) {
-    const comparePrice = document.createElement("span")
-    comparePrice.className = "price-item price-item--sale"
-    comparePrice.textContent = formatPrice(product.compare_at_price)
+  if (simpleCard.discount && product.compare_at_price && product.compare_at_price > product.price) {
+    const comparePrice = element("span", { 
+      className: "price-item price-item--sale" 
+    }, formatPrice(product.compare_at_price))
     priceDiv.appendChild(comparePrice)
   }
 
@@ -161,14 +166,14 @@ function formatPrice(price: number): string {
   return `$${(price / 100).toFixed(2)}`
 }
 
-function renderError(element: SimpleCard) {
-  element.innerHTML = `
+function renderError(simpleCard: SimpleCard) {
+  simpleCard.innerHTML = `
     <div class="card-wrapper product-card-wrapper">
       <div class="card card--text">
         <div class="card__content">
           <div class="card__information">
             <h3 class="card__heading">Error loading product</h3>
-            <p>Could not load product with handle: ${element.handle}</p>
+            <p>Could not load product with handle: ${simpleCard.handle}</p>
           </div>
         </div>
       </div>
