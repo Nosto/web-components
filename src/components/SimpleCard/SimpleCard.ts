@@ -3,7 +3,7 @@ import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
-import { renderCard } from "./renderCard"
+import { CardWrapper } from "./CardWrapper"
 
 async function fetchProductData(handle: string): Promise<ShopifyProduct> {
   const url = createShopifyUrl(`products/${handle}.js`)
@@ -58,7 +58,10 @@ export class SimpleCard extends NostoElement {
     this.toggleAttribute("loading", true)
     try {
       const product = await fetchProductData(this.handle)
-      renderCard(this, product)
+      const cardWrapper = CardWrapper(this, product)
+      // Clear existing content and append new card
+      this.innerHTML = ""
+      this.appendChild(cardWrapper)
     } catch (error) {
       console.error("Failed to load product data:", error)
       // Simply clear content on error instead of showing error message

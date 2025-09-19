@@ -9,12 +9,10 @@ export interface SimpleCardInterface {
   rating?: boolean
   discount?: boolean
   alternate?: boolean
-  innerHTML: string
-  appendChild(child: Node): Node
 }
 
-export function renderCard(simpleCard: SimpleCardInterface, product: ShopifyProduct) {
-  const cardWrapper = (
+export function CardWrapper(simpleCard: SimpleCardInterface, product: ShopifyProduct): HTMLElement {
+  return (
     <div className="card-wrapper product-card-wrapper underline-links-hover">
       <div className={`card card--standard${product.featured_image ? ' card--media' : ' card--text'}`}>
         <div className="card__inner ratio">
@@ -53,8 +51,4 @@ export function renderCard(simpleCard: SimpleCardInterface, product: ShopifyProd
       </div>
     </div>
   )
-
-  // Clear existing content and append new card
-  simpleCard.innerHTML = ""
-  simpleCard.appendChild(cardWrapper)
 }
