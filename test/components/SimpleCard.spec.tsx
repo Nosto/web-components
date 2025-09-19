@@ -283,7 +283,7 @@ describe("SimpleCard", () => {
     expect(card.querySelector(".card")?.classList.contains("card--media")).toBe(false)
   })
 
-  it("should render error state when product fetch fails", async () => {
+  it("should clear content when product fetch fails", async () => {
     addProductHandlers({
       "non-existent": {
         status: 404
@@ -294,8 +294,7 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("Error loading product")
-    expect(card.innerHTML).toContain("Could not load product with handle: non-existent")
+    expect(card.innerHTML).toBe("")
   })
 
   it("should handle attribute changes and re-render", async () => {

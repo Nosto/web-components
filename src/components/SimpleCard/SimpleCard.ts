@@ -10,21 +10,6 @@ async function fetchProductData(handle: string): Promise<ShopifyProduct> {
   return getJSON(url.href)
 }
 
-function renderError(simpleCard: SimpleCard) {
-  simpleCard.innerHTML = `
-    <div class="card-wrapper product-card-wrapper">
-      <div class="card card--text">
-        <div class="card__content">
-          <div class="card__information">
-            <h3 class="card__heading">Error loading product</h3>
-            <p>Could not load product with handle: ${simpleCard.handle}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-}
-
 /**
  * A simple custom element that renders a product card by fetching Shopify product data
  * based on the provided handle and rendering it in the light DOM.
@@ -76,7 +61,8 @@ export class SimpleCard extends NostoElement {
       renderCard(this, product)
     } catch (error) {
       console.error("Failed to load product data:", error)
-      renderError(this)
+      // Simply clear content on error instead of showing error message
+      this.innerHTML = ""
     } finally {
       this.toggleAttribute("loading", false)
     }
