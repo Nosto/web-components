@@ -1,11 +1,11 @@
 /** @jsx createElement */
-import type { ShopifyProduct } from "./types"
+import type { ShopifyProduct } from "../types"
 import { createElement } from "@/utils/jsx"
 import { Media } from "./Media"
 import { Price } from "./Price"
 import { Brand } from "./Brand"
 import { Badge } from "./Badge"
-import type { SimpleCard } from "./SimpleCard"
+import type { SimpleCard } from "../SimpleCard"
 
 export function CardWrapper(simpleCard: SimpleCard, product: ShopifyProduct): HTMLElement {
   return (

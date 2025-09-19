@@ -5,15 +5,10 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 import { createElement } from "@/utils/jsx"
-import { Media } from "./Media"
-import { Price } from "./Price"
-import { Brand } from "./Brand"
-import { Badge } from "./Badge"
-
-async function fetchProductData(handle: string): Promise<ShopifyProduct> {
-  const url = createShopifyUrl(`products/${handle}.js`)
-  return getJSON(url.href)
-}
+import { Media } from "./components/Media"
+import { Price } from "./components/Price"
+import { Brand } from "./components/Brand"
+import { Badge } from "./components/Badge"
 
 /**
  * A simple custom element that renders a product card by fetching Shopify product data
@@ -89,6 +84,11 @@ export class SimpleCard extends NostoElement {
     this.appendChild(cardWrapper)
     this.toggleAttribute("loading", false)
   }
+}
+
+async function fetchProductData(handle: string): Promise<ShopifyProduct> {
+  const url = createShopifyUrl(`products/${handle}.js`)
+  return getJSON(url.href)
 }
 
 declare global {

@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import type { ShopifyProduct } from "./types"
+import type { ShopifyProduct } from "../types"
 import { createElement } from "@/utils/jsx"
 
 interface BrandProps {

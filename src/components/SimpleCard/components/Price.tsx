@@ -1,7 +1,7 @@
 /** @jsx createElement */
-import type { ShopifyProduct } from "./types"
+import type { ShopifyProduct } from "../types"
 import { createElement } from "@/utils/jsx"
-import { formatPrice } from "./formatPrice"
+import { formatPrice } from "../formatPrice"
 
 interface PriceProps {
   discount?: boolean
