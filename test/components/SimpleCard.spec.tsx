@@ -1,38 +1,11 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach, beforeAll } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
+import type { ShopifyProduct } from "@/components/SimpleCard/types"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../utils/jsx"
 import { createShopifyUrl } from "@/utils"
-
-// Define the interface locally to avoid circular imports
-interface ShopifyProduct {
-  id: number
-  title: string
-  handle: string
-  description: string
-  published_at: string
-  created_at: string
-  updated_at: string
-  vendor: string
-  product_type: string
-  tags: string[]
-  price: number
-  price_min: number
-  price_max: number
-  available: boolean
-  price_varies: boolean
-  compare_at_price?: number
-  compare_at_price_min?: number
-  compare_at_price_max?: number
-  compare_at_price_varies?: boolean
-  variants: unknown[]
-  images: string[]
-  featured_image?: string
-  options: unknown[]
-  url: string
-}
 
 describe("SimpleCard", () => {
   beforeAll(() => {

@@ -130,24 +130,18 @@ function renderProductCard(
  * Loads and renders the product card
  */
 async function loadAndRender(element: SimpleCard) {
-  try {
-    element.toggleAttribute("loading", true)
-    const productData = await fetchProductData(element.handle)
-    
-    const template = renderProductCard(productData, {
-      alternate: element.alternate || false,
-      brand: element.brand || false,
-      discount: element.discount || false,
-      rating: element.rating || false
-    })
-    
-    render(template, element)
-  } catch (error) {
-    console.error("Failed to load product data:", error)
-    element.innerHTML = `<p>Failed to load product: ${element.handle}</p>`
-  } finally {
-    element.toggleAttribute("loading", false)
-  }
+  element.toggleAttribute("loading", true)
+  const productData = await fetchProductData(element.handle)
+  
+  const template = renderProductCard(productData, {
+    alternate: element.alternate || false,
+    brand: element.brand || false,
+    discount: element.discount || false,
+    rating: element.rating || false
+  })
+  
+  render(template, element)
+  element.toggleAttribute("loading", false)
 }
 
 /**
@@ -195,74 +189,6 @@ export class SimpleCard extends NostoElement {
       await loadAndRender(this)
     }
   }
-}
-
-/**
- * Basic Shopify product data structure
- */
-interface ShopifyProduct {
-  id: number
-  title: string
-  handle: string
-  description: string
-  published_at: string
-  created_at: string
-  updated_at: string
-  vendor: string
-  product_type: string
-  tags: string[]
-  price: number
-  price_min: number
-  price_max: number
-  available: boolean
-  price_varies: boolean
-  compare_at_price?: number
-  compare_at_price_min?: number
-  compare_at_price_max?: number
-  compare_at_price_varies?: boolean
-  variants: ShopifyVariant[]
-  images: string[]
-  featured_image?: string
-  options: ShopifyOption[]
-  url: string
-}
-
-interface ShopifyVariant {
-  id: number
-  title: string
-  option1?: string
-  option2?: string
-  option3?: string
-  sku: string
-  requires_shipping: boolean
-  taxable: boolean
-  featured_image?: string
-  available: boolean
-  name: string
-  public_title: string
-  options: string[]
-  price: number
-  weight: number
-  compare_at_price?: number
-  inventory_management: string
-  barcode: string
-  featured_media?: {
-    alt?: string
-    id: number
-    position: number
-    preview_image: {
-      aspect_ratio: number
-      height: number
-      width: number
-      src: string
-    }
-  }
-}
-
-interface ShopifyOption {
-  name: string
-  position: number
-  values: string[]
 }
 
 declare global {
