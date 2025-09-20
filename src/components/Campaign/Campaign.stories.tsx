@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
+import type { RequestBuilder } from "@nosto/nosto-js/client"
 
 function mockNostoRecs(recommendations: Record<string, unknown>) {
   const mockBuilder = {
@@ -9,7 +10,7 @@ function mockNostoRecs(recommendations: Record<string, unknown>) {
     setElements: () => mockBuilder,
     setResponseMode: () => mockBuilder,
     setProducts: () => mockBuilder,
-    load: async () => ({ recommendations }),
+    load: async () => ({ recommendations })
   }
   mockNostojs({
     placements: {
@@ -25,7 +26,7 @@ function mockNostoRecs(recommendations: Record<string, unknown>) {
       }
     },
     attributeProductClicksInCampaign: () => {},
-    createRecommendationRequest: () => mockBuilder as unknown as any,
+    createRecommendationRequest: () => mockBuilder as unknown as RequestBuilder
   })
 }
 

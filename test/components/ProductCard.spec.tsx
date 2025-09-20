@@ -5,7 +5,7 @@ import { createElement } from "../utils/jsx"
 describe("ProductCard", () => {
   it("should throw an error if template is not provided", async () => {
     const card = (<nosto-product-card />) as ProductCard
-    await expect(card.connectedCallback()).rejects.toThrowError("Template with id \"null\" not found.")
+    await expect(card.connectedCallback()).rejects.toThrowError('Template with id "null" not found.')
   })
 
   it("should throw an error if template cannot be found", async () => {
