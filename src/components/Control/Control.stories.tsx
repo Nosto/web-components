@@ -3,22 +3,19 @@ import { html } from "lit"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
 
-// Helper function for creating demo section
-function createDemoSection(title: string, description: string, content: unknown) {
-  return html`
-    <div class="story-container">
-      <div class="demo-section">
-        <div class="demo-title">${title}</div>
-        <div class="demo-description">${description}</div>
-        ${content}
-      </div>
+// Storybook decorator for wrapping stories with container styling
+const withStoryContainer = (story: () => unknown) => html`
+  <div class="story-container">
+    <div class="demo-section">
+      ${story()}
     </div>
-  `
-}
+  </div>
+`
 
 const meta: Meta = {
   title: "Components/Control",
   component: "nosto-control",
+  decorators: [withStoryContainer],
   parameters: {
     docs: {
       description: {

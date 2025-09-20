@@ -3,22 +3,19 @@ import { html } from "lit"
 import { mockNostoRecs } from "../../../test/mockNostoRecs"
 import "./Campaign.stories.css"
 
-// Helper function for creating demo section
-function createDemoSection(title: string, description: string, content: unknown) {
-  return html`
-    <div class="story-container">
-      <div class="demo-section">
-        <div class="demo-title">${title}</div>
-        <div class="demo-description">${description}</div>
-        ${content}
-      </div>
+// Storybook decorator for wrapping stories with container styling
+const withStoryContainer = (story: () => unknown) => html`
+  <div class="story-container">
+    <div class="demo-section">
+      ${story()}
     </div>
-  `
-}
+  </div>
+`
 
 const meta: Meta = {
   title: "Components/Campaign",
   component: "nosto-campaign",
+  decorators: [withStoryContainer],
   parameters: {
     docs: {
       description: {
@@ -69,14 +66,11 @@ export const BasicCampaign: Story = {
       }
     })
 
-    return createDemoSection(
-      "Basic Campaign",
-      "Simple campaign that displays HTML content from Nosto API.",
-      html`
-        <nosto-campaign placement="homepage-hero" product-id="demo-product">
-        </nosto-campaign>
-      `
-    )
+    return html`
+      <nosto-campaign placement="homepage-hero" product-id="demo-product">
+        <template>{{ html }}</template>
+      </nosto-campaign>
+    `
   },
   parameters: {
     docs: {
@@ -102,31 +96,27 @@ export const ProductRecommendations: Story = {
       }
     })
 
-    return createDemoSection(
-      "Product Recommendations",
-      "Campaign that displays personalized product recommendations using Vue-like templating.",
-      html`
-        <nosto-campaign 
-          placement="product-recommendations" 
-          product-id="current-product">
-          <template>
-            <div class="recommendations-section">
-              <h3>{{ title }}</h3>
-              <div class="products-grid">
-                <div class="product-card" v-for="product in products">
-                  <img :src="'https://picsum.photos/200/200?random=' + product.id" :alt="product.title" class="product-image" />
-                  <div class="product-info">
-                    <h4 class="product-title">{{ product.title }}</h4>
-                    <div class="product-price">{{ product.price || '$99.99' }}</div>
-                    <button class="add-to-cart">Add to Cart</button>
-                  </div>
+    return html`
+      <nosto-campaign 
+        placement="product-recommendations" 
+        product-id="current-product">
+        <template>
+          <div class="recommendations-section">
+            <h3>{{ title }}</h3>
+            <div class="products-grid">
+              <div class="product-card" v-for="product in products">
+                <img :src="'https://picsum.photos/200/200?random=' + product.id" :alt="product.title" class="product-image" />
+                <div class="product-info">
+                  <h4 class="product-title">{{ product.title }}</h4>
+                  <div class="product-price">{{ product.price || '$99.99' }}</div>
+                  <button class="add-to-cart">Add to Cart</button>
                 </div>
               </div>
             </div>
-          </template>
-        </nosto-campaign>
-      `
-    )
+          </div>
+        </template>
+      </nosto-campaign>
+    `
   },
   parameters: {
     docs: {
@@ -155,20 +145,16 @@ export const LazyLoadedCampaign: Story = {
       }
     })
 
-    return createDemoSection(
-      "Lazy Loaded Campaign",
-      "Campaign that only loads content when it comes into the viewport. Scroll down to see it load!",
-      html`
-        <div class="spacer">
-          <p>👆 Scroll up and down to see the lazy loading in action</p>
-        </div>
-        <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy>
-        </nosto-campaign>
-        <div class="spacer">
-          <p>👇 The campaign above should load when scrolled into view</p>
-        </div>
-      `
-    )
+    return html`
+      <div class="spacer">
+        <p>👆 Scroll up and down to see the lazy loading in action</p>
+      </div>
+      <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy>
+      </nosto-campaign>
+      <div class="spacer">
+        <p>👇 The campaign above should load when scrolled into view</p>
+      </div>
+    `
   },
   parameters: {
     docs: {
@@ -194,21 +180,17 @@ export const ManualInitialization: Story = {
       }
     })
 
-    return createDemoSection(
-      "Manual Initialization",
-      'Campaign with init="false" that requires manual loading. Click the button to load the campaign.',
-      html`
-        <div class="manual-controls">
-          <button 
-            class="load-button"
-            onclick="document.querySelector('nosto-campaign[placement=manual-campaign]').load()">
-            Load Campaign
-          </button>
-        </div>
-        <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false">
-        </nosto-campaign>
-      `
-    )
+    return html`
+      <div class="manual-controls">
+        <button 
+          class="load-button"
+          onclick="document.querySelector('nosto-campaign[placement=manual-campaign]').load()">
+          Load Campaign
+        </button>
+      </div>
+      <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false">
+      </nosto-campaign>
+    `
   },
   parameters: {
     docs: {
