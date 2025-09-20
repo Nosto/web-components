@@ -68,7 +68,6 @@ export const BasicCampaign: Story = {
 
     return html`
       <nosto-campaign placement="homepage-hero" product-id="demo-product">
-        <template>{{ html }}</template>
       </nosto-campaign>
     `
   },
