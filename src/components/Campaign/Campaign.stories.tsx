@@ -67,7 +67,8 @@ const meta: Meta = {
       control: "boolean",
       description: "If true, the component will only load the campaign when it comes into view."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

@@ -92,7 +92,8 @@ const meta: Meta = {
       options: ["center", "left", "right", "top", "bottom"],
       description: "Shopify only. The crop of the image."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

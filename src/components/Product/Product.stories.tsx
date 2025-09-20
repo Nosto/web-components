@@ -81,7 +81,8 @@ const meta: Meta = {
       control: "text",
       description: "Required. The recommendation slot ID."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

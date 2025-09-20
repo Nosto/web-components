@@ -30,7 +30,8 @@ const meta: Meta = {
           "A custom element that shows different content templates based on user segments from Nosto. The first matching segment template will be displayed."
       }
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

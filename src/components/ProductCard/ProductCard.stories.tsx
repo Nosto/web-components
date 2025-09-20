@@ -26,7 +26,8 @@ const meta: Meta = {
       control: "text",
       description: "The ID of the template to use for rendering the product card."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta
