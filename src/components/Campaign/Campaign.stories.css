@@ -1,0 +1,100 @@
+/* Common story styles for Campaign stories */
+.story-container {
+  font-family:
+    Albert Sans,
+    sans-serif;
+  padding: 20px;
+}
+
+.campaign-demo-section {
+  margin-bottom: 40px;
+}
+
+.campaign-demo-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 16px 0px;
+  color: #333;
+}
+
+.campaign-demo-sub-title {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 20px 0 8px 0;
+}
+
+.campaign-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.campaign-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 400px;
+  background: #f9f9f9;
+}
+
+.campaign-loading {
+  border-color: #007bff;
+  background: #e7f3ff;
+}
+
+.campaign-loading::before {
+  content: "Loading...";
+  color: #007bff;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Campaign content styles */
+.nosto-campaign-content {
+  font-family: inherit;
+}
+
+.nosto-campaign-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.nosto-campaign-products {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nosto-campaign-product {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 12px;
+  background: white;
+  text-align: center;
+  min-width: 120px;
+}
+
+.nosto-campaign-product img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.nosto-campaign-product-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.nosto-campaign-product-price {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: bold;
+}
