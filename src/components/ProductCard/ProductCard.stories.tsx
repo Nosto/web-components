@@ -1,0 +1,306 @@
+import type { Meta, StoryObj } from "@storybook/web-components"
+import { html } from "lit"
+import "./ProductCard.stories.css"
+
+// Helper function for creating demo section
+function createDemoSection(title: string, description: string, content: unknown) {
+  return html`
+    <div class="story-container">
+      <div class="demo-section">
+        <div class="demo-title">${title}</div>
+        <div class="demo-description">${description}</div>
+        ${content}
+      </div>
+    </div>
+  `
+}
+
+const meta: Meta = {
+  title: "Components/ProductCard",
+  component: "nosto-product-card",
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "A custom element that renders a product card using a Vue-like template. It can receive product data either through a JSON script tag or data attributes."
+      }
+    }
+  },
+  argTypes: {
+    template: {
+      control: "text",
+      description: "Required. The id of the Vue-like template element to use for rendering the product card."
+    }
+  }
+}
+
+export default meta
+type Story = StoryObj
+
+export const BasicProductCard: Story = {
+  render: () => {
+    // Create template for basic product card
+    const templateId = "basic-product-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
+      <div class="product-card">
+        <img :src="product.image" :alt="product.title" class="product-image" />
+        <div class="product-info">
+          <h3 class="product-title">{{ product.title }}</h3>
+          <div class="product-price">
+            <span class="current-price" n-price>{{ product.price }}</span>
+            <span class="list-price" n-list-price v-if="product.listPrice">{{ product.listPrice }}</span>
+          </div>
+          <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+    `
+    
+    // Add template to document if not already there
+    if (!document.getElementById(templateId)) {
+      document.body.appendChild(template)
+    }
+
+    return createDemoSection(
+      "Basic Product Card",
+      "Simple product card using JSON data and Vue-like template syntax.",
+      html`
+        <nosto-product-card template="${templateId}">
+          <script type="application/json" product-data>
+            {
+              "id": "wireless-headphones",
+              "image": "https://picsum.photos/300/300?random=1",
+              "title": "Wireless Noise-Canceling Headphones",
+              "price": "$129.99",
+              "listPrice": "$159.99"
+            }
+          </script>
+        </nosto-product-card>
+      `
+    )
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Basic product card with JSON data provided via script tag."
+      }
+    }
+  }
+}
+
+export const DataAttributesCard: Story = {
+  render: () => {
+    // Create template for data attributes card
+    const templateId = "data-attrs-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
+      <div class="product-card compact">
+        <div class="product-header">
+          <img :src="product.image" :alt="product.title" class="product-image-small" />
+          <div class="product-details">
+            <h4 class="product-title">{{ product.title }}</h4>
+            <div class="product-price">{{ product.price }}</div>
+          </div>
+        </div>
+        <p class="product-description">{{ product.description }}</p>
+        <div class="product-actions">
+          <button class="btn-primary">Buy Now</button>
+          <button class="btn-secondary">Add to Wishlist</button>
+        </div>
+      </div>
+    `
+    
+    if (!document.getElementById(templateId)) {
+      document.body.appendChild(template)
+    }
+
+    return createDemoSection(
+      "Data Attributes Card",
+      "Product card using data attributes instead of JSON script tag.",
+      html`
+        <nosto-product-card 
+          template="${templateId}"
+          data-id="smart-watch"
+          data-image="https://picsum.photos/300/300?random=2" 
+          data-title="Smart Fitness Watch"
+          data-price="$299.99"
+          data-description="Track your fitness goals with this advanced smartwatch featuring heart rate monitoring and GPS.">
+        </nosto-product-card>
+      `
+    )
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Product card using data attributes to provide product information."
+      }
+    }
+  }
+}
+
+export const GridLayout: Story = {
+  render: () => {
+    // Create template for grid layout
+    const templateId = "grid-product-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
+      <div class="product-card grid-card">
+        <div class="product-image-container">
+          <img :src="product.image" :alt="product.title" class="product-image" />
+          <div class="product-badge" v-if="product.badge">{{ product.badge }}</div>
+        </div>
+        <div class="product-content">
+          <div class="product-category">{{ product.category }}</div>
+          <h3 class="product-title">{{ product.title }}</h3>
+          <div class="product-rating">
+            <span class="stars">{{ product.rating || '★★★★☆' }}</span>
+            <span class="review-count">({{ product.reviews || '0' }} reviews)</span>
+          </div>
+          <div class="product-price">
+            <span class="current-price">{{ product.price }}</span>
+            <span class="list-price" v-if="product.listPrice">{{ product.listPrice }}</span>
+          </div>
+        </div>
+      </div>
+    `
+    
+    if (!document.getElementById(templateId)) {
+      document.body.appendChild(template)
+    }
+
+    const products = [
+      {
+        id: "laptop-stand",
+        image: "https://picsum.photos/300/300?random=3",
+        title: "Adjustable Laptop Stand",
+        category: "Electronics",
+        price: "$79.99",
+        listPrice: "$99.99",
+        badge: "Sale",
+        rating: "★★★★★",
+        reviews: "127"
+      },
+      {
+        id: "phone-case",
+        image: "https://picsum.photos/300/300?random=4",
+        title: "Premium Phone Case",
+        category: "Accessories",
+        price: "$24.99",
+        rating: "★★★★☆",
+        reviews: "89"
+      },
+      {
+        id: "coffee-mug",
+        image: "https://picsum.photos/300/300?random=5",
+        title: "Insulated Travel Mug",
+        category: "Home & Kitchen",
+        price: "$19.99",
+        listPrice: "$29.99",
+        badge: "New",
+        rating: "★★★★★",
+        reviews: "203"
+      },
+      {
+        id: "desk-lamp",
+        image: "https://picsum.photos/300/300?random=6",
+        title: "LED Desk Lamp",
+        category: "Home & Office",
+        price: "$45.99",
+        rating: "★★★☆☆",
+        reviews: "34"
+      }
+    ]
+
+    return createDemoSection(
+      "Grid Layout",
+      "Multiple product cards in a grid layout with enhanced styling and product information.",
+      html`
+        <div class="products-grid">
+          ${products.map(product => html`
+            <nosto-product-card template="${templateId}">
+              <script type="application/json" product-data>
+                ${JSON.stringify(product)}
+              </script>
+            </nosto-product-card>
+          `)}
+        </div>
+      `
+    )
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Multiple product cards displayed in a responsive grid layout with enhanced product information."
+      }
+    }
+  }
+}
+
+export const MinimalCard: Story = {
+  render: () => {
+    // Create template for minimal card
+    const templateId = "minimal-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `
+      <div class="product-card minimal">
+        <img :src="product.image" :alt="product.title" class="product-image" />
+        <div class="product-name">{{ product.title }}</div>
+        <div class="product-price">{{ product.price }}</div>
+      </div>
+    `
+    
+    if (!document.getElementById(templateId)) {
+      document.body.appendChild(template)
+    }
+
+    return createDemoSection(
+      "Minimal Card",
+      "Clean, minimal product card design with just the essential information.",
+      html`
+        <div class="minimal-grid">
+          <nosto-product-card template="${templateId}">
+            <script type="application/json" product-data>
+              {
+                "id": "book",
+                "image": "https://picsum.photos/200/300?random=7",
+                "title": "The Design of Everyday Things",
+                "price": "$16.99"
+              }
+            </script>
+          </nosto-product-card>
+          <nosto-product-card template="${templateId}">
+            <script type="application/json" product-data>
+              {
+                "id": "notebook", 
+                "image": "https://picsum.photos/200/300?random=8",
+                "title": "Premium Leather Notebook",
+                "price": "$34.99"
+              }
+            </script>
+          </nosto-product-card>
+          <nosto-product-card template="${templateId}">
+            <script type="application/json" product-data>
+              {
+                "id": "pen",
+                "image": "https://picsum.photos/200/300?random=9", 
+                "title": "Executive Fountain Pen",
+                "price": "$89.99"
+              }
+            </script>
+          </nosto-product-card>
+        </div>
+      `
+    )
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Minimal product card design focusing on clean aesthetics and essential product information."
+      }
+    }
+  }
+}
