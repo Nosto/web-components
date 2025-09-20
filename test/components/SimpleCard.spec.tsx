@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, beforeAll, afterEach } from "vitest"
+import { describe, it, expect, vi, afterEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -7,12 +7,6 @@ import { createElement } from "../utils/jsx"
 import { createShopifyUrl } from "@/utils"
 
 describe("SimpleCard", () => {
-  beforeAll(() => {
-    if (!customElements.get("simple-card")) {
-      customElements.define("simple-card", SimpleCard)
-    }
-  })
-
   afterEach(() => {
     vi.clearAllMocks()
     document.body.innerHTML = ""
@@ -245,12 +239,8 @@ describe("SimpleCard", () => {
 
     const card = (<simple-card handle="missing-product" />) as SimpleCard
 
-    await card.connectedCallback()
-
-    // Component should still exist and have loading state removed
-    expect(card.hasAttribute("loading")).toBe(false)
-    // Since error rendering is removed, innerHTML should be empty or not contain error
-    expect(card.innerHTML).not.toContain("simple-card--error")
+    // Since error handling is removed, the component should throw
+    await expect(card.connectedCallback()).rejects.toThrow()
   })
 
   it("should re-render when handle attribute changes", async () => {

@@ -52,14 +52,9 @@ export class SimpleCard extends NostoElement {
 
   private async loadAndRender() {
     this.toggleAttribute("loading", true)
-    try {
-      const productData = await fetchProductData(this.handle)
-      this.innerHTML = generateCardHTML(this, productData)
-    } catch (error) {
-      console.error("Failed to load product data:", error)
-    } finally {
-      this.toggleAttribute("loading", false)
-    }
+    const productData = await fetchProductData(this.handle)
+    this.innerHTML = generateCardHTML(this, productData)
+    this.toggleAttribute("loading", false)
   }
 }
 

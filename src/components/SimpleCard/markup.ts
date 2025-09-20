@@ -1,7 +1,7 @@
 import type { ShopifyProduct, ShopifyImage, ShopifyVariant } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 
-export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): string {
+export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount =
     element.discount &&
     product.variants?.[0]?.compare_at_price &&
@@ -30,7 +30,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
   `
 }
 
-export function generateImageHTML(element: SimpleCard, product: ShopifyProduct): string {
+export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   const primaryImage = product.images?.[0]
   if (!primaryImage) {
     return '<div class="simple-card__image simple-card__image--placeholder"></div>'
@@ -55,7 +55,7 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct):
   `
 }
 
-export function generateAlternateImageHTML(alternateImage: ShopifyImage, product: ShopifyProduct): string {
+export function generateAlternateImageHTML(alternateImage: ShopifyImage, product: ShopifyProduct) {
   return `
     <img 
       src="${alternateImage.src}" 
@@ -68,18 +68,18 @@ export function generateAlternateImageHTML(alternateImage: ShopifyImage, product
   `
 }
 
-export function generateDiscountHTML(variant: ShopifyVariant): string {
+export function generateDiscountHTML(variant: ShopifyVariant) {
   const discountPercent = Math.round(((variant.compare_at_price - variant.price) / variant.compare_at_price) * 100)
   return `<div class="simple-card__discount">Save ${discountPercent}%</div>`
 }
 
-export function generateRatingHTML(): string {
+export function generateRatingHTML() {
   // Since product rating isn't typically in Shopify product.js,
   // this is a placeholder for potential integration with review apps
   return `<div class="simple-card__rating">★★★★☆ (4.0)</div>`
 }
 
-export function formatPrice(price: number): string {
+export function formatPrice(price: number) {
   // Convert from cents to dollars and format
   const dollars = price / 100
   return new Intl.NumberFormat("en-US", {
@@ -88,7 +88,7 @@ export function formatPrice(price: number): string {
   }).format(dollars)
 }
 
-export function escapeHTML(text: string): string {
+export function escapeHTML(text: string) {
   const div = document.createElement("div")
   div.textContent = text
   return div.innerHTML
