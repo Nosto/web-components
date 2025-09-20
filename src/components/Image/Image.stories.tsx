@@ -46,20 +46,19 @@ function createImageGrid(
   `
 }
 
-function createDemoSection(title: string, content: unknown) {
-  return html`
-    <div class="story-container">
-      <div class="image-demo-section">
-        <div class="image-demo-title">${title}</div>
-        ${content}
-      </div>
+// Storybook decorator for wrapping stories with container styling
+const withStoryContainer = (story: () => unknown) => html`
+  <div class="story-container">
+    <div class="image-demo-section">
+      ${story()}
     </div>
-  `
-}
+  </div>
+`
 
 const meta: Meta = {
   title: "Components/Image",
   component: "nosto-image",
+  decorators: [withStoryContainer],
   parameters: {
     docs: {
       description: {
