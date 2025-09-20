@@ -39,34 +39,24 @@ type Story = StoryObj
 
 export const BasicProductCard: Story = {
   render: () => {
-    // Create template for basic product card
-    const templateId = "basic-product-template"
-    const template = document.createElement("template")
-    template.id = templateId
-    template.innerHTML = `
-      <div class="product-card">
-        <img :src="product.image" :alt="product.title" class="product-image" />
-        <div class="product-info">
-          <h3 class="product-title">{{ product.title }}</h3>
-          <div class="product-price">
-            <span class="current-price" n-price>{{ product.price }}</span>
-            <span class="list-price" n-list-price v-if="product.listPrice">{{ product.listPrice }}</span>
-          </div>
-          <button class="add-to-cart-btn">Add to Cart</button>
-        </div>
-      </div>
-    `
-    
-    // Add template to document if not already there
-    if (!document.getElementById(templateId)) {
-      document.body.appendChild(template)
-    }
-
     return createDemoSection(
       "Basic Product Card",
       "Simple product card using JSON data and Vue-like template syntax.",
       html`
-        <nosto-product-card template="${templateId}">
+        <nosto-product-card>
+          <template>
+            <div class="product-card">
+              <img :src="product.image" :alt="product.title" class="product-image" />
+              <div class="product-info">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price">
+                  <span class="current-price" n-price>{{ product.price }}</span>
+                  <span class="list-price" n-list-price v-if="product.listPrice">{{ product.listPrice }}</span>
+                </div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+          </template>
           <script type="application/json" product-data>
             {
               "id": "wireless-headphones",
@@ -91,42 +81,32 @@ export const BasicProductCard: Story = {
 
 export const DataAttributesCard: Story = {
   render: () => {
-    // Create template for data attributes card
-    const templateId = "data-attrs-template"
-    const template = document.createElement("template")
-    template.id = templateId
-    template.innerHTML = `
-      <div class="product-card compact">
-        <div class="product-header">
-          <img :src="product.image" :alt="product.title" class="product-image-small" />
-          <div class="product-details">
-            <h4 class="product-title">{{ product.title }}</h4>
-            <div class="product-price">{{ product.price }}</div>
-          </div>
-        </div>
-        <p class="product-description">{{ product.description }}</p>
-        <div class="product-actions">
-          <button class="btn-primary">Buy Now</button>
-          <button class="btn-secondary">Add to Wishlist</button>
-        </div>
-      </div>
-    `
-    
-    if (!document.getElementById(templateId)) {
-      document.body.appendChild(template)
-    }
-
     return createDemoSection(
       "Data Attributes Card",
       "Product card using data attributes instead of JSON script tag.",
       html`
         <nosto-product-card 
-          template="${templateId}"
           data-id="smart-watch"
           data-image="https://picsum.photos/300/300?random=2" 
           data-title="Smart Fitness Watch"
           data-price="$299.99"
           data-description="Track your fitness goals with this advanced smartwatch featuring heart rate monitoring and GPS.">
+          <template>
+            <div class="product-card compact">
+              <div class="product-header">
+                <img :src="product.image" :alt="product.title" class="product-image-small" />
+                <div class="product-details">
+                  <h4 class="product-title">{{ product.title }}</h4>
+                  <div class="product-price">{{ product.price }}</div>
+                </div>
+              </div>
+              <p class="product-description">{{ product.description }}</p>
+              <div class="product-actions">
+                <button class="btn-primary">Buy Now</button>
+                <button class="btn-secondary">Add to Wishlist</button>
+              </div>
+            </div>
+          </template>
         </nosto-product-card>
       `
     )
@@ -142,35 +122,6 @@ export const DataAttributesCard: Story = {
 
 export const GridLayout: Story = {
   render: () => {
-    // Create template for grid layout
-    const templateId = "grid-product-template"
-    const template = document.createElement("template")
-    template.id = templateId
-    template.innerHTML = `
-      <div class="product-card grid-card">
-        <div class="product-image-container">
-          <img :src="product.image" :alt="product.title" class="product-image" />
-          <div class="product-badge" v-if="product.badge">{{ product.badge }}</div>
-        </div>
-        <div class="product-content">
-          <div class="product-category">{{ product.category }}</div>
-          <h3 class="product-title">{{ product.title }}</h3>
-          <div class="product-rating">
-            <span class="stars">{{ product.rating || '★★★★☆' }}</span>
-            <span class="review-count">({{ product.reviews || '0' }} reviews)</span>
-          </div>
-          <div class="product-price">
-            <span class="current-price">{{ product.price }}</span>
-            <span class="list-price" v-if="product.listPrice">{{ product.listPrice }}</span>
-          </div>
-        </div>
-      </div>
-    `
-    
-    if (!document.getElementById(templateId)) {
-      document.body.appendChild(template)
-    }
-
     const products = [
       {
         id: "laptop-stand",
@@ -220,7 +171,27 @@ export const GridLayout: Story = {
       html`
         <div class="products-grid">
           ${products.map(product => html`
-            <nosto-product-card template="${templateId}">
+            <nosto-product-card>
+              <template>
+                <div class="product-card grid-card">
+                  <div class="product-image-container">
+                    <img :src="product.image" :alt="product.title" class="product-image" />
+                    <div class="product-badge" v-if="product.badge">{{ product.badge }}</div>
+                  </div>
+                  <div class="product-content">
+                    <div class="product-category">{{ product.category }}</div>
+                    <h3 class="product-title">{{ product.title }}</h3>
+                    <div class="product-rating">
+                      <span class="stars">{{ product.rating || '★★★★☆' }}</span>
+                      <span class="review-count">({{ product.reviews || '0' }} reviews)</span>
+                    </div>
+                    <div class="product-price">
+                      <span class="current-price">{{ product.price }}</span>
+                      <span class="list-price" v-if="product.listPrice">{{ product.listPrice }}</span>
+                    </div>
+                  </div>
+                </div>
+              </template>
               <script type="application/json" product-data>
                 ${JSON.stringify(product)}
               </script>
@@ -241,28 +212,19 @@ export const GridLayout: Story = {
 
 export const MinimalCard: Story = {
   render: () => {
-    // Create template for minimal card
-    const templateId = "minimal-template"
-    const template = document.createElement("template")
-    template.id = templateId
-    template.innerHTML = `
-      <div class="product-card minimal">
-        <img :src="product.image" :alt="product.title" class="product-image" />
-        <div class="product-name">{{ product.title }}</div>
-        <div class="product-price">{{ product.price }}</div>
-      </div>
-    `
-    
-    if (!document.getElementById(templateId)) {
-      document.body.appendChild(template)
-    }
-
     return createDemoSection(
       "Minimal Card",
       "Clean, minimal product card design with just the essential information.",
       html`
         <div class="minimal-grid">
-          <nosto-product-card template="${templateId}">
+          <nosto-product-card>
+            <template>
+              <div class="product-card minimal">
+                <img :src="product.image" :alt="product.title" class="product-image" />
+                <div class="product-name">{{ product.title }}</div>
+                <div class="product-price">{{ product.price }}</div>
+              </div>
+            </template>
             <script type="application/json" product-data>
               {
                 "id": "book",
@@ -272,7 +234,14 @@ export const MinimalCard: Story = {
               }
             </script>
           </nosto-product-card>
-          <nosto-product-card template="${templateId}">
+          <nosto-product-card>
+            <template>
+              <div class="product-card minimal">
+                <img :src="product.image" :alt="product.title" class="product-image" />
+                <div class="product-name">{{ product.title }}</div>
+                <div class="product-price">{{ product.price }}</div>
+              </div>
+            </template>
             <script type="application/json" product-data>
               {
                 "id": "notebook", 
@@ -282,7 +251,14 @@ export const MinimalCard: Story = {
               }
             </script>
           </nosto-product-card>
-          <nosto-product-card template="${templateId}">
+          <nosto-product-card>
+            <template>
+              <div class="product-card minimal">
+                <img :src="product.image" :alt="product.title" class="product-image" />
+                <div class="product-name">{{ product.title }}</div>
+                <div class="product-price">{{ product.price }}</div>
+              </div>
+            </template>
             <script type="application/json" product-data>
               {
                 "id": "pen",

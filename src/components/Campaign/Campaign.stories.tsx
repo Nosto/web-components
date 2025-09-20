@@ -1,40 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import { mockNostoRecs } from "../../../test/mockNostoRecs"
 import "./Campaign.stories.css"
-
-// Simple mock for Nosto API in Storybook (without vitest dependencies)
-function mockNostoStorybookAPI(recommendations: Record<string, any>) {
-  interface NostoWindow extends Window {
-    nostojs?: (api: any) => any
-  }
-
-  // Mock the nostojs function
-  ; (window as NostoWindow).nostojs = (callback: (api: any) => void) => {
-    const mockApi = {
-      createRecommendationRequest: () => ({
-        disableCampaignInjection: () => mockApi.createRecommendationRequest(),
-        setElements: () => mockApi.createRecommendationRequest(),
-        setResponseMode: () => mockApi.createRecommendationRequest(),
-        setProducts: () => mockApi.createRecommendationRequest(),
-        load: () => Promise.resolve({ recommendations })
-      }),
-      attributeProductClicksInCampaign: () => {}, // Add missing function
-      placements: {
-        injectCampaigns: async (campaigns: Record<string, string>, targets: Record<string, HTMLElement>) => {
-          Object.keys(campaigns).forEach(placementId => {
-            const target = targets[placementId]
-            if (target) {
-              target.innerHTML = campaigns[placementId]
-            }
-          })
-          return { filledElements: Object.keys(campaigns), unFilledElements: [] }
-        }
-      }
-    }
-    callback(mockApi)
-    return Promise.resolve(mockApi)
-  }
-}
 
 // Helper function for creating demo section
 function createDemoSection(title: string, description: string, content: unknown) {
@@ -90,7 +57,7 @@ type Story = StoryObj
 export const BasicCampaign: Story = {
   render: () => {
     // Mock campaign data with HTML content
-    mockNostoStorybookAPI({
+    mockNostoRecs({
       "homepage-hero": {
         html: `
           <div class="campaign-content">
@@ -123,33 +90,8 @@ export const BasicCampaign: Story = {
 
 export const ProductRecommendations: Story = {
   render: () => {
-    // Create external template for product recommendations
-    const templateId = "product-recommendations-template"
-    const template = document.createElement("template")
-    template.id = templateId
-    template.innerHTML = `
-      <div class="recommendations-section">
-        <h3>{{ title }}</h3>
-        <div class="products-grid">
-          <div class="product-card" v-for="product in products">
-            <img :src="'https://picsum.photos/200/200?random=' + product.id" :alt="product.title" class="product-image" />
-            <div class="product-info">
-              <h4 class="product-title">{{ product.title }}</h4>
-              <div class="product-price">{{ product.price || '$99.99' }}</div>
-              <button class="add-to-cart">Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
-    
-    // Add template to document if not already there
-    if (!document.getElementById(templateId)) {
-      document.body.appendChild(template)
-    }
-
     // Mock campaign data with product recommendations
-    mockNostoStorybookAPI({
+    mockNostoRecs({
       "product-recommendations": {
         title: "Recommended for You",
         products: [
@@ -167,8 +109,22 @@ export const ProductRecommendations: Story = {
       html`
         <nosto-campaign 
           placement="product-recommendations" 
-          product-id="current-product" 
-          template="${templateId}">
+          product-id="current-product">
+          <template>
+            <div class="recommendations-section">
+              <h3>{{ title }}</h3>
+              <div class="products-grid">
+                <div class="product-card" v-for="product in products">
+                  <img :src="'https://picsum.photos/200/200?random=' + product.id" :alt="product.title" class="product-image" />
+                  <div class="product-info">
+                    <h4 class="product-title">{{ product.title }}</h4>
+                    <div class="product-price">{{ product.price || '$99.99' }}</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
         </nosto-campaign>
       `
     )
@@ -176,7 +132,7 @@ export const ProductRecommendations: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Campaign component with product recommendations using external Vue-like template."
+        story: "Campaign component with product recommendations using inline Vue-like template."
       }
     }
   }
@@ -185,7 +141,7 @@ export const ProductRecommendations: Story = {
 export const LazyLoadedCampaign: Story = {
   render: () => {
     // Mock campaign data
-    mockNostoStorybookAPI({
+    mockNostoRecs({
       "lazy-campaign": {
         html: `
           <div class="lazy-campaign-content">
@@ -228,7 +184,7 @@ export const LazyLoadedCampaign: Story = {
 export const ManualInitialization: Story = {
   render: () => {
     // Mock campaign data
-    mockNostoStorybookAPI({
+    mockNostoRecs({
       "manual-campaign": {
         html: `
           <div class="manual-campaign-content">

@@ -1,24 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
-
-// Simple mock for Nosto segments API in Storybook (without vitest dependencies)
-function mockNostoSegments(segments: string[]) {
-  interface NostoWindow extends Window {
-    nostojs?: (api: any) => any
-  }
-
-  // Mock the nostojs function
-  ; (window as NostoWindow).nostojs = (callback: (api: any) => void) => {
-    const mockApi = {
-      internal: {
-        getSegments: () => Promise.resolve(segments)
-      }
-    }
-    callback(mockApi)
-    return Promise.resolve(mockApi)
-  }
-}
 
 // Helper function for creating demo section
 function createDemoSection(title: string, description: string, content: unknown) {
@@ -52,7 +35,11 @@ type Story = StoryObj
 export const BasicSegmentation: Story = {
   render: () => {
     // Mock user segments - user belongs to "premium" segment
-    mockNostoSegments(["premium", "returning-customer"])
+    mockNostojs({
+      internal: {
+        getSegments: () => Promise.resolve(["premium", "returning-customer"])
+      }
+    })
 
     return createDemoSection(
       "Basic Segmentation",
@@ -100,7 +87,11 @@ export const BasicSegmentation: Story = {
 export const NewVisitorExperience: Story = {
   render: () => {
     // Mock user segments - new visitor
-    mockNostoSegments(["new-visitor"])
+    mockNostojs({
+      internal: {
+        getSegments: () => Promise.resolve(["new-visitor"])
+      }
+    })
 
     return createDemoSection(
       "New Visitor Experience",
@@ -167,7 +158,11 @@ export const NewVisitorExperience: Story = {
 export const NoMatchingSegment: Story = {
   render: () => {
     // Mock user segments - user has segments that don't match any templates
-    mockNostoSegments(["anonymous", "mobile-user"])
+    mockNostojs({
+      internal: {
+        getSegments: () => Promise.resolve(["anonymous", "mobile-user"])
+      }
+    })
 
     return createDemoSection(
       "No Matching Segment",
@@ -216,7 +211,11 @@ export const NoMatchingSegment: Story = {
 export const VIPCustomerExperience: Story = {
   render: () => {
     // Mock user segments - VIP customer
-    mockNostoSegments(["vip-customer", "high-value", "premium"])
+    mockNostojs({
+      internal: {
+        getSegments: () => Promise.resolve(["vip-customer", "high-value", "premium"])
+      }
+    })
 
     return createDemoSection(
       "VIP Customer Experience",
