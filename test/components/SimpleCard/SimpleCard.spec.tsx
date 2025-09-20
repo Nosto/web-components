@@ -37,7 +37,6 @@ describe("SimpleCard", () => {
     handle: "awesome-test-product",
     description: "A great product for testing",
     vendor: "Test Brand",
-    product_type: "Test Type",
     tags: ["test", "awesome"],
     images: [
       "https://example.com/image1.jpg",
@@ -53,7 +52,7 @@ describe("SimpleCard", () => {
         title: "Default Title"
       }
     ]
-  }
+  } as ShopifyProduct
 
   it("should throw an error if handle is not provided", async () => {
     const card = (<simple-card />) as SimpleCard
@@ -62,7 +61,7 @@ describe("SimpleCard", () => {
 
   it("should fetch product data and render basic card", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" />) as SimpleCard
@@ -78,7 +77,7 @@ describe("SimpleCard", () => {
 
   it("should render brand when brand attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" brand />) as SimpleCard
@@ -91,7 +90,7 @@ describe("SimpleCard", () => {
 
   it("should not render brand when brand attribute is disabled", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" />) as SimpleCard
@@ -104,7 +103,7 @@ describe("SimpleCard", () => {
 
   it("should render discount when discount attribute is enabled and product has discount", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" discount />) as SimpleCard
@@ -128,10 +127,10 @@ describe("SimpleCard", () => {
           title: "Default Title"
         }
       ]
-    }
+    } as ShopifyProduct
 
     addProductHandlers({
-      "test-product": productWithoutDiscount
+      "test-product": { product: productWithoutDiscount }
     })
 
     const card = (<simple-card handle="test-product" discount />) as SimpleCard
@@ -144,7 +143,7 @@ describe("SimpleCard", () => {
 
   it("should render rating when rating attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" rating />) as SimpleCard
@@ -157,7 +156,7 @@ describe("SimpleCard", () => {
 
   it("should render alternate image when alternate attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" alternate />) as SimpleCard
@@ -176,7 +175,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": productWithOneImage
+      "test-product": { product: productWithOneImage }
     })
 
     const card = (<simple-card handle="test-product" alternate />) as SimpleCard
@@ -192,7 +191,7 @@ describe("SimpleCard", () => {
 
   it("should render all features when all attributes are enabled", async () => {
     addProductHandlers({
-      "test-product": mockProduct
+      "test-product": { product: mockProduct }
     })
 
     const card = (<simple-card handle="test-product" brand discount rating alternate />) as SimpleCard
@@ -216,7 +215,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": productWithoutImages
+      "test-product": { product: productWithoutImages }
     })
 
     const card = (<simple-card handle="test-product" />) as SimpleCard
@@ -242,8 +241,8 @@ describe("SimpleCard", () => {
     const product2 = { ...mockProduct, title: "Product 2" }
 
     addProductHandlers({
-      "product-1": product1,
-      "product-2": product2
+      "product-1": { product: product1 },
+      "product-2": { product: product2 }
     })
 
     const card = (<simple-card handle="product-1" />) as SimpleCard
@@ -265,7 +264,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": productWithHTML
+      "test-product": { product: productWithHTML }
     })
 
     const card = (<simple-card handle="test-product" brand />) as SimpleCard
@@ -292,7 +291,7 @@ describe("SimpleCard", () => {
           title: "Default Title"
         }
       ]
-    }
+    } as ShopifyProduct
 
     addProductHandlers({
       "test-product": { product: productWithDifferentPrice }
