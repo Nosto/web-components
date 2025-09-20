@@ -15,9 +15,7 @@ function mockSegments(segments: string[]) {
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
   <div class="story-container">
-    <div class="demo-section">
-      ${story()}
-    </div>
+    <div class="demo-section">${story()}</div>
   </div>
 `
 
@@ -60,7 +58,8 @@ export const BasicSegmentation: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Basic segmentation showing different content for different user segments. The 'premium' template will be shown first since it matches the user's segments."
+        story:
+          "Basic segmentation showing different content for different user segments. The 'premium' template will be shown first since it matches the user's segments."
       }
     }
   }
@@ -147,7 +146,8 @@ export const VIPCustomerExperience: Story = {
   parameters: {
     docs: {
       description: {
-        story: "VIP customer experience showing the first matching template (vip-customer) even when multiple segments match."
+        story:
+          "VIP customer experience showing the first matching template (vip-customer) even when multiple segments match."
       }
     }
   }

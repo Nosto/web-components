@@ -6,9 +6,7 @@ import "./Campaign.stories.css"
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
   <div class="story-container">
-    <div class="demo-section">
-      ${story()}
-    </div>
+    <div class="demo-section">${story()}</div>
   </div>
 `
 
@@ -66,10 +64,7 @@ export const BasicCampaign: Story = {
       }
     })
 
-    return html`
-      <nosto-campaign placement="homepage-hero" product-id="demo-product">
-      </nosto-campaign>
-    `
+    return html` <nosto-campaign placement="homepage-hero" product-id="demo-product"> </nosto-campaign> `
   },
   parameters: {
     docs: {
@@ -96,15 +91,17 @@ export const ProductRecommendations: Story = {
     })
 
     return html`
-      <nosto-campaign 
-        placement="product-recommendations" 
-        product-id="current-product">
+      <nosto-campaign placement="product-recommendations" product-id="current-product">
         <template>
           <div class="recommendations-section">
             <h3>{{ title }}</h3>
             <div class="products-grid">
               <div class="product-card" v-for="product in products">
-                <img :src="'https://picsum.photos/200/200?random=' + product.id" :alt="product.title" class="product-image" />
+                <img
+                  :src="'https://picsum.photos/200/200?random=' + product.id"
+                  :alt="product.title"
+                  class="product-image"
+                />
                 <div class="product-info">
                   <h4 class="product-title">{{ product.title }}</h4>
                   <div class="product-price">{{ product.price || '$99.99' }}</div>
@@ -148,8 +145,7 @@ export const LazyLoadedCampaign: Story = {
       <div class="spacer">
         <p>👆 Scroll up and down to see the lazy loading in action</p>
       </div>
-      <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy>
-      </nosto-campaign>
+      <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy> </nosto-campaign>
       <div class="spacer">
         <p>👇 The campaign above should load when scrolled into view</p>
       </div>
@@ -158,7 +154,8 @@ export const LazyLoadedCampaign: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Campaign component with lazy loading enabled. Content is only fetched when the element enters the viewport."
+        story:
+          "Campaign component with lazy loading enabled. Content is only fetched when the element enters the viewport."
       }
     }
   }
@@ -181,20 +178,21 @@ export const ManualInitialization: Story = {
 
     return html`
       <div class="manual-controls">
-        <button 
+        <button
           class="load-button"
-          onclick="document.querySelector('nosto-campaign[placement=manual-campaign]').load()">
+          onclick="document.querySelector('nosto-campaign[placement=manual-campaign]').load()"
+        >
           Load Campaign
         </button>
       </div>
-      <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false">
-      </nosto-campaign>
+      <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false"> </nosto-campaign>
     `
   },
   parameters: {
     docs: {
       description: {
-        story: 'Campaign component with manual initialization (init="false"). The load() method must be called programmatically.'
+        story:
+          'Campaign component with manual initialization (init="false"). The load() method must be called programmatically.'
       }
     }
   }

@@ -5,9 +5,7 @@ import "./ProductCard.stories.css"
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
   <div class="story-container">
-    <div class="demo-section">
-      ${story()}
-    </div>
+    <div class="demo-section">${story()}</div>
   </div>
 `
 
@@ -75,12 +73,13 @@ export const BasicProductCard: Story = {
 export const DataAttributesCard: Story = {
   render: () => {
     return html`
-      <nosto-product-card 
+      <nosto-product-card
         data-id="smart-watch"
-        data-image="https://picsum.photos/300/300?random=2" 
+        data-image="https://picsum.photos/300/300?random=2"
         data-title="Smart Fitness Watch"
         data-price="$299.99"
-        data-description="Track your fitness goals with this advanced smartwatch featuring heart rate monitoring and GPS.">
+        data-description="Track your fitness goals with this advanced smartwatch featuring heart rate monitoring and GPS."
+      >
         <template>
           <div class="product-card compact">
             <div class="product-header">
@@ -156,33 +155,35 @@ export const GridLayout: Story = {
 
     return html`
       <div class="products-grid">
-        ${products.map(product => html`
-          <nosto-product-card>
-            <template>
-              <div class="product-card grid-card">
-                <div class="product-image-container">
-                  <img :src="product.image" :alt="product.title" class="product-image" />
-                  <div class="product-badge" v-if="product.badge">{{ product.badge }}</div>
-                </div>
-                <div class="product-content">
-                  <div class="product-category">{{ product.category }}</div>
-                  <h3 class="product-title">{{ product.title }}</h3>
-                  <div class="product-rating">
-                    <span class="stars">{{ product.rating || '★★★★☆' }}</span>
-                    <span class="review-count">({{ product.reviews || '0' }} reviews)</span>
+        ${products.map(
+          product => html`
+            <nosto-product-card>
+              <template>
+                <div class="product-card grid-card">
+                  <div class="product-image-container">
+                    <img :src="product.image" :alt="product.title" class="product-image" />
+                    <div class="product-badge" v-if="product.badge">{{ product.badge }}</div>
                   </div>
-                  <div class="product-price">
-                    <span class="current-price">{{ product.price }}</span>
-                    <span class="list-price" v-if="product.listPrice">{{ product.listPrice }}</span>
+                  <div class="product-content">
+                    <div class="product-category">{{ product.category }}</div>
+                    <h3 class="product-title">{{ product.title }}</h3>
+                    <div class="product-rating">
+                      <span class="stars">{{ product.rating || '★★★★☆' }}</span>
+                      <span class="review-count">({{ product.reviews || '0' }} reviews)</span>
+                    </div>
+                    <div class="product-price">
+                      <span class="current-price">{{ product.price }}</span>
+                      <span class="list-price" v-if="product.listPrice">{{ product.listPrice }}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </template>
-            <script type="application/json" product-data>
-              ${JSON.stringify(product)}
-            </script>
-          </nosto-product-card>
-        `)}
+              </template>
+              <script type="application/json" product-data>
+                ${JSON.stringify(product)}
+              </script>
+            </nosto-product-card>
+          `
+        )}
       </div>
     `
   },
@@ -226,7 +227,7 @@ export const MinimalCard: Story = {
           </template>
           <script type="application/json" product-data>
             {
-              "id": "notebook", 
+              "id": "notebook",
               "image": "https://picsum.photos/200/300?random=8",
               "title": "Premium Leather Notebook",
               "price": "$34.99"
@@ -244,7 +245,7 @@ export const MinimalCard: Story = {
           <script type="application/json" product-data>
             {
               "id": "pen",
-              "image": "https://picsum.photos/200/300?random=9", 
+              "image": "https://picsum.photos/200/300?random=9",
               "title": "Executive Fountain Pen",
               "price": "$89.99"
             }
