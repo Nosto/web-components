@@ -204,7 +204,7 @@
   text-transform: uppercase;
 }
 
-.product-badge:has-text("New") {
+.product-badge.new {
   background: #2ed573;
 }
 
