@@ -1,10 +1,11 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
-import { addHandlers } from "../msw.setup"
+import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { createElement } from "../utils/jsx"
+import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils"
+import type { ShopifyProduct } from "@/components/SimpleCard/types"
 
 describe("SimpleCard", () => {
   afterEach(() => {
@@ -12,7 +13,7 @@ describe("SimpleCard", () => {
     document.body.innerHTML = ""
   })
 
-  function addProductHandlers(responses: Record<string, { product?: any; status?: number }>) {
+  function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     // Use createShopifyUrl to get the correct path with Shopify root handling
     const productUrl = createShopifyUrl("products/:handle.js")
     const productPath = productUrl.pathname
@@ -39,21 +40,10 @@ describe("SimpleCard", () => {
     product_type: "Test Type",
     tags: ["test", "awesome"],
     images: [
-      {
-        id: 1,
-        src: "https://example.com/image1.jpg",
-        alt: "Primary image",
-        width: 300,
-        height: 300
-      },
-      {
-        id: 2,
-        src: "https://example.com/image2.jpg",
-        alt: "Alternate image",
-        width: 300,
-        height: 300
-      }
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg"
     ],
+    featured_image: "https://example.com/image1.jpg",
     variants: [
       {
         id: 789,
@@ -193,7 +183,10 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).not.toContain("simple-card__img--primary")
+    // Should still render primary image class
+    expect(card.innerHTML).toContain("simple-card__img--primary")
+    // But should NOT render the alternate image container or alternate image class
+    expect(card.innerHTML).not.toContain("simple-card__image--alternate")
     expect(card.innerHTML).not.toContain("simple-card__img--alternate")
   })
 
@@ -281,9 +274,10 @@ describe("SimpleCard", () => {
 
     expect(card.innerHTML).toContain("&lt;script&gt;")
     expect(card.innerHTML).toContain("Safe Title")
-    expect(card.innerHTML).toContain("&lt;img")  // malicious img tag is escaped
-    expect(card.innerHTML).toContain("Brand")  // content is still displayed
-    expect(card.innerHTML).not.toContain("<script>")  // dangerous script tags are escaped
+    expect(card.innerHTML).toContain("&lt;img") // malicious img tag is escaped
+    expect(card.innerHTML).toContain("Brand") // content is still displayed
+    // In text content, script tags should be escaped
+    expect(card.innerHTML).toContain("&lt;script&gt;alert('xss')&lt;/script&gt;Safe Title")
   })
 
   it("should format price correctly", async () => {

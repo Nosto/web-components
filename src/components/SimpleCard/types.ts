@@ -24,9 +24,9 @@ export type ShopifyVariant = {
     max: number | null
     increment: number
   }
-  quantity_price_breaks: any[]
+  quantity_price_breaks: unknown[]
   requires_selling_plan: boolean
-  selling_plan_allocations: any[]
+  selling_plan_allocations: unknown[]
 }
 
 export type ShopifyOption = {
@@ -78,5 +78,5 @@ export type ShopifyProduct = {
   url: string
   media: ShopifyMedia[]
   requires_selling_plan: boolean
-  selling_plan_groups: any[]
+  selling_plan_groups: unknown[]
 }

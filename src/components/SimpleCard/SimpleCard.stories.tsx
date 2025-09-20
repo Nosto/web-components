@@ -4,15 +4,11 @@ import "./SimpleCard.stories.css"
 
 window.Shopify = {
   routes: {
-    root: "https://nosto-shopify1.myshopify.com/" 
+    root: "https://nosto-shopify1.myshopify.com/"
   }
 }
 
-const handles = [
-  "awesome-sneakers",
-  "good-ol-shoes",
-  "old-school-kicks"
-]
+const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks"]
 
 const meta: Meta = {
   title: "Components/SimpleCard",
@@ -27,7 +23,7 @@ const meta: Meta = {
       description: "Show alternate product image on hover"
     },
     brand: {
-      control: "boolean", 
+      control: "boolean",
       description: "Show brand/vendor data"
     },
     discount: {
@@ -52,7 +48,7 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
-  render: (args) => html`
+  render: args => html`
     <simple-card
       handle="${args.handle}"
       ?alternate="${args.alternate}"
@@ -71,7 +67,7 @@ export const WithAllFeatures: Story = {
     discount: true,
     rating: true
   },
-  render: (args) => html`
+  render: args => html`
     <simple-card
       handle="${args.handle}"
       ?alternate="${args.alternate}"
