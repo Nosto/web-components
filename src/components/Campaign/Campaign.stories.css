@@ -1,28 +1,9 @@
-/* Common story styles for Campaign stories */
+/* Campaign Stories Styles */
 .story-container {
   font-family: Albert Sans, sans-serif;
   padding: 20px;
 }
 
-.demo-section {
-  margin-bottom: 40px;
-}
-
-.demo-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 16px 0px;
-  color: #333;
-}
-
-.demo-description {
-  font-size: 1rem;
-  color: #666;
-  margin: 20px 0 24px 0;
-  line-height: 1.5;
-}
-
-/* Campaign-specific styles */
 .campaign-content {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -38,12 +19,6 @@
   font-weight: bold;
 }
 
-.campaign-content p {
-  margin: 0 0 20px 0;
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
-
 .cta-button {
   background: white;
   color: #667eea;
@@ -52,26 +27,7 @@
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Product recommendations styles */
-.recommendations-section {
-  padding: 20px;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
-  background: #fafbfc;
-}
-
-.recommendations-section h3 {
-  margin: 0 0 20px 0;
-  color: #333;
-  font-size: 1.3rem;
+  transition: transform 0.2s;
 }
 
 .products-grid {
@@ -85,120 +41,11 @@
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
 }
 
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-}
-
-.product-image {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-
-.product-info {
-  text-align: center;
-}
-
-.product-title {
-  margin: 0 0 8px 0;
-  font-size: 1rem;
-  color: #333;
-  font-weight: 600;
-}
-
-.product-price {
-  margin: 0 0 12px 0;
-  font-size: 1.1rem;
-  color: #007acc;
-  font-weight: bold;
-}
-
-.add-to-cart {
-  background: #007acc;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
-}
-
-.add-to-cart:hover {
-  background: #005a9e;
-}
-
-/* Lazy loading styles */
-.spacer {
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f9fa;
-  border: 2px dashed #dee2e6;
-  border-radius: 8px;
-  margin: 20px 0;
-}
-
-.spacer p {
-  color: #6c757d;
-  font-style: italic;
-  margin: 0;
-}
-
-.lazy-campaign-content {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
-  color: white;
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  animation: slideInUp 0.6s ease-out;
-}
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.lazy-campaign-content h3 {
-  margin: 0 0 12px 0;
-  font-size: 1.5rem;
-}
-
-.lazy-campaign-content p {
-  margin: 0 0 16px 0;
-  opacity: 0.9;
-}
-
-.campaign-stats {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.stat {
-  background: rgba(255,255,255,0.2);
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-}
-
-/* Manual initialization styles */
-.manual-controls {
-  margin-bottom: 20px;
-  text-align: center;
 }
 
 .load-button {
@@ -207,35 +54,5 @@
   border: none;
   padding: 12px 24px;
   border-radius: 6px;
-  font-weight: bold;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
-}
-
-.load-button:hover {
-  background: #218838;
-}
-
-.manual-campaign-content {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.manual-campaign-content h3 {
-  margin: 0 0 12px 0;
-  font-size: 1.5rem;
-}
-
-.manual-campaign-content p {
-  margin: 0 0 8px 0;
-  opacity: 0.9;
-}
-
-.manual-campaign-content small {
-  opacity: 0.8;
-  font-style: italic;
 }
