@@ -1,6 +1,6 @@
 import { Product } from "@/main"
 import { triggerEvent } from "@/components/Product/events"
-import { intersectionOf } from "@/utils"
+import { intersectionOf } from "@/utils/array"
 import { addSkuToCart } from "@nosto/nosto-js"
 
 interface Sku {

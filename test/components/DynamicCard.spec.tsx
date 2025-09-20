@@ -4,7 +4,7 @@ import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../utils/jsx"
-import { createShopifyUrl } from "@/utils"
+import { createShopifyUrl } from "@/utils/shopify"
 
 describe("DynamicCard", () => {
   afterEach(() => {
