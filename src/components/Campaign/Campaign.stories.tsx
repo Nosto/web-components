@@ -164,7 +164,6 @@ export const LazyLoadedCampaign: Story = {
           <p>👆 Scroll up and down to see the lazy loading in action</p>
         </div>
         <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy>
-          <template>{{ html }}</template>
         </nosto-campaign>
         <div class="spacer">
           <p>👇 The campaign above should load when scrolled into view</p>
@@ -208,7 +207,6 @@ export const ManualInitialization: Story = {
           </button>
         </div>
         <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false">
-          <template>{{ html }}</template>
         </nosto-campaign>
       `
     )
