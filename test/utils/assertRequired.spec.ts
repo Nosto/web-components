@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { assertRequired } from "@/utils/validation"
+import { assertRequired } from "@/utils/assertRequired"
 
 describe("validation utils", () => {
   describe("assertRequired", () => {

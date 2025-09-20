@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { intersectionOf } from "@/utils/array"
+import { intersectionOf } from "@/utils/intersectionOf"
 
 describe("array utils", () => {
   describe("intersectionOf", () => {

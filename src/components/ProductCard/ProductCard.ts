@@ -1,5 +1,5 @@
 import { customElement } from "../decorators"
-import { assertRequired } from "@/utils/validation"
+import { assertRequired } from "@/utils/assertRequired"
 import { compile } from "@/templating/vue"
 import { NostoElement } from "../Element"
 import { getContext } from "../../templating/context"

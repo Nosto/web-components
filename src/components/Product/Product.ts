@@ -1,4 +1,4 @@
-import { assertRequired } from "@/utils/validation"
+import { assertRequired } from "@/utils/assertRequired"
 import { createStore, provideStore, Store } from "./store"
 import { customElement } from "../decorators"
 import { syncSkuData } from "../common"

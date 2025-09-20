@@ -1,5 +1,5 @@
-import { assertRequired } from "@/utils/validation"
-import { intersectionOf } from "@/utils/array"
+import { assertRequired } from "@/utils/assertRequired"
+import { intersectionOf } from "@/utils/intersectionOf"
 import { injectStore, Store } from "../Product/store"
 import { customElement } from "../decorators"
 import { syncSkuData } from "../common"
