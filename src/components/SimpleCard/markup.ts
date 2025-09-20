@@ -1,4 +1,4 @@
-import type { ShopifyProduct, ShopifyImage, ShopifyVariant } from "./types"
+import type { ShopifyProduct, ShopifyVariant } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
@@ -21,7 +21,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
           <span class="simple-card__price-current">
             ${formatPrice(product.variants?.[0]?.price || 0)}
           </span>
-          ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.variants[0].compare_at_price)}</span>` : ""}
+          ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.variants[0].compare_at_price!)}</span>` : ""}
         </div>
         ${element.discount && hasDiscount ? generateDiscountHTML(product.variants[0]) : ""}
         ${element.rating ? generateRatingHTML() : ""}
@@ -42,10 +42,8 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
     <div class="simple-card__image ${hasAlternate ? "simple-card__image--alternate" : ""}">
       <a href="/products/${product.handle}" class="simple-card__image-link">
         <img 
-          src="${primaryImage.src}" 
-          alt="${escapeHTML(primaryImage.alt || product.title)}"
-          width="${primaryImage.width || 300}"
-          height="${primaryImage.height || 300}"
+          src="${primaryImage}" 
+          alt="${escapeHTML(product.title)}"
           loading="lazy"
           class="simple-card__img simple-card__img--primary"
         />
@@ -55,13 +53,11 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
   `
 }
 
-export function generateAlternateImageHTML(alternateImage: ShopifyImage, product: ShopifyProduct) {
+export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
   return `
     <img 
-      src="${alternateImage.src}" 
-      alt="${escapeHTML(alternateImage.alt || product.title)}"
-      width="${alternateImage.width || 300}"
-      height="${alternateImage.height || 300}"
+      src="${alternateImage}" 
+      alt="${escapeHTML(product.title)}"
       loading="lazy"
       class="simple-card__img simple-card__img--alternate"
     />
@@ -69,7 +65,7 @@ export function generateAlternateImageHTML(alternateImage: ShopifyImage, product
 }
 
 export function generateDiscountHTML(variant: ShopifyVariant) {
-  const discountPercent = Math.round(((variant.compare_at_price - variant.price) / variant.compare_at_price) * 100)
+  const discountPercent = Math.round(((variant.compare_at_price! - variant.price) / variant.compare_at_price!) * 100)
   return `<div class="simple-card__discount">Save ${discountPercent}%</div>`
 }
 
