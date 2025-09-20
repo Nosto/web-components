@@ -41,21 +41,21 @@ export class SimpleCard extends NostoElement {
 
   async attributeChangedCallback() {
     if (this.isConnected) {
-      await this.loadAndRender()
+      await loadAndRenderMarkup(this)
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.loadAndRender()
+    await loadAndRenderMarkup(this)
   }
+}
 
-  private async loadAndRender() {
-    this.toggleAttribute("loading", true)
-    const productData = await fetchProductData(this.handle)
-    this.innerHTML = generateCardHTML(this, productData)
-    this.toggleAttribute("loading", false)
-  }
+async function loadAndRenderMarkup(element: SimpleCard) {
+  element.toggleAttribute("loading", true)
+  const productData = await fetchProductData(element.handle)
+  element.innerHTML = generateCardHTML(element, productData)
+  element.toggleAttribute("loading", false)
 }
 
 async function fetchProductData(handle: string): Promise<ShopifyProduct> {

@@ -24,7 +24,8 @@ describe("SimpleCard", () => {
         if (!response) {
           return HttpResponse.json({ error: "Not Found" }, { status: 404 })
         }
-        return HttpResponse.json(response.product || {}, { status: response.status || 200 })
+        // SimpleCard expects the product data directly, not wrapped in a product property
+        return HttpResponse.json(response.product || response, { status: response.status || 200 })
       })
     )
   }
@@ -71,7 +72,7 @@ describe("SimpleCard", () => {
 
   it("should fetch product data and render basic card", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" />) as SimpleCard
@@ -87,7 +88,7 @@ describe("SimpleCard", () => {
 
   it("should render brand when brand attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" brand />) as SimpleCard
@@ -100,7 +101,7 @@ describe("SimpleCard", () => {
 
   it("should not render brand when brand attribute is disabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" />) as SimpleCard
@@ -113,7 +114,7 @@ describe("SimpleCard", () => {
 
   it("should render discount when discount attribute is enabled and product has discount", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" discount />) as SimpleCard
@@ -140,7 +141,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": { product: productWithoutDiscount }
+      "test-product": productWithoutDiscount
     })
 
     const card = (<simple-card handle="test-product" discount />) as SimpleCard
@@ -153,7 +154,7 @@ describe("SimpleCard", () => {
 
   it("should render rating when rating attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" rating />) as SimpleCard
@@ -166,7 +167,7 @@ describe("SimpleCard", () => {
 
   it("should render alternate image when alternate attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" alternate />) as SimpleCard
@@ -185,7 +186,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": { product: productWithOneImage }
+      "test-product": productWithOneImage
     })
 
     const card = (<simple-card handle="test-product" alternate />) as SimpleCard
@@ -198,7 +199,7 @@ describe("SimpleCard", () => {
 
   it("should render all features when all attributes are enabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      "test-product": mockProduct
     })
 
     const card = (<simple-card handle="test-product" brand discount rating alternate />) as SimpleCard
@@ -222,7 +223,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": { product: productWithoutImages }
+      "test-product": productWithoutImages
     })
 
     const card = (<simple-card handle="test-product" />) as SimpleCard
@@ -248,8 +249,8 @@ describe("SimpleCard", () => {
     const product2 = { ...mockProduct, title: "Product 2" }
 
     addProductHandlers({
-      "product-1": { product: product1 },
-      "product-2": { product: product2 }
+      "product-1": product1,
+      "product-2": product2
     })
 
     const card = (<simple-card handle="product-1" />) as SimpleCard
@@ -271,7 +272,7 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": { product: productWithHTML }
+      "test-product": productWithHTML
     })
 
     const card = (<simple-card handle="test-product" brand />) as SimpleCard
