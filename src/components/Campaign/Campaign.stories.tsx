@@ -74,7 +74,6 @@ export const BasicCampaign: Story = {
       "Simple campaign that displays HTML content from Nosto API.",
       html`
         <nosto-campaign placement="homepage-hero" product-id="demo-product">
-          <template>{{ html }}</template>
         </nosto-campaign>
       `
     )
