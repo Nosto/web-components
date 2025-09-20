@@ -53,6 +53,22 @@ simple-card[loading] {
   transition: opacity 0.3s ease;
 }
 
+/* Alternate image styling with CSS-only hover effect */
+.simple-card__image--alternate .simple-card__img--alternate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.simple-card__image--alternate:hover .simple-card__img--primary {
+  opacity: 0;
+}
+
+.simple-card__image--alternate:hover .simple-card__img--alternate {
+  opacity: 1;
+}
+
 .simple-card__image--placeholder {
   background: #f5f5f5;
   display: flex;

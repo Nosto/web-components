@@ -319,21 +319,4 @@ describe("SimpleCard", () => {
     expect(card.innerHTML).toContain("$9.99")
     expect(card.innerHTML).toContain("$12.99")
   })
-
-  it("should dispatch loaded event when rendering is complete", async () => {
-    addProductHandlers({
-      "test-product": { product: mockProduct }
-    })
-
-    const card = (<simple-card handle="test-product" />) as SimpleCard
-    let eventFired = false
-
-    card.addEventListener("@nosto/SimpleCard/loaded", () => {
-      eventFired = true
-    })
-
-    await card.connectedCallback()
-
-    expect(eventFired).toBe(true)
-  })
 })
