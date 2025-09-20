@@ -15,14 +15,16 @@ function mockNostoRecs(recommendations: Record<string, unknown>) {
     placements: {
       injectCampaigns() {
         Object.entries(recommendations).forEach(([placementId, content]) => {
-          const element = document.getElementById(placementId)
-          if (element && typeof content === "string") {
-            element.innerHTML = content
+          const element = document.querySelector(`nosto-campaign[placement="${placementId}"]`)
+          if (element) {
+            // @ts-expect-error type mismatch
+            element.innerHTML = "html" in content ? content.html : content
           }
         })
         return { filledElements: Object.keys(recommendations), unFilledElements: [] }
       }
     },
+    attributeProductClicksInCampaign: () => {},
     createRecommendationRequest: () => mockBuilder as unknown as any,
   })
 }

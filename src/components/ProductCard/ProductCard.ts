@@ -60,7 +60,6 @@ export class ProductCard extends NostoElement {
   templateElement?: HTMLTemplateElement
 
   async connectedCallback() {
-    assertRequired(this, "template")
     this.toggleAttribute("loading", true)
     const template = getTemplate(this)
     const product = getData(this) ?? this.dataset
