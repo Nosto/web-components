@@ -41,29 +41,13 @@ export const BasicSegmentation: Story = {
     return html`
       <nosto-control>
         <template segment="new-visitor">
-          <div class="segment-content new-visitor">
-            <h3>👋 Welcome, New Visitor!</h3>
-            <p>Sign up today and get 10% off your first order</p>
-            <button class="signup-button">Sign Up Now</button>
-          </div>
+          <h3>👋 Welcome, New Visitor!</h3>
         </template>
         <template segment="premium">
-          <div class="segment-content premium">
-            <h3>✨ Premium Member Benefits</h3>
-            <p>Enjoy exclusive deals and free shipping on all orders</p>
-            <div class="benefits-list">
-              <span class="benefit">🚚 Free Shipping</span>
-              <span class="benefit">🎁 Exclusive Deals</span>
-              <span class="benefit">⚡ Priority Support</span>
-            </div>
-          </div>
+          <h3>✨ Premium Member Benefits</h3>
         </template>
         <template segment="returning-customer">
-          <div class="segment-content returning">
-            <h3>🎉 Welcome Back!</h3>
-            <p>We've saved your favorites just for you</p>
-            <button class="favorites-button">View Favorites</button>
-          </div>
+          <h3>🎉 Welcome Back!</h3>
         </template>
       </nosto-control>
     `
@@ -89,48 +73,13 @@ export const NewVisitorExperience: Story = {
     return html`
       <nosto-control>
         <template segment="new-visitor">
-          <div class="segment-content onboarding">
-            <div class="onboarding-header">
-              <h3>🎉 Welcome to Our Store!</h3>
-              <p>Discover amazing products tailored just for you</p>
-            </div>
-            <div class="onboarding-steps">
-              <div class="step">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                  <h4>Browse Categories</h4>
-                  <p>Explore our curated collections</p>
-                </div>
-              </div>
-              <div class="step">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                  <h4>Add to Wishlist</h4>
-                  <p>Save items for later</p>
-                </div>
-              </div>
-              <div class="step">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                  <h4>Get Recommendations</h4>
-                  <p>Personalized just for you</p>
-                </div>
-              </div>
-            </div>
-            <button class="start-shopping-button">Start Shopping</button>
-          </div>
+          <h3>🎉 Welcome to Our Store!</h3>
         </template>
         <template segment="returning-customer">
-          <div class="segment-content returning">
-            <h3>Welcome back!</h3>
-            <p>Continue where you left off</p>
-          </div>
+          <h3>Welcome back!</h3>
         </template>
         <template segment="premium">
-          <div class="segment-content premium">
-            <h3>Premium Dashboard</h3>
-            <p>Your exclusive member area</p>
-          </div>
+          <h3>Premium Dashboard</h3>
         </template>
       </nosto-control>
     `
@@ -157,29 +106,15 @@ export const NoMatchingSegment: Story = {
       <nosto-control>
         <div class="default-content">
           <h3>🌐 Default Content</h3>
-          <p>This content shows when no segment templates match the user.</p>
-          <p>User segments: anonymous, mobile-user</p>
-          <div class="segment-info">
-            <small>Available segment templates: premium, new-visitor, vip-customer</small>
-          </div>
         </div>
         <template segment="premium">
-          <div class="segment-content premium">
-            <h3>Premium Member</h3>
-            <p>Exclusive premium content</p>
-          </div>
+          <h3>Premium Member</h3>
         </template>
         <template segment="new-visitor">
-          <div class="segment-content new-visitor">
-            <h3>New Visitor</h3>
-            <p>Welcome to our store!</p>
-          </div>
+          <h3>New Visitor</h3>
         </template>
         <template segment="vip-customer">
-          <div class="segment-content vip">
-            <h3>VIP Customer</h3>
-            <p>Ultra-exclusive VIP experience</p>
-          </div>
+          <h3>VIP Customer</h3>
         </template>
       </nosto-control>
     `
@@ -205,46 +140,13 @@ export const VIPCustomerExperience: Story = {
     return html`
       <nosto-control>
         <template segment="new-visitor">
-          <div class="segment-content new-visitor">
-            <h3>New Visitor Content</h3>
-          </div>
+          <h3>New Visitor Content</h3>
         </template>
         <template segment="vip-customer">
-          <div class="segment-content vip-experience">
-            <div class="vip-header">
-              <h3>💎 VIP Customer Portal</h3>
-              <div class="vip-badge">VIP</div>
-            </div>
-            <div class="vip-perks">
-              <div class="perk">
-                <div class="perk-icon">🎁</div>
-                <div class="perk-text">
-                  <strong>Exclusive Gifts</strong>
-                  <p>Complimentary items with every order</p>
-                </div>
-              </div>
-              <div class="perk">
-                <div class="perk-icon">🚁</div>
-                <div class="perk-text">
-                  <strong>Premium Delivery</strong>
-                  <p>Same-day delivery available</p>
-                </div>
-              </div>
-              <div class="perk">
-                <div class="perk-icon">💬</div>
-                <div class="perk-text">
-                  <strong>Personal Shopper</strong>
-                  <p>Dedicated customer service</p>
-                </div>
-              </div>
-            </div>
-            <button class="vip-button">Access VIP Collection</button>
-          </div>
+          <h3>💎 VIP Customer Portal</h3>
         </template>
         <template segment="premium">
-          <div class="segment-content premium">
-            <h3>Premium Member Content</h3>
-          </div>
+          <h3>Premium Member Content</h3>
         </template>
       </nosto-control>
     `
