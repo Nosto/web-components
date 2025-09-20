@@ -247,9 +247,10 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card--error")
-    expect(card.innerHTML).toContain("Failed to load product")
-    expect(card.innerHTML).toContain("missing-product")
+    // Component should still exist and have loading state removed
+    expect(card.hasAttribute("loading")).toBe(false)
+    // Since error rendering is removed, innerHTML should be empty or not contain error
+    expect(card.innerHTML).not.toContain("simple-card--error")
   })
 
   it("should re-render when handle attribute changes", async () => {

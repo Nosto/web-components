@@ -132,12 +132,3 @@ export const MultipleCards: Story = {
     </div>
   `
 }
-
-export const ErrorState: Story = {
-  args: {
-    handle: "non-existent-product"
-  },
-  render: (args) => html`
-    <simple-card handle="${args.handle}"></simple-card>
-  `
-}
