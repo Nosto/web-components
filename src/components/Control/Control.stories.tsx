@@ -3,6 +3,15 @@ import { html } from "lit"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
 
+// Helper function to mock user segments
+function mockSegments(segments: string[]) {
+  mockNostojs({
+    internal: {
+      getSegments: () => Promise.resolve(segments)
+    }
+  })
+}
+
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
   <div class="story-container">
@@ -32,11 +41,7 @@ type Story = StoryObj
 export const BasicSegmentation: Story = {
   render: () => {
     // Mock user segments - user belongs to "premium" segment
-    mockNostojs({
-      internal: {
-        getSegments: () => Promise.resolve(["premium", "returning-customer"])
-      }
-    })
+    mockSegments(["premium", "returning-customer"])
 
     return html`
       <nosto-control>
@@ -64,11 +69,7 @@ export const BasicSegmentation: Story = {
 export const NewVisitorExperience: Story = {
   render: () => {
     // Mock user segments - new visitor
-    mockNostojs({
-      internal: {
-        getSegments: () => Promise.resolve(["new-visitor"])
-      }
-    })
+    mockSegments(["new-visitor"])
 
     return html`
       <nosto-control>
@@ -96,11 +97,7 @@ export const NewVisitorExperience: Story = {
 export const NoMatchingSegment: Story = {
   render: () => {
     // Mock user segments - user has segments that don't match any templates
-    mockNostojs({
-      internal: {
-        getSegments: () => Promise.resolve(["anonymous", "mobile-user"])
-      }
-    })
+    mockSegments(["anonymous", "mobile-user"])
 
     return html`
       <nosto-control>
@@ -131,11 +128,7 @@ export const NoMatchingSegment: Story = {
 export const VIPCustomerExperience: Story = {
   render: () => {
     // Mock user segments - VIP customer
-    mockNostojs({
-      internal: {
-        getSegments: () => Promise.resolve(["vip-customer", "high-value", "premium"])
-      }
-    })
+    mockSegments(["vip-customer", "high-value", "premium"])
 
     return html`
       <nosto-control>
