@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import { addRequest } from "@/components/Campaign/orchestrator"
-import { mockNostoRecs } from "../mockNostoRecs"
+import { mockNostoRecs } from "../../mockNostoRecs"
 
 describe("orchestrator", () => {
   beforeEach(() => {
