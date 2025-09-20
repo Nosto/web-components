@@ -87,12 +87,18 @@ export function formatPrice(price: number) {
 export function escapeHTML(text: string) {
   return text.replace(/[&<>"']/g, match => {
     switch (match) {
-      case "&": return "&amp;"
-      case "<": return "&lt;"
-      case ">": return "&gt;"
-      case '"': return "&quot;"
-      case "'": return "&#39;"
-      default: return match
+      case "&":
+        return "&amp;"
+      case "<":
+        return "&lt;"
+      case ">":
+        return "&gt;"
+      case '"':
+        return "&quot;"
+      case "'":
+        return "&#39;"
+      default:
+        return match
     }
   })
 }

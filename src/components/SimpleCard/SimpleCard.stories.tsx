@@ -13,9 +13,7 @@ const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks"]
 const meta: Meta = {
   title: "Components/SimpleCard",
   component: "simple-card",
-  decorators: [
-    story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`
-  ],
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   argTypes: {
     handle: {
       control: "text",

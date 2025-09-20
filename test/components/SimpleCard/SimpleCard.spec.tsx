@@ -38,10 +38,7 @@ describe("SimpleCard", () => {
     description: "A great product for testing",
     vendor: "Test Brand",
     tags: ["test", "awesome"],
-    images: [
-      "https://example.com/image1.jpg",
-      "https://example.com/image2.jpg"
-    ],
+    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
     featured_image: "https://example.com/image1.jpg",
     variants: [
       {
