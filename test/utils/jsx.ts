@@ -5,6 +5,7 @@ import type { Image } from "@/components/Image/Image"
 import type { Product } from "@/components/Product/Product"
 import type { ProductCard } from "@/components/ProductCard/ProductCard"
 import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
+import type { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
 
 type MaybeArray<T> = T | T[]
@@ -29,6 +30,7 @@ declare global {
       "nosto-product-card": ElementMapping<ProductCard>
       "nosto-section-campaign": ElementMapping<SectionCampaign>
       "nosto-sku-options": ElementMapping<SkuOptions>
+      "simple-card": ElementMapping<SimpleCard>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
