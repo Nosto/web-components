@@ -1,7 +1,31 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
-import { mockNostoRecs } from "../../../test/mockNostoRecs"
 import "./Campaign.stories.css"
+import { mockNostojs } from "@nosto/nosto-js/testing"
+
+function mockNostoRecs(recommendations: Record<string, unknown>) {
+  const mockBuilder = {
+    disableCampaignInjection: () => mockBuilder,
+    setElements: () => mockBuilder,
+    setResponseMode: () => mockBuilder,
+    setProducts: () => mockBuilder,
+    load: async () => ({ recommendations }),
+  }
+  mockNostojs({
+    placements: {
+      injectCampaigns() {
+        Object.entries(recommendations).forEach(([placementId, content]) => {
+          const element = document.getElementById(placementId)
+          if (element && typeof content === "string") {
+            element.innerHTML = content
+          }
+        })
+        return { filledElements: Object.keys(recommendations), unFilledElements: [] }
+      }
+    },
+    createRecommendationRequest: () => mockBuilder as unknown as any,
+  })
+}
 
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
