@@ -37,132 +37,13 @@ export class VariantSelector extends NostoElement {
 
   async attributeChangedCallback() {
     if (this.isConnected) {
-      await this.loadAndRender()
+      await loadAndRender(this)
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.loadAndRender()
-  }
-
-  private async loadAndRender() {
-    try {
-      this.toggleAttribute("loading", true)
-      this.product = await this.fetchProductData()
-      this.render()
-      this.preselectFirstVariant()
-      this.toggleAttribute("loading", false)
-    } catch (error) {
-      console.error(`Failed to load product data for handle "${this.handle}":`, error)
-      this.innerHTML = `<div class="variant-selector-error">Failed to load product options</div>`
-      this.toggleAttribute("loading", false)
-    }
-  }
-
-  private async fetchProductData(): Promise<ShopifyProduct> {
-    const url = createShopifyUrl(`products/${this.handle}.js`)
-    return getJSON(url.toString()) as Promise<ShopifyProduct>
-  }
-
-  private render() {
-    if (!this.product) return
-
-    const { options } = this.product
-
-    if (options.length === 0) {
-      this.innerHTML = `<div class="variant-selector-empty">No options available</div>`
-      return
-    }
-
-    const selectsHTML = options
-      .map(option => {
-        const selectId = `variant-selector-${this.handle}-${option.name.toLowerCase()}`
-        return `
-        <div class="variant-option">
-          <label for="${selectId}">${option.name}:</label>
-          <select id="${selectId}" data-option-position="${option.position}" aria-label="Select ${option.name}">
-            ${option.values
-              .map(
-                value => `
-              <option value="${value}">${value}</option>
-            `
-              )
-              .join("")}
-          </select>
-        </div>
-      `
-      })
-      .join("")
-
-    this.innerHTML = `
-      <form class="variant-selector" role="group" aria-label="Product variant selection">
-        ${selectsHTML}
-      </form>
-    `
-
-    this.setupEventListeners()
-  }
-
-  private setupEventListeners() {
-    this.selects = Array.from(this.querySelectorAll("select"))
-
-    this.selects.forEach(select => {
-      select.addEventListener("change", () => {
-        this.updateSelectedVariant()
-      })
-    })
-  }
-
-  private preselectFirstVariant() {
-    if (!this.product?.variants.length) return
-
-    const firstVariant = this.product.variants[0]
-
-    // Set select values based on first variant's options
-    this.selects.forEach((select, index) => {
-      const optionValue = firstVariant.options[index]
-      if (optionValue) {
-        select.value = optionValue
-      }
-    })
-
-    this.selectedVariant = firstVariant
-    this.emitVariantSelectedEvent()
-  }
-
-  private updateSelectedVariant() {
-    if (!this.product) return
-
-    // Get current selected options
-    const selectedOptions = this.selects.map(select => select.value)
-
-    // Find matching variant
-    const variant = this.product.variants.find(v => {
-      return selectedOptions.every((option, index) => v.options[index] === option)
-    })
-
-    if (variant !== this.selectedVariant) {
-      this.selectedVariant = variant || null
-      this.emitVariantSelectedEvent()
-    }
-  }
-
-  private emitVariantSelectedEvent() {
-    if (!this.product) return
-
-    const detail: VariantSelectionEvent = {
-      variant: this.selectedVariant || null,
-      product: this.product
-    }
-
-    const event = new CustomEvent(VARIANT_SELECTED_EVENT, {
-      bubbles: true,
-      cancelable: true,
-      detail
-    })
-
-    this.dispatchEvent(event)
+    await loadAndRender(this)
   }
 
   /**
@@ -178,6 +59,125 @@ export class VariantSelector extends NostoElement {
   getProduct(): ShopifyProduct | undefined {
     return this.product
   }
+}
+
+async function loadAndRender(element: VariantSelector) {
+  try {
+    element.toggleAttribute("loading", true)
+    element.product = await fetchProductData(element)
+    render(element)
+    preselectFirstVariant(element)
+    element.toggleAttribute("loading", false)
+  } catch (error) {
+    console.error(`Failed to load product data for handle "${element.handle}":`, error)
+    element.innerHTML = `<div class="variant-selector-error">Failed to load product options</div>`
+    element.toggleAttribute("loading", false)
+  }
+}
+
+async function fetchProductData(element: VariantSelector): Promise<ShopifyProduct> {
+  const url = createShopifyUrl(`products/${element.handle}.js`)
+  return getJSON(url.toString()) as Promise<ShopifyProduct>
+}
+
+function render(element: VariantSelector) {
+  if (!element.product) return
+
+  const { options } = element.product
+
+  if (options.length === 0) {
+    element.innerHTML = `<div class="variant-selector-empty">No options available</div>`
+    return
+  }
+
+  const selectsHTML = options
+    .map(option => {
+      const selectId = `variant-selector-${element.handle}-${option.name.toLowerCase()}`
+      return `
+        <div class="variant-option">
+          <label for="${selectId}">${option.name}:</label>
+          <select id="${selectId}" data-option-position="${option.position}" aria-label="Select ${option.name}">
+            ${option.values
+              .map(
+                value => `
+              <option value="${value}">${value}</option>
+            `
+              )
+              .join("")}
+          </select>
+        </div>
+      `
+    })
+    .join("")
+
+  element.innerHTML = `
+      <form class="variant-selector" role="group" aria-label="Product variant selection">
+        ${selectsHTML}
+      </form>
+    `
+
+  setupEventListeners(element)
+}
+
+function setupEventListeners(element: VariantSelector) {
+  element.selects = Array.from(element.querySelectorAll("select"))
+
+  element.selects.forEach(select => {
+    select.addEventListener("change", () => {
+      updateSelectedVariant(element)
+    })
+  })
+}
+
+function preselectFirstVariant(element: VariantSelector) {
+  if (!element.product?.variants.length) return
+
+  const firstVariant = element.product.variants[0]
+
+  // Set select values based on first variant's options
+  element.selects.forEach((select, index) => {
+    const optionValue = firstVariant.options[index]
+    if (optionValue) {
+      select.value = optionValue
+    }
+  })
+
+  element.selectedVariant = firstVariant
+  emitVariantSelectedEvent(element)
+}
+
+function updateSelectedVariant(element: VariantSelector) {
+  if (!element.product) return
+
+  // Get current selected options
+  const selectedOptions = element.selects.map(select => select.value)
+
+  // Find matching variant
+  const variant = element.product.variants.find(v => {
+    return selectedOptions.every((option, index) => v.options[index] === option)
+  })
+
+  if (variant !== element.selectedVariant) {
+    element.selectedVariant = variant || null
+    emitVariantSelectedEvent(element)
+  }
+}
+
+function emitVariantSelectedEvent(element: VariantSelector) {
+  if (!element.product) return
+
+  const detail: VariantSelectionEvent = {
+    variant: element.selectedVariant || null,
+    product: element.product
+  }
+
+  const event = new CustomEvent(VARIANT_SELECTED_EVENT, {
+    bubbles: true,
+    cancelable: true,
+    detail
+  })
+
+  element.dispatchEvent(event)
 }
 
 declare global {

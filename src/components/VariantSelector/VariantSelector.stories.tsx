@@ -238,7 +238,7 @@ if (typeof window !== "undefined") {
     if (productMatch) {
       const handle = productMatch[1]
       const product = mockProducts[handle]
-      
+
       if (product) {
         return new Response(JSON.stringify(product), {
           status: 200,
@@ -409,9 +409,9 @@ export const Basic: Story = {
     </div>
 
     <script>
-      (() => {
-        const selector = document.querySelector('nosto-variant-selector')
-        const detailsElement = document.getElementById('variant-details')
+      ;(() => {
+        const selector = document.querySelector("nosto-variant-selector")
+        const detailsElement = document.getElementById("variant-details")
 
         function updateVariantInfo(event) {
           const { variant, product } = event.detail
@@ -420,14 +420,14 @@ export const Basic: Story = {
               <strong>\${variant.title}</strong><br>
               SKU: \${variant.sku}<br>
               Price: $\${(variant.price / 100).toFixed(2)}<br>
-              Available: \${variant.available ? 'Yes' : 'No'}
+              Available: \${variant.available ? "Yes" : "No"}
             \`
           } else {
-            detailsElement.innerHTML = 'No variant selected or variant not found'
+            detailsElement.innerHTML = "No variant selected or variant not found"
           }
         }
 
-        selector.addEventListener('@nosto/VariantSelector/variant-selected', updateVariantInfo)
+        selector.addEventListener("@nosto/VariantSelector/variant-selected", updateVariantInfo)
       })()
     </script>
   `,
@@ -463,9 +463,9 @@ export const SingleOption: Story = {
     </div>
 
     <script>
-      (() => {
+      ;(() => {
         const selector = document.querySelector('nosto-variant-selector[handle="good-ol-shoes"]')
-        const detailsElement = document.getElementById('shoes-variant-details')
+        const detailsElement = document.getElementById("shoes-variant-details")
 
         function updateVariantInfo(event) {
           const { variant } = event.detail
@@ -476,11 +476,11 @@ export const SingleOption: Story = {
               Price: $\${(variant.price / 100).toFixed(2)}
             \`
           } else {
-            detailsElement.innerHTML = 'No variant selected'
+            detailsElement.innerHTML = "No variant selected"
           }
         }
 
-        selector.addEventListener('@nosto/VariantSelector/variant-selected', updateVariantInfo)
+        selector.addEventListener("@nosto/VariantSelector/variant-selected", updateVariantInfo)
       })()
     </script>
   `,

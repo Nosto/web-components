@@ -205,12 +205,11 @@ describe("VariantSelector", () => {
     const selector = (<nosto-variant-selector handle="test-t-shirt" />) as VariantSelector
 
     let eventDetail: VariantSelectionEvent | null = null
-    selector.addEventListener(
-      "@nosto/VariantSelector/variant-selected",
-      ((event: CustomEvent<VariantSelectionEvent>) => {
-        eventDetail = event.detail
-      }) as EventListener
-    )
+    selector.addEventListener("@nosto/VariantSelector/variant-selected", ((
+      event: CustomEvent<VariantSelectionEvent>
+    ) => {
+      eventDetail = event.detail
+    }) as EventListener)
 
     await selector.connectedCallback()
 
@@ -392,12 +391,11 @@ describe("VariantSelector", () => {
     const selector = (<nosto-variant-selector handle="limited-variants" />) as VariantSelector
 
     let eventDetail: VariantSelectionEvent | null = null
-    selector.addEventListener(
-      "@nosto/VariantSelector/variant-selected",
-      ((event: CustomEvent<VariantSelectionEvent>) => {
-        eventDetail = event.detail
-      }) as EventListener
-    )
+    selector.addEventListener("@nosto/VariantSelector/variant-selected", ((
+      event: CustomEvent<VariantSelectionEvent>
+    ) => {
+      eventDetail = event.detail
+    }) as EventListener)
 
     await selector.connectedCallback()
 
