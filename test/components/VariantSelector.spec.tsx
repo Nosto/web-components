@@ -138,7 +138,7 @@ describe("VariantSelector", () => {
     url: "/products/test-t-shirt"
   }
 
-  it("fetches product data and renders select inputs", async () => {
+  it("fetches product data and renders button inputs", async () => {
     addProductHandlers({
       "test-t-shirt": {
         product: sampleProduct
@@ -149,9 +149,9 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    expect(selector.innerHTML).toContain("Color")
-    expect(selector.innerHTML).toContain("Size")
-    expect(selector.querySelectorAll("select")).toHaveLength(2)
+    expect(selector.shadowRoot?.innerHTML).toContain("Color")
+    expect(selector.shadowRoot?.innerHTML).toContain("Size")
+    expect(selector.shadowRoot?.querySelectorAll(".option-button")).toHaveLength(4) // Red, Blue, Small, Large
     expect(selector.hasAttribute("loading")).toBe(false)
   })
 
@@ -166,11 +166,15 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    const colorSelect = selector.querySelector('[data-option-position="1"]') as HTMLSelectElement
-    const sizeSelect = selector.querySelector('[data-option-position="2"]') as HTMLSelectElement
+    const redButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Color"][data-value="Red"]'
+    ) as HTMLButtonElement
+    const smallButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Size"][data-value="Small"]'
+    ) as HTMLButtonElement
 
-    expect(colorSelect.value).toBe("Red")
-    expect(sizeSelect.value).toBe("Small")
+    expect(redButton?.classList.contains("selected")).toBe(true)
+    expect(smallButton?.classList.contains("selected")).toBe(true)
     expect(selector.getSelectedVariant()?.id).toBe(11111)
   })
 
@@ -185,11 +189,12 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    const sizeSelect = selector.querySelector('[data-option-position="2"]') as HTMLSelectElement
+    const largeButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Size"][data-value="Large"]'
+    ) as HTMLButtonElement
 
     // Change size to Large
-    sizeSelect.value = "Large"
-    sizeSelect.dispatchEvent(new Event("change"))
+    largeButton.click()
 
     expect(selector.getSelectedVariant()?.id).toBe(22222)
     expect(selector.getSelectedVariant()?.title).toBe("Red / Large")
@@ -221,11 +226,12 @@ describe("VariantSelector", () => {
     // Reset for next test
     eventDetail = null
 
-    const colorSelect = selector.querySelector('[data-option-position="1"]') as HTMLSelectElement
+    const blueButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Color"][data-value="Blue"]'
+    ) as HTMLButtonElement
 
     // Change color to Blue
-    colorSelect.value = "Blue"
-    colorSelect.dispatchEvent(new Event("change"))
+    blueButton.click()
 
     // Event should be emitted again
     expect(eventDetail).not.toBeNull()
@@ -249,7 +255,7 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    expect(selector.innerHTML).toContain("No options available")
+    expect(selector.shadowRoot?.innerHTML).toContain("No options available")
     expect(selector.getSelectedVariant()).toBeNull()
   })
 
@@ -264,7 +270,7 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    expect(selector.innerHTML).toContain("Failed to load product options")
+    expect(selector.shadowRoot?.innerHTML).toContain("Failed to load product options")
     expect(selector.hasAttribute("loading")).toBe(false)
   })
 
@@ -334,12 +340,13 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    expect(selector.querySelectorAll("select")).toHaveLength(1)
+    expect(selector.shadowRoot?.querySelectorAll(".option-button")).toHaveLength(3) // Red, Blue, Green
     expect(selector.getSelectedVariant()?.id).toBe(44444)
 
-    const colorSelect = selector.querySelector("select") as HTMLSelectElement
-    colorSelect.value = "Blue"
-    colorSelect.dispatchEvent(new Event("change"))
+    const blueButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Color"][data-value="Blue"]'
+    ) as HTMLButtonElement
+    blueButton.click()
 
     expect(selector.getSelectedVariant()?.id).toBe(55555)
   })
@@ -355,17 +362,15 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    const form = selector.querySelector("form")
+    const form = selector.shadowRoot?.querySelector("form")
     expect(form?.getAttribute("role")).toBe("group")
     expect(form?.getAttribute("aria-label")).toBe("Product variant selection")
 
-    const selects = selector.querySelectorAll("select")
-    selects.forEach(select => {
-      expect(select.hasAttribute("aria-label")).toBe(true)
-      expect(select.getAttribute("id")).toBeTruthy()
-
-      const label = selector.querySelector(`label[for="${select.id}"]`)
-      expect(label).toBeTruthy()
+    const buttons = selector.shadowRoot?.querySelectorAll(".option-button")
+    buttons?.forEach(button => {
+      expect(button.hasAttribute("aria-label")).toBe(true)
+      expect(button.getAttribute("data-option-name")).toBeTruthy()
+      expect(button.getAttribute("data-value")).toBeTruthy()
     })
   })
 
@@ -399,13 +404,16 @@ describe("VariantSelector", () => {
 
     await selector.connectedCallback()
 
-    const colorSelect = selector.querySelector('[data-option-position="1"]') as HTMLSelectElement
-    const sizeSelect = selector.querySelector('[data-option-position="2"]') as HTMLSelectElement
+    const blueButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Color"][data-value="Blue"]'
+    ) as HTMLButtonElement
+    const smallButton = selector.shadowRoot?.querySelector(
+      '.option-button[data-option-name="Size"][data-value="Small"]'
+    ) as HTMLButtonElement
 
     // Change to an unavailable combination
-    colorSelect.value = "Blue"
-    sizeSelect.value = "Small"
-    colorSelect.dispatchEvent(new Event("change"))
+    blueButton.click()
+    smallButton.click()
 
     expect(selector.getSelectedVariant()).toBeNull()
     expect(eventDetail!.variant).toBeNull()

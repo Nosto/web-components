@@ -33,7 +33,7 @@ export class VariantSelector extends NostoElement {
 
   private product?: ShopifyProduct
   private selectedVariant?: ShopifyVariant | null
-  private selects: HTMLSelectElement[] = []
+  private buttons: HTMLButtonElement[] = []
 
   async attributeChangedCallback() {
     if (this.isConnected) {
@@ -70,7 +70,27 @@ async function loadAndRender(element: VariantSelector) {
     element.toggleAttribute("loading", false)
   } catch (error) {
     console.error(`Failed to load product data for handle "${element.handle}":`, error)
-    element.innerHTML = `<div class="variant-selector-error">Failed to load product options</div>`
+
+    if (!element.shadowRoot) {
+      element.attachShadow({ mode: "open" })
+    }
+
+    element.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          font-family: var(--nosto-font-family, inherit);
+        }
+        .variant-selector-error {
+          color: var(--nosto-error-color, #dc3545);
+          background: var(--nosto-error-bg, #f8d7da);
+          padding: var(--nosto-error-padding, 1rem);
+          border-radius: var(--nosto-error-radius, 4px);
+          border: var(--nosto-error-border, 1px solid #f5c6cb);
+        }
+      </style>
+      <div class="variant-selector-error">Failed to load product options</div>
+    `
     element.toggleAttribute("loading", false)
   }
 }
@@ -86,59 +106,191 @@ function render(element: VariantSelector) {
   const { options } = element.product
 
   if (options.length === 0) {
-    element.innerHTML = `<div class="variant-selector-empty">No options available</div>`
+    if (!element.shadowRoot) {
+      element.attachShadow({ mode: "open" })
+    }
+    element.shadowRoot!.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          font-family: var(--nosto-font-family, inherit);
+        }
+        .variant-selector-empty {
+          color: var(--nosto-text-color, #666);
+          padding: var(--nosto-padding, 1rem);
+        }
+      </style>
+      <div class="variant-selector-empty">No options available</div>
+    `
     return
   }
 
-  const selectsHTML = options
+  if (!element.shadowRoot) {
+    element.attachShadow({ mode: "open" })
+  }
+
+  const optionsHTML = options
     .map(option => {
-      const selectId = `variant-selector-${element.handle}-${option.name.toLowerCase()}`
       return `
-        <div class="variant-option">
-          <label for="${selectId}">${option.name}:</label>
-          <select id="${selectId}" data-option-position="${option.position}" aria-label="Select ${option.name}">
+        <div class="variant-option" data-option-name="${option.name}" data-option-position="${option.position}">
+          <div class="option-label">${option.name}:</div>
+          <div class="option-buttons" role="group" aria-label="Select ${option.name}">
             ${option.values
               .map(
                 value => `
-              <option value="${value}">${value}</option>
-            `
+                  <button 
+                    type="button" 
+                    class="option-button" 
+                    data-value="${value}" 
+                    data-option-name="${option.name}"
+                    aria-label="Select ${option.name}: ${value}"
+                  >
+                    ${value}
+                  </button>
+                `
               )
               .join("")}
-          </select>
+          </div>
         </div>
       `
     })
     .join("")
 
-  element.innerHTML = `
-      <form class="variant-selector" role="group" aria-label="Product variant selection">
-        ${selectsHTML}
-      </form>
-    `
+  element.shadowRoot.innerHTML = `
+    <style>
+      :host {
+        display: block;
+        font-family: var(--nosto-font-family, inherit);
+      }
+      
+      :host([loading]) {
+        opacity: var(--nosto-loading-opacity, 0.6);
+      }
+      
+      .variant-selector {
+        display: flex;
+        flex-direction: column;
+        gap: var(--nosto-option-spacing, 1rem);
+      }
+      
+      .variant-option {
+        display: flex;
+        flex-direction: column;
+        gap: var(--nosto-label-spacing, 0.5rem);
+      }
+      
+      .option-label {
+        font-weight: var(--nosto-label-weight, 600);
+        color: var(--nosto-label-color, #333);
+        font-size: var(--nosto-label-size, 1rem);
+      }
+      
+      .option-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--nosto-button-spacing, 0.5rem);
+      }
+      
+      .option-button {
+        padding: var(--nosto-button-padding, 0.5rem 1rem);
+        border: var(--nosto-button-border, 1px solid #ccc);
+        border-radius: var(--nosto-button-radius, 4px);
+        background: var(--nosto-button-bg, white);
+        color: var(--nosto-button-color, #333);
+        font-size: var(--nosto-button-size, 0.875rem);
+        cursor: pointer;
+        transition: var(--nosto-button-transition, all 0.2s ease);
+        min-width: var(--nosto-button-min-width, 2.5rem);
+        text-align: center;
+      }
+      
+      .option-button:hover {
+        background: var(--nosto-button-hover-bg, #f5f5f5);
+        border-color: var(--nosto-button-hover-border, #999);
+      }
+      
+      .option-button:focus {
+        outline: none;
+        border-color: var(--nosto-button-focus-border, #007bff);
+        box-shadow: var(--nosto-button-focus-shadow, 0 0 0 2px rgba(0, 123, 255, 0.25));
+      }
+      
+      .option-button.selected {
+        background: var(--nosto-button-selected-bg, #007bff);
+        color: var(--nosto-button-selected-color, white);
+        border-color: var(--nosto-button-selected-border, #007bff);
+      }
+      
+      .option-button:disabled {
+        opacity: var(--nosto-button-disabled-opacity, 0.5);
+        cursor: not-allowed;
+        background: var(--nosto-button-disabled-bg, #f5f5f5);
+        color: var(--nosto-button-disabled-color, #999);
+      }
+      
+      .variant-selector-error {
+        color: var(--nosto-error-color, #dc3545);
+        background: var(--nosto-error-bg, #f8d7da);
+        padding: var(--nosto-error-padding, 1rem);
+        border-radius: var(--nosto-error-radius, 4px);
+        border: var(--nosto-error-border, 1px solid #f5c6cb);
+      }
+    </style>
+    <form class="variant-selector" role="group" aria-label="Product variant selection">
+      ${optionsHTML}
+    </form>
+  `
 
   setupEventListeners(element)
 }
 
 function setupEventListeners(element: VariantSelector) {
-  element.selects = Array.from(element.querySelectorAll("select"))
+  if (!element.shadowRoot) return
 
-  element.selects.forEach(select => {
-    select.addEventListener("change", () => {
+  const buttons = Array.from(element.shadowRoot.querySelectorAll<HTMLButtonElement>(".option-button"))
+  element.buttons = buttons // Store buttons instead of selects
+
+  buttons.forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault()
+      const clickedButton = event.target as HTMLButtonElement
+      const optionName = clickedButton.dataset.optionName!
+
+      // Update selection state - only one button per option group can be selected
+      const optionButtons = element.shadowRoot!.querySelectorAll<HTMLButtonElement>(
+        `.option-button[data-option-name="${optionName}"]`
+      )
+
+      optionButtons.forEach(btn => btn.classList.remove("selected"))
+      clickedButton.classList.add("selected")
+
       updateSelectedVariant(element)
     })
   })
 }
 
 function preselectFirstVariant(element: VariantSelector) {
-  if (!element.product?.variants.length) return
+  if (!element.product?.variants.length || !element.shadowRoot) return
 
   const firstVariant = element.product.variants[0]
 
-  // Set select values based on first variant's options
-  element.selects.forEach((select, index) => {
-    const optionValue = firstVariant.options[index]
+  // Set button selection based on first variant's options
+  firstVariant.options.forEach((optionValue, index) => {
     if (optionValue) {
-      select.value = optionValue
+      const optionName = element.product!.options[index].name
+      const button = element.shadowRoot!.querySelector<HTMLButtonElement>(
+        `.option-button[data-option-name="${optionName}"][data-value="${optionValue}"]`
+      )
+      if (button) {
+        // Clear other selections in the same option group
+        const optionButtons = element.shadowRoot!.querySelectorAll<HTMLButtonElement>(
+          `.option-button[data-option-name="${optionName}"]`
+        )
+        optionButtons.forEach(btn => btn.classList.remove("selected"))
+
+        // Select the correct button
+        button.classList.add("selected")
+      }
     }
   })
 
@@ -147,15 +299,28 @@ function preselectFirstVariant(element: VariantSelector) {
 }
 
 function updateSelectedVariant(element: VariantSelector) {
-  if (!element.product) return
+  if (!element.product || !element.shadowRoot) return
 
-  // Get current selected options
-  const selectedOptions = element.selects.map(select => select.value)
+  // Get current selected options from buttons
+  const selectedOptions: string[] = []
 
-  // Find matching variant
-  const variant = element.product.variants.find(v => {
-    return selectedOptions.every((option, index) => v.options[index] === option)
+  element.product.options.forEach(option => {
+    const selectedButton = element.shadowRoot!.querySelector<HTMLButtonElement>(
+      `.option-button[data-option-name="${option.name}"].selected`
+    )
+    if (selectedButton) {
+      selectedOptions.push(selectedButton.dataset.value!)
+    } else {
+      selectedOptions.push("") // No selection for this option
+    }
   })
+
+  // Find matching variant - only if all options are selected
+  const variant = selectedOptions.every(option => option !== "")
+    ? element.product.variants.find(v => {
+        return selectedOptions.every((option, index) => v.options[index] === option)
+      })
+    : null
 
   if (variant !== element.selectedVariant) {
     element.selectedVariant = variant || null
