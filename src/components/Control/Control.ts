@@ -5,6 +5,31 @@ import { NostoElement } from "../Element"
 /**
  * This component replaces its children with the content of the first template
  * that matches any of the current user's Nosto segments.
+ *
+ * @example
+ * Conditional content based on user segments:
+ * ```html
+ * <nosto-control>
+ *   <template segment="premium-customers">
+ *     <div class="premium-offer">
+ *       <h2>Exclusive Premium Offer!</h2>
+ *       <p>Get 20% off your next purchase</p>
+ *     </div>
+ *   </template>
+ *   <template segment="new-customers">
+ *     <div class="welcome-offer">
+ *       <h2>Welcome! Get Started</h2>
+ *       <p>Use code WELCOME10 for 10% off your first order</p>
+ *     </div>
+ *   </template>
+ *   <template segment="frequent-buyers">
+ *     <div class="loyalty-message">
+ *       <h2>Thank you for your loyalty!</h2>
+ *       <p>Free shipping on all orders this month</p>
+ *     </div>
+ *   </template>
+ * </nosto-control>
+ * ```
  */
 @customElement("nosto-control")
 export class Control extends NostoElement {

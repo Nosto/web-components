@@ -23,6 +23,37 @@ import { addRequest } from "./orchestrator"
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
+ *
+ * @example
+ * Basic campaign rendering with HTML mode:
+ * ```html
+ * <nosto-campaign placement="front-page"></nosto-campaign>
+ * ```
+ *
+ * @example
+ * Campaign with template-based rendering:
+ * ```html
+ * <nosto-campaign placement="front-page" template="my-template">
+ *   <template id="my-template">
+ *     <div class="campaign">
+ *       <h2>{{ title }}</h2>
+ *       <div class="products">
+ *         <div v-for="product in products" class="product">
+ *           <img :src="product.imageUrl" :alt="product.name" />
+ *           <h3>{{ product.name }}</h3>
+ *           <span class="price">{{ product.price }}</span>
+ *         </div>
+ *       </div>
+ *     </div>
+ *   </template>
+ * </nosto-campaign>
+ * ```
+ *
+ * @example
+ * Campaign with lazy loading and product context:
+ * ```html
+ * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
+ * ```
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
