@@ -45,7 +45,7 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
       <nosto-image 
         src="${primaryImage}" 
         alt="${escapeHTML(product.title)}"
-        height="300"
+        width="300"
         aspect-ratio="${aspectRatio}"
         loading="lazy"
         class="simple-card__img simple-card__img--primary"
@@ -63,7 +63,7 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
     <nosto-image 
       src="${alternateImage}" 
       alt="${escapeHTML(product.title)}"
-      height="300"
+      width="300"
       aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="simple-card__img simple-card__img--alternate"
