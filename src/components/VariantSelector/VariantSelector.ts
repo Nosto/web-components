@@ -70,38 +70,34 @@ async function loadAndRender(element: VariantSelector) {
   element.toggleAttribute("loading", false)
 }
 
-async function fetchProductData(element: VariantSelector): Promise<ShopifyProduct> {
+async function fetchProductData(element: VariantSelector) {
   const url = createShopifyUrl(`products/${element.handle}.js`)
   return getJSON(url.toString()) as Promise<ShopifyProduct>
 }
 
-function renderOptions(options: ShopifyProduct["options"]): string {
-  return options
-    .map(option => {
-      return `
-        <div class="variant-option" data-option-name="${option.name}" data-option-position="${option.position}">
-          <div class="option-label">${option.name}:</div>
-          <div class="option-buttons" role="group" aria-label="Select ${option.name}">
-            ${option.values
-              .map(
-                value => `
-                  <button 
-                    type="button" 
-                    class="option-button" 
-                    data-value="${value}" 
-                    data-option-name="${option.name}"
-                    aria-label="Select ${option.name}: ${value}"
-                  >
-                    ${value}
-                  </button>
-                `
-              )
-              .join("")}
-          </div>
-        </div>
-      `
-    })
-    .join("")
+function renderOption(option: ShopifyProduct["options"][0]) {
+  return `
+    <div class="variant-option" data-option-name="${option.name}" data-option-position="${option.position}">
+      <div class="option-label">${option.name}:</div>
+      <div class="option-buttons" role="group" aria-label="Select ${option.name}">
+        ${option.values
+          .map(
+            value => `
+              <button 
+                type="button" 
+                class="option-button" 
+                data-value="${value}" 
+                data-option-name="${option.name}"
+                aria-label="Select ${option.name}: ${value}"
+              >
+                ${value}
+              </button>
+            `
+          )
+          .join("")}
+      </div>
+    </div>
+  `
 }
 
 function render(element: VariantSelector) {
@@ -124,12 +120,10 @@ function render(element: VariantSelector) {
     element.attachShadow({ mode: "open" })
   }
 
-  const optionsHTML = renderOptions(options)
-
   element.shadowRoot.innerHTML = `
     <style>${VARIANT_SELECTOR_STYLES}</style>
     <form class="variant-selector" role="group" aria-label="Product variant selection">
-      ${optionsHTML}
+      ${options.map(option => renderOption(option)).join("")}
     </form>
   `
 
