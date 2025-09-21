@@ -3,6 +3,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 
 /**
+ * A custom element that provides conditional content rendering based on user segments.
  * This component replaces its children with the content of the first template
  * that matches any of the current user's Nosto segments.
  *

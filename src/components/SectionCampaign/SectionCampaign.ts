@@ -7,8 +7,8 @@ import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
 /**
- * NostoSectionCampaign is a custom element that fetches Nosto placement results and renders the results
- * using a Shopify section template via the Section Rendering API.
+ * A custom element that fetches Nosto placement results and renders them using Shopify section templates.
+ * This component integrates with Shopify's Section Rendering API to dynamically render campaign content.
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
