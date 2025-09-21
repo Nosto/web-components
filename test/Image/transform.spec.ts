@@ -32,6 +32,15 @@ describe("NostoImage/transform", () => {
       expect(result.src).toContain("shopify")
     })
 
+    it("handles undefined crop correctly", () => {
+      const result = transform({ src: imageUrl, width: 300, height: 200, crop: undefined })
+      expect(result.src).toBe(`${baseUrl}image.jpg?width=300&height=200`)
+      expect(result.src).not.toContain("crop=undefined")
+      expect(result.width).toBeUndefined()
+      expect(result.height).toBeUndefined()
+      expect(typeof result.style).toBe("object")
+    })
+
     it("sanitizes style and props (removes style key from props)", () => {
       const result = transform({ src: imageUrl, width: 100, height: 200 })
       expect(result.src).toBe(`${baseUrl}image.jpg?width=100&height=200`)

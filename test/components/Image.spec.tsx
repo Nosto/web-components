@@ -121,26 +121,47 @@ describe("Image", () => {
   describe("Attribute handling", () => {
     it("should not set null or undefined attributes on img element", () => {
       // Create an image with some null/undefined properties
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} crop={undefined as any} />) as Image
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} crop={undefined} />) as Image
       nostoImage.connectedCallback()
-      
+
       const imgElement = nostoImage.querySelector("img")
       expect(imgElement).toBeDefined()
-      
-      // Debug: log all attributes
+
+      // Check that no attributes have null or undefined string values
       const attributes = imgElement!.attributes
-      console.log("Attributes found:")
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes[i]
-        console.log(`  ${attr.name}: "${attr.value}"`)
-      }
-      
-      // Check that no attributes have null or undefined values
       for (let i = 0; i < attributes.length; i++) {
         const attr = attributes[i]
         expect(attr.value).not.toBe("null")
         expect(attr.value).not.toBe("undefined")
         expect(attr.value).not.toBe("")
+      }
+
+      // Ensure width and height attributes don't exist when they have undefined values from unpic transform
+      expect(imgElement!.hasAttribute("width")).toBe(false)
+      expect(imgElement!.hasAttribute("height")).toBe(false)
+    })
+
+    it("should set attributes for valid non-null values", () => {
+      // Create an image with all valid properties
+      nostoImage = (<nosto-image src={shopifyUrl} width={400} height={300} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Check that valid attributes are present
+      expect(imgElement!.hasAttribute("src")).toBe(true)
+      expect(imgElement!.hasAttribute("srcset")).toBe(true)
+      expect(imgElement!.hasAttribute("sizes")).toBe(true)
+      expect(imgElement!.hasAttribute("loading")).toBe(true)
+      expect(imgElement!.hasAttribute("decoding")).toBe(true)
+
+      // Verify no null/undefined string values
+      const attributes = imgElement!.attributes
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes[i]
+        expect(attr.value).not.toBe("null")
+        expect(attr.value).not.toBe("undefined")
       }
     })
   })
