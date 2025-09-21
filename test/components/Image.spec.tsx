@@ -117,4 +117,31 @@ describe("Image", () => {
       assertImage(stencilUrlPrefix)
     })
   })
+
+  describe("Attribute handling", () => {
+    it("should not set null or undefined attributes on img element", () => {
+      // Create an image with some null/undefined properties
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} crop={undefined as any} />) as Image
+      nostoImage.connectedCallback()
+      
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      
+      // Debug: log all attributes
+      const attributes = imgElement!.attributes
+      console.log("Attributes found:")
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes[i]
+        console.log(`  ${attr.name}: "${attr.value}"`)
+      }
+      
+      // Check that no attributes have null or undefined values
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes[i]
+        expect(attr.value).not.toBe("null")
+        expect(attr.value).not.toBe("undefined")
+        expect(attr.value).not.toBe("")
+      }
+    })
+  })
 })
