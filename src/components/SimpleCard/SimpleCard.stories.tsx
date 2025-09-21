@@ -8,7 +8,7 @@ window.Shopify = {
   }
 }
 
-const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks"]
+const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks", "insane-shoes"]
 
 const meta: Meta = {
   title: "Components/SimpleCard",
