@@ -39,12 +39,14 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
 
   return `
     <div class="simple-card__image ${hasAlternate ? "simple-card__image--alternate" : ""}">
-      <img 
+      <nosto-image 
         src="${primaryImage}" 
         alt="${escapeHTML(product.title)}"
+        width="300"
+        aspect-ratio="1"
         loading="lazy"
         class="simple-card__img simple-card__img--primary"
-      />
+      ></nosto-image>
       ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product) : ""}
     </div>
   `
@@ -52,12 +54,14 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
 
 export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
   return `
-    <img 
+    <nosto-image 
       src="${alternateImage}" 
       alt="${escapeHTML(product.title)}"
+      width="300"
+      aspect-ratio="1"
       loading="lazy"
       class="simple-card__img simple-card__img--alternate"
-    />
+    ></nosto-image>
   `
 }
 
