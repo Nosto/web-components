@@ -52,10 +52,10 @@ export const Default: Story = {
   render: args => html`
     <nosto-simple-card
       handle="${args.handle}"
-      ${args.alternate ? "alternate" : ""}
-      ${args.brand ? "brand" : ""}
-      ${args.discount ? "discount" : ""}
-      ${args.rating ? "rating" : ""}
+      ?alternate=${args.alternate}
+      ?brand=${args.brand}
+      ?discount=${args.discount}
+      ?rating=${args.rating}
     ></nosto-simple-card>
   `
 }
@@ -71,10 +71,10 @@ export const WithAllFeatures: Story = {
   render: args => html`
     <nosto-simple-card
       handle="${args.handle}"
-      ${args.alternate ? "alternate" : ""}
-      ${args.brand ? "brand" : ""}
-      ${args.discount ? "discount" : ""}
-      ${args.rating ? "rating" : ""}
+      ?alternate=${args.alternate}
+      ?brand=${args.brand}
+      ?discount=${args.discount}
+      ?rating=${args.rating}
     ></nosto-simple-card>
   `
 }
