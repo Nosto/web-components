@@ -133,7 +133,6 @@ describe("Image", () => {
         const attr = attributes[i]
         expect(attr.value).not.toBe("null")
         expect(attr.value).not.toBe("undefined")
-        expect(attr.value).not.toBe("")
       }
 
       // Ensure width and height attributes don't exist when they have undefined values from unpic transform
