@@ -30,14 +30,14 @@ export class SimpleCard extends NostoElement {
     alternate: Boolean,
     brand: Boolean,
     discount: Boolean,
-    rating: Boolean
+    rating: Number
   }
 
   handle!: string
   alternate?: boolean
   brand?: boolean
   discount?: boolean
-  rating?: boolean
+  rating?: number
 
   async attributeChangedCallback() {
     if (this.isConnected) {
@@ -58,7 +58,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", false)
 }
 
-async function fetchProductData(handle: string): Promise<ShopifyProduct> {
+async function fetchProductData(handle: string) {
   const url = createShopifyUrl(`products/${handle}.js`)
   return getJSON(url.href) as Promise<ShopifyProduct>
 }

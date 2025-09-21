@@ -54,8 +54,8 @@ const meta: Meta = {
       description: "Show discount data"
     },
     rating: {
-      control: "boolean",
-      description: "Show product rating"
+      control: "number",
+      description: "Product rating (0-5 stars)"
     }
   },
   args: {
@@ -64,7 +64,7 @@ const meta: Meta = {
     alternate: false,
     brand: false,
     discount: false,
-    rating: false
+    rating: 0
   }
 }
 
@@ -78,7 +78,7 @@ export const Default: Story = {
       ?alternate=${args.alternate}
       ?brand=${args.brand}
       ?discount=${args.discount}
-      ?rating=${args.rating}
+      rating=${args.rating || 0}
     ></nosto-simple-card>
   `
 }
@@ -89,7 +89,7 @@ export const WithAllFeatures: Story = {
     alternate: true,
     brand: true,
     discount: true,
-    rating: true
+    rating: 4.2
   },
   render: args => html`
     <nosto-simple-card
@@ -97,7 +97,7 @@ export const WithAllFeatures: Story = {
       ?alternate=${args.alternate}
       ?brand=${args.brand}
       ?discount=${args.discount}
-      ?rating=${args.rating}
+      rating=${args.rating || 0}
     ></nosto-simple-card>
   `
 }
@@ -115,7 +115,9 @@ export const GridOfCards: Story = {
   render: () => html`
     <div class="card-grid">
       ${handles.map(
-        handle => html` <nosto-simple-card handle="${handle}" alternate brand discount rating></nosto-simple-card> `
+        handle => html`
+          <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8"></nosto-simple-card>
+        `
       )}
     </div>
   `

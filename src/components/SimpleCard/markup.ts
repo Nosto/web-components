@@ -19,7 +19,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
             </span>
             ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.compare_at_price!)}</span>` : ""}
           </div>
-          ${element.rating ? generateRatingHTML() : ""}
+          ${element.rating ? generateRatingHTML(element.rating) : ""}
         </div>
       </a>
     </div>
@@ -65,10 +65,13 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
   `
 }
 
-export function generateRatingHTML() {
-  // Since product rating isn't typically in Shopify product.js,
-  // this is a placeholder for potential integration with review apps
-  return `<div class="simple-card__rating">★★★★☆ (4.0)</div>`
+export function generateRatingHTML(rating: number) {
+  // Generate star display based on numeric rating
+  const fullStars = Math.floor(rating)
+  const hasHalfStar = rating % 1 >= 0.5
+  const starDisplay =
+    "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
+  return `<div class="simple-card__rating">${starDisplay} (${rating.toFixed(1)})</div>`
 }
 
 export function formatPrice(price: number) {

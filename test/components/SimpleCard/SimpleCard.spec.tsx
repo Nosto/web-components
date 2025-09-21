@@ -135,17 +135,17 @@ describe("SimpleCard", () => {
     expect(card.innerHTML).not.toContain("simple-card__price-original")
   })
 
-  it("should render rating when rating attribute is enabled", async () => {
+  it("should render rating when rating attribute is provided", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" rating />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" rating={4.2} />) as SimpleCard
 
     await card.connectedCallback()
 
     expect(card.innerHTML).toContain("simple-card__rating")
-    expect(card.innerHTML).toContain("★★★★☆")
+    expect(card.innerHTML).toContain("★★★★☆ (4.2)")
   })
 
   it("should render alternate image when alternate attribute is enabled", async () => {
@@ -188,7 +188,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" brand discount rating alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" brand discount rating={3.5} alternate />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -196,7 +196,7 @@ describe("SimpleCard", () => {
     expect(card.innerHTML).toContain("Test Brand")
     expect(card.innerHTML).toContain("$24.99") // original price shown with discount attribute
     expect(card.innerHTML).toContain("simple-card__rating")
-    expect(card.innerHTML).toContain("★★★★☆")
+    expect(card.innerHTML).toContain("★★★☆☆ (3.5)")
     expect(card.innerHTML).toContain("simple-card__img--primary")
     expect(card.innerHTML).toContain("simple-card__img--alternate")
   })
