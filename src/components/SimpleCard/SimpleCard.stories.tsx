@@ -11,6 +11,15 @@ window.Shopify = {
   }
 }
 
+// Reusable decorator logic
+function updateShopifyRoot(rootUrl: string) {
+  window.Shopify = {
+    routes: {
+      root: rootUrl
+    }
+  }
+}
+
 const meta: Meta = {
   title: "Components/SimpleCard",
   component: "nosto-simple-card",
@@ -18,11 +27,7 @@ const meta: Meta = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        window.Shopify = {
-          routes: {
-            root: context.args.root
-          }
-        }
+        updateShopifyRoot(context.args.root)
       }
       return html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`
     }
@@ -102,11 +107,7 @@ export const GridOfCards: Story = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        window.Shopify = {
-          routes: {
-            root: context.args.root
-          }
-        }
+        updateShopifyRoot(context.args.root)
       }
       return html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`
     }
