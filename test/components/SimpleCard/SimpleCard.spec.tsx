@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, afterEach } from "vitest"
+import { describe, it, expect } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -8,11 +8,6 @@ import { createShopifyUrl } from "@/utils"
 import type { ShopifyProduct } from "@/components/SimpleCard/types"
 
 describe("SimpleCard", () => {
-  afterEach(() => {
-    vi.clearAllMocks()
-    document.body.innerHTML = ""
-  })
-
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     // Use createShopifyUrl to get the correct path with Shopify root handling
     const productUrl = createShopifyUrl("products/:handle.js")
@@ -40,6 +35,8 @@ describe("SimpleCard", () => {
     tags: ["test", "awesome"],
     images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
     featured_image: "https://example.com/image1.jpg",
+    price: 1999, // $19.99 in cents
+    compare_at_price: 2499, // $24.99 in cents
     variants: [
       {
         id: 789,
@@ -98,7 +95,7 @@ describe("SimpleCard", () => {
     expect(card.innerHTML).not.toContain("Test Brand")
   })
 
-  it("should render discount when discount attribute is enabled and product has discount", async () => {
+  it("should render original price when discount attribute is enabled and product has discount", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
     })
@@ -107,14 +104,15 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card__discount")
-    expect(card.innerHTML).toContain("Save 20%")
     expect(card.innerHTML).toContain("$24.99") // original price
+    expect(card.innerHTML).toContain("$19.99") // current price
   })
 
-  it("should not render discount when product has no discount", async () => {
+  it("should not render original price when product has no discount", async () => {
     const productWithoutDiscount = {
       ...mockProduct,
+      price: 1999,
+      compare_at_price: 1999, // same price, no discount
       variants: [
         {
           id: 789,
@@ -134,8 +132,7 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).not.toContain("simple-card__discount")
-    expect(card.innerHTML).not.toContain("Save")
+    expect(card.innerHTML).not.toContain("simple-card__price-original")
   })
 
   it("should render rating when rating attribute is enabled", async () => {
@@ -197,8 +194,7 @@ describe("SimpleCard", () => {
 
     expect(card.innerHTML).toContain("simple-card__brand")
     expect(card.innerHTML).toContain("Test Brand")
-    expect(card.innerHTML).toContain("simple-card__discount")
-    expect(card.innerHTML).toContain("Save 20%")
+    expect(card.innerHTML).toContain("$24.99") // original price shown with discount attribute
     expect(card.innerHTML).toContain("simple-card__rating")
     expect(card.innerHTML).toContain("★★★★☆")
     expect(card.innerHTML).toContain("simple-card__img--primary")
@@ -279,6 +275,8 @@ describe("SimpleCard", () => {
   it("should format price correctly", async () => {
     const productWithDifferentPrice = {
       ...mockProduct,
+      price: 999, // $9.99 in cents
+      compare_at_price: 1299, // $12.99 in cents
       variants: [
         {
           id: 789,

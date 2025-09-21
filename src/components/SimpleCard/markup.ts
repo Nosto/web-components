@@ -1,11 +1,8 @@
-import type { ShopifyProduct, ShopifyVariant } from "./types"
+import type { ShopifyProduct } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
-  const hasDiscount =
-    element.discount &&
-    product.variants?.[0]?.compare_at_price &&
-    product.variants[0].compare_at_price > product.variants[0].price
+  const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
 
   return `
     <div class="simple-card">
@@ -19,11 +16,10 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
         </h3>
         <div class="simple-card__price">
           <span class="simple-card__price-current">
-            ${formatPrice(product.variants?.[0]?.price || 0)}
+            ${formatPrice(product.price || 0)}
           </span>
-          ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.variants[0].compare_at_price!)}</span>` : ""}
+          ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.compare_at_price!)}</span>` : ""}
         </div>
-        ${element.discount && hasDiscount ? generateDiscountHTML(product.variants[0]) : ""}
         ${element.rating ? generateRatingHTML() : ""}
       </div>
     </div>
@@ -64,11 +60,6 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
   `
 }
 
-export function generateDiscountHTML(variant: ShopifyVariant) {
-  const discountPercent = Math.round(((variant.compare_at_price! - variant.price) / variant.compare_at_price!) * 100)
-  return `<div class="simple-card__discount">Save ${discountPercent}%</div>`
-}
-
 export function generateRatingHTML() {
   // Since product rating isn't typically in Shopify product.js,
   // this is a placeholder for potential integration with review apps
@@ -77,11 +68,11 @@ export function generateRatingHTML() {
 
 export function formatPrice(price: number) {
   // Convert from cents to dollars and format
-  const dollars = price / 100
-  return new Intl.NumberFormat("en-US", {
+  const amount = price / 100
+  return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
     style: "currency",
-    currency: "USD"
-  }).format(dollars)
+    currency: window.Shopify?.currency?.active ?? "USD"
+  }).format(amount)
 }
 
 export function escapeHTML(text: string) {
