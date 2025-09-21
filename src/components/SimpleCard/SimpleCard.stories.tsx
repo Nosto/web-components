@@ -29,7 +29,7 @@ const meta: Meta = {
       if (context.args?.root) {
         updateShopifyRoot(context.args.root)
       }
-      return html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`
+      return story()
     }
   ],
   argTypes: {
@@ -72,6 +72,9 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
+  decorators: [
+    story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`
+  ],
   render: args => html`
     <nosto-simple-card
       handle="${args.handle}"
@@ -91,6 +94,9 @@ export const WithAllFeatures: Story = {
     discount: true,
     rating: 4.2
   },
+  decorators: [
+    story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`
+  ],
   render: args => html`
     <nosto-simple-card
       handle="${args.handle}"
@@ -104,13 +110,7 @@ export const WithAllFeatures: Story = {
 
 export const GridOfCards: Story = {
   decorators: [
-    (story, context) => {
-      // Update Shopify root if provided via args
-      if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
-      }
-      return html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`
-    }
+    story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`
   ],
   render: () => html`
     <div class="card-grid">
