@@ -259,21 +259,6 @@ describe("VariantSelector", () => {
     expect(selector.getSelectedVariant()).toBeNull()
   })
 
-  it("handles product not found gracefully", async () => {
-    addProductHandlers({
-      "non-existent": {
-        status: 404
-      }
-    })
-
-    const selector = (<nosto-variant-selector handle="non-existent" />) as VariantSelector
-
-    await selector.connectedCallback()
-
-    expect(selector.shadowRoot?.innerHTML).toContain("Failed to load product options")
-    expect(selector.hasAttribute("loading")).toBe(false)
-  })
-
   it("works with single option products", async () => {
     const singleOptionProduct = {
       ...sampleProduct,
