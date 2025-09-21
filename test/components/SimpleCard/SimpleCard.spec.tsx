@@ -52,7 +52,7 @@ describe("SimpleCard", () => {
   } as ShopifyProduct
 
   it("should throw an error if handle is not provided", async () => {
-    const card = (<simple-card />) as SimpleCard
+    const card = (<nosto-simple-card />) as SimpleCard
     await expect(card.connectedCallback()).rejects.toThrowError("Property handle is required.")
   })
 
@@ -61,7 +61,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -77,7 +77,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" brand />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" brand />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -90,7 +90,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -103,7 +103,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" discount />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" discount />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -130,7 +130,7 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithoutDiscount }
     })
 
-    const card = (<simple-card handle="test-product" discount />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" discount />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -143,7 +143,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" rating />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" rating />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -156,7 +156,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" alternate />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -175,7 +175,7 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithOneImage }
     })
 
-    const card = (<simple-card handle="test-product" alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" alternate />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -191,7 +191,7 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<simple-card handle="test-product" brand discount rating alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" brand discount rating alternate />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -215,7 +215,7 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithoutImages }
     })
 
-    const card = (<simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -227,7 +227,7 @@ describe("SimpleCard", () => {
       "missing-product": { status: 404 }
     })
 
-    const card = (<simple-card handle="missing-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle="missing-product" />) as SimpleCard
 
     // Since error handling is removed, the component should throw
     await expect(card.connectedCallback()).rejects.toThrow()
@@ -242,7 +242,7 @@ describe("SimpleCard", () => {
       "product-2": { product: product2 }
     })
 
-    const card = (<simple-card handle="product-1" />) as SimpleCard
+    const card = (<nosto-simple-card handle="product-1" />) as SimpleCard
     document.body.appendChild(card)
 
     await card.connectedCallback()
@@ -264,7 +264,7 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithHTML }
     })
 
-    const card = (<simple-card handle="test-product" brand />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" brand />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -294,7 +294,7 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithDifferentPrice }
     })
 
-    const card = (<simple-card handle="test-product" discount />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" discount />) as SimpleCard
 
     await card.connectedCallback()
 

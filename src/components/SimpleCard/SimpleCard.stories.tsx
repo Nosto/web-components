@@ -12,7 +12,7 @@ const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks"]
 
 const meta: Meta = {
   title: "Components/SimpleCard",
-  component: "simple-card",
+  component: "nosto-simple-card",
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   argTypes: {
     handle: {
@@ -50,13 +50,13 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: args => html`
-    <simple-card
+    <nosto-simple-card
       handle="${args.handle}"
       ${args.alternate ? "alternate" : ""}
       ${args.brand ? "brand" : ""}
       ${args.discount ? "discount" : ""}
       ${args.rating ? "rating" : ""}
-    ></simple-card>
+    ></nosto-simple-card>
   `
 }
 
@@ -69,12 +69,12 @@ export const WithAllFeatures: Story = {
     rating: true
   },
   render: args => html`
-    <simple-card
+    <nosto-simple-card
       handle="${args.handle}"
       ${args.alternate ? "alternate" : ""}
       ${args.brand ? "brand" : ""}
       ${args.discount ? "discount" : ""}
       ${args.rating ? "rating" : ""}
-    ></simple-card>
+    ></nosto-simple-card>
   `
 }

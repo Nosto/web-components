@@ -19,10 +19,10 @@ import { generateCardHTML } from "./markup"
  *
  * @example
  * ```html
- * <simple-card handle="awesome-product" alternate brand discount rating></simple-card>
+ * <nosto-simple-card handle="awesome-product" alternate brand discount rating></nosto-simple-card>
  * ```
  */
-@customElement("simple-card", { observe: true })
+@customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
   /** @private */
   static attributes = {
@@ -65,6 +65,6 @@ async function fetchProductData(handle: string): Promise<ShopifyProduct> {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "simple-card": SimpleCard
+    "nosto-simple-card": SimpleCard
   }
 }

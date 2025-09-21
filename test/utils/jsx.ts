@@ -30,7 +30,7 @@ declare global {
       "nosto-product-card": ElementMapping<ProductCard>
       "nosto-section-campaign": ElementMapping<SectionCampaign>
       "nosto-sku-options": ElementMapping<SkuOptions>
-      "simple-card": ElementMapping<SimpleCard>
+      "nosto-simple-card": ElementMapping<SimpleCard>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
