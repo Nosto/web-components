@@ -6,7 +6,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return `
     <div class="simple-card">
-      <a href="/products/${product.handle}" class="simple-card__link">
+      <a href="${product.url}" class="simple-card__link">
         ${generateImageHTML(element, product)}
         <div class="simple-card__content">
           ${element.brand && product.vendor ? `<div class="simple-card__brand">${escapeHTML(product.vendor)}</div>` : ""}
@@ -37,13 +37,16 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
     element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
   const alternateImage = product.media?.[1]?.src || product.images?.[1]
 
+  // Get aspect ratio from media object, fallback to 1
+  const aspectRatio = product.media?.[0]?.aspect_ratio || 1
+
   return `
     <div class="simple-card__image ${hasAlternate ? "simple-card__image--alternate" : ""}">
       <nosto-image 
         src="${primaryImage}" 
         alt="${escapeHTML(product.title)}"
-        width="300"
-        aspect-ratio="1"
+        height="300"
+        aspect-ratio="${aspectRatio}"
         loading="lazy"
         class="simple-card__img simple-card__img--primary"
       ></nosto-image>
@@ -53,12 +56,15 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
 }
 
 export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
+  // Get aspect ratio from the second media object, fallback to 1
+  const aspectRatio = product.media?.[1]?.aspect_ratio || 1
+
   return `
     <nosto-image 
       src="${alternateImage}" 
       alt="${escapeHTML(product.title)}"
-      width="300"
-      aspect-ratio="1"
+      height="300"
+      aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="simple-card__img simple-card__img--alternate"
     ></nosto-image>
