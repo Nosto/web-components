@@ -78,3 +78,14 @@ export const WithAllFeatures: Story = {
     ></nosto-simple-card>
   `
 }
+
+export const GridOfCards: Story = {
+  decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
+  render: () => html`
+    <div class="card-grid">
+      ${handles.map(
+        handle => html` <nosto-simple-card handle="${handle}" alternate brand discount rating></nosto-simple-card> `
+      )}
+    </div>
+  `
+}

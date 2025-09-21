@@ -6,45 +6,46 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return `
     <div class="simple-card">
-      ${generateImageHTML(element, product)}
-      <div class="simple-card__content">
-        ${element.brand && product.vendor ? `<div class="simple-card__brand">${escapeHTML(product.vendor)}</div>` : ""}
-        <h3 class="simple-card__title">
-          <a href="/products/${product.handle}" class="simple-card__link">
+      <a href="/products/${product.handle}" class="simple-card__link">
+        ${generateImageHTML(element, product)}
+        <div class="simple-card__content">
+          ${element.brand && product.vendor ? `<div class="simple-card__brand">${escapeHTML(product.vendor)}</div>` : ""}
+          <h3 class="simple-card__title">
             ${escapeHTML(product.title)}
-          </a>
-        </h3>
-        <div class="simple-card__price">
-          <span class="simple-card__price-current">
-            ${formatPrice(product.price || 0)}
-          </span>
-          ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.compare_at_price!)}</span>` : ""}
+          </h3>
+          <div class="simple-card__price">
+            <span class="simple-card__price-current">
+              ${formatPrice(product.price || 0)}
+            </span>
+            ${hasDiscount ? `<span class="simple-card__price-original">${formatPrice(product.compare_at_price!)}</span>` : ""}
+          </div>
+          ${element.rating ? generateRatingHTML() : ""}
         </div>
-        ${element.rating ? generateRatingHTML() : ""}
-      </div>
+      </a>
     </div>
   `
 }
 
 export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
-  const primaryImage = product.images?.[0]
+  // Use media objects first, fallback to images array
+  const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
     return '<div class="simple-card__image simple-card__image--placeholder"></div>'
   }
 
-  const hasAlternate = element.alternate && product.images.length > 1
+  const hasAlternate =
+    element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
+  const alternateImage = product.media?.[1]?.src || product.images?.[1]
 
   return `
     <div class="simple-card__image ${hasAlternate ? "simple-card__image--alternate" : ""}">
-      <a href="/products/${product.handle}" class="simple-card__image-link">
-        <img 
-          src="${primaryImage}" 
-          alt="${escapeHTML(product.title)}"
-          loading="lazy"
-          class="simple-card__img simple-card__img--primary"
-        />
-        ${hasAlternate ? generateAlternateImageHTML(product.images[1], product) : ""}
-      </a>
+      <img 
+        src="${primaryImage}" 
+        alt="${escapeHTML(product.title)}"
+        loading="lazy"
+        class="simple-card__img simple-card__img--primary"
+      />
+      ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product) : ""}
     </div>
   `
 }
