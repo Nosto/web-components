@@ -53,9 +53,17 @@ function createRecommendationSection(title: string, products: unknown[]) {
   `
 }
 
+// Storybook decorator for wrapping stories with container styling
+const withStoryContainer = (story: () => unknown) => html`
+  <div class="story-container">
+    <div class="block__recommendation">${story()}</div>
+  </div>
+`
+
 const meta: Meta = {
   title: "Components/Product",
   component: "nosto-product",
+  decorators: [withStoryContainer],
   parameters: {
     docs: {
       description: {
@@ -73,7 +81,8 @@ const meta: Meta = {
       control: "text",
       description: "Required. The recommendation slot ID."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

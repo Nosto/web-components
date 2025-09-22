@@ -46,20 +46,17 @@ function createImageGrid(
   `
 }
 
-function createDemoSection(title: string, content: unknown) {
-  return html`
-    <div class="story-container">
-      <div class="image-demo-section">
-        <div class="image-demo-title">${title}</div>
-        ${content}
-      </div>
-    </div>
-  `
-}
+// Storybook decorator for wrapping stories with container styling
+const withStoryContainer = (story: () => unknown) => html`
+  <div class="story-container">
+    <div class="image-demo-section">${story()}</div>
+  </div>
+`
 
 const meta: Meta = {
   title: "Components/Image",
   component: "nosto-image",
+  decorators: [withStoryContainer],
   parameters: {
     docs: {
       description: {
@@ -95,7 +92,8 @@ const meta: Meta = {
       options: ["center", "left", "right", "top", "bottom"],
       description: "Shopify only. The crop of the image."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta
@@ -109,15 +107,12 @@ export const Constrained: Story = {
     layout: "constrained"
   },
   render: args =>
-    createDemoSection(
-      "Constrained Layout",
-      html`<nosto-image
-        src="${args.src}"
-        width="${args.width}"
-        height="${args.height}"
-        layout="${args.layout}"
-      ></nosto-image>`
-    )
+    html`<nosto-image
+      src="${args.src}"
+      width="${args.width}"
+      height="${args.height}"
+      layout="${args.layout}"
+    ></nosto-image>`
 }
 
 export const FullWidth: Story = {
@@ -126,11 +121,7 @@ export const FullWidth: Story = {
     height: 400,
     layout: "fullWidth"
   },
-  render: args =>
-    createDemoSection(
-      "Full Width Layout",
-      html`<nosto-image src="${args.src}" height="${args.height}" layout="${args.layout}"></nosto-image>`
-    )
+  render: args => html`<nosto-image src="${args.src}" height="${args.height}" layout="${args.layout}"></nosto-image>`
 }
 
 export const Fixed: Story = {
@@ -141,46 +132,35 @@ export const Fixed: Story = {
     layout: "fixed"
   },
   render: args =>
-    createDemoSection(
-      "Fixed Layout",
-      html`<nosto-image
-        src="${args.src}"
-        width="${args.width}"
-        height="${args.height}"
-        layout="${args.layout}"
-      ></nosto-image>`
-    )
+    html`<nosto-image
+      src="${args.src}"
+      width="${args.width}"
+      height="${args.height}"
+      layout="${args.layout}"
+    ></nosto-image>`
 }
 
 export const AspectRatioDemo: Story = {
-  render: () =>
-    createDemoSection(
-      "Aspect Ratio Examples",
-      html`
-        <div class="image-demo-sub-title">Square (1:1 ratio)</div>
-        ${createImageGrid([sampleImages[0]], undefined, 200, undefined, 1)}
+  render: () => html`
+    <div class="image-demo-sub-title">Square (1:1 ratio)</div>
+    ${createImageGrid([sampleImages[0]], undefined, 200, undefined, 1)}
 
-        <div class="image-demo-sub-title">Wide (16:9 ratio)</div>
-        ${createImageGrid([sampleImages[1]], undefined, 400, undefined, 1.77)}
+    <div class="image-demo-sub-title">Wide (16:9 ratio)</div>
+    ${createImageGrid([sampleImages[1]], undefined, 400, undefined, 1.77)}
 
-        <div class="image-demo-sub-title">Portrait (3:4 ratio)</div>
-        ${createImageGrid([sampleImages[2]], undefined, 200, undefined, 0.75)}
-      `
-    )
+    <div class="image-demo-sub-title">Portrait (3:4 ratio)</div>
+    ${createImageGrid([sampleImages[2]], undefined, 200, undefined, 0.75)}
+  `
 }
 
 export const ConstrainedLayout: Story = {
-  render: () =>
-    createDemoSection(
-      "Constrained Layout (default)",
-      html`
-        <div class="image-demo-sub-title">Width (300) and Height (800)</div>
-        ${createImageGrid(sampleImages, undefined, 800, 300)}
+  render: () => html`
+    <div class="image-demo-sub-title">Width (300) and Height (800)</div>
+    ${createImageGrid(sampleImages, undefined, 800, 300)}
 
-        <div class="image-demo-sub-title">Height (300) and AspectRatio (1.33)</div>
-        ${createImageGrid(sampleImages, undefined, undefined, 300, 1.33)}
-      `
-    ),
+    <div class="image-demo-sub-title">Height (300) and AspectRatio (1.33)</div>
+    ${createImageGrid(sampleImages, undefined, undefined, 300, 1.33)}
+  `,
   parameters: {
     docs: {
       description: {
@@ -191,14 +171,10 @@ export const ConstrainedLayout: Story = {
 }
 
 export const FullWidthLayout: Story = {
-  render: () =>
-    createDemoSection(
-      "Full Width Layout",
-      html`
-        <div class="image-demo-sub-title">Without width and height</div>
-        ${createImageGrid(sampleImages, "fullWidth")}
-      `
-    ),
+  render: () => html`
+    <div class="image-demo-sub-title">Without width and height</div>
+    ${createImageGrid(sampleImages, "fullWidth")}
+  `,
   parameters: {
     docs: {
       description: {
@@ -209,14 +185,10 @@ export const FullWidthLayout: Story = {
 }
 
 export const FixedLayout: Story = {
-  render: () =>
-    createDemoSection(
-      "Fixed Layout",
-      html`
-        <div class="image-demo-sub-title">Width (700) and Height (300)</div>
-        ${createImageGrid(sampleImages, "fixed", 700, 300)}
-      `
-    ),
+  render: () => html`
+    <div class="image-demo-sub-title">Width (700) and Height (300)</div>
+    ${createImageGrid(sampleImages, "fixed", 700, 300)}
+  `,
   parameters: {
     docs: {
       description: {

@@ -54,7 +54,8 @@ const meta: Meta = {
       control: "text",
       description: "Required. The identifier for this option group."
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

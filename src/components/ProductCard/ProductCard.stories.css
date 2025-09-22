@@ -1,0 +1,60 @@
+/* ProductCard Stories Styles */
+.story-container {
+  font-family: Albert Sans, sans-serif;
+  padding: 20px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+.product-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-title {
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.current-price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #007acc;
+}
+
+.add-to-cart-btn {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
