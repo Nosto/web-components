@@ -1,5 +1,4 @@
 import { customElement } from "../decorators"
-import { assertRequired } from "@/utils"
 import { compile } from "@/templating/vue"
 import { NostoElement } from "../Element"
 import { getContext } from "../../templating/context"
@@ -60,7 +59,6 @@ export class ProductCard extends NostoElement {
   templateElement?: HTMLTemplateElement
 
   async connectedCallback() {
-    assertRequired(this, "template")
     this.toggleAttribute("loading", true)
     const template = getTemplate(this)
     const product = getData(this) ?? this.dataset

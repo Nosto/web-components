@@ -3,8 +3,34 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 
 /**
+ * A custom element that provides conditional content rendering based on user segments.
  * This component replaces its children with the content of the first template
  * that matches any of the current user's Nosto segments.
+ *
+ * @example
+ * Conditional content based on user segments:
+ * ```html
+ * <nosto-control>
+ *   <template segment="5b71f1500000000000000006">
+ *     <div class="premium-offer">
+ *       <h2>Exclusive Premium Offer!</h2>
+ *       <p>Get 20% off your next purchase</p>
+ *     </div>
+ *   </template>
+ *   <template segment="5a497a000000000000000001">
+ *     <div class="welcome-offer">
+ *       <h2>Welcome! Get Started</h2>
+ *       <p>Use code WELCOME10 for 10% off your first order</p>
+ *     </div>
+ *   </template>
+ *   <template segment="5a497a000000000000000002">
+ *     <div class="loyalty-message">
+ *       <h2>Thank you for your loyalty!</h2>
+ *       <p>Free shipping on all orders this month</p>
+ *     </div>
+ *   </template>
+ * </nosto-control>
+ * ```
  */
 @customElement("nosto-control")
 export class Control extends NostoElement {
