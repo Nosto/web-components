@@ -10,6 +10,15 @@ describe("Image", () => {
     "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/products/15493/images/80390/5SqIsKoR7VMPHGrsnseGPkhhpWHT9tLcY7Uwop7FCMzm5jcxKgU2d7P7zbgqcs8r__09669.1741105378.1280.1280.jpg?c=2"
   const stencilUrlPrefix = "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/images/stencil/"
 
+  function assertNoNullOrUndefinedAttributes(imgElement: HTMLImageElement) {
+    const attributes = imgElement.attributes
+    for (let i = 0; i < attributes.length; i++) {
+      const attr = attributes[i]
+      expect(attr.value).not.toBe("null")
+      expect(attr.value).not.toBe("undefined")
+    }
+  }
+
   function assertImage(src: string) {
     const imageElement = nostoImage.querySelector("img")
     expect(imageElement?.src).toContain(src)
@@ -115,6 +124,45 @@ describe("Image", () => {
       nostoImage = (<nosto-image src={bigCommerceUrl} width={300} aspectRatio={1.33} layout="fullWidth" />) as Image
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
+    })
+  })
+
+  describe("Attribute handling", () => {
+    it("should not set null or undefined attributes on img element", () => {
+      // Create an image with some null/undefined properties
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} crop={undefined} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Check that no attributes have null or undefined string values
+      assertNoNullOrUndefinedAttributes(imgElement!)
+
+      // Ensure width and height attributes don't exist when unpic transform returns undefined values
+      // Note: The crop: undefined parameter doesn't affect width/height - they're undefined because
+      // the unpic transform removes them from props and puts sizing info in the style instead
+      expect(imgElement!.hasAttribute("width")).toBe(false)
+      expect(imgElement!.hasAttribute("height")).toBe(false)
+    })
+
+    it("should set attributes for valid non-null values", () => {
+      // Create an image with all valid properties
+      nostoImage = (<nosto-image src={shopifyUrl} width={400} height={300} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Check that valid attributes are present
+      expect(imgElement!.hasAttribute("src")).toBe(true)
+      expect(imgElement!.hasAttribute("srcset")).toBe(true)
+      expect(imgElement!.hasAttribute("sizes")).toBe(true)
+      expect(imgElement!.hasAttribute("loading")).toBe(true)
+      expect(imgElement!.hasAttribute("decoding")).toBe(true)
+
+      // Verify no null/undefined string values
+      assertNoNullOrUndefinedAttributes(imgElement!)
     })
   })
 })
