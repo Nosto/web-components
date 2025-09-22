@@ -2,7 +2,7 @@ import { transformBaseImageProps } from "@unpic/core/base"
 import type { BaseImageProps, ImageProps } from "./types"
 import { transform as bcTransform } from "./bigcommerce"
 import { transform as shopifyTransform } from "./shopify"
-import { toCamelCase } from "@/utils"
+import { toCamelCase } from "@/utils/toCamelCase"
 
 function getTransformer(url: string) {
   if (url.includes("shopify")) {
