@@ -29,7 +29,7 @@ export async function getText(url: string) {
  * @returns Promise that resolves to the parsed JSON response
  * @throws Error if the fetch request fails or JSON parsing fails
  */
-export async function getJSON(url: string) {
+export async function getJSON<T = unknown>(url: string): Promise<T> {
   const response = await fetchWithErrorHandling(url)
   return response.json()
 }
