@@ -32,9 +32,8 @@ export class VariantSelector extends NostoElement {
 
   handle!: string
 
-  private product?: ShopifyProduct
-  private selectedVariant?: ShopifyVariant | null
-  private buttons: HTMLButtonElement[] = []
+  product?: ShopifyProduct
+  selectedVariant?: ShopifyVariant | null
 
   async attributeChangedCallback() {
     if (this.isConnected) {
@@ -109,6 +108,8 @@ function render(element: VariantSelector) {
     element.attachShadow({ mode: "open" })
   }
 
+  if (!element.shadowRoot) return
+
   element.shadowRoot.innerHTML = `
     <style>${VARIANT_SELECTOR_STYLES}</style>
     <form class="variant-selector" role="group" aria-label="Product variant selection">
@@ -123,7 +124,6 @@ function setupEventListeners(element: VariantSelector) {
   if (!element.shadowRoot) return
 
   const buttons = Array.from(element.shadowRoot.querySelectorAll<HTMLButtonElement>(".option-button"))
-  element.buttons = buttons
 
   buttons.forEach(button => {
     button.addEventListener("click", event => {
