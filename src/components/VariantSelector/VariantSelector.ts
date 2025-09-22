@@ -3,7 +3,7 @@ import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant } from "./types"
-import { VARIANT_SELECTOR_STYLES, VARIANT_SELECTOR_EMPTY_STYLES } from "./styles"
+import { VARIANT_SELECTOR_STYLES } from "./styles"
 
 /** Event name for variant selection */
 const VARIANT_SELECTED_EVENT = "@nosto/VariantSelector/variant-selected"
@@ -105,17 +105,6 @@ function render(element: VariantSelector) {
 
   const { options } = element.product
 
-  if (options.length === 0) {
-    if (!element.shadowRoot) {
-      element.attachShadow({ mode: "open" })
-    }
-    element.shadowRoot!.innerHTML = `
-      <style>${VARIANT_SELECTOR_EMPTY_STYLES}</style>
-      <div class="variant-selector-empty">No options available</div>
-    `
-    return
-  }
-
   if (!element.shadowRoot) {
     element.attachShadow({ mode: "open" })
   }
@@ -134,7 +123,7 @@ function setupEventListeners(element: VariantSelector) {
   if (!element.shadowRoot) return
 
   const buttons = Array.from(element.shadowRoot.querySelectorAll<HTMLButtonElement>(".option-button"))
-  element.buttons = buttons // Store buttons instead of selects
+  element.buttons = buttons
 
   buttons.forEach(button => {
     button.addEventListener("click", event => {

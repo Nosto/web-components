@@ -77,14 +77,3 @@ export const VARIANT_SELECTOR_STYLES = `
     border: var(--nosto-error-border, 1px solid #f5c6cb);
   }
 `
-
-export const VARIANT_SELECTOR_EMPTY_STYLES = `
-  :host {
-    display: block;
-    font-family: var(--nosto-font-family, inherit);
-  }
-  .variant-selector-empty {
-    color: var(--nosto-text-color, #666);
-    padding: var(--nosto-padding, 1rem);
-  }
-`

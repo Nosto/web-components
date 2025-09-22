@@ -238,27 +238,6 @@ describe("VariantSelector", () => {
     expect(eventDetail!.variant!.id).toBe(33333)
   })
 
-  it("handles products with no variants gracefully", async () => {
-    const productNoVariants = {
-      ...sampleProduct,
-      variants: [],
-      options: []
-    }
-
-    addProductHandlers({
-      "no-variants": {
-        product: productNoVariants
-      }
-    })
-
-    const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
-
-    await selector.connectedCallback()
-
-    expect(selector.shadowRoot?.innerHTML).toContain("No options available")
-    expect(selector.getSelectedVariant()).toBeNull()
-  })
-
   it("works with single option products", async () => {
     const singleOptionProduct = {
       ...sampleProduct,
