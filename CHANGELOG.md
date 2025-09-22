@@ -1,3 +1,20 @@
+# [8.23.0](https://github.com/Nosto/web-components/compare/v8.22.0...v8.23.0) (2025-09-22)
+
+
+### Bug Fixes
+
+* **Campaign:** remove template wrappers from lazy loaded and manual initialization stories ([d3b349e](https://github.com/Nosto/web-components/commit/d3b349eb68b88570b4d91a51503fee706dc05e48))
+* resolve Prettier formatting issues in all story files ([804c992](https://github.com/Nosto/web-components/commit/804c9922f4174a723d1e84fb3a91ebeb3520faf1))
+* resolve remaining lint errors in Campaign stories and ProductCard test ([28bffa7](https://github.com/Nosto/web-components/commit/28bffa7883b41ccf6761e948f77d7e83ecbec071))
+
+
+### Features
+
+* apply decorator pattern to remaining story files for consistency ([8277fa0](https://github.com/Nosto/web-components/commit/8277fa01faef28de5e5338ce8cb264ca01293575))
+* convert story helpers to Storybook decorators and remove template wrapper ([28ed4a7](https://github.com/Nosto/web-components/commit/28ed4a712bb057075429826017137432b4fda702))
+* create Storybook files for Campaign, Control, and ProductCard components ([c3a37d2](https://github.com/Nosto/web-components/commit/c3a37d2bfc482a5ced3b8bc94e2c7561cd9c6f00))
+* simplify Control stories templates and styles, remove createDemoSection from Image stories ([8ad7375](https://github.com/Nosto/web-components/commit/8ad73759bb7d63be3c6ad38542d77040acefa7ce))
+
 # [8.22.0](https://github.com/Nosto/web-components/compare/v8.21.0...v8.22.0) (2025-09-04)
 
 
