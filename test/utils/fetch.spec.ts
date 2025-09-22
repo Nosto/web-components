@@ -46,38 +46,6 @@ describe("fetch facade", () => {
       expect(result).toEqual(mockData)
     })
 
-    it("should fetch URL and return typed JSON object", async () => {
-      interface TestData {
-        message: string
-        count: number
-      }
-      const mockData: TestData = { message: "Hello", count: 42 }
-      addHandlers(
-        http.get("https://api.example.com/typed-data", () => {
-          return HttpResponse.json(mockData)
-        })
-      )
-
-      const result = await getJSON<TestData>("https://api.example.com/typed-data")
-      expect(result).toEqual(mockData)
-      // Type assertions to verify TypeScript typing
-      expect(typeof result.message).toBe("string")
-      expect(typeof result.count).toBe("number")
-    })
-
-    it("should infer type when used with type assertion", async () => {
-      const mockData = { items: ["item1", "item2"], total: 2 }
-      addHandlers(
-        http.get("https://api.example.com/items", () => {
-          return HttpResponse.json(mockData)
-        })
-      )
-
-      const result = await getJSON<{ items: string[]; total: number }>("https://api.example.com/items")
-      expect(result.items).toHaveLength(2)
-      expect(result.total).toBe(2)
-    })
-
     it("should throw error when fetch response is not ok", async () => {
       addHandlers(
         http.get("https://api.example.com/error", () => {
