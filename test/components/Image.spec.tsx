@@ -10,6 +10,15 @@ describe("Image", () => {
     "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/products/15493/images/80390/5SqIsKoR7VMPHGrsnseGPkhhpWHT9tLcY7Uwop7FCMzm5jcxKgU2d7P7zbgqcs8r__09669.1741105378.1280.1280.jpg?c=2"
   const stencilUrlPrefix = "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/images/stencil/"
 
+  function assertNoNullOrUndefinedAttributes(imgElement: HTMLImageElement) {
+    const attributes = imgElement.attributes
+    for (let i = 0; i < attributes.length; i++) {
+      const attr = attributes[i]
+      expect(attr.value).not.toBe("null")
+      expect(attr.value).not.toBe("undefined")
+    }
+  }
+
   function assertImage(src: string) {
     const imageElement = nostoImage.querySelector("img")
     expect(imageElement?.src).toContain(src)
@@ -128,14 +137,11 @@ describe("Image", () => {
       expect(imgElement).toBeDefined()
 
       // Check that no attributes have null or undefined string values
-      const attributes = imgElement!.attributes
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes[i]
-        expect(attr.value).not.toBe("null")
-        expect(attr.value).not.toBe("undefined")
-      }
+      assertNoNullOrUndefinedAttributes(imgElement!)
 
-      // Ensure width and height attributes don't exist when they have undefined values from unpic transform
+      // Ensure width and height attributes don't exist when unpic transform returns undefined values
+      // Note: The crop: undefined parameter doesn't affect width/height - they're undefined because
+      // the unpic transform removes them from props and puts sizing info in the style instead
       expect(imgElement!.hasAttribute("width")).toBe(false)
       expect(imgElement!.hasAttribute("height")).toBe(false)
     })
@@ -156,12 +162,7 @@ describe("Image", () => {
       expect(imgElement!.hasAttribute("decoding")).toBe(true)
 
       // Verify no null/undefined string values
-      const attributes = imgElement!.attributes
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes[i]
-        expect(attr.value).not.toBe("null")
-        expect(attr.value).not.toBe("undefined")
-      }
+      assertNoNullOrUndefinedAttributes(imgElement!)
     })
   })
 })
