@@ -1,3 +1,10 @@
+## [8.23.1](https://github.com/Nosto/web-components/compare/v8.23.0...v8.23.1) (2025-09-22)
+
+
+### Bug Fixes
+
+* **Image:** filter out null/undefined attributes from inner img element ([7b7f3b4](https://github.com/Nosto/web-components/commit/7b7f3b4186d8de0a6ac4068f457cafcbb7d9b0be))
+
 # [8.23.0](https://github.com/Nosto/web-components/compare/v8.22.0...v8.23.0) (2025-09-22)
 
 
