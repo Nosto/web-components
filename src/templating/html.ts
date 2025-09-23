@@ -27,8 +27,7 @@ function processExpression(expression: unknown): string {
   }
 
   if (expression && typeof expression === "object" && "html" in expression) {
-    const templateExpr = expression as TemplateExpression
-    return templateExpr.html
+    return (expression as TemplateExpression).html
   }
 
   if (expression === null || expression === undefined) {
