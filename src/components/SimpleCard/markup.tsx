@@ -26,7 +26,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
   )
 }
 
-export function generateImageHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
+export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
@@ -53,7 +53,7 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct):
   )
 }
 
-export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct): HTMLElement {
+export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
   // Get aspect ratio from the second media object, fallback to 1
   const aspectRatio = product.media?.[1]?.aspect_ratio || 1
 
@@ -67,7 +67,7 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
   )
 }
 
-export function generateRatingHTML(rating: number): HTMLElement {
+export function generateRatingHTML(rating: number) {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5
