@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { html, type TemplateExpression } from "@/templating/html"
+import { html, type TemplateExpression, type TemplateInterpolation } from "@/templating/html"
 
 describe("html templating function", () => {
   it("returns a TemplateExpression object with html property", () => {
@@ -19,14 +19,14 @@ describe("html templating function", () => {
     expect(result.html).toBe("<div>&lt;&gt;&amp;&quot;&#039;</div>")
   })
 
-  it("handles null and undefined expressions", () => {
-    const result = html`<div>${null} ${undefined}</div>`
-    expect(result.html).toBe("<div> </div>")
+  it("handles undefined expressions", () => {
+    const result = html`<div>${undefined}</div>`
+    expect(result.html).toBe("<div></div>")
   })
 
-  it("handles number and boolean expressions", () => {
-    const result = html`<div>${42} ${true}</div>`
-    expect(result.html).toBe("<div>42 true</div>")
+  it("handles number expressions", () => {
+    const result = html`<div>${42}</div>`
+    expect(result.html).toBe("<div>42</div>")
   })
 
   it("flattens and joins array contents", () => {

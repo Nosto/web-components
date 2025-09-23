@@ -5,13 +5,23 @@ export interface TemplateExpression {
 }
 
 /**
+ * Valid expression types that can be interpolated in template literals
+ */
+export type TemplateInterpolation = 
+  | string 
+  | TemplateExpression 
+  | number 
+  | undefined 
+  | TemplateInterpolation[]
+
+/**
  * Processes template literal expressions according to their type:
  * - Arrays: contents are flattened and joined
  * - { html: string } objects: html is injected as-is
  * - Strings: HTML escaped for safety
  * - Other values: converted to string and HTML escaped
  */
-function processExpression(expression: unknown): string {
+function processExpression(expression: TemplateInterpolation): string {
   if (Array.isArray(expression)) {
     return expression.map(processExpression).join("")
   }
@@ -20,7 +30,7 @@ function processExpression(expression: unknown): string {
     return (expression as TemplateExpression).html
   }
 
-  if (expression === null || expression === undefined) {
+  if (expression === undefined) {
     return ""
   }
 
@@ -49,7 +59,7 @@ function processExpression(expression: unknown): string {
  * const template = html`<p>This is ${rawHtml} text</p>`
  * ```
  */
-export function html(strings: TemplateStringsArray, ...expressions: unknown[]): TemplateExpression {
+export function html(strings: TemplateStringsArray, ...expressions: TemplateInterpolation[]): TemplateExpression {
   let result = ""
 
   for (let i = 0; i < strings.length; i++) {
