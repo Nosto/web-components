@@ -1,17 +1,7 @@
+import { escapeHtml } from "@/utils/escapeHtml"
+
 export interface TemplateExpression {
   html: string
-}
-
-/**
- * HTML escapes a string for safe insertion into HTML
- */
-function escapeHtml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
 }
 
 /**
