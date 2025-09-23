@@ -25,22 +25,17 @@ function createDemoProduct(
   `
 }
 
-// Helper function for creating demo section
-function createDemoSection(title: string, description: string, content: unknown) {
-  return html`
-    <div class="story-container">
-      <div class="demo-section">
-        <div class="demo-title">${title}</div>
-        <div class="demo-description">${description}</div>
-        ${content}
-      </div>
-    </div>
-  `
-}
+// Storybook decorator for wrapping stories with container styling
+const withStoryContainer = (story: () => unknown) => html`
+  <div class="story-container">
+    <div class="demo-section">${story()}</div>
+  </div>
+`
 
 const meta: Meta = {
   title: "Components/SkuOptions",
   component: "nosto-sku-options",
+  decorators: [withStoryContainer],
   parameters: {
     docs: {
       description: {
@@ -99,11 +94,7 @@ export const BasicColorOptions: Story = {
       </div>
     `
 
-    return createDemoSection(
-      "Basic Color Options",
-      "Simple color selection with visual feedback. One option is preselected.",
-      createDemoProduct("demo-product-1", "Stylish T-Shirt", "$29.99", skuContent, skuData)
-    )
+    return createDemoProduct("demo-product-1", "Stylish T-Shirt", "$29.99", skuContent, skuData)
   },
   parameters: {
     docs: {
@@ -136,11 +127,7 @@ export const ColorAndSizeOptions: Story = {
       </div>
     `
 
-    return createDemoSection(
-      "Color and Size Options",
-      "Two option groups working together. Selecting options in one group affects availability in the other.",
-      createDemoProduct("demo-product-2", "Designer Jeans", "$89.99", skuContent)
-    )
+    return createDemoProduct("demo-product-2", "Designer Jeans", "$89.99", skuContent)
   },
   parameters: {
     docs: {
@@ -198,11 +185,7 @@ export const OutOfStockHandling: Story = {
       </div>
     `
 
-    return createDemoSection(
-      "Out of Stock Handling",
-      "Demonstrates how options are disabled when they lead to out-of-stock SKUs (OOS = 145, 234).",
-      createDemoProduct("demo-product-3", "Premium Hoodie", "$69.99", skuContent)
-    )
+    return createDemoProduct("demo-product-3", "Premium Hoodie", "$69.99", skuContent)
   },
   parameters: {
     docs: {
@@ -229,11 +212,7 @@ export const VisualColorOptions: Story = {
       </div>
     `
 
-    return createDemoSection(
-      "Visual Color Options",
-      "Color options displayed as colored circles for better visual representation.",
-      createDemoProduct("demo-product-4", "Canvas Sneakers", "$79.99", skuContent)
-    )
+    return createDemoProduct("demo-product-4", "Canvas Sneakers", "$79.99", skuContent)
   },
   parameters: {
     docs: {
@@ -266,11 +245,7 @@ export const PricingChanges: Story = {
       </div>
     `
 
-    return createDemoSection(
-      "Dynamic Pricing",
-      "Watch how the price changes when you select different options. Different sizes have different prices.",
-      createDemoProduct("demo-product-5", "Premium Watch", "$199.99", skuContent)
-    )
+    return createDemoProduct("demo-product-5", "Premium Watch", "$199.99", skuContent)
   },
   parameters: {
     docs: {
