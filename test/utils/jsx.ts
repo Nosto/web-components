@@ -6,6 +6,7 @@ import type { Product } from "@/components/Product/Product"
 import type { ProductCard } from "@/components/ProductCard/ProductCard"
 import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
+import type { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 
 type MaybeArray<T> = T | T[]
 
@@ -29,6 +30,7 @@ declare global {
       "nosto-product-card": ElementMapping<ProductCard>
       "nosto-section-campaign": ElementMapping<SectionCampaign>
       "nosto-sku-options": ElementMapping<SkuOptions>
+      "nosto-variant-selector": ElementMapping<VariantSelector>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
