@@ -10,28 +10,22 @@ describe("html templating function", () => {
   })
 
   it("handles simple string interpolation with HTML escaping", () => {
-    const name = "<script>alert('xss')</script>"
-    const result = html`<h1>Hello ${name}!</h1>`
+    const result = html`<h1>Hello ${"<script>alert('xss')</script>"}!</h1>`
     expect(result.html).toBe("<h1>Hello &lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;!</h1>")
   })
 
   it("escapes dangerous HTML characters in strings", () => {
-    const dangerous = `<>&"'`
-    const result = html`<div>${dangerous}</div>`
+    const result = html`<div>${`<>&"'`}</div>`
     expect(result.html).toBe("<div>&lt;&gt;&amp;&quot;&#039;</div>")
   })
 
   it("handles null and undefined expressions", () => {
-    const nullValue = null
-    const undefinedValue = undefined
-    const result = html`<div>${nullValue} ${undefinedValue}</div>`
+    const result = html`<div>${null} ${undefined}</div>`
     expect(result.html).toBe("<div> </div>")
   })
 
   it("handles number and boolean expressions", () => {
-    const number = 42
-    const boolean = true
-    const result = html`<div>${number} ${boolean}</div>`
+    const result = html`<div>${42} ${true}</div>`
     expect(result.html).toBe("<div>42 true</div>")
   })
 
@@ -106,8 +100,7 @@ describe("html templating function", () => {
   })
 
   it("preserves whitespace in template", () => {
-    const name = "World"
-    const result = html` <div>Hello ${name}!</div> `
+    const result = html` <div>Hello ${"World"}!</div> `
     expect(result.html).toBe(" <div>Hello World!</div> ")
   })
 
