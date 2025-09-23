@@ -9,7 +9,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
   return (
     <div className="simple-card">
       <a href={product.url} className="simple-card__link">
-        {generateImageHTML(element, product)}
+        <ImageHTML element={element} product={product} />
         <div className="simple-card__content">
           {element.brand && product.vendor && <div className="simple-card__brand">{product.vendor}</div>}
           <h3 className="simple-card__title">{product.title}</h3>
@@ -19,14 +19,14 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
               <span className="simple-card__price-original">{formatPrice(product.compare_at_price!)}</span>
             )}
           </div>
-          {element.rating && generateRatingHTML(element.rating)}
+          {element.rating && <RatingHTML rating={element.rating} />}
         </div>
       </a>
     </div>
   )
 }
 
-export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+export function ImageHTML({ element, product }: { element: SimpleCard; product: ShopifyProduct }) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
@@ -48,12 +48,12 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
         aspectRatio={aspectRatio}
         className="simple-card__img simple-card__img--primary"
       />
-      {hasAlternate && alternateImage && generateAlternateImageHTML(alternateImage, product)}
+      {hasAlternate && alternateImage && <AlternateImageHTML alternateImage={alternateImage} product={product} />}
     </div>
   )
 }
 
-export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
+export function AlternateImageHTML({ alternateImage, product }: { alternateImage: string; product: ShopifyProduct }) {
   // Get aspect ratio from the second media object, fallback to 1
   const aspectRatio = product.media?.[1]?.aspect_ratio || 1
 
@@ -67,7 +67,7 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
   )
 }
 
-export function generateRatingHTML(rating: number) {
+export function RatingHTML({ rating }: { rating: number }) {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5
