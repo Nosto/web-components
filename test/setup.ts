@@ -7,6 +7,7 @@ import "@/components/Image/Image"
 import "@/components/Product/Product"
 import "@/components/ProductCard/ProductCard"
 import "@/components/SectionCampaign/SectionCampaign"
+import "@/components/SimpleCard/SimpleCard"
 import "@/components/SkuOptions/SkuOptions"
 
 beforeAll(() => {
