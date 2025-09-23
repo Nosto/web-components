@@ -31,10 +31,6 @@ function processExpression(expression: unknown): string {
     return templateExpr.html
   }
 
-  if (typeof expression === "string") {
-    return escapeHtml(expression)
-  }
-
   if (expression === null || expression === undefined) {
     return ""
   }
