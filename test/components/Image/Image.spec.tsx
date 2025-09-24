@@ -164,5 +164,37 @@ describe("Image", () => {
       // Verify no null/undefined string values
       assertNoNullOrUndefinedAttributes(imgElement!)
     })
+
+    it("should correctly set alt attribute when provided", () => {
+      const altText = "Product image description"
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} alt={altText} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("alt")).toBe(altText)
+    })
+
+    it("should correctly set sizes attribute when provided", () => {
+      const sizesValue = "(max-width: 768px) 100vw, 50vw"
+      nostoImage = (<nosto-image src={shopifyUrl} width={400} aspectRatio={1.5} sizes={sizesValue} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("sizes")).toBe(sizesValue)
+    })
+
+    it("should correctly set both alt and sizes attributes when provided", () => {
+      const altText = "Hero banner image"
+      const sizesValue = "(max-width: 1200px) 100vw, 50vw"
+      nostoImage = (<nosto-image src={shopifyUrl} width={800} height={400} alt={altText} sizes={sizesValue} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("alt")).toBe(altText)
+      expect(imgElement!.getAttribute("sizes")).toBe(sizesValue)
+    })
   })
 })
