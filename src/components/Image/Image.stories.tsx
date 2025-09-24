@@ -37,7 +37,6 @@ function createImageGrid(
               height=${ifDefined(height)}
               aspect-ratio=${ifDefined(aspectRatio)}
             >
-            >
             </nosto-image>
             <div class="image-caption">${product.name}</div>
           </div>
