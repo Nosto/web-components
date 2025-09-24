@@ -87,25 +87,24 @@ export class Image extends NostoElement {
     validateProps(this)
     const { src, width, height, layout, aspectRatio, crop, alt, sizes } = this
 
-    // Filter out undefined values
-    const transformProps: Partial<ImageProps> = {
+    // Create props object and filter out null/undefined values
+    const rawProps = {
       src,
       width,
       height,
       aspectRatio,
       layout: layout || "constrained",
-      crop
+      crop,
+      alt,
+      sizes
     }
 
-    // Only add alt and sizes if they are defined and not the string "undefined"
-    if (alt !== undefined && alt !== "undefined") {
-      transformProps.alt = alt
-    }
-    if (sizes !== undefined && sizes !== "undefined") {
-      transformProps.sizes = sizes
-    }
+    // Filter out null, undefined, and "undefined" string values
+    const transformProps = Object.fromEntries(
+      Object.entries(rawProps).filter(([, value]) => value != null && value !== "undefined")
+    ) as ImageProps
 
-    const { style, ...props } = transform(transformProps as ImageProps)
+    const { style, ...props } = transform(transformProps)
 
     const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
