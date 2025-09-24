@@ -36,12 +36,6 @@ import { NostoElement } from "../Element"
  * ```
  *
  * @example
- * Using with alt text for accessibility:
- * ```html
- * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="400" height="300" alt="Luxury bath towels in white"></nosto-image>
- * ```
- *
- * @example
  * Using with responsive sizes attribute:
  * ```html
  * <nosto-image
@@ -99,9 +93,9 @@ export class Image extends NostoElement {
       sizes
     }
 
-    // Filter out null, undefined, and "undefined" string values
+    // Filter out null and undefined values
     const transformProps = Object.fromEntries(
-      Object.entries(rawProps).filter(([, value]) => value != null && value !== "undefined")
+      Object.entries(rawProps).filter(([, value]) => value != null)
     ) as ImageProps
 
     const { style, ...props } = transform(transformProps)
