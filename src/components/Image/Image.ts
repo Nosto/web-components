@@ -108,7 +108,7 @@ export class Image extends NostoElement {
 
     const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
-      if (value != null && value !== undefined) {
+      if (value != null) {
         img.setAttribute(key, String(value))
       }
     })
