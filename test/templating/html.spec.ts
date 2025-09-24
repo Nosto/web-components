@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { html, type TemplateExpression, type TemplateInterpolation } from "@/templating/html"
+import { html, type TemplateExpression } from "@/templating/html"
 
 describe("html templating function", () => {
   it("returns a TemplateExpression object with html property", () => {
@@ -106,6 +106,7 @@ describe("html templating function", () => {
 
   it("handles objects that are not TemplateExpression", () => {
     const obj = { name: "test", value: 123 }
+    // @ts-expect-error Testing non-TemplateExpression object
     const result = html`<div>${obj}</div>`
     expect(result.html).toBe("<div>[object Object]</div>")
   })

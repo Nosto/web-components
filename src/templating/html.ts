@@ -7,11 +7,13 @@ export interface TemplateExpression {
 /**
  * Valid expression types that can be interpolated in template literals
  */
-export type TemplateInterpolation = 
-  | string 
-  | TemplateExpression 
-  | number 
-  | undefined 
+export type TemplateInterpolation =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | TemplateExpression
   | TemplateInterpolation[]
 
 /**
