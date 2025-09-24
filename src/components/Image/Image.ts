@@ -1,4 +1,4 @@
-import type { Crop } from "./types"
+import type { Crop, ImageProps } from "./types"
 import { customElement } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
@@ -20,6 +20,8 @@ import { NostoElement } from "../Element"
  * @property {number} [aspectRatio] - The aspect ratio of the image (width / height value).
  * @property {Layout} [layout] - The layout of the image. Can be "fixed", "constrained", or "fullWidth".
  * @property {Crop} [crop] - Shopify only. The crop of the image. Can be "center", "left", "right", "top", or "bottom".
+ * @property {string} [alt] - Alternative text for the image for accessibility purposes.
+ * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  *
  * @example
  * Using with Shopify image URL:
@@ -32,6 +34,25 @@ import { NostoElement } from "../Element"
  * ```html
  * <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600" layout="constrained"></nosto-image>
  * ```
+ *
+ * @example
+ * Using with alt text for accessibility:
+ * ```html
+ * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="400" height="300" alt="Luxury bath towels in white"></nosto-image>
+ * ```
+ *
+ * @example
+ * Using with responsive sizes attribute:
+ * ```html
+ * <nosto-image
+ *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+ *   width="800"
+ *   aspectRatio="1.5"
+ *   layout="constrained"
+ *   alt="Product showcase image"
+ *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
+ * </nosto-image>
+ * ```
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -42,7 +63,9 @@ export class Image extends NostoElement {
     height: Number,
     aspectRatio: Number,
     layout: String,
-    crop: String
+    crop: String,
+    alt: String,
+    sizes: String
   }
 
   src!: string
@@ -51,6 +74,8 @@ export class Image extends NostoElement {
   aspectRatio?: number
   layout?: Layout
   crop?: Crop
+  alt?: string
+  sizes?: string
 
   attributeChangedCallback() {
     if (this.isConnected) {
@@ -60,20 +85,31 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop } = this
+    const { src, width, height, layout, aspectRatio, crop, alt, sizes } = this
 
-    const { style, ...props } = transform({
+    // Filter out undefined values
+    const transformProps: Partial<ImageProps> = {
       src,
       width,
       height,
       aspectRatio,
       layout: layout || "constrained",
       crop
-    })
+    }
+
+    // Only add alt and sizes if they are defined and not the string "undefined"
+    if (alt !== undefined && alt !== "undefined") {
+      transformProps.alt = alt
+    }
+    if (sizes !== undefined && sizes !== "undefined") {
+      transformProps.sizes = sizes
+    }
+
+    const { style, ...props } = transform(transformProps as ImageProps)
 
     const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
-      if (value != null) {
+      if (value != null && value !== undefined) {
         img.setAttribute(key, String(value))
       }
     })

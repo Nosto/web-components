@@ -10,6 +10,8 @@ export type ImageProps = {
   aspectRatio?: number
   layout?: Layout
   crop?: Crop
+  alt?: string
+  sizes?: string
 }
 
 export type BaseImageProps = UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<CSSStyleDeclaration>>
