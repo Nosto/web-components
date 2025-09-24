@@ -124,19 +124,5 @@ describe("NostoImage/transform", () => {
       const result = transform({ src: shopifyUrl, width: 400, height: 300, sizes: sizesValue })
       expect(result.sizes).toBe(sizesValue)
     })
-
-    it("passes through both alt and sizes attributes", () => {
-      const altText = "Product showcase"
-      const sizesValue = "(max-width: 1200px) 100vw, 33vw"
-      const result = transform({
-        src: shopifyUrl,
-        width: 600,
-        height: 400,
-        alt: altText,
-        sizes: sizesValue
-      })
-      expect(result.alt).toBe(altText)
-      expect(result.sizes).toBe(sizesValue)
-    })
   })
 })
