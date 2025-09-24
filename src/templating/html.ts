@@ -32,7 +32,7 @@ function processExpression(expression: TemplateInterpolation): string {
     return (expression as TemplateExpression).html
   }
 
-  if (expression === undefined) {
+  if (expression === undefined || expression === null) {
     return ""
   }
 

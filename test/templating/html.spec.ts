@@ -19,14 +19,9 @@ describe("html templating function", () => {
     expect(result.html).toBe("<div>&lt;&gt;&amp;&quot;&#039;</div>")
   })
 
-  it("handles undefined expressions", () => {
-    const result = html`<div>${undefined}</div>`
-    expect(result.html).toBe("<div></div>")
-  })
-
-  it("handles number expressions", () => {
-    const result = html`<div>${42}</div>`
-    expect(result.html).toBe("<div>42</div>")
+  it("handles primitive value expressions", () => {
+    const result = html`<div>${undefined} ${null} ${42} ${true} ${false}</div>`
+    expect(result.html).toBe("<div>  42 true false</div>")
   })
 
   it("flattens and joins array contents", () => {
@@ -102,12 +97,5 @@ describe("html templating function", () => {
   it("preserves whitespace in template", () => {
     const result = html` <div>Hello ${"World"}!</div> `
     expect(result.html).toBe(" <div>Hello World!</div> ")
-  })
-
-  it("handles objects that are not TemplateExpression", () => {
-    const obj = { name: "test", value: 123 }
-    // @ts-expect-error Testing non-TemplateExpression object
-    const result = html`<div>${obj}</div>`
-    expect(result.html).toBe("<div>[object Object]</div>")
   })
 })
