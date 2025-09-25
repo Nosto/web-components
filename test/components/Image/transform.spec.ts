@@ -108,6 +108,15 @@ describe("NostoImage/transform", () => {
       expect(result.src).toBe(stencilUrl.replace("{DIMEN}", "1280x600"))
       expect(typeof result.style).toBe("object")
     })
+
+    it("handles breakpoints with bigcommerce", () => {
+      const breakpoints = [200, 400, 800]
+      const result = transform({ src: bigcommerceUrl, width: 400, height: 300, breakpoints })
+
+      expect(result.src).toBeDefined()
+      expect(result.srcset).toBeDefined()
+      expect(typeof result.style).toBe("object")
+    })
   })
 
   describe("alt and sizes attribute handling", () => {
@@ -123,6 +132,35 @@ describe("NostoImage/transform", () => {
       const sizesValue = "(max-width: 768px) 100vw, 50vw"
       const result = transform({ src: shopifyUrl, width: 400, height: 300, sizes: sizesValue })
       expect(result.sizes).toBe(sizesValue)
+    })
+
+    it("passes through breakpoints correctly", () => {
+      const breakpoints = [320, 640, 768, 1024, 1280]
+      const result = transform({ src: shopifyUrl, width: 400, height: 300, breakpoints })
+
+      // Verify that the transform returns a result (the breakpoints are processed internally by unpic)
+      expect(result.src).toBeDefined()
+      expect(result.srcset).toBeDefined()
+      expect(typeof result.style).toBe("object")
+    })
+
+    it("works with breakpoints and other props together", () => {
+      const sizesValue = "(max-width: 768px) 100vw, 50vw"
+      const breakpoints = [400, 800, 1200]
+      const result = transform({
+        src: shopifyUrl,
+        width: 400,
+        height: 300,
+        sizes: sizesValue,
+        breakpoints,
+        alt: "Test image"
+      })
+
+      expect(result.sizes).toBe(sizesValue)
+      expect(result.alt).toBe("Test image")
+      expect(result.src).toBeDefined()
+      expect(result.srcset).toBeDefined()
+      expect(typeof result.style).toBe("object")
     })
   })
 })

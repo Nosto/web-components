@@ -4,7 +4,9 @@ type FieldType<T> = T extends string
     ? NumberConstructor
     : T extends boolean
       ? BooleanConstructor
-      : never
+      : T extends number[]
+        ? ArrayConstructor
+        : never
 
 type ConstructorMetadata<T extends HTMLElement> = {
   new (): T
@@ -39,6 +41,8 @@ function getPropertyDescriptor(propertyName: string, type: unknown) {
     return booleanAttribute(attributeName)
   } else if (type === Number) {
     return numberAttribute(attributeName)
+  } else if (type === Array) {
+    return arrayAttribute(attributeName)
   }
   return stringAttribute(attributeName)
 }
@@ -88,6 +92,32 @@ function numberAttribute(attributeName: string) {
         this.removeAttribute(attributeName)
       } else {
         this.setAttribute(attributeName, value.toString())
+      }
+    },
+    configurable: true,
+    enumerable: true
+  }
+}
+
+function arrayAttribute(attributeName: string) {
+  return {
+    get(this: HTMLElement) {
+      const value = this.getAttribute(attributeName)
+      if (!value) {
+        return undefined
+      }
+      try {
+        const parsed = JSON.parse(value)
+        return Array.isArray(parsed) ? parsed : undefined
+      } catch {
+        return undefined
+      }
+    },
+    set(this: HTMLElement, value?: number[]) {
+      if (value === null || value === undefined) {
+        this.removeAttribute(attributeName)
+      } else {
+        this.setAttribute(attributeName, JSON.stringify(value))
       }
     },
     configurable: true,
