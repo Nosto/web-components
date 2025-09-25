@@ -1,12 +1,10 @@
-import type { Crop, ImageProps } from "./types"
+import type { Crop, ImageProps, Layout } from "./types"
 import { customElement } from "../decorators"
-import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
 
 /**
- * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
- * refer https://unpic.dev for more details.
+ * NostoImage is a custom element that renders an image with responsive capabilities.
  *
  * @category Progressive Enhancement
  *

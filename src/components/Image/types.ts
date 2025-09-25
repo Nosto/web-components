@@ -1,7 +1,6 @@
-import type { CoreImageAttributes, Layout, Operations, UnpicBaseImageProps } from "@unpic/core/base"
-import type { ShopifyOperations } from "unpic/providers/shopify"
+export type Layout = "fixed" | "constrained" | "fullWidth"
 
-export type Crop = Exclude<ShopifyOperations["crop"], undefined>
+export type Crop = "center" | "left" | "right" | "top" | "bottom"
 
 export type ImageProps = {
   src: string
@@ -14,4 +13,20 @@ export type ImageProps = {
   sizes?: string
 }
 
-export type BaseImageProps = UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<CSSStyleDeclaration>>
+export type Operations = {
+  width?: number
+  height?: number
+  crop?: Crop
+}
+
+export type TransformResult = {
+  src: string
+  srcset?: string
+  sizes?: string
+  loading?: string
+  decoding?: string
+  width?: number
+  height?: number
+  alt?: string
+  style: CSSStyleDeclaration
+}

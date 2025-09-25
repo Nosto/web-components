@@ -1,7 +1,6 @@
-import type { Operations } from "unpic/types"
-import { Crop } from "./types"
+import type { Operations } from "./types"
 
-export function transform(src: string | URL, { width, height, crop }: Operations & { crop?: Crop } = {}): string {
+export function transform(src: string | URL, { width, height, crop }: Operations = {}): string {
   const u = new URL(src.toString())
 
   // Extract path and extension

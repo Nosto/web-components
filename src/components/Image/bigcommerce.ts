@@ -1,4 +1,4 @@
-import type { Operations } from "unpic/types"
+import type { Operations } from "./types"
 
 type BigCommerceUrlGroups = {
   prefix: string
