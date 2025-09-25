@@ -86,8 +86,6 @@ export class Campaign extends NostoElement {
   cartSynced?: boolean
 
   templateElement?: HTMLTemplateElement
-  /** @private */
-  cartUpdateListener?: () => void
 
   async connectedCallback() {
     if (!this.placement && !this.id) {
@@ -96,11 +94,8 @@ export class Campaign extends NostoElement {
 
     // Register cart update listener if cart-synced is enabled
     if (this.cartSynced) {
-      this.cartUpdateListener = () => {
-        this.load()
-      }
       const api = await new Promise(nostojs)
-      api.listen("cartUpdated", this.cartUpdateListener)
+      api.listen("cartUpdated", () => this.load())
     }
 
     if (this.init !== "false") {
@@ -115,15 +110,6 @@ export class Campaign extends NostoElement {
       } else {
         await loadCampaign(this)
       }
-    }
-  }
-
-  disconnectedCallback() {
-    // Clean up cart update listener
-    if (this.cartUpdateListener) {
-      // Note: The Nosto API doesn't provide an unlisten method,
-      // so we set the listener to null to prevent memory leaks
-      this.cartUpdateListener = undefined
     }
   }
 

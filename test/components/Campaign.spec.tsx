@@ -209,7 +209,6 @@ describe("Campaign", () => {
       await campaign.connectedCallback()
 
       expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
-      expect(campaign.cartUpdateListener).toBeDefined()
     })
 
     it("should not register cart update listener when cart-synced is false or not set", async () => {
@@ -234,7 +233,6 @@ describe("Campaign", () => {
       await campaign.connectedCallback()
 
       expect(mockListen).not.toHaveBeenCalled()
-      expect(campaign.cartUpdateListener).toBeUndefined()
     })
 
     it("should reload campaign when cart update event is triggered", async () => {
@@ -333,24 +331,6 @@ describe("Campaign", () => {
       // Should register cart listener but not auto-load
       expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
       expect(mockBuilder.load).not.toHaveBeenCalled()
-    })
-
-    it("should clean up listener reference on disconnect", () => {
-      campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
-
-      // Set up the listener reference
-      campaign.cartUpdateListener = vi.fn()
-
-      campaign.disconnectedCallback()
-
-      expect(campaign.cartUpdateListener).toBeUndefined()
-    })
-
-    it("should handle disconnectedCallback safely when no listener is set", () => {
-      campaign = (<nosto-campaign placement="789" />) as Campaign
-
-      // Should not throw an error
-      expect(() => campaign.disconnectedCallback()).not.toThrow()
     })
   })
 })
