@@ -163,4 +163,36 @@ describe("Campaign", () => {
     expect(mockObserver.observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
   })
+
+  it("should use HTML templating when useHtmlTemplating is true", async () => {
+    const templateId = "campaign-template"
+    const template = document.createElement("template")
+    template.id = templateId
+    template.innerHTML = `<div>Template content</div>`
+    document.body.appendChild(template)
+
+    const { mockBuilder } = mockNostoRecs({
+      "789": {
+        title: "HTML Templated Campaign",
+        products: [
+          { name: "Product A", imageUrl: "https://example.com/a.jpg", price: "$10" },
+          { name: "Product B", imageUrl: "https://example.com/b.jpg", price: "$20" }
+        ]
+      }
+    })
+
+    campaign = (
+      <nosto-campaign placement="789" productId="123" template={templateId} useHtmlTemplating={true} />
+    ) as Campaign
+    document.body.appendChild(campaign)
+
+    await campaign.connectedCallback()
+
+    expect(mockBuilder.load).toHaveBeenCalledWith()
+    expect(campaign.innerHTML).toContain("HTML Templated Campaign")
+    expect(campaign.innerHTML).toContain("Product A")
+    expect(campaign.innerHTML).toContain("Product B")
+    expect(campaign.innerHTML).toContain("$10")
+    expect(campaign.innerHTML).toContain("$20")
+  })
 })

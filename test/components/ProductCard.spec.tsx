@@ -156,4 +156,36 @@ describe("ProductCard", () => {
 
     expect(card.innerHTML).toBe(expected.outerHTML)
   })
+
+  it("should use HTML templating when useHtmlTemplating is true", async () => {
+    const productData = {
+      title: "HTML Templated Product",
+      image: "https://example.com/product.jpg",
+      price: "$25.99",
+      listPrice: "$29.99"
+    }
+
+    const card = (<nosto-product-card template="test-html" useHtmlTemplating={true} />) as ProductCard
+
+    // Create a dummy template (won't be used since we're using HTML templating)
+    document.body.append(
+      <template id="test-html">
+        <div>Dummy template</div>
+      </template>
+    )
+
+    card.append(
+      <script type="application/json" product-data>
+        {JSON.stringify(productData)}
+      </script>
+    )
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toContain("HTML Templated Product")
+    expect(card.innerHTML).toContain("https://example.com/product.jpg")
+    expect(card.innerHTML).toContain("$25.99")
+    expect(card.innerHTML).toContain("$29.99")
+    expect(card.innerHTML).toContain("product-card")
+  })
 })

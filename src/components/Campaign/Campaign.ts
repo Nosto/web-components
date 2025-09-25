@@ -2,6 +2,7 @@ import { customElement } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
+import { html } from "@/templating/html"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
@@ -23,6 +24,7 @@ import { addRequest } from "./orchestrator"
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
+ * @property {boolean} [useHtmlTemplating] - If true, uses HTML templating instead of Vue templating. Defaults to false.
  *
  * @example
  * Basic campaign rendering with HTML mode:
@@ -64,7 +66,8 @@ export class Campaign extends NostoElement {
     variantId: String,
     template: String,
     init: String,
-    lazy: Boolean
+    lazy: Boolean,
+    useHtmlTemplating: Boolean
   }
 
   placement!: string
@@ -73,6 +76,7 @@ export class Campaign extends NostoElement {
   template?: string
   init?: string
   lazy?: boolean
+  useHtmlTemplating?: boolean
 
   templateElement?: HTMLTemplateElement
 
@@ -115,8 +119,16 @@ export async function loadCampaign(element: Campaign) {
 
   if (rec) {
     if (useTemplate) {
-      const template = getTemplate(element)
-      compile(element, template, getContext(rec as JSONResult))
+      if (element.useHtmlTemplating) {
+        // Use HTML templating approach
+        const context = getContext(rec as JSONResult)
+        const htmlTemplate = generateCampaignHTML(context)
+        element.innerHTML = htmlTemplate
+      } else {
+        // Use Vue templating approach (default)
+        const template = getTemplate(element)
+        compile(element, template, getContext(rec as JSONResult))
+      }
       api.attributeProductClicksInCampaign(element, rec as JSONResult)
     } else {
       await api.placements.injectCampaigns(
@@ -126,6 +138,34 @@ export async function loadCampaign(element: Campaign) {
     }
   }
   element.toggleAttribute("loading", false)
+}
+
+function generateCampaignHTML(context: { title?: string; products?: unknown[] }): string {
+  // Example HTML template using html templating
+  // This can be customized based on the campaign data structure
+  if (context.products && Array.isArray(context.products)) {
+    return html`
+      <div class="campaign">
+        ${context.title ? html`<h2 class="campaign__title">${context.title}</h2>` : ""}
+        <div class="campaign__products">
+          ${context.products.map(
+            (product: { imageUrl?: string; name?: string; price?: string }) => html`
+              <div class="campaign__product">
+                ${product.imageUrl
+                  ? html`<img src="${product.imageUrl}" alt="${product.name}" class="campaign__product-image" />`
+                  : ""}
+                <h3 class="campaign__product-name">${product.name}</h3>
+                ${product.price ? html`<span class="campaign__product-price">${product.price}</span>` : ""}
+              </div>
+            `
+          )}
+        </div>
+      </div>
+    `.html
+  }
+
+  // Fallback for other campaign structures
+  return html`<div class="campaign">${JSON.stringify(context)}</div>`.html
 }
 
 declare global {
