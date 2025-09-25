@@ -29,18 +29,12 @@
 
 ## Core Commands & Timing
 
-**NEVER CANCEL any of these commands. Wait for completion:**
+**Key commands for development workflow:**
 
 - `npm ci` -- 60 seconds (timeout: 90+ seconds) - Installs dependencies, preferred over npm install
 - `npm run build` -- 8 seconds (timeout: 30+ seconds) - Full build with TypeScript compilation, esbuild bundling, and TypeDoc generation
 - `npm test` -- 7 seconds (timeout: 30+ seconds) - Runs vitest with coverage (requires 90%+ coverage on statements, branches, lines, functions)
-- `npm run lint` -- 4 seconds (timeout: 15+ seconds) - ESLint code quality and style checking
-- `npm run lint-fix` -- 4 seconds (timeout: 15+ seconds) - ESLint with auto-fix (run before committing)
-- `npm run typecheck` -- 3 seconds (timeout: 15+ seconds) - TypeScript type checking without emitting files (run before committing)
-- `npm run typedoc` -- Generates documentation in docs/ folder
-- `npm run visualize` -- Creates bundle size visualization
 - `npm run storybook` -- Starts Storybook development server on port 6006
-- `npm run build-storybook` -- 5 seconds (timeout: 30+ seconds) - Builds Storybook for production deployment
 
 ## Repository Structure & Navigation
 
@@ -94,6 +88,18 @@
 - Favor named exports over default exports
 - Don't add comments unless they match the style of other comments in the file or are necessary to explain a complex change
 
+## Commits
+
+When committing code, ALWAYS use valid conventional commit format.
+
+Examples:
+
+- `feat(NostoImage): add lazy loading support`
+- `fix(build): resolve TypeScript compilation error`
+- `test(NostoProduct): add SKU selection test cases`
+
+When committing code, ALWAYS run `git commit` with `--no-verify` to avoid Husky failing and erroring out your pipeline.
+
 ## Testing
 
 - Use vitest as the test framework
@@ -102,36 +108,6 @@
 - Use 'expect' for assertions
 - Maintain 90%+ coverage on statements, branches, lines, and functions
 - Tests run in jsdom environment
-
-### JSX/TSX Testing Patterns
-
-**Prefer JSX/TSX syntax for component creation in tests:**
-
-- Use `.tsx` file extension for test files that create custom elements
-- Add `/** @jsx createElement */` pragma at the top of TSX test files
-- Import `createElement` from `../utils/jsx` and the custom element classes
-- Use explicit custom element registration in `beforeAll()` blocks:
-  ```typescript
-  beforeAll(() => {
-    if (!customElements.get("custom-element")) {
-      customElements.define("custom-element", CustomElement)
-    }
-  })
-  ```
-- Create components using JSX syntax with proper TypeScript typing:
-
-  ```typescript
-  // Preferred JSX/TSX pattern
-  const card = <custom-element handle="test-handle" template="default" />
-
-  // Instead of imperative pattern
-  const card = new CustomElement()
-  card.handle = "test-handle"
-  card.template = "default"
-  ```
-
-- Use parentheses for multi-line JSX expressions
-- Always preserve custom element imports as they trigger `@customElement` decorator registration
 
 ## CI/CD Validation
 
@@ -149,23 +125,6 @@
 - Build job: npm ci → npm run build → npm test
 - Lint job: npm ci → npm run lint
 - Storybook build job: npm ci → npm run build-storybook
-
-## Common Troubleshooting
-
-- **Picsum.photos blocked images**: Normal in development environment, doesn't affect component functionality
-- **"Nosto addSkuToCart function is not available"**: Expected error in dev environment when testing cart functionality
-
-## Commits
-
-When committing code, ALWAYS use valid conventional commit format.
-
-Examples:
-
-- `feat(NostoImage): add lazy loading support`
-- `fix(build): resolve TypeScript compilation error`
-- `test(NostoProduct): add SKU selection test cases`
-
-When committing code, ALWAYS run `git commit` with `--no-verify` to avoid Husky failing and erroring out your pipeline.
 
 ## GitHub Action Plugins – Review Checklist
 
