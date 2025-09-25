@@ -126,9 +126,10 @@ export function responsiveImage({
   const { style, ...transformedProps } = transform(transformProps)
 
   // Filter out null and undefined values from props
-  const props = Object.fromEntries(
-    Object.entries(transformedProps).filter(([, value]) => value != null)
-  ) as Record<string, string | number>
+  const props = Object.fromEntries(Object.entries(transformedProps).filter(([, value]) => value != null)) as Record<
+    string,
+    string | number
+  >
 
   return {
     props,
