@@ -41,16 +41,22 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return html`
     <div class="simple-card__image ${hasAlternate ? "simple-card__image--alternate" : ""}">
-      <nosto-image
-        src="${primaryImage}"
-        alt="${product.title}"
-        width="300"
-        aspect-ratio="${aspectRatio}"
-        loading="lazy"
-        class="simple-card__img simple-card__img--primary"
-      ></nosto-image>
+      ${generateNostoImageHTML(primaryImage, product.title, aspectRatio, "simple-card__img simple-card__img--primary")}
       ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product) : ""}
     </div>
+  `
+}
+
+function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string) {
+  return html`
+    <nosto-image
+      src="${src}"
+      alt="${alt}"
+      width="300"
+      aspect-ratio="${aspectRatio}"
+      loading="lazy"
+      class="${className}"
+    ></nosto-image>
   `
 }
 
@@ -58,16 +64,12 @@ function generateAlternateImageHTML(alternateImage: string, product: ShopifyProd
   // Get aspect ratio from the second media object, fallback to 1
   const aspectRatio = product.media?.[1]?.aspect_ratio || 1
 
-  return html`
-    <nosto-image
-      src="${alternateImage}"
-      alt="${product.title}"
-      width="300"
-      aspect-ratio="${aspectRatio}"
-      loading="lazy"
-      class="simple-card__img simple-card__img--alternate"
-    ></nosto-image>
-  `
+  return generateNostoImageHTML(
+    alternateImage,
+    product.title,
+    aspectRatio,
+    "simple-card__img simple-card__img--alternate"
+  )
 }
 
 function generateRatingHTML(rating: number) {
