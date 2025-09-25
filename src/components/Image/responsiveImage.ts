@@ -42,8 +42,7 @@ export function responsiveImage({
   crop,
   alt,
   sizes
-}: ImageProps & { layout?: ImageProps["layout"] }) {
-  // Create props object and filter out null/undefined values
+}: ImageProps) {
   const rawProps = {
     src,
     width,
@@ -55,12 +54,10 @@ export function responsiveImage({
     sizes
   }
 
-  // Filter out null and undefined values
   const transformProps = Object.fromEntries(Object.entries(rawProps).filter(([, value]) => value != null)) as ImageProps
 
   const { style, ...transformedProps } = transform(transformProps)
 
-  // Filter out null and undefined values from props
   const props = Object.fromEntries(Object.entries(transformedProps).filter(([, value]) => value != null)) as Record<
     string,
     string | number
