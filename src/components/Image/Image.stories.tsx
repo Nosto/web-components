@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import { ifDefined } from "lit/directives/if-defined.js"
 import "./Image.stories.css"
 
 const sampleImages = [
@@ -29,13 +30,12 @@ function createImageGrid(
     <div class="image-grid">
       ${images.map(
         product => html`
-          <div class="image-item">
             <nosto-image
-              src="${product.imageUrl}"
-              ${layout ? `layout="${layout}"` : ""}
-              ${width ? `width="${width}"` : ""}
-              ${height ? `height="${height}"` : ""}
-              ${aspectRatio ? `aspect-ratio="${aspectRatio}"` : ""}
+              src=${product.imageUrl}
+              layout=${ifDefined(layout)}
+              width=${ifDefined(width)}
+              height=${ifDefined(height)}
+              aspect-ratio=${ifDefined(aspectRatio)}
             >
             </nosto-image>
             <div class="image-caption">${product.name}</div>
