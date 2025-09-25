@@ -1,3 +1,11 @@
+# [8.24.0](https://github.com/Nosto/web-components/compare/v8.23.1...v8.24.0) (2025-09-25)
+
+
+### Features
+
+* **Image:** Add support for alt and sizes attributes and pass to unpic transform ([6a13f61](https://github.com/Nosto/web-components/commit/6a13f6157afff27e3ee6266e21448c8dc1b5c9c5))
+* implement lit-html like templating engine with html function ([bb29ec2](https://github.com/Nosto/web-components/commit/bb29ec27b27d557e43dd54f9f0a0fa8255301b9c))
+
 ## [8.23.1](https://github.com/Nosto/web-components/compare/v8.23.0...v8.23.1) (2025-09-22)
 
 
