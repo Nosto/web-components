@@ -35,7 +35,7 @@ describe("customElement", () => {
         foo: String,
         bar: Boolean,
         baz: Number,
-        qux: Array
+        qux: JSON
       }
 
       foo!: string
@@ -61,7 +61,7 @@ describe("customElement", () => {
     @customElement(tagName)
     class constructor extends HTMLElement {
       static attributes = {
-        numbers: Array
+        numbers: JSON
       }
 
       numbers!: number[]
@@ -87,7 +87,8 @@ describe("customElement", () => {
     expect(e.numbers).toBeUndefined()
 
     // Test removing attribute
-    e.numbers = undefined as any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(e as any).numbers = undefined
     expect(e.hasAttribute("numbers")).toBe(false)
   })
 })

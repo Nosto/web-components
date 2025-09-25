@@ -217,11 +217,14 @@ export const CustomBreakpoints: Story = {
     element.setAttribute("layout", args.layout)
     // Set custom breakpoints as JSON array
     element.setAttribute("breakpoints", "[480, 768, 1024, 1440]")
-    
+
     return html`
       <div>
         <div class="image-demo-sub-title">Custom Breakpoints: [480, 768, 1024, 1440]</div>
-        <p>This image uses custom breakpoints for responsive sizing. Inspect the generated srcset to see the custom widths.</p>
+        <p>
+          This image uses custom breakpoints for responsive sizing. Inspect the generated srcset to see the custom
+          widths.
+        </p>
         ${element}
       </div>
     `
