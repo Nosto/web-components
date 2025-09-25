@@ -22,14 +22,14 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
         </div>
       </a>
     </div>
-  `.html
+  `
 }
 
 export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
-    return html`<div class="simple-card__image simple-card__image--placeholder"></div>`.html
+    return html`<div class="simple-card__image simple-card__image--placeholder"></div>`
   }
 
   const hasAlternate =
@@ -51,7 +51,7 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
       ></nosto-image>
       ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product) : ""}
     </div>
-  `.html
+  `
 }
 
 export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
@@ -67,7 +67,7 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
       loading="lazy"
       class="simple-card__img simple-card__img--alternate"
     ></nosto-image>
-  `.html
+  `
 }
 
 export function generateRatingHTML(rating: number) {
@@ -76,7 +76,7 @@ export function generateRatingHTML(rating: number) {
   const hasHalfStar = rating % 1 >= 0.5
   const starDisplay =
     "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
-  return html`<div class="simple-card__rating">${starDisplay} (${rating.toFixed(1)})</div>`.html
+  return html`<div class="simple-card__rating">${starDisplay} (${rating.toFixed(1)})</div>`
 }
 
 export function formatPrice(price: number) {
