@@ -7,6 +7,17 @@ describe("responsiveImage", () => {
     "https://cdn11.bigcommerce.com/s-bo4yyk7o1j/products/15493/images/80390/5SqIsKoR7VMPHGrsnseGPkhhpWHT9tLcY7Uwop7FCMzm5jcxKgU2d7P7zbgqcs8r__09669.1741105378.1280.1280.jpg?c=2"
 
   function assertValidResult(result: ReturnType<typeof responsiveImage>, originalSrc: string) {
+    // Check full result structure
+    expect(result).toEqual({
+      props: expect.objectContaining({
+        src: expect.any(String),
+        srcset: expect.any(String),
+        loading: expect.any(String),
+        decoding: expect.any(String)
+      }),
+      style: expect.any(Object)
+    })
+
     expect(result).toHaveProperty("props")
     expect(result).toHaveProperty("style")
     expect(result.props).toHaveProperty("src")

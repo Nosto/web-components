@@ -85,7 +85,7 @@ export class Image extends NostoElement {
       src,
       width,
       height,
-      layout,
+      layout: layout || "constrained",
       aspectRatio,
       crop,
       alt,
