@@ -102,16 +102,17 @@ function numberAttribute(attributeName: string) {
 function jsonAttribute(attributeName: string) {
   return {
     get(this: HTMLElement) {
-      const value = this.getAttribute(attributeName)
-      if (!value) {
-        return undefined
+      if (this.hasAttribute(attributeName)) {
+        const value = this.getAttribute(attributeName)
+        if (value) {
+          try {
+            return JSON.parse(value)
+          } catch {
+            return undefined
+          }
+        }
       }
-      try {
-        const parsed = JSON.parse(value)
-        return Array.isArray(parsed) ? parsed : undefined
-      } catch {
-        return undefined
-      }
+      return undefined
     },
     set(this: HTMLElement, value?: number[]) {
       if (value === null || value === undefined) {
