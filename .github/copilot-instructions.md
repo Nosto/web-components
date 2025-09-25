@@ -21,6 +21,18 @@
 
 **When taking Storybook screenshots, always close the controls section first** using the "Hide addons [alt A]" button for cleaner screenshots and **wait for `#storybook-root .storybook-wrapper` to be available** before capturing the screenshot.
 
+## Commits
+
+When committing code, ALWAYS use valid conventional commit format.
+
+Examples:
+
+- `feat(NostoImage): add lazy loading support`
+- `fix(build): resolve TypeScript compilation error`
+- `test(NostoProduct): add SKU selection test cases`
+
+When committing code, ALWAYS run `git commit` with `--no-verify` to avoid Husky failing and erroring out your pipeline.
+
 ## Node.js Requirements
 
 **CRITICAL**: This project requires Node.js >= 22.12.0 and npm >= 10.9.0 as specified in package.json engines.
@@ -154,18 +166,6 @@
 
 - **Picsum.photos blocked images**: Normal in development environment, doesn't affect component functionality
 - **"Nosto addSkuToCart function is not available"**: Expected error in dev environment when testing cart functionality
-
-## Commits
-
-When committing code, ALWAYS use valid conventional commit format.
-
-Examples:
-
-- `feat(NostoImage): add lazy loading support`
-- `fix(build): resolve TypeScript compilation error`
-- `test(NostoProduct): add SKU selection test cases`
-
-When committing code, ALWAYS run `git commit` with `--no-verify` to avoid Husky failing and erroring out your pipeline.
 
 ## GitHub Action Plugins – Review Checklist
 
