@@ -1,7 +1,7 @@
-import type { Crop, ImageProps } from "./types"
+import type { Crop } from "./types"
 import { customElement } from "../decorators"
 import type { Layout } from "@unpic/core/base"
-import { transform } from "./transform"
+import { responsiveImage } from "./responsiveImage"
 import { NostoElement } from "../Element"
 
 /**
@@ -81,24 +81,16 @@ export class Image extends NostoElement {
     validateProps(this)
     const { src, width, height, layout, aspectRatio, crop, alt, sizes } = this
 
-    // Create props object and filter out null/undefined values
-    const rawProps = {
+    const { props, style } = responsiveImage({
       src,
       width,
       height,
+      layout,
       aspectRatio,
-      layout: layout || "constrained",
       crop,
       alt,
       sizes
-    }
-
-    // Filter out null and undefined values
-    const transformProps = Object.fromEntries(
-      Object.entries(rawProps).filter(([, value]) => value != null)
-    ) as ImageProps
-
-    const { style, ...props } = transform(transformProps)
+    })
 
     const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
