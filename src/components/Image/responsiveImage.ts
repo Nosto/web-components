@@ -33,35 +33,10 @@ import { transform } from "./transform"
  * Object.assign(img.style, style)
  * ```
  */
-export function responsiveImage({
-  src,
-  width,
-  height,
-  aspectRatio,
-  layout = "constrained",
-  crop,
-  alt,
-  sizes
-}: ImageProps) {
-  const rawProps = {
-    src,
-    width,
-    height,
-    aspectRatio,
-    layout,
-    crop,
-    alt,
-    sizes
-  }
-
+export function responsiveImage(rawProps: ImageProps) {
   const transformProps = Object.fromEntries(Object.entries(rawProps).filter(([, value]) => value != null)) as ImageProps
-
   const { style, ...transformedProps } = transform(transformProps)
-
-  const props = Object.fromEntries(Object.entries(transformedProps).filter(([, value]) => value != null)) as Record<
-    string,
-    string | number
-  >
+  const props = Object.fromEntries(Object.entries(transformedProps).filter(([, value]) => value != null)) as ImageProps
 
   return {
     props,

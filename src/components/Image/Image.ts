@@ -94,9 +94,7 @@ export class Image extends NostoElement {
 
     const img = document.createElement("img")
     Object.entries(props).forEach(([key, value]) => {
-      if (value != null) {
-        img.setAttribute(key, String(value))
-      }
+      img.setAttribute(key, String(value))
     })
     Object.assign(img.style, style)
     this.replaceChildren(img)
