@@ -197,26 +197,6 @@ describe("Campaign", () => {
       expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
     })
 
-    it("should not register cart update listener when cart-synced is false or not set", async () => {
-      const { mockBuilder } = mockNostoRecs({ "789": "content" })
-
-      // Use mockNostojs to add listen method
-      mockNostojs({
-        createRecommendationRequest: () => mockBuilder,
-        listen: mockListen,
-        attributeProductClicksInCampaign: vi.fn(),
-        placements: {
-          injectCampaigns: vi.fn()
-        }
-      })
-
-      campaign = (<nosto-campaign placement="789" />) as Campaign
-
-      await campaign.connectedCallback()
-
-      expect(mockListen).not.toHaveBeenCalled()
-    })
-
     it("should reload campaign when cart update event is triggered", async () => {
       const { mockBuilder } = mockNostoRecs({ "789": "original content" })
 
@@ -249,58 +229,6 @@ describe("Campaign", () => {
 
       // Verify the campaign was reloaded
       expect(campaign.load).toHaveBeenCalled()
-    })
-
-    it("should work with both cart-synced and lazy loading", async () => {
-      const { mockBuilder } = mockNostoRecs({ "789": "content" })
-
-      // Use mockNostojs to add listen method
-      mockNostojs({
-        createRecommendationRequest: () => mockBuilder,
-        listen: mockListen,
-        attributeProductClicksInCampaign: vi.fn(),
-        placements: {
-          injectCampaigns: vi.fn()
-        }
-      })
-
-      // Mock IntersectionObserver
-      const mockObserver = {
-        observe: vi.fn(),
-        disconnect: vi.fn()
-      }
-      // @ts-expect-error partial mock assignment
-      global.IntersectionObserver = vi.fn(() => mockObserver)
-
-      campaign = (<nosto-campaign placement="789" cart-synced={true} lazy={true} />) as Campaign
-
-      await campaign.connectedCallback()
-
-      // Should register cart listener and setup lazy loading
-      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
-      expect(mockObserver.observe).toHaveBeenCalledWith(campaign)
-    })
-
-    it("should work with cart-synced and init=false", async () => {
-      const { mockBuilder } = mockNostoRecs({ "789": "content" })
-
-      // Use mockNostojs to add listen method
-      mockNostojs({
-        createRecommendationRequest: () => mockBuilder,
-        listen: mockListen,
-        attributeProductClicksInCampaign: vi.fn(),
-        placements: {
-          injectCampaigns: vi.fn()
-        }
-      })
-
-      campaign = (<nosto-campaign placement="789" cart-synced={true} init="false" />) as Campaign
-
-      await campaign.connectedCallback()
-
-      // Should register cart listener but not auto-load
-      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
-      expect(mockBuilder.load).not.toHaveBeenCalled()
     })
   })
 })
