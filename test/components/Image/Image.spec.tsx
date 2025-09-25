@@ -45,23 +45,27 @@ describe("Image", () => {
   describe("Constrained Layout", () => {
     it("throws when width, height and aspectRadio are missing", () => {
       nostoImage = (<nosto-image src="https://example.com/image.jpg" />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError(
-        "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
-      )
+      expect(() => nostoImage.connectedCallback()).toThrowError("At least one of 'width' or 'height' must be provided.")
     })
 
-    it("throws when only width prop is provided", () => {
-      nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError(
-        "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
-      )
+    it("renders an image with only width prop", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(shopifyUrl)
+
+      nostoImage = (<nosto-image src={bigCommerceUrl} width={300} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(stencilUrlPrefix)
     })
 
-    it("throws when only height prop is provided", () => {
-      nostoImage = (<nosto-image src="https://example.com/image.jpg" height={200} />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError(
-        "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
-      )
+    it("renders an image with only height prop", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} height={200} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(shopifyUrl)
+
+      nostoImage = (<nosto-image src={bigCommerceUrl} height={200} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with width and height props", () => {

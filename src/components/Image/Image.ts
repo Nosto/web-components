@@ -47,6 +47,18 @@ import { NostoElement } from "../Element"
  *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
  * </nosto-image>
  * ```
+ *
+ * @example
+ * Using with only width dimension (height inferred):
+ * ```html
+ * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="320"></nosto-image>
+ * ```
+ *
+ * @example
+ * Using with only height dimension (width inferred):
+ * ```html
+ * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" height="200"></nosto-image>
+ * ```
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -116,8 +128,16 @@ function validateProps(element: Image) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
   if (element.layout !== "fullWidth") {
-    if ((["width", "height", "aspectRatio"] as const).filter(prop => element[prop]).length < 2) {
-      throw new Error("Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided.")
+    const hasWidth = !!element.width
+    const hasHeight = !!element.height
+    const hasAspectRatio = !!element.aspectRatio
+
+    // Allow: width + height, width + aspectRatio, height + aspectRatio, or just width, or just height
+    const validCombinations =
+      (hasWidth && hasHeight) || (hasWidth && hasAspectRatio) || (hasHeight && hasAspectRatio) || hasWidth || hasHeight
+
+    if (!validCombinations) {
+      throw new Error("At least one of 'width' or 'height' must be provided.")
     }
   }
 }
