@@ -190,7 +190,7 @@ describe("Campaign", () => {
         }
       })
 
-      campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
+      campaign = (<nosto-campaign placement="789" cart-synced />) as Campaign
 
       await campaign.connectedCallback()
 
