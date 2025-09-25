@@ -25,7 +25,7 @@ import { addRequest } from "./orchestrator"
  * when it comes into view using IntersectionObserver. Defaults to false.
  * @property {boolean} [cart-synced] - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
- * with Shopify cart changes. Defaults to false.
+ * with cart changes. Defaults to false.
  *
  * @example
  * Basic campaign rendering with HTML mode:
@@ -56,12 +56,6 @@ import { addRequest } from "./orchestrator"
  * Campaign with lazy loading and product context:
  * ```html
  * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
- * ```
- *
- * @example
- * Campaign with cart synchronization for Shopify stores:
- * ```html
- * <nosto-campaign placement="cart-recommendations" cart-synced></nosto-campaign>
  * ```
  */
 @customElement("nosto-campaign")

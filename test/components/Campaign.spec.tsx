@@ -2,13 +2,8 @@
 import { describe, it, expect, vi, Mock, beforeEach, afterEach } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostoRecs } from "../mockNostoRecs"
+import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { createElement } from "../utils/jsx"
-
-// Extend global type for nostojs
-declare global {
-  // eslint-disable-next-line no-var
-  var nostojs: unknown
-}
 
 describe("Campaign", () => {
   let campaign: Campaign
@@ -172,36 +167,27 @@ describe("Campaign", () => {
 
   describe("cart-synced functionality", () => {
     let mockListen: Mock
-    let originalNostojs: unknown
 
     beforeEach(() => {
       mockListen = vi.fn()
-      // Store original function
-      originalNostojs = global.nostojs
     })
 
     afterEach(() => {
-      // Restore original function
-      global.nostojs = originalNostojs as typeof global.nostojs
+      restoreNostojs()
       vi.clearAllMocks()
     })
 
     it("should register cart update listener when cart-synced is true", async () => {
-      // Set up our mock after calling mockNostoRecs
       const { mockBuilder } = mockNostoRecs({ "789": "content" })
 
-      // Override the mock to add listen method
-      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
-        const api = {
-          createRecommendationRequest: () => mockBuilder,
-          listen: mockListen,
-          attributeProductClicksInCampaign: vi.fn(),
-          placements: {
-            injectCampaigns: vi.fn()
-          }
+      // Use mockNostojs to add listen method
+      mockNostojs({
+        createRecommendationRequest: () => mockBuilder,
+        listen: mockListen,
+        attributeProductClicksInCampaign: vi.fn(),
+        placements: {
+          injectCampaigns: vi.fn()
         }
-        callback(api)
-        return Promise.resolve(api)
       })
 
       campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
@@ -214,18 +200,14 @@ describe("Campaign", () => {
     it("should not register cart update listener when cart-synced is false or not set", async () => {
       const { mockBuilder } = mockNostoRecs({ "789": "content" })
 
-      // Override the mock to add listen method
-      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
-        const api = {
-          createRecommendationRequest: () => mockBuilder,
-          listen: mockListen,
-          attributeProductClicksInCampaign: vi.fn(),
-          placements: {
-            injectCampaigns: vi.fn()
-          }
+      // Use mockNostojs to add listen method
+      mockNostojs({
+        createRecommendationRequest: () => mockBuilder,
+        listen: mockListen,
+        attributeProductClicksInCampaign: vi.fn(),
+        placements: {
+          injectCampaigns: vi.fn()
         }
-        callback(api)
-        return Promise.resolve(api)
       })
 
       campaign = (<nosto-campaign placement="789" />) as Campaign
@@ -238,18 +220,14 @@ describe("Campaign", () => {
     it("should reload campaign when cart update event is triggered", async () => {
       const { mockBuilder } = mockNostoRecs({ "789": "original content" })
 
-      // Override the mock to add listen method
-      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
-        const api = {
-          createRecommendationRequest: () => mockBuilder,
-          listen: mockListen,
-          attributeProductClicksInCampaign: vi.fn(),
-          placements: {
-            injectCampaigns: vi.fn()
-          }
+      // Use mockNostojs to add listen method
+      mockNostojs({
+        createRecommendationRequest: () => mockBuilder,
+        listen: mockListen,
+        attributeProductClicksInCampaign: vi.fn(),
+        placements: {
+          injectCampaigns: vi.fn()
         }
-        callback(api)
-        return Promise.resolve(api)
       })
 
       // Create campaign with cart-synced
@@ -276,18 +254,14 @@ describe("Campaign", () => {
     it("should work with both cart-synced and lazy loading", async () => {
       const { mockBuilder } = mockNostoRecs({ "789": "content" })
 
-      // Override the mock to add listen method
-      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
-        const api = {
-          createRecommendationRequest: () => mockBuilder,
-          listen: mockListen,
-          attributeProductClicksInCampaign: vi.fn(),
-          placements: {
-            injectCampaigns: vi.fn()
-          }
+      // Use mockNostojs to add listen method
+      mockNostojs({
+        createRecommendationRequest: () => mockBuilder,
+        listen: mockListen,
+        attributeProductClicksInCampaign: vi.fn(),
+        placements: {
+          injectCampaigns: vi.fn()
         }
-        callback(api)
-        return Promise.resolve(api)
       })
 
       // Mock IntersectionObserver
@@ -310,18 +284,14 @@ describe("Campaign", () => {
     it("should work with cart-synced and init=false", async () => {
       const { mockBuilder } = mockNostoRecs({ "789": "content" })
 
-      // Override the mock to add listen method
-      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
-        const api = {
-          createRecommendationRequest: () => mockBuilder,
-          listen: mockListen,
-          attributeProductClicksInCampaign: vi.fn(),
-          placements: {
-            injectCampaigns: vi.fn()
-          }
+      // Use mockNostojs to add listen method
+      mockNostojs({
+        createRecommendationRequest: () => mockBuilder,
+        listen: mockListen,
+        attributeProductClicksInCampaign: vi.fn(),
+        placements: {
+          injectCampaigns: vi.fn()
         }
-        callback(api)
-        return Promise.resolve(api)
       })
 
       campaign = (<nosto-campaign placement="789" cart-synced={true} init="false" />) as Campaign
