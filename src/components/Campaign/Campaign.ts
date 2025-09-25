@@ -23,6 +23,9 @@ import { addRequest } from "./orchestrator"
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
+ * @property {boolean} [cart-synced] - If true, the component will reload the campaign
+ * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
+ * with Shopify cart changes. Defaults to false.
  *
  * @example
  * Basic campaign rendering with HTML mode:
@@ -54,6 +57,12 @@ import { addRequest } from "./orchestrator"
  * ```html
  * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
  * ```
+ *
+ * @example
+ * Campaign with cart synchronization for Shopify stores:
+ * ```html
+ * <nosto-campaign placement="cart-recommendations" cart-synced></nosto-campaign>
+ * ```
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
@@ -64,7 +73,8 @@ export class Campaign extends NostoElement {
     variantId: String,
     template: String,
     init: String,
-    lazy: Boolean
+    lazy: Boolean,
+    cartSynced: Boolean
   }
 
   placement!: string
@@ -73,13 +83,26 @@ export class Campaign extends NostoElement {
   template?: string
   init?: string
   lazy?: boolean
+  cartSynced?: boolean
 
   templateElement?: HTMLTemplateElement
+  /** @private */
+  cartUpdateListener?: () => void
 
   async connectedCallback() {
     if (!this.placement && !this.id) {
       throw new Error("placement or id attribute is required for Campaign")
     }
+
+    // Register cart update listener if cart-synced is enabled
+    if (this.cartSynced) {
+      this.cartUpdateListener = () => {
+        this.load()
+      }
+      const api = await new Promise(nostojs)
+      api.listen("cartUpdated", this.cartUpdateListener)
+    }
+
     if (this.init !== "false") {
       if (this.lazy) {
         const observer = new IntersectionObserver(async entries => {
@@ -92,6 +115,15 @@ export class Campaign extends NostoElement {
       } else {
         await loadCampaign(this)
       }
+    }
+  }
+
+  disconnectedCallback() {
+    // Clean up cart update listener
+    if (this.cartUpdateListener) {
+      // Note: The Nosto API doesn't provide an unlisten method,
+      // so we set the listener to null to prevent memory leaks
+      this.cartUpdateListener = undefined
     }
   }
 

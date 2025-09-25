@@ -1,8 +1,14 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, Mock } from "vitest"
+import { describe, it, expect, vi, Mock, beforeEach, afterEach } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostoRecs } from "../mockNostoRecs"
 import { createElement } from "../utils/jsx"
+
+// Extend global type for nostojs
+declare global {
+  // eslint-disable-next-line no-var
+  var nostojs: unknown
+}
 
 describe("Campaign", () => {
   let campaign: Campaign
@@ -162,5 +168,189 @@ describe("Campaign", () => {
     // Should not create observer or load when init="false"
     expect(mockObserver.observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
+  })
+
+  describe("cart-synced functionality", () => {
+    let mockListen: Mock
+    let originalNostojs: unknown
+
+    beforeEach(() => {
+      mockListen = vi.fn()
+      // Store original function
+      originalNostojs = global.nostojs
+    })
+
+    afterEach(() => {
+      // Restore original function
+      global.nostojs = originalNostojs as typeof global.nostojs
+      vi.clearAllMocks()
+    })
+
+    it("should register cart update listener when cart-synced is true", async () => {
+      // Set up our mock after calling mockNostoRecs
+      const { mockBuilder } = mockNostoRecs({ "789": "content" })
+
+      // Override the mock to add listen method
+      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
+        const api = {
+          createRecommendationRequest: () => mockBuilder,
+          listen: mockListen,
+          attributeProductClicksInCampaign: vi.fn(),
+          placements: {
+            injectCampaigns: vi.fn()
+          }
+        }
+        callback(api)
+        return Promise.resolve(api)
+      })
+
+      campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
+
+      await campaign.connectedCallback()
+
+      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
+      expect(campaign.cartUpdateListener).toBeDefined()
+    })
+
+    it("should not register cart update listener when cart-synced is false or not set", async () => {
+      const { mockBuilder } = mockNostoRecs({ "789": "content" })
+
+      // Override the mock to add listen method
+      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
+        const api = {
+          createRecommendationRequest: () => mockBuilder,
+          listen: mockListen,
+          attributeProductClicksInCampaign: vi.fn(),
+          placements: {
+            injectCampaigns: vi.fn()
+          }
+        }
+        callback(api)
+        return Promise.resolve(api)
+      })
+
+      campaign = (<nosto-campaign placement="789" />) as Campaign
+
+      await campaign.connectedCallback()
+
+      expect(mockListen).not.toHaveBeenCalled()
+      expect(campaign.cartUpdateListener).toBeUndefined()
+    })
+
+    it("should reload campaign when cart update event is triggered", async () => {
+      const { mockBuilder } = mockNostoRecs({ "789": "original content" })
+
+      // Override the mock to add listen method
+      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
+        const api = {
+          createRecommendationRequest: () => mockBuilder,
+          listen: mockListen,
+          attributeProductClicksInCampaign: vi.fn(),
+          placements: {
+            injectCampaigns: vi.fn()
+          }
+        }
+        callback(api)
+        return Promise.resolve(api)
+      })
+
+      // Create campaign with cart-synced
+      campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
+
+      await campaign.connectedCallback()
+
+      // Verify listener was registered
+      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
+
+      // Get the registered callback
+      const cartUpdateCallback = mockListen.mock.calls[0][1]
+
+      // Mock the load method on the campaign
+      campaign.load = vi.fn().mockResolvedValue(undefined)
+
+      // Simulate cart update
+      await cartUpdateCallback()
+
+      // Verify the campaign was reloaded
+      expect(campaign.load).toHaveBeenCalled()
+    })
+
+    it("should work with both cart-synced and lazy loading", async () => {
+      const { mockBuilder } = mockNostoRecs({ "789": "content" })
+
+      // Override the mock to add listen method
+      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
+        const api = {
+          createRecommendationRequest: () => mockBuilder,
+          listen: mockListen,
+          attributeProductClicksInCampaign: vi.fn(),
+          placements: {
+            injectCampaigns: vi.fn()
+          }
+        }
+        callback(api)
+        return Promise.resolve(api)
+      })
+
+      // Mock IntersectionObserver
+      const mockObserver = {
+        observe: vi.fn(),
+        disconnect: vi.fn()
+      }
+      // @ts-expect-error partial mock assignment
+      global.IntersectionObserver = vi.fn(() => mockObserver)
+
+      campaign = (<nosto-campaign placement="789" cart-synced={true} lazy={true} />) as Campaign
+
+      await campaign.connectedCallback()
+
+      // Should register cart listener and setup lazy loading
+      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
+      expect(mockObserver.observe).toHaveBeenCalledWith(campaign)
+    })
+
+    it("should work with cart-synced and init=false", async () => {
+      const { mockBuilder } = mockNostoRecs({ "789": "content" })
+
+      // Override the mock to add listen method
+      global.nostojs = vi.fn((callback: (api: unknown) => void) => {
+        const api = {
+          createRecommendationRequest: () => mockBuilder,
+          listen: mockListen,
+          attributeProductClicksInCampaign: vi.fn(),
+          placements: {
+            injectCampaigns: vi.fn()
+          }
+        }
+        callback(api)
+        return Promise.resolve(api)
+      })
+
+      campaign = (<nosto-campaign placement="789" cart-synced={true} init="false" />) as Campaign
+
+      await campaign.connectedCallback()
+
+      // Should register cart listener but not auto-load
+      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
+      expect(mockBuilder.load).not.toHaveBeenCalled()
+    })
+
+    it("should clean up listener reference on disconnect", () => {
+      campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
+
+      // Set up the listener reference
+      campaign.cartUpdateListener = vi.fn()
+
+      campaign.disconnectedCallback()
+
+      expect(campaign.cartUpdateListener).toBeUndefined()
+    })
+
+    it("should handle disconnectedCallback safely when no listener is set", () => {
+      campaign = (<nosto-campaign placement="789" />) as Campaign
+
+      // Should not throw an error
+      expect(() => campaign.disconnectedCallback()).not.toThrow()
+    })
   })
 })
