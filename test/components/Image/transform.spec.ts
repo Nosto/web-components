@@ -109,4 +109,20 @@ describe("NostoImage/transform", () => {
       expect(typeof result.style).toBe("object")
     })
   })
+
+  describe("alt and sizes attribute handling", () => {
+    const shopifyUrl = "https://cdn.shopify.com/s/files/1/0000/0001/products/image.jpg"
+
+    it("passes through alt attribute correctly", () => {
+      const altText = "Test image description"
+      const result = transform({ src: shopifyUrl, width: 400, height: 300, alt: altText })
+      expect(result.alt).toBe(altText)
+    })
+
+    it("passes through sizes attribute correctly", () => {
+      const sizesValue = "(max-width: 768px) 100vw, 50vw"
+      const result = transform({ src: shopifyUrl, width: 400, height: 300, sizes: sizesValue })
+      expect(result.sizes).toBe(sizesValue)
+    })
+  })
 })

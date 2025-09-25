@@ -164,5 +164,38 @@ describe("Image", () => {
       // Verify no null/undefined string values
       assertNoNullOrUndefinedAttributes(imgElement!)
     })
+
+    it("should correctly set alt and sizes attributes", () => {
+      // Test alt attribute
+      const altText = "Product image description"
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} alt={altText} />) as Image
+      nostoImage.connectedCallback()
+
+      let imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("alt")).toBe(altText)
+
+      // Test sizes attribute
+      const sizesValue = "(max-width: 768px) 100vw, 50vw"
+      nostoImage = (<nosto-image src={shopifyUrl} width={400} aspectRatio={1.5} sizes={sizesValue} />) as Image
+      nostoImage.connectedCallback()
+
+      imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("sizes")).toBe(sizesValue)
+
+      // Test both alt and sizes attributes together
+      const combinedAltText = "Hero banner image"
+      const combinedSizesValue = "(max-width: 1200px) 100vw, 50vw"
+      nostoImage = (
+        <nosto-image src={shopifyUrl} width={800} height={400} alt={combinedAltText} sizes={combinedSizesValue} />
+      ) as Image
+      nostoImage.connectedCallback()
+
+      imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("alt")).toBe(combinedAltText)
+      expect(imgElement!.getAttribute("sizes")).toBe(combinedSizesValue)
+    })
   })
 })
