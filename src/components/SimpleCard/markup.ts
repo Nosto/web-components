@@ -25,7 +25,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
@@ -54,7 +54,7 @@ export function generateImageHTML(element: SimpleCard, product: ShopifyProduct) 
   `
 }
 
-export function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
+function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
   // Get aspect ratio from the second media object, fallback to 1
   const aspectRatio = product.media?.[1]?.aspect_ratio || 1
 
@@ -70,7 +70,7 @@ export function generateAlternateImageHTML(alternateImage: string, product: Shop
   `
 }
 
-export function generateRatingHTML(rating: number) {
+function generateRatingHTML(rating: number) {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5
@@ -79,7 +79,7 @@ export function generateRatingHTML(rating: number) {
   return html`<div class="simple-card__rating">${starDisplay} (${rating.toFixed(1)})</div>`
 }
 
-export function formatPrice(price: number) {
+function formatPrice(price: number) {
   // Convert from cents to dollars and format
   const amount = price / 100
   return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
