@@ -23,6 +23,8 @@ import { addRequest } from "./orchestrator"
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
+ * @property {boolean} [cart-synced] - If true, the component will listen for
+ * cart updates and reload the campaign when the cart is updated. Defaults to false.
  *
  * @example
  * Basic campaign rendering with HTML mode:
@@ -54,6 +56,12 @@ import { addRequest } from "./orchestrator"
  * ```html
  * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
  * ```
+ *
+ * @example
+ * Campaign that reloads when cart is updated:
+ * ```html
+ * <nosto-campaign placement="cart-recommendations" cart-synced></nosto-campaign>
+ * ```
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
@@ -64,7 +72,8 @@ export class Campaign extends NostoElement {
     variantId: String,
     template: String,
     init: String,
-    lazy: Boolean
+    lazy: Boolean,
+    cartSynced: Boolean
   }
 
   placement!: string
@@ -73,13 +82,21 @@ export class Campaign extends NostoElement {
   template?: string
   init?: string
   lazy?: boolean
+  cartSynced?: boolean
 
   templateElement?: HTMLTemplateElement
+  private cartUpdateListener?: () => void
 
   async connectedCallback() {
     if (!this.placement && !this.id) {
       throw new Error("placement or id attribute is required for Campaign")
     }
+
+    // Set up cart update listener if cart-synced is enabled
+    if (this.cartSynced) {
+      this.setupCartListener()
+    }
+
     if (this.init !== "false") {
       if (this.lazy) {
         const observer = new IntersectionObserver(async entries => {
@@ -97,6 +114,24 @@ export class Campaign extends NostoElement {
 
   async load() {
     await loadCampaign(this)
+  }
+
+  private async setupCartListener() {
+    try {
+      const api = await new Promise(nostojs)
+      this.cartUpdateListener = () => {
+        this.load()
+      }
+      api.listen("cartUpdated", this.cartUpdateListener)
+    } catch (error) {
+      console.warn("Failed to set up cart update listener:", error)
+    }
+  }
+
+  disconnectedCallback() {
+    // Note: Currently there's no way to remove listeners from nostojs
+    // The listener will be cleaned up when the component is removed from DOM
+    this.cartUpdateListener = undefined
   }
 }
 

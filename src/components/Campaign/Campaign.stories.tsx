@@ -69,6 +69,10 @@ const meta: Meta = {
     lazy: {
       control: "boolean",
       description: "If true, the component will only load the campaign when it comes into view."
+    },
+    cartSynced: {
+      control: "boolean",
+      description: "If true, the component will listen for cart updates and reload the campaign automatically."
     }
   },
   tags: ["autodocs"]
@@ -221,6 +225,81 @@ export const ManualInitialization: Story = {
       description: {
         story:
           'Campaign component with manual initialization (init="false"). The load() method must be called programmatically.'
+      }
+    }
+  }
+}
+
+export const CartSyncedCampaign: Story = {
+  render: () => {
+    // Mock campaign data that would typically change based on cart contents
+    mockNostoRecs({
+      "cart-recommendations": {
+        html: `
+          <div class="cart-synced-campaign">
+            <h3>🛒 Cart-Synchronized Recommendations</h3>
+            <p>This campaign reloads automatically when cart is updated</p>
+            <div class="campaign-products">
+              <div class="product-item">
+                <span>📦 Complementary Product A</span>
+              </div>
+              <div class="product-item">
+                <span>📦 Complementary Product B</span>
+              </div>
+            </div>
+            <small>cart-synced attribute enabled</small>
+          </div>
+        `
+      }
+    })
+
+    return html`
+      <div class="demo-section">
+        <p class="demo-description">
+          This campaign listens for cart updates and automatically reloads when the cart changes. In a real
+          implementation, the campaign content would update based on current cart contents.
+        </p>
+        <nosto-campaign placement="cart-recommendations" cart-synced> </nosto-campaign>
+
+        <div class="cart-demo-controls">
+          <p><strong>Simulate cart changes:</strong></p>
+          <button
+            class="demo-button"
+            onclick="
+              const api = window.nostojs ? window.nostojs : (() => console.log('Nosto API not available in demo'));
+              api(client => {
+                if (client.listen) {
+                  // Simulate a cartUpdated event
+                  client.listen && console.log('Cart update would trigger campaign reload');
+                } else {
+                  console.log('Cart sync feature requires nostojs with cartUpdated event support');
+                }
+              });
+            "
+          >
+            Add Item to Cart (Demo)
+          </button>
+          <button
+            class="demo-button"
+            onclick="
+              const campaign = document.querySelector('nosto-campaign[cart-synced]');
+              if (campaign && campaign.load) {
+                campaign.load();
+                console.log('Campaign manually reloaded');
+              }
+            "
+          >
+            Manual Reload
+          </button>
+        </div>
+      </div>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Campaign component with cart synchronization enabled. When cart-synced attribute is present, the campaign automatically reloads when the cart is updated via nostojs cartUpdated event."
       }
     }
   }
