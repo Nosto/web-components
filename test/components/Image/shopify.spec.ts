@@ -12,7 +12,7 @@ describe("NostoImage/shopify.transform", () => {
   it("transforms url with extracted dimension", () => {
     const imageUrl = base + "image_200x300.jpg"
     const result = transform(imageUrl)
-    expect(result).toBe(`${base}image.jpg?width=200&height=300`)
+    expect(result).toBe(`${base}image.jpg`)
   })
 
   it("overrides extracted dimension with provided width/height", () => {
@@ -24,19 +24,19 @@ describe("NostoImage/shopify.transform", () => {
   it("overrides only the provided dimension", () => {
     const imageUrl = base + "image_200x300.jpg"
     const result = transform(imageUrl, { width: 600 })
-    expect(result).toBe(`${base}image.jpg?width=600&height=300`)
+    expect(result).toBe(`${base}image.jpg?width=600`)
   })
 
   it("extracts dimensions and crop from URL", () => {
     const imageUrl = base + "image_200x300_crop_center.jpg"
     const result = transform(imageUrl)
-    expect(result).toBe(`${base}image.jpg?width=200&height=300&crop=center`)
+    expect(result).toBe(`${base}image.jpg?crop=center`)
   })
 
   it("adds crop param if provided", () => {
     const imageUrl = base + "image_200x300.jpg"
     const result = transform(imageUrl, { crop: "center" })
-    expect(result).toBe(`${base}image.jpg?width=200&height=300&crop=center`)
+    expect(result).toBe(`${base}image.jpg?crop=center`)
   })
 
   it("overrides dimensions and crop with provided", () => {
@@ -48,13 +48,13 @@ describe("NostoImage/shopify.transform", () => {
   it("preserves existing query params", () => {
     const imageUrl = base + "image_200x300.jpg?v=1234567&foo=bar"
     const result = transform(imageUrl, { width: 500 })
-    expect(result).toBe(`${base}image.jpg?v=1234567&foo=bar&width=500&height=300`)
+    expect(result).toBe(`${base}image.jpg?v=1234567&foo=bar&width=500`)
   })
 
   it("handles format correctly", () => {
     const imageUrl = base + "image_200x300.webp"
     const result = transform(imageUrl)
-    expect(result).toBe(`${base}image.webp?width=200&height=300`)
+    expect(result).toBe(`${base}image.webp`)
   })
 
   it("handles images with no dimension or crop", () => {
@@ -66,7 +66,7 @@ describe("NostoImage/shopify.transform", () => {
   it("considers existing dimensions from query params", () => {
     const imageUrl = base + "image.jpg?width=300&height=200"
     const result = transform(imageUrl, { width: 800 })
-    expect(result).toBe(`${base}image.jpg?width=800&height=200`)
+    expect(result).toBe(`${base}image.jpg?width=800`)
   })
 
   it("handles the legacy size parameters with crop is supplied", () => {

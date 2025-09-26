@@ -26,7 +26,7 @@ describe("NostoImage/transform", () => {
 
     it("handles missing width/height/crop gracefully", () => {
       const result = transform({ src: imageUrl })
-      expect(result.src).toBe(`${baseUrl}image.jpg?width=200&height=300`)
+      expect(result.src).toBe(`${baseUrl}image.jpg`)
       expect(result.width).toBeUndefined()
       expect(result.height).toBeUndefined()
       expect(result.src).toContain("shopify")
