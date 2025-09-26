@@ -6,7 +6,7 @@ applyTo: "src/components/**/*.ts"
 
 **Follow these patterns when working with components:**
 
-- Use `Nosto` prefix for custom element class names and `nosto-` prefix for custom element tags
+- Use `nosto-` prefix for custom element tags
 - Register classes via the `customElement` decorator
 - Define attributes using the static `attributes` object and matching property definitions
 - Implement mainly `connectedCallback` and `disconnectedCallback` lifecycle methods
