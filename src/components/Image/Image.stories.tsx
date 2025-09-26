@@ -140,6 +140,21 @@ export const Fixed: Story = {
     ></nosto-image>`
 }
 
+export const WidthOnly: Story = {
+  args: {
+    src: "https://picsum.photos/id/40/800/600",
+    width: 320
+  },
+  render: args => html`<nosto-image src="${args.src}" width="${args.width}"></nosto-image>`,
+  parameters: {
+    docs: {
+      description: {
+        story: "Image rendered with only src and width attributes. Height is inferred automatically."
+      }
+    }
+  }
+}
+
 export const AspectRatioDemo: Story = {
   render: () => html`
     <div class="image-demo-sub-title">Square (1:1 ratio)</div>

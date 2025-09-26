@@ -47,8 +47,6 @@ import { NostoElement } from "../Element"
  *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
  * </nosto-image>
  * ```
- *
-
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -118,9 +116,7 @@ function validateProps(element: Image) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
   if (element.layout !== "fullWidth") {
-    const validCombinations = element.width || element.height
-
-    if (!validCombinations) {
+    if (!element.width && !element.height) {
       throw new Error("At least one of 'width' or 'height' must be provided.")
     }
   }
