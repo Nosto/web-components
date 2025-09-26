@@ -1,3 +1,10 @@
+# [8.25.0](https://github.com/Nosto/web-components/compare/v8.24.0...v8.25.0) (2025-09-26)
+
+
+### Features
+
+* **Image:** allow rendering with only src + width or src + height ([541642f](https://github.com/Nosto/web-components/commit/541642f6122181e720760ff7f767e1ca8bee7d54))
+
 # [8.24.0](https://github.com/Nosto/web-components/compare/v8.23.1...v8.24.0) (2025-09-25)
 
 
