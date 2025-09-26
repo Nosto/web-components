@@ -1,3 +1,5 @@
+import { NumberArray } from "./Image/types"
+
 type FieldType<T> = T extends string
   ? StringConstructor
   : T extends number
@@ -5,7 +7,7 @@ type FieldType<T> = T extends string
     : T extends boolean
       ? BooleanConstructor
       : T extends number[]
-        ? typeof JSON
+        ? typeof NumberArray
         : never
 
 type ConstructorMetadata<T extends HTMLElement> = {
@@ -41,7 +43,7 @@ function getPropertyDescriptor(propertyName: string, type: unknown) {
     return booleanAttribute(attributeName)
   } else if (type === Number) {
     return numberAttribute(attributeName)
-  } else if (type === JSON) {
+  } else if (type === NumberArray) {
     return jsonAttribute(attributeName)
   }
   return stringAttribute(attributeName)
@@ -104,13 +106,7 @@ function jsonAttribute(attributeName: string) {
     get(this: HTMLElement) {
       if (this.hasAttribute(attributeName)) {
         const value = this.getAttribute(attributeName)
-        if (value) {
-          try {
-            return JSON.parse(value)
-          } catch {
-            return undefined
-          }
-        }
+        return value ? NumberArray(value) : undefined
       }
       return undefined
     },
