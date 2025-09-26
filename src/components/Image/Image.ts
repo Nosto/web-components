@@ -48,17 +48,7 @@ import { NostoElement } from "../Element"
  * </nosto-image>
  * ```
  *
- * @example
- * Using with only width dimension (height inferred):
- * ```html
- * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="320"></nosto-image>
- * ```
- *
- * @example
- * Using with only height dimension (width inferred):
- * ```html
- * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" height="200"></nosto-image>
- * ```
+
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -128,13 +118,7 @@ function validateProps(element: Image) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
   if (element.layout !== "fullWidth") {
-    const hasWidth = !!element.width
-    const hasHeight = !!element.height
-    const hasAspectRatio = !!element.aspectRatio
-
-    // Allow: width + height, width + aspectRatio, height + aspectRatio, or just width, or just height
-    const validCombinations =
-      (hasWidth && hasHeight) || (hasWidth && hasAspectRatio) || (hasHeight && hasAspectRatio) || hasWidth || hasHeight
+    const validCombinations = element.width || element.height
 
     if (!validCombinations) {
       throw new Error("At least one of 'width' or 'height' must be provided.")
