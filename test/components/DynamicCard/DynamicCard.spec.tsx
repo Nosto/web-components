@@ -1,9 +1,9 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
-import { addHandlers } from "../msw.setup"
+import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { createElement } from "../utils/jsx"
+import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
 describe("DynamicCard", () => {

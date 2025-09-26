@@ -2,10 +2,10 @@
 import { describe, it, expect, Mock } from "vitest"
 import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
-import { addHandlers } from "../msw.setup"
+import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { mockNostoRecs } from "../mockNostoRecs"
-import { createElement } from "../utils/jsx"
+import { mockNostoRecs } from "../../mockNostoRecs"
+import { createElement } from "../../utils/jsx"
 
 describe("SectionCampaign", () => {
   it("should be defined as a custom element", () => {
