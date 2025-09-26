@@ -116,8 +116,8 @@ function validateProps(element: Image) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
   if (element.layout !== "fullWidth") {
-    if ((["width", "height", "aspectRatio"] as const).filter(prop => element[prop]).length < 2) {
-      throw new Error("Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided.")
+    if (!element.width && !element.height) {
+      throw new Error("At least one of 'width' or 'height' must be provided.")
     }
   }
 }
