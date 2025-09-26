@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { customElement } from "../../src/components/decorators"
+import { NumberArray } from "@/components/Image/types"
 
 describe("customElement", () => {
   beforeEach(() => {
@@ -35,7 +36,7 @@ describe("customElement", () => {
         foo: String,
         bar: Boolean,
         baz: Number,
-        qux: JSON
+        qux: NumberArray
       }
 
       foo!: string
@@ -61,7 +62,7 @@ describe("customElement", () => {
     @customElement(tagName)
     class constructor extends HTMLElement {
       static attributes = {
-        numbers: JSON
+        numbers: NumberArray
       }
 
       numbers!: number[]
