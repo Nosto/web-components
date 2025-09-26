@@ -14,11 +14,33 @@ export function transform(src: string | URL, { width, height, crop }: Operations
   // Remove size/crop from path, restore original filename
   u.pathname = `${base}${ext}`
 
-  const params = {
-    width: width ?? (wStr && parseInt(wStr, 10)),
-    height: height ?? (hStr && parseInt(hStr, 10)),
-    crop: crop ?? cropStr
+  // Clear existing width/height query params to avoid mixed old/new dimensions
+  u.searchParams.delete("width")
+  u.searchParams.delete("height")
+
+  // Build params object - only use extracted dimensions if no new dimensions are provided
+  const params: Record<string, string | number | undefined> = {}
+
+  if (width !== undefined) {
+    params.width = width
+  } else if (height === undefined && wStr) {
+    // Only use extracted width if neither width nor height is provided
+    params.width = parseInt(wStr, 10)
   }
+
+  if (height !== undefined) {
+    params.height = height
+  } else if (width === undefined && hStr) {
+    // Only use extracted height if neither width nor height is provided
+    params.height = parseInt(hStr, 10)
+  }
+
+  if (crop !== undefined) {
+    params.crop = crop
+  } else if (cropStr) {
+    params.crop = cropStr
+  }
+
   Object.entries(params).forEach(([key, value]) => {
     if (value) {
       u.searchParams.set(key, String(value))

@@ -24,7 +24,7 @@ describe("NostoImage/shopify.transform", () => {
   it("overrides only the provided dimension", () => {
     const imageUrl = base + "image_200x300.jpg"
     const result = transform(imageUrl, { width: 600 })
-    expect(result).toBe(`${base}image.jpg?width=600&height=300`)
+    expect(result).toBe(`${base}image.jpg?width=600`)
   })
 
   it("extracts dimensions and crop from URL", () => {
@@ -48,7 +48,7 @@ describe("NostoImage/shopify.transform", () => {
   it("preserves existing query params", () => {
     const imageUrl = base + "image_200x300.jpg?v=1234567&foo=bar"
     const result = transform(imageUrl, { width: 500 })
-    expect(result).toBe(`${base}image.jpg?v=1234567&foo=bar&width=500&height=300`)
+    expect(result).toBe(`${base}image.jpg?v=1234567&foo=bar&width=500`)
   })
 
   it("handles format correctly", () => {
@@ -66,7 +66,31 @@ describe("NostoImage/shopify.transform", () => {
   it("considers existing dimensions from query params", () => {
     const imageUrl = base + "image.jpg?width=300&height=200"
     const result = transform(imageUrl, { width: 800 })
-    expect(result).toBe(`${base}image.jpg?width=800&height=200`)
+    expect(result).toBe(`${base}image.jpg?width=800`)
+  })
+
+  it("clears existing path height when only width provided", () => {
+    const imageUrl = base + "image_200x300.jpg"
+    const result = transform(imageUrl, { width: 600 })
+    expect(result).toBe(`${base}image.jpg?width=600`)
+  })
+
+  it("clears existing path width when only height provided", () => {
+    const imageUrl = base + "image_200x300.jpg"
+    const result = transform(imageUrl, { height: 400 })
+    expect(result).toBe(`${base}image.jpg?height=400`)
+  })
+
+  it("clears existing query height when only width provided", () => {
+    const imageUrl = base + "image.jpg?width=300&height=200&foo=bar"
+    const result = transform(imageUrl, { width: 800 })
+    expect(result).toBe(`${base}image.jpg?foo=bar&width=800`)
+  })
+
+  it("clears existing query width when only height provided", () => {
+    const imageUrl = base + "image.jpg?width=300&height=200&foo=bar"
+    const result = transform(imageUrl, { height: 500 })
+    expect(result).toBe(`${base}image.jpg?foo=bar&height=500`)
   })
 
   it("handles the legacy size parameters with crop is supplied", () => {

@@ -19,18 +19,16 @@ describe("unpic.transformUrl vs custom transform", () => {
     expect(unpicResult).toBe(customResult)
   })
 
-  it("merges height in original image URL when only width is supplied", () => {
+  it("clears height in original image URL when only width is supplied", () => {
     const imageUrl = `${baseUrl}image_200x300.jpg`
-    const unpicResult = unpicTransform(imageUrl, { width: 400 })
     const customResult = transform(imageUrl, { width: 400 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?width=400`)
   })
 
-  it("merges width in original image URL when only height is supplied", () => {
+  it("clears width in original image URL when only height is supplied", () => {
     const imageUrl = `${baseUrl}image_200x300.jpg`
-    const unpicResult = unpicTransform(imageUrl, { height: 500 })
     const customResult = transform(imageUrl, { height: 500 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?height=500`)
   })
 
   it("returns original URL if no dimensions are provided", () => {
@@ -40,11 +38,10 @@ describe("unpic.transformUrl vs custom transform", () => {
     expect(unpicResult).toBe(customResult)
   })
 
-  it("merges crop in original image URL when crop is provided", () => {
+  it("clears height in original image URL when crop is provided with width", () => {
     const imageUrl = `${baseUrl}image_200x300_crop_center.jpg`
-    const unpicResult = unpicTransform(imageUrl, { width: 400 })
     const customResult = transform(imageUrl, { width: 400 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?width=400&crop=center`)
   })
 
   it("retains original size parameters if no dimensions are provided", () => {
@@ -54,24 +51,21 @@ describe("unpic.transformUrl vs custom transform", () => {
     expect(unpicResult).toBe(customResult)
   })
 
-  it("retains height from existing query parameters when only width is provided", () => {
+  it("clears height from existing query parameters when only width is provided", () => {
     const imageUrl = `${baseUrl}image.jpg?v=1234567&foo=bar&width=200&height=300`
-    const unpicResult = unpicTransform(imageUrl, { width: 500 })
     const customResult = transform(imageUrl, { width: 500 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?v=1234567&foo=bar&width=500`)
   })
 
-  it("retains width from existing query parameters when only height is provided", () => {
+  it("clears width from existing query parameters when only height is provided", () => {
     const imageUrl = `${baseUrl}image.jpg?v=1234567&foo=bar&width=200&height=300`
-    const unpicResult = unpicTransform(imageUrl, { height: 400 })
     const customResult = transform(imageUrl, { height: 400 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?v=1234567&foo=bar&height=400`)
   })
 
-  it("retains crop from existing query parameters when only width and height is provided", () => {
+  it("preserves crop from existing query parameters when width and height are provided", () => {
     const imageUrl = `${baseUrl}image.jpg?v=1234567&foo=bar&width=200&height=300&crop=center`
-    const unpicResult = unpicTransform(imageUrl, { width: 600, height: 400 })
     const customResult = transform(imageUrl, { width: 600, height: 400 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?v=1234567&foo=bar&crop=center&width=600&height=400`)
   })
 })
