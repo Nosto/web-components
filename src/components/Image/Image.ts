@@ -22,6 +22,7 @@ import { NostoElement } from "../Element"
  * @property {Crop} [crop] - Shopify only. The crop of the image. Can be "center", "left", "right", "top", or "bottom".
  * @property {string} [alt] - Alternative text for the image for accessibility purposes.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
  *
  * @example
  * Using with Shopify image URL:
@@ -47,6 +48,19 @@ import { NostoElement } from "../Element"
  *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
  * </nosto-image>
  * ```
+ *
+ * @example
+ * Using with custom breakpoints:
+ * ```html
+ * <nosto-image
+ *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+ *   width="800"
+ *   aspectRatio="1.5"
+ *   layout="constrained"
+ *   alt="Product showcase image"
+ *   breakpoints="[320, 640, 768, 1024, 1280]">
+ * </nosto-image>
+ * ```
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -59,7 +73,8 @@ export class Image extends NostoElement {
     layout: String,
     crop: String,
     alt: String,
-    sizes: String
+    sizes: String,
+    breakpoints: JSON
   }
 
   src!: string
@@ -70,6 +85,7 @@ export class Image extends NostoElement {
   crop?: Crop
   alt?: string
   sizes?: string
+  breakpoints?: number[]
 
   attributeChangedCallback() {
     if (this.isConnected) {
@@ -79,7 +95,7 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes } = this
+    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints } = this
 
     // Create props object and filter out null/undefined values
     const rawProps = {
@@ -90,7 +106,8 @@ export class Image extends NostoElement {
       layout: layout || "constrained",
       crop,
       alt,
-      sizes
+      sizes,
+      breakpoints
     }
 
     // Filter out null and undefined values
