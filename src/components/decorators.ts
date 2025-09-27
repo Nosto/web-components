@@ -1,16 +1,11 @@
-// Custom Array type for array attribute serialization
-const ArrayType = {} as const
-
-export { ArrayType as Array }
-
 type FieldType<T> = T extends string
   ? StringConstructor
   : T extends number
     ? NumberConstructor
     : T extends boolean
       ? BooleanConstructor
-      : T extends number[]
-        ? typeof ArrayType
+      : T extends unknown[]
+        ? ArrayConstructor
         : never
 
 type ConstructorMetadata<T extends HTMLElement> = {
@@ -46,7 +41,7 @@ function getPropertyDescriptor(propertyName: string, type: unknown) {
     return booleanAttribute(attributeName)
   } else if (type === Number) {
     return numberAttribute(attributeName)
-  } else if (type === ArrayType) {
+  } else if (type === Array) {
     return jsonAttribute(attributeName)
   }
   return stringAttribute(attributeName)
@@ -119,7 +114,7 @@ function jsonAttribute(attributeName: string) {
       }
       return undefined
     },
-    set(this: HTMLElement, value?: number[]) {
+    set(this: HTMLElement, value?: unknown[]) {
       if (value === null || value === undefined) {
         this.removeAttribute(attributeName)
       } else {

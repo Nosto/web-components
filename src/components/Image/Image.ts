@@ -1,5 +1,5 @@
 import type { Crop, ImageProps } from "./types"
-import { customElement, Array } from "../decorators"
+import { customElement } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
