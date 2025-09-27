@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { customElement } from "../../src/components/decorators"
+import { customElement, Array } from "../../src/components/decorators"
 
 describe("customElement", () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe("customElement", () => {
         foo: String,
         bar: Boolean,
         baz: Number,
-        qux: JSON
+        qux: Array
       }
 
       foo!: string
@@ -61,7 +61,7 @@ describe("customElement", () => {
     @customElement(tagName)
     class constructor extends HTMLElement {
       static attributes = {
-        numbers: JSON
+        numbers: Array
       }
 
       numbers!: number[]
@@ -90,5 +90,37 @@ describe("customElement", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(e as any).numbers = undefined
     expect(e.hasAttribute("numbers")).toBe(false)
+  })
+
+  it("should verify Array type behaves identically to old JSON type", () => {
+    const tagName = "my-element5"
+    @customElement(tagName)
+    class constructor extends HTMLElement {
+      static attributes = {
+        arrayAttr: Array
+      }
+
+      arrayAttr!: number[]
+    }
+
+    const e = new constructor()
+
+    // Test array serialization
+    e.arrayAttr = [10, 20, 30]
+    expect(e.getAttribute("array-attr")).toBe("[10,20,30]")
+    expect(e.arrayAttr).toEqual([10, 20, 30])
+
+    // Test complex array with strings
+    e.arrayAttr = [100, 200] as number[]
+    expect(e.getAttribute("array-attr")).toBe("[100,200]")
+    expect(e.arrayAttr).toEqual([100, 200])
+
+    // Test deserialization from attribute
+    e.setAttribute("array-attr", "[500, 600, 700]")
+    expect(e.arrayAttr).toEqual([500, 600, 700])
+
+    // Test null/undefined handling
+    e.arrayAttr = null as unknown as number[]
+    expect(e.hasAttribute("array-attr")).toBe(false)
   })
 })

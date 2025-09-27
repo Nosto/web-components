@@ -1,5 +1,5 @@
 import type { Crop, ImageProps } from "./types"
-import { customElement } from "../decorators"
+import { customElement, Array } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
@@ -74,7 +74,7 @@ export class Image extends NostoElement {
     crop: String,
     alt: String,
     sizes: String,
-    breakpoints: JSON
+    breakpoints: Array
   }
 
   src!: string
