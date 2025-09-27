@@ -74,7 +74,7 @@ export class Image extends NostoElement {
     crop: String,
     alt: String,
     sizes: String,
-    breakpoints: JSON
+    breakpoints: Array
   }
 
   src!: string
