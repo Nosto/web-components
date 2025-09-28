@@ -42,7 +42,7 @@ function getPropertyDescriptor(propertyName: string, type: unknown) {
   } else if (type === Number) {
     return numberAttribute(attributeName)
   } else if (type === Array) {
-    return jsonAttribute(attributeName)
+    return arrayAttribute(attributeName)
   }
   return stringAttribute(attributeName)
 }
@@ -99,7 +99,7 @@ function numberAttribute(attributeName: string) {
   }
 }
 
-function jsonAttribute(attributeName: string) {
+function arrayAttribute(attributeName: string) {
   return {
     get(this: HTMLElement) {
       if (this.hasAttribute(attributeName)) {
