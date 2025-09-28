@@ -86,6 +86,14 @@ describe("customElement", () => {
     e.setAttribute("numbers", "")
     expect(e.numbers).toBeUndefined()
 
+    // Test non-array JSON value should return undefined
+    e.setAttribute("numbers", '"not an array"')
+    expect(e.numbers).toBeUndefined()
+    e.setAttribute("numbers", "42")
+    expect(e.numbers).toBeUndefined()
+    e.setAttribute("numbers", '{"key": "value"}')
+    expect(e.numbers).toBeUndefined()
+
     // Test removing attribute
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(e as any).numbers = undefined

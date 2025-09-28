@@ -106,7 +106,8 @@ function arrayAttribute(attributeName: string) {
         const value = this.getAttribute(attributeName)
         if (value) {
           try {
-            return JSON.parse(value)
+            const parsed = JSON.parse(value)
+            return Array.isArray(parsed) ? parsed : undefined
           } catch {
             return undefined
           }
