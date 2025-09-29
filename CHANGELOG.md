@@ -1,3 +1,17 @@
+# [8.27.0](https://github.com/Nosto/web-components/compare/v8.26.0...v8.27.0) (2025-09-29)
+
+
+### Bug Fixes
+
+* use built-in Array constructor for all array types instead of custom ArrayType ([a47f9b5](https://github.com/Nosto/web-components/commit/a47f9b51eba20be002bc49dce49a61ec458468f5))
+
+
+### Features
+
+* add Array.isArray validation in arrayAttribute getter to ensure type safety ([6d41883](https://github.com/Nosto/web-components/commit/6d418835b68354239591466c866204a1436935ac))
+* add breakpoints validation to ensure all elements are positive finite numbers ([cfe2dfc](https://github.com/Nosto/web-components/commit/cfe2dfcc79f12ca45205c5fb7b779489a0f234ed))
+* improve breakpoints validation logic and add attribute test case ([ae839a8](https://github.com/Nosto/web-components/commit/ae839a83da1a61a09f11056addaf487b43e18e64))
+
 # [8.26.0](https://github.com/Nosto/web-components/compare/v8.25.0...v8.26.0) (2025-09-29)
 
 
