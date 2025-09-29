@@ -74,7 +74,7 @@ export class Image extends NostoElement {
     crop: String,
     alt: String,
     sizes: String,
-    breakpoints: JSON
+    breakpoints: Array
   }
 
   src!: string
@@ -135,6 +135,16 @@ function validateProps(element: Image) {
   if (element.layout !== "fullWidth") {
     if (!element.width && !element.height) {
       throw new Error("At least one of 'width' or 'height' must be provided.")
+    }
+  }
+  if (element.breakpoints) {
+    const invalidItems = element.breakpoints.filter(
+      item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
+    )
+    if (invalidItems.length > 0) {
+      throw new Error(
+        `All breakpoints must be positive finite numbers, found these illegal entries ${JSON.stringify(invalidItems)}`
+      )
     }
   }
 }

@@ -35,7 +35,7 @@ describe("customElement", () => {
         foo: String,
         bar: Boolean,
         baz: Number,
-        qux: JSON
+        qux: Array
       }
 
       foo!: string
@@ -61,7 +61,7 @@ describe("customElement", () => {
     @customElement(tagName)
     class constructor extends HTMLElement {
       static attributes = {
-        numbers: JSON
+        numbers: Array
       }
 
       numbers!: number[]
@@ -84,6 +84,14 @@ describe("customElement", () => {
 
     // Test empty string should return undefined
     e.setAttribute("numbers", "")
+    expect(e.numbers).toBeUndefined()
+
+    // Test non-array JSON value should return undefined
+    e.setAttribute("numbers", '"not an array"')
+    expect(e.numbers).toBeUndefined()
+    e.setAttribute("numbers", "42")
+    expect(e.numbers).toBeUndefined()
+    e.setAttribute("numbers", '{"key": "value"}')
     expect(e.numbers).toBeUndefined()
 
     // Test removing attribute
