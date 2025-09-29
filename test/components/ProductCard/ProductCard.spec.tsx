@@ -1,6 +1,6 @@
 import { ProductCard } from "@/components/ProductCard/ProductCard"
 import { describe, expect, it } from "vitest"
-import { createElement } from "../utils/jsx"
+import { createElement } from "../../utils/jsx"
 
 describe("ProductCard", () => {
   it("should throw an error if template is not provided", async () => {
