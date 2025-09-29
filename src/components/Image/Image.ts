@@ -138,9 +138,6 @@ function validateProps(element: Image) {
     }
   }
   if (element.breakpoints) {
-    if (!Array.isArray(element.breakpoints)) {
-      throw new Error("breakpoints must be an array of numbers.")
-    }
     for (let i = 0; i < element.breakpoints.length; i++) {
       const breakpoint = element.breakpoints[i]
       if (typeof breakpoint !== "number" || !Number.isFinite(breakpoint) || breakpoint <= 0) {
