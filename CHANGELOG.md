@@ -1,3 +1,10 @@
+# [8.26.0](https://github.com/Nosto/web-components/compare/v8.25.0...v8.26.0) (2025-09-29)
+
+
+### Features
+
+* extract path-specific conventions from copilot instructions ([71f4e85](https://github.com/Nosto/web-components/commit/71f4e85ce61b409c2c073cc8bbee2bdf357a96d0))
+
 # [8.25.0](https://github.com/Nosto/web-components/compare/v8.24.0...v8.25.0) (2025-09-26)
 
 
