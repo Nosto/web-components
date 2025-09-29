@@ -138,11 +138,10 @@ function validateProps(element: Image) {
     }
   }
   if (element.breakpoints) {
-    for (let i = 0; i < element.breakpoints.length; i++) {
-      const breakpoint = element.breakpoints[i]
-      if (typeof breakpoint !== "number" || !Number.isFinite(breakpoint) || breakpoint <= 0) {
-        throw new Error(`All breakpoints must be positive finite numbers. Invalid value at index ${i}: ${breakpoint}`)
-      }
+    const invalidItems = element.breakpoints.filter(item => typeof item !== 'number' || isNaN(item));
+    
+    if (invalidItems.length) {
+        throw new Error(`Breakpoints should be an array of numbers. Invalid breakpoint values ${invalidItems}`)
     }
   }
 }
