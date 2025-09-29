@@ -137,6 +137,17 @@ function validateProps(element: Image) {
       throw new Error("At least one of 'width' or 'height' must be provided.")
     }
   }
+  if (element.breakpoints) {
+    if (!Array.isArray(element.breakpoints)) {
+      throw new Error("breakpoints must be an array of numbers.")
+    }
+    for (let i = 0; i < element.breakpoints.length; i++) {
+      const breakpoint = element.breakpoints[i]
+      if (typeof breakpoint !== "number" || !Number.isFinite(breakpoint) || breakpoint <= 0) {
+        throw new Error(`All breakpoints must be positive finite numbers. Invalid value at index ${i}: ${breakpoint}`)
+      }
+    }
+  }
 }
 
 declare global {
