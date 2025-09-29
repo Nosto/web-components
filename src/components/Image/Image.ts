@@ -141,7 +141,6 @@ function validateProps(element: Image) {
     const invalidItems = element.breakpoints.filter(
       item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
     )
-
     if (invalidItems.length > 0) {
       const firstInvalidIndex = element.breakpoints.findIndex(
         item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
