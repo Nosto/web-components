@@ -138,10 +138,18 @@ function validateProps(element: Image) {
     }
   }
   if (element.breakpoints) {
-    const invalidItems = element.breakpoints.filter(item => typeof item !== 'number' || isNaN(item));
-    
-    if (invalidItems.length) {
-        throw new Error(`Breakpoints should be an array of numbers. Invalid breakpoint values ${invalidItems}`)
+    const invalidItems = element.breakpoints.filter(
+      item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
+    )
+
+    if (invalidItems.length > 0) {
+      const firstInvalidIndex = element.breakpoints.findIndex(
+        item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
+      )
+      const firstInvalidValue = element.breakpoints[firstInvalidIndex]
+      throw new Error(
+        `All breakpoints must be positive finite numbers. Invalid value at index ${firstInvalidIndex}: ${firstInvalidValue}`
+      )
     }
   }
 }

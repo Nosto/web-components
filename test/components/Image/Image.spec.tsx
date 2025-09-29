@@ -65,6 +65,14 @@ describe("Image", () => {
     expect(() => nostoImage.connectedCallback()).not.toThrow()
   })
 
+  it("handles breakpoints set via attribute", () => {
+    nostoImage = (
+      <nosto-image src="https://example.com/image.jpg" width={300} height={200} breakpoints="[100, 300, 500]" />
+    ) as Image
+    expect(() => nostoImage.connectedCallback()).not.toThrow()
+    expect(nostoImage.breakpoints).toEqual([100, 300, 500])
+  })
+
   it("rerenders when attributes are updated", () => {
     nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
     document.body.appendChild(nostoImage)
