@@ -142,12 +142,8 @@ function validateProps(element: Image) {
       item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
     )
     if (invalidItems.length > 0) {
-      const firstInvalidIndex = element.breakpoints.findIndex(
-        item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
-      )
-      const firstInvalidValue = element.breakpoints[firstInvalidIndex]
       throw new Error(
-        `All breakpoints must be positive finite numbers. Invalid value at index ${firstInvalidIndex}: ${firstInvalidValue}`
+        `All breakpoints must be positive finite numbers, found these illegal entries ${JSON.stringify(invalidItems)}`
       )
     }
   }
