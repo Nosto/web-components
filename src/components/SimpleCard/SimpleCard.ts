@@ -81,12 +81,20 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
   const productData = await fetchProductData(element.handle)
 
-  // Create the shadow DOM content with styles and markup
   const cardHTML = generateCardHTML(element, productData)
-  element.shadowRoot!.innerHTML = `
-    <style>${cardStyles}</style>
-    ${cardHTML.html}
-  `
+
+  // Use constructible stylesheets if supported, fallback to inline styles
+  if ("adoptedStyleSheets" in element.shadowRoot!) {
+    const styleSheet = new CSSStyleSheet()
+    await styleSheet.replace(cardStyles)
+    element.shadowRoot!.adoptedStyleSheets = [styleSheet]
+    element.shadowRoot!.innerHTML = cardHTML.html
+  } else {
+    element.shadowRoot!.innerHTML = `
+      <style>${cardStyles}</style>
+      ${cardHTML.html}
+    `
+  }
 
   element.toggleAttribute("loading", false)
 }
