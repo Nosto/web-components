@@ -33,6 +33,47 @@ describe("Image", () => {
     expect(() => nostoImage.connectedCallback()).toThrowError(/Invalid layout/)
   })
 
+  it("throws when breakpoints contains non-number values", () => {
+    nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} height={200} />) as Image
+    // Test with string values in breakpoints
+    nostoImage.breakpoints = ["100", "200", "300"] as unknown as number[]
+    expect(() => nostoImage.connectedCallback()).toThrowError(/All breakpoints must be positive finite numbers/)
+  })
+
+  it("throws when breakpoints contains invalid number values", () => {
+    nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} height={200} />) as Image
+    // Test with negative numbers
+    nostoImage.breakpoints = [100, -200, 300]
+    expect(() => nostoImage.connectedCallback()).toThrowError(/All breakpoints must be positive finite numbers/)
+
+    // Test with zero
+    nostoImage.breakpoints = [100, 0, 300]
+    expect(() => nostoImage.connectedCallback()).toThrowError(/All breakpoints must be positive finite numbers/)
+
+    // Test with Infinity
+    nostoImage.breakpoints = [100, Infinity, 300]
+    expect(() => nostoImage.connectedCallback()).toThrowError(/All breakpoints must be positive finite numbers/)
+
+    // Test with NaN
+    nostoImage.breakpoints = [100, NaN, 300]
+    expect(() => nostoImage.connectedCallback()).toThrowError(/All breakpoints must be positive finite numbers/)
+  })
+
+  it("accepts valid breakpoints array", () => {
+    nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} height={200} />) as Image
+    nostoImage.breakpoints = [320, 640, 768, 1024, 1280]
+    expect(() => nostoImage.connectedCallback()).not.toThrow()
+  })
+
+  it("handles breakpoints set via attribute", () => {
+    nostoImage = (
+      // @ts-expect-error Testing with string attribute that gets parsed to array
+      <nosto-image src="https://example.com/image.jpg" width={300} height={200} breakpoints="[100, 300, 500]" />
+    ) as Image
+    expect(() => nostoImage.connectedCallback()).not.toThrow()
+    expect(nostoImage.breakpoints).toEqual([100, 300, 500])
+  })
+
   it("rerenders when attributes are updated", () => {
     nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
     document.body.appendChild(nostoImage)
@@ -45,23 +86,27 @@ describe("Image", () => {
   describe("Constrained Layout", () => {
     it("throws when width, height and aspectRadio are missing", () => {
       nostoImage = (<nosto-image src="https://example.com/image.jpg" />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError(
-        "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
-      )
+      expect(() => nostoImage.connectedCallback()).toThrowError("At least one of 'width' or 'height' must be provided.")
     })
 
-    it("throws when only width prop is provided", () => {
-      nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError(
-        "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
-      )
+    it("renders an image with only width prop", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(shopifyUrl)
+
+      nostoImage = (<nosto-image src={bigCommerceUrl} width={300} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(stencilUrlPrefix)
     })
 
-    it("throws when only height prop is provided", () => {
-      nostoImage = (<nosto-image src="https://example.com/image.jpg" height={200} />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError(
-        "Either 'width' and 'aspectRatio' or 'height' and 'aspectRatio' must be provided."
-      )
+    it("renders an image with only height prop", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} height={200} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(shopifyUrl)
+
+      nostoImage = (<nosto-image src={bigCommerceUrl} height={200} />) as Image
+      nostoImage.connectedCallback()
+      assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with width and height props", () => {

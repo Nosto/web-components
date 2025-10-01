@@ -1,3 +1,43 @@
+# [8.28.0](https://github.com/Nosto/web-components/compare/v8.27.0...v8.28.0) (2025-10-01)
+
+
+### Bug Fixes
+
+* **SimpleCard:** return TemplateExpression objects instead of .html strings ([3431065](https://github.com/Nosto/web-components/commit/343106527d04cbb991b7b9bde8883e6f633af846))
+
+
+### Features
+
+* **SimpleCard:** refactor to use html templating from src/templating/html.ts ([14f4364](https://github.com/Nosto/web-components/commit/14f4364cbfb5d0165e18c7062e3bdfc231dc043f))
+
+# [8.27.0](https://github.com/Nosto/web-components/compare/v8.26.0...v8.27.0) (2025-09-29)
+
+
+### Bug Fixes
+
+* use built-in Array constructor for all array types instead of custom ArrayType ([a47f9b5](https://github.com/Nosto/web-components/commit/a47f9b51eba20be002bc49dce49a61ec458468f5))
+
+
+### Features
+
+* add Array.isArray validation in arrayAttribute getter to ensure type safety ([6d41883](https://github.com/Nosto/web-components/commit/6d418835b68354239591466c866204a1436935ac))
+* add breakpoints validation to ensure all elements are positive finite numbers ([cfe2dfc](https://github.com/Nosto/web-components/commit/cfe2dfcc79f12ca45205c5fb7b779489a0f234ed))
+* improve breakpoints validation logic and add attribute test case ([ae839a8](https://github.com/Nosto/web-components/commit/ae839a83da1a61a09f11056addaf487b43e18e64))
+
+# [8.26.0](https://github.com/Nosto/web-components/compare/v8.25.0...v8.26.0) (2025-09-29)
+
+
+### Features
+
+* extract path-specific conventions from copilot instructions ([71f4e85](https://github.com/Nosto/web-components/commit/71f4e85ce61b409c2c073cc8bbee2bdf357a96d0))
+
+# [8.25.0](https://github.com/Nosto/web-components/compare/v8.24.0...v8.25.0) (2025-09-26)
+
+
+### Features
+
+* **Image:** allow rendering with only src + width or src + height ([541642f](https://github.com/Nosto/web-components/commit/541642f6122181e720760ff7f767e1ca8bee7d54))
+
 # [8.24.0](https://github.com/Nosto/web-components/compare/v8.23.1...v8.24.0) (2025-09-25)
 
 

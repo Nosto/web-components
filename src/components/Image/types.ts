@@ -12,6 +12,7 @@ export type ImageProps = {
   crop?: Crop
   alt?: string
   sizes?: string
+  breakpoints?: number[]
 }
 
 export type BaseImageProps = UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<CSSStyleDeclaration>>

@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup NodeJS
-        uses: actions/setup-node@d7a11313b581b306c961b506cfc8971208bb03f6
+        uses: actions/setup-node@89d709d423dc495668cd762a18dd4a070611be3f
         with:
           node-version: 22
           cache: "npm"
@@ -40,7 +40,7 @@ jobs:
         run: npm test
 
       - name: Publish project
-        uses: cycjimmy/semantic-release-action@92100d13151fab905884dc7880d02e41ecb61099
+        uses: cycjimmy/semantic-release-action@8f46764b734c73a89c9b0d242b3876d1c261ce4e
         id: semantic
         with:
           extra_plugins: |
@@ -65,7 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
-      - uses: actions/setup-node@d7a11313b581b306c961b506cfc8971208bb03f6
+      - uses: actions/setup-node@89d709d423dc495668cd762a18dd4a070611be3f
         with:
           node-version: 22
           cache: "npm"

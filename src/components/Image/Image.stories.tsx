@@ -91,6 +91,10 @@ const meta: Meta = {
       control: { type: "select" },
       options: ["center", "left", "right", "top", "bottom"],
       description: "Shopify only. The crop of the image."
+    },
+    breakpoints: {
+      control: "object",
+      description: "Custom widths for responsive image generation. Expects an array of numbers."
     }
   },
   tags: ["autodocs"]
@@ -138,6 +142,21 @@ export const Fixed: Story = {
       height="${args.height}"
       layout="${args.layout}"
     ></nosto-image>`
+}
+
+export const WidthOnly: Story = {
+  args: {
+    src: "https://picsum.photos/id/40/800/600",
+    width: 320
+  },
+  render: args => html`<nosto-image src="${args.src}" width="${args.width}"></nosto-image>`,
+  parameters: {
+    docs: {
+      description: {
+        story: "Image rendered with only src and width attributes. Height is inferred automatically."
+      }
+    }
+  }
 }
 
 export const AspectRatioDemo: Story = {
@@ -193,6 +212,46 @@ export const FixedLayout: Story = {
     docs: {
       description: {
         story: "Fixed layout with specific width and height dimensions."
+      }
+    }
+  }
+}
+
+export const CustomBreakpoints: Story = {
+  args: {
+    src: "https://picsum.photos/id/40/800/600",
+    width: 800,
+    aspectRatio: 1.33,
+    layout: "constrained"
+  },
+  render: args => {
+    const element = document.createElement("nosto-image")
+    element.setAttribute("src", args.src)
+    element.setAttribute("width", String(args.width))
+    element.setAttribute("aspect-ratio", String(args.aspectRatio))
+    element.setAttribute("layout", args.layout)
+    // Set custom breakpoints as JSON array
+    element.setAttribute("breakpoints", "[480, 768, 1024, 1440]")
+
+    return html`
+      <div>
+        <div class="image-demo-sub-title">Custom Breakpoints: [480, 768, 1024, 1440]</div>
+        <p>
+          This image uses custom breakpoints for responsive sizing. Inspect the generated srcset to see the custom
+          widths.
+        </p>
+        ${element}
+      </div>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+          Demonstrates the use of custom breakpoints for responsive image generation.
+          The component accepts a breakpoints property as a JSON array of numbers representing widths.
+          These breakpoints are used by the unpic library to generate appropriate srcset values.
+        `
       }
     }
   }

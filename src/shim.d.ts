@@ -7,6 +7,10 @@ interface Window {
     routes?: {
       root?: string
     }
+    currency?: {
+      active?: string
+    }
+    locale?: string
   }
 }
 

@@ -1,9 +1,9 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, Mock, beforeEach, afterEach } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
-import { mockNostoRecs } from "../mockNostoRecs"
 import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
-import { createElement } from "../utils/jsx"
+import { mockNostoRecs } from "../../mockNostoRecs"
+import { createElement } from "../../utils/jsx"
 
 describe("Campaign", () => {
   let campaign: Campaign
