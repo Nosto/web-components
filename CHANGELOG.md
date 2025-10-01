@@ -1,3 +1,15 @@
+# [8.28.0](https://github.com/Nosto/web-components/compare/v8.27.0...v8.28.0) (2025-10-01)
+
+
+### Bug Fixes
+
+* **SimpleCard:** return TemplateExpression objects instead of .html strings ([3431065](https://github.com/Nosto/web-components/commit/343106527d04cbb991b7b9bde8883e6f633af846))
+
+
+### Features
+
+* **SimpleCard:** refactor to use html templating from src/templating/html.ts ([14f4364](https://github.com/Nosto/web-components/commit/14f4364cbfb5d0165e18c7062e3bdfc231dc043f))
+
 # [8.27.0](https://github.com/Nosto/web-components/compare/v8.26.0...v8.27.0) (2025-09-29)
 
 
