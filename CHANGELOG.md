@@ -1,3 +1,10 @@
+# [8.29.0](https://github.com/Nosto/web-components/compare/v8.28.0...v8.29.0) (2025-10-01)
+
+
+### Features
+
+* **Campaign:** implement cart-synced attribute with @nosto/nosto-js bump ([94ca04d](https://github.com/Nosto/web-components/commit/94ca04d42fbf4013cf92ef4e54346dbc4a21c7d2))
+
 # [8.28.0](https://github.com/Nosto/web-components/compare/v8.27.0...v8.28.0) (2025-10-01)
 
 
