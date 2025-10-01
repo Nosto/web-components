@@ -60,11 +60,9 @@ export class SimpleCard extends NostoElement {
   discount?: boolean
   rating?: number
 
-  public cardShadowRoot!: ShadowRoot
-
   constructor() {
     super()
-    this.cardShadowRoot = this.attachShadow({ mode: "open" })
+    this.attachShadow({ mode: "open" })
   }
 
   async attributeChangedCallback() {
@@ -85,7 +83,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
   // Create the shadow DOM content with styles and markup
   const cardHTML = generateCardHTML(element, productData)
-  element.cardShadowRoot.innerHTML = `
+  element.shadowRoot!.innerHTML = `
     <style>${cardStyles}</style>
     ${cardHTML.html}
   `
