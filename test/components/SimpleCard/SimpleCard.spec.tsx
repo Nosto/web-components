@@ -27,7 +27,7 @@ describe("SimpleCard", () => {
   }
 
   function getShadowContent(card: SimpleCard): string {
-    const shadowContent = card.shadowRoot?.innerHTML || ""
+    const shadowContent = card.cardShadowRoot?.innerHTML || ""
     // Remove the style tag and its content to get just the HTML content
     return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
   }
