@@ -23,6 +23,9 @@ import { addRequest } from "./orchestrator"
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
+ * @property {boolean} [cart-synced] - If true, the component will reload the campaign
+ * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
+ * with cart changes. Defaults to false.
  *
  * @example
  * Basic campaign rendering with HTML mode:
@@ -64,7 +67,8 @@ export class Campaign extends NostoElement {
     variantId: String,
     template: String,
     init: String,
-    lazy: Boolean
+    lazy: Boolean,
+    cartSynced: Boolean
   }
 
   placement!: string
@@ -73,6 +77,7 @@ export class Campaign extends NostoElement {
   template?: string
   init?: string
   lazy?: boolean
+  cartSynced?: boolean
 
   templateElement?: HTMLTemplateElement
 
@@ -80,6 +85,13 @@ export class Campaign extends NostoElement {
     if (!this.placement && !this.id) {
       throw new Error("placement or id attribute is required for Campaign")
     }
+
+    // Register cart update listener if cart-synced is enabled
+    if (this.cartSynced) {
+      const api = await new Promise(nostojs)
+      api.listen("cartUpdated", () => this.load())
+    }
+
     if (this.init !== "false") {
       if (this.lazy) {
         const observer = new IntersectionObserver(async entries => {
