@@ -5,7 +5,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 import { generateCardHTML } from "./markup"
-import { getCardStyles } from "./styles"
+import { cardStyles } from "./styles"
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -86,7 +86,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   // Create the shadow DOM content with styles and markup
   const cardHTML = generateCardHTML(element, productData)
   element.cardShadowRoot.innerHTML = `
-    <style>${getCardStyles()}</style>
+    <style>${cardStyles}</style>
     ${cardHTML.html}
   `
 
