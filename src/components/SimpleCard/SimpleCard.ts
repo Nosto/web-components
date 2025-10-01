@@ -7,6 +7,9 @@ import type { ShopifyProduct } from "./types"
 import { generateCardHTML } from "./markup"
 import { cardStyles } from "./styles"
 
+// Cache the stylesheet for reuse across component instances
+let cachedStyleSheet: CSSStyleSheet | null = null
+
 /**
  * A custom element that displays a product card using Shopify product data.
  *
@@ -85,9 +88,11 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
   // Use constructible stylesheets if supported, fallback to inline styles
   if ("adoptedStyleSheets" in element.shadowRoot!) {
-    const styleSheet = new CSSStyleSheet()
-    await styleSheet.replace(cardStyles)
-    element.shadowRoot!.adoptedStyleSheets = [styleSheet]
+    if (!cachedStyleSheet) {
+      cachedStyleSheet = new CSSStyleSheet()
+      await cachedStyleSheet.replace(cardStyles)
+    }
+    element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
     element.shadowRoot!.innerHTML = cardHTML.html
   } else {
     element.shadowRoot!.innerHTML = `
