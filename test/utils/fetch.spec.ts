@@ -3,6 +3,19 @@ import { getText, getJSON } from "@/utils/fetch"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 
+function createCallCountHandler(url: string, responseCallback: (count: number) => Response) {
+  let callCount = 0
+
+  const handler = http.get(url, () => {
+    callCount++
+    return responseCallback(callCount)
+  })
+
+  const getCallCount = () => callCount
+
+  return { handler, getCallCount }
+}
+
 describe("fetch facade", () => {
   afterEach(() => {
     vi.clearAllMocks()
@@ -33,39 +46,33 @@ describe("fetch facade", () => {
     })
 
     it("should cache responses when cached option is true", async () => {
-      let callCount = 0
-
-      addHandlers(
-        http.get("https://example.com/cached", () => {
-          callCount++
-          return HttpResponse.text(`Response ${callCount}`)
-        })
+      const { handler, getCallCount } = createCallCountHandler("https://example.com/cached", count =>
+        HttpResponse.text(`Response ${count}`)
       )
+
+      addHandlers(handler)
 
       const result1 = await getText("https://example.com/cached", { cached: true })
       const result2 = await getText("https://example.com/cached", { cached: true })
 
       expect(result1).toBe("Response 1")
-      expect(result2).toBe("Response 1") // Should return cached result
-      expect(callCount).toBe(1) // Only one network request should be made
+      expect(result2).toBe("Response 1")
+      expect(getCallCount()).toBe(1)
     })
 
     it("should not cache responses when cached option is false or not provided", async () => {
-      let callCount = 0
-
-      addHandlers(
-        http.get("https://example.com/uncached", () => {
-          callCount++
-          return HttpResponse.text(`Response ${callCount}`)
-        })
+      const { handler, getCallCount } = createCallCountHandler("https://example.com/uncached", count =>
+        HttpResponse.text(`Response ${count}`)
       )
+
+      addHandlers(handler)
 
       const result1 = await getText("https://example.com/uncached")
       const result2 = await getText("https://example.com/uncached", { cached: false })
 
       expect(result1).toBe("Response 1")
-      expect(result2).toBe("Response 2") // Should make new request
-      expect(callCount).toBe(2) // Two network requests should be made
+      expect(result2).toBe("Response 2")
+      expect(getCallCount()).toBe(2)
     })
 
     it("should maintain separate caches for different URLs", async () => {
@@ -112,39 +119,33 @@ describe("fetch facade", () => {
     })
 
     it("should cache JSON responses when cached option is true", async () => {
-      let callCount = 0
-
-      addHandlers(
-        http.get("https://api.example.com/cached", () => {
-          callCount++
-          return HttpResponse.json({ count: callCount, message: `Response ${callCount}` })
-        })
+      const { handler, getCallCount } = createCallCountHandler("https://api.example.com/cached", count =>
+        HttpResponse.json({ count, message: `Response ${count}` })
       )
+
+      addHandlers(handler)
 
       const result1 = await getJSON("https://api.example.com/cached", { cached: true })
       const result2 = await getJSON("https://api.example.com/cached", { cached: true })
 
       expect(result1).toEqual({ count: 1, message: "Response 1" })
-      expect(result2).toEqual({ count: 1, message: "Response 1" }) // Should return cached result
-      expect(callCount).toBe(1) // Only one network request should be made
+      expect(result2).toEqual({ count: 1, message: "Response 1" })
+      expect(getCallCount()).toBe(1)
     })
 
     it("should not cache JSON responses when cached option is false or not provided", async () => {
-      let callCount = 0
-
-      addHandlers(
-        http.get("https://api.example.com/uncached", () => {
-          callCount++
-          return HttpResponse.json({ count: callCount, message: `Response ${callCount}` })
-        })
+      const { handler, getCallCount } = createCallCountHandler("https://api.example.com/uncached", count =>
+        HttpResponse.json({ count, message: `Response ${count}` })
       )
+
+      addHandlers(handler)
 
       const result1 = await getJSON("https://api.example.com/uncached")
       const result2 = await getJSON("https://api.example.com/uncached", { cached: false })
 
       expect(result1).toEqual({ count: 1, message: "Response 1" })
-      expect(result2).toEqual({ count: 2, message: "Response 2" }) // Should make new request
-      expect(callCount).toBe(2) // Two network requests should be made
+      expect(result2).toEqual({ count: 2, message: "Response 2" })
+      expect(getCallCount()).toBe(2)
     })
 
     it("should maintain separate caches for getText and getJSON", async () => {
