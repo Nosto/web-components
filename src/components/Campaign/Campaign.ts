@@ -23,7 +23,7 @@ import { addRequest } from "./orchestrator"
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
- * @property {boolean} [cart-synced] - If true, the component will reload the campaign
+ * @property {boolean} [cartSynced] - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
  *
