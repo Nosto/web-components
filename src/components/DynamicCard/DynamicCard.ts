@@ -95,7 +95,7 @@ async function getMarkup(element: DynamicCard) {
     target.searchParams.set("variant", element.variantId)
   }
 
-  let markup = await getText(target.href)
+  let markup = await getText(target.href, { cached: true })
 
   if (element.section) {
     const parser = new DOMParser()
