@@ -54,9 +54,12 @@ export class SimpleCard extends NostoElement {
 
 async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
-  const productData = await fetchProductData(element.handle)
-  element.innerHTML = generateCardHTML(element, productData).html
-  element.toggleAttribute("loading", false)
+  try {
+    const productData = await fetchProductData(element.handle)
+    element.innerHTML = generateCardHTML(element, productData).html
+  } finally {
+    element.toggleAttribute("loading", false)
+  }
 }
 
 async function fetchProductData(handle: string) {

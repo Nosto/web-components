@@ -73,6 +73,14 @@ describe("ProductCard", () => {
     expect(card.innerHTML).toBe("<h1>Test Product</h1>")
   })
 
+  it("should remove loading attribute even when error occurs", async () => {
+    const card = (<nosto-product-card template="non-existent-template" />) as ProductCard
+
+    // The component should throw on error, but loading state should be cleaned up
+    await expect(card.connectedCallback()).rejects.toThrow()
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
   it("should scale to complex examples", async () => {
     const data = {
       name: "Tiffany Fitness Tee",

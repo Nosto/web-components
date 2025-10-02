@@ -76,9 +76,12 @@ const placeholders = new Map<string, string>()
 
 async function loadAndRenderMarkup(element: DynamicCard) {
   element.toggleAttribute("loading", true)
-  element.innerHTML = await getMarkup(element)
-  element.toggleAttribute("loading", false)
-  element.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+  try {
+    element.innerHTML = await getMarkup(element)
+    element.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+  } finally {
+    element.toggleAttribute("loading", false)
+  }
 }
 
 async function getMarkup(element: DynamicCard) {

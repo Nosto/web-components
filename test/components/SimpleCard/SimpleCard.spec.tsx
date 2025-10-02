@@ -229,6 +229,18 @@ describe("SimpleCard", () => {
     await expect(card.connectedCallback()).rejects.toThrow()
   })
 
+  it("should remove loading attribute even when error occurs", async () => {
+    addProductHandlers({
+      "error-product": { status: 500 }
+    })
+
+    const card = (<nosto-simple-card handle="error-product" />) as SimpleCard
+
+    // The component should throw on error, but loading state should be cleaned up
+    await expect(card.connectedCallback()).rejects.toThrow()
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
   it("should re-render when handle attribute changes", async () => {
     const product1 = { ...mockProduct, title: "Product 1" }
     const product2 = { ...mockProduct, title: "Product 2" }
