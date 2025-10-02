@@ -1,3 +1,15 @@
+# [8.30.0](https://github.com/Nosto/web-components/compare/v8.29.0...v8.30.0) (2025-10-02)
+
+
+### Bug Fixes
+
+* remove comment and add npm caching to copilot-setup-steps.yml ([6d274b4](https://github.com/Nosto/web-components/commit/6d274b4ce7426324252e9bbabb9077d0f8a707ad))
+
+
+### Features
+
+* add minimal copilot-setup-steps.yml file ([784351d](https://github.com/Nosto/web-components/commit/784351d13fe732f18087c75e5dca7702f603b5b4))
+
 # [8.29.0](https://github.com/Nosto/web-components/compare/v8.28.0...v8.29.0) (2025-10-01)
 
 
