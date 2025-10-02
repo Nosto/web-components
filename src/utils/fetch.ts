@@ -16,7 +16,6 @@ async function fetchWithErrorHandling(url: string) {
   return response
 }
 
-// In-memory caches for getText and getJSON
 const textCache = new Map<string, string>()
 const jsonCache = new Map<string, unknown>()
 
