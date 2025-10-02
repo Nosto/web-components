@@ -23,7 +23,7 @@ function dimensionString(width: string | number | undefined, height: string | nu
 }
 
 export function transform(src: string | URL, { width, height }: Operations) {
-  const u = new URL(src.toString())
+  const u = new URL(src.toString(), window.location.origin)
   if (u.pathname.includes("/images/stencil/")) {
     const dimenStr = dimensionString(width, height)
     u.pathname = u.pathname.replace(/images\/stencil\/[^/]+/, `images/stencil/${dimenStr}`)
