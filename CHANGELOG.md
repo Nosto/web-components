@@ -1,3 +1,10 @@
+# [8.31.0](https://github.com/Nosto/web-components/compare/v8.30.0...v8.31.0) (2025-10-02)
+
+
+### Features
+
+* **utils:** add optional in-memory caching to getText/getJSON ([01f842c](https://github.com/Nosto/web-components/commit/01f842c12857d5aed583a6125e06f14183b983d0))
+
 # [8.30.0](https://github.com/Nosto/web-components/compare/v8.29.0...v8.30.0) (2025-10-02)
 
 
