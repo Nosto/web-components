@@ -43,6 +43,7 @@ describe("SimpleCard", () => {
     featured_image: "https://example.com/image1.jpg",
     price: 1999, // $19.99 in cents
     compare_at_price: 2499, // $24.99 in cents
+    available: true, // Product is available
     variants: [
       {
         id: 789,
@@ -316,5 +317,231 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("$9.99")
     expect(shadowContent).toContain("$12.99")
+  })
+
+  describe("New features", () => {
+    const mockProductWithColors = {
+      ...mockProduct,
+      available: true, // Ensure it's available
+      options: [
+        {
+          name: "Color",
+          position: 1,
+          values: ["Red", "Blue", "Green", "Yellow", "Black"]
+        },
+        {
+          name: "Size",
+          position: 2,
+          values: ["S", "M", "L"]
+        }
+      ]
+    } as ShopifyProduct
+
+    it("should render swatches when swatches attribute is enabled", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProductWithColors }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" swatches />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__swatches")
+      expect(shadowContent).toContain("simple-card__swatch")
+      expect(shadowContent).toContain("title=\"Red\"")
+      expect(shadowContent).toContain("title=\"Blue\"")
+      expect(shadowContent).toContain("title=\"Green\"")
+    })
+
+    it("should limit swatches when maxSwatches attribute is set", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProductWithColors }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" swatches max-swatches="3" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__swatches")
+      expect(shadowContent).toContain("simple-card__swatch-more")
+      expect(shadowContent).toContain("+2") // 5 colors - 3 shown = 2 more
+    })
+
+    it("should not render swatches when product has no color options", async () => {
+      const productWithoutColors = {
+        ...mockProduct,
+        options: [{ name: "Size", position: 1, values: ["S", "M", "L"] }]
+      } as ShopifyProduct
+
+      addProductHandlers({
+        "test-product": { product: productWithoutColors }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" swatches />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).not.toContain("simple-card__swatches")
+    })
+
+    it("should render sold out badge when oosBadge is enabled and product is unavailable", async () => {
+      const unavailableProduct = {
+        ...mockProduct,
+        available: false
+      } as ShopifyProduct
+
+      addProductHandlers({
+        "test-product": { product: unavailableProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" oos-badge />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__badge--oos")
+      expect(shadowContent).toContain("Sold Out")
+    })
+
+    it("should not render sold out badge when product is available", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" oos-badge />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).not.toContain("simple-card__badge--oos")
+    })
+
+    it("should render sale badge with text when saleBadge is enabled", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" sale-badge />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__badge--sale")
+      expect(shadowContent).toContain("Sale")
+    })
+
+    it("should render sale badge with percentage when saleBadgeType is percentage", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (
+        <nosto-simple-card handle="test-product" sale-badge sale-badge-type="percentage" />
+      ) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__badge--sale")
+      expect(shadowContent).toContain("-20%") // (2499-1999)/2499 = 20%
+    })
+
+    it("should render sale badge with fixed amount when saleBadgeType is fixed", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" sale-badge sale-badge-type="fixed" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__badge--sale")
+      expect(shadowContent).toContain("-$5.00") // 2499-1999 = 500 cents = $5.00
+    })
+
+    it("should not render sale badge when discount is not enabled or no discount exists", async () => {
+      const productWithoutDiscount = {
+        ...mockProduct,
+        compare_at_price: null
+      } as ShopifyProduct
+
+      addProductHandlers({
+        "test-product": { product: productWithoutDiscount }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" sale-badge />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).not.toContain("simple-card__badge--sale")
+    })
+
+    it("should forward sizes attribute to nosto-image", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (
+        <nosto-simple-card handle="test-product" sizes="(max-width: 768px) 100vw, 50vw" />
+      ) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain('sizes="(max-width: 768px) 100vw, 50vw"')
+    })
+
+    it("should render multiple badges together", async () => {
+      const unavailableDiscountedProduct = {
+        ...mockProduct,
+        available: false
+      } as ShopifyProduct
+
+      addProductHandlers({
+        "test-product": { product: unavailableDiscountedProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" oos-badge sale-badge />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__badge--oos")
+      expect(shadowContent).toContain("simple-card__badge--sale")
+      expect(shadowContent).toContain("Sold Out")
+      expect(shadowContent).toContain("Sale")
+    })
+
+    it("should render all new features together", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProductWithColors }
+      })
+
+      const card = (
+        <nosto-simple-card
+          handle="test-product"
+          swatches
+          max-swatches="2"
+          sale-badge
+          sale-badge-type="percentage"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+      ) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("simple-card__swatches")
+      expect(shadowContent).toContain("simple-card__swatch-more")
+      expect(shadowContent).toContain("+3") // 5 colors - 2 shown = 3 more
+      expect(shadowContent).toContain("simple-card__badge--sale")
+      expect(shadowContent).toContain("-20%")
+      expect(shadowContent).toContain('sizes="(max-width: 768px) 100vw, 50vw"')
+    })
   })
 })

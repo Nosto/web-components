@@ -40,10 +40,16 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
+ * @property {boolean} [swatches] - Show color swatches. Defaults to false.
+ * @property {number} [maxSwatches] - Maximum number of swatches to show. Defaults to undefined (show all).
+ * @property {boolean} [oosBadge] - Show sold out badge when product is unavailable. Defaults to false.
+ * @property {boolean} [saleBadge] - Show sale badge when product is on sale. Defaults to false.
+ * @property {string} [saleBadgeType] - Sale badge type: "text", "percentage", or "fixed". Defaults to "text".
+ * @property {string} [sizes] - Responsive image sizes attribute forwarded to nosto-image. Defaults to undefined.
  *
  * @example
  * ```html
- * <nosto-simple-card handle="awesome-product" alternate brand discount rating></nosto-simple-card>
+ * <nosto-simple-card handle="awesome-product" alternate brand discount rating swatches max-swatches="3" oos-badge sale-badge sale-badge-type="percentage" sizes="(max-width: 768px) 100vw, 50vw"></nosto-simple-card>
  * ```
  */
 @customElement("nosto-simple-card", { observe: true })
@@ -54,7 +60,13 @@ export class SimpleCard extends NostoElement {
     alternate: Boolean,
     brand: Boolean,
     discount: Boolean,
-    rating: Number
+    rating: Number,
+    swatches: Boolean,
+    maxSwatches: Number,
+    oosBadge: Boolean,
+    saleBadge: Boolean,
+    saleBadgeType: String,
+    sizes: String
   }
 
   handle!: string
@@ -62,6 +74,12 @@ export class SimpleCard extends NostoElement {
   brand?: boolean
   discount?: boolean
   rating?: number
+  swatches?: boolean
+  maxSwatches?: number
+  oosBadge?: boolean
+  saleBadge?: boolean
+  saleBadgeType?: string
+  sizes?: string
 
   constructor() {
     super()

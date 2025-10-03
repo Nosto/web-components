@@ -124,4 +124,71 @@ export const cardStyles = `
   .simple-card__image--placeholder::after {
     content: "No image available";
   }
+
+  /* Image container for badges */
+  .simple-card__image-container {
+    position: relative;
+  }
+
+  /* Badges */
+  .simple-card__badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  .simple-card__badge--oos {
+    background: var(--simple-card-oos-badge-bg, #666);
+    color: var(--simple-card-oos-badge-color, white);
+  }
+
+  .simple-card__badge--sale {
+    background: var(--simple-card-sale-badge-bg, #e74c3c);
+    color: var(--simple-card-sale-badge-color, white);
+  }
+
+  /* Multiple badges positioning */
+  .simple-card__badge--oos ~ .simple-card__badge--sale {
+    top: 40px;
+  }
+
+  /* Swatches */
+  .simple-card__swatches {
+    display: flex;
+    gap: 4px;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+  }
+
+  .simple-card__swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--simple-card-swatch-border, #ddd);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .simple-card__swatch:hover {
+    transform: scale(1.1);
+  }
+
+  .simple-card__swatch-more {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--simple-card-swatch-more-bg, #f5f5f5);
+    border: 2px solid var(--simple-card-swatch-border, #ddd);
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--simple-card-swatch-more-color, #666);
+  }
 `
