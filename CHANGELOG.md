@@ -1,3 +1,15 @@
+## [8.31.1](https://github.com/Nosto/web-components/compare/v8.31.0...v8.31.1) (2025-10-03)
+
+
+### Bug Fixes
+
+* normalize image urls ([6479451](https://github.com/Nosto/web-components/commit/647945145c50c891a39ce16bf42814ef41a043e9))
+
+
+### Performance Improvements
+
+* **SimpleCard:** cache constructible stylesheet for better performance ([adf59e6](https://github.com/Nosto/web-components/commit/adf59e66d5a35260d0e8f6398a6c9f27cbe09782))
+
 # [8.31.0](https://github.com/Nosto/web-components/compare/v8.30.0...v8.31.0) (2025-10-02)
 
 

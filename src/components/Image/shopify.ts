@@ -1,8 +1,9 @@
 import type { Operations } from "unpic/types"
 import { Crop } from "./types"
+import { normalizeUrl } from "./normalizeUrl"
 
 export function transform(src: string | URL, { width, height, crop }: Operations & { crop?: Crop } = {}): string {
-  const u = new URL(src.toString())
+  const u = new URL(src.toString(), window.location.origin)
 
   // Extract path and extension
   const pathMatch = u.pathname.match(
@@ -24,5 +25,6 @@ export function transform(src: string | URL, { width, height, crop }: Operations
       u.searchParams.set(key, String(value))
     }
   })
-  return u.toString()
+
+  return normalizeUrl(src, u)
 }

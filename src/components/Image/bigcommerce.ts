@@ -1,4 +1,5 @@
 import type { Operations } from "unpic/types"
+import { normalizeUrl } from "./normalizeUrl"
 
 type BigCommerceUrlGroups = {
   prefix: string
@@ -23,11 +24,11 @@ function dimensionString(width: string | number | undefined, height: string | nu
 }
 
 export function transform(src: string | URL, { width, height }: Operations) {
-  const u = new URL(src.toString())
+  const u = new URL(src.toString(), window.location.origin)
   if (u.pathname.includes("/images/stencil/")) {
     const dimenStr = dimensionString(width, height)
     u.pathname = u.pathname.replace(/images\/stencil\/[^/]+/, `images/stencil/${dimenStr}`)
-    return u.toString()
+    return normalizeUrl(src, u)
   }
   const parseResult = parseUrl(u.pathname)
 
@@ -38,5 +39,5 @@ export function transform(src: string | URL, { width, height }: Operations) {
   const { prefix, suffix, productId, imageId, format, width: pathWidth, height: pathHeight } = parseResult
   const dimenStr = dimensionString(width || pathWidth, height || pathHeight)
   u.pathname = `${prefix}images/stencil/${dimenStr}/products/${productId}/${imageId}${suffix}.${format}`
-  return u.toString()
+  return normalizeUrl(src, u)
 }

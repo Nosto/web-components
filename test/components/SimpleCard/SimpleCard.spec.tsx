@@ -26,6 +26,12 @@ describe("SimpleCard", () => {
     )
   }
 
+  function getShadowContent(card: SimpleCard) {
+    const shadowContent = card.shadowRoot?.innerHTML || ""
+    // Remove the style tag and its content to get just the HTML content
+    return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
+  }
+
   const mockProduct = {
     id: 123456,
     title: "Awesome Test Product",
@@ -62,10 +68,11 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card")
-    expect(card.innerHTML).toContain("Awesome Test Product")
-    expect(card.innerHTML).toContain("$19.99")
-    expect(card.innerHTML).toContain("https://example.com/image1.jpg")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("simple-card")
+    expect(shadowContent).toContain("Awesome Test Product")
+    expect(shadowContent).toContain("$19.99")
+    expect(shadowContent).toContain("https://example.com/image1.jpg")
     expect(card.hasAttribute("loading")).toBe(false)
   })
 
@@ -78,8 +85,9 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card__brand")
-    expect(card.innerHTML).toContain("Test Brand")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("simple-card__brand")
+    expect(shadowContent).toContain("Test Brand")
   })
 
   it("should not render brand when brand attribute is disabled", async () => {
@@ -91,8 +99,9 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).not.toContain("simple-card__brand")
-    expect(card.innerHTML).not.toContain("Test Brand")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).not.toContain("simple-card__brand")
+    expect(shadowContent).not.toContain("Test Brand")
   })
 
   it("should render original price when discount attribute is enabled and product has discount", async () => {
@@ -104,8 +113,9 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("$24.99") // original price
-    expect(card.innerHTML).toContain("$19.99") // current price
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("$24.99") // original price
+    expect(shadowContent).toContain("$19.99") // current price
   })
 
   it("should not render original price when product has no discount", async () => {
@@ -132,7 +142,8 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).not.toContain("simple-card__price-original")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).not.toContain("simple-card__price-original")
   })
 
   it("should render rating when rating attribute is provided", async () => {
@@ -144,8 +155,9 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card__rating")
-    expect(card.innerHTML).toContain("★★★★☆ (4.2)")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("simple-card__rating")
+    expect(shadowContent).toContain("★★★★☆ (4.2)")
   })
 
   it("should render alternate image when alternate attribute is enabled", async () => {
@@ -157,9 +169,10 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card__img--primary")
-    expect(card.innerHTML).toContain("simple-card__img--alternate")
-    expect(card.innerHTML).toContain("https://example.com/image2.jpg")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("simple-card__img--primary")
+    expect(shadowContent).toContain("simple-card__img--alternate")
+    expect(shadowContent).toContain("https://example.com/image2.jpg")
   })
 
   it("should not render alternate image when product has only one image", async () => {
@@ -176,11 +189,12 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
+    const shadowContent = getShadowContent(card)
     // Should still render primary image class
-    expect(card.innerHTML).toContain("simple-card__img--primary")
+    expect(shadowContent).toContain("simple-card__img--primary")
     // But should NOT render the alternate image container or alternate image class
-    expect(card.innerHTML).not.toContain("simple-card__image--alternate")
-    expect(card.innerHTML).not.toContain("simple-card__img--alternate")
+    expect(shadowContent).not.toContain("simple-card__image--alternate")
+    expect(shadowContent).not.toContain("simple-card__img--alternate")
   })
 
   it("should render all features when all attributes are enabled", async () => {
@@ -192,13 +206,14 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card__brand")
-    expect(card.innerHTML).toContain("Test Brand")
-    expect(card.innerHTML).toContain("$24.99") // original price shown with discount attribute
-    expect(card.innerHTML).toContain("simple-card__rating")
-    expect(card.innerHTML).toContain("★★★☆☆ (3.5)")
-    expect(card.innerHTML).toContain("simple-card__img--primary")
-    expect(card.innerHTML).toContain("simple-card__img--alternate")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("simple-card__brand")
+    expect(shadowContent).toContain("Test Brand")
+    expect(shadowContent).toContain("$24.99") // original price shown with discount attribute
+    expect(shadowContent).toContain("simple-card__rating")
+    expect(shadowContent).toContain("★★★☆☆ (3.5)")
+    expect(shadowContent).toContain("simple-card__img--primary")
+    expect(shadowContent).toContain("simple-card__img--alternate")
   })
 
   it("should handle product with no images", async () => {
@@ -215,7 +230,8 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("simple-card__image--placeholder")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("simple-card__image--placeholder")
   })
 
   it("should handle error when product fetch fails", async () => {
@@ -254,11 +270,11 @@ describe("SimpleCard", () => {
     document.body.appendChild(card)
 
     await card.connectedCallback()
-    expect(card.innerHTML).toContain("Product 1")
+    expect(getShadowContent(card)).toContain("Product 1")
 
     card.handle = "product-2"
     await card.attributeChangedCallback()
-    expect(card.innerHTML).toContain("Product 2")
+    expect(getShadowContent(card)).toContain("Product 2")
   })
 
   it("should escape HTML in product data", async () => {
@@ -276,12 +292,13 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("&lt;script&gt;")
-    expect(card.innerHTML).toContain("Safe Title")
-    expect(card.innerHTML).toContain("&lt;img") // malicious img tag is escaped
-    expect(card.innerHTML).toContain("Brand") // content is still displayed
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("&lt;script&gt;")
+    expect(shadowContent).toContain("Safe Title")
+    expect(shadowContent).toContain("&lt;img") // malicious img tag is escaped
+    expect(shadowContent).toContain("Brand") // content is still displayed
     // In text content, script tags should be escaped
-    expect(card.innerHTML).toContain("&lt;script&gt;alert('xss')&lt;/script&gt;Safe Title")
+    expect(shadowContent).toContain("&lt;script&gt;alert('xss')&lt;/script&gt;Safe Title")
   })
 
   it("should format price correctly", async () => {
@@ -308,7 +325,8 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
 
-    expect(card.innerHTML).toContain("$9.99")
-    expect(card.innerHTML).toContain("$12.99")
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("$9.99")
+    expect(shadowContent).toContain("$12.99")
   })
 })

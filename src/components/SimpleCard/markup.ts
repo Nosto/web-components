@@ -1,6 +1,7 @@
 import { html } from "@/templating/html"
 import type { ShopifyProduct } from "./types"
 import type { SimpleCard } from "./SimpleCard"
+import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -47,10 +48,17 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
+function normalizeUrl(url: string) {
+  if (url.startsWith("//") || !url.startsWith("/")) {
+    return url
+  }
+  return createShopifyUrl(url).toString()
+}
+
 function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string) {
   return html`
     <nosto-image
-      src="${src}"
+      src="${normalizeUrl(src)}"
       alt="${alt}"
       width="300"
       aspect-ratio="${aspectRatio}"
