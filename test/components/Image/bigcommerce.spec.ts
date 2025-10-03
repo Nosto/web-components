@@ -28,4 +28,10 @@ describe("NostoImage/bigcommerce.transform", () => {
     const output = stencilUrlWithParams.replace("{DIMEN}", "600x400")
     expect(transform(input, { width: 600, height: 400 })).toBe(output)
   })
+
+  it("supports urls starting with //", () => {
+    const input = stencilUrlWithParams.replace("https:", "").replace("{DIMEN}", "300x200")
+    const output = stencilUrlWithParams.replace("https:", "").replace("{DIMEN}", "600x400")
+    expect(transform(input, { width: 600, height: 400 })).toBe(output)
+  })
 })

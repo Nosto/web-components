@@ -86,4 +86,16 @@ describe("NostoImage/shopify.transform", () => {
       expect(result).toBe(`${base}image.jpg?width=400&height=200`)
     })
   })
+
+  it("supports urls starting with //", () => {
+    const imageUrl = "//cdn.shopify.com/s/files/1/1183/1048/products/image_200x300.jpg"
+    const result = transform(imageUrl, { width: 400 })
+    expect(result).toBe("//cdn.shopify.com/s/files/1/1183/1048/products/image.jpg?width=400&height=300")
+  })
+
+  it("supports urls starting with /", () => {
+    const imageUrl = "/s/files/1/1183/1048/products/image_200x300.jpg"
+    const result = transform(imageUrl, { width: 400 })
+    expect(result).toBe("http://localhost:3000/s/files/1/1183/1048/products/image.jpg?width=400&height=300")
+  })
 })
