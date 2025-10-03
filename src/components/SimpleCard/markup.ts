@@ -42,8 +42,14 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return html`
     <div class="simple-card__image ${hasAlternate ? "simple-card__image--alternate" : ""}">
-      ${generateNostoImageHTML(primaryImage, product.title, aspectRatio, "simple-card__img simple-card__img--primary")}
-      ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product) : ""}
+      ${generateNostoImageHTML(
+        primaryImage,
+        product.title,
+        aspectRatio,
+        "simple-card__img simple-card__img--primary",
+        element.sizes
+      )}
+      ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product, element.sizes) : ""}
     </div>
   `
 }
@@ -55,7 +61,9 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string) {
+function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string, sizes?: string) {
+  const sizesAttr = sizes ? { html: `sizes="${sizes}"` } : ""
+
   return html`
     <nosto-image
       src="${normalizeUrl(src)}"
@@ -64,11 +72,12 @@ function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, c
       aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="${className}"
+      ${sizesAttr}
     ></nosto-image>
   `
 }
 
-function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct) {
+function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct, sizes?: string) {
   // Get aspect ratio from the second media object, fallback to 1
   const aspectRatio = product.media?.[1]?.aspect_ratio || 1
 
@@ -76,7 +85,8 @@ function generateAlternateImageHTML(alternateImage: string, product: ShopifyProd
     alternateImage,
     product.title,
     aspectRatio,
-    "simple-card__img simple-card__img--alternate"
+    "simple-card__img simple-card__img--alternate",
+    sizes
   )
 }
 
