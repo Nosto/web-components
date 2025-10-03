@@ -1,3 +1,11 @@
+## [8.31.2](https://github.com/Nosto/web-components/compare/v8.31.1...v8.31.2) (2025-10-03)
+
+
+### Bug Fixes
+
+* **components:** ensure loading state cleared in finally blocks across custom elements ([9ee5eef](https://github.com/Nosto/web-components/commit/9ee5eef89f73df2e9eaa28b32830b1ac3413c481))
+* **SimpleCard:** add try/finally blocks for loading state management ([89f4e11](https://github.com/Nosto/web-components/commit/89f4e113b58dac9bec4692bcbedb579e6485beff))
+
 ## [8.31.1](https://github.com/Nosto/web-components/compare/v8.31.0...v8.31.1) (2025-10-03)
 
 
