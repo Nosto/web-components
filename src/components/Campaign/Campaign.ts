@@ -114,30 +114,33 @@ export class Campaign extends NostoElement {
 
 export async function loadCampaign(element: Campaign) {
   element.toggleAttribute("loading", true)
-  const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
-  const placement = element.placement ?? element.id
-  const api = await new Promise(nostojs)
+  try {
+    const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
+    const placement = element.placement ?? element.id
+    const api = await new Promise(nostojs)
 
-  const rec = await addRequest({
-    placement,
-    productId: element.productId,
-    variantId: element.variantId,
-    responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML"
-  })
+    const rec = await addRequest({
+      placement,
+      productId: element.productId,
+      variantId: element.variantId,
+      responseMode: useTemplate ? "JSON_ORIGINAL" : "HTML"
+    })
 
-  if (rec) {
-    if (useTemplate) {
-      const template = getTemplate(element)
-      compile(element, template, getContext(rec as JSONResult))
-      api.attributeProductClicksInCampaign(element, rec as JSONResult)
-    } else {
-      await api.placements.injectCampaigns(
-        { [placement]: rec as string | AttributedCampaignResult },
-        { [placement]: element }
-      )
+    if (rec) {
+      if (useTemplate) {
+        const template = getTemplate(element)
+        compile(element, template, getContext(rec as JSONResult))
+        api.attributeProductClicksInCampaign(element, rec as JSONResult)
+      } else {
+        await api.placements.injectCampaigns(
+          { [placement]: rec as string | AttributedCampaignResult },
+          { [placement]: element }
+        )
+      }
     }
+  } finally {
+    element.toggleAttribute("loading", false)
   }
-  element.toggleAttribute("loading", false)
 }
 
 declare global {

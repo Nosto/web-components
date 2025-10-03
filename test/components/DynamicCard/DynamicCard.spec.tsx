@@ -175,6 +175,21 @@ describe("DynamicCard", () => {
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
   })
 
+  it("removes loading attribute even when error occurs", async () => {
+    addProductHandlers({
+      "error-handle": {
+        markup: "Error",
+        status: 500
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="error-handle" template="default" />) as DynamicCard
+
+    // The component should throw on error, but loading state should be cleaned up
+    await expect(card.connectedCallback()).rejects.toThrow()
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
   it("uses Shopify routes root when available", async () => {
     // Set up window.Shopify.routes.root
     vi.stubGlobal("Shopify", { routes: { root: "/en-us/" } })

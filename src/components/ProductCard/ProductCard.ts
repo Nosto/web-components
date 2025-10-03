@@ -60,10 +60,13 @@ export class ProductCard extends NostoElement {
 
   async connectedCallback() {
     this.toggleAttribute("loading", true)
-    const template = getTemplate(this)
-    const product = getData(this) ?? this.dataset
-    compile(this, template, getContext({ product }))
-    this.toggleAttribute("loading", false)
+    try {
+      const template = getTemplate(this)
+      const product = getData(this) ?? this.dataset
+      compile(this, template, getContext({ product }))
+    } finally {
+      this.toggleAttribute("loading", false)
+    }
   }
 }
 

@@ -82,26 +82,28 @@ export class SimpleCard extends NostoElement {
 
 async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
-  const productData = await fetchProductData(element.handle)
+  try {
+    const productData = await fetchProductData(element.handle)
 
-  const cardHTML = generateCardHTML(element, productData)
+    const cardHTML = generateCardHTML(element, productData)
 
-  // Use constructible stylesheets if supported, fallback to inline styles
-  if ("adoptedStyleSheets" in element.shadowRoot!) {
-    if (!cachedStyleSheet) {
-      cachedStyleSheet = new CSSStyleSheet()
-      await cachedStyleSheet.replace(cardStyles)
+    // Use constructible stylesheets if supported, fallback to inline styles
+    if ("adoptedStyleSheets" in element.shadowRoot!) {
+      if (!cachedStyleSheet) {
+        cachedStyleSheet = new CSSStyleSheet()
+        await cachedStyleSheet.replace(cardStyles)
+      }
+      element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
+      element.shadowRoot!.innerHTML = cardHTML.html
+    } else {
+      element.shadowRoot!.innerHTML = `
+        <style>${cardStyles}</style>
+        ${cardHTML.html}
+      `
     }
-    element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
-    element.shadowRoot!.innerHTML = cardHTML.html
-  } else {
-    element.shadowRoot!.innerHTML = `
-      <style>${cardStyles}</style>
-      ${cardHTML.html}
-    `
+  } finally {
+    element.toggleAttribute("loading", false)
   }
-
-  element.toggleAttribute("loading", false)
 }
 
 async function fetchProductData(handle: string) {

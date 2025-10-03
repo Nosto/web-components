@@ -24,6 +24,16 @@ describe("Campaign", () => {
     await expect(campaign.connectedCallback()).rejects.toThrow('Template with id "my-template" not found.')
   })
 
+  it("should remove loading attribute even when error occurs", async () => {
+    mockNostoRecs({ "123": {} })
+
+    campaign = (<nosto-campaign placement="123" template="missing-template" />) as Campaign
+
+    // The component should throw on error, but loading state should be cleaned up
+    await expect(campaign.connectedCallback()).rejects.toThrow()
+    expect(campaign.hasAttribute("loading")).toBe(false)
+  })
+
   it("should mark element for client injection", async () => {
     const htmlContent = "recommended content"
     const { mockBuilder } = mockNostoRecs({ "789": { html: htmlContent } })
