@@ -138,11 +138,11 @@ export const GridOfCards: Story = {
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
       ${handles.map(
         handle => html`
-          <nosto-simple-card 
-            handle="${handle}" 
-            alternate 
-            brand 
-            discount 
+          <nosto-simple-card
+            handle="${handle}"
+            alternate
+            brand
+            discount
             rating="3.8"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           ></nosto-simple-card>

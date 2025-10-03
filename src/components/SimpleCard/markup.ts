@@ -62,8 +62,6 @@ function normalizeUrl(url: string) {
 }
 
 function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string, sizes?: string) {
-  const sizesAttr = sizes ? { html: `sizes="${sizes}"` } : ""
-
   return html`
     <nosto-image
       src="${normalizeUrl(src)}"
@@ -72,7 +70,7 @@ function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, c
       aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="${className}"
-      ${sizesAttr}
+      ${sizes ? html`sizes="${sizes}"` : ""}
     ></nosto-image>
   `
 }
