@@ -329,4 +329,31 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("$9.99")
     expect(shadowContent).toContain("$12.99")
   })
+
+  it("should forward sizes attribute to nosto-image elements", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const sizesValue = "(max-width: 768px) 100vw, 50vw"
+    const card = (<nosto-simple-card handle="test-product" sizes={sizesValue} />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain(`sizes="${sizesValue}"`)
+  })
+
+  it("should not add sizes attribute when not provided", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).not.toContain("sizes=")
+  })
 })
