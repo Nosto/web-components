@@ -3,19 +3,12 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct, ShopifyVariant } from "../SimpleCard/types"
+import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "../SimpleCard/types"
 import { generateVariantSelectorHTML } from "./markup"
 import { variantSelectorStyles } from "./styles"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null
-
-/**
- * Event detail for variant change events
- */
-export type VariantChangeDetail = {
-  variant: ShopifyVariant
-}
 
 /**
  * A custom element that displays product variant options as clickable pills.

@@ -6,7 +6,7 @@ import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 import { generateCardHTML } from "./markup"
 import { cardStyles } from "./styles"
-import type { VariantChangeDetail } from "../VariantSelector/VariantSelector"
+import type { VariantChangeDetail } from "./types"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null
