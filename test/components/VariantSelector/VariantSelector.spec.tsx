@@ -203,7 +203,7 @@ describe("VariantSelector", () => {
   })
 
   it("should throw an error if handle attribute is not provided", async () => {
-    const selector = <nosto-variant-selector />
+    const selector = (<nosto-variant-selector />) as VariantSelector
     await expect(selector.connectedCallback()).rejects.toThrow("Property handle is required.")
   })
 
@@ -251,7 +251,7 @@ describe("VariantSelector", () => {
     expect(selector.selectedOptions["Color"]).toBe("Red")
 
     const shadowContent = getShadowContent(selector)
-    expect(shadowContent).toContain('variant-option-value--active')
+    expect(shadowContent).toContain("variant-option-value--active")
   })
 
   it("should emit variantchange event on option selection", async () => {
@@ -262,7 +262,7 @@ describe("VariantSelector", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
 
-    let eventDetail: any = null
+    let eventDetail: Record<string, unknown> | null = null
     selector.addEventListener("variantchange", (event: Event) => {
       eventDetail = (event as CustomEvent).detail
     })
@@ -270,8 +270,10 @@ describe("VariantSelector", () => {
     selector.selectOption("Size", "Large")
 
     expect(eventDetail).toBeTruthy()
-    expect(eventDetail.variant).toBeTruthy()
-    expect(eventDetail.product).toBeTruthy()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((eventDetail as any)?.variant).toBeTruthy()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((eventDetail as any)?.product).toBeTruthy()
   })
 
   it("should update selected variant when options change", async () => {
@@ -301,7 +303,9 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
-    const mediumButton = shadowRoot.querySelector('[data-option-name="Size"][data-option-value="Medium"]') as HTMLButtonElement
+    const mediumButton = shadowRoot.querySelector(
+      '[data-option-name="Size"][data-option-value="Medium"]'
+    ) as HTMLButtonElement
 
     expect(mediumButton).toBeTruthy()
 
@@ -325,8 +329,12 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
-    const smallButton = shadowRoot.querySelector('[data-option-name="Size"][data-option-value="Small"]') as HTMLButtonElement
-    const mediumButton = shadowRoot.querySelector('[data-option-name="Size"][data-option-value="Medium"]') as HTMLButtonElement
+    const smallButton = shadowRoot.querySelector(
+      '[data-option-name="Size"][data-option-value="Small"]'
+    ) as HTMLButtonElement
+    const mediumButton = shadowRoot.querySelector(
+      '[data-option-name="Size"][data-option-value="Medium"]'
+    ) as HTMLButtonElement
 
     // Initially Small should be active
     expect(smallButton.classList.contains("variant-option-value--active")).toBe(true)

@@ -8,9 +8,7 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
     return html``
   }
 
-  return html`
-    <div class="variant-selector">${product.options.map(option => generateOptionRowHTML(option))}</div>
-  `
+  return html` <div class="variant-selector">${product.options.map(option => generateOptionRowHTML(option))}</div> `
 }
 
 function generateOptionRowHTML(option: { name: string; values: string[] }) {
