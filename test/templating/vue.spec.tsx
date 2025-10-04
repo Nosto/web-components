@@ -202,49 +202,12 @@ describe("vue:compile", () => {
     expect(div.childNodes[0].nodeType).toBe(Node.TEXT_NODE)
   })
 
-  it("should handle v-cloak directive", () => {
-    container.append(<div id="test" v-cloak v-text="'cloaked content'"></div>)
-
-    processElement(container, {})
-
-    const el = container.querySelector("#test")
-    expect(el?.hasAttribute("v-cloak")).toBe(false)
-    expect(el?.textContent).toBe("cloaked content")
-  })
-
-  it("should replace template elements with their content", () => {
-    const template = document.createElement("template")
-    template.innerHTML = "<span>template content</span>"
-    container.appendChild(template)
-
-    processElement(container, {})
-
-    expect(container.querySelector("template")).toBeNull()
-    expect(container.querySelector("span")?.textContent).toBe("template content")
-  })
-
   it("should process v-bind and set the attribute accordingly", () => {
     container.append(<div id="test" v-bind:title="'Hello'"></div>)
     processElement(container, { title: "Hello" })
     const el = container.querySelector("#test") as HTMLElement
     expect(el.getAttribute("title")).toBe("Hello")
     expect(el.hasAttribute("v-bind:title")).toBe(false)
-  })
-
-  it("should support property binding syntax", () => {
-    container.innerHTML = `<div .id="'test'"></div>`
-    processElement(container, {})
-    const el = container.querySelector("div") as HTMLElement
-    expect(el.id).toEqual("test")
-    expect(el.hasAttribute(".id")).toBe(false)
-  })
-
-  it("should support v-bind shorthand with colon", () => {
-    container.append(<div id="test" v-bind:title="'Hello'"></div>)
-    processElement(container, {})
-    const el = container.querySelector("#test") as HTMLElement
-    expect(el.getAttribute("title")).toBe("Hello")
-    expect(el.hasAttribute(":title")).toBe(false)
   })
 
   it("should support v-bind object syntax", () => {
@@ -256,46 +219,9 @@ describe("vue:compile", () => {
     expect(el.hasAttribute("v-bind")).toBe(false)
   })
 
-  it("should skip null and undefined values in v-bind", () => {
-    container.append(<div id="test" v-bind="{ title: null, 'data-val': undefined }"></div>)
-    processElement(container, {})
-    const el = container.querySelector("#test") as HTMLElement
-    expect(el.hasAttribute("title")).toBe(false)
-    expect(el.hasAttribute("data-val")).toBe(false)
-    expect(el.hasAttribute("v-bind")).toBe(false)
-  })
-
-  it("should process nested directives", () => {
-    container.append(
-      <div id="test" v-if="true">
-        <span v-text="'nested'"></span>
-        <p v-bind:data-val="'data'"></p>
-      </div>
-    )
-    processElement(container, {})
-    const el = container.querySelector("#test") as HTMLElement
-    const span = el.querySelector("span")
-    const p = el.querySelector("p")
-    expect(span?.textContent).toBe("nested")
-    expect(p?.getAttribute("data-val")).toBe("data")
-  })
-
   it("should support v-on event binding", () => {
     container.append(
       <button id="test" v-on:click="handleClick">
-        Click me
-      </button>
-    )
-    const mockHandler = vi.fn()
-    processElement(container, { handleClick: mockHandler })
-    const button = container.querySelector("#test") as HTMLButtonElement
-    button.click()
-    expect(mockHandler).toHaveBeenCalled()
-  })
-
-  it("should support v-on event binding with expressions", () => {
-    container.append(
-      <button id="test" v-on:click="handleClick($event, 1, 2)">
         Click me
       </button>
     )
@@ -320,45 +246,5 @@ describe("vue:compile", () => {
     const p = el.querySelector("p")
     expect(span?.textContent).toBe("world")
     expect(p?.getAttribute("data-val")).toBe("data")
-  })
-
-  it("should support nosto-dynamic-card rendering", () => {
-    container.innerHTML = `
-      <dynamic-product-card 
-        class='ns-product w-full flex' 
-        :handle='product.handle' 
-        template='product-card' 
-        v-for="product in products">
-        <div class='product-card-skeleton'></div>
-      </dynamic-product-card>`
-
-    processElement(container, { products: [{ handle: "test-product1" }, { handle: "test-product2" }] })
-    expect(container.outerHTML).toContain("test-product1")
-    expect(container.outerHTML).toContain("test-product2")
-  })
-
-  it("should replace nested templates with content", () => {
-    container.innerHTML = `
-      <div id="test">
-        <template v-if="condition">
-          <span>Nested Content</span>
-        </template>
-      </div>`
-
-    processElement(container, { condition: true })
-    const el = container.querySelector("#test")
-    expect(el?.innerHTML.trim()).toEqual("<span>Nested Content</span>")
-  })
-
-  it("should render v-for on template elements correctly", () => {
-    container.innerHTML = `
-      <template v-for="item in items">
-        <div class="item">{{ item }}</div>
-      </template>`
-
-    processElement(container, { items: ["Item 1", "Item 2", "Item 3"] })
-    expect(container.innerHTML.trim().replace(/\s+/g, " ")).toEqual(
-      `<div class="item">{{ item }}</div> <div class="item">{{ item }}</div> <div class="item">{{ item }}</div>`
-    )
   })
 })

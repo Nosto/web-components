@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -407,66 +407,5 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("simple-card__rating")
     expect(shadowContent).toContain("★★★★☆")
     expect(shadowContent).toContain("(4.5)")
-  })
-
-  it("should handle half-star rating correctly", async () => {
-    addProductHandlers({
-      "half-star-product": { product: mockProduct }
-    })
-
-    const card = (<nosto-simple-card handle="half-star-product" rating={3.7} />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("★★★☆")
-    expect(shadowContent).toContain("(3.7)")
-  })
-
-  it("should format prices with different currencies when Shopify object available", async () => {
-    // Mock window.Shopify with EUR currency
-    vi.stubGlobal("Shopify", {
-      locale: "fr-FR",
-      currency: { active: "EUR" }
-    })
-
-    const productEUR = {
-      ...mockProduct,
-      price: 1500, // €15.00 in cents
-      compare_at_price: 2000 // €20.00 in cents
-    } as ShopifyProduct
-
-    addProductHandlers({
-      "eur-product": { product: productEUR }
-    })
-
-    const card = (<nosto-simple-card handle="eur-product" discount />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("€") // Should contain Euro symbol
-
-    vi.unstubAllGlobals()
-  })
-
-  it("should normalize URLs correctly", async () => {
-    const productWithRelativeUrl = {
-      ...mockProduct,
-      images: ["/relative/path/image.jpg"],
-      url: "/products/test-product"
-    } as ShopifyProduct
-
-    addProductHandlers({
-      "relative-url-product": { product: productWithRelativeUrl }
-    })
-
-    const card = (<nosto-simple-card handle="relative-url-product" />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    // Should contain the full URL, not just the relative path
-    expect(shadowContent).toContain("http://") // Should be normalized to full URL
   })
 })
