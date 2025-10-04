@@ -94,7 +94,6 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 }
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  // Select first value for each option by default
   product.options.forEach(option => {
     if (option.values.length > 0) {
       element.selectedOptions[option.name] = option.values[0]

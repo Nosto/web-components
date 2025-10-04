@@ -121,7 +121,6 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
 
   if (element.alternate && variant.featured_image) {
     const alternateImgElement = element.shadowRoot.querySelector(".simple-card__img--alternate") as HTMLElement
-
     if (alternateImgElement) {
       alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image))
       alternateImgElement.setAttribute("alt", variant.name)
@@ -131,7 +130,6 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
 
 function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
   if (!element.shadowRoot) return
-
   const hasDiscount = element.discount && variant.compare_at_price && variant.compare_at_price > variant.price
 
   const currentPriceElement = element.shadowRoot.querySelector(".simple-card__price-current")
@@ -140,7 +138,6 @@ function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
   }
 
   const originalPriceElement = element.shadowRoot.querySelector(".simple-card__price-original")
-
   if (hasDiscount && originalPriceElement) {
     originalPriceElement.textContent = formatPrice(variant.compare_at_price!)
   }

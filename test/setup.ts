@@ -10,6 +10,7 @@ import "@/components/ProductCard/ProductCard"
 import "@/components/SectionCampaign/SectionCampaign"
 import "@/components/SimpleCard/SimpleCard"
 import "@/components/SkuOptions/SkuOptions"
+import "@/components/VariantSelector/VariantSelector"
 
 beforeAll(() => {
   // Components are automatically registered by their @customElement decorators

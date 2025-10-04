@@ -429,8 +429,8 @@ describe("SimpleCard", () => {
     // Wait for the event to be processed
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    // The card should update to reflect the blue variant
-    // (Note: In a real test we would verify image updates, but for this test we verify the event handling)
-    expect(true).toBe(true) // Placeholder assertion - the important part is that no errors are thrown
+    // Verify that the image was updated to the blue variant
+    const primaryImg = card.shadowRoot?.querySelector(".simple-card__img--primary") as HTMLImageElement
+    expect(primaryImg?.src).toBe("https://example.com/blue.jpg")
   })
 })

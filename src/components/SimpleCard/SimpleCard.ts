@@ -113,7 +113,6 @@ async function fetchProductData(handle: string) {
   return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
-/** Handle variant change events from VariantSelector */
 function handleVariantChange(event: Event) {
   event.stopPropagation()
   const customEvent = event as CustomEvent<VariantChangeDetail>

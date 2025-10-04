@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, beforeAll } from "vitest"
+import { describe, it, expect } from "vitest"
 import { VariantSelector, selectOption, getSelectedVariant } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -8,12 +8,6 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/components/SimpleCard/types"
 
 describe("VariantSelector", () => {
-  beforeAll(() => {
-    if (!customElements.get("nosto-variant-selector")) {
-      customElements.define("nosto-variant-selector", VariantSelector)
-    }
-  })
-
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     const productUrl = createShopifyUrl("products/:handle.js")
     const productPath = productUrl.pathname
@@ -96,26 +90,22 @@ describe("VariantSelector", () => {
         option1: "Small",
         option2: "Red",
         option3: null,
-        sku: "TEST-SM-RED",
+        sku: null,
         requires_shipping: true,
         taxable: true,
-        featured_image: "https://example.com/red-small.jpg",
+        featured_image: null,
         available: true,
         name: "Small / Red",
-        public_title: "Small / Red",
+        public_title: null,
         options: ["Small", "Red"],
         price: 1999,
         weight: 100,
-        compare_at_price: 2499,
+        compare_at_price: null,
         inventory_quantity: 10,
-        inventory_management: "shopify",
+        inventory_management: null,
         inventory_policy: "deny",
-        barcode: "123456789",
-        quantity_rule: {
-          min: 1,
-          max: null,
-          increment: 1
-        },
+        barcode: null,
+        quantity_rule: { min: 1, max: null, increment: 1 },
         quantity_price_breaks: [],
         requires_selling_plan: false,
         selling_plan_allocations: []
@@ -126,26 +116,22 @@ describe("VariantSelector", () => {
         option1: "Medium",
         option2: "Blue",
         option3: null,
-        sku: "TEST-MD-BLUE",
+        sku: null,
         requires_shipping: true,
         taxable: true,
-        featured_image: "https://example.com/blue-medium.jpg",
+        featured_image: null,
         available: true,
         name: "Medium / Blue",
-        public_title: "Medium / Blue",
+        public_title: null,
         options: ["Medium", "Blue"],
         price: 2499,
-        weight: 120,
-        compare_at_price: 2999,
+        weight: 100,
+        compare_at_price: null,
         inventory_quantity: 5,
-        inventory_management: "shopify",
+        inventory_management: null,
         inventory_policy: "deny",
-        barcode: "123456790",
-        quantity_rule: {
-          min: 1,
-          max: null,
-          increment: 1
-        },
+        barcode: null,
+        quantity_rule: { min: 1, max: null, increment: 1 },
         quantity_price_breaks: [],
         requires_selling_plan: false,
         selling_plan_allocations: []
@@ -156,26 +142,22 @@ describe("VariantSelector", () => {
         option1: "Large",
         option2: "Red",
         option3: null,
-        sku: "TEST-LG-RED",
+        sku: null,
         requires_shipping: true,
         taxable: true,
-        featured_image: "https://example.com/red-large.jpg",
+        featured_image: null,
         available: true,
         name: "Large / Red",
-        public_title: "Large / Red",
+        public_title: null,
         options: ["Large", "Red"],
         price: 2999,
-        weight: 150,
-        compare_at_price: 3499,
+        weight: 100,
+        compare_at_price: null,
         inventory_quantity: 3,
-        inventory_management: "shopify",
+        inventory_management: null,
         inventory_policy: "deny",
-        barcode: "123456791",
-        quantity_rule: {
-          min: 1,
-          max: null,
-          increment: 1
-        },
+        barcode: null,
+        quantity_rule: { min: 1, max: null, increment: 1 },
         quantity_price_breaks: [],
         requires_selling_plan: false,
         selling_plan_allocations: []
