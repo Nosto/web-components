@@ -272,8 +272,6 @@ describe("VariantSelector", () => {
     expect(eventDetail).toBeTruthy()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((eventDetail as any)?.variant).toBeTruthy()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((eventDetail as any)?.product).toBeTruthy()
   })
 
   it("should update selected variant when options change", async () => {

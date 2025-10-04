@@ -15,7 +15,6 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  */
 export type VariantChangeDetail = {
   variant: ShopifyVariant
-  product: ShopifyProduct
 }
 
 /**
@@ -114,8 +113,8 @@ export class VariantSelector extends NostoElement {
   /** Emit variant change event */
   emitVariantChange() {
     const variant = this.selectedVariant
-    if (variant && this.product) {
-      const detail: VariantChangeDetail = { variant, product: this.product }
+    if (variant) {
+      const detail: VariantChangeDetail = { variant }
       this.dispatchEvent(
         new CustomEvent("variantchange", {
           detail,

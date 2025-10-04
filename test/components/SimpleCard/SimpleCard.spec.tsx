@@ -419,8 +419,7 @@ describe("SimpleCard", () => {
     // Simulate variant change event
     const variantChangeEvent = new CustomEvent("variantchange", {
       detail: {
-        variant: variantProduct.variants[1], // Blue variant
-        product: variantProduct
+        variant: variantProduct.variants[1] // Blue variant
       },
       bubbles: true
     })

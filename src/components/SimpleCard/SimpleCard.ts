@@ -64,8 +64,8 @@ export class SimpleCard extends NostoElement {
   discount?: boolean
   rating?: number
 
-  /** @private Current product data */
-  private currentProduct: ShopifyProduct | null = null
+  /** Current product data */
+  currentProduct: ShopifyProduct | null = null
 
   /** @private Bound event handler for cleanup */
   private boundHandleVariantChange: EventListener
@@ -97,20 +97,22 @@ export class SimpleCard extends NostoElement {
   private async handleVariantChange(event: Event) {
     event.stopPropagation()
     const customEvent = event as CustomEvent<VariantChangeDetail>
-    const { variant, product } = customEvent.detail
+    const { variant } = customEvent.detail
 
     // Update current product data and re-render with variant-specific data
-    this.currentProduct = {
-      ...product,
-      // Update price with variant price
-      price: variant.price,
-      compare_at_price: variant.compare_at_price,
-      // Update featured image if variant has one
-      featured_image: variant.featured_image || product.featured_image,
-      // Update images array with variant image if available
-      images: variant.featured_image
-        ? [variant.featured_image, ...product.images.filter(img => img !== variant.featured_image)]
-        : product.images
+    if (this.currentProduct) {
+      this.currentProduct = {
+        ...this.currentProduct,
+        // Update price with variant price
+        price: variant.price,
+        compare_at_price: variant.compare_at_price,
+        // Update featured image if variant has one
+        featured_image: variant.featured_image || this.currentProduct.featured_image,
+        // Update images array with variant image if available
+        images: variant.featured_image
+          ? [variant.featured_image, ...this.currentProduct.images.filter(img => img !== variant.featured_image)]
+          : this.currentProduct.images
+      }
     }
 
     await this.updateCardContent()
@@ -158,8 +160,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element.handle)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(element as any).currentProduct = productData
+    element.currentProduct = productData
 
     const cardHTML = generateCardHTML(element, productData)
 
