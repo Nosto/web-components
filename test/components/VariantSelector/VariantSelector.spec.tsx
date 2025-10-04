@@ -1,10 +1,11 @@
 /** @jsx createElement */
-import { describe, it, expect, beforeAll } from "vitest"
+import { describe, it, expect, beforeAll, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { clearCache } from "@/utils/fetch"
 import type { ShopifyProduct } from "@/components/SimpleCard/types"
 
 describe("VariantSelector", () => {
@@ -12,6 +13,10 @@ describe("VariantSelector", () => {
     if (!customElements.get("nosto-variant-selector")) {
       customElements.define("nosto-variant-selector", VariantSelector)
     }
+  })
+
+  beforeEach(() => {
+    clearCache()
   })
 
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
@@ -304,17 +309,24 @@ describe("VariantSelector", () => {
     const mediumButton = shadowRoot.querySelector(
       '[data-option-name="Size"][data-option-value="Medium"]'
     ) as HTMLButtonElement
+    const blueButton = shadowRoot.querySelector(
+      '[data-option-name="Color"][data-option-value="Blue"]'
+    ) as HTMLButtonElement
 
     expect(mediumButton).toBeTruthy()
+    expect(blueButton).toBeTruthy()
 
     let eventFired = false
     selector.addEventListener("variantchange", () => {
       eventFired = true
     })
 
+    // Click Medium and Blue to create a valid variant combination (Medium / Blue)
     mediumButton.click()
+    blueButton.click()
 
     expect(selector.selectedOptions["Size"]).toBe("Medium")
+    expect(selector.selectedOptions["Color"]).toBe("Blue")
     expect(eventFired).toBe(true)
   })
 

@@ -1,13 +1,18 @@
 /** @jsx createElement */
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, beforeEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { clearCache } from "@/utils/fetch"
 import type { ShopifyProduct } from "@/components/SimpleCard/types"
 
 describe("SimpleCard", () => {
+  beforeEach(() => {
+    clearCache()
+  })
+
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     // Use createShopifyUrl to get the correct path with Shopify root handling
     const productUrl = createShopifyUrl("products/:handle.js")
