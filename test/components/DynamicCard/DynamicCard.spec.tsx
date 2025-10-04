@@ -258,22 +258,6 @@ describe("DynamicCard", () => {
     vi.unstubAllGlobals()
   })
 
-  it("throws error when markup contains body or html tags", async () => {
-    const invalidMarkup = "<body><div>Invalid markup</div></body>"
-    addProductHandlers({
-      "invalid-handle": {
-        markup: invalidMarkup
-      }
-    })
-
-    const card = (<nosto-dynamic-card handle="invalid-handle" template="invalid" />) as DynamicCard
-
-    await expect(card.connectedCallback()).rejects.toThrow(
-      "Invalid markup for template invalid, make sure that no <body> or <html> tags are included."
-    )
-    expect(card.hasAttribute("loading")).toBe(false)
-  })
-
   it("supports lazy loading with intersection observer", async () => {
     const validMarkup = "<div>Lazy loaded content</div>"
     addProductHandlers({

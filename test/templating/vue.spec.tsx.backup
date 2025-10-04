@@ -105,6 +105,19 @@ describe("vue:compile", () => {
     expect(container.querySelector("#third")).toBeNull()
   })
 
+  it("should process v-else-if when previous sibling doesn't have vif flag", () => {
+    container.append(
+      <div>
+        <span id="first" v-if="true" v-text="'if content'"></span>
+        <span id="second" v-else-if="true" v-text="'else-if content'"></span>
+      </div>
+    )
+    processElement(container, {})
+
+    expect(container.querySelector("#first")?.textContent).toBe("if content")
+    expect(container.querySelector("#second")).toBeNull() // Should be removed due to vif flag
+  })
+
   it("should handle v-on event handlers with method references", () => {
     const mockHandler = vi.fn()
     container.append(<button id="btn" v-on:click="handleClick"></button>)
@@ -204,6 +217,19 @@ describe("vue:compile", () => {
     expect(el.getAttribute("title")).toBe("Hello")
     expect(el.getAttribute("data-val")).toBe("123")
     expect(el.hasAttribute("v-bind")).toBe(false)
+  })
+
+  it("should support v-on event binding", () => {
+    container.append(
+      <button id="test" v-on:click="handleClick">
+        Click me
+      </button>
+    )
+    const mockHandler = vi.fn()
+    processElement(container, { handleClick: mockHandler })
+    const button = container.querySelector("#test") as HTMLButtonElement
+    button.click()
+    expect(mockHandler).toHaveBeenCalled()
   })
 
   it("should support mustache interpolation in text elements", () => {
