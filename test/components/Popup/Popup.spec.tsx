@@ -1,16 +1,10 @@
 /** @jsx createElement */
-import { describe, beforeEach, afterEach, it, expect, vi, beforeAll } from "vitest"
+import { describe, beforeEach, afterEach, it, expect, vi } from "vitest"
 import { Popup } from "@/components/Popup/Popup"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import { createElement } from "../../utils/jsx"
 
 describe("Popup", () => {
-  beforeAll(() => {
-    if (!customElements.get("nosto-popup")) {
-      customElements.define("nosto-popup", Popup)
-    }
-  })
-
   beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear()
@@ -377,6 +371,84 @@ describe("Popup", () => {
       await popup.connectedCallback()
 
       expect(popup.style.display).toBe("none")
+    })
+  })
+
+  describe("Ribbon mode functionality", () => {
+    it("should switch to ribbon mode when n-ribbon element is clicked", async () => {
+      const popup = (
+        <nosto-popup name="ribbon-test-popup">
+          <div slot="default">
+            <button n-ribbon>Switch to Ribbon</button>
+          </div>
+          <div slot="ribbon">
+            <span>Ribbon content</span>
+          </div>
+        </nosto-popup>
+      ) as Popup
+
+      document.body.appendChild(popup)
+      await popup.connectedCallback()
+
+      const ribbonButton = popup.querySelector("[n-ribbon]") as HTMLButtonElement
+      expect(ribbonButton).toBeTruthy()
+
+      ribbonButton.click()
+
+      // Check that ribbon state is stored
+      expect(localStorage.getItem("nosto:web-components:popup:ribbon-test-popup")).toBe("ribbon")
+
+      // Check DOM structure after switch
+      const dialog = popup.shadowRoot?.querySelector('[part="dialog"]')
+      const ribbon = popup.shadowRoot?.querySelector('[part="ribbon"]')
+      expect(dialog?.classList.contains("hidden")).toBe(true)
+      expect(ribbon?.classList.contains("hidden")).toBe(false)
+    })
+
+    it("should render in ribbon mode when localStorage state is 'ribbon'", async () => {
+      const popupName = "persistent-ribbon-popup"
+      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "ribbon")
+
+      const popup = (
+        <nosto-popup name={popupName}>
+          <div slot="default">Dialog content</div>
+          <div slot="ribbon">Ribbon content</div>
+        </nosto-popup>
+      ) as Popup
+
+      document.body.appendChild(popup)
+      await popup.connectedCallback()
+
+      const dialog = popup.shadowRoot?.querySelector('[part="dialog"]')
+      const ribbon = popup.shadowRoot?.querySelector('[part="ribbon"]')
+      expect(dialog?.classList.contains("hidden")).toBe(true)
+      expect(ribbon?.classList.contains("hidden")).toBe(false)
+    })
+
+    it("should prevent default and stop propagation on n-ribbon click", async () => {
+      const popup = (
+        <nosto-popup name="ribbon-events-popup">
+          <div slot="default">
+            <a href="#" n-ribbon>
+              Switch to Ribbon
+            </a>
+          </div>
+        </nosto-popup>
+      ) as Popup
+
+      document.body.appendChild(popup)
+      await popup.connectedCallback()
+
+      const ribbonLink = popup.querySelector("[n-ribbon]") as HTMLAnchorElement
+
+      const clickEvent = new Event("click", { bubbles: true, cancelable: true })
+      const preventDefaultSpy = vi.spyOn(clickEvent, "preventDefault")
+      const stopPropagationSpy = vi.spyOn(clickEvent, "stopPropagation")
+
+      ribbonLink.dispatchEvent(clickEvent)
+
+      expect(preventDefaultSpy).toHaveBeenCalled()
+      expect(stopPropagationSpy).toHaveBeenCalled()
     })
   })
 })

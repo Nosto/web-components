@@ -9,7 +9,7 @@ export const popupStyles = `
     pointer-events: none;
   }
 
-  dialog {
+  [part="dialog"] {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -22,11 +22,11 @@ export const popupStyles = `
     z-index: 1001;
   }
 
-  dialog::backdrop {
+  [part="dialog"]::backdrop {
     background: rgba(0, 0, 0, 0.5);
   }
 
-  .ribbon {
+  [part="ribbon"] {
     position: fixed;
     bottom: 20px;
     right: 20px;

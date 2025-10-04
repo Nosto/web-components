@@ -50,29 +50,42 @@ export class Popup extends NostoElement {
       return
     }
 
-    renderShadowContent(this)
+    const state = getPopupState(this.name)
+    const mode = state === "ribbon" ? "ribbon" : "open"
+    renderShadowContent(this, mode)
     this.addEventListener("click", this.handleClick)
   }
 
   private handleClick = (event: Event) => {
     const target = event.target as HTMLElement
     const closeElement = target?.closest("[n-close]")
+    const ribbonElement = target?.closest("[n-ribbon]")
+
     if (closeElement) {
       event.preventDefault()
       event.stopPropagation()
       closePopup(this)
+    } else if (ribbonElement) {
+      event.preventDefault()
+      event.stopPropagation()
+      setPopupToRibbon(this.name)
+      renderShadowContent(this, "ribbon")
     }
   }
 }
 
-function renderShadowContent(element: Popup) {
+function renderShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   if (!element.shadowRoot) return
+
+  const dialogHidden = mode === "ribbon" ? "hidden" : ""
+  const ribbonHidden = mode === "open" ? "hidden" : ""
+
   element.shadowRoot.innerHTML = `
     <style>${popupStyles}</style>
-    <dialog open>
+    <dialog open part="dialog" class="${dialogHidden}">
       <slot name="default"></slot>
     </dialog>
-    <div class="ribbon">
+    <div class="ribbon ${ribbonHidden}" part="ribbon">
       <slot name="ribbon"></slot>
     </div>
   `
@@ -112,6 +125,11 @@ function getPopupState(name: string): "open" | "ribbon" | "closed" {
 function setPopupClosed(name: string) {
   const key = `nosto:web-components:popup:${name}`
   localStorage.setItem(key, "closed")
+}
+
+function setPopupToRibbon(name: string) {
+  const key = `nosto:web-components:popup:${name}`
+  localStorage.setItem(key, "ribbon")
 }
 
 async function checkSegment(segment: string) {
