@@ -105,7 +105,7 @@ export const Default: Story = {
       `
     }
 
-    setTimeout(loadCards, 0)
+    requestAnimationFrame(loadCards)
 
     return html`<div id="${containerId}"></div>`
   }
