@@ -43,14 +43,14 @@ export class Popup extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "name")
 
-    if (!this.shadowRoot?.innerHTML) {
-      initializeShadowContent(this)
-    }
-
     const state = await getPopupState(this.name, this.segment)
     if (state === "closed") {
       this.style.display = "none"
       return
+    }
+
+    if (!this.shadowRoot?.innerHTML) {
+      initializeShadowContent(this, state)
     }
 
     const mode = state === "ribbon" ? "ribbon" : "open"
@@ -60,8 +60,8 @@ export class Popup extends NostoElement {
 
   private handleClick = (event: Event) => {
     const target = event.target as HTMLElement
-    const closeElement = target?.closest("[n-close]")
-    const ribbonElement = target?.closest("[n-ribbon]")
+    const closeElement = target?.matches("[n-close]") || target?.closest("[n-close]")
+    const ribbonElement = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
 
     if (closeElement) {
       event.preventDefault()
@@ -76,13 +76,13 @@ export class Popup extends NostoElement {
   }
 }
 
-function initializeShadowContent(element: Popup) {
+function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   element.shadowRoot!.innerHTML = `
     <style>${popupStyles}</style>
-    <dialog open part="dialog">
+    <dialog ${mode === "open" ? "open" : ""} part="dialog" ${mode === "ribbon" ? 'class="hidden"' : ""}>
       <slot name="default"></slot>
     </dialog>
-    <div class="ribbon hidden" part="ribbon">
+    <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
       <slot name="ribbon"></slot>
     </div>
   `
