@@ -64,9 +64,6 @@ export class SimpleCard extends NostoElement {
   discount?: boolean
   rating?: number
 
-  /** Current product data */
-  currentProduct: ShopifyProduct | null = null
-
   constructor() {
     super()
     this.attachShadow({ mode: "open" })
@@ -90,23 +87,7 @@ export class SimpleCard extends NostoElement {
     const customEvent = event as CustomEvent<VariantChangeDetail>
     const { variant } = customEvent.detail
 
-    // Update current product data and re-render with variant-specific data
-    if (this.currentProduct) {
-      this.currentProduct = {
-        ...this.currentProduct,
-        // Update price with variant price
-        price: variant.price,
-        compare_at_price: variant.compare_at_price,
-        // Update featured image if variant has one
-        featured_image: variant.featured_image || this.currentProduct.featured_image,
-        // Update images array with variant image if available
-        images: variant.featured_image
-          ? [variant.featured_image, ...this.currentProduct.images.filter(img => img !== variant.featured_image)]
-          : this.currentProduct.images
-      }
-    }
-
-    updateSimpleCardContent(this)
+    updateSimpleCardContent(this, variant)
   }
 }
 
@@ -114,7 +95,6 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element.handle)
-    element.currentProduct = productData
 
     const cardHTML = generateCardHTML(element, productData)
 

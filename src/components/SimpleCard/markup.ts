@@ -1,5 +1,5 @@
 import { html } from "@/templating/html"
-import type { ShopifyProduct } from "./types"
+import type { ShopifyProduct, ShopifyVariant } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
@@ -101,53 +101,47 @@ function formatPrice(price: number) {
   }).format(amount)
 }
 
-export function updateSimpleCardContent(element: SimpleCard) {
-  if (!element.currentProduct || !element.shadowRoot) return
+export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
+  if (!element.shadowRoot) return
 
-  updateImages(element)
-  updatePrices(element)
+  updateImages(element, variant)
+  updatePrices(element, variant)
 }
 
-function updateImages(element: SimpleCard) {
-  if (!element.currentProduct || !element.shadowRoot) return
+function updateImages(element: SimpleCard, variant: ShopifyVariant) {
+  if (!element.shadowRoot) return
 
-  const product = element.currentProduct
-  const primaryImage = product.media?.[0]?.src || product.images?.[0]
+  const primaryImage = variant.featured_image
 
   const primaryImgElement = element.shadowRoot.querySelector(".simple-card__img--primary") as HTMLElement
   if (primaryImgElement && primaryImage) {
     primaryImgElement.setAttribute("src", normalizeUrl(primaryImage))
-    primaryImgElement.setAttribute("alt", product.title)
+    primaryImgElement.setAttribute("alt", variant.name)
   }
 
-  const hasAlternate =
-    element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
-  const alternateImage = product.media?.[1]?.src || product.images?.[1]
-  const imageContainer = element.shadowRoot.querySelector(".simple-card__image")
-  const alternateImgElement = element.shadowRoot.querySelector(".simple-card__img--alternate") as HTMLElement
+  if (element.alternate && variant.featured_image) {
+    const alternateImgElement = element.shadowRoot.querySelector(".simple-card__img--alternate") as HTMLElement
 
-  if (hasAlternate && alternateImage && alternateImgElement) {
-    imageContainer?.classList.add("simple-card__image--alternate")
-    alternateImgElement.setAttribute("src", normalizeUrl(alternateImage))
-    alternateImgElement.setAttribute("alt", product.title)
-    alternateImgElement.setAttribute("aspect-ratio", String(product.media?.[1]?.aspect_ratio || 1))
+    if (alternateImgElement) {
+      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image))
+      alternateImgElement.setAttribute("alt", variant.name)
+    }
   }
 }
 
-function updatePrices(element: SimpleCard) {
-  if (!element.currentProduct || !element.shadowRoot) return
+function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
+  if (!element.shadowRoot) return
 
-  const product = element.currentProduct
-  const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
+  const hasDiscount = element.discount && variant.compare_at_price && variant.compare_at_price > variant.price
 
   const currentPriceElement = element.shadowRoot.querySelector(".simple-card__price-current")
   if (currentPriceElement) {
-    currentPriceElement.textContent = ` ${formatPrice(product.price || 0)} `
+    currentPriceElement.textContent = ` ${formatPrice(variant.price || 0)} `
   }
 
   const originalPriceElement = element.shadowRoot.querySelector(".simple-card__price-original")
 
   if (hasDiscount && originalPriceElement) {
-    originalPriceElement.textContent = formatPrice(product.compare_at_price!)
+    originalPriceElement.textContent = formatPrice(variant.compare_at_price!)
   }
 }

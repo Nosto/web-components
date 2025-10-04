@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeAll, beforeEach } from "vitest"
-import { VariantSelector, selectOption } from "@/components/VariantSelector/VariantSelector"
+import { VariantSelector, selectOption, getSelectedVariant } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -272,7 +272,7 @@ describe("VariantSelector", () => {
       eventDetail = (event as CustomEvent).detail
     })
 
-    selectOption(selector, "Size", "Large")
+    await selectOption(selector, "Size", "Large")
 
     expect(eventDetail).toBeTruthy()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -288,13 +288,13 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     // Initial selection should be first variant (Small/Red)
-    expect(selector.selectedVariant?.id).toBe(1001)
+    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe(1001)
 
     // Change to Medium/Blue
-    selectOption(selector, "Size", "Medium")
-    selectOption(selector, "Color", "Blue")
+    await selectOption(selector, "Size", "Medium")
+    await selectOption(selector, "Color", "Blue")
 
-    expect(selector.selectedVariant?.id).toBe(1002)
+    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe(1002)
   })
 
   it("should handle option button clicks", async () => {
@@ -324,6 +324,9 @@ describe("VariantSelector", () => {
     // Click Medium and Blue to create a valid variant combination (Medium / Blue)
     mediumButton.click()
     blueButton.click()
+
+    // Wait for async event handlers to complete
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     expect(selector.selectedOptions["Size"]).toBe("Medium")
     expect(selector.selectedOptions["Color"]).toBe("Blue")

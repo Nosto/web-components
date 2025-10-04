@@ -41,9 +41,6 @@ export class VariantSelector extends NostoElement {
   /** Internal state for current selections */
   selectedOptions: Record<string, string> = {}
 
-  /** Product data cache */
-  product: ShopifyProduct | null = null
-
   constructor() {
     super()
     this.attachShadow({ mode: "open" })
@@ -59,30 +56,12 @@ export class VariantSelector extends NostoElement {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
   }
-
-  /**
-   * Get the currently selected variant based on option selections
-   */
-  get selectedVariant(): ShopifyVariant | null {
-    if (!this.product?.variants) return null
-
-    return (
-      this.product.variants.find(variant => {
-        return this.product!.options.every((option, index) => {
-          const selectedValue = this.selectedOptions[option.name]
-          const variantValue = variant.options[index]
-          return selectedValue === variantValue
-        })
-      }) || null
-    )
-  }
 }
 
 async function loadAndRenderMarkup(element: VariantSelector) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element.handle)
-    element.product = productData
 
     // Initialize selections with first value of each option
     initializeDefaultSelections(element, productData)
@@ -108,7 +87,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     setupOptionListeners(element)
 
     updateActiveStates(element)
-    emitVariantChange(element)
+    emitVariantChange(element, productData)
   } finally {
     element.toggleAttribute("loading", false)
   }
@@ -127,22 +106,25 @@ function setupOptionListeners(element: VariantSelector) {
   if (!element.shadowRoot) return
 
   element.shadowRoot.querySelectorAll(".variant-option-value").forEach(button => {
-    button.addEventListener("click", e => {
+    button.addEventListener("click", async e => {
       e.preventDefault()
       const optionName = (e.target as Element).getAttribute("data-option-name")
       const optionValue = (e.target as Element).getAttribute("data-option-value")
 
       if (optionName && optionValue) {
-        selectOption(element, optionName, optionValue)
+        await selectOption(element, optionName, optionValue)
       }
     })
   })
 }
 
-export function selectOption(element: VariantSelector, optionName: string, value: string) {
+export async function selectOption(element: VariantSelector, optionName: string, value: string) {
   element.selectedOptions[optionName] = value
   updateActiveStates(element)
-  emitVariantChange(element)
+
+  // Fetch product data and emit variant change
+  const productData = await fetchProductData(element.handle)
+  emitVariantChange(element, productData)
 }
 
 function updateActiveStates(element: VariantSelector) {
@@ -160,8 +142,8 @@ function updateActiveStates(element: VariantSelector) {
   })
 }
 
-function emitVariantChange(element: VariantSelector) {
-  const variant = element.selectedVariant
+function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
+  const variant = getSelectedVariant(element, product)
   if (variant) {
     const detail: VariantChangeDetail = { variant }
     element.dispatchEvent(
@@ -171,6 +153,20 @@ function emitVariantChange(element: VariantSelector) {
       })
     )
   }
+}
+
+export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
+  if (!product?.variants) return null
+
+  return (
+    product.variants.find(variant => {
+      return product.options.every((option, index) => {
+        const selectedValue = element.selectedOptions[option.name]
+        const variantValue = variant.options[index]
+        return selectedValue === variantValue
+      })
+    }) || null
+  )
 }
 
 async function fetchProductData(handle: string) {
