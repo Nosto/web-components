@@ -2,6 +2,7 @@ import type { Campaign } from "@/components/Campaign/Campaign"
 import type { Control } from "@/components/Control/Control"
 import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import type { Image } from "@/components/Image/Image"
+import type { Popup } from "@/components/Popup/Popup"
 import type { Product } from "@/components/Product/Product"
 import type { ProductCard } from "@/components/ProductCard/ProductCard"
 import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
@@ -26,6 +27,7 @@ declare global {
       "nosto-control": ElementMapping<Control>
       "nosto-dynamic-card": ElementMapping<DynamicCard>
       "nosto-image": ElementMapping<Image>
+      "nosto-popup": ElementMapping<Popup>
       "nosto-product": ElementMapping<Product>
       "nosto-product-card": ElementMapping<ProductCard>
       "nosto-section-campaign": ElementMapping<SectionCampaign>
