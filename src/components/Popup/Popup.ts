@@ -3,46 +3,6 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import { popupStyles } from "./styles"
 
-function renderShadowContent(element: Popup) {
-  if (!element.shadowRoot) return
-  element.shadowRoot.innerHTML = `
-    <style>${popupStyles}</style>
-    <dialog open>
-      <slot name="default"></slot>
-    </dialog>
-    <div class="ribbon">
-      <slot name="ribbon"></slot>
-    </div>
-  `
-}
-
-function closePopup(element: Popup) {
-  if (element.name) {
-    setPopupClosed(element.name)
-  }
-  element.style.display = "none"
-}
-
-function isPopupClosed(name: string): boolean {
-  const key = `nosto:web-components:popup:${name}`
-  return localStorage.getItem(key) === "true"
-}
-
-function setPopupClosed(name: string) {
-  const key = `nosto:web-components:popup:${name}`
-  localStorage.setItem(key, "true")
-}
-
-async function checkSegment(segment: string): Promise<boolean> {
-  try {
-    const api = await new Promise(nostojs)
-    const segments = await api.internal.getSegments()
-    return segments?.includes(segment) || false
-  } catch {
-    return false
-  }
-}
-
 /**
  * A custom element that displays popup content with dialog and ribbon slots.
  * Supports conditional activation based on Nosto segments and persistent closure state.
@@ -58,7 +18,6 @@ async function checkSegment(segment: string): Promise<boolean> {
  *   </div>
  *   <div slot="ribbon">
  *     <span>Limited time!</span>
-
  *   </div>
  * </nosto-popup>
  * ```
@@ -80,14 +39,7 @@ export class Popup extends NostoElement {
   }
 
   async connectedCallback() {
-    // Check if popup was permanently closed
-    if (this.name && isPopupClosed(this.name)) {
-      this.style.display = "none"
-      return
-    }
-
-    // Check segment precondition if specified
-    if (this.segment && !(await checkSegment(this.segment))) {
+    if (!(await isPopupShown(this))) {
       this.style.display = "none"
       return
     }
@@ -107,6 +59,60 @@ export class Popup extends NostoElement {
       event.stopPropagation()
       closePopup(this)
     }
+  }
+}
+
+function renderShadowContent(element: Popup) {
+  if (!element.shadowRoot) return
+  element.shadowRoot.innerHTML = `
+    <style>${popupStyles}</style>
+    <dialog open>
+      <slot name="default"></slot>
+    </dialog>
+    <div class="ribbon">
+      <slot name="ribbon"></slot>
+    </div>
+  `
+}
+
+function closePopup(element: Popup) {
+  if (element.name) {
+    setPopupClosed(element.name)
+  }
+  element.style.display = "none"
+}
+
+async function isPopupShown(element: Popup): Promise<boolean> {
+  // Check if popup was permanently closed
+  if (element.name && isPopupClosed(element.name)) {
+    return false
+  }
+
+  // Check segment precondition if specified
+  if (element.segment && !(await checkSegment(element.segment))) {
+    return false
+  }
+
+  return true
+}
+
+function isPopupClosed(name: string): boolean {
+  const key = `nosto:web-components:popup:${name}`
+  return localStorage.getItem(key) === "true"
+}
+
+function setPopupClosed(name: string) {
+  const key = `nosto:web-components:popup:${name}`
+  localStorage.setItem(key, "true")
+}
+
+async function checkSegment(segment: string): Promise<boolean> {
+  try {
+    const api = await new Promise(nostojs)
+    const segments = await api.internal.getSegments()
+    return segments?.includes(segment) || false
+  } catch {
+    return false
   }
 }
 
