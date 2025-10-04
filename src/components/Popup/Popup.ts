@@ -45,12 +45,12 @@ export class Popup extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "name")
 
-    if (!(await isPopupShown(this))) {
+    const state = await getPopupState(this.name, this.segment)
+    if (state === "closed") {
       this.style.display = "none"
       return
     }
 
-    const state = getPopupState(this.name)
     const mode = state === "ribbon" ? "ribbon" : "open"
     renderShadowContent(this, mode)
     this.addEventListener("click", this.handleClick)
@@ -68,7 +68,7 @@ export class Popup extends NostoElement {
     } else if (ribbonElement) {
       event.preventDefault()
       event.stopPropagation()
-      setPopupToRibbon(this.name)
+      setPopupState(this.name, "ribbon")
       renderShadowContent(this, "ribbon")
     }
   }
@@ -93,27 +93,18 @@ function renderShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
 
 function closePopup(element: Popup) {
   if (element.name) {
-    setPopupClosed(element.name)
+    setPopupState(element.name, "closed")
   }
   element.style.display = "none"
 }
 
-async function isPopupShown(element: Popup): Promise<boolean> {
-  // Check if popup was permanently closed
-  const state = getPopupState(element.name)
-  if (state === "closed") {
-    return false
+async function getPopupState(name: string, segment?: string): Promise<"open" | "ribbon" | "closed"> {
+  // Check segment precondition first - if it fails, return closed
+  if (segment && !(await checkSegment(segment))) {
+    return "closed"
   }
 
-  // Check segment precondition if specified
-  if (element.segment && !(await checkSegment(element.segment))) {
-    return false
-  }
-
-  return true
-}
-
-function getPopupState(name: string): "open" | "ribbon" | "closed" {
+  // Check localStorage state
   const key = `nosto:web-components:popup:${name}`
   const state = localStorage.getItem(key)
   if (state === "closed" || state === "ribbon") {
@@ -122,14 +113,13 @@ function getPopupState(name: string): "open" | "ribbon" | "closed" {
   return "open"
 }
 
-function setPopupClosed(name: string) {
+function setPopupState(name: string, state: "open" | "ribbon" | "closed") {
   const key = `nosto:web-components:popup:${name}`
-  localStorage.setItem(key, "closed")
-}
-
-function setPopupToRibbon(name: string) {
-  const key = `nosto:web-components:popup:${name}`
-  localStorage.setItem(key, "ribbon")
+  if (state === "open") {
+    localStorage.removeItem(key)
+  } else {
+    localStorage.setItem(key, state)
+  }
 }
 
 async function checkSegment(segment: string) {
