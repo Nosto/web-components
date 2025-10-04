@@ -2,12 +2,13 @@ import { nostojs } from "@nosto/nosto-js"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import { popupStyles } from "./styles"
+import { assertRequired } from "@/utils/assertRequired"
 
 /**
  * A custom element that displays popup content with dialog and ribbon slots.
  * Supports conditional activation based on Nosto segments and persistent closure state.
  *
- * @property {string} [name] - Optional name used for analytics and localStorage persistence. When provided, the popup's closed state will be remembered.
+ * @property {string} name - Required name used for analytics and localStorage persistence. The popup's closed state will be remembered.
  * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
  *
  * @example
@@ -33,7 +34,7 @@ export class Popup extends NostoElement {
     segment: String
   }
 
-  name?: string
+  name!: string
   segment?: string
 
   constructor() {
@@ -42,6 +43,8 @@ export class Popup extends NostoElement {
   }
 
   async connectedCallback() {
+    assertRequired(this, "name")
+
     if (!(await isPopupShown(this))) {
       this.style.display = "none"
       return
@@ -49,10 +52,6 @@ export class Popup extends NostoElement {
 
     renderShadowContent(this)
     this.addEventListener("click", this.handleClick)
-  }
-
-  disconnectedCallback() {
-    this.removeEventListener("click", this.handleClick)
   }
 
   private handleClick = (event: Event) => {
@@ -88,7 +87,8 @@ function closePopup(element: Popup) {
 
 async function isPopupShown(element: Popup): Promise<boolean> {
   // Check if popup was permanently closed
-  if (element.name && isPopupClosed(element.name)) {
+  const state = getPopupState(element.name)
+  if (state === "closed") {
     return false
   }
 
@@ -100,24 +100,24 @@ async function isPopupShown(element: Popup): Promise<boolean> {
   return true
 }
 
-function isPopupClosed(name: string): boolean {
+function getPopupState(name: string): "open" | "ribbon" | "closed" {
   const key = `nosto:web-components:popup:${name}`
-  return localStorage.getItem(key) === "true"
+  const state = localStorage.getItem(key)
+  if (state === "closed" || state === "ribbon") {
+    return state
+  }
+  return "open"
 }
 
 function setPopupClosed(name: string) {
   const key = `nosto:web-components:popup:${name}`
-  localStorage.setItem(key, "true")
+  localStorage.setItem(key, "closed")
 }
 
-async function checkSegment(segment: string): Promise<boolean> {
-  try {
-    const api = await new Promise(nostojs)
-    const segments = await api.internal.getSegments()
-    return segments?.includes(segment) || false
-  } catch {
-    return false
-  }
+async function checkSegment(segment: string) {
+  const api = await new Promise(nostojs)
+  const segments = await api.internal.getSegments()
+  return segments?.includes(segment) || false
 }
 
 declare global {

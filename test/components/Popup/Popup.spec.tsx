@@ -31,7 +31,7 @@ describe("Popup", () => {
   describe("Basic functionality", () => {
     it("should render shadow content with dialog and ribbon slots", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="test-popup">
           <div slot="default">Dialog content</div>
           <div slot="ribbon">Ribbon content</div>
         </nosto-popup>
@@ -49,7 +49,7 @@ describe("Popup", () => {
 
     it("should be visible by default", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="test-popup">
           <div slot="default">Content</div>
         </nosto-popup>
       ) as Popup
@@ -64,7 +64,7 @@ describe("Popup", () => {
   describe("Named popups and persistence", () => {
     it("should hide popup if it was previously closed and name is set", async () => {
       const popupName = "test-popup"
-      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "true")
+      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "closed")
 
       const popup = (
         <nosto-popup name={popupName}>
@@ -91,7 +91,7 @@ describe("Popup", () => {
       expect(popup.style.display).not.toBe("none")
     })
 
-    it("should work without name attribute", async () => {
+    it("should throw error when name attribute is missing", async () => {
       const popup = (
         <nosto-popup>
           <div slot="default">Content</div>
@@ -99,9 +99,8 @@ describe("Popup", () => {
       ) as Popup
 
       document.body.appendChild(popup)
-      await popup.connectedCallback()
 
-      expect(popup.style.display).not.toBe("none")
+      await expect(popup.connectedCallback()).rejects.toThrow("Property name is required.")
     })
   })
 
@@ -114,7 +113,7 @@ describe("Popup", () => {
       })
 
       const popup = (
-        <nosto-popup segment="target-segment">
+        <nosto-popup name="test-popup" segment="target-segment">
           <div slot="default">Content</div>
         </nosto-popup>
       ) as Popup
@@ -133,7 +132,7 @@ describe("Popup", () => {
       })
 
       const popup = (
-        <nosto-popup segment="non-matching-segment">
+        <nosto-popup name="test-popup" segment="non-matching-segment">
           <div slot="default">Content</div>
         </nosto-popup>
       ) as Popup
@@ -146,7 +145,7 @@ describe("Popup", () => {
 
     it("should show popup when no segment attribute is specified", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="test-popup">
           <div slot="default">Content</div>
         </nosto-popup>
       ) as Popup
@@ -157,7 +156,7 @@ describe("Popup", () => {
       expect(popup.style.display).not.toBe("none")
     })
 
-    it("should handle segment API errors gracefully", async () => {
+    it("should propagate segment API errors", async () => {
       mockNostojs({
         internal: {
           getSegments: () => Promise.reject(new Error("API Error"))
@@ -165,15 +164,14 @@ describe("Popup", () => {
       })
 
       const popup = (
-        <nosto-popup segment="any-segment">
+        <nosto-popup name="test-popup" segment="any-segment">
           <div slot="default">Content</div>
         </nosto-popup>
       ) as Popup
 
       document.body.appendChild(popup)
-      await popup.connectedCallback()
 
-      expect(popup.style.display).toBe("none")
+      await expect(popup.connectedCallback()).rejects.toThrow("API Error")
     })
   })
 
@@ -216,12 +214,12 @@ describe("Popup", () => {
       const closeButton = popup.querySelector("[n-close]") as HTMLButtonElement
       closeButton.click()
 
-      expect(localStorage.getItem(`nosto:web-components:popup:${popupName}`)).toBe("true")
+      expect(localStorage.getItem(`nosto:web-components:popup:${popupName}`)).toBe("closed")
     })
 
-    it("should not store state in localStorage when popup has no name", async () => {
+    it("should always store closed state in localStorage since name is required", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="always-stores-popup">
           <div slot="default">
             <button n-close>Close</button>
           </div>
@@ -231,12 +229,10 @@ describe("Popup", () => {
       document.body.appendChild(popup)
       await popup.connectedCallback()
 
-      const initialStorageLength = localStorage.length
-
       const closeButton = popup.querySelector("[n-close]") as HTMLButtonElement
       closeButton.click()
 
-      expect(localStorage.length).toBe(initialStorageLength)
+      expect(localStorage.getItem("nosto:web-components:popup:always-stores-popup")).toBe("closed")
     })
 
     it("should handle click events on ribbon content with n-close", async () => {
@@ -259,12 +255,12 @@ describe("Popup", () => {
       ribbonCloseButton.click()
 
       expect(popup.style.display).toBe("none")
-      expect(localStorage.getItem("nosto:web-components:popup:ribbon-popup")).toBe("true")
+      expect(localStorage.getItem("nosto:web-components:popup:ribbon-popup")).toBe("closed")
     })
 
     it("should not close popup when clicking elements without n-close attribute", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="test-popup">
           <div slot="default">
             <p>Some content</p>
             <button>Regular button</button>
@@ -285,7 +281,7 @@ describe("Popup", () => {
 
     it("should prevent default and stop propagation on n-close click", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="test-popup">
           <div slot="default">
             <a href="http://example.com" n-close>
               Close link
@@ -312,7 +308,7 @@ describe("Popup", () => {
 
     it("should close popup when clicking inside element with n-close attribute (ancestor support)", async () => {
       const popup = (
-        <nosto-popup>
+        <nosto-popup name="test-popup">
           <div slot="default">
             <div n-close>
               <span>Click anywhere inside this div</span>
@@ -342,7 +338,7 @@ describe("Popup", () => {
       const popupName = "segment-popup"
 
       // First, close the popup
-      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "true")
+      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "closed")
 
       // Set up segments that would normally show the popup
       mockNostojs({
@@ -381,27 +377,6 @@ describe("Popup", () => {
       await popup.connectedCallback()
 
       expect(popup.style.display).toBe("none")
-    })
-  })
-
-  describe("Lifecycle", () => {
-    it("should clean up event listeners on disconnect", async () => {
-      const popup = (
-        <nosto-popup>
-          <div slot="default">
-            <button n-close>Close</button>
-          </div>
-        </nosto-popup>
-      ) as Popup
-
-      document.body.appendChild(popup)
-      await popup.connectedCallback()
-
-      const removeEventListenerSpy = vi.spyOn(popup, "removeEventListener")
-
-      popup.disconnectedCallback()
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith("click", expect.any(Function))
     })
   })
 })
