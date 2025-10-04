@@ -1,8 +1,44 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import { getJSON } from "@/utils/fetch"
+import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
 const root = "https://nosto-shopify1.myshopify.com/"
 const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks", "insane-shoes"]
+
+interface ProductHandlesResponse {
+  handles: string[]
+}
+
+/**
+ * Fetches product handles from the store root collections endpoint
+ * @param rootUrl The Shopify store root URL
+ * @returns Promise resolving to array of product handles (up to 12)
+ */
+export async function fetchProductHandles(rootUrl?: string): Promise<string[]> {
+  try {
+    // Update Shopify root if provided
+    if (rootUrl) {
+      updateShopifyRoot(rootUrl)
+    }
+
+    // Fetch handles from collections/all endpoint with handles view
+    const url = createShopifyUrl("collections/all?view=handles.json")
+    const response = await getJSON<ProductHandlesResponse>(url.href, { cached: true })
+
+    // Return first 12 handles, fallback to default handles if response is invalid
+    if (response?.handles && Array.isArray(response.handles)) {
+      return response.handles.slice(0, 12)
+    }
+
+    // Fallback to default handles
+    return handles.slice(0, 12)
+  } catch (error) {
+    console.warn("Failed to fetch product handles:", error)
+    // Graceful fallback to default handles
+    return handles.slice(0, 12)
+  }
+}
 
 window.Shopify = {
   routes: {
@@ -71,16 +107,74 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card
-      handle="${args.handle}"
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      rating=${args.rating || 0}
-    ></nosto-simple-card>
-  `
+  decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
+  render: args => {
+    // Create a container that will be populated with fetched data
+    const containerId = `story-${Math.random().toString(36).substr(2, 9)}`
+
+    // Async function to populate the container
+    const loadCards = async () => {
+      const container = document.getElementById(containerId)
+      if (!container) return
+
+      try {
+        // Show loading state
+        container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Loading products...</div>'
+
+        // Fetch product handles from store root
+        const fetchedHandles = await fetchProductHandles(args.root)
+
+        // Create grid HTML with fetched handles
+        const cardsHTML = fetchedHandles
+          .map(
+            handle => `
+            <nosto-simple-card 
+              handle="${handle}"
+              ${args.alternate ? "alternate" : ""}
+              ${args.brand ? "brand" : ""}
+              ${args.discount ? "discount" : ""}
+              rating="${args.rating || 0}">
+            </nosto-simple-card>
+          `
+          )
+          .join("")
+
+        container.innerHTML = `
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem;">
+            ${cardsHTML}
+          </div>
+        `
+      } catch (error) {
+        console.error("Error loading product handles:", error)
+        // Fallback to default handles
+        const fallbackHTML = handles
+          .slice(0, 12)
+          .map(
+            handle => `
+            <nosto-simple-card 
+              handle="${handle}"
+              ${args.alternate ? "alternate" : ""}
+              ${args.brand ? "brand" : ""}
+              ${args.discount ? "discount" : ""}
+              rating="${args.rating || 0}">
+            </nosto-simple-card>
+          `
+          )
+          .join("")
+
+        container.innerHTML = `
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem;">
+            ${fallbackHTML}
+          </div>
+        `
+      }
+    }
+
+    // Load cards after the container is rendered
+    setTimeout(loadCards, 0)
+
+    return html`<div id="${containerId}"></div>`
+  }
 }
 
 export const WithAllFeatures: Story = {
