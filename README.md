@@ -26,7 +26,7 @@ This package provides the following custom elements:
 | Image       | `nosto-image`        | Progressive image enhancement with optimization |
 | Product     | `nosto-product`      | Product interaction and cart management         |
 | ProductCard | `nosto-product-card` | Product card templating for recommendations     |
-| SimpleCard  | `nosto-simple-card`  | Simple product card templating (Shopify only)   |
+| SimpleCard | `nosto-simple-card` | Simple product card templating (Shopify only) |
 | SkuOptions  | `nosto-sku-options`  | Product variant and SKU selection interface     |
 
 ## Documentation
