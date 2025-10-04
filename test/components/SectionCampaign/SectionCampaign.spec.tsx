@@ -98,4 +98,31 @@ describe("SectionCampaign", () => {
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
+
+
+
+  it("handles rec without title gracefully", async () => {
+    const products = [{ handle: "product-c" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
+      placement1: { products } // no title property
+    })
+
+    const sectionHTML = `<div class="wrapper"><h2 nosto-title>Default Title</h2><div class="inner">Rendered Section</div></div>`
+    addHandlers(
+      http.get("/search", () => {
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="no-title-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    // Should keep original title when rec has no title
+    expect(el.innerHTML).toContain("Default Title")
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+    expect(el.hasAttribute("loading")).toBe(false)
+  })
 })

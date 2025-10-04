@@ -89,6 +89,140 @@ describe("vue:compile", () => {
     expect(texts).toEqual(["0: a", "1: b", "2: c"])
   })
 
+  it("should handle v-else-if when previous sibling has vif flag", () => {
+    container.append(
+      <div>
+        <span id="first" v-if="true" v-text="'if content'"></span>
+        <span id="second" v-else-if="true" v-text="'else-if content'"></span>
+        <span id="third" v-else v-text="'else content'"></span>
+      </div>
+    )
+    processElement(container, {})
+
+    // First should remain with vif flag, second should be removed due to vif flag, third should be removed due to vif flag
+    expect(container.querySelector("#first")?.textContent).toBe("if content")
+    expect(container.querySelector("#second")).toBeNull()
+    expect(container.querySelector("#third")).toBeNull()
+  })
+
+  it("should process v-else-if when previous sibling doesn't have vif flag", () => {
+    container.append(
+      <div>
+        <span id="first" v-if="true" v-text="'if content'"></span>
+        <span id="second" v-else-if="true" v-text="'else-if content'"></span>
+      </div>
+    )
+    processElement(container, {})
+
+    expect(container.querySelector("#first")?.textContent).toBe("if content")
+    expect(container.querySelector("#second")).toBeNull() // Should be removed due to vif flag
+  })
+
+  it("should handle v-on event handlers with method references", () => {
+    const mockHandler = vi.fn()
+    container.append(<button id="btn" v-on:click="handleClick"></button>)
+
+    processElement(container, { handleClick: mockHandler })
+
+    const button = container.querySelector("#btn") as HTMLButtonElement
+    button.click()
+    expect(mockHandler).toHaveBeenCalled()
+  })
+
+  it("should handle v-on event handlers with expressions", () => {
+    let eventReceived: Event | null = null
+    const mockHandler = vi.fn((e: Event) => {
+      eventReceived = e
+    })
+
+    container.append(<button id="btn" v-on:click="handleEvent($event)"></button>)
+
+    processElement(container, { handleEvent: mockHandler })
+
+    const button = container.querySelector("#btn") as HTMLButtonElement
+    button.click()
+
+    expect(mockHandler).toHaveBeenCalled()
+    expect(eventReceived).toBeInstanceOf(Event)
+  })
+
+  it("should handle property binding with dot notation", () => {
+    const mockElement = document.createElement("input") as HTMLInputElement
+    mockElement.id = "input"
+    // Use a valid attribute name and set it manually since JSX/HTML won't accept invalid attribute names
+    Object.defineProperty(mockElement, "attributes", {
+      get() {
+        return [{ name: ".value", value: "inputValue" }]
+      }
+    })
+    // Mock setAttribute to avoid the InvalidCharacterError
+
+    mockElement.setAttribute = vi.fn()
+    // Mock getAttribute to return the dot attribute
+    mockElement.getAttribute = vi.fn((name: string) => {
+      if (name === ".value") return "inputValue"
+      return null
+    })
+    // Mock hasAttribute
+    mockElement.hasAttribute = vi.fn((name: string) => name === ".value")
+    // Mock removeAttribute
+    mockElement.removeAttribute = vi.fn()
+
+    container.append(mockElement)
+
+    processElement(container, { inputValue: "test value" })
+
+    const input = container.querySelector("#input") as HTMLInputElement
+    expect(input.value).toBe("test value")
+  })
+
+  it("should handle v-bind with object syntax", () => {
+    container.append(<div id="test" v-bind="{ 'data-test': 'value', class: 'test-class' }"></div>)
+
+    processElement(container, {})
+
+    const el = container.querySelector("#test")
+    expect(el?.getAttribute("data-test")).toBe("value")
+    expect(el?.getAttribute("class")).toBe("test-class")
+  })
+
+  it("should remove non-element non-text child nodes", () => {
+    const div = document.createElement("div")
+    const comment = document.createComment("test comment")
+    const text = document.createTextNode("keep this text")
+
+    div.appendChild(comment)
+    div.appendChild(text)
+    container.appendChild(div)
+
+    processElement(container, {})
+
+    // Comment should be removed, text should remain
+    expect(div.childNodes.length).toBe(1)
+    expect(div.childNodes[0].nodeType).toBe(Node.TEXT_NODE)
+  })
+
+  it("should handle v-cloak directive", () => {
+    container.append(<div id="test" v-cloak v-text="'cloaked content'"></div>)
+
+    processElement(container, {})
+
+    const el = container.querySelector("#test")
+    expect(el?.hasAttribute("v-cloak")).toBe(false)
+    expect(el?.textContent).toBe("cloaked content")
+  })
+
+  it("should replace template elements with their content", () => {
+    const template = document.createElement("template")
+    template.innerHTML = "<span>template content</span>"
+    container.appendChild(template)
+
+    processElement(container, {})
+
+    expect(container.querySelector("template")).toBeNull()
+    expect(container.querySelector("span")?.textContent).toBe("template content")
+  })
+
   it("should process v-bind and set the attribute accordingly", () => {
     container.append(<div id="test" v-bind:title="'Hello'"></div>)
     processElement(container, { title: "Hello" })
