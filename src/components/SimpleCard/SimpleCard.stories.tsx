@@ -74,7 +74,7 @@ type Story = StoryObj
 export const Default: Story = {
   decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
   render: args => {
-    const containerId = `story-${Math.random().toString(36).substr(2, 9)}`
+    const containerId = `story-${Math.random().toString(36).substring(2, 11)}`
 
     async function loadCards() {
       const container = document.getElementById(containerId)
