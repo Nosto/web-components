@@ -22,6 +22,9 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
           ${element.rating ? generateRatingHTML(element.rating) : ""}
         </div>
       </a>
+      <div class="simple-card__slot">
+        <slot></slot>
+      </div>
     </div>
   `
 }

@@ -6,6 +6,7 @@ import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 import { generateCardHTML } from "./markup"
 import { cardStyles } from "./styles"
+import type { VariantChangeDetail } from "../VariantSelector/VariantSelector"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null
@@ -63,9 +64,16 @@ export class SimpleCard extends NostoElement {
   discount?: boolean
   rating?: number
 
+  /** @private Current product data */
+  private currentProduct: ShopifyProduct | null = null
+
+  /** @private Bound event handler for cleanup */
+  private boundHandleVariantChange: EventListener
+
   constructor() {
     super()
     this.attachShadow({ mode: "open" })
+    this.boundHandleVariantChange = this.handleVariantChange.bind(this)
   }
 
   async attributeChangedCallback() {
@@ -77,6 +85,72 @@ export class SimpleCard extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
+    this.boundHandleVariantChange = this.handleVariantChange.bind(this)
+    this.addEventListener("variantchange", this.boundHandleVariantChange)
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("variantchange", this.boundHandleVariantChange)
+  }
+
+  /** @private Handle variant change events from VariantSelector */
+  private async handleVariantChange(event: Event) {
+    event.stopPropagation()
+    const customEvent = event as CustomEvent<VariantChangeDetail>
+    const { variant, product } = customEvent.detail
+
+    // Update current product data and re-render with variant-specific data
+    this.currentProduct = {
+      ...product,
+      // Update price with variant price
+      price: variant.price,
+      compare_at_price: variant.compare_at_price,
+      // Update featured image if variant has one
+      featured_image: variant.featured_image || product.featured_image,
+      // Update images array with variant image if available
+      images: variant.featured_image
+        ? [variant.featured_image, ...product.images.filter(img => img !== variant.featured_image)]
+        : product.images
+    }
+
+    await this.updateCardContent()
+  }
+
+  /** @private Update card content with current product data */
+  private async updateCardContent() {
+    if (!this.currentProduct) return
+
+    const cardHTML = generateCardHTML(this, this.currentProduct)
+
+    if (this.shadowRoot) {
+      // Find the slot and preserve it during re-render
+      const slotElement = this.shadowRoot.querySelector(".simple-card__slot")
+
+      // Update the main card content but preserve the slot
+      const cardDiv = this.shadowRoot.querySelector(".simple-card")
+      if (cardDiv && slotElement) {
+        // Create a temporary container with new content
+        const tempDiv = document.createElement("div")
+        tempDiv.innerHTML = cardHTML.html
+
+        const newCardDiv = tempDiv.querySelector(".simple-card")
+        if (newCardDiv) {
+          // Replace everything except the slot
+          Array.from(cardDiv.children).forEach(child => {
+            if (!child.classList.contains("simple-card__slot")) {
+              child.remove()
+            }
+          })
+
+          // Add new content before the slot
+          Array.from(newCardDiv.children).forEach(child => {
+            if (!child.classList.contains("simple-card__slot")) {
+              cardDiv.insertBefore(child, slotElement)
+            }
+          })
+        }
+      }
+    }
   }
 }
 
@@ -84,6 +158,8 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element.handle)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(element as any).currentProduct = productData
 
     const cardHTML = generateCardHTML(element, productData)
 
@@ -108,7 +184,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
 async function fetchProductData(handle: string) {
   const url = createShopifyUrl(`products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href)
+  return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
 declare global {
