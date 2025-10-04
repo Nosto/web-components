@@ -92,8 +92,8 @@ describe("Popup", () => {
         </nosto-popup>
       ) as Popup
 
-      document.body.appendChild(popup)
-
+      // Don't append to DOM to avoid automatic connectedCallback call
+      // that would cause unhandled error
       await expect(popup.connectedCallback()).rejects.toThrow("Property name is required.")
     })
   })
@@ -163,8 +163,8 @@ describe("Popup", () => {
         </nosto-popup>
       ) as Popup
 
-      document.body.appendChild(popup)
-
+      // Don't append to DOM to avoid automatic connectedCallback call
+      // that would cause unhandled error
       await expect(popup.connectedCallback()).rejects.toThrow("API Error")
     })
   })
