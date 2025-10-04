@@ -8,7 +8,7 @@ import { NostoElement } from "../Element"
  * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
  * refer https://unpic.dev for more details.
  *
- * @category Progressive Enhancement
+ * @category Campaign level templating
  *
  * @remarks
  * - Supports only Shopify and BigCommerce image URLs.

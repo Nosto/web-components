@@ -7,6 +7,8 @@ import { NostoElement } from "../Element"
  * This component replaces its children with the content of the first template
  * that matches any of the current user's Nosto segments.
  *
+ * @category Store level templating
+ *
  * @example
  * Conditional content based on user segments:
  * ```html

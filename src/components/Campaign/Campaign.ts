@@ -13,6 +13,8 @@ import { addRequest } from "./orchestrator"
  * It supports both HTML and JSON response modes, allowing for flexible rendering.
  * The placement or id attribute will be used as the identifier of the placement to be fetched.
  *
+ * @category Store level templating
+ *
  * @property {string} placement (or id) - The placement identifier for the campaign.
  * @property {string} productId - The ID of the product to associate with
  * the campaign.

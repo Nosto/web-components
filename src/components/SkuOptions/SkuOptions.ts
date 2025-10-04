@@ -19,6 +19,8 @@ import { NostoElement } from "../Element"
  * - Registering click events for options
  * - Listening for state changes to update UI
  *
+ * @category Campaign level templating
+ *
  * @property {string} name - Required. The identifier for this option group
  *
  * @example

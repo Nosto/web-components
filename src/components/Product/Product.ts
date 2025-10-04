@@ -10,6 +10,8 @@ import { NostoElement } from "../Element"
  * This component manages product selection, SKU selection, and add-to-cart functionality.
  * It creates a store and provides methods to interact with product and SKU data.
  *
+ * @category Campaign level templating
+ *
  * @property {string} productId - Required. The ID of the product.
  * @property {string} recoId - Required. The recommendation slot ID.
  * @property {boolean} skuSelected - Indicates whether a SKU is currently selected.
