@@ -73,4 +73,29 @@ describe("SectionCampaign", () => {
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
+
+  it("does not replace title in regular heading elements without nosto-title attribute", async () => {
+    const products = [{ handle: "product-a" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
+      placement1: { products, title: "Custom Title" }
+    })
+
+    const sectionHTML = `<div class="wrapper"><h2>Regular Heading</h2><div class="inner">Rendered Section</div></div>`
+    addHandlers(
+      http.get("/search", () => {
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    expect(el.innerHTML).toContain("Regular Heading")
+    expect(el.innerHTML).not.toContain("Custom Title")
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
+    expect(el.hasAttribute("loading")).toBe(false)
+  })
 })
