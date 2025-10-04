@@ -124,4 +124,9 @@ export const cardStyles = `
   .simple-card__image--placeholder::after {
     content: "No image available";
   }
+
+  .simple-card__slot {
+    padding: var(--simple-card-slot-padding, 1rem);
+    padding-top: var(--simple-card-slot-padding-top, 0.5rem);
+  }
 `

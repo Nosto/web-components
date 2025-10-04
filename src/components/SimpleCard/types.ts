@@ -80,3 +80,10 @@ export type ShopifyProduct = {
   requires_selling_plan: boolean
   selling_plan_groups: unknown[]
 }
+
+/**
+ * Event detail for variant change events
+ */
+export type VariantChangeDetail = {
+  variant: ShopifyVariant
+}
