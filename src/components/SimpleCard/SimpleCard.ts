@@ -4,7 +4,7 @@ import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
-import { generateCardHTML } from "./markup"
+import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import { cardStyles } from "./styles"
 import type { VariantChangeDetail } from "./types"
 
@@ -67,13 +67,9 @@ export class SimpleCard extends NostoElement {
   /** Current product data */
   currentProduct: ShopifyProduct | null = null
 
-  /** @private Bound event handler for cleanup */
-  private boundHandleVariantChange: EventListener
-
   constructor() {
     super()
     this.attachShadow({ mode: "open" })
-    this.boundHandleVariantChange = this.handleVariantChange.bind(this)
   }
 
   async attributeChangedCallback() {
@@ -85,11 +81,7 @@ export class SimpleCard extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
-    this.addEventListener("variantchange", this.boundHandleVariantChange)
-  }
-
-  disconnectedCallback() {
-    this.removeEventListener("variantchange", this.boundHandleVariantChange)
+    this.addEventListener("variantchange", this.handleVariantChange.bind(this))
   }
 
   /** @private Handle variant change events from VariantSelector */
@@ -119,103 +111,7 @@ export class SimpleCard extends NostoElement {
 
   /** @private Update card content with current product data */
   private async updateCardContent() {
-    if (!this.currentProduct || !this.shadowRoot) return
-
-    // Update images efficiently using querySelector
-    this.updateImages()
-
-    // Update prices efficiently using querySelector
-    this.updatePrices()
-  }
-
-  /** @private Update image elements without full re-render */
-  private updateImages() {
-    if (!this.currentProduct || !this.shadowRoot) return
-
-    const product = this.currentProduct
-    const primaryImage = product.media?.[0]?.src || product.images?.[0]
-
-    // Update primary image
-    const primaryImgElement = this.shadowRoot.querySelector(".simple-card__img--primary") as HTMLElement
-    if (primaryImgElement && primaryImage) {
-      primaryImgElement.setAttribute("src", primaryImage)
-      primaryImgElement.setAttribute("alt", product.title)
-    }
-
-    // Handle alternate image
-    const hasAlternate =
-      this.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
-    const alternateImage = product.media?.[1]?.src || product.images?.[1]
-    const imageContainer = this.shadowRoot.querySelector(".simple-card__image")
-
-    if (hasAlternate && alternateImage) {
-      // Add or update alternate image
-      imageContainer?.classList.add("simple-card__image--alternate")
-      let alternateImgElement = this.shadowRoot.querySelector(".simple-card__img--alternate") as HTMLElement
-
-      if (!alternateImgElement) {
-        // Create alternate image if it doesn't exist
-        alternateImgElement = document.createElement("nosto-image")
-        alternateImgElement.className = "simple-card__img simple-card__img--alternate"
-        imageContainer?.appendChild(alternateImgElement)
-      }
-
-      alternateImgElement.setAttribute("src", alternateImage)
-      alternateImgElement.setAttribute("alt", product.title)
-      alternateImgElement.setAttribute("width", "300")
-      alternateImgElement.setAttribute("aspect-ratio", String(product.media?.[1]?.aspect_ratio || 1))
-      alternateImgElement.setAttribute("loading", "lazy")
-    } else {
-      // Remove alternate image if not needed
-      imageContainer?.classList.remove("simple-card__image--alternate")
-      const alternateImgElement = this.shadowRoot.querySelector(".simple-card__img--alternate")
-      alternateImgElement?.remove()
-    }
-  }
-
-  /** @private Update price elements without full re-render */
-  private updatePrices() {
-    if (!this.currentProduct || !this.shadowRoot) return
-
-    const product = this.currentProduct
-    const hasDiscount = this.discount && product.compare_at_price && product.compare_at_price > product.price
-
-    // Update current price
-    const currentPriceElement = this.shadowRoot.querySelector(".simple-card__price-current")
-    if (currentPriceElement) {
-      currentPriceElement.textContent = ` ${this.formatPrice(product.price || 0)} `
-    }
-
-    // Handle original/discount price
-    const originalPriceElement = this.shadowRoot.querySelector(".simple-card__price-original")
-
-    if (hasDiscount) {
-      if (originalPriceElement) {
-        // Update existing original price
-        originalPriceElement.textContent = this.formatPrice(product.compare_at_price!)
-      } else {
-        // Create original price element
-        const priceContainer = this.shadowRoot.querySelector(".simple-card__price")
-        if (priceContainer) {
-          const originalPrice = document.createElement("span")
-          originalPrice.className = "simple-card__price-original"
-          originalPrice.textContent = this.formatPrice(product.compare_at_price!)
-          priceContainer.appendChild(originalPrice)
-        }
-      }
-    } else {
-      // Remove original price if no discount
-      originalPriceElement?.remove()
-    }
-  }
-
-  /** @private Format price using Shopify locale settings */
-  private formatPrice(price: number): string {
-    const amount = price / 100
-    return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
-      style: "currency",
-      currency: window.Shopify?.currency?.active ?? "USD"
-    }).format(amount)
+    updateSimpleCardContent(this)
   }
 }
 
