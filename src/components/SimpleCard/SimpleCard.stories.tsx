@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
+import { fetchProductHandles } from "@/utils/storybook/fetchProductHandles"
 
 const root = "https://nosto-shopify1.myshopify.com/"
 const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks", "insane-shoes"]
@@ -71,16 +72,51 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card
-      handle="${args.handle}"
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      rating=${args.rating || 0}
-    ></nosto-simple-card>
-  `
+  decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
+  render: args => {
+    const containerId = `story-${Math.random().toString(36).substring(2, 11)}`
+
+    async function loadCards() {
+      const container = document.getElementById(containerId)
+      if (!container) return
+
+      container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Loading products...</div>'
+
+      if (args.root) {
+        window.Shopify = {
+          routes: {
+            root: args.root
+          }
+        }
+      }
+
+      const fetchedHandles = await fetchProductHandles()
+
+      const cardsHTML = fetchedHandles
+        .map(
+          handle => `
+            <nosto-simple-card 
+              handle="${handle}"
+              ${args.alternate ? "alternate" : ""}
+              ${args.brand ? "brand" : ""}
+              ${args.discount ? "discount" : ""}
+              rating="${args.rating || 0}">
+            </nosto-simple-card>
+          `
+        )
+        .join("")
+
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem;">
+          ${cardsHTML}
+        </div>
+      `
+    }
+
+    requestAnimationFrame(loadCards)
+
+    return html`<div id="${containerId}"></div>`
+  }
 }
 
 export const WithAllFeatures: Story = {
