@@ -85,7 +85,6 @@ export class SimpleCard extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
-    this.boundHandleVariantChange = this.handleVariantChange.bind(this)
     this.addEventListener("variantchange", this.boundHandleVariantChange)
   }
 
