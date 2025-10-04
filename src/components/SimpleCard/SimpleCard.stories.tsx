@@ -75,6 +75,21 @@ export const Default: Story = {
   `
 }
 
+export const WithVariantSelector: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card
+      handle="${args.handle}"
+      ?alternate=${args.alternate}
+      ?brand=${args.brand}
+      ?discount=${args.discount}
+      rating=${args.rating || 0}
+    >
+      <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
+    </nosto-simple-card>
+  `
+}
+
 export const WithAllFeatures: Story = {
   args: {
     handle: handles[0],
