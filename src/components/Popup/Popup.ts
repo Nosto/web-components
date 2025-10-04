@@ -15,11 +15,9 @@ import { assertRequired } from "@/utils/assertRequired"
  * Basic popup with dialog and ribbon content:
  * ```html
  * <nosto-popup name="promo-popup" segment="5b71f1500000000000000006">
- *   <div slot="default">
- *     <h2>Special Offer!</h2>
- *     <p>Get 20% off your order today</p>
- *     <button n-close>Close</button>
- *   </div>
+ *   <h2>Special Offer!</h2>
+ *   <p>Get 20% off your order today</p>
+ *   <button n-close>Close</button>
  *   <div slot="ribbon">
  *     <span>Limited time!</span>
  *   </div>
@@ -45,6 +43,19 @@ export class Popup extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "name")
 
+    // Initialize shadow DOM content once
+    if (!this.shadowRoot?.innerHTML) {
+      this.shadowRoot!.innerHTML = `
+        <style>${popupStyles}</style>
+        <dialog open part="dialog">
+          <slot name="default"></slot>
+        </dialog>
+        <div class="ribbon hidden" part="ribbon">
+          <slot name="ribbon"></slot>
+        </div>
+      `
+    }
+
     const state = await getPopupState(this.name, this.segment)
     if (state === "closed") {
       this.style.display = "none"
@@ -52,7 +63,7 @@ export class Popup extends NostoElement {
     }
 
     const mode = state === "ribbon" ? "ribbon" : "open"
-    renderShadowContent(this, mode)
+    updateShadowContent(this, mode)
     this.addEventListener("click", this.handleClick)
   }
 
@@ -69,26 +80,26 @@ export class Popup extends NostoElement {
       event.preventDefault()
       event.stopPropagation()
       setPopupState(this.name, "ribbon")
-      renderShadowContent(this, "ribbon")
+      updateShadowContent(this, "ribbon")
     }
   }
 }
 
-function renderShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
+function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   if (!element.shadowRoot) return
 
-  const dialogHidden = mode === "ribbon" ? "hidden" : ""
-  const ribbonHidden = mode === "open" ? "hidden" : ""
+  const dialog = element.shadowRoot.querySelector("dialog")
+  const ribbon = element.shadowRoot.querySelector('[part="ribbon"]')
 
-  element.shadowRoot.innerHTML = `
-    <style>${popupStyles}</style>
-    <dialog open part="dialog" class="${dialogHidden}">
-      <slot name="default"></slot>
-    </dialog>
-    <div class="ribbon ${ribbonHidden}" part="ribbon">
-      <slot name="ribbon"></slot>
-    </div>
-  `
+  if (dialog && ribbon) {
+    if (mode === "ribbon") {
+      dialog.classList.add("hidden")
+      ribbon.classList.remove("hidden")
+    } else {
+      dialog.classList.remove("hidden")
+      ribbon.classList.add("hidden")
+    }
+  }
 }
 
 function closePopup(element: Popup) {

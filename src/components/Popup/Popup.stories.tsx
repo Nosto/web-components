@@ -22,8 +22,6 @@ const meta: Meta = {
         component: `
 A popup component that displays content in a dialog with optional ribbon content.
 Supports segment-based activation and persistent closure state using localStorage.
-
-
         `
       }
     }
