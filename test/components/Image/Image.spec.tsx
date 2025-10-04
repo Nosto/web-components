@@ -308,31 +308,29 @@ describe("Image", () => {
       expect(imgElement?.className).toBe("custom-image-class")
     })
 
-    it("should remove outdated attributes from existing img elements", () => {
+    it("should preserve existing attributes when updating img elements", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
 
-      // Manually insert an img element with old attributes
+      // Manually insert an img element with existing attributes
       const existingImg = document.createElement("img")
-      existingImg.setAttribute("old-attribute", "old-value")
-      existingImg.setAttribute("another-old-attr", "should-be-removed")
       existingImg.setAttribute("data-custom", "preserved-data")
+      existingImg.setAttribute("existing-attr", "existing-value")
       existingImg.className = "preserved-class"
       nostoImage.appendChild(existingImg)
 
       // Call connectedCallback
       nostoImage.connectedCallback()
 
-      // Verify old attributes are removed but class and data attributes are preserved
+      // Verify existing attributes are preserved and new ones are added
       const imgElement = nostoImage.querySelector("img")
       expect(imgElement).toBe(existingImg)
-      expect(imgElement?.hasAttribute("old-attribute")).toBe(false)
-      expect(imgElement?.hasAttribute("another-old-attr")).toBe(false)
-      expect(imgElement?.className).toBe("preserved-class")
       expect(imgElement?.getAttribute("data-custom")).toBe("preserved-data")
+      expect(imgElement?.getAttribute("existing-attr")).toBe("existing-value")
+      expect(imgElement?.className).toBe("preserved-class")
       expect(imgElement?.src).toContain(shopifyUrl)
     })
 
-    it("should update styles on existing img elements", () => {
+    it("should add new styles to existing img elements", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
 
       // Manually insert an img element with custom styles
@@ -344,12 +342,12 @@ describe("Image", () => {
       // Call connectedCallback
       nostoImage.connectedCallback()
 
-      // Verify styles are updated (previous styles cleared, new styles applied)
+      // Verify existing styles are preserved and new styles are added
       const imgElement = nostoImage.querySelector("img")
       expect(imgElement).toBe(existingImg)
-      expect(imgElement?.style.border).toBe("")
-      expect(imgElement?.style.margin).toBe("")
-      expect(imgElement?.style.cssText).toBeTruthy() // Should have new styles from transform
+      expect(imgElement?.style.border).toBe("1px solid red")
+      expect(imgElement?.style.margin).toBe("10px")
+      expect(imgElement?.style.cssText).toBeTruthy() // Should have both existing and new styles
     })
 
     it("should handle multiple img elements by using the first one", () => {
