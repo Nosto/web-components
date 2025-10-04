@@ -101,36 +101,25 @@ function formatPrice(price: number) {
   }).format(amount)
 }
 
-/**
- * Update SimpleCard content with optimized DOM updates
- */
 export function updateSimpleCardContent(element: SimpleCard) {
   if (!element.currentProduct || !element.shadowRoot) return
 
-  // Update images efficiently using querySelector
   updateImages(element)
-
-  // Update prices efficiently using querySelector
   updatePrices(element)
 }
 
-/**
- * Update image elements without full re-render
- */
 function updateImages(element: SimpleCard) {
   if (!element.currentProduct || !element.shadowRoot) return
 
   const product = element.currentProduct
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
 
-  // Update primary image
   const primaryImgElement = element.shadowRoot.querySelector(".simple-card__img--primary") as HTMLElement
   if (primaryImgElement && primaryImage) {
     primaryImgElement.setAttribute("src", normalizeUrl(primaryImage))
     primaryImgElement.setAttribute("alt", product.title)
   }
 
-  // Handle alternate image - only update if element already exists
   const hasAlternate =
     element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
   const alternateImage = product.media?.[1]?.src || product.images?.[1]
@@ -138,7 +127,6 @@ function updateImages(element: SimpleCard) {
   const alternateImgElement = element.shadowRoot.querySelector(".simple-card__img--alternate") as HTMLElement
 
   if (hasAlternate && alternateImage && alternateImgElement) {
-    // Update existing alternate image
     imageContainer?.classList.add("simple-card__image--alternate")
     alternateImgElement.setAttribute("src", normalizeUrl(alternateImage))
     alternateImgElement.setAttribute("alt", product.title)
@@ -146,26 +134,20 @@ function updateImages(element: SimpleCard) {
   }
 }
 
-/**
- * Update price elements without full re-render
- */
 function updatePrices(element: SimpleCard) {
   if (!element.currentProduct || !element.shadowRoot) return
 
   const product = element.currentProduct
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
 
-  // Update current price
   const currentPriceElement = element.shadowRoot.querySelector(".simple-card__price-current")
   if (currentPriceElement) {
     currentPriceElement.textContent = ` ${formatPrice(product.price || 0)} `
   }
 
-  // Handle original/discount price
   const originalPriceElement = element.shadowRoot.querySelector(".simple-card__price-original")
 
   if (hasDiscount && originalPriceElement) {
-    // Update existing original price
     originalPriceElement.textContent = formatPrice(product.compare_at_price!)
   }
 }

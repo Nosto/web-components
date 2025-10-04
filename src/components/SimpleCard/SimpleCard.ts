@@ -106,11 +106,6 @@ export class SimpleCard extends NostoElement {
       }
     }
 
-    await this.updateCardContent()
-  }
-
-  /** @private Update card content with current product data */
-  private async updateCardContent() {
     updateSimpleCardContent(this)
   }
 }

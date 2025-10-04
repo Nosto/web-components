@@ -76,46 +76,6 @@ export class VariantSelector extends NostoElement {
       }) || null
     )
   }
-
-  /**
-   * Update option selection and emit variant change event
-   */
-  selectOption(optionName: string, value: string) {
-    this.selectedOptions[optionName] = value
-    this.updateActiveStates()
-    this.emitVariantChange()
-  }
-
-  /** Update active states in the DOM */
-  updateActiveStates() {
-    if (!this.shadowRoot) return
-
-    // Update active states in the DOM
-    this.shadowRoot.querySelectorAll(".variant-option-value").forEach(button => {
-      const optionName = button.getAttribute("data-option-name")
-      const optionValue = button.getAttribute("data-option-value")
-
-      if (optionName && this.selectedOptions[optionName] === optionValue) {
-        button.classList.add("variant-option-value--active")
-      } else {
-        button.classList.remove("variant-option-value--active")
-      }
-    })
-  }
-
-  /** Emit variant change event */
-  emitVariantChange() {
-    const variant = this.selectedVariant
-    if (variant) {
-      const detail: VariantChangeDetail = { variant }
-      this.dispatchEvent(
-        new CustomEvent("variantchange", {
-          detail,
-          bubbles: true
-        })
-      )
-    }
-  }
 }
 
 async function loadAndRenderMarkup(element: VariantSelector) {
@@ -147,11 +107,8 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     // Setup event listeners for option buttons
     setupOptionListeners(element)
 
-    // Update active states based on current selections
-    element.updateActiveStates()
-
-    // Emit initial variant change event
-    element.emitVariantChange()
+    updateActiveStates(element)
+    emitVariantChange(element)
   } finally {
     element.toggleAttribute("loading", false)
   }
@@ -176,10 +133,44 @@ function setupOptionListeners(element: VariantSelector) {
       const optionValue = (e.target as Element).getAttribute("data-option-value")
 
       if (optionName && optionValue) {
-        element.selectOption(optionName, optionValue)
+        selectOption(element, optionName, optionValue)
       }
     })
   })
+}
+
+export function selectOption(element: VariantSelector, optionName: string, value: string) {
+  element.selectedOptions[optionName] = value
+  updateActiveStates(element)
+  emitVariantChange(element)
+}
+
+function updateActiveStates(element: VariantSelector) {
+  if (!element.shadowRoot) return
+
+  element.shadowRoot.querySelectorAll(".variant-option-value").forEach(button => {
+    const optionName = button.getAttribute("data-option-name")
+    const optionValue = button.getAttribute("data-option-value")
+
+    if (optionName && element.selectedOptions[optionName] === optionValue) {
+      button.classList.add("variant-option-value--active")
+    } else {
+      button.classList.remove("variant-option-value--active")
+    }
+  })
+}
+
+function emitVariantChange(element: VariantSelector) {
+  const variant = element.selectedVariant
+  if (variant) {
+    const detail: VariantChangeDetail = { variant }
+    element.dispatchEvent(
+      new CustomEvent("variantchange", {
+        detail,
+        bubbles: true
+      })
+    )
+  }
 }
 
 async function fetchProductData(handle: string) {

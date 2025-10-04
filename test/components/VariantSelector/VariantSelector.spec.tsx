@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeAll, beforeEach } from "vitest"
-import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
+import { VariantSelector, selectOption } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -272,7 +272,7 @@ describe("VariantSelector", () => {
       eventDetail = (event as CustomEvent).detail
     })
 
-    selector.selectOption("Size", "Large")
+    selectOption(selector, "Size", "Large")
 
     expect(eventDetail).toBeTruthy()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -291,8 +291,8 @@ describe("VariantSelector", () => {
     expect(selector.selectedVariant?.id).toBe(1001)
 
     // Change to Medium/Blue
-    selector.selectOption("Size", "Medium")
-    selector.selectOption("Color", "Blue")
+    selectOption(selector, "Size", "Medium")
+    selectOption(selector, "Color", "Blue")
 
     expect(selector.selectedVariant?.id).toBe(1002)
   })
