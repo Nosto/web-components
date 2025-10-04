@@ -74,21 +74,16 @@ type Story = StoryObj
 export const Default: Story = {
   decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
   render: args => {
-    // Create a container that will be populated with fetched data
     const containerId = `story-${Math.random().toString(36).substr(2, 9)}`
 
-    // Async function to populate the container
-    const loadCards = async () => {
+    async function loadCards() {
       const container = document.getElementById(containerId)
       if (!container) return
 
-      // Show loading state
       container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Loading products...</div>'
 
-      // Fetch product handles from store root
       const fetchedHandles = await fetchProductHandles(args.root)
 
-      // Create grid HTML with fetched handles
       const cardsHTML = fetchedHandles
         .map(
           handle => `
@@ -110,7 +105,6 @@ export const Default: Story = {
       `
     }
 
-    // Load cards after the container is rendered
     setTimeout(loadCards, 0)
 
     return html`<div id="${containerId}"></div>`

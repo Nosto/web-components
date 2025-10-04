@@ -1,38 +1,33 @@
-import { getJSON } from "@/utils/fetch"
+import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
-interface ProductHandlesResponse {
-  handles: string[]
-}
-
-/**
- * Fetches product handles from the store root collections endpoint
- * @param rootUrl The Shopify store root URL
- * @returns Promise resolving to array of product handles (up to 12)
- */
-export async function fetchProductHandles(rootUrl?: string): Promise<string[]> {
-  try {
-    // Update Shopify root if provided
-    if (rootUrl) {
-      window.Shopify = {
-        routes: {
-          root: rootUrl
-        }
+export async function fetchProductHandles(rootUrl?: string) {
+  if (rootUrl) {
+    window.Shopify = {
+      routes: {
+        root: rootUrl
       }
     }
-
-    // Fetch handles from collections/all endpoint with handles view
-    const url = createShopifyUrl("collections/all?view=handles.json")
-    const response = await getJSON<ProductHandlesResponse>(url.href, { cached: true })
-
-    // Return first 12 handles
-    if (response?.handles && Array.isArray(response.handles)) {
-      return response.handles.slice(0, 12)
-    }
-
-    return []
-  } catch (error) {
-    console.warn("Failed to fetch product handles:", error)
-    return []
   }
+
+  const url = createShopifyUrl("collections/all")
+  const response = await getText(url.href)
+
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(response, "text/html")
+  const productLinks = doc.querySelectorAll('a[href*="/products/"]')
+
+  const handles = Array.from(productLinks)
+    .map(link => {
+      const href = link.getAttribute("href")
+      if (href && href.includes("/products/")) {
+        const match = href.match(/\/products\/([^/?]+)/)
+        return match ? match[1] : null
+      }
+      return null
+    })
+    .filter(Boolean)
+    .slice(0, 12)
+
+  return handles
 }
