@@ -309,6 +309,32 @@ describe("Popup", () => {
       expect(stopPropagationSpy).toHaveBeenCalled()
       expect(popup.style.display).toBe("none")
     })
+
+    it("should close popup when clicking inside element with n-close attribute (ancestor support)", async () => {
+      const popup = (
+        <nosto-popup>
+          <div slot="default">
+            <div n-close>
+              <span>Click anywhere inside this div</span>
+              <button>Inner button</button>
+            </div>
+          </div>
+        </nosto-popup>
+      ) as Popup
+
+      document.body.appendChild(popup)
+      await popup.connectedCallback()
+
+      expect(popup.style.display).not.toBe("none")
+
+      // Click on the inner button (child of element with n-close)
+      const innerButton = popup.querySelector("button") as HTMLButtonElement
+      expect(innerButton).toBeTruthy()
+
+      innerButton.click()
+
+      expect(popup.style.display).toBe("none")
+    })
   })
 
   describe("Combined scenarios", () => {

@@ -7,6 +7,9 @@ import { popupStyles } from "./styles"
  * A custom element that displays popup content with dialog and ribbon slots.
  * Supports conditional activation based on Nosto segments and persistent closure state.
  *
+ * @property {string} [name] - Optional name used for analytics and localStorage persistence. When provided, the popup's closed state will be remembered.
+ * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
+ *
  * @example
  * Basic popup with dialog and ribbon content:
  * ```html
@@ -54,7 +57,8 @@ export class Popup extends NostoElement {
 
   private handleClick = (event: Event) => {
     const target = event.target as HTMLElement
-    if (target?.hasAttribute("n-close")) {
+    const closeElement = target?.closest("[n-close]")
+    if (closeElement) {
       event.preventDefault()
       event.stopPropagation()
       closePopup(this)
