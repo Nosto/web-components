@@ -82,7 +82,15 @@ export const Default: Story = {
 
       container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Loading products...</div>'
 
-      const fetchedHandles = await fetchProductHandles(args.root)
+      if (args.root) {
+        window.Shopify = {
+          routes: {
+            root: args.root
+          }
+        }
+      }
+
+      const fetchedHandles = await fetchProductHandles()
 
       const cardsHTML = fetchedHandles
         .map(

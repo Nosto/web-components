@@ -1,15 +1,7 @@
 import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
-export async function fetchProductHandles(rootUrl?: string) {
-  if (rootUrl) {
-    window.Shopify = {
-      routes: {
-        root: rootUrl
-      }
-    }
-  }
-
+export async function fetchProductHandles() {
   const url = createShopifyUrl("collections/all")
   const response = await getText(url.href)
 
@@ -17,7 +9,7 @@ export async function fetchProductHandles(rootUrl?: string) {
   const doc = parser.parseFromString(response, "text/html")
   const productLinks = doc.querySelectorAll('a[href*="/products/"]')
 
-  const handles = Array.from(productLinks)
+  return Array.from(productLinks)
     .map(link => {
       const href = link.getAttribute("href")
       if (href && href.includes("/products/")) {
@@ -28,6 +20,4 @@ export async function fetchProductHandles(rootUrl?: string) {
     })
     .filter(Boolean)
     .slice(0, 12)
-
-  return handles
 }
