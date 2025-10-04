@@ -119,23 +119,22 @@ export class Image extends NostoElement {
 
     let img = this.querySelector("img")
     if (img) {
-      Object.entries(props).forEach(([key, value]) => {
-        if (value != null) {
-          img!.setAttribute(key, String(value))
-        }
-      })
-      Object.assign(img.style, style)
+      setProps(img, props, style)
     } else {
       img = document.createElement("img")
-      Object.entries(props).forEach(([key, value]) => {
-        if (value != null) {
-          img!.setAttribute(key, String(value))
-        }
-      })
-      Object.assign(img.style, style)
+      setProps(img, props, style)
       this.replaceChildren(img)
     }
   }
+}
+
+function setProps(img: HTMLImageElement, props: Record<string, unknown>, style: CSSStyleDeclaration) {
+  Object.entries(props).forEach(([key, value]) => {
+    if (value != null) {
+      img.setAttribute(key, String(value))
+    }
+  })
+  Object.assign(img.style, style)
 }
 
 function validateProps(element: Image) {
