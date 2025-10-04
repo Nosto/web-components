@@ -12,6 +12,8 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  *
  * This component is designed to be used in a Shopify environment and fetches product data dynamically.
  *
+ * @category Campaign level templating
+ *
  * @property {string} handle - The product handle to fetch data for. Required.
  * @property {string} section - The section to use for rendering the product. section or template is required.
  * @property {string} template - The template to use for rendering the product. section or template is required.
