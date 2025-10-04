@@ -117,14 +117,47 @@ export class Image extends NostoElement {
 
     const { style, ...props } = transform(transformProps)
 
-    const img = document.createElement("img")
-    Object.entries(props).forEach(([key, value]) => {
-      if (value != null) {
-        img.setAttribute(key, String(value))
+    // Look for existing img child
+    let img = this.querySelector("img")
+    if (img) {
+      // Update existing img element
+      // Clear existing attributes that might not be present in new props
+      // Preserve class, style, and data-* attributes
+      const attributesToRemove: string[] = []
+      for (let i = 0; i < img.attributes.length; i++) {
+        const attr = img.attributes[i]
+        if (
+          attr.name !== "class" &&
+          attr.name !== "style" &&
+          !attr.name.startsWith("data-") &&
+          !props.hasOwnProperty(attr.name)
+        ) {
+          attributesToRemove.push(attr.name)
+        }
       }
-    })
-    Object.assign(img.style, style)
-    this.replaceChildren(img)
+      attributesToRemove.forEach(name => img!.removeAttribute(name))
+
+      // Set new attributes
+      Object.entries(props).forEach(([key, value]) => {
+        if (value != null) {
+          img!.setAttribute(key, String(value))
+        }
+      })
+
+      // Reset and apply new styles
+      img.style.cssText = ""
+      Object.assign(img.style, style)
+    } else {
+      // Create new img element if none exists
+      img = document.createElement("img")
+      Object.entries(props).forEach(([key, value]) => {
+        if (value != null) {
+          img!.setAttribute(key, String(value))
+        }
+      })
+      Object.assign(img.style, style)
+      this.replaceChildren(img)
+    }
   }
 }
 

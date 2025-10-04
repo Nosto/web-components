@@ -243,4 +243,134 @@ describe("Image", () => {
       expect(imgElement!.getAttribute("sizes")).toBe(combinedSizesValue)
     })
   })
+
+  describe("Existing img child reuse", () => {
+    it("should reuse existing img child when present", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Manually insert an img element
+      const existingImg = document.createElement("img")
+      existingImg.src = "https://example.com/old-image.jpg"
+      existingImg.setAttribute("data-test-id", "existing-image")
+      nostoImage.appendChild(existingImg)
+
+      // Add event listener to verify it's preserved
+      let clickCount = 0
+      existingImg.addEventListener("click", () => clickCount++)
+
+      // Call connectedCallback to trigger the update
+      nostoImage.connectedCallback()
+
+      // Verify the same img element is still there
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBe(existingImg)
+      expect(imgElement?.getAttribute("data-test-id")).toBe("existing-image")
+
+      // Verify attributes were updated correctly
+      expect(imgElement?.src).toContain(shopifyUrl)
+      expect(imgElement?.srcset).toBeDefined()
+
+      // Verify event listener is preserved
+      imgElement?.click()
+      expect(clickCount).toBe(1)
+    })
+
+    it("should create new img child when none exists", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Ensure no img exists initially
+      expect(nostoImage.querySelector("img")).toBeNull()
+
+      // Call connectedCallback
+      nostoImage.connectedCallback()
+
+      // Verify new img was created
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement?.src).toContain(shopifyUrl)
+      expect(imgElement?.srcset).toBeDefined()
+    })
+
+    it("should preserve custom classes on existing img elements", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Manually insert an img element with custom class
+      const existingImg = document.createElement("img")
+      existingImg.className = "custom-image-class"
+      nostoImage.appendChild(existingImg)
+
+      // Call connectedCallback
+      nostoImage.connectedCallback()
+
+      // Verify class is preserved
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBe(existingImg)
+      expect(imgElement?.className).toBe("custom-image-class")
+    })
+
+    it("should remove outdated attributes from existing img elements", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Manually insert an img element with old attributes
+      const existingImg = document.createElement("img")
+      existingImg.setAttribute("old-attribute", "old-value")
+      existingImg.setAttribute("another-old-attr", "should-be-removed")
+      existingImg.setAttribute("data-custom", "preserved-data")
+      existingImg.className = "preserved-class"
+      nostoImage.appendChild(existingImg)
+
+      // Call connectedCallback
+      nostoImage.connectedCallback()
+
+      // Verify old attributes are removed but class and data attributes are preserved
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBe(existingImg)
+      expect(imgElement?.hasAttribute("old-attribute")).toBe(false)
+      expect(imgElement?.hasAttribute("another-old-attr")).toBe(false)
+      expect(imgElement?.className).toBe("preserved-class")
+      expect(imgElement?.getAttribute("data-custom")).toBe("preserved-data")
+      expect(imgElement?.src).toContain(shopifyUrl)
+    })
+
+    it("should update styles on existing img elements", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Manually insert an img element with custom styles
+      const existingImg = document.createElement("img")
+      existingImg.style.border = "1px solid red"
+      existingImg.style.margin = "10px"
+      nostoImage.appendChild(existingImg)
+
+      // Call connectedCallback
+      nostoImage.connectedCallback()
+
+      // Verify styles are updated (previous styles cleared, new styles applied)
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBe(existingImg)
+      expect(imgElement?.style.border).toBe("")
+      expect(imgElement?.style.margin).toBe("")
+      expect(imgElement?.style.cssText).toBeTruthy() // Should have new styles from transform
+    })
+
+    it("should handle multiple img elements by using the first one", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Manually insert multiple img elements
+      const firstImg = document.createElement("img")
+      firstImg.setAttribute("data-first", "true")
+      const secondImg = document.createElement("img")
+      secondImg.setAttribute("data-second", "true")
+
+      nostoImage.appendChild(firstImg)
+      nostoImage.appendChild(secondImg)
+
+      // Call connectedCallback
+      nostoImage.connectedCallback()
+
+      // Verify first img is updated, second img remains unchanged
+      expect(nostoImage.querySelector("img")).toBe(firstImg)
+      expect(firstImg.src).toContain(shopifyUrl)
+      expect(secondImg.hasAttribute("src")).toBe(false)
+    })
+  })
 })
