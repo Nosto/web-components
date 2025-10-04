@@ -43,17 +43,8 @@ export class Popup extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "name")
 
-    // Initialize shadow DOM content once
     if (!this.shadowRoot?.innerHTML) {
-      this.shadowRoot!.innerHTML = `
-        <style>${popupStyles}</style>
-        <dialog open part="dialog">
-          <slot name="default"></slot>
-        </dialog>
-        <div class="ribbon hidden" part="ribbon">
-          <slot name="ribbon"></slot>
-        </div>
-      `
+      initializeShadowContent(this)
     }
 
     const state = await getPopupState(this.name, this.segment)
@@ -85,6 +76,18 @@ export class Popup extends NostoElement {
   }
 }
 
+function initializeShadowContent(element: Popup) {
+  element.shadowRoot!.innerHTML = `
+    <style>${popupStyles}</style>
+    <dialog open part="dialog">
+      <slot name="default"></slot>
+    </dialog>
+    <div class="ribbon hidden" part="ribbon">
+      <slot name="ribbon"></slot>
+    </div>
+  `
+}
+
 function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   if (!element.shadowRoot) return
 
@@ -110,13 +113,11 @@ function closePopup(element: Popup) {
 }
 
 async function getPopupState(name: string, segment?: string): Promise<"open" | "ribbon" | "closed"> {
-  // Check segment precondition first - if it fails, return closed
   if (segment && !(await checkSegment(segment))) {
     return "closed"
   }
 
-  // Check localStorage state
-  const key = `nosto:web-components:popup:${name}`
+  const key = getKey(name)
   const state = localStorage.getItem(key)
   if (state === "closed" || state === "ribbon") {
     return state
@@ -125,12 +126,16 @@ async function getPopupState(name: string, segment?: string): Promise<"open" | "
 }
 
 function setPopupState(name: string, state: "open" | "ribbon" | "closed") {
-  const key = `nosto:web-components:popup:${name}`
+  const key = getKey(name)
   if (state === "open") {
     localStorage.removeItem(key)
   } else {
     localStorage.setItem(key, state)
   }
+}
+
+function getKey(name: string) {
+  return `nosto:web-components:popup:${name}`
 }
 
 async function checkSegment(segment: string) {
