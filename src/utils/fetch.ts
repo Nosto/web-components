@@ -22,7 +22,7 @@ const jsonCache = new Map<string, unknown>()
 /**
  * Clears all cached responses
  */
-export function clearCache(): void {
+export function clearCache() {
   textCache.clear()
   jsonCache.clear()
 }

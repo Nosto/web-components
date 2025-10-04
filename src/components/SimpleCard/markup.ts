@@ -136,7 +136,7 @@ function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
 
   const currentPriceElement = element.shadowRoot.querySelector(".simple-card__price-current")
   if (currentPriceElement) {
-    currentPriceElement.textContent = ` ${formatPrice(variant.price || 0)} `
+    currentPriceElement.textContent = formatPrice(variant.price || 0)
   }
 
   const originalPriceElement = element.shadowRoot.querySelector(".simple-card__price-original")

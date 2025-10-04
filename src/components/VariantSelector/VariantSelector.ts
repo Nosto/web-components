@@ -105,16 +105,17 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
 function setupOptionListeners(element: VariantSelector) {
   if (!element.shadowRoot) return
 
-  element.shadowRoot.querySelectorAll(".variant-option-value").forEach(button => {
-    button.addEventListener("click", async e => {
+  element.shadowRoot.addEventListener("click", async e => {
+    const target = e.target as HTMLElement
+    if (target.classList.contains("variant-option-value")) {
       e.preventDefault()
-      const optionName = (e.target as Element).getAttribute("data-option-name")
-      const optionValue = (e.target as Element).getAttribute("data-option-value")
+      const optionName = target.getAttribute("data-option-name")
+      const optionValue = target.getAttribute("data-option-value")
 
       if (optionName && optionValue) {
         await selectOption(element, optionName, optionValue)
       }
-    })
+    }
   })
 }
 

@@ -1,11 +1,10 @@
 /** @jsx createElement */
-import { describe, it, expect, beforeAll, beforeEach } from "vitest"
+import { describe, it, expect, beforeAll } from "vitest"
 import { VariantSelector, selectOption, getSelectedVariant } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { clearCache } from "@/utils/fetch"
 import type { ShopifyProduct } from "@/components/SimpleCard/types"
 
 describe("VariantSelector", () => {
@@ -13,10 +12,6 @@ describe("VariantSelector", () => {
     if (!customElements.get("nosto-variant-selector")) {
       customElements.define("nosto-variant-selector", VariantSelector)
     }
-  })
-
-  beforeEach(() => {
-    clearCache()
   })
 
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
