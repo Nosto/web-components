@@ -23,12 +23,7 @@ const meta: Meta = {
 A popup component that displays content in a dialog with optional ribbon content.
 Supports segment-based activation and persistent closure state using localStorage.
 
-## Features
-- **Dialog slot**: Main popup content displayed in a centered modal dialog
-- **Ribbon slot**: Additional content displayed in bottom-right corner
-- **Segment filtering**: Only show popup to users in specified Nosto segments
-- **Persistent closure**: Named popups remember when they've been closed
-- **Click to close**: Elements with \`n-close\` attribute will close the popup
+
         `
       }
     }
@@ -90,52 +85,6 @@ export const WithRibbon: Story = {
           style="background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; margin-left: 0.5rem;"
         >
           ×
-        </button>
-      </div>
-    </nosto-popup>
-  `
-}
-
-export const Named: Story = {
-  args: {
-    name: "demo-popup"
-  },
-  render: args => html`
-    <nosto-popup name=${args.name}>
-      <div slot="default" style="padding: 2rem; background: white; border-radius: 8px; max-width: 400px;">
-        <h2 style="margin-top: 0;">Named Popup</h2>
-        <p>This popup has a name and will remember if it's been closed.</p>
-        <p>
-          <small>Name: <code>${args.name}</code></small>
-        </p>
-        <button
-          n-close
-          style="background: #007acc; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;"
-        >
-          Close Forever
-        </button>
-      </div>
-    </nosto-popup>
-  `
-}
-
-export const WithSegment: Story = {
-  args: {
-    segment: "demo-segment"
-  },
-  render: args => html`
-    <nosto-popup segment=${args.segment}>
-      <div slot="default" style="padding: 2rem; background: white; border-radius: 8px; max-width: 400px;">
-        <h2 style="margin-top: 0;">Segment-Based Popup</h2>
-        <p>This popup only appears for users in the specified segment.</p>
-        <p>
-          <small>Required segment: <code>${args.segment}</code></small>
-        </p>
-        <button
-          n-close
-          style="background: #007acc; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;"
-        >
-          Got it!
         </button>
       </div>
     </nosto-popup>
