@@ -73,3 +73,36 @@ export function html(strings: TemplateStringsArray, ...expressions: TemplateInte
 
   return { html: result }
 }
+
+/**
+ * A utility function that creates an HTML element from a template literal,
+ * similar to `html` but returns an HTMLElement instead of a TemplateExpression.
+ *
+ * @example
+ * ```typescript
+ * const button = el`<button class="btn">Click me</button>`
+ * document.body.appendChild(button)
+ * ```
+ *
+ * @example
+ * ```typescript
+ * const name = "World"
+ * const element = el`<h1>Hello ${name}!</h1>`
+ * ```
+ */
+export function el(strings: TemplateStringsArray, ...expressions: TemplateInterpolation[]): HTMLElement {
+  const template = html(strings, ...expressions)
+  const tempDiv = document.createElement("div")
+  tempDiv.innerHTML = template.html
+
+  // Return the first element child, or throw if none exists or multiple exist
+  const children = Array.from(tempDiv.children)
+  if (children.length === 0) {
+    throw new Error("el() template must contain at least one HTML element")
+  }
+  if (children.length > 1) {
+    throw new Error("el() template must contain exactly one root HTML element")
+  }
+
+  return children[0] as HTMLElement
+}

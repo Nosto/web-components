@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { html, type TemplateExpression } from "@/templating/html"
+import { html, el, type TemplateExpression } from "@/templating/html"
 
 describe("html templating function", () => {
   it("returns a TemplateExpression object with html property", () => {
@@ -97,5 +97,72 @@ describe("html templating function", () => {
   it("preserves whitespace in template", () => {
     const result = html` <div>Hello ${"World"}!</div> `
     expect(result.html).toBe(" <div>Hello World!</div> ")
+  })
+})
+
+describe("el function", () => {
+  it("returns an HTMLElement", () => {
+    const element = el`<div>Hello World</div>`
+    expect(element).toBeInstanceOf(HTMLElement)
+    expect(element.tagName).toBe("DIV")
+    expect(element.textContent).toBe("Hello World")
+  })
+
+  it("handles string interpolation with HTML escaping", () => {
+    const name = "<script>alert('xss')</script>"
+    const element = el`<h1>Hello ${name}!</h1>`
+    expect(element.tagName).toBe("H1")
+    expect(element.textContent).toBe("Hello <script>alert('xss')</script>!")
+    // Check that HTML is escaped but don't rely on specific quote escaping
+    expect(element.innerHTML).toContain("&lt;script&gt;")
+    expect(element.innerHTML).toContain("&lt;/script&gt;")
+  })
+
+  it("handles complex attributes and nested content", () => {
+    const className = "btn-primary"
+    const id = "my-button"
+    const text = "Click me"
+    const element = el`<button class="${className}" id="${id}">${text}</button>`
+    expect(element.tagName).toBe("BUTTON")
+    expect(element.getAttribute("class")).toBe("btn-primary")
+    expect(element.getAttribute("id")).toBe("my-button")
+    expect(element.textContent).toBe("Click me")
+  })
+
+  it("handles TemplateExpression objects as raw HTML", () => {
+    const rawHtml: TemplateExpression = { html: "<em>emphasized</em>" }
+    const element = el`<p>This is ${rawHtml} text</p>`
+    expect(element.tagName).toBe("P")
+    expect(element.innerHTML).toBe("This is <em>emphasized</em> text")
+  })
+
+  it("throws error when template contains no elements", () => {
+    expect(() => el`Just plain text`).toThrow("el() template must contain at least one HTML element")
+    expect(() => el``).toThrow("el() template must contain at least one HTML element")
+  })
+
+  it("throws error when template contains multiple root elements", () => {
+    expect(() => el`<div>First</div><div>Second</div>`).toThrow(
+      "el() template must contain exactly one root HTML element"
+    )
+  })
+
+  it("handles nested elements correctly", () => {
+    const element = el`<div class="container"><span>nested content</span></div>`
+    expect(element.tagName).toBe("DIV")
+    expect(element.getAttribute("class")).toBe("container")
+    const span = element.querySelector("span")
+    expect(span?.textContent).toBe("nested content")
+  })
+
+  it("handles arrays in expressions", () => {
+    const items = ["apple", "banana", "cherry"]
+    // Use html helper function to properly handle arrays
+    const listItems = items.map(item => html`<li>${item}</li>`)
+    const element = el`<ul>${listItems}</ul>`
+    expect(element.tagName).toBe("UL")
+    const lis = element.querySelectorAll("li")
+    expect(lis.length).toBe(3)
+    expect(Array.from(lis).map(li => li.textContent)).toEqual(["apple", "banana", "cherry"])
   })
 })
