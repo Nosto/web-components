@@ -31,6 +31,9 @@ Supports segment-based activation and persistent closure state using localStorag
 export default meta
 type Story = StoryObj
 
+// reset popular storage key for demo purposes
+localStorage.clear()
+
 export const Default: Story = {
   args: {},
   render: () => html`
@@ -44,12 +47,19 @@ export const Default: Story = {
           Sign Up Now
         </button>
         <button
+          n-ribbon
+          style="background: transparent; border: 1px solid #ccc; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; margin-left: 0.5rem;"
+        >
+          Maybe Later
+        </button>
+        <button
           n-close
           style="background: transparent; border: 1px solid #ccc; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; margin-left: 0.5rem;"
         >
           Close
         </button>
       </div>
+      <div slot="ribbon">Hello from the ribbon!</div>
     </nosto-popup>
   `
 }

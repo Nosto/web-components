@@ -5,6 +5,16 @@ import { mockNostojs } from "@nosto/nosto-js/testing"
 import { createElement } from "../../utils/jsx"
 
 describe("Popup", () => {
+  const popupKey = "nosto:web-components:popup"
+
+  function getPopupData() {
+    return JSON.parse(localStorage.getItem(popupKey)!)
+  }
+
+  function setPopupData(data: { name: string; state: "open" | "ribbon" | "closed" }) {
+    localStorage.setItem(popupKey, JSON.stringify(data))
+  }
+
   beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear()
@@ -58,7 +68,7 @@ describe("Popup", () => {
   describe("Named popups and persistence", () => {
     it("should hide popup if it was previously closed and name is set", async () => {
       const popupName = "test-popup"
-      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "closed")
+      setPopupData({ name: popupName, state: "closed" })
 
       const popup = (
         <nosto-popup name={popupName}>
@@ -208,7 +218,7 @@ describe("Popup", () => {
       const closeButton = popup.querySelector("[n-close]") as HTMLButtonElement
       closeButton.click()
 
-      expect(localStorage.getItem(`nosto:web-components:popup:${popupName}`)).toBe("closed")
+      expect(getPopupData()).toEqual({ name: popupName, state: "closed" })
     })
 
     it("should always store closed state in localStorage since name is required", async () => {
@@ -226,7 +236,7 @@ describe("Popup", () => {
       const closeButton = popup.querySelector("[n-close]") as HTMLButtonElement
       closeButton.click()
 
-      expect(localStorage.getItem("nosto:web-components:popup:always-stores-popup")).toBe("closed")
+      expect(getPopupData()).toEqual({ name: "always-stores-popup", state: "closed" })
     })
 
     it("should handle click events on ribbon content with n-close", async () => {
@@ -249,7 +259,7 @@ describe("Popup", () => {
       ribbonCloseButton.click()
 
       expect(popup.style.display).toBe("none")
-      expect(localStorage.getItem("nosto:web-components:popup:ribbon-popup")).toBe("closed")
+      expect(getPopupData()).toEqual({ name: "ribbon-popup", state: "closed" })
     })
 
     it("should not close popup when clicking elements without n-close attribute", async () => {
@@ -332,7 +342,7 @@ describe("Popup", () => {
       const popupName = "segment-popup"
 
       // First, close the popup
-      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "closed")
+      setPopupData({ name: popupName, state: "closed" })
 
       // Set up segments that would normally show the popup
       mockNostojs({
@@ -396,18 +406,18 @@ describe("Popup", () => {
       ribbonButton.click()
 
       // Check that ribbon state is stored
-      expect(localStorage.getItem("nosto:web-components:popup:ribbon-test-popup")).toBe("ribbon")
+      expect(getPopupData()).toEqual({ name: "ribbon-test-popup", state: "ribbon" })
 
       // Check DOM structure after switch
       const dialog = popup.shadowRoot?.querySelector('[part="dialog"]')
       const ribbon = popup.shadowRoot?.querySelector('[part="ribbon"]')
-      expect(dialog?.classList.contains("hidden")).toBe(true)
+      expect(dialog?.hasAttribute("open")).toBe(false)
       expect(ribbon?.classList.contains("hidden")).toBe(false)
     })
 
     it("should render in ribbon mode when localStorage state is 'ribbon'", async () => {
       const popupName = "persistent-ribbon-popup"
-      localStorage.setItem(`nosto:web-components:popup:${popupName}`, "ribbon")
+      setPopupData({ name: popupName, state: "ribbon" })
 
       const popup = (
         <nosto-popup name={popupName}>
@@ -421,7 +431,7 @@ describe("Popup", () => {
 
       const dialog = popup.shadowRoot?.querySelector('[part="dialog"]')
       const ribbon = popup.shadowRoot?.querySelector('[part="ribbon"]')
-      expect(dialog?.classList.contains("hidden")).toBe(true)
+      expect(dialog?.hasAttribute("open")).toBe(false)
       expect(ribbon?.classList.contains("hidden")).toBe(false)
     })
 

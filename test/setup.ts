@@ -11,6 +11,13 @@ import "@/components/SectionCampaign/SectionCampaign"
 import "@/components/SimpleCard/SimpleCard"
 import "@/components/SkuOptions/SkuOptions"
 
+HTMLDialogElement.prototype.showModal = function () {
+  this.toggleAttribute("open", true)
+}
+HTMLDialogElement.prototype.close = function () {
+  this.toggleAttribute("open", false)
+}
+
 beforeAll(() => {
   // Components are automatically registered by their @customElement decorators
   // when the modules are imported above.

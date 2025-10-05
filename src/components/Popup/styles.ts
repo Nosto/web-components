@@ -19,11 +19,11 @@ export const popupStyles = `
     padding: 0;
     background: transparent;
     pointer-events: auto;
-    z-index: 1001;
   }
 
   dialog::backdrop {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(2px);
   }
 
   .ribbon {

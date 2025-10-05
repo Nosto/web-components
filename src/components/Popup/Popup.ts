@@ -56,18 +56,19 @@ export class Popup extends NostoElement {
 
   private handleClick(event: Event) {
     const target = event.target as HTMLElement
-    const toOpen = target?.matches(".ribbon") || target?.closest(".ribbon")
     const toClose = target?.matches("[n-close]") || target?.closest("[n-close]")
     const toRibbon = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
+    const toOpen = target?.matches("[slot='ribbon']") || target?.closest("[slot='ribbon']")
+    console.log("Popup clicked:", target, { toOpen, toClose, toRibbon })
 
     if (toOpen || toClose || toRibbon) {
       event.preventDefault()
       event.stopPropagation()
     }
-    if (toOpen) {
-      updateShadowContent(this, "open")
-    } else if (toClose) {
+    if (toClose) {
       closePopup(this)
+    } else if (toOpen) {
+      updateShadowContent(this, "open")
     } else if (toRibbon) {
       setPopupState(this.name, "ribbon")
       updateShadowContent(this, "ribbon")
@@ -75,27 +76,37 @@ export class Popup extends NostoElement {
   }
 }
 
+const key = "nosto:web-components:popup"
+
+type PopupData = {
+  name: string
+  state: "open" | "ribbon" | "closed"
+}
+
 function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   element.shadowRoot!.innerHTML = `
     <style>${popupStyles}</style>
-    <dialog ${mode === "open" ? "open" : ""} part="dialog" ${mode === "ribbon" ? 'class="hidden"' : ""}>
+    <dialog part="dialog">
       <slot name="default"></slot>
     </dialog>
     <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
-      <slot name="ribbon"></slot>
+      <slot name="ribbon">Open</slot>
     </div>
   `
+  if (mode === "open") {
+    element.shadowRoot?.querySelector("dialog")?.showModal()
+  }
 }
 
 function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  const dialog = element.shadowRoot?.querySelector("dialog")
+  const dialog = element.shadowRoot?.querySelector<HTMLDialogElement>("dialog")
   const ribbon = element.shadowRoot?.querySelector(".ribbon")
   if (dialog && ribbon) {
     if (mode === "ribbon") {
-      dialog.classList.add("hidden")
+      dialog.close()
       ribbon.classList.remove("hidden")
     } else {
-      dialog.classList.remove("hidden")
+      dialog.showModal()
       ribbon.classList.add("hidden")
     }
   }
@@ -110,25 +121,19 @@ async function getPopupState(name: string, segment?: string): Promise<"open" | "
   if (segment && !(await checkSegment(segment))) {
     return "closed"
   }
-  const key = getKey(name)
-  const state = localStorage.getItem(key)
-  if (state === "closed" || state === "ribbon") {
-    return state
+  const dataStr = localStorage.getItem(key)
+  if (dataStr) {
+    const data = JSON.parse(dataStr) as PopupData
+    if (data.name !== name) {
+      return "closed"
+    }
+    return data.state
   }
   return "open"
 }
 
 function setPopupState(name: string, state: "open" | "ribbon" | "closed") {
-  const key = getKey(name)
-  if (state === "open") {
-    localStorage.removeItem(key)
-  } else {
-    localStorage.setItem(key, state)
-  }
-}
-
-function getKey(name: string) {
-  return `nosto:web-components:popup:${name}`
+  localStorage.setItem(key, JSON.stringify({ name, state }))
 }
 
 async function checkSegment(segment: string) {
