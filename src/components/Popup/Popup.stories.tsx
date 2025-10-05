@@ -34,7 +34,7 @@ type Story = StoryObj
 export const Default: Story = {
   args: {},
   render: () => html`
-    <nosto-popup>
+    <nosto-popup name="default-example">
       <div slot="default" style="padding: 2rem; background: white; border-radius: 8px; max-width: 400px;">
         <h2 style="margin-top: 0;">Special Offer!</h2>
         <p>Get 20% off your next purchase when you sign up for our newsletter.</p>

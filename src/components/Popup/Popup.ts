@@ -42,34 +42,33 @@ export class Popup extends NostoElement {
 
   async connectedCallback() {
     assertRequired(this, "name")
-
     const state = await getPopupState(this.name, this.segment)
     if (state === "closed") {
       this.style.display = "none"
       return
     }
-
     if (!this.shadowRoot?.innerHTML) {
       initializeShadowContent(this, state)
     }
-
-    const mode = state === "ribbon" ? "ribbon" : "open"
-    updateShadowContent(this, mode)
-    this.addEventListener("click", this.handleClick)
+    this.addEventListener("click", this.handleClick.bind(this))
+    setPopupState(this.name, "ribbon")
   }
 
-  private handleClick = (event: Event) => {
+  private handleClick(event: Event) {
     const target = event.target as HTMLElement
-    const closeElement = target?.matches("[n-close]") || target?.closest("[n-close]")
-    const ribbonElement = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
+    const toOpen = target?.matches(".ribbon") || target?.closest(".ribbon")
+    const toClose = target?.matches("[n-close]") || target?.closest("[n-close]")
+    const toRibbon = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
 
-    if (closeElement) {
+    if (toOpen || toClose || toRibbon) {
       event.preventDefault()
       event.stopPropagation()
+    }
+    if (toOpen) {
+      updateShadowContent(this, "open")
+    } else if (toClose) {
       closePopup(this)
-    } else if (ribbonElement) {
-      event.preventDefault()
-      event.stopPropagation()
+    } else if (toRibbon) {
       setPopupState(this.name, "ribbon")
       updateShadowContent(this, "ribbon")
     }
@@ -89,11 +88,8 @@ function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open
 }
 
 function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  if (!element.shadowRoot) return
-
-  const dialog = element.shadowRoot.querySelector("dialog")
-  const ribbon = element.shadowRoot.querySelector('[part="ribbon"]')
-
+  const dialog = element.shadowRoot?.querySelector("dialog")
+  const ribbon = element.shadowRoot?.querySelector(".ribbon")
   if (dialog && ribbon) {
     if (mode === "ribbon") {
       dialog.classList.add("hidden")
@@ -106,9 +102,7 @@ function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
 }
 
 function closePopup(element: Popup) {
-  if (element.name) {
-    setPopupState(element.name, "closed")
-  }
+  setPopupState(element.name, "closed")
   element.style.display = "none"
 }
 
@@ -116,7 +110,6 @@ async function getPopupState(name: string, segment?: string): Promise<"open" | "
   if (segment && !(await checkSegment(segment))) {
     return "closed"
   }
-
   const key = getKey(name)
   const state = localStorage.getItem(key)
   if (state === "closed" || state === "ribbon") {
