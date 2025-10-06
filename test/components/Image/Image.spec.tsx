@@ -243,4 +243,52 @@ describe("Image", () => {
       expect(imgElement!.getAttribute("sizes")).toBe(combinedSizesValue)
     })
   })
+
+  describe("Existing img child reuse", () => {
+    it("should reuse existing img child when present", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Manually insert an img element
+      const existingImg = document.createElement("img")
+      existingImg.src = "https://example.com/old-image.jpg"
+      existingImg.setAttribute("data-test-id", "existing-image")
+      nostoImage.appendChild(existingImg)
+
+      // Add event listener to verify it's preserved
+      let clickCount = 0
+      existingImg.addEventListener("click", () => clickCount++)
+
+      // Call connectedCallback to trigger the update
+      nostoImage.connectedCallback()
+
+      // Verify the same img element is still there
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBe(existingImg)
+      expect(imgElement?.getAttribute("data-test-id")).toBe("existing-image")
+
+      // Verify attributes were updated correctly
+      expect(imgElement?.src).toContain(shopifyUrl)
+      expect(imgElement?.srcset).toBeDefined()
+
+      // Verify event listener is preserved
+      imgElement?.click()
+      expect(clickCount).toBe(1)
+    })
+
+    it("should create new img child when none exists", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Ensure no img exists initially
+      expect(nostoImage.querySelector("img")).toBeNull()
+
+      // Call connectedCallback
+      nostoImage.connectedCallback()
+
+      // Verify new img was created
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement?.src).toContain(shopifyUrl)
+      expect(imgElement?.srcset).toBeDefined()
+    })
+  })
 })

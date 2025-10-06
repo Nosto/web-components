@@ -115,17 +115,25 @@ export class Image extends NostoElement {
       Object.entries(rawProps).filter(([, value]) => value != null)
     ) as ImageProps
 
-    const { style, ...props } = transform(transformProps)
-
-    const img = document.createElement("img")
-    Object.entries(props).forEach(([key, value]) => {
-      if (value != null) {
-        img.setAttribute(key, String(value))
-      }
-    })
-    Object.assign(img.style, style)
-    this.replaceChildren(img)
+    let img = this.querySelector("img")
+    if (img) {
+      setProps(img, transformProps)
+    } else {
+      img = document.createElement("img")
+      setProps(img, transformProps)
+      this.replaceChildren(img)
+    }
   }
+}
+
+function setProps(img: HTMLImageElement, transformProps: ImageProps) {
+  const { style, ...props } = transform(transformProps)
+  Object.entries(props).forEach(([key, value]) => {
+    if (value != null) {
+      img.setAttribute(key, String(value))
+    }
+  })
+  Object.assign(img.style, style)
 }
 
 function validateProps(element: Image) {
