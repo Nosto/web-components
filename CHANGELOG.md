@@ -1,3 +1,17 @@
+# [8.33.0](https://github.com/Nosto/web-components/compare/v8.32.0...v8.33.0) (2025-10-06)
+
+
+### Bug Fixes
+
+* **Image:** simplify implementation - remove comments and attribute removal logic ([7f843cd](https://github.com/Nosto/web-components/commit/7f843cd594d635b05b85769792989901d80b69cf))
+* restore all original vue tests and remove backup file ([6e1e5a0](https://github.com/Nosto/web-components/commit/6e1e5a016d2e1d4d0e7fcc1fb3ceb5f1ba433f94))
+
+
+### Features
+
+* **Image:** reuse existing img child instead of always recreating ([eee1705](https://github.com/Nosto/web-components/commit/eee1705390b59a3b62222cfd1571ecdbfb06c7a1))
+* **jsdoc:** add [@category](https://github.com/category) annotations to all custom elements ([9722a22](https://github.com/Nosto/web-components/commit/9722a224b30adca2c1b6134916a9e4c3e150ad9f))
+
 # [8.32.0](https://github.com/Nosto/web-components/compare/v8.31.2...v8.32.0) (2025-10-06)
 
 
