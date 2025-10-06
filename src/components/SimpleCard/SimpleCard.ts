@@ -42,6 +42,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
+ * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  *
  * @example
  * ```html
@@ -56,7 +57,8 @@ export class SimpleCard extends NostoElement {
     alternate: Boolean,
     brand: Boolean,
     discount: Boolean,
-    rating: Number
+    rating: Number,
+    sizes: String
   }
 
   handle!: string
@@ -64,6 +66,7 @@ export class SimpleCard extends NostoElement {
   brand?: boolean
   discount?: boolean
   rating?: number
+  sizes?: string
 
   constructor() {
     super()

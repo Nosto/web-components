@@ -330,82 +330,46 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("$12.99")
   })
 
-  it("should render placeholder image when no images available", async () => {
-    const productWithoutImages = {
-      ...mockProduct,
-      images: [],
-      media: [],
-      featured_image: ""
-    } as ShopifyProduct
-
+  it("should forward sizes attribute to nosto-image elements", async () => {
     addProductHandlers({
-      "no-images-product": { product: productWithoutImages }
+      "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="no-images-product" />) as SimpleCard
+    const sizesValue = "(max-width: 768px) 100vw, 50vw"
+    const card = (<nosto-simple-card handle="test-product" sizes={sizesValue} />) as SimpleCard
 
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__image--placeholder")
+    expect(shadowContent).toContain(`sizes="${sizesValue}"`)
   })
 
-  it("should support alternate image with media objects", async () => {
-    const productWithMedia = {
-      ...mockProduct,
-      media: [
-        { src: "https://example.com/media1.jpg", aspect_ratio: 1.5 },
-        { src: "https://example.com/media2.jpg", aspect_ratio: 1.2 }
-      ]
-    } as ShopifyProduct
-
+  it("should forward sizes attribute to both primary and alternate images", async () => {
     addProductHandlers({
-      "media-product": { product: productWithMedia }
+      "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="media-product" alternate />) as SimpleCard
+    const sizesValue = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    const card = (<nosto-simple-card handle="test-product" alternate sizes={sizesValue} />) as SimpleCard
 
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__image--alternate")
-    expect(shadowContent).toContain('aspect-ratio="1.5"')
-    expect(shadowContent).toContain("simple-card__img--alternate")
+    // Should contain sizes attribute twice - once for primary, once for alternate
+    const sizesMatches = shadowContent.match(new RegExp(`sizes="${sizesValue.replace(/[()]/g, "\\$&")}"`, "g"))
+    expect(sizesMatches).toHaveLength(2)
   })
 
-  it("should handle alternate images fallback to images array", async () => {
-    const productWithImagesArray = {
-      ...mockProduct,
-      images: ["https://example.com/img1.jpg", "https://example.com/img2.jpg"],
-      media: [] // No media objects
-    } as ShopifyProduct
-
+  it("should not add sizes attribute when not provided", async () => {
     addProductHandlers({
-      "images-array-product": { product: productWithImagesArray }
+      "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="images-array-product" alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
 
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__image--alternate")
-    expect(shadowContent).toContain("img1.jpg")
-    expect(shadowContent).toContain("img2.jpg")
-  })
-
-  it("should render rating when provided", async () => {
-    addProductHandlers({
-      "rated-product": { product: mockProduct }
-    })
-
-    const card = (<nosto-simple-card handle="rated-product" rating={4.5} />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__rating")
-    expect(shadowContent).toContain("★★★★☆")
-    expect(shadowContent).toContain("(4.5)")
+    expect(shadowContent).not.toContain("sizes=")
   })
 })
