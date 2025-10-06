@@ -7,6 +7,8 @@ import { getTemplate } from "../common"
 /**
  * A custom element that renders a product card using a Vue-like template.
  *
+ * @category Campaign level templating
+ *
  * @property {string} template - The id of the Vue-like template element to use for rendering the product card.
  *
  * @throws {Error} - Throws an error if recoId or template is not provided.

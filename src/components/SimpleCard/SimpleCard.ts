@@ -19,6 +19,8 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
  * customized using the following CSS custom properties:
  *
+ * @category Campaign level templating
+ *
  * @csspart host - The host element styles
  * @cssprop --simple-card-border - Border color (default: #e1e1e1)
  * @cssprop --simple-card-bg - Background color (default: white)

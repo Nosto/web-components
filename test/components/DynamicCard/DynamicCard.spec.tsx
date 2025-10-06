@@ -257,4 +257,95 @@ describe("DynamicCard", () => {
     // Restore original globals
     vi.unstubAllGlobals()
   })
+
+  it("throws error when markup contains body or html tags", async () => {
+    const invalidMarkup = "<body><div>Invalid markup</div></body>"
+    addProductHandlers({
+      "invalid-handle": {
+        markup: invalidMarkup
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="invalid-handle" template="invalid" />) as DynamicCard
+
+    await expect(card.connectedCallback()).rejects.toThrow(
+      "Invalid markup for template invalid, make sure that no <body> or <html> tags are included."
+    )
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
+  it("supports lazy loading with intersection observer", async () => {
+    const validMarkup = "<div>Lazy loaded content</div>"
+    addProductHandlers({
+      "lazy-handle": {
+        markup: validMarkup
+      }
+    })
+
+    // Mock IntersectionObserver
+    const mockObserve = vi.fn()
+    const mockDisconnect = vi.fn()
+    const mockIntersectionObserver = vi.fn().mockImplementation(callback => ({
+      observe: mockObserve,
+      disconnect: mockDisconnect,
+      callback
+    }))
+    vi.stubGlobal("IntersectionObserver", mockIntersectionObserver)
+
+    const card = (<nosto-dynamic-card handle="lazy-handle" template="lazy-template" lazy />) as DynamicCard
+
+    await card.connectedCallback()
+
+    // Should have set up intersection observer
+    expect(mockIntersectionObserver).toHaveBeenCalled()
+    expect(mockObserve).toHaveBeenCalledWith(card)
+
+    // Simulate intersection
+    const observerCallback = mockIntersectionObserver.mock.calls[0][0]
+    await observerCallback([{ isIntersecting: true }])
+
+    expect(mockDisconnect).toHaveBeenCalled()
+    expect(card.innerHTML).toBe(validMarkup)
+
+    vi.unstubAllGlobals()
+  })
+
+  it("includes variant parameter when variantId is provided", async () => {
+    const validMarkup = "<div>Variant content</div>"
+
+    // Mock the fetch to capture the URL
+    let capturedUrl = ""
+    addHandlers(
+      http.get("/products/:handle", ({ request }) => {
+        capturedUrl = request.url
+        return HttpResponse.text(validMarkup)
+      })
+    )
+
+    const card = (
+      <nosto-dynamic-card handle="variant-handle" template="variant-template" variant-id="12345" />
+    ) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe(validMarkup)
+    expect(capturedUrl).toContain("variant=12345")
+  })
+
+  it("processes section markup correctly when using section instead of template", async () => {
+    const sectionMarkup = "<section><div>Section content</div></section>"
+
+    addHandlers(
+      http.get("/products/:handle", () => {
+        return HttpResponse.text(sectionMarkup)
+      })
+    )
+
+    const card = (<nosto-dynamic-card handle="section-handle" section="test-section" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    // Should extract content from the section element
+    expect(card.innerHTML).toBe("<div>Section content</div>")
+  })
 })
