@@ -344,6 +344,22 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain(`sizes="${sizesValue}"`)
   })
 
+  it("should forward sizes attribute to both primary and alternate images", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const sizesValue = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    const card = (<nosto-simple-card handle="test-product" alternate sizes={sizesValue} />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Should contain sizes attribute twice - once for primary, once for alternate
+    const sizesMatches = shadowContent.match(new RegExp(`sizes="${sizesValue.replace(/[()]/g, "\\$&")}"`, "g"))
+    expect(sizesMatches).toHaveLength(2)
+  })
+
   it("should not add sizes attribute when not provided", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
