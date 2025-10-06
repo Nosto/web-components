@@ -1,3 +1,16 @@
+# [8.34.0](https://github.com/Nosto/web-components/compare/v8.33.0...v8.34.0) (2025-10-06)
+
+
+### Bug Fixes
+
+* restore the removed test for both primary and alternate images ([73cff99](https://github.com/Nosto/web-components/commit/73cff99f13a00c44abe76ca0b580bd0f10d2baa3))
+* use proper HTML escaping for sizes attribute and remove duplicate test ([c16649b](https://github.com/Nosto/web-components/commit/c16649b2a4307a4ae78b138060cdbd30d929c355))
+
+
+### Features
+
+* **SimpleCard:** add sizes attribute support for responsive images ([d9a512f](https://github.com/Nosto/web-components/commit/d9a512f91edcb0c5bee06bae93cadbfbc48df997))
+
 # [8.33.0](https://github.com/Nosto/web-components/compare/v8.32.0...v8.33.0) (2025-10-06)
 
 
