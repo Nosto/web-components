@@ -47,6 +47,10 @@ const meta: Meta = {
     rating: {
       control: "number",
       description: "Product rating (0-5 stars)"
+    },
+    sizes: {
+      control: "text",
+      description: "The sizes attribute for responsive images"
     }
   },
   args: {
@@ -55,7 +59,8 @@ const meta: Meta = {
     alternate: false,
     brand: false,
     discount: false,
-    rating: 0
+    rating: 0,
+    sizes: ""
   }
 }
 
@@ -71,6 +76,7 @@ export const Default: Story = {
       ?brand=${args.brand}
       ?discount=${args.discount}
       rating=${args.rating || 0}
+      sizes="${args.sizes || ""}"
     ></nosto-simple-card>
   `
 }
@@ -106,6 +112,29 @@ export const WithAllFeatures: Story = {
       ?brand=${args.brand}
       ?discount=${args.discount}
       rating=${args.rating || 0}
+      sizes="${args.sizes || ""}"
+    ></nosto-simple-card>
+  `
+}
+
+export const WithResponsiveSizes: Story = {
+  args: {
+    handle: handles[0],
+    alternate: true,
+    brand: true,
+    discount: true,
+    rating: 4.2,
+    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  },
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card
+      handle="${args.handle}"
+      ?alternate=${args.alternate}
+      ?brand=${args.brand}
+      ?discount=${args.discount}
+      rating=${args.rating || 0}
+      sizes="${args.sizes || ""}"
     ></nosto-simple-card>
   `
 }
@@ -116,7 +145,14 @@ export const GridOfCards: Story = {
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
       ${handles.map(
         handle => html`
-          <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8"></nosto-simple-card>
+          <nosto-simple-card
+            handle="${handle}"
+            alternate
+            brand
+            discount
+            rating="3.8"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          ></nosto-simple-card>
         `
       )}
     </div>

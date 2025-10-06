@@ -20,6 +20,8 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
  * customized using the following CSS custom properties:
  *
+ * @category Campaign level templating
+ *
  * @csspart host - The host element styles
  * @cssprop --simple-card-border - Border color (default: #e1e1e1)
  * @cssprop --simple-card-bg - Background color (default: white)
@@ -41,6 +43,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
+ * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  *
  * @example
  * ```html
@@ -55,7 +58,8 @@ export class SimpleCard extends NostoElement {
     alternate: Boolean,
     brand: Boolean,
     discount: Boolean,
-    rating: Number
+    rating: Number,
+    sizes: String
   }
 
   handle!: string
@@ -63,6 +67,7 @@ export class SimpleCard extends NostoElement {
   brand?: boolean
   discount?: boolean
   rating?: number
+  sizes?: string
 
   constructor() {
     super()

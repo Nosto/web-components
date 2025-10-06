@@ -1,3 +1,37 @@
+# [8.34.0](https://github.com/Nosto/web-components/compare/v8.33.0...v8.34.0) (2025-10-06)
+
+
+### Bug Fixes
+
+* restore the removed test for both primary and alternate images ([73cff99](https://github.com/Nosto/web-components/commit/73cff99f13a00c44abe76ca0b580bd0f10d2baa3))
+* use proper HTML escaping for sizes attribute and remove duplicate test ([c16649b](https://github.com/Nosto/web-components/commit/c16649b2a4307a4ae78b138060cdbd30d929c355))
+
+
+### Features
+
+* **SimpleCard:** add sizes attribute support for responsive images ([d9a512f](https://github.com/Nosto/web-components/commit/d9a512f91edcb0c5bee06bae93cadbfbc48df997))
+
+# [8.33.0](https://github.com/Nosto/web-components/compare/v8.32.0...v8.33.0) (2025-10-06)
+
+
+### Bug Fixes
+
+* **Image:** simplify implementation - remove comments and attribute removal logic ([7f843cd](https://github.com/Nosto/web-components/commit/7f843cd594d635b05b85769792989901d80b69cf))
+* restore all original vue tests and remove backup file ([6e1e5a0](https://github.com/Nosto/web-components/commit/6e1e5a016d2e1d4d0e7fcc1fb3ceb5f1ba433f94))
+
+
+### Features
+
+* **Image:** reuse existing img child instead of always recreating ([eee1705](https://github.com/Nosto/web-components/commit/eee1705390b59a3b62222cfd1571ecdbfb06c7a1))
+* **jsdoc:** add [@category](https://github.com/category) annotations to all custom elements ([9722a22](https://github.com/Nosto/web-components/commit/9722a224b30adca2c1b6134916a9e4c3e150ad9f))
+
+# [8.32.0](https://github.com/Nosto/web-components/compare/v8.31.2...v8.32.0) (2025-10-06)
+
+
+### Features
+
+* bump GitHub Actions Node.js version from 22 to 24 ([fdcd5da](https://github.com/Nosto/web-components/commit/fdcd5da84a736dfc1720b4e7dfb4e4607ef606a0))
+
 ## [8.31.2](https://github.com/Nosto/web-components/compare/v8.31.1...v8.31.2) (2025-10-03)
 
 

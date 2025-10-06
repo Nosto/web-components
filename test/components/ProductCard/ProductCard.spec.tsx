@@ -81,6 +81,42 @@ describe("ProductCard", () => {
     expect(card.hasAttribute("loading")).toBe(false)
   })
 
+  it("should use dataset when no JSON script is present", async () => {
+    const card = (
+      <nosto-product-card template="test-dataset" data-title="Dataset Product" data-price="29.99" />
+    ) as ProductCard
+
+    document.body.append(
+      <template id="test-dataset">
+        <h1 v-text="product.title"></h1>
+        <span v-text="product.price"></span>
+      </template>
+    )
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toBe("<h1>Dataset Product</h1><span>29.99</span>")
+  })
+
+  it("should handle malformed JSON in script tag gracefully", async () => {
+    const card = (<nosto-product-card template="test-error" />) as ProductCard
+
+    document.body.append(
+      <template id="test-error">
+        <h1 v-text="product.title"></h1>
+      </template>
+    )
+    card.append(
+      <script type="application/json" product-data>
+        {`{ "invalid": json }`}
+      </script>
+    )
+
+    // Should throw due to JSON parse error but still clean up loading state
+    await expect(card.connectedCallback()).rejects.toThrow()
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
   it("should scale to complex examples", async () => {
     const data = {
       name: "Tiffany Fitness Tee",
