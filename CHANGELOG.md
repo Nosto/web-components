@@ -1,3 +1,10 @@
+# [8.32.0](https://github.com/Nosto/web-components/compare/v8.31.2...v8.32.0) (2025-10-06)
+
+
+### Features
+
+* bump GitHub Actions Node.js version from 22 to 24 ([fdcd5da](https://github.com/Nosto/web-components/commit/fdcd5da84a736dfc1720b4e7dfb4e4607ef606a0))
+
 ## [8.31.2](https://github.com/Nosto/web-components/compare/v8.31.1...v8.31.2) (2025-10-03)
 
 
