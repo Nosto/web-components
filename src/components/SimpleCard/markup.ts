@@ -24,7 +24,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
           ${element.rating ? generateRatingHTML(element.rating) : ""}
         </div>
       </a>
-      <div class="slot" part="slot">
+      <div class="slot">
         <slot></slot>
       </div>
     </div>
@@ -35,7 +35,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
-    return html`<div class="image placeholder" part="image placeholder"></div>`
+    return html`<div class="image placeholder"></div>`
   }
 
   const hasAlternate =

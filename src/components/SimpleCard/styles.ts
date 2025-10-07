@@ -6,22 +6,21 @@ export const cardStyles = `
     overflow: hidden;
     background: var(--simple-card-bg, white);
     transition: box-shadow 0.2s ease;
-    
-    /* All CSS variables moved to :host level */
-    --content-padding: var(--simple-card-content-padding, 1rem);
-    --brand-color: var(--simple-card-brand-color, #666);
-    --title-color: var(--simple-card-title-color, inherit);
-    --link-color: var(--simple-card-link-color, #333);
-    --link-hover-color: var(--simple-card-link-hover-color, #0066cc);
-    --price-color: var(--simple-card-price-color, inherit);
-    --price-original-color: var(--simple-card-price-original-color, #999);
-    --discount-bg: var(--simple-card-discount-bg, #e74c3c);
-    --discount-color: var(--simple-card-discount-color, white);
-    --rating-color: var(--simple-card-rating-color, inherit);
-    --placeholder-bg: var(--simple-card-placeholder-bg, #f5f5f5);
-    --placeholder-color: var(--simple-card-placeholder-color, #999);
-    --slot-padding: var(--simple-card-slot-padding, 1rem);
-    --slot-padding-top: var(--simple-card-slot-padding-top, 0.5rem);
+
+    --content-padding: 1rem;
+    --brand-color: #666;
+    --title-color: inherit;
+    --link-color: #333;
+    --link-hover-color: #0066cc;
+    --price-color: inherit;
+    --price-original-color: #999;
+    --discount-bg: #e74c3c;
+    --discount-color: white;
+    --rating-color: inherit;
+    --placeholder-bg: #f5f5f5;
+    --placeholder-color: #999;
+    --slot-padding: 1rem;
+    --slot-padding-top: 0.5rem;
   }
 
   :host(:hover) { 
