@@ -5,7 +5,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
-import { cardStyles } from "./styles"
+import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "./types"
 
 // Cache the stylesheet for reuse across component instances
@@ -98,13 +98,13 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     if ("adoptedStyleSheets" in element.shadowRoot!) {
       if (!cachedStyleSheet) {
         cachedStyleSheet = new CSSStyleSheet()
-        await cachedStyleSheet.replace(cardStyles)
+        await cachedStyleSheet.replace(styles)
       }
       element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
       element.shadowRoot!.innerHTML = cardHTML.html
     } else {
       element.shadowRoot!.innerHTML = `
-        <style>${cardStyles}</style>
+        <style>${styles}</style>
         ${cardHTML.html}
       `
     }
