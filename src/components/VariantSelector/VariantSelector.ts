@@ -30,7 +30,6 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @example
  * ```html
  * <nosto-variant-selector handle="awesome-product"></nosto-variant-selector>
-
  * ```
  */
 @customElement("nosto-variant-selector", { observe: true })
@@ -69,7 +68,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   try {
     const productData = await fetchProductData(element.handle)
 
-    // Initialize selections with first value of each option (if preselect is true)
+    // Initialize selections with first value of each option
     initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
@@ -94,7 +93,6 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 
     updateActiveStates(element)
 
-    // Only emit variant change if we have selections (i.e., preselect was enabled)
     if (Object.keys(element.selectedOptions).length > 0) {
       emitVariantChange(element, productData)
     }
