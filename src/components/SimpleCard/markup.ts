@@ -89,7 +89,7 @@ function generateRatingHTML(rating: number, reviews?: number) {
     "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
 
   const reviewsText =
-    reviews !== undefined && reviews > 0 ? ` • (${reviews} ${reviews === 1 ? "review" : "reviews"})` : ""
+    reviews !== undefined && reviews > 0 ? ` (${reviews} ${reviews === 1 ? "review" : "reviews"})` : ""
 
   return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})${reviewsText}</div>`
 }

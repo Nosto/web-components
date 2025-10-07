@@ -171,7 +171,7 @@ describe("SimpleCard", () => {
 
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("rating")
-    expect(shadowContent).toContain("★★★★☆ (4.2) • (127 reviews)")
+    expect(shadowContent).toContain("★★★★☆ (4.2) (127 reviews)")
   })
 
   it("should not render reviews count when only reviews is provided without rating", async () => {
@@ -199,7 +199,7 @@ describe("SimpleCard", () => {
 
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("★★★★☆ (4.2)")
-    expect(shadowContent).not.toContain("• (0 reviews)")
+    expect(shadowContent).not.toContain("(0 reviews)")
   })
 
   it("should render singular 'review' when reviews count is 1", async () => {
@@ -212,7 +212,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("★★★☆☆ (3.5) • (1 review)")
+    expect(shadowContent).toContain("★★★☆☆ (3.5) (1 review)")
   })
 
   it("should render alternate image when alternate attribute is enabled", async () => {
@@ -268,7 +268,7 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("Test Brand")
     expect(shadowContent).toContain("$24.99") // original price shown with discount attribute
     expect(shadowContent).toContain("rating")
-    expect(shadowContent).toContain("★★★☆☆ (3.5) • (89 reviews)")
+    expect(shadowContent).toContain("★★★☆☆ (3.5) (89 reviews)")
     expect(shadowContent).toContain("img primary")
     expect(shadowContent).toContain("img alternate")
   })
