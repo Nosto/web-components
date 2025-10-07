@@ -113,14 +113,14 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
 
   const primaryImgElement = element.shadowRoot.querySelector(".img.primary") as HTMLElement
   if (primaryImgElement && primaryImage) {
-    primaryImgElement.setAttribute("src", normalizeUrl(primaryImage))
+    primaryImgElement.setAttribute("src", normalizeUrl(primaryImage.src))
     primaryImgElement.setAttribute("alt", variant.name)
   }
 
-  if (element.alternate && variant.featured_image) {
+  if (element.alternate && primaryImage) {
     const alternateImgElement = element.shadowRoot.querySelector(".img.alternate") as HTMLElement
     if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image))
+      alternateImgElement.setAttribute("src", normalizeUrl(primaryImage.src))
       alternateImgElement.setAttribute("alt", variant.name)
     }
   }

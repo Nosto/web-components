@@ -406,7 +406,18 @@ describe("SimpleCard", () => {
           sku: "TEST-RED",
           requires_shipping: true,
           taxable: true,
-          featured_image: "https://example.com/red.jpg",
+          featured_image: {
+            id: 555,
+            product_id: 123456,
+            position: 2,
+            created_at: "2024-01-01T00:00:00Z",
+            updated_at: "2024-01-01T00:00:00Z",
+            alt: "Blue variant image",
+            width: 800,
+            height: 800,
+            src: "https://example.com/red.jpg",
+            variant_ids: [1002]
+          },
           available: true,
           name: "Red",
           public_title: "Red",
@@ -432,7 +443,18 @@ describe("SimpleCard", () => {
           sku: "TEST-BLUE",
           requires_shipping: true,
           taxable: true,
-          featured_image: "https://example.com/blue.jpg",
+          featured_image: {
+            id: 555,
+            product_id: 123456,
+            position: 2,
+            created_at: "2024-01-01T00:00:00Z",
+            updated_at: "2024-01-01T00:00:00Z",
+            alt: "Blue variant image",
+            width: 800,
+            height: 800,
+            src: "https://example.com/blue.jpg",
+            variant_ids: [1002]
+          },
           available: true,
           name: "Blue",
           public_title: "Blue",
@@ -450,7 +472,7 @@ describe("SimpleCard", () => {
           selling_plan_allocations: []
         }
       ]
-    }
+    } satisfies ShopifyProduct
 
     addProductHandlers({
       "variant-product": { product: variantProduct }
