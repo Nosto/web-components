@@ -83,7 +83,14 @@ export class SimpleCard extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
-    this.addEventListener("variantchange", handleVariantChange)
+    this.addEventListener("variantchange", this)
+  }
+
+  handleEvent(event: Event) {
+    event.stopPropagation()
+    const customEvent = event as CustomEvent<VariantChangeDetail>
+    const { variant } = customEvent.detail
+    updateSimpleCardContent(this, variant)
   }
 }
 
@@ -116,15 +123,6 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 async function fetchProductData(handle: string) {
   const url = createShopifyUrl(`products/${handle}.js`)
   return getJSON<ShopifyProduct>(url.href, { cached: true })
-}
-
-function handleVariantChange(event: Event) {
-  event.stopPropagation()
-  const customEvent = event as CustomEvent<VariantChangeDetail>
-  const { variant } = customEvent.detail
-  const element = event.currentTarget as SimpleCard
-
-  updateSimpleCardContent(element, variant)
 }
 
 declare global {
