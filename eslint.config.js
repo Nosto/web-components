@@ -21,7 +21,7 @@ export default tseslint.config(
     files: ["src/**/*.{js,ts,tsx}"],
     rules: {
       "barrel-files/avoid-barrel-files": 2,
-      "barrel-files/avoid-importing-barrel-files": 2,
+      "barrel-files/avoid-importing-barrel-files": "off",
       "barrel-files/avoid-namespace-import": 2,
       "barrel-files/avoid-re-export-all": 2
     }

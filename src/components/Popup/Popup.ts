@@ -1,7 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
-import { popupStyles } from "./styles"
+import popupStyles from "./styles.css?inline"
 import { assertRequired } from "@/utils/assertRequired"
 
 /**

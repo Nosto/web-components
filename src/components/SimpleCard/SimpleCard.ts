@@ -5,7 +5,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
-import { cardStyles } from "./styles"
+import cardStyles from "./styles.css?inline"
 import type { VariantChangeDetail } from "./types"
 
 // Cache the stylesheet for reuse across component instances

@@ -5,7 +5,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "../SimpleCard/types"
 import { generateVariantSelectorHTML } from "./markup"
-import { variantSelectorStyles } from "./styles"
+import variantSelectorStyles from "./styles.css?inline"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null

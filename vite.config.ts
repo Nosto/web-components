@@ -11,6 +11,11 @@ export default defineConfig(() => ({
   server: {
     port: 8080
   },
+  assetsInclude: ["**/*.css"],
+  css: {
+    // Ensure CSS is treated as text for import as string
+    transformer: "postcss"
+  },
   test: {
     coverage: {
       include: ["src/**/*.{js,ts}"],
