@@ -8,6 +8,8 @@ import { assertRequired } from "@/utils/assertRequired"
  * A custom element that displays popup content with dialog and ribbon slots.
  * Supports conditional activation based on Nosto segments and persistent closure state.
  *
+ * @category Store level templating
+ *
  * @property {string} name - Required name used for analytics and localStorage persistence. The popup's closed state will be remembered.
  * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
  *
