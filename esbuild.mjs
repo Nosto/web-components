@@ -26,6 +26,7 @@ async function build() {
 
     const result = await esbuild.build({
       ...sharedConfig,
+      minifyWhitespace: true,
       outfile: "dist/main.es.bundle.js",
       format: "esm",
       metafile: true
