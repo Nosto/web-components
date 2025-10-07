@@ -78,9 +78,11 @@ export class Popup extends NostoElement {
 
 const key = "nosto:web-components:popup"
 
+type PopupState = "open" | "ribbon" | "closed"
+
 type PopupData = {
   name: string
-  state: "open" | "ribbon" | "closed"
+  state: PopupState
 }
 
 function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
@@ -117,7 +119,7 @@ function closePopup(element: Popup) {
   element.style.display = "none"
 }
 
-async function getPopupState(name: string, segment?: string): Promise<"open" | "ribbon" | "closed"> {
+async function getPopupState(name: string, segment?: string): Promise<PopupState> {
   if (segment && !(await checkSegment(segment))) {
     return "closed"
   }
@@ -132,7 +134,7 @@ async function getPopupState(name: string, segment?: string): Promise<"open" | "
   return "open"
 }
 
-function setPopupState(name: string, state: "open" | "ribbon" | "closed") {
+function setPopupState(name: string, state: PopupState) {
   localStorage.setItem(key, JSON.stringify({ name, state }))
 }
 
