@@ -1,3 +1,10 @@
+## [8.36.1](https://github.com/Nosto/web-components/compare/v8.36.0...v8.36.1) (2025-10-07)
+
+
+### Bug Fixes
+
+* adjust variant image handling ([4e32418](https://github.com/Nosto/web-components/commit/4e32418983d01685f5d9f61b12ddf1043d7ea6de))
+
 # [8.36.0](https://github.com/Nosto/web-components/compare/v8.35.0...v8.36.0) (2025-10-07)
 
 
