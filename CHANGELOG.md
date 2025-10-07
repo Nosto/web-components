@@ -1,3 +1,10 @@
+# [8.36.0](https://github.com/Nosto/web-components/compare/v8.35.0...v8.36.0) (2025-10-07)
+
+
+### Features
+
+* **SimpleCard,VariantSelector:** align CSS styles according to requirements ([26fdf2d](https://github.com/Nosto/web-components/commit/26fdf2dc3be4512f5661f725c1e2f9a3f03345dc))
+
 # [8.35.0](https://github.com/Nosto/web-components/compare/v8.34.0...v8.35.0) (2025-10-07)
 
 
