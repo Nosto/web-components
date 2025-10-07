@@ -1,7 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
-import { popupStyles } from "./styles"
+import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
 
 /**
@@ -89,7 +89,7 @@ type PopupData = {
 
 function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   element.shadowRoot!.innerHTML = `
-    <style>${popupStyles}</style>
+    <style>${styles}</style>
     <dialog part="dialog">
       <slot name="default"></slot>
     </dialog>

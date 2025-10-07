@@ -5,7 +5,7 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "../SimpleCard/types"
 import { generateVariantSelectorHTML } from "./markup"
-import { variantSelectorStyles } from "./styles"
+import styles from "./styles.css?raw"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null
@@ -74,13 +74,13 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     if ("adoptedStyleSheets" in element.shadowRoot!) {
       if (!cachedStyleSheet) {
         cachedStyleSheet = new CSSStyleSheet()
-        await cachedStyleSheet.replace(variantSelectorStyles)
+        await cachedStyleSheet.replace(styles)
       }
       element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
       element.shadowRoot!.innerHTML = selectorHTML.html
     } else {
       element.shadowRoot!.innerHTML = `
-        <style>${variantSelectorStyles}</style>
+        <style>${styles}</style>
         ${selectorHTML.html}
       `
     }

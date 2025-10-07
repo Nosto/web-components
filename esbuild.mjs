@@ -7,7 +7,8 @@ const sharedConfig = {
   minifyIdentifiers: true,
   minifySyntax: true,
   target: "es2018",
-  sourcemap: true
+  sourcemap: true,
+  loader: { ".css": "text" }
 }
 
 async function build() {
@@ -26,6 +27,7 @@ async function build() {
 
     const result = await esbuild.build({
       ...sharedConfig,
+      minifyWhitespace: true,
       outfile: "dist/main.es.bundle.js",
       format: "esm",
       metafile: true
