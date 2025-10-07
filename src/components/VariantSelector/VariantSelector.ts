@@ -14,7 +14,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * A custom element that displays product variant options as clickable pills.
  *
  * Fetches product data from `/products/<handle>.js` and renders option rows with
- * clickable value pills. Preselects the first value for each option and highlights
+ * clickable value pills. Optionally preselects the first value for each option and highlights
  * the currently selected choices. Emits a custom event when variant selections change.
  *
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
@@ -23,22 +23,26 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @category Category level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
+ * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to true.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  *
  * @example
  * ```html
  * <nosto-variant-selector handle="awesome-product"></nosto-variant-selector>
+ * <nosto-variant-selector handle="awesome-product" preselect="false"></nosto-variant-selector>
  * ```
  */
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {
   /** @private */
   static attributes = {
-    handle: String
+    handle: String,
+    preselect: Boolean
   }
 
   handle!: string
+  preselect?: boolean
 
   /** Internal state for current selections */
   selectedOptions: Record<string, string> = {}
@@ -65,7 +69,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   try {
     const productData = await fetchProductData(element.handle)
 
-    // Initialize selections with first value of each option
+    // Initialize selections with first value of each option (if preselect is true)
     initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
@@ -89,18 +93,29 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     setupOptionListeners(element)
 
     updateActiveStates(element)
-    emitVariantChange(element, productData)
+
+    // Only emit variant change if we have selections (i.e., preselect was enabled or user made selections)
+    if (Object.keys(element.selectedOptions).length > 0) {
+      emitVariantChange(element, productData)
+    }
   } finally {
     element.toggleAttribute("loading", false)
   }
 }
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  product.options.forEach(option => {
-    if (option.values.length > 0) {
-      element.selectedOptions[option.name] = option.values[0]
-    }
-  })
+  // Default to true if preselect attribute is not specified
+  // Only disable if explicitly set to "false"
+  const preselectAttr = element.getAttribute("preselect")
+  const shouldPreselect = preselectAttr !== "false"
+
+  if (shouldPreselect) {
+    product.options.forEach(option => {
+      if (option.values.length > 0) {
+        element.selectedOptions[option.name] = option.values[0]
+      }
+    })
+  }
 }
 
 function setupOptionListeners(element: VariantSelector) {

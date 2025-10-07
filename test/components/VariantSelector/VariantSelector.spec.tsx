@@ -337,4 +337,116 @@ describe("VariantSelector", () => {
     expect(smallButton.classList.contains("active")).toBe(false)
     expect(mediumButton.classList.contains("active")).toBe(true)
   })
+
+  it("should not preselect when preselect attribute is false", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={false} />) as VariantSelector
+    await selector.connectedCallback()
+
+    expect(selector.selectedOptions["Size"]).toBeUndefined()
+    expect(selector.selectedOptions["Color"]).toBeUndefined()
+
+    const shadowContent = getShadowContent(selector)
+    // Should not have any active buttons initially
+    expect(shadowContent).not.toContain("value active")
+  })
+
+  it("should preselect when preselect attribute is true (explicit)", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
+    await selector.connectedCallback()
+
+    expect(selector.selectedOptions["Size"]).toBe("Small")
+    expect(selector.selectedOptions["Color"]).toBe("Red")
+
+    const shadowContent = getShadowContent(selector)
+    expect(shadowContent).toContain("value active")
+  })
+
+  it("should preselect by default when preselect attribute is not specified", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    await selector.connectedCallback()
+
+    expect(selector.selectedOptions["Size"]).toBe("Small")
+    expect(selector.selectedOptions["Color"]).toBe("Red")
+
+    const shadowContent = getShadowContent(selector)
+    expect(shadowContent).toContain("value active")
+  })
+
+  it("should emit variantchange event only when variant is selected with preselect=true", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
+
+    let eventDetail: Record<string, unknown> | null = null
+    selector.addEventListener("variantchange", (event: Event) => {
+      eventDetail = (event as CustomEvent).detail
+    })
+
+    await selector.connectedCallback()
+
+    // Should emit event on connect due to preselection
+    expect(eventDetail).toBeTruthy()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((eventDetail as any)?.variant).toBeTruthy()
+  })
+
+  it("should not emit variantchange event on initial load when preselect=false", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={false} />) as VariantSelector
+
+    let eventDetail: Record<string, unknown> | null = null
+    selector.addEventListener("variantchange", (event: Event) => {
+      eventDetail = (event as CustomEvent).detail
+    })
+
+    await selector.connectedCallback()
+
+    // Should not emit event on connect due to no preselection
+    expect(eventDetail).toBeNull()
+  })
+
+  it("should allow manual selection after preselect=false", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={false} />) as VariantSelector
+    await selector.connectedCallback()
+
+    // Initially no selections
+    expect(selector.selectedOptions["Size"]).toBeUndefined()
+    expect(selector.selectedOptions["Color"]).toBeUndefined()
+
+    let eventDetail: Record<string, unknown> | null = null
+    selector.addEventListener("variantchange", (event: Event) => {
+      eventDetail = (event as CustomEvent).detail
+    })
+
+    // Manually select options
+    await selectOption(selector, "Size", "Medium")
+    await selectOption(selector, "Color", "Blue")
+
+    expect(selector.selectedOptions["Size"]).toBe("Medium")
+    expect(selector.selectedOptions["Color"]).toBe("Blue")
+    expect(eventDetail).toBeTruthy()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((eventDetail as any)?.variant?.id).toBe(1002)
+  })
 })
