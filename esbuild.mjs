@@ -1,39 +1,6 @@
 import esbuild from "esbuild"
 import fs from "fs"
-import path from "path"
-
-// Plugin to handle CSS imports with ?inline suffix as text
-const cssInlinePlugin = {
-  name: "css-inline",
-  setup(build) {
-    build.onResolve({ filter: /\.css\?inline$/ }, args => {
-      // Remove ?inline suffix and resolve the actual path
-      const cssPath = args.path.replace("?inline", "")
-
-      // Resolve relative path based on the importer
-      if (cssPath.startsWith("./") || cssPath.startsWith("../")) {
-        const resolvedPath = path.resolve(path.dirname(args.importer), cssPath)
-        return {
-          path: resolvedPath,
-          namespace: "css-inline"
-        }
-      }
-
-      return {
-        path: cssPath,
-        namespace: "css-inline"
-      }
-    })
-
-    build.onLoad({ filter: /.*/, namespace: "css-inline" }, async args => {
-      const css = await fs.promises.readFile(args.path, "utf8")
-      return {
-        contents: `export default ${JSON.stringify(css)}`,
-        loader: "js"
-      }
-    })
-  }
-}
+import { cssInlineEsbuildPlugin } from "./build/css-inline-esbuild-plugin.js"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -42,7 +9,7 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2018",
   sourcemap: true,
-  plugins: [cssInlinePlugin]
+  plugins: [cssInlineEsbuildPlugin()]
 }
 
 async function build() {
