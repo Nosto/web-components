@@ -5,7 +5,6 @@ export { Control } from "./components/Control/Control"
 export { DynamicCard } from "./components/DynamicCard/DynamicCard"
 export { Image } from "./components/Image/Image"
 export { Product } from "./components/Product/Product"
-
 export { SimpleCard } from "./components/SimpleCard/SimpleCard"
 export { VariantSelector } from "./components/VariantSelector/VariantSelector"
 export { SkuOptions } from "./components/SkuOptions/SkuOptions"

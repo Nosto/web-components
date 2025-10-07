@@ -7,7 +7,6 @@ import "@/components/DynamicCard/DynamicCard"
 import "@/components/Image/Image"
 import "@/components/Popup/Popup"
 import "@/components/Product/Product"
-
 import "@/components/SectionCampaign/SectionCampaign"
 import "@/components/SimpleCard/SimpleCard"
 import "@/components/SkuOptions/SkuOptions"
