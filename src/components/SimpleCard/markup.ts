@@ -1,5 +1,5 @@
 import { html } from "@/templating/html"
-import type { ShopifyProduct } from "./types"
+import type { ShopifyProduct, ShopifyVariant } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
@@ -22,6 +22,9 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
           ${element.rating ? generateRatingHTML(element.rating) : ""}
         </div>
       </a>
+      <div class="simple-card__slot">
+        <slot></slot>
+      </div>
     </div>
   `
 }
@@ -104,4 +107,46 @@ function formatPrice(price: number) {
     style: "currency",
     currency: window.Shopify?.currency?.active ?? "USD"
   }).format(amount)
+}
+
+export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
+  if (!element.shadowRoot) return
+
+  updateImages(element, variant)
+  updatePrices(element, variant)
+}
+
+function updateImages(element: SimpleCard, variant: ShopifyVariant) {
+  if (!element.shadowRoot) return
+
+  const primaryImage = variant.featured_image
+
+  const primaryImgElement = element.shadowRoot.querySelector(".simple-card__img--primary") as HTMLElement
+  if (primaryImgElement && primaryImage) {
+    primaryImgElement.setAttribute("src", normalizeUrl(primaryImage))
+    primaryImgElement.setAttribute("alt", variant.name)
+  }
+
+  if (element.alternate && variant.featured_image) {
+    const alternateImgElement = element.shadowRoot.querySelector(".simple-card__img--alternate") as HTMLElement
+    if (alternateImgElement) {
+      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image))
+      alternateImgElement.setAttribute("alt", variant.name)
+    }
+  }
+}
+
+function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
+  if (!element.shadowRoot) return
+  const hasDiscount = element.discount && variant.compare_at_price && variant.compare_at_price > variant.price
+
+  const currentPriceElement = element.shadowRoot.querySelector(".simple-card__price-current")
+  if (currentPriceElement) {
+    currentPriceElement.textContent = formatPrice(variant.price || 0)
+  }
+
+  const originalPriceElement = element.shadowRoot.querySelector(".simple-card__price-original")
+  if (hasDiscount && originalPriceElement) {
+    originalPriceElement.textContent = formatPrice(variant.compare_at_price!)
+  }
 }

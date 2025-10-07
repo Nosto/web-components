@@ -4,8 +4,9 @@ import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "./types"
-import { generateCardHTML } from "./markup"
+import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import { cardStyles } from "./styles"
+import type { VariantChangeDetail } from "./types"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null
@@ -82,6 +83,7 @@ export class SimpleCard extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
+    this.addEventListener("variantchange", handleVariantChange)
   }
 }
 
@@ -113,7 +115,16 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
 async function fetchProductData(handle: string) {
   const url = createShopifyUrl(`products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href)
+  return getJSON<ShopifyProduct>(url.href, { cached: true })
+}
+
+function handleVariantChange(event: Event) {
+  event.stopPropagation()
+  const customEvent = event as CustomEvent<VariantChangeDetail>
+  const { variant } = customEvent.detail
+  const element = event.currentTarget as SimpleCard
+
+  updateSimpleCardContent(element, variant)
 }
 
 declare global {

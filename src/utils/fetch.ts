@@ -20,6 +20,14 @@ const textCache = new Map<string, string>()
 const jsonCache = new Map<string, unknown>()
 
 /**
+ * Clears all cached responses
+ */
+export function clearCache() {
+  textCache.clear()
+  jsonCache.clear()
+}
+
+/**
  * Fetches a URL and returns the response as text.
  * @param url - The URL to fetch
  * @param options - Optional configuration object
