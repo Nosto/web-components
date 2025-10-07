@@ -221,7 +221,7 @@ describe("VariantSelector", () => {
     expect(shadowContent).toBe("")
   })
 
-  it("should preselect first values for each option", async () => {
+  it("should not preselect by default", async () => {
     addProductHandlers({
       "variant-test-product": { product: mockProductWithVariants }
     })
@@ -229,11 +229,11 @@ describe("VariantSelector", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
 
-    expect(selector.selectedOptions["Size"]).toBe("Small")
-    expect(selector.selectedOptions["Color"]).toBe("Red")
+    expect(selector.selectedOptions["Size"]).toBeUndefined()
+    expect(selector.selectedOptions["Color"]).toBeUndefined()
 
     const shadowContent = getShadowContent(selector)
-    expect(shadowContent).toContain("value active")
+    expect(shadowContent).not.toContain("value active")
   })
 
   it("should emit variantchange event on option selection", async () => {
@@ -250,10 +250,13 @@ describe("VariantSelector", () => {
     })
 
     await selectOption(selector, "Size", "Large")
+    await selectOption(selector, "Color", "Red")
 
     expect(eventDetail).toBeTruthy()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((eventDetail as any)?.variant).toBeTruthy()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((eventDetail as any)?.variant?.id).toBe(1003) // Large / Red
   })
 
   it("should update selected variant when options change", async () => {
@@ -261,7 +264,7 @@ describe("VariantSelector", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
     await selector.connectedCallback()
 
     // Initial selection should be first variant (Small/Red)
@@ -315,7 +318,7 @@ describe("VariantSelector", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
@@ -338,20 +341,19 @@ describe("VariantSelector", () => {
     expect(mediumButton.classList.contains("active")).toBe(true)
   })
 
-  it("should not preselect when preselect attribute is false", async () => {
+  it("should preselect when preselect attribute is present", async () => {
     addProductHandlers({
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={false} />) as VariantSelector
+    const selector = (<nosto-variant-selector handle="variant-test-product" preselect />) as VariantSelector
     await selector.connectedCallback()
 
-    expect(selector.selectedOptions["Size"]).toBeUndefined()
-    expect(selector.selectedOptions["Color"]).toBeUndefined()
+    expect(selector.selectedOptions["Size"]).toBe("Small")
+    expect(selector.selectedOptions["Color"]).toBe("Red")
 
     const shadowContent = getShadowContent(selector)
-    // Should not have any active buttons initially
-    expect(shadowContent).not.toContain("value active")
+    expect(shadowContent).toContain("value active")
   })
 
   it("should preselect when preselect attribute is true (explicit)", async () => {
@@ -369,7 +371,7 @@ describe("VariantSelector", () => {
     expect(shadowContent).toContain("value active")
   })
 
-  it("should preselect by default when preselect attribute is not specified", async () => {
+  it("should not preselect by default when preselect attribute is not specified", async () => {
     addProductHandlers({
       "variant-test-product": { product: mockProductWithVariants }
     })
@@ -377,11 +379,11 @@ describe("VariantSelector", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
 
-    expect(selector.selectedOptions["Size"]).toBe("Small")
-    expect(selector.selectedOptions["Color"]).toBe("Red")
+    expect(selector.selectedOptions["Size"]).toBeUndefined()
+    expect(selector.selectedOptions["Color"]).toBeUndefined()
 
     const shadowContent = getShadowContent(selector)
-    expect(shadowContent).toContain("value active")
+    expect(shadowContent).not.toContain("value active")
   })
 
   it("should emit variantchange event only when variant is selected with preselect=true", async () => {
@@ -404,12 +406,12 @@ describe("VariantSelector", () => {
     expect((eventDetail as any)?.variant).toBeTruthy()
   })
 
-  it("should not emit variantchange event on initial load when preselect=false", async () => {
+  it("should not emit variantchange event on initial load when preselect is not set", async () => {
     addProductHandlers({
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={false} />) as VariantSelector
+    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
 
     let eventDetail: Record<string, unknown> | null = null
     selector.addEventListener("variantchange", (event: Event) => {
@@ -422,12 +424,12 @@ describe("VariantSelector", () => {
     expect(eventDetail).toBeNull()
   })
 
-  it("should allow manual selection after preselect=false", async () => {
+  it("should allow manual selection when preselect is not set", async () => {
     addProductHandlers({
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={false} />) as VariantSelector
+    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
 
     // Initially no selections

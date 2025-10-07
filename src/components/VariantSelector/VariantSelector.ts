@@ -23,14 +23,14 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @category Category level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
- * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to true.
+ * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  *
  * @example
  * ```html
  * <nosto-variant-selector handle="awesome-product"></nosto-variant-selector>
- * <nosto-variant-selector handle="awesome-product" preselect="false"></nosto-variant-selector>
+
  * ```
  */
 @customElement("nosto-variant-selector", { observe: true })
@@ -94,7 +94,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 
     updateActiveStates(element)
 
-    // Only emit variant change if we have selections (i.e., preselect was enabled or user made selections)
+    // Only emit variant change if we have selections (i.e., preselect was enabled)
     if (Object.keys(element.selectedOptions).length > 0) {
       emitVariantChange(element, productData)
     }
@@ -104,12 +104,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 }
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  // Default to true if preselect attribute is not specified
-  // Only disable if explicitly set to "false"
-  const preselectAttr = element.getAttribute("preselect")
-  const shouldPreselect = preselectAttr !== "false"
-
-  if (shouldPreselect) {
+  if (element.preselect) {
     product.options.forEach(option => {
       if (option.values.length > 0) {
         element.selectedOptions[option.name] = option.values[0]
