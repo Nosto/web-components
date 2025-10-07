@@ -48,6 +48,10 @@ const meta: Meta = {
       control: "number",
       description: "Product rating (0-5 stars)"
     },
+    reviews: {
+      control: "number",
+      description: "Number of reviews (shows alongside rating)"
+    },
     sizes: {
       control: "text",
       description: "The sizes attribute for responsive images"
@@ -60,6 +64,7 @@ const meta: Meta = {
     brand: false,
     discount: false,
     rating: 0,
+    reviews: 0,
     sizes: ""
   }
 }
@@ -76,6 +81,7 @@ export const Default: Story = {
       ?brand=${args.brand}
       ?discount=${args.discount}
       rating=${args.rating || 0}
+      reviews=${args.reviews || 0}
       sizes="${args.sizes || ""}"
     ></nosto-simple-card>
   `
@@ -90,6 +96,7 @@ export const WithVariantSelector: Story = {
       ?brand=${args.brand}
       ?discount=${args.discount}
       rating=${args.rating || 0}
+      reviews=${args.reviews || 0}
     >
       <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
     </nosto-simple-card>
@@ -102,7 +109,8 @@ export const WithAllFeatures: Story = {
     alternate: true,
     brand: true,
     discount: true,
-    rating: 4.2
+    rating: 4.2,
+    reviews: 127
   },
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: args => html`
@@ -112,6 +120,7 @@ export const WithAllFeatures: Story = {
       ?brand=${args.brand}
       ?discount=${args.discount}
       rating=${args.rating || 0}
+      reviews=${args.reviews || 0}
       sizes="${args.sizes || ""}"
     ></nosto-simple-card>
   `
@@ -124,6 +133,7 @@ export const WithResponsiveSizes: Story = {
     brand: true,
     discount: true,
     rating: 4.2,
+    reviews: 89,
     sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
   },
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
@@ -134,7 +144,24 @@ export const WithResponsiveSizes: Story = {
       ?brand=${args.brand}
       ?discount=${args.discount}
       rating=${args.rating || 0}
+      reviews=${args.reviews || 0}
       sizes="${args.sizes || ""}"
+    ></nosto-simple-card>
+  `
+}
+
+export const WithReviews: Story = {
+  args: {
+    handle: handles[0],
+    rating: 4.5,
+    reviews: 203
+  },
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card
+      handle="${args.handle}"
+      rating=${args.rating || 0}
+      reviews=${args.reviews || 0}
     ></nosto-simple-card>
   `
 }
@@ -151,6 +178,7 @@ export const GridOfCards: Story = {
             brand
             discount
             rating="3.8"
+            reviews="45"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           ></nosto-simple-card>
         `

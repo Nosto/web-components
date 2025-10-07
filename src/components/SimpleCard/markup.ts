@@ -21,7 +21,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
                 >`
               : ""}
           </div>
-          ${element.rating ? generateRatingHTML(element.rating) : ""}
+          ${element.rating ? generateRatingHTML(element.rating, element.reviews) : ""}
         </div>
       </a>
       <div class="slot">
@@ -81,13 +81,17 @@ function generateAlternateImageHTML(alternateImage: string, product: ShopifyProd
   return generateNostoImageHTML(alternateImage, product.title, aspectRatio, "img alternate", sizes)
 }
 
-function generateRatingHTML(rating: number) {
+function generateRatingHTML(rating: number, reviews?: number) {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5
   const starDisplay =
     "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
-  return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})</div>`
+
+  const reviewsText =
+    reviews !== undefined && reviews > 0 ? ` • (${reviews} ${reviews === 1 ? "review" : "reviews"})` : ""
+
+  return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})${reviewsText}</div>`
 }
 
 function formatPrice(price: number) {

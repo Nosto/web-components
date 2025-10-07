@@ -42,7 +42,8 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @property {boolean} [alternate] - Show alternate product image on hover. Defaults to false.
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
- * @property {boolean} [rating] - Show product rating. Defaults to false.
+ * @property {number} [rating] - Product rating (0-5 stars). When provided, displays star rating.
+ * @property {number} [reviews] - Number of reviews. When provided alongside rating, displays review count.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  *
  * @example
@@ -59,6 +60,7 @@ export class SimpleCard extends NostoElement {
     brand: Boolean,
     discount: Boolean,
     rating: Number,
+    reviews: Number,
     sizes: String
   }
 
@@ -67,6 +69,7 @@ export class SimpleCard extends NostoElement {
   brand?: boolean
   discount?: boolean
   rating?: number
+  reviews?: number
   sizes?: string
 
   constructor() {
