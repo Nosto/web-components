@@ -7,17 +7,7 @@
   max-width: 1200px;
 }
 
-nosto-simple-card {
-  display: block;
-  border: 1px solid #e1e1e1;
-  border-radius: 8px;
-  overflow: hidden;
-  background: white;
-  transition: box-shadow 0.2s ease;
-}
 
-nosto-simple-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-nosto-simple-card[loading] { opacity: 0.7; }
 
 /* Card structure */
 .simple-card { display: flex; flex-direction: column; height: 100%; }
