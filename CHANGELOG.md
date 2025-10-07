@@ -1,3 +1,27 @@
+# [8.35.0](https://github.com/Nosto/web-components/compare/v8.34.0...v8.35.0) (2025-10-07)
+
+
+### Bug Fixes
+
+* add cache clearing and fix failing tests ([80405d5](https://github.com/Nosto/web-components/commit/80405d5ea64648515f299098d31125d16f7dc6dd))
+* make currentProduct public and remove product from VariantChangeDetail ([2155778](https://github.com/Nosto/web-components/commit/2155778212d688a8b64a333688cb9e5f183f3bf5))
+* move VariantChangeDetail to types, use escapeHtml for data attributes ([69c4594](https://github.com/Nosto/web-components/commit/69c459481733c809eb1a8242d44ad256cdc34311))
+* **Popup:** fix test unhandled errors and format issues ([030cabe](https://github.com/Nosto/web-components/commit/030cabec2c08ee345029923736c2d79ea66f3349))
+
+
+### Features
+
+* add WithVariantSelector Storybook story for SimpleCard ([9c91cd4](https://github.com/Nosto/web-components/commit/9c91cd4dd8853310b0615af318990927e9113d08))
+* complete VariantSelector implementation with Storybook integration ([4225966](https://github.com/Nosto/web-components/commit/422596686e416b09c1b34be145682f4fd3d5e32d))
+* implement VariantSelector component with basic functionality ([9c1ea83](https://github.com/Nosto/web-components/commit/9c1ea83b0c61f97bc038acb36983bbafce7db97d))
+* **Popup:** add new custom element with dialog and ribbon slots ([d077525](https://github.com/Nosto/web-components/commit/d077525a68e21d6e0472dbaeb86445e52538c9a8))
+* **Popup:** add ribbon mode, shadow DOM parts, and global test setup ([1324963](https://github.com/Nosto/web-components/commit/132496371aa298109b61884ec512a960d788aa87))
+
+
+### Performance Improvements
+
+* optimize SimpleCard updates with querySelector-based DOM updates ([7cd30db](https://github.com/Nosto/web-components/commit/7cd30db437c70ed3e40163a57ee79f5f1a4b9ab0))
+
 # [8.34.0](https://github.com/Nosto/web-components/compare/v8.33.0...v8.34.0) (2025-10-06)
 
 
