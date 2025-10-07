@@ -7,7 +7,18 @@ export type ShopifyVariant = {
   sku: string | null
   requires_shipping: boolean
   taxable: boolean
-  featured_image: string | null
+  featured_image: {
+    id: number
+    product_id: number
+    position: number
+    created_at: string
+    updated_at: string
+    alt: string | null
+    width: number
+    height: number
+    src: string
+    variant_ids: number[]
+  } | null
   available: boolean
   name: string
   public_title: string | null

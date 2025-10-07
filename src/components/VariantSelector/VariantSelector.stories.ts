@@ -4,7 +4,7 @@ import { updateShopifyRoot } from "../../utils/storybook"
 import "./VariantSelector"
 
 const root = "https://nosto-shopify1.myshopify.com/"
-const handles = ["awesome-sneakers", "good-ol-shoes", "old-school-kicks", "insane-shoes"]
+const handles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
 
 window.Shopify = {
   routes: {
