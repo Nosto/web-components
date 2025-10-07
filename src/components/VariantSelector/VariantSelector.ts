@@ -20,6 +20,8 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
  * customized using CSS custom properties.
  *
+ * @category Category level templating
+ *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
