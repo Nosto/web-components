@@ -9,16 +9,16 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
     return { html: "" }
   }
 
-  return html` <div class="variant-selector">${product.options.map(option => generateOptionRowHTML(option))}</div> `
+  return html`
+    <div class="selector" part="selector">${product.options.map(option => generateOptionRowHTML(option))}</div>
+  `
 }
 
 function generateOptionRowHTML(option: { name: string; values: string[] }) {
   return html`
-    <div class="variant-option-row">
-      <div class="variant-option-label">${option.name}:</div>
-      <div class="variant-option-values">
-        ${option.values.map(value => generateOptionValueHTML(option.name, value))}
-      </div>
+    <div class="row" part="row">
+      <div class="label" part="label">${option.name}:</div>
+      <div class="values" part="values">${option.values.map(value => generateOptionValueHTML(option.name, value))}</div>
     </div>
   `
 }
@@ -27,7 +27,8 @@ function generateOptionValueHTML(optionName: string, value: string) {
   return html`
     <button
       type="button"
-      class="variant-option-value"
+      class="value"
+      part="value"
       data-option-name="${escapeHtml(optionName)}"
       data-option-value="${escapeHtml(value)}"
     >

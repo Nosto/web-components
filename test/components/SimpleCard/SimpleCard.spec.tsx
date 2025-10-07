@@ -69,7 +69,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card")
+    expect(shadowContent).toContain("card")
     expect(shadowContent).toContain("Awesome Test Product")
     expect(shadowContent).toContain("$19.99")
     expect(shadowContent).toContain("https://example.com/image1.jpg")
@@ -86,7 +86,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__brand")
+    expect(shadowContent).toContain("brand")
     expect(shadowContent).toContain("Test Brand")
   })
 
@@ -100,7 +100,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).not.toContain("simple-card__brand")
+    expect(shadowContent).not.toContain("brand")
     expect(shadowContent).not.toContain("Test Brand")
   })
 
@@ -143,7 +143,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).not.toContain("simple-card__price-original")
+    expect(shadowContent).not.toContain("price-original")
   })
 
   it("should render rating when rating attribute is provided", async () => {
@@ -156,7 +156,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__rating")
+    expect(shadowContent).toContain("rating")
     expect(shadowContent).toContain("★★★★☆ (4.2)")
   })
 
@@ -170,8 +170,8 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__img--primary")
-    expect(shadowContent).toContain("simple-card__img--alternate")
+    expect(shadowContent).toContain("img primary")
+    expect(shadowContent).toContain("img alternate")
     expect(shadowContent).toContain("https://example.com/image2.jpg")
   })
 
@@ -191,10 +191,10 @@ describe("SimpleCard", () => {
 
     const shadowContent = getShadowContent(card)
     // Should still render primary image class
-    expect(shadowContent).toContain("simple-card__img--primary")
+    expect(shadowContent).toContain("img primary")
     // But should NOT render the alternate image container or alternate image class
-    expect(shadowContent).not.toContain("simple-card__image--alternate")
-    expect(shadowContent).not.toContain("simple-card__img--alternate")
+    expect(shadowContent).not.toContain("image alternate")
+    expect(shadowContent).not.toContain("img alternate")
   })
 
   it("should render all features when all attributes are enabled", async () => {
@@ -207,13 +207,13 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__brand")
+    expect(shadowContent).toContain("brand")
     expect(shadowContent).toContain("Test Brand")
     expect(shadowContent).toContain("$24.99") // original price shown with discount attribute
-    expect(shadowContent).toContain("simple-card__rating")
+    expect(shadowContent).toContain("rating")
     expect(shadowContent).toContain("★★★☆☆ (3.5)")
-    expect(shadowContent).toContain("simple-card__img--primary")
-    expect(shadowContent).toContain("simple-card__img--alternate")
+    expect(shadowContent).toContain("img primary")
+    expect(shadowContent).toContain("img alternate")
   })
 
   it("should handle product with no images", async () => {
@@ -231,7 +231,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__image--placeholder")
+    expect(shadowContent).toContain("image placeholder")
   })
 
   it("should handle error when product fetch fails", async () => {
@@ -382,7 +382,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("simple-card__slot")
+    expect(shadowContent).toContain("slot")
     expect(shadowContent).toContain("<slot></slot>")
   })
 
@@ -473,7 +473,7 @@ describe("SimpleCard", () => {
     await new Promise(resolve => setTimeout(resolve, 0))
 
     // Verify that the image was updated to the blue variant
-    const primaryImg = card.shadowRoot?.querySelector(".simple-card__img--primary") as HTMLImageElement
+    const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
     expect(primaryImg?.src).toBe("https://example.com/blue.jpg")
   })
 })
