@@ -198,7 +198,7 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     const shadowContent = getShadowContent(selector)
-    expect(shadowContent).toContain("variant-selector")
+    expect(shadowContent).toContain("selector")
     expect(shadowContent).toContain("Size:")
     expect(shadowContent).toContain("Color:")
     expect(shadowContent).toContain("Small")
@@ -233,7 +233,7 @@ describe("VariantSelector", () => {
     expect(selector.selectedOptions["Color"]).toBe("Red")
 
     const shadowContent = getShadowContent(selector)
-    expect(shadowContent).toContain("variant-option-value--active")
+    expect(shadowContent).toContain("value active")
   })
 
   it("should emit variantchange event on option selection", async () => {
@@ -327,14 +327,14 @@ describe("VariantSelector", () => {
     ) as HTMLButtonElement
 
     // Initially Small should be active
-    expect(smallButton.classList.contains("variant-option-value--active")).toBe(true)
-    expect(mediumButton.classList.contains("variant-option-value--active")).toBe(false)
+    expect(smallButton.classList.contains("active")).toBe(true)
+    expect(mediumButton.classList.contains("active")).toBe(false)
 
     // Click Medium
     mediumButton.click()
 
     // Now Medium should be active
-    expect(smallButton.classList.contains("variant-option-value--active")).toBe(false)
-    expect(mediumButton.classList.contains("variant-option-value--active")).toBe(true)
+    expect(smallButton.classList.contains("active")).toBe(false)
+    expect(mediumButton.classList.contains("active")).toBe(true)
   })
 })

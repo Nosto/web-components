@@ -108,7 +108,7 @@ function setupOptionListeners(element: VariantSelector) {
 
   element.shadowRoot.addEventListener("click", async e => {
     const target = e.target as HTMLElement
-    if (target.classList.contains("variant-option-value")) {
+    if (target.classList.contains("value")) {
       e.preventDefault()
       const optionName = target.getAttribute("data-option-name")
       const optionValue = target.getAttribute("data-option-value")
@@ -135,14 +135,14 @@ export async function selectOption(element: VariantSelector, optionName: string,
 function updateActiveStates(element: VariantSelector) {
   if (!element.shadowRoot) return
 
-  element.shadowRoot.querySelectorAll(".variant-option-value").forEach(button => {
+  element.shadowRoot.querySelectorAll(".value").forEach(button => {
     const optionName = button.getAttribute("data-option-name")
     const optionValue = button.getAttribute("data-option-value")
 
     if (optionName && element.selectedOptions[optionName] === optionValue) {
-      button.classList.add("variant-option-value--active")
+      button.classList.add("active")
     } else {
-      button.classList.remove("variant-option-value--active")
+      button.classList.remove("active")
     }
   })
 }
