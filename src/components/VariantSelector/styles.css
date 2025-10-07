@@ -68,20 +68,10 @@
   white-space: nowrap;
 }
 
-.value:hover {
-  background: var(--value-hover-bg);
-  border-color: var(--value-hover-border);
-}
-
 .value.active {
   background: var(--value-active-bg);
   border-color: var(--value-active-border);
   color: var(--value-active-color);
-}
-
-.value.active:hover {
-  background: var(--value-active-hover-bg);
-  border-color: var(--value-active-hover-border);
 }
 
 .value:focus {
