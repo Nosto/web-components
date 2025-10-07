@@ -9,7 +9,7 @@ const cssInlinePlugin = {
     build.onResolve({ filter: /\.css\?inline$/ }, args => {
       // Remove ?inline suffix and resolve the actual path
       const cssPath = args.path.replace("?inline", "")
-      
+
       // Resolve relative path based on the importer
       if (cssPath.startsWith("./") || cssPath.startsWith("../")) {
         const resolvedPath = path.resolve(path.dirname(args.importer), cssPath)
@@ -18,7 +18,7 @@ const cssInlinePlugin = {
           namespace: "css-inline"
         }
       }
-      
+
       return {
         path: cssPath,
         namespace: "css-inline"
