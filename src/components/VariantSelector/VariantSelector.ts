@@ -119,6 +119,9 @@ function setupOptionListeners(element: VariantSelector) {
 }
 
 export async function selectOption(element: VariantSelector, optionName: string, value: string) {
+  if (element.selectedOptions[optionName] === value) {
+    return
+  }
   element.selectedOptions[optionName] = value
   updateActiveStates(element)
 
