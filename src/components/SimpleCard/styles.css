@@ -1,10 +1,8 @@
 :host {
-  display: var(--simple-card-display, block);
-  border: 1px solid var(--simple-card-border, #e1e1e1);
-  border-radius: var(--simple-card-border-radius, 8px);
+  display: block;
+  border: 1px solid #e1e1e1;
   overflow: hidden;
-  background: var(--simple-card-bg, white);
-  transition: box-shadow 0.2s ease;
+  background: white;
 
   --content-padding: 1rem;
   --brand-color: #666;
@@ -22,15 +20,10 @@
   --slot-padding-top: 0.5rem;
 }
 
-:host(:hover) {
-  box-shadow: var(--simple-card-hover-shadow, 0 4px 12px rgba(0, 0, 0, 0.1));
-}
-
 :host([loading]) {
-  opacity: var(--simple-card-loading-opacity, 0.7);
+  opacity: 0.7;
 }
 
-/* Card structure */
 .card {
   display: flex;
   flex-direction: column;
@@ -50,7 +43,6 @@
   transition: opacity 0.3s ease;
 }
 
-/* Alternate image hover */
 .image.alternate .img.alternate {
   position: absolute;
   top: 0;
@@ -66,7 +58,6 @@
   opacity: 1;
 }
 
-/* Content */
 .content {
   padding: var(--content-padding);
   flex: 1;
