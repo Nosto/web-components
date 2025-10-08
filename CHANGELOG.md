@@ -1,3 +1,15 @@
+# [9.1.0](https://github.com/Nosto/web-components/compare/v9.0.0...v9.1.0) (2025-10-08)
+
+
+### Bug Fixes
+
+* **VariantSelector:** change preselect default to false and simplify logic per feedback ([9002b66](https://github.com/Nosto/web-components/commit/9002b66aa1befd6e3e4048d35654adfba48dd97e))
+
+
+### Features
+
+* **VariantSelector:** add preselect boolean attribute for optional variant preselection ([e298ae2](https://github.com/Nosto/web-components/commit/e298ae20b7fedef4252868d75d897d544f874d6f))
+
 # [9.0.0](https://github.com/Nosto/web-components/compare/v8.36.1...v9.0.0) (2025-10-08)
 
 
