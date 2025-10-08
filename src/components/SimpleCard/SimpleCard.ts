@@ -22,22 +22,6 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  *
  * @category Campaign level templating
  *
- * @csspart host - The host element styles
- * @cssprop --simple-card-border - Border color (default: #e1e1e1)
- * @cssprop --simple-card-bg - Background color (default: white)
- * @cssprop --simple-card-hover-shadow - Box shadow on hover (default: 0 4px 12px rgba(0, 0, 0, 0.1))
- * @cssprop --simple-card-loading-opacity - Opacity when loading (default: 0.7)
- * @cssprop --simple-card-border-radius - Border radius (default: 8px)
- * @cssprop --simple-card-content-padding - Content area padding (default: 1rem)
- * @cssprop --simple-card-brand-color - Brand text color (default: #666)
- * @cssprop --simple-card-title-color - Title text color (default: inherit)
- * @cssprop --simple-card-link-color - Link color (default: #333)
- * @cssprop --simple-card-link-hover-color - Link hover color (default: #0066cc)
- * @cssprop --simple-card-price-color - Current price color (default: inherit)
- * @cssprop --simple-card-price-original-color - Original price color (default: #999)
- * @cssprop --simple-card-discount-bg - Discount badge background (default: #e74c3c)
- * @cssprop --simple-card-discount-color - Discount badge text color (default: white)
- *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {boolean} [alternate] - Show alternate product image on hover. Defaults to false.
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
