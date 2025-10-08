@@ -4,7 +4,7 @@ import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
 import { NostoElement } from "../Element"
-import { getTemplate } from "../common"
+import { getTemplate } from "../common/getTemplate"
 import { addRequest } from "./orchestrator"
 
 /**

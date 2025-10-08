@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createStore, provideStore, Store } from "./store"
 import { customElement } from "../decorators"
-import { syncSkuData } from "../common"
+import { syncSkuData } from "../common/syncSkuData"
 import { NostoElement } from "../Element"
 
 /**
