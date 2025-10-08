@@ -4,6 +4,7 @@ import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "../SimpleCard/types"
+import type { SimpleCard } from "../SimpleCard/SimpleCard"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 
@@ -22,7 +23,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  *
  * @category Category level templating
  *
- * @property {string} handle - The Shopify product handle to fetch data for. Required.
+ * @property {string} handle - The Shopify product handle to fetch data for. Optional when nested in SimpleCard.
  * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
@@ -40,7 +41,7 @@ export class VariantSelector extends NostoElement {
     preselect: Boolean
   }
 
-  handle!: string
+  handle?: string
   preselect?: boolean
 
   /** Internal state for current selections */
@@ -58,6 +59,14 @@ export class VariantSelector extends NostoElement {
   }
 
   async connectedCallback() {
+    // Try to derive handle from closest SimpleCard ancestor if not explicitly provided
+    if (!this.handle) {
+      const simpleCard = this.closest("nosto-simple-card") as SimpleCard | null
+      if (simpleCard?.handle) {
+        this.handle = simpleCard.handle
+      }
+    }
+
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
   }
@@ -66,7 +75,7 @@ export class VariantSelector extends NostoElement {
 async function loadAndRenderMarkup(element: VariantSelector) {
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element.handle)
+    const productData = await fetchProductData(element.handle!)
 
     // Initialize selections with first value of each option
     initializeDefaultSelections(element, productData)
@@ -136,7 +145,7 @@ export async function selectOption(element: VariantSelector, optionName: string,
   updateActiveStates(element)
 
   // Fetch product data and emit variant change
-  const productData = await fetchProductData(element.handle)
+  const productData = await fetchProductData(element.handle!)
   emitVariantChange(element, productData)
 }
 

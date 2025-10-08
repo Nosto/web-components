@@ -370,4 +370,71 @@ describe("VariantSelector", () => {
     const shadowContent = getShadowContent(selector)
     expect(shadowContent).not.toContain("value active")
   })
+
+  it("should inherit handle from closest SimpleCard ancestor when handle is not provided", async () => {
+    // Import SimpleCard for this test
+    await import("@/components/SimpleCard/SimpleCard")
+
+    addProductHandlers({
+      "inherited-product": { product: mockProductWithVariants }
+    })
+
+    // Create a SimpleCard with handle
+    const card = document.createElement("nosto-simple-card") as HTMLElement & { handle: string }
+    card.handle = "inherited-product"
+
+    // Create VariantSelector without explicit handle
+    const selector = (<nosto-variant-selector />) as VariantSelector
+
+    // Append selector to card first, then append to document to avoid premature connection
+    card.appendChild(selector)
+    document.body.appendChild(card)
+
+    // Manually call connectedCallback to test the behavior
+    await selector.connectedCallback()
+
+    expect(selector.handle).toBe("inherited-product")
+
+    const shadowContent = getShadowContent(selector)
+    expect(shadowContent).toContain("Size:")
+    expect(shadowContent).toContain("Color:")
+
+    // Cleanup
+    document.body.removeChild(card)
+  })
+
+  it("should throw an error when handle is not provided and no SimpleCard ancestor exists", async () => {
+    const selector = (<nosto-variant-selector />) as VariantSelector
+
+    await expect(selector.connectedCallback()).rejects.toThrow("Property handle is required.")
+  })
+
+  it("should prefer explicit handle over inherited handle", async () => {
+    // Import SimpleCard for this test
+    await import("@/components/SimpleCard/SimpleCard")
+
+    addProductHandlers({
+      "explicit-product": { product: mockProductWithVariants },
+      "inherited-product": { product: mockProductWithVariants }
+    })
+
+    // Create a SimpleCard with handle
+    const card = document.createElement("nosto-simple-card") as HTMLElement & { handle: string }
+    card.handle = "inherited-product"
+
+    // Create VariantSelector with explicit handle
+    const selector = (<nosto-variant-selector handle="explicit-product" />) as VariantSelector
+
+    // Append selector to card to establish parent-child relationship
+    card.appendChild(selector)
+    document.body.appendChild(card)
+
+    await selector.connectedCallback()
+
+    // Should use explicit handle, not inherited
+    expect(selector.handle).toBe("explicit-product")
+
+    // Cleanup
+    document.body.removeChild(card)
+  })
 })
