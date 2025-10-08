@@ -52,11 +52,11 @@ export class Popup extends NostoElement {
     if (!this.shadowRoot?.innerHTML) {
       initializeShadowContent(this, state)
     }
-    this.addEventListener("click", this.handleClick.bind(this))
+    this.addEventListener("click", this)
     setPopupState(this.name, "ribbon")
   }
 
-  private handleClick(event: Event) {
+  handleEvent(event: Event) {
     const target = event.target as HTMLElement
     const toClose = target?.matches("[n-close]") || target?.closest("[n-close]")
     const toRibbon = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
