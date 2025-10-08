@@ -221,9 +221,6 @@ async function fetchProductData(handle: string) {
   return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
-/**
- * Get all variants that would match if a specific option value is selected
- */
 function getVariantsForOptionValue(
   product: ShopifyProduct,
   targetOptionName: string,
@@ -250,9 +247,6 @@ function getVariantsForOptionValue(
   })
 }
 
-/**
- * Check if an option value should be disabled (no variants available)
- */
 export function isOptionValueDisabled(
   product: ShopifyProduct,
   optionName: string,
@@ -263,9 +257,6 @@ export function isOptionValueDisabled(
   return matchingVariants.length === 0
 }
 
-/**
- * Check if an option value should be marked as unavailable (variants exist but all are out of stock)
- */
 export function isOptionValueUnavailable(
   product: ShopifyProduct,
   optionName: string,
