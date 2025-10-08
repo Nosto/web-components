@@ -14,7 +14,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * A custom element that displays product variant options as clickable pills.
  *
  * Fetches product data from `/products/<handle>.js` and renders option rows with
- * clickable value pills. Preselects the first value for each option and highlights
+ * clickable value pills. Optionally preselects the first value for each option and highlights
  * the currently selected choices. Emits a custom event when variant selections change.
  *
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
@@ -23,6 +23,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * @category Category level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
+ * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  *
@@ -35,10 +36,12 @@ let cachedStyleSheet: CSSStyleSheet | null = null
 export class VariantSelector extends NostoElement {
   /** @private */
   static attributes = {
-    handle: String
+    handle: String,
+    preselect: Boolean
   }
 
   handle!: string
+  preselect?: boolean
 
   /** Internal state for current selections */
   selectedOptions: Record<string, string> = {}
@@ -89,18 +92,23 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     setupOptionListeners(element)
 
     updateActiveStates(element)
-    emitVariantChange(element, productData)
+
+    if (Object.keys(element.selectedOptions).length > 0) {
+      emitVariantChange(element, productData)
+    }
   } finally {
     element.toggleAttribute("loading", false)
   }
 }
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  product.options.forEach(option => {
-    if (option.values.length > 0) {
-      element.selectedOptions[option.name] = option.values[0]
-    }
-  })
+  if (element.preselect) {
+    product.options.forEach(option => {
+      if (option.values.length > 0) {
+        element.selectedOptions[option.name] = option.values[0]
+      }
+    })
+  }
 }
 
 function setupOptionListeners(element: VariantSelector) {
