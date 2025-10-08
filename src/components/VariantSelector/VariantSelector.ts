@@ -168,9 +168,7 @@ function updateActiveStates(element: VariantSelector) {
 }
 
 function updateAvailabilityStates(element: VariantSelector, product: ShopifyProduct) {
-  if (!element.shadowRoot) return
-
-  element.shadowRoot.querySelectorAll(".value").forEach(button => {
+  element.shadowRoot!.querySelectorAll(".value").forEach(button => {
     const optionName = button.getAttribute("data-option-name")
     const optionValue = button.getAttribute("data-option-value")
 
@@ -221,39 +219,27 @@ async function fetchProductData(handle: string) {
   return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
-function getVariantsForOptionValue(
-  product: ShopifyProduct,
-  targetOptionName: string,
-  targetValue: string,
-  currentSelections: Record<string, string>
-): ShopifyVariant[] {
-  if (!product?.variants) return []
-
-  return product.variants.filter(variant => {
-    return product.options.every((option, index) => {
-      const variantValue = variant.options[index]
-
-      if (option.name === targetOptionName) {
-        // For the target option, check if it matches the target value
-        return variantValue === targetValue
-      } else if (currentSelections[option.name]) {
-        // For other options that have selections, check if they match
-        return variantValue === currentSelections[option.name]
-      } else {
-        // For options without selections, any value is acceptable
-        return true
-      }
-    })
-  })
-}
-
 export function isOptionValueDisabled(
   product: ShopifyProduct,
   optionName: string,
   optionValue: string,
   currentSelections: Record<string, string>
 ): boolean {
-  const matchingVariants = getVariantsForOptionValue(product, optionName, optionValue, currentSelections)
+  if (!product?.variants) return true
+
+  const matchingVariants = product.variants.filter(variant => {
+    return product.options.every((option, index) => {
+      const variantValue = variant.options[index]
+
+      if (option.name === optionName) {
+        return variantValue === optionValue
+      } else if (currentSelections[option.name]) {
+        return variantValue === currentSelections[option.name]
+      } else {
+        return true
+      }
+    })
+  })
   return matchingVariants.length === 0
 }
 
@@ -263,12 +249,23 @@ export function isOptionValueUnavailable(
   optionValue: string,
   currentSelections: Record<string, string>
 ): boolean {
-  const matchingVariants = getVariantsForOptionValue(product, optionName, optionValue, currentSelections)
+  if (!product?.variants) return false
 
-  // If no variants, it's disabled, not unavailable
+  const matchingVariants = product.variants.filter(variant => {
+    return product.options.every((option, index) => {
+      const variantValue = variant.options[index]
+
+      if (option.name === optionName) {
+        return variantValue === optionValue
+      } else if (currentSelections[option.name]) {
+        return variantValue === currentSelections[option.name]
+      } else {
+        return true
+      }
+    })
+  })
+
   if (matchingVariants.length === 0) return false
-
-  // If all matching variants are not available, then it's unavailable
   return matchingVariants.every(variant => !variant.available)
 }
 
