@@ -1,3 +1,22 @@
+# [9.0.0](https://github.com/Nosto/web-components/compare/v8.36.1...v9.0.0) (2025-10-08)
+
+
+### Bug Fixes
+
+* remove empty lines as requested in code review ([e31be65](https://github.com/Nosto/web-components/commit/e31be6554ba6ab5b7644fcce707c0156c66fcf1a))
+
+
+### Documentation
+
+* document ProductCard removal as breaking change ([9c0ae0a](https://github.com/Nosto/web-components/commit/9c0ae0a2acd528b425cd48d001118bfa5e4e1479))
+
+
+### BREAKING CHANGES
+
+* The ProductCard component and nosto-product-card custom element have
+been completely removed. Use Campaign component (nosto-campaign) instead for product
+templating capabilities.
+
 ## [8.36.1](https://github.com/Nosto/web-components/compare/v8.36.0...v8.36.1) (2025-10-07)
 
 
