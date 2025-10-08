@@ -7,6 +7,7 @@ import type { ShopifyProduct } from "./types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "./types"
+import { addSkuToCart } from "@nosto/nosto-js"
 
 // Cache the stylesheet for reuse across component instances
 let cachedStyleSheet: CSSStyleSheet | null = null
@@ -53,6 +54,9 @@ export class SimpleCard extends NostoElement {
   rating?: number
   sizes?: string
 
+  productId?: number
+  variantId?: number
+
   constructor() {
     super()
     this.attachShadow({ mode: "open" })
@@ -67,21 +71,47 @@ export class SimpleCard extends NostoElement {
   async connectedCallback() {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
+    this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
   }
 
   handleEvent(event: Event) {
-    event.stopPropagation()
-    const customEvent = event as CustomEvent<VariantChangeDetail>
-    const { variant } = customEvent.detail
-    updateSimpleCardContent(this, variant)
+    switch (event.type) {
+      case "click":
+        onClick(this, event as MouseEvent)
+        break
+      case "variantchange":
+        onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
+    }
   }
+}
+
+function isAddToCartClick(event: MouseEvent) {
+  return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
+}
+
+async function onClick(element: SimpleCard, event: MouseEvent) {
+  if (isAddToCartClick(event) && element.productId && element.variantId) {
+    event.stopPropagation()
+    await addSkuToCart({
+      productId: element.productId.toString(),
+      skuId: element.variantId.toString()
+    })
+  }
+}
+
+function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
+  event.stopPropagation()
+  const { variant } = event.detail
+  element.variantId = variant.id
+  updateSimpleCardContent(element, variant)
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element.handle)
+    element.productId = productData.id
 
     const cardHTML = generateCardHTML(element, productData)
 

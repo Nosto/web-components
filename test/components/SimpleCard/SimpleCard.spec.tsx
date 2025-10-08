@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, vi } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -88,6 +88,28 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("brand")
     expect(shadowContent).toContain("Test Brand")
+  })
+
+  it("should handle add to cart clicks", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (
+      <nosto-simple-card handle="test-product" brand>
+        <button n-atc>Add to Cart</button>
+      </nosto-simple-card>
+    ) as SimpleCard
+
+    await card.connectedCallback()
+    card.variantId = 789
+
+    window.Nosto = { addSkuToCart: vi.fn(() => Promise.resolve()) }
+
+    const button = card.querySelector("[n-atc]") as HTMLButtonElement
+    button.click()
+
+    expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith({ productId: "123456", skuId: "789" }, undefined, undefined)
   })
 
   it("should not render brand when brand attribute is disabled", async () => {

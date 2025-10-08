@@ -61,7 +61,8 @@ const meta: Meta = {
     discount: false,
     rating: 0,
     sizes: ""
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta
@@ -77,7 +78,9 @@ export const Default: Story = {
       ?discount=${args.discount}
       rating=${args.rating || 0}
       sizes="${args.sizes || ""}"
-    ></nosto-simple-card>
+    >
+      <button n-atc>Add to cart</button>
+    </nosto-simple-card>
   `
 }
 
@@ -92,6 +95,7 @@ export const WithVariantSelector: Story = {
       rating=${args.rating || 0}
     >
       <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
+      <button n-atc>Add to cart</button>
     </nosto-simple-card>
   `
 }
