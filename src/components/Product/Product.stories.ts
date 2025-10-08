@@ -42,11 +42,10 @@ function createProductCard(
   `
 }
 
-function createRecommendationSection(title: string, products: unknown[]) {
+function createRecommendationSection(products: unknown[]) {
   return html`
     <div class="story-container">
       <div class="block__recommendation">
-        <span class="reco-title">${title}</span>
         <div class="products">${products}</div>
       </div>
     </div>
@@ -135,7 +134,7 @@ export const DualSkuSelection: Story = {
       )
     )
 
-    return createRecommendationSection("Dual SKU Selection", productCards)
+    return createRecommendationSection(productCards)
   },
   parameters: {
     docs: {
@@ -183,7 +182,7 @@ export const TripleSkuSelection: Story = {
       )
     )
 
-    return createRecommendationSection("Triple SKU Selection", productCards)
+    return createRecommendationSection(productCards)
   },
   parameters: {
     docs: {
@@ -213,7 +212,7 @@ export const DropdownSkuSelection: Story = {
       )
     )
 
-    return createRecommendationSection("Dropdown SKU Selection", productCards)
+    return createRecommendationSection(productCards)
   },
   parameters: {
     docs: {
