@@ -22,10 +22,11 @@
   --value-active-hover-bg: #0056b3;
   --value-active-hover-border: #0056b3;
   --value-focus-color: #007bff;
+  --loading-opacity: 0.7;
 }
 
 :host([loading]) {
-  opacity: var(--variant-selector-loading-opacity, 0.7);
+  opacity: var(--loading-opacity);
 }
 
 .selector {
@@ -58,7 +59,6 @@
 .value {
   background: var(--value-bg);
   border: var(--value-border);
-  border-radius: var(--value-radius);
   color: var(--value-color);
   cursor: pointer;
   font-family: inherit;
@@ -82,9 +82,4 @@
 .value.active:hover {
   background: var(--value-active-hover-bg);
   border-color: var(--value-active-hover-border);
-}
-
-.value:focus {
-  outline: 2px solid var(--value-focus-color);
-  outline-offset: 2px;
 }
