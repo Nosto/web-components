@@ -93,9 +93,6 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 
     updateActiveStates(element)
 
-    // Update availability states based on current selections
-    updateAvailabilityStates(element, productData)
-
     if (Object.keys(element.selectedOptions).length > 0) {
       emitVariantChange(element, productData)
     }
@@ -148,10 +145,10 @@ export async function selectOption(element: VariantSelector, optionName: string,
 
   // Fetch product data for availability updates and variant change
   const productData = await fetchProductData(element.handle)
-  
+
   // Update availability states with fresh data
   updateAvailabilityStates(element, productData)
-  
+
   emitVariantChange(element, productData)
 }
 
@@ -178,35 +175,6 @@ function updateAvailabilityStates(element: VariantSelector, product: ShopifyProd
     const optionValue = button.getAttribute("data-option-value")
 
     if (optionName && optionValue) {
-      // Update availability state
-      const isDisabled = isOptionValueDisabled(product, optionName, optionValue, element.selectedOptions)
-      const isUnavailable = isOptionValueUnavailable(product, optionName, optionValue, element.selectedOptions)
-
-      button.toggleAttribute("disabled", isDisabled)
-      if (isUnavailable) {
-        button.setAttribute("data-status", "unavailable")
-      } else {
-        button.removeAttribute("data-status")
-      }
-    }
-  })
-}
-
-function updateActiveAndAvailabilityStates(element: VariantSelector, product: ShopifyProduct) {
-  if (!element.shadowRoot) return
-
-  element.shadowRoot.querySelectorAll(".value").forEach(button => {
-    const optionName = button.getAttribute("data-option-name")
-    const optionValue = button.getAttribute("data-option-value")
-
-    if (optionName && optionValue) {
-      // Update active state
-      if (element.selectedOptions[optionName] === optionValue) {
-        button.classList.add("active")
-      } else {
-        button.classList.remove("active")
-      }
-
       // Update availability state
       const isDisabled = isOptionValueDisabled(product, optionName, optionValue, element.selectedOptions)
       const isUnavailable = isOptionValueUnavailable(product, optionName, optionValue, element.selectedOptions)
