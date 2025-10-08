@@ -8,9 +8,7 @@ describe("inject", () => {
     const element = createElement()
     const key = Symbol("value")
     const value = { foo: "bar" }
-
     provide(element, key, value)
-
     expect(inject<typeof value>(element, key)).toBe(value)
   })
 
@@ -39,7 +37,6 @@ describe("inject", () => {
     const shadow = host.attachShadow({ mode: "open" })
     const child = createElement()
     shadow.appendChild(child)
-    
     const key = Symbol("shadow-value")
     const value = [1, 2, 3]
     provide(host, key, value)
