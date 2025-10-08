@@ -1,3 +1,10 @@
+# [9.2.0](https://github.com/Nosto/web-components/compare/v9.1.0...v9.2.0) (2025-10-08)
+
+
+### Features
+
+* add add-to-cart support to SimpleCard ([2a99814](https://github.com/Nosto/web-components/commit/2a99814ce9c1840cbb7f66f94cea3eebaed12760))
+
 # [9.1.0](https://github.com/Nosto/web-components/compare/v9.0.0...v9.1.0) (2025-10-08)
 
 
