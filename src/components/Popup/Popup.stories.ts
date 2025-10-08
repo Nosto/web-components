@@ -25,7 +25,8 @@ Supports segment-based activation and persistent closure state using localStorag
         `
       }
     }
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta

@@ -37,7 +37,8 @@ const meta: Meta = {
   args: {
     root,
     handle: handles[0]
-  }
+  },
+  tags: ["autodocs"]
 }
 
 export default meta
@@ -48,11 +49,21 @@ export const Default: Story = {
   render: args => html` <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector> `
 }
 
-export const WithSimpleCard: Story = {
+export const InSimpleCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: args => html`
     <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
       <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
+    </nosto-simple-card>
+  `
+}
+
+export const InSimpleCard_AddToCart: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
+      <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
+      <button n-atc>Add to cart</button>
     </nosto-simple-card>
   `
 }
