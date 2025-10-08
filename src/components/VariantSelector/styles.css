@@ -22,10 +22,11 @@
   --value-active-hover-bg: #0056b3;
   --value-active-hover-border: #0056b3;
   --value-focus-color: #007bff;
+  --loading-opacity: 0.7;
 }
 
 :host([loading]) {
-  opacity: 0.7;
+  opacity: var(--loading-opacity);
 }
 
 .selector {
