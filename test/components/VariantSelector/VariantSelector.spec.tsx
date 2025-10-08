@@ -336,6 +336,9 @@ describe("VariantSelector", () => {
     // Click Medium
     mediumButton.click()
 
+    // Wait for async event handlers to complete
+    await new Promise(resolve => setTimeout(resolve, 100))
+
     // Now Medium should be active
     expect(smallButton.classList.contains("active")).toBe(false)
     expect(mediumButton.classList.contains("active")).toBe(true)
