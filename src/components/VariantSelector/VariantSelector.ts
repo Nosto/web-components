@@ -104,7 +104,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   product.options.forEach(option => {
     // Always auto-select single-value options, or multi-value options when preselect is true
-    if (option.values.length === 1 || (element.preselect && option.values.length > 0)) {
+    if (option.values.length === 1 || (element.preselect && option.values.length > 1)) {
       element.selectedOptions[option.name] = option.values[0]
     }
   })

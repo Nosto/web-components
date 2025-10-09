@@ -6,6 +6,7 @@ import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/components/SimpleCard/types"
+import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
 
 describe("VariantSelector", () => {
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
@@ -372,77 +373,9 @@ describe("VariantSelector", () => {
   })
 
   describe("Single-value options", () => {
-    const mockProductWithSingleValueOption: ShopifyProduct = {
-      ...mockProductWithVariants,
-      options: [
-        {
-          name: "Size",
-          position: 1,
-          values: ["Small", "Medium", "Large"]
-        },
-        {
-          name: "Material",
-          position: 2,
-          values: ["Cotton"] // Single value option
-        }
-      ],
-      variants: [
-        {
-          ...mockProductWithVariants.variants[0],
-          id: 3001,
-          title: "Small / Cotton",
-          option1: "Small",
-          option2: "Cotton",
-          options: ["Small", "Cotton"]
-        },
-        {
-          ...mockProductWithVariants.variants[0],
-          id: 3002,
-          title: "Medium / Cotton",
-          option1: "Medium",
-          option2: "Cotton",
-          options: ["Medium", "Cotton"]
-        },
-        {
-          ...mockProductWithVariants.variants[0],
-          id: 3003,
-          title: "Large / Cotton",
-          option1: "Large",
-          option2: "Cotton",
-          options: ["Large", "Cotton"]
-        }
-      ]
-    }
-
-    const mockProductWithAllSingleValueOptions: ShopifyProduct = {
-      ...mockProductWithVariants,
-      options: [
-        {
-          name: "Size",
-          position: 1,
-          values: ["Medium"] // Single value
-        },
-        {
-          name: "Color",
-          position: 2,
-          values: ["Red"] // Single value
-        }
-      ],
-      variants: [
-        {
-          ...mockProductWithVariants.variants[0],
-          id: 4001,
-          title: "Medium / Red",
-          option1: "Medium",
-          option2: "Red",
-          options: ["Medium", "Red"]
-        }
-      ]
-    }
-
     it("should auto-select single-value options regardless of preselect attribute", async () => {
       addProductHandlers({
-        "single-value-test": { product: mockProductWithSingleValueOption }
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
@@ -456,7 +389,7 @@ describe("VariantSelector", () => {
 
     it("should auto-select single-value options even when preselect is true", async () => {
       addProductHandlers({
-        "single-value-test": { product: mockProductWithSingleValueOption }
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
       const selector = (<nosto-variant-selector handle="single-value-test" preselect />) as VariantSelector
@@ -469,7 +402,7 @@ describe("VariantSelector", () => {
 
     it("should hide single-value options from rendered UI", async () => {
       addProductHandlers({
-        "single-value-test": { product: mockProductWithSingleValueOption }
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
@@ -490,7 +423,7 @@ describe("VariantSelector", () => {
 
     it("should not render UI when all options are single-value", async () => {
       addProductHandlers({
-        "all-single-value-test": { product: mockProductWithAllSingleValueOptions }
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
       })
 
       const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
@@ -506,7 +439,7 @@ describe("VariantSelector", () => {
 
     it("should emit variantchange event for products with single-value options", async () => {
       addProductHandlers({
-        "all-single-value-test": { product: mockProductWithAllSingleValueOptions }
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
       })
 
       const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
@@ -525,7 +458,7 @@ describe("VariantSelector", () => {
 
     it("should correctly select variants with mixed single and multi-value options", async () => {
       addProductHandlers({
-        "single-value-test": { product: mockProductWithSingleValueOption }
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
@@ -534,7 +467,7 @@ describe("VariantSelector", () => {
       // Select a size option (Material is auto-selected)
       await selectOption(selector, "Size", "Large")
 
-      const variant = getSelectedVariant(selector, mockProductWithSingleValueOption)
+      const variant = getSelectedVariant(selector, mockProductWithSingleValueOptionTest)
       expect(variant?.id).toBe(3003) // Large / Cotton
       expect(variant?.options).toEqual(["Large", "Cotton"])
     })

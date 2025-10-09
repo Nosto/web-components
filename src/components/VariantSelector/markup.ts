@@ -15,7 +15,6 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
 }
 
 function generateOptionRowHTML(option: { name: string; values: string[] }) {
-  // Hide single-value options from the UI
   if (option.values.length <= 1) {
     return ""
   }

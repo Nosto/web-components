@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
 import { updateShopifyRoot } from "../../utils/storybook"
 import { http, HttpResponse } from "msw"
-import { mockProductWithSingleValueOption, mockProductAllSingleValue } from "../../mock/variantSelectorMocks"
+import { mockProductWithSingleValueOption, mockProductAllSingleValue } from "../../mock/products"
 import "./VariantSelector"
 
 const root = "https://nosto-shopify1.myshopify.com/"
@@ -133,25 +133,5 @@ export const SingleValueOptionDemo: Story = {
         </nosto-simple-card>
       </div>
     </div>
-  `,
-  parameters: {
-    docs: {
-      description: {
-        story: `
-Demonstrates the behavior of single-value options in the VariantSelector component:
-
-**Key Features:**
-- Single-value options are automatically selected regardless of the \`preselect\` attribute
-- Options with only one value are hidden from the UI to avoid showing redundant pills
-- When all options are single-value, no variant selector UI is rendered at all
-- Variant selection logic continues to work correctly with hidden options
-
-**Use Case:**
-This is useful for products where some variant options (like material, brand, or collection) 
-only have one available choice, eliminating unnecessary user interactions while maintaining 
-proper variant tracking.
-        `
-      }
-    }
-  }
+  `
 }
