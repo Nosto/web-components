@@ -9,20 +9,17 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
     return { html: "" }
   }
 
-  // Filter out single-value options as they should be hidden from UI
-  const multiValueOptions = product.options.filter(option => option.values.length > 1)
-
-  // If all options are single-value, don't render anything
-  if (multiValueOptions.length === 0) {
-    return { html: "" }
-  }
-
   return html`
-    <div class="selector" part="selector">${multiValueOptions.map(option => generateOptionRowHTML(option))}</div>
+    <div class="selector" part="selector">${product.options.map(option => generateOptionRowHTML(option))}</div>
   `
 }
 
 function generateOptionRowHTML(option: { name: string; values: string[] }) {
+  // Hide single-value options from the UI
+  if (option.values.length <= 1) {
+    return ""
+  }
+
   return html`
     <div class="row" part="row">
       <div class="label" part="label">${option.name}:</div>
