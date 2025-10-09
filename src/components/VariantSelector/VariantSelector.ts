@@ -112,15 +112,11 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
 }
 
 function setupOptionListeners(element: VariantSelector) {
-  if (!element.shadowRoot) return
-
-  element.shadowRoot.addEventListener("click", async e => {
+  element.shadowRoot!.addEventListener("click", async e => {
     const target = e.target as HTMLElement
     if (target.classList.contains("value")) {
       e.preventDefault()
-      const optionName = target.getAttribute("data-option-name")
-      const optionValue = target.getAttribute("data-option-value")
-
+      const { optionName, optionValue } = target.dataset
       if (optionName && optionValue) {
         await selectOption(element, optionName, optionValue)
       }
@@ -141,12 +137,8 @@ export async function selectOption(element: VariantSelector, optionName: string,
 }
 
 function updateActiveStates(element: VariantSelector) {
-  if (!element.shadowRoot) return
-
-  element.shadowRoot.querySelectorAll(".value").forEach(button => {
-    const optionName = button.getAttribute("data-option-name")
-    const optionValue = button.getAttribute("data-option-value")
-
+  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+    const { optionName, optionValue } = button.dataset
     if (optionName && element.selectedOptions[optionName] === optionValue) {
       button.classList.add("active")
     } else {
@@ -169,10 +161,8 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
 }
 
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
-  if (!product?.variants) return null
-
   return (
-    product.variants.find(variant => {
+    product.variants?.find(variant => {
       return product.options.every((option, index) => {
         const selectedValue = element.selectedOptions[option.name]
         const variantValue = variant.options[index]
