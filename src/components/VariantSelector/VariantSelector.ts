@@ -91,7 +91,11 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     // Setup event listeners for option buttons
     setupOptionListeners(element)
 
+    // active state for selected options
     updateActiveStates(element)
+    // unavailable state for options without available variants
+    updateUnavailableStates(element, productData)
+    // TODO disabled state
 
     if (Object.keys(element.selectedOptions).length > 0) {
       emitVariantChange(element, productData)
@@ -139,17 +143,33 @@ export async function selectOption(element: VariantSelector, optionName: string,
 function updateActiveStates(element: VariantSelector) {
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
-    if (optionName && element.selectedOptions[optionName] === optionValue) {
-      button.classList.add("active")
-    } else {
-      button.classList.remove("active")
-    }
+    const active = !!optionName && element.selectedOptions[optionName] === optionValue
+    button.toggleAttribute("active", active)
+  })
+}
+
+function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
+  const availableOptions = new Set<string>()
+  const optionNames = product.options.map(option => option.name)
+  product.variants
+    .filter(v => v.available)
+    .forEach(variant => {
+      variant.options.forEach((optionValue, i) => {
+        availableOptions.add(`${optionNames[i]}::${optionValue}`)
+      })
+    })
+  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+    const { optionName, optionValue } = button.dataset
+    const available = availableOptions.has(`${optionName}::${optionValue}`)
+    button.toggleAttribute("unavailable", !available)
   })
 }
 
 function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   const variant = getSelectedVariant(element, product)
   if (variant) {
+    // reflect selected variant ID in a data attribute
+    element.dataset.variantId = variant.id.toString()
     const detail: VariantChangeDetail = { variant }
     element.dispatchEvent(
       new CustomEvent("variantchange", {
