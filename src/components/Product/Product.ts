@@ -1,8 +1,9 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createStore, provideStore, Store } from "./store"
+import { createStore, injectKey, Store } from "./store"
 import { customElement } from "../decorators"
 import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
+import { provide } from "../inject"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -57,7 +58,7 @@ export class Product extends NostoElement {
   connectedCallback() {
     assertRequired(this, "productId", "recoId")
     const store = createStore(this)
-    provideStore(this, store)
+    provide(this, injectKey, store)
     addListeners(this, store)
     registerSkuSelectors(this, store)
     registerSkuIds(this, store)
