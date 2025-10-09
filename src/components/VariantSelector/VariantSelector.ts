@@ -102,13 +102,16 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 }
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  if (element.preselect) {
-    product.options.forEach(option => {
-      if (option.values.length > 0) {
-        element.selectedOptions[option.name] = option.values[0]
-      }
-    })
-  }
+  product.options.forEach(option => {
+    // Always auto-select single-value options regardless of preselect attribute
+    if (option.values.length === 1) {
+      element.selectedOptions[option.name] = option.values[0]
+    }
+    // For multi-value options, only preselect if preselect is true
+    else if (element.preselect && option.values.length > 0) {
+      element.selectedOptions[option.name] = option.values[0]
+    }
+  })
 }
 
 function setupOptionListeners(element: VariantSelector) {

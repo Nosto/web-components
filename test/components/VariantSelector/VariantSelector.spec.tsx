@@ -370,4 +370,173 @@ describe("VariantSelector", () => {
     const shadowContent = getShadowContent(selector)
     expect(shadowContent).not.toContain("value active")
   })
+
+  describe("Single-value options", () => {
+    const mockProductWithSingleValueOption: ShopifyProduct = {
+      ...mockProductWithVariants,
+      options: [
+        {
+          name: "Size",
+          position: 1,
+          values: ["Small", "Medium", "Large"]
+        },
+        {
+          name: "Material",
+          position: 2,
+          values: ["Cotton"] // Single value option
+        }
+      ],
+      variants: [
+        {
+          ...mockProductWithVariants.variants[0],
+          id: 3001,
+          title: "Small / Cotton",
+          option1: "Small",
+          option2: "Cotton",
+          options: ["Small", "Cotton"]
+        },
+        {
+          ...mockProductWithVariants.variants[0],
+          id: 3002,
+          title: "Medium / Cotton",
+          option1: "Medium",
+          option2: "Cotton",
+          options: ["Medium", "Cotton"]
+        },
+        {
+          ...mockProductWithVariants.variants[0],
+          id: 3003,
+          title: "Large / Cotton",
+          option1: "Large",
+          option2: "Cotton",
+          options: ["Large", "Cotton"]
+        }
+      ]
+    }
+
+    const mockProductWithAllSingleValueOptions: ShopifyProduct = {
+      ...mockProductWithVariants,
+      options: [
+        {
+          name: "Size",
+          position: 1,
+          values: ["Medium"] // Single value
+        },
+        {
+          name: "Color",
+          position: 2,
+          values: ["Red"] // Single value
+        }
+      ],
+      variants: [
+        {
+          ...mockProductWithVariants.variants[0],
+          id: 4001,
+          title: "Medium / Red",
+          option1: "Medium",
+          option2: "Red",
+          options: ["Medium", "Red"]
+        }
+      ]
+    }
+
+    it("should auto-select single-value options regardless of preselect attribute", async () => {
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOption }
+      })
+
+      const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      await selector.connectedCallback()
+
+      // Material should be auto-selected even without preselect
+      expect(selector.selectedOptions["Material"]).toBe("Cotton")
+      // Size should not be selected since preselect is false
+      expect(selector.selectedOptions["Size"]).toBeUndefined()
+    })
+
+    it("should auto-select single-value options even when preselect is true", async () => {
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOption }
+      })
+
+      const selector = (<nosto-variant-selector handle="single-value-test" preselect />) as VariantSelector
+      await selector.connectedCallback()
+
+      // Both should be selected - Material auto-selected, Size preselected
+      expect(selector.selectedOptions["Material"]).toBe("Cotton")
+      expect(selector.selectedOptions["Size"]).toBe("Small")
+    })
+
+    it("should hide single-value options from rendered UI", async () => {
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOption }
+      })
+
+      const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowContent = getShadowContent(selector)
+
+      // Size (multi-value) should be visible
+      expect(shadowContent).toContain("Size:")
+      expect(shadowContent).toContain("Small")
+      expect(shadowContent).toContain("Medium")
+      expect(shadowContent).toContain("Large")
+
+      // Material (single-value) should be hidden
+      expect(shadowContent).not.toContain("Material:")
+      expect(shadowContent).not.toContain("Cotton")
+    })
+
+    it("should not render UI when all options are single-value", async () => {
+      addProductHandlers({
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptions }
+      })
+
+      const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowContent = getShadowContent(selector)
+      expect(shadowContent).toBe("")
+
+      // But selections should still be made internally
+      expect(selector.selectedOptions["Size"]).toBe("Medium")
+      expect(selector.selectedOptions["Color"]).toBe("Red")
+    })
+
+    it("should emit variantchange event for products with single-value options", async () => {
+      addProductHandlers({
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptions }
+      })
+
+      const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
+
+      let eventDetail: Record<string, unknown> | null = null
+      selector.addEventListener("variantchange", (event: Event) => {
+        eventDetail = (event as CustomEvent).detail
+      })
+
+      await selector.connectedCallback()
+
+      expect(eventDetail).toBeTruthy()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((eventDetail as any)?.variant?.id).toBe(4001)
+    })
+
+    it("should correctly select variants with mixed single and multi-value options", async () => {
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOption }
+      })
+
+      const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      await selector.connectedCallback()
+
+      // Select a size option (Material is auto-selected)
+      await selectOption(selector, "Size", "Large")
+
+      const variant = getSelectedVariant(selector, mockProductWithSingleValueOption)
+      expect(variant?.id).toBe(3003) // Large / Cotton
+      expect(variant?.options).toEqual(["Large", "Cotton"])
+    })
+  })
 })
