@@ -15,6 +15,10 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
 }
 
 function generateOptionRowHTML(option: { name: string; values: string[] }) {
+  if (option.values.length <= 1) {
+    return ""
+  }
+
   return html`
     <div class="row" part="row">
       <div class="label" part="label">${option.name}:</div>
