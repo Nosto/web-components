@@ -27,22 +27,16 @@ describe("NostoImage/shopify.transform", () => {
     expect(result).toBe(`${base}image.jpg?width=600&height=300`)
   })
 
-  it("extracts dimensions and crop from URL", () => {
+  it("extracts dimensions from URL", () => {
     const imageUrl = base + "image_200x300_crop_center.jpg"
     const result = transform(imageUrl)
-    expect(result).toBe(`${base}image.jpg?width=200&height=300&crop=center`)
+    expect(result).toBe(`${base}image.jpg?width=200&height=300`)
   })
 
-  it("adds crop param if provided", () => {
-    const imageUrl = base + "image_200x300.jpg"
-    const result = transform(imageUrl, { crop: "center" })
-    expect(result).toBe(`${base}image.jpg?width=200&height=300&crop=center`)
-  })
-
-  it("overrides dimensions and crop with provided", () => {
+  it("handles URLs with crop in filename", () => {
     const imageUrl = base + "image_200x300_center.jpg"
-    const result = transform(imageUrl, { width: 600, height: 400, crop: "left" })
-    expect(result).toBe(`${base}image.jpg?width=600&height=400&crop=left`)
+    const result = transform(imageUrl, { width: 600, height: 400 })
+    expect(result).toBe(`${base}image.jpg?width=600&height=400`)
   })
 
   it("preserves existing query params", () => {
@@ -69,12 +63,12 @@ describe("NostoImage/shopify.transform", () => {
     expect(result).toBe(`${base}image.jpg?width=800&height=200`)
   })
 
-  it("handles the legacy size parameters with crop is supplied", () => {
+  it("handles the legacy size parameters", () => {
     const sizes = ["pico", "icon", "thumb", "small", "compact", "medium", "large", "grande", "original", "master"]
     sizes.forEach(size => {
       const imageUrl = base + `image_${size}.jpg`
-      const result = transform(imageUrl, { crop: "center" })
-      expect(result).toBe(`${base}image.jpg?crop=center`)
+      const result = transform(imageUrl)
+      expect(result).toBe(`${base}image.jpg`)
     })
   })
 

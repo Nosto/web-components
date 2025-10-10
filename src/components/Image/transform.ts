@@ -1,28 +1,26 @@
 import type { ImageProps, TransformedImageProps } from "./types"
 import { DEFAULT_BREAKPOINTS } from "./types"
 import { transform as bcTransform } from "./bigcommerce"
-import { transform as shopifyTransform, type Crop } from "./shopify"
+import { transform as shopifyTransform } from "./shopify"
 
 function getTransformer(url: string) {
   if (url.includes("shopify")) {
-    return { transform: shopifyTransform, supportsCrop: true }
+    return shopifyTransform
   }
   if (url.includes("bigcommerce")) {
-    return { transform: bcTransform, supportsCrop: false }
+    return bcTransform
   }
   return null
 }
 
 function generateSrcset(
   src: string,
-  transformer: (src: string, options: { width?: number; height?: number; crop?: Crop }) => string,
-  breakpoints: number[],
-  supportsCrop: boolean,
-  crop?: Crop
+  transformer: (src: string, options: { width?: number; height?: number }) => string,
+  breakpoints: number[]
 ): string {
   return breakpoints
     .map(width => {
-      const transformOptions = supportsCrop ? { width, crop } : { width }
+      const transformOptions = { width }
       const transformedSrc = transformer(src, transformOptions)
       return `${transformedSrc} ${width}w`
     })
@@ -66,16 +64,6 @@ export function transform(props: ImageProps): TransformedImageProps {
   // Use custom breakpoints if provided, otherwise use default breakpoints
   const breakpoints = customBreakpoints || [...DEFAULT_BREAKPOINTS]
 
-  // Extract crop from Shopify URLs if supported
-  let crop: Crop | undefined
-  if (transformer.supportsCrop && src.includes("shopify")) {
-    // Try to extract crop from existing URL
-    const cropMatch = src.match(/_crop_([a-zA-Z0-9]+)/)
-    if (cropMatch) {
-      crop = cropMatch[1] as Crop
-    }
-  }
-
   // Generate main src
   // For Shopify, try to extract existing dimensions from URL if no width/height provided
   let mainWidth = width
@@ -100,11 +88,9 @@ export function transform(props: ImageProps): TransformedImageProps {
     mainWidth = breakpoints[0]
   }
 
-  const mainTransformOptions = transformer.supportsCrop
-    ? { width: mainWidth, height: mainHeight, crop }
-    : { width: mainWidth, height: mainHeight }
+  const mainTransformOptions = { width: mainWidth, height: mainHeight }
 
-  const transformedSrc = transformer.transform(src, mainTransformOptions)
+  const transformedSrc = transformer(src, mainTransformOptions)
 
   // Generate srcset for responsive images
   // If a specific width is provided, include it in the srcset
@@ -112,7 +98,7 @@ export function transform(props: ImageProps): TransformedImageProps {
     mainWidth && !customBreakpoints && !breakpoints.includes(mainWidth)
       ? [...breakpoints, mainWidth].sort((a, b) => a - b)
       : breakpoints
-  const srcset = generateSrcset(src, transformer.transform, srcsetBreakpoints, transformer.supportsCrop, crop)
+  const srcset = generateSrcset(src, transformer, srcsetBreakpoints)
 
   // Calculate CSS styles for responsive behavior
   const style: Partial<CSSStyleDeclaration> = {}

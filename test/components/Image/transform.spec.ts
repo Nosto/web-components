@@ -56,10 +56,10 @@ describe("NostoImage/transform", () => {
       expect(result.src).toContain("height=80")
     })
 
-    it("handles crop from url for Shopify images", () => {
+    it("handles crop in filename for Shopify images", () => {
       const imageUrlWithCrop = `${baseUrl}image_200x300_crop_center.jpg`
       const result = transform({ src: imageUrlWithCrop, width: 100, height: 200 })
-      expect(result.src).toBe(`${baseUrl}image.jpg?width=100&height=200&crop=center`)
+      expect(result.src).toBe(`${baseUrl}image.jpg?width=100&height=200`)
       expect(result.srcset).toBeDefined()
     })
 

@@ -1,11 +1,6 @@
 import { normalizeUrl } from "./normalizeUrl"
 
-export type Crop = "center" | "left" | "right" | "top" | "bottom"
-
-export function transform(
-  src: string | URL,
-  { width, height, crop }: { width?: number; height?: number; crop?: Crop } = {}
-): string {
+export function transform(src: string | URL, { width, height }: { width?: number; height?: number } = {}): string {
   const u = new URL(src.toString(), window.location.origin)
 
   // Extract path and extension
@@ -13,15 +8,14 @@ export function transform(
     /^(.*\/[^\/]+?)(?:_(?:pico|icon|thumb|small|compact|medium|large|grande|original|master))?(?:_([0-9]*)x([0-9]*)(?:_(?:crop_)?([a-zA-Z0-9]+))?)?(\.[a-z0-9]+)$/i
   )
   if (!pathMatch) return src.toString()
-  const [, base, wStr, hStr, cropStr, ext] = pathMatch
+  const [, base, wStr, hStr, , ext] = pathMatch
 
   // Remove size/crop from path, restore original filename
   u.pathname = `${base}${ext}`
 
   const params = {
     width: width ?? (wStr && parseInt(wStr, 10)),
-    height: height ?? (hStr && parseInt(hStr, 10)),
-    crop: crop ?? cropStr
+    height: height ?? (hStr && parseInt(hStr, 10))
   }
   Object.entries(params).forEach(([key, value]) => {
     if (value) {

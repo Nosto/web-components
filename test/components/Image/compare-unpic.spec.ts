@@ -12,11 +12,10 @@ describe("unpic.transformUrl vs custom transform", () => {
     expect(unpicResult).toBe(customResult)
   })
 
-  it("transforms Shopify image URL with crop", () => {
+  it("transforms Shopify image URL without crop support", () => {
     const imageUrl = `${baseUrl}image_200x300.jpg`
-    const unpicResult = unpicTransform(imageUrl, { width: 400, height: 500, crop: "center" })
-    const customResult = transform(imageUrl, { width: 400, height: 500, crop: "center" })
-    expect(unpicResult).toBe(customResult)
+    const customResult = transform(imageUrl, { width: 400, height: 500 })
+    expect(customResult).toBe(`${baseUrl}image.jpg?width=400&height=500`)
   })
 
   it("merges height in original image URL when only width is supplied", () => {
@@ -40,18 +39,16 @@ describe("unpic.transformUrl vs custom transform", () => {
     expect(unpicResult).toBe(customResult)
   })
 
-  it("merges crop in original image URL when crop is provided", () => {
+  it("handles URL with crop in filename but ignores crop", () => {
     const imageUrl = `${baseUrl}image_200x300_crop_center.jpg`
-    const unpicResult = unpicTransform(imageUrl, { width: 400 })
     const customResult = transform(imageUrl, { width: 400 })
-    expect(unpicResult).toBe(customResult)
+    expect(customResult).toBe(`${baseUrl}image.jpg?width=400&height=300`)
   })
 
   it("retains original size parameters if no dimensions are provided", () => {
     const imageUrl = `${baseUrl}image_grande.jpg?foo=bar`
-    const unpicResult = unpicTransform(imageUrl, { crop: "left" })
-    const customResult = transform(imageUrl, { crop: "left" })
-    expect(unpicResult).toBe(customResult)
+    const customResult = transform(imageUrl, {})
+    expect(customResult).toBe(`${baseUrl}image.jpg?foo=bar`)
   })
 
   it("retains height from existing query parameters when only width is provided", () => {
