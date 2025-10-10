@@ -16,36 +16,34 @@ describe("NostoImage/transform", () => {
     const imageUrl = `${baseUrl}image_200x300.jpg`
 
     it("transforms shopify url and returns correct props and style", () => {
-      const result = transform({ src: imageUrl, width: 400, height: 200, crop: "center" })
-      expect(result.src).toBe(`${baseUrl}image.jpg?width=400&height=200&crop=center`)
+      const result = transform({ src: imageUrl, width: 400, height: 200 })
+      expect(result.src).toBe(`${baseUrl}image.jpg?width=400&height=200`)
       expect(result.src).toContain("shopify")
-      expect(result.width).toBeUndefined()
-      expect(result.height).toBeUndefined()
+      expect(result.srcset).toBeDefined()
       expect(typeof result.style).toBe("object")
     })
 
-    it("handles missing width/height/crop gracefully", () => {
+    it("handles missing width/height gracefully by extracting from URL", () => {
       const result = transform({ src: imageUrl })
       expect(result.src).toBe(`${baseUrl}image.jpg?width=200&height=300`)
-      expect(result.width).toBeUndefined()
-      expect(result.height).toBeUndefined()
+      expect(result.srcset).toBeDefined()
       expect(result.src).toContain("shopify")
     })
 
-    it("handles undefined crop correctly", () => {
-      const result = transform({ src: imageUrl, width: 300, height: 200, crop: undefined })
+    it("handles width and height correctly", () => {
+      const result = transform({ src: imageUrl, width: 300, height: 200 })
       expect(result.src).toBe(`${baseUrl}image.jpg?width=300&height=200`)
-      expect(result.width).toBeUndefined()
-      expect(result.height).toBeUndefined()
+      expect(result.srcset).toBeDefined()
       expect(typeof result.style).toBe("object")
     })
 
-    it("sanitizes style and props (removes style key from props)", () => {
+    it("generates srcset and applies responsive styles", () => {
       const result = transform({ src: imageUrl, width: 100, height: 200 })
       expect(result.src).toBe(`${baseUrl}image.jpg?width=100&height=200`)
-      expect(result.width).toBeUndefined()
-      expect(result.height).toBeUndefined()
+      expect(result.srcset).toBeDefined()
       expect(result.style).toBeDefined()
+      expect(result.style.maxWidth).toBe("100%")
+      expect(result.style.height).toBe("auto")
     })
 
     it("preserves existing query params", () => {
@@ -58,24 +56,25 @@ describe("NostoImage/transform", () => {
       expect(result.src).toContain("height=80")
     })
 
-    it("handles crop from url if not provided as prop", () => {
+    it("handles crop from url for Shopify images", () => {
       const imageUrlWithCrop = `${baseUrl}image_200x300_crop_center.jpg`
       const result = transform({ src: imageUrlWithCrop, width: 100, height: 200 })
       expect(result.src).toBe(`${baseUrl}image.jpg?width=100&height=200&crop=center`)
+      expect(result.srcset).toBeDefined()
     })
 
     it("handles named dimensions like master/original", () => {
       const imageUrlMaster = `${baseUrl}image_master.jpg`
       const result = transform({ src: imageUrlMaster })
-      expect(result.src).toBe(`${baseUrl}image.jpg`)
+      expect(result.src).toBe(`${baseUrl}image.jpg?width=320`)
+      expect(result.srcset).toBeDefined()
     })
 
     it("prioritizes provided width/height over named dimensions", () => {
       const imageUrlWithDim = `${baseUrl}image_grande.jpg`
       const result = transform({ src: imageUrlWithDim, width: 500, height: 400 })
       expect(result.src).toBe(`${baseUrl}image.jpg?width=500&height=400`)
-      expect(result.width).toBeUndefined()
-      expect(result.height).toBeUndefined()
+      expect(result.srcset).toBeDefined()
     })
 
     it("handles images with no dimension or crop", () => {

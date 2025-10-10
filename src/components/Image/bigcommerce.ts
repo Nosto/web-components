@@ -1,4 +1,3 @@
-import type { Operations } from "unpic/types"
 import { normalizeUrl } from "./normalizeUrl"
 
 type BigCommerceUrlGroups = {
@@ -23,7 +22,7 @@ function dimensionString(width: string | number | undefined, height: string | nu
   return height ? `${width}x${height}` : `${width}w`
 }
 
-export function transform(src: string | URL, { width, height }: Operations) {
+export function transform(src: string | URL, { width, height }: { width?: number; height?: number }) {
   const u = new URL(src.toString(), window.location.origin)
   if (u.pathname.includes("/images/stencil/")) {
     const dimenStr = dimensionString(width, height)

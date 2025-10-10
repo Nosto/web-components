@@ -1,39 +1,37 @@
-import type { Crop, ImageProps } from "./types"
+import type { ImageProps } from "./types"
 import { customElement } from "../decorators"
-import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
 
 /**
- * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
- * refer https://unpic.dev for more details.
+ * NostoImage is a responsive custom element that renders images with automatic srcset generation
+ * for Shopify and BigCommerce URLs. Uses transformer-specific URL handling for optimal performance.
  *
  * @category Campaign level templating
  *
  * @remarks
- * - Supports only Shopify and BigCommerce image URLs.
- * - Support for format, pad_color and quality to be added in the future.
+ * - Supports Shopify and BigCommerce image URLs with automatic responsive srcset generation.
+ * - Uses default breakpoints [320, 640, 768, 1024, 1280, 1600] unless custom breakpoints are provided.
+ * - For unknown image providers, falls back to basic img element without transformation.
  *
  * @property {string} src - The source URL of the image.
  * @property {number} [width] - The width of the image in pixels.
  * @property {number} [height] - The height of the image in pixels.
  * @property {number} [aspectRatio] - The aspect ratio of the image (width / height value).
- * @property {Layout} [layout] - The layout of the image. Can be "fixed", "constrained", or "fullWidth".
- * @property {Crop} [crop] - Shopify only. The crop of the image. Can be "center", "left", "right", "top", or "bottom".
  * @property {string} [alt] - Alternative text for the image for accessibility purposes.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
- * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
+ * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Defaults to [320, 640, 768, 1024, 1280, 1600].
  *
  * @example
  * Using with Shopify image URL:
  * ```html
- * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600" layout="constrained" crop="center"></nosto-image>
+ * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600"></nosto-image>
  * ```
  *
  * @example
  * Using with BigCommerce image URL:
  * ```html
- * <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600" layout="constrained"></nosto-image>
+ * <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600"></nosto-image>
  * ```
  *
  * @example
@@ -43,7 +41,6 @@ import { NostoElement } from "../Element"
  *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
  *   width="800"
  *   aspectRatio="1.5"
- *   layout="constrained"
  *   alt="Product showcase image"
  *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
  * </nosto-image>
@@ -56,7 +53,6 @@ import { NostoElement } from "../Element"
  *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
  *   width="800"
  *   aspectRatio="1.5"
- *   layout="constrained"
  *   alt="Product showcase image"
  *   breakpoints="[320, 640, 768, 1024, 1280]">
  * </nosto-image>
@@ -70,8 +66,6 @@ export class Image extends NostoElement {
     width: Number,
     height: Number,
     aspectRatio: Number,
-    layout: String,
-    crop: String,
     alt: String,
     sizes: String,
     breakpoints: Array
@@ -81,8 +75,6 @@ export class Image extends NostoElement {
   width?: number
   height?: number
   aspectRatio?: number
-  layout?: Layout
-  crop?: Crop
   alt?: string
   sizes?: string
   breakpoints?: number[]
@@ -95,7 +87,7 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints } = this
+    const { src, width, height, aspectRatio, alt, sizes, breakpoints } = this
 
     // Create props object and filter out null/undefined values
     const rawProps = {
@@ -103,8 +95,6 @@ export class Image extends NostoElement {
       width,
       height,
       aspectRatio,
-      layout: layout || "constrained",
-      crop,
       alt,
       sizes,
       breakpoints
@@ -137,14 +127,6 @@ function setProps(img: HTMLImageElement, transformProps: ImageProps) {
 }
 
 function validateProps(element: Image) {
-  if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
-    throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
-  }
-  if (element.layout !== "fullWidth") {
-    if (!element.width && !element.height) {
-      throw new Error("At least one of 'width' or 'height' must be provided.")
-    }
-  }
   if (element.breakpoints) {
     const invalidItems = element.breakpoints.filter(
       item => typeof item !== "number" || !Number.isFinite(item) || item <= 0

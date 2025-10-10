@@ -19,20 +19,13 @@ const sampleImages = [
   }
 ]
 
-function createImageGrid(
-  images: typeof sampleImages,
-  layout?: string,
-  width?: number,
-  height?: number,
-  aspectRatio?: number
-) {
+function createImageGrid(images: typeof sampleImages, width?: number, height?: number, aspectRatio?: number) {
   return html`
     <div class="image-grid">
       ${images.map(
         product => html`
             <nosto-image
               src=${product.imageUrl}
-              layout=${ifDefined(layout)}
               width=${ifDefined(width)}
               height=${ifDefined(height)}
               aspect-ratio=${ifDefined(aspectRatio)}
@@ -61,7 +54,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "Image is a custom element that renders responsive images with support for Shopify and BigCommerce image transformations."
+          "Image is a responsive custom element that automatically generates srcsets for Shopify and BigCommerce images. Uses default breakpoints [320, 640, 768, 1024, 1280, 1600] unless custom breakpoints are provided."
       }
     }
   },
@@ -82,16 +75,7 @@ const meta: Meta = {
       control: "number",
       description: "The aspect ratio of the image (width / height value)."
     },
-    layout: {
-      control: { type: "select" },
-      options: ["constrained", "fullWidth", "fixed"],
-      description: "The layout of the image."
-    },
-    crop: {
-      control: { type: "select" },
-      options: ["center", "left", "right", "top", "bottom"],
-      description: "Shopify only. The crop of the image."
-    },
+
     breakpoints: {
       control: "object",
       description: "Custom widths for responsive image generation. Expects an array of numbers."
@@ -107,41 +91,26 @@ export const Constrained: Story = {
   args: {
     src: "https://picsum.photos/id/25/800/800",
     width: 400,
-    height: 300,
-    layout: "constrained"
+    height: 300
   },
-  render: args =>
-    html`<nosto-image
-      src="${args.src}"
-      width="${args.width}"
-      height="${args.height}"
-      layout="${args.layout}"
-    ></nosto-image>`
+  render: args => html`<nosto-image src="${args.src}" width="${args.width}" height="${args.height}"></nosto-image>`
 }
 
 export const FullWidth: Story = {
   args: {
     src: "https://picsum.photos/id/30/800/600",
-    height: 400,
-    layout: "fullWidth"
+    height: 400
   },
-  render: args => html`<nosto-image src="${args.src}" height="${args.height}" layout="${args.layout}"></nosto-image>`
+  render: args => html`<nosto-image src="${args.src}" height="${args.height}"></nosto-image>`
 }
 
 export const Fixed: Story = {
   args: {
     src: "https://picsum.photos/id/35/800/600",
     width: 500,
-    height: 300,
-    layout: "fixed"
+    height: 300
   },
-  render: args =>
-    html`<nosto-image
-      src="${args.src}"
-      width="${args.width}"
-      height="${args.height}"
-      layout="${args.layout}"
-    ></nosto-image>`
+  render: args => html`<nosto-image src="${args.src}" width="${args.width}" height="${args.height}"></nosto-image>`
 }
 
 export const WidthOnly: Story = {
@@ -162,56 +131,56 @@ export const WidthOnly: Story = {
 export const AspectRatioDemo: Story = {
   render: () => html`
     <div class="image-demo-sub-title">Square (1:1 ratio)</div>
-    ${createImageGrid([sampleImages[0]], undefined, 200, undefined, 1)}
+    ${createImageGrid([sampleImages[0]], 200, undefined, 1)}
 
     <div class="image-demo-sub-title">Wide (16:9 ratio)</div>
-    ${createImageGrid([sampleImages[1]], undefined, 400, undefined, 1.77)}
+    ${createImageGrid([sampleImages[1]], 400, undefined, 1.77)}
 
     <div class="image-demo-sub-title">Portrait (3:4 ratio)</div>
-    ${createImageGrid([sampleImages[2]], undefined, 200, undefined, 0.75)}
+    ${createImageGrid([sampleImages[2]], 200, undefined, 0.75)}
   `
 }
 
-export const ConstrainedLayout: Story = {
+export const ResponsiveLayout: Story = {
   render: () => html`
-    <div class="image-demo-sub-title">Width (300) and Height (800)</div>
-    ${createImageGrid(sampleImages, undefined, 800, 300)}
+    <div class="image-demo-sub-title">Width (800) and Height (300)</div>
+    ${createImageGrid(sampleImages, 800, 300)}
 
     <div class="image-demo-sub-title">Height (300) and AspectRatio (1.33)</div>
-    ${createImageGrid(sampleImages, undefined, undefined, 300, 1.33)}
+    ${createImageGrid(sampleImages, undefined, 300, 1.33)}
   `,
   parameters: {
     docs: {
       description: {
-        story: "Constrained layout showcasing different width/height and aspect ratio configurations."
+        story: "Responsive images with different width/height and aspect ratio configurations."
       }
     }
   }
 }
 
-export const FullWidthLayout: Story = {
+export const FluidLayout: Story = {
   render: () => html`
-    <div class="image-demo-sub-title">Without width and height</div>
-    ${createImageGrid(sampleImages, "fullWidth")}
+    <div class="image-demo-sub-title">Without specified dimensions</div>
+    ${createImageGrid(sampleImages)}
   `,
   parameters: {
     docs: {
       description: {
-        story: "Full width layout that fills the available container width."
+        story: "Fluid responsive layout that adapts to container width using default breakpoints."
       }
     }
   }
 }
 
-export const FixedLayout: Story = {
+export const FixedDimensions: Story = {
   render: () => html`
     <div class="image-demo-sub-title">Width (700) and Height (300)</div>
-    ${createImageGrid(sampleImages, "fixed", 700, 300)}
+    ${createImageGrid(sampleImages, 700, 300)}
   `,
   parameters: {
     docs: {
       description: {
-        story: "Fixed layout with specific width and height dimensions."
+        story: "Images with specific width and height dimensions."
       }
     }
   }
@@ -221,15 +190,13 @@ export const CustomBreakpoints: Story = {
   args: {
     src: "https://picsum.photos/id/40/800/600",
     width: 800,
-    aspectRatio: 1.33,
-    layout: "constrained"
+    aspectRatio: 1.33
   },
   render: args => {
     const element = document.createElement("nosto-image")
     element.setAttribute("src", args.src)
     element.setAttribute("width", String(args.width))
     element.setAttribute("aspect-ratio", String(args.aspectRatio))
-    element.setAttribute("layout", args.layout)
     // Set custom breakpoints as JSON array
     element.setAttribute("breakpoints", "[480, 768, 1024, 1440]")
 
@@ -250,7 +217,7 @@ export const CustomBreakpoints: Story = {
         story: `
           Demonstrates the use of custom breakpoints for responsive image generation.
           The component accepts a breakpoints property as a JSON array of numbers representing widths.
-          These breakpoints are used by the unpic library to generate appropriate srcset values.
+          These breakpoints are used by the Shopify and BigCommerce transformers to generate appropriate srcset values.
         `
       }
     }

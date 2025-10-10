@@ -1,8 +1,11 @@
-import type { Operations } from "unpic/types"
-import { Crop } from "./types"
 import { normalizeUrl } from "./normalizeUrl"
 
-export function transform(src: string | URL, { width, height, crop }: Operations & { crop?: Crop } = {}): string {
+export type Crop = "center" | "left" | "right" | "top" | "bottom"
+
+export function transform(
+  src: string | URL,
+  { width, height, crop }: { width?: number; height?: number; crop?: Crop } = {}
+): string {
   const u = new URL(src.toString(), window.location.origin)
 
   // Extract path and extension

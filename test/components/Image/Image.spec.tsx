@@ -27,12 +27,6 @@ describe("Image", () => {
     expect(imageElement?.style).toBeDefined()
   }
 
-  it("throws when invalid layout value is used", () => {
-    // @ts-expect-error testing invalid layout value
-    nostoImage = (<nosto-image src="https://example.com/image.jpg" layout="invalid" />) as Image
-    expect(() => nostoImage.connectedCallback()).toThrowError(/Invalid layout/)
-  })
-
   it("throws when breakpoints contains non-number values", () => {
     nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} height={200} />) as Image
     // Test with string values in breakpoints
@@ -84,11 +78,6 @@ describe("Image", () => {
   })
 
   describe("Constrained Layout", () => {
-    it("throws when width, height and aspectRadio are missing", () => {
-      nostoImage = (<nosto-image src="https://example.com/image.jpg" />) as Image
-      expect(() => nostoImage.connectedCallback()).toThrowError("At least one of 'width' or 'height' must be provided.")
-    })
-
     it("renders an image with only width prop", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} />) as Image
       nostoImage.connectedCallback()
@@ -140,33 +129,33 @@ describe("Image", () => {
     })
   })
 
-  describe("FullWidth Layout", () => {
-    it("renders an image with srcset, when no width, height or aspectRatio props are provided", () => {
-      nostoImage = (<nosto-image src={shopifyUrl} layout="fullWidth" />) as Image
+  describe("Responsive image generation", () => {
+    it("renders an image with srcset when no width, height or aspectRatio props are provided", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} />) as Image
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      nostoImage = (<nosto-image src={bigCommerceUrl} layout="fullWidth" />) as Image
+      nostoImage = (<nosto-image src={bigCommerceUrl} />) as Image
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
 
     it("renders an image with srcset, sizes and style with only height prop", () => {
-      nostoImage = (<nosto-image src={shopifyUrl} height={300} layout="fullWidth" />) as Image
+      nostoImage = (<nosto-image src={shopifyUrl} height={300} />) as Image
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      nostoImage = (<nosto-image src={bigCommerceUrl} height={300} layout="fullWidth" />) as Image
+      nostoImage = (<nosto-image src={bigCommerceUrl} height={300} />) as Image
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
 
-    it("renders an image with srcset, sizes and style with height and aspectRatio prop", () => {
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} aspectRatio={1.33} layout="fullWidth" />) as Image
+    it("renders an image with srcset, sizes and style with width and aspectRatio prop", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} aspectRatio={1.33} />) as Image
       nostoImage.connectedCallback()
       assertImage(shopifyUrl)
 
-      nostoImage = (<nosto-image src={bigCommerceUrl} width={300} aspectRatio={1.33} layout="fullWidth" />) as Image
+      nostoImage = (<nosto-image src={bigCommerceUrl} width={300} aspectRatio={1.33} />) as Image
       nostoImage.connectedCallback()
       assertImage(stencilUrlPrefix)
     })
@@ -175,7 +164,7 @@ describe("Image", () => {
   describe("Attribute handling", () => {
     it("should not set null or undefined attributes on img element", () => {
       // Create an image with some null/undefined properties
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} crop={undefined} />) as Image
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
       nostoImage.connectedCallback()
 
       const imgElement = nostoImage.querySelector("img")
