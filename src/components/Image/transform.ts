@@ -41,23 +41,8 @@ export function transform(props: ImageProps): TransformedImageProps {
   const breakpoints = customBreakpoints || [...DEFAULT_BREAKPOINTS]
 
   // Generate main src
-  // For Shopify, try to extract existing dimensions from URL if no width/height provided
   let mainWidth = width
-  let mainHeight = height
-
-  if (!mainWidth && !mainHeight && src.includes("shopify")) {
-    // Try to extract dimensions from existing URL
-    const dimMatch = src.match(/_(\d+)x(\d+)/)
-    if (dimMatch) {
-      mainWidth = parseInt(dimMatch[1], 10)
-      mainHeight = parseInt(dimMatch[2], 10)
-    }
-  }
-
-  // For BigCommerce, if only height is provided, use a default large width (1280)
-  if (!mainWidth && mainHeight && src.includes("bigcommerce")) {
-    mainWidth = 1280
-  }
+  const mainHeight = height
 
   // If still no dimensions, use first breakpoint as width
   if (!mainWidth && !mainHeight) {

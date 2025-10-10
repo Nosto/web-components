@@ -21,9 +21,9 @@ describe("NostoImage/transform", () => {
       expect(typeof result.style).toBe("object")
     })
 
-    it("handles missing width/height gracefully by extracting from URL", () => {
+    it("handles missing width/height gracefully by using default breakpoint", () => {
       const result = transform({ src: imageUrl })
-      expect(result.src).toBe(`${baseUrl}image.jpg?width=200&height=300`)
+      expect(result.src).toBe(`${baseUrl}image.jpg?width=320&height=300`)
       expect(result.srcset).toBeDefined()
       expect(result.src).toContain("shopify")
     })
