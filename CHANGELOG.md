@@ -1,3 +1,10 @@
+## [9.2.1](https://github.com/Nosto/web-components/compare/v9.2.0...v9.2.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* add unavailable flags to option values ([f4b683a](https://github.com/Nosto/web-components/commit/f4b683affed6af608295a8f7d9d97ce4ff3632eb))
+
 # [9.2.0](https://github.com/Nosto/web-components/compare/v9.1.0...v9.2.0) (2025-10-08)
 
 
