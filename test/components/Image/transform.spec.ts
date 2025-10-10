@@ -2,13 +2,11 @@ import { describe, it, expect } from "vitest"
 import { transform } from "@/components/Image/transform"
 
 describe("NostoImage/transform", () => {
-  it("returns original url and props for unknown provider", () => {
+  it("throws error for unknown provider", () => {
     const unknownUrl = "https://example.com/images/image.jpg"
-    const result = transform({ src: unknownUrl, width: 300, height: 400 })
-    expect(result.src).toBe(unknownUrl)
-    expect(result.width).toBe(300)
-    expect(result.height).toBe(400)
-    expect(typeof result.style).toBe("object")
+    expect(() => transform({ src: unknownUrl, width: 300, height: 400 })).toThrowError(
+      "Unsupported image provider for URL: https://example.com/images/image.jpg"
+    )
   })
 
   describe("shopify transform", () => {

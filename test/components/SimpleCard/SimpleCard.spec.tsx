@@ -39,8 +39,11 @@ describe("SimpleCard", () => {
     description: "A great product for testing",
     vendor: "Test Brand",
     tags: ["test", "awesome"],
-    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-    featured_image: "https://example.com/image1.jpg",
+    images: [
+      "https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg",
+      "https://cdn.shopify.com/s/files/1/1183/1048/products/image2.jpg"
+    ],
+    featured_image: "https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg",
     price: 1999, // $19.99 in cents
     compare_at_price: 2499, // $24.99 in cents
     variants: [
@@ -72,7 +75,7 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("card")
     expect(shadowContent).toContain("Awesome Test Product")
     expect(shadowContent).toContain("$19.99")
-    expect(shadowContent).toContain("https://example.com/image1.jpg")
+    expect(shadowContent).toContain("https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg")
     expect(card.hasAttribute("loading")).toBe(false)
   })
 
@@ -194,7 +197,7 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("img primary")
     expect(shadowContent).toContain("img alternate")
-    expect(shadowContent).toContain("https://example.com/image2.jpg")
+    expect(shadowContent).toContain("https://cdn.shopify.com/s/files/1/1183/1048/products/image2.jpg")
   })
 
   it("should not render alternate image when product has only one image", async () => {

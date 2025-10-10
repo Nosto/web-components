@@ -1,3 +1,8 @@
+export type Options = {
+  width?: number
+  height?: number
+}
+
 export type ImageProps = {
   src: string
   width?: number

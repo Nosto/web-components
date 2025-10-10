@@ -1,4 +1,5 @@
 import { normalizeUrl } from "./normalizeUrl"
+import type { Options } from "./types"
 
 type BigCommerceUrlGroups = {
   prefix: string
@@ -22,7 +23,7 @@ function dimensionString(width: string | number | undefined, height: string | nu
   return height ? `${width}x${height}` : `${width}w`
 }
 
-export function transform(src: string | URL, { width, height }: { width?: number; height?: number }) {
+export function transform(src: string | URL, { width, height }: Options) {
   const u = new URL(src.toString(), window.location.origin)
   if (u.pathname.includes("/images/stencil/")) {
     const dimenStr = dimensionString(width, height)

@@ -54,7 +54,7 @@ describe("Image", () => {
   })
 
   it("accepts valid breakpoints array", () => {
-    nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} height={200} />) as Image
+    nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
     nostoImage.breakpoints = [320, 640, 768, 1024, 1280]
     expect(() => nostoImage.connectedCallback()).not.toThrow()
   })
@@ -62,7 +62,7 @@ describe("Image", () => {
   it("handles breakpoints set via attribute", () => {
     nostoImage = (
       // @ts-expect-error Testing with string attribute that gets parsed to array
-      <nosto-image src="https://example.com/image.jpg" width={300} height={200} breakpoints="[100, 300, 500]" />
+      <nosto-image src={shopifyUrl} width={300} height={200} breakpoints="[100, 300, 500]" />
     ) as Image
     expect(() => nostoImage.connectedCallback()).not.toThrow()
     expect(nostoImage.breakpoints).toEqual([100, 300, 500])

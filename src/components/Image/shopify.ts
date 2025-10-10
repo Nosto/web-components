@@ -1,6 +1,7 @@
 import { normalizeUrl } from "./normalizeUrl"
+import type { Options } from "./types"
 
-export function transform(src: string | URL, { width, height }: { width?: number; height?: number } = {}): string {
+export function transform(src: string | URL, { width, height }: Options = {}): string {
   const u = new URL(src.toString(), window.location.origin)
 
   // Extract path and extension

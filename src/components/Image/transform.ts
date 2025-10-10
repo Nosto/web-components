@@ -1,4 +1,4 @@
-import type { ImageProps, TransformedImageProps } from "./types"
+import type { ImageProps, TransformedImageProps, Options } from "./types"
 import { DEFAULT_BREAKPOINTS } from "./types"
 import { transform as bcTransform } from "./bigcommerce"
 import { transform as shopifyTransform } from "./shopify"
@@ -15,7 +15,7 @@ function getTransformer(url: string) {
 
 function generateSrcset(
   src: string,
-  transformer: (src: string, options: { width?: number; height?: number }) => string,
+  transformer: (src: string, options: Options) => string,
   breakpoints: number[]
 ): string {
   return breakpoints
@@ -32,33 +32,9 @@ export function transform(props: ImageProps): TransformedImageProps {
 
   const transformer = getTransformer(src)
 
-  // For unknown providers, return basic properties without transformation
+  // For unknown providers, throw an error
   if (!transformer) {
-    const style: Partial<CSSStyleDeclaration> = {}
-
-    if (width) {
-      style.width = `${width}px`
-    }
-    if (height) {
-      style.height = `${height}px`
-    }
-    if (aspectRatio && !height && width) {
-      style.height = `${width / aspectRatio}px`
-    }
-    if (aspectRatio && !width && height) {
-      style.width = `${height * aspectRatio}px`
-    }
-
-    return {
-      src,
-      width,
-      height,
-      alt,
-      sizes: sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-      loading: "lazy",
-      decoding: "async",
-      style
-    }
+    throw new Error(`Unsupported image provider for URL: ${src}`)
   }
 
   // Use custom breakpoints if provided, otherwise use default breakpoints

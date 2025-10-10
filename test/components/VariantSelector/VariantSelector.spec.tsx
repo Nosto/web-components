@@ -37,8 +37,11 @@ describe("VariantSelector", () => {
     description: "A product with variants for testing",
     vendor: "Test Brand",
     tags: ["test", "variants"],
-    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-    featured_image: "https://example.com/image1.jpg",
+    images: [
+      "https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg",
+      "https://cdn.shopify.com/s/files/1/1183/1048/products/image2.jpg"
+    ],
+    featured_image: "https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg",
     price: 1999, // $19.99 in cents
     compare_at_price: 2499, // $24.99 in cents
     published_at: "2023-01-01T00:00:00Z",
@@ -55,7 +58,7 @@ describe("VariantSelector", () => {
     media: [
       {
         id: 1,
-        src: "https://example.com/image1.jpg",
+        src: "https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg",
         alt: "Product image 1",
         position: 1,
         aspect_ratio: 1,
@@ -66,7 +69,7 @@ describe("VariantSelector", () => {
           aspect_ratio: 1,
           height: 300,
           width: 300,
-          src: "https://example.com/image1.jpg"
+          src: "https://cdn.shopify.com/s/files/1/1183/1048/products/image1.jpg"
         }
       }
     ],
