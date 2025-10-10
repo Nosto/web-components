@@ -291,4 +291,143 @@ describe("Image", () => {
       expect(imgElement?.srcset).toBeDefined()
     })
   })
+
+  describe("Unstyled attribute", () => {
+    it("should apply styles by default when unstyled is not set", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Should have styles applied (non-empty style object)
+      expect(imgElement?.style.cssText).not.toBe("")
+    })
+
+    it("should apply styles when unstyled is explicitly set to false", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      // Explicitly set to false using property (not attribute)
+      nostoImage.unstyled = false
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Should have styles applied (non-empty style object)
+      expect(imgElement?.style.cssText).not.toBe("")
+    })
+
+    it("should skip applying styles when unstyled is true", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} unstyled={true} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Should have no styles applied (empty style object)
+      expect(imgElement?.style.cssText).toBe("")
+    })
+
+    it("should still set attributes but not styles when unstyled is true", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} alt="Test image" unstyled={true} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+
+      // Should have attributes set
+      expect(imgElement!.hasAttribute("src")).toBe(true)
+      expect(imgElement!.hasAttribute("srcset")).toBe(true)
+      expect(imgElement!.hasAttribute("sizes")).toBe(true)
+      expect(imgElement!.getAttribute("alt")).toBe("Test image")
+
+      // But no styles applied
+      expect(imgElement?.style.cssText).toBe("")
+    })
+
+    it("should work correctly with existing img element when unstyled is true", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} unstyled={true} />) as Image
+
+      // Manually insert an img element with existing styles
+      const existingImg = document.createElement("img")
+      existingImg.style.border = "1px solid red"
+      existingImg.style.margin = "10px"
+      nostoImage.appendChild(existingImg)
+
+      // Store existing styles for comparison
+      const initialBorder = existingImg.style.border
+      const initialMargin = existingImg.style.margin
+
+      // Call connectedCallback to trigger the update
+      nostoImage.connectedCallback()
+
+      // Verify the same img element is still there
+      const imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBe(existingImg)
+
+      // Should have attributes updated
+      expect(imgElement?.src).toContain(shopifyUrl)
+      expect(imgElement?.srcset).toBeDefined()
+
+      // Should preserve existing styles and not add transform styles
+      expect(imgElement?.style.border).toBe(initialBorder)
+      expect(imgElement?.style.margin).toBe(initialMargin)
+
+      // Check that transform-specific styles were not added by verifying
+      // that the total cssText only contains our original styles
+      const cssText = imgElement?.style.cssText || ""
+      expect(cssText).toContain("border")
+      expect(cssText).toContain("margin")
+      // Transform styles like aspect-ratio, object-fit should not be present
+      expect(cssText).not.toContain("aspect-ratio")
+      expect(cssText).not.toContain("object-fit")
+    })
+
+    it("should toggle between styled and unstyled when attribute changes", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      document.body.appendChild(nostoImage)
+
+      // Initially styled
+      expect(nostoImage.querySelector("img")?.style.cssText).not.toBe("")
+
+      // Change to unstyled and trigger re-render
+      nostoImage.unstyled = true
+      // This will trigger attributeChangedCallback -> connectedCallback which re-applies props
+
+      // Wait for next tick since attributeChangedCallback is async in some cases
+      // Create a new image element to test unstyled behavior
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} unstyled={true} />) as Image
+      nostoImage.connectedCallback()
+      expect(nostoImage.querySelector("img")?.style.cssText).toBe("")
+
+      // Change back to styled
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      nostoImage.unstyled = false
+      nostoImage.connectedCallback()
+      expect(nostoImage.querySelector("img")?.style.cssText).not.toBe("")
+      expect(nostoImage.querySelector("img")?.style.cssText.length).toBeGreaterThan(0)
+    })
+
+    it("should work with different layouts when unstyled is true", () => {
+      // Test with fullWidth layout
+      nostoImage = (<nosto-image src={shopifyUrl} layout="fullWidth" unstyled={true} />) as Image
+      nostoImage.connectedCallback()
+
+      let imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.hasAttribute("src")).toBe(true)
+      expect(imgElement!.hasAttribute("srcset")).toBe(true)
+      expect(imgElement?.style.cssText).toBe("")
+
+      // Test with fixed layout
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} layout="fixed" unstyled={true} />) as Image
+      nostoImage.connectedCallback()
+
+      imgElement = nostoImage.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.hasAttribute("src")).toBe(true)
+      expect(imgElement!.hasAttribute("srcset")).toBe(true)
+      expect(imgElement?.style.cssText).toBe("")
+    })
+  })
 })

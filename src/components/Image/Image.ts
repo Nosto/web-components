@@ -23,6 +23,7 @@ import { NostoElement } from "../Element"
  * @property {string} [alt] - Alternative text for the image for accessibility purposes.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
+ * @property {boolean} [unstyled] - When true, skips applying the inline styles produced by the transform helper, leaving the image unstyled.
  *
  * @example
  * Using with Shopify image URL:
@@ -74,7 +75,8 @@ export class Image extends NostoElement {
     crop: String,
     alt: String,
     sizes: String,
-    breakpoints: Array
+    breakpoints: Array,
+    unstyled: Boolean
   }
 
   src!: string
@@ -86,6 +88,7 @@ export class Image extends NostoElement {
   alt?: string
   sizes?: string
   breakpoints?: number[]
+  unstyled?: boolean
 
   attributeChangedCallback() {
     if (this.isConnected) {
@@ -95,7 +98,7 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints } = this
+    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled } = this
 
     // Create props object and filter out null/undefined values
     const rawProps = {
@@ -117,23 +120,25 @@ export class Image extends NostoElement {
 
     let img = this.querySelector("img")
     if (img) {
-      setProps(img, transformProps)
+      setProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
-      setProps(img, transformProps)
+      setProps(img, transformProps, unstyled)
       this.replaceChildren(img)
     }
   }
 }
 
-function setProps(img: HTMLImageElement, transformProps: ImageProps) {
+function setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
   const { style, ...props } = transform(transformProps)
   Object.entries(props).forEach(([key, value]) => {
     if (value != null) {
       img.setAttribute(key, String(value))
     }
   })
-  Object.assign(img.style, style)
+  if (!unstyled) {
+    Object.assign(img.style, style)
+  }
 }
 
 function validateProps(element: Image) {

@@ -95,6 +95,11 @@ const meta: Meta = {
     breakpoints: {
       control: "object",
       description: "Custom widths for responsive image generation. Expects an array of numbers."
+    },
+    unstyled: {
+      control: "boolean",
+      description:
+        "When true, skips applying the inline styles produced by the transform helper, leaving the image unstyled."
     }
   },
   tags: ["autodocs"]
@@ -251,6 +256,46 @@ export const CustomBreakpoints: Story = {
           Demonstrates the use of custom breakpoints for responsive image generation.
           The component accepts a breakpoints property as a JSON array of numbers representing widths.
           These breakpoints are used by the unpic library to generate appropriate srcset values.
+        `
+      }
+    }
+  }
+}
+
+export const Unstyled: Story = {
+  render: () => html`
+    <div style="display: flex; gap: 20px; align-items: flex-start;">
+      <div style="flex: 1;">
+        <div class="image-demo-sub-title">Default (with styles)</div>
+        <p>This image has all transform styles applied by unpic library.</p>
+        <nosto-image
+          src="https://picsum.photos/id/25/800/800"
+          width="300"
+          height="200"
+          layout="constrained"
+        ></nosto-image>
+      </div>
+      <div style="flex: 1;">
+        <div class="image-demo-sub-title">Unstyled</div>
+        <p>This image skips transform styles, only attributes are set. You can apply custom CSS styling.</p>
+        <nosto-image
+          src="https://picsum.photos/id/25/800/800"
+          width="300"
+          height="200"
+          layout="constrained"
+          unstyled
+          style="border: 2px solid #007bff; border-radius: 8px; display: block; max-width: 100%;"
+        ></nosto-image>
+      </div>
+    </div>
+  `,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+          Demonstrates the unstyled attribute functionality. When the unstyled attribute is present,
+          the component skips applying inline styles from the transform helper, allowing you to
+          apply custom CSS styling while still getting the responsive attributes (src, srcset, sizes).
         `
       }
     }
