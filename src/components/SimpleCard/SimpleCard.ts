@@ -54,7 +54,9 @@ export class SimpleCard extends NostoElement {
   rating?: number
   sizes?: string
 
+  /** @hidden */
   productId?: number
+  /** @hidden */
   variantId?: number
 
   constructor() {
