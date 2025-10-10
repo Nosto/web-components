@@ -1,3 +1,10 @@
+# [9.3.0](https://github.com/Nosto/web-components/compare/v9.2.1...v9.3.0) (2025-10-10)
+
+
+### Features
+
+* **VariantSelector:** implement single-value option auto-selection and hiding ([15e069e](https://github.com/Nosto/web-components/commit/15e069e99a7e9329db0315edc5f5352bb8c3da8c))
+
 ## [9.2.1](https://github.com/Nosto/web-components/compare/v9.2.0...v9.2.1) (2025-10-10)
 
 
