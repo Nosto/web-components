@@ -81,6 +81,7 @@ export class Campaign extends NostoElement {
   lazy?: boolean
   cartSynced?: boolean
 
+  /** @hidden */
   templateElement?: HTMLTemplateElement
 
   async connectedCallback() {

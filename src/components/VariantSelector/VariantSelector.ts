@@ -43,7 +43,10 @@ export class VariantSelector extends NostoElement {
   handle!: string
   preselect?: boolean
 
-  /** Internal state for current selections */
+  /**
+   * Internal state for current selections
+   * @hidden
+   */
   selectedOptions: Record<string, string> = {}
 
   constructor() {
