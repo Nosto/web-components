@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: inherit;
   overflow: hidden;
   background: white;
   --font-family: Arial, sans-serif;
@@ -93,6 +94,11 @@
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   width: fit-content;
+}
+
+.rating {
+  color: var(--rating-color);
+  margin-top: 0.5rem;
 }
 
 .image.placeholder {
