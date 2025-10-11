@@ -100,6 +100,11 @@ export class Image extends NostoElement {
   breakpoints?: number[]
   unstyled?: boolean
 
+  constructor() {
+    super()
+    this.attachShadow({ mode: "open" })
+  }
+
   attributeChangedCallback() {
     if (this.isConnected) {
       this.connectedCallback()
@@ -127,11 +132,6 @@ export class Image extends NostoElement {
     const transformProps = Object.fromEntries(
       Object.entries(rawProps).filter(([, value]) => value != null)
     ) as ImageProps
-
-    // Create/attach shadow root if not already present
-    if (!this.shadowRoot) {
-      this.attachShadow({ mode: "open" })
-    }
 
     let img = this.shadowRoot!.querySelector("img")
     if (img) {
