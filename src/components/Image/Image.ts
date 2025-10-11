@@ -23,17 +23,18 @@ import { NostoElement } from "../Element"
  * @property {string} [alt] - Alternative text for the image for accessibility purposes.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
+ * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  *
  * @example
  * Using with Shopify image URL:
  * ```html
- * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600" layout="constrained" crop="center"></nosto-image>
+ * <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600" crop="center"></nosto-image>
  * ```
  *
  * @example
  * Using with BigCommerce image URL:
  * ```html
- * <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600" layout="constrained"></nosto-image>
+ * <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600"></nosto-image>
  * ```
  *
  * @example
@@ -43,7 +44,6 @@ import { NostoElement } from "../Element"
  *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
  *   width="800"
  *   aspectRatio="1.5"
- *   layout="constrained"
  *   alt="Product showcase image"
  *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
  * </nosto-image>
@@ -56,9 +56,20 @@ import { NostoElement } from "../Element"
  *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
  *   width="800"
  *   aspectRatio="1.5"
- *   layout="constrained"
  *   alt="Product showcase image"
  *   breakpoints="[320, 640, 768, 1024, 1280]">
+ * </nosto-image>
+ * ```
+ *
+ * @example
+ * Using with unstyled attribute to prevent inline styles:
+ * ```html
+ * <nosto-image
+ *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+ *   width="800"
+ *   height="600"
+ *   unstyled
+ *   alt="Product image without inline styles">
  * </nosto-image>
  * ```
  */
@@ -74,7 +85,8 @@ export class Image extends NostoElement {
     crop: String,
     alt: String,
     sizes: String,
-    breakpoints: Array
+    breakpoints: Array,
+    unstyled: Boolean
   }
 
   src!: string
@@ -86,6 +98,7 @@ export class Image extends NostoElement {
   alt?: string
   sizes?: string
   breakpoints?: number[]
+  unstyled?: boolean
 
   attributeChangedCallback() {
     if (this.isConnected) {
@@ -95,7 +108,7 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints } = this
+    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled } = this
 
     // Create props object and filter out null/undefined values
     const rawProps = {
@@ -103,7 +116,7 @@ export class Image extends NostoElement {
       width,
       height,
       aspectRatio,
-      layout: layout || "constrained",
+      layout,
       crop,
       alt,
       sizes,
@@ -115,32 +128,39 @@ export class Image extends NostoElement {
       Object.entries(rawProps).filter(([, value]) => value != null)
     ) as ImageProps
 
-    let img = this.querySelector("img")
+    // Create/attach shadow root if not already present
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: "open" })
+    }
+
+    let img = this.shadowRoot!.querySelector("img")
     if (img) {
-      setProps(img, transformProps)
+      setProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
-      setProps(img, transformProps)
-      this.replaceChildren(img)
+      setProps(img, transformProps, unstyled)
+      this.shadowRoot!.replaceChildren(img)
     }
   }
 }
 
-function setProps(img: HTMLImageElement, transformProps: ImageProps) {
+function setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
   const { style, ...props } = transform(transformProps)
   Object.entries(props).forEach(([key, value]) => {
     if (value != null) {
       img.setAttribute(key, String(value))
     }
   })
-  Object.assign(img.style, style)
+  if (!unstyled) {
+    Object.assign(img.style, style)
+  }
 }
 
 function validateProps(element: Image) {
   if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
-  if (element.layout !== "fullWidth") {
+  if (element.layout !== "fullWidth" && element.layout !== undefined) {
     if (!element.width && !element.height) {
       throw new Error("At least one of 'width' or 'height' must be provided.")
     }

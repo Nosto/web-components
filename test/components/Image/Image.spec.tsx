@@ -20,7 +20,7 @@ describe("Image", () => {
   }
 
   function assertImage(src: string) {
-    const imageElement = nostoImage.querySelector("img")
+    const imageElement = nostoImage.shadowRoot?.querySelector("img")
     expect(imageElement?.src).toContain(src)
     expect(imageElement?.srcset).toBeDefined()
     expect(imageElement?.sizes).toBeDefined()
@@ -77,9 +77,9 @@ describe("Image", () => {
   it("rerenders when attributes are updated", () => {
     nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
     document.body.appendChild(nostoImage)
-    const oldSrcSet = nostoImage.querySelector("img")?.getAttribute("srcset")
+    const oldSrcSet = nostoImage.shadowRoot?.querySelector("img")?.getAttribute("srcset")
     nostoImage.width = 400
-    const newSrcSet = nostoImage.querySelector("img")?.getAttribute("srcset")
+    const newSrcSet = nostoImage.shadowRoot?.querySelector("img")?.getAttribute("srcset")
     expect(newSrcSet).not.toBe(oldSrcSet)
   })
 
@@ -178,7 +178,7 @@ describe("Image", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} crop={undefined} />) as Image
       nostoImage.connectedCallback()
 
-      const imgElement = nostoImage.querySelector("img")
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
 
       // Check that no attributes have null or undefined string values
@@ -196,7 +196,7 @@ describe("Image", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={400} height={300} />) as Image
       nostoImage.connectedCallback()
 
-      const imgElement = nostoImage.querySelector("img")
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
 
       // Check that valid attributes are present
@@ -216,7 +216,7 @@ describe("Image", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} alt={altText} />) as Image
       nostoImage.connectedCallback()
 
-      let imgElement = nostoImage.querySelector("img")
+      let imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
       expect(imgElement!.getAttribute("alt")).toBe(altText)
 
@@ -225,7 +225,7 @@ describe("Image", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={400} aspectRatio={1.5} sizes={sizesValue} />) as Image
       nostoImage.connectedCallback()
 
-      imgElement = nostoImage.querySelector("img")
+      imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
       expect(imgElement!.getAttribute("sizes")).toBe(sizesValue)
 
@@ -237,22 +237,103 @@ describe("Image", () => {
       ) as Image
       nostoImage.connectedCallback()
 
-      imgElement = nostoImage.querySelector("img")
+      imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
       expect(imgElement!.getAttribute("alt")).toBe(combinedAltText)
       expect(imgElement!.getAttribute("sizes")).toBe(combinedSizesValue)
     })
   })
 
-  describe("Existing img child reuse", () => {
-    it("should reuse existing img child when present", () => {
+  describe("Shadow DOM rendering", () => {
+    it("should render image inside shadow DOM", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      nostoImage.connectedCallback()
+
+      // Verify shadow root exists
+      expect(nostoImage.shadowRoot).toBeDefined()
+
+      // Verify img is in shadow DOM, not in light DOM
+      expect(nostoImage.querySelector("img")).toBeNull()
+      expect(nostoImage.shadowRoot?.querySelector("img")).toBeDefined()
+    })
+
+    it("should attach shadow root if not already present", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
 
-      // Manually insert an img element
+      expect(nostoImage.shadowRoot).toBeNull()
+      nostoImage.connectedCallback()
+      expect(nostoImage.shadowRoot).toBeDefined()
+    })
+  })
+
+  describe("Unstyled attribute", () => {
+    it("should apply inline styles when unstyled is false/undefined", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement?.style.cssText).not.toBe("")
+    })
+
+    it("should skip inline styles when unstyled is true", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} unstyled />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement?.style.cssText).toBe("")
+    })
+
+    it("should still set attributes when unstyled is true", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} alt="Test alt" unstyled />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement?.getAttribute("alt")).toBe("Test alt")
+      expect(imgElement?.hasAttribute("src")).toBe(true)
+      expect(imgElement?.hasAttribute("srcset")).toBe(true)
+      expect(imgElement?.style.cssText).toBe("")
+    })
+  })
+
+  describe("Optional layout attribute", () => {
+    it("should work without layout attribute when width/height provided", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      expect(() => nostoImage.connectedCallback()).not.toThrow()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement?.src).toContain(shopifyUrl)
+    })
+
+    it("should work without layout attribute when only width provided", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} />) as Image
+      expect(() => nostoImage.connectedCallback()).not.toThrow()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement?.src).toContain(shopifyUrl)
+    })
+
+    it("should work without layout attribute when only height provided", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} height={200} />) as Image
+      expect(() => nostoImage.connectedCallback()).not.toThrow()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement?.src).toContain(shopifyUrl)
+    })
+  })
+
+  describe("Existing img child reuse", () => {
+    it("should reuse existing img child when present in shadow DOM", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+
+      // Attach shadow root and manually insert an img element
+      nostoImage.attachShadow({ mode: "open" })
       const existingImg = document.createElement("img")
       existingImg.src = "https://example.com/old-image.jpg"
       existingImg.setAttribute("data-test-id", "existing-image")
-      nostoImage.appendChild(existingImg)
+      nostoImage.shadowRoot!.appendChild(existingImg)
 
       // Add event listener to verify it's preserved
       let clickCount = 0
@@ -262,7 +343,7 @@ describe("Image", () => {
       nostoImage.connectedCallback()
 
       // Verify the same img element is still there
-      const imgElement = nostoImage.querySelector("img")
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBe(existingImg)
       expect(imgElement?.getAttribute("data-test-id")).toBe("existing-image")
 
@@ -278,14 +359,14 @@ describe("Image", () => {
     it("should create new img child when none exists", () => {
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
 
-      // Ensure no img exists initially
-      expect(nostoImage.querySelector("img")).toBeNull()
+      // Ensure no shadowRoot exists initially
+      expect(nostoImage.shadowRoot).toBeNull()
 
       // Call connectedCallback
       nostoImage.connectedCallback()
 
-      // Verify new img was created
-      const imgElement = nostoImage.querySelector("img")
+      // Verify new img was created in shadow DOM
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
       expect(imgElement?.src).toContain(shopifyUrl)
       expect(imgElement?.srcset).toBeDefined()
