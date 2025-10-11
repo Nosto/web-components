@@ -12,7 +12,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
         ${generateImageHTML(element, product)}
         <div class="content" part="content">
           ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
-          <h3 class="title" part="title">${product.title}</h3>
+          <div class="title" part="title">${product.title}</div>
           <div class="price" part="price">
             <span class="price-current" part="price-current"> ${formatPrice(product.price || 0)} </span>
             ${hasDiscount

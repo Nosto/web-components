@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-family: inherit;
   border: 1px solid #e1e1e1;
   overflow: hidden;
   background: white;
@@ -65,7 +66,7 @@
 }
 
 .brand {
-  font-size: 12px;
+ 
   color: var(--brand-color);
   text-transform: uppercase;
   margin-bottom: 0.5rem;
@@ -93,8 +94,6 @@
 }
 
 .price-current {
-  font-size: 18px;
-  font-weight: 600;
   color: var(--price-color);
 }
 
@@ -108,13 +107,11 @@
   color: var(--discount-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 12px;
   width: fit-content;
 }
 
 .rating {
   color: var(--rating-color);
-  font-size: 14px;
   margin-top: 0.5rem;
 }
 
