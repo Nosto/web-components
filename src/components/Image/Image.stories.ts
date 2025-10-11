@@ -95,6 +95,10 @@ const meta: Meta = {
     breakpoints: {
       control: "object",
       description: "Custom widths for responsive image generation. Expects an array of numbers."
+    },
+    unstyled: {
+      control: "boolean",
+      description: "When enabled, prevents inline styles from being applied to the image element."
     }
   },
   tags: ["autodocs"]
