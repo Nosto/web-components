@@ -1,7 +1,7 @@
 /**
  * HTML escapes a string for safe insertion into HTML
  */
-export function escapeHtml(unsafe: string): string {
+export function escapeHtml(unsafe: string) {
   return unsafe
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

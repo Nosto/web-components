@@ -1,5 +1,4 @@
 import { html } from "@/templating/html"
-import { escapeHtml } from "@/utils/escapeHtml"
 import type { ShopifyProduct } from "../SimpleCard/types"
 import type { VariantSelector } from "./VariantSelector"
 
@@ -27,15 +26,9 @@ function generateOptionRowHTML(option: { name: string; values: string[] }) {
   `
 }
 
-function generateOptionValueHTML(optionName: string, value: string) {
+function generateOptionValueHTML(name: string, value: string) {
   return html`
-    <button
-      type="button"
-      class="value"
-      part="value"
-      data-option-name="${escapeHtml(optionName)}"
-      data-option-value="${escapeHtml(value)}"
-    >
+    <button type="button" class="value" part="value" data-option-name="${name}" data-option-value="${value}">
       ${value}
     </button>
   `
