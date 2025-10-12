@@ -42,11 +42,14 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
     element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
   const alternateImage = product.media?.[1]?.src || product.images?.[1]
 
+  // Get aspect ratio from media object, fallback to 1
+  const aspectRatio = product.media?.[0]?.aspect_ratio || 1
+
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
+      ${generateNostoImageHTML(primaryImage, product.title, aspectRatio, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
-        ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
+        ? generateNostoImageHTML(alternateImage, product.title, aspectRatio, "img alternate", element.sizes)
         : ""}
     </div>
   `
@@ -59,12 +62,13 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
+function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string, sizes?: string) {
   return html`
     <nosto-image
       src="${normalizeUrl(src)}"
       alt="${alt}"
-      width="300"
+      width="800"
+      aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="${className}"
       ${sizes ? html`sizes="${sizes}"` : ""}
