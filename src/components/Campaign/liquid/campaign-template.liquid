@@ -3,14 +3,12 @@
   Supports simple, native, and section modes with grid and carousel layouts
 -->
 <div class="nosto-campaign-wrapper">
-
-  
   <!-- Simple and Native modes: uses product cards with layout-specific wrappers -->
   {% if settings.mode == 'simple' or settings.mode == 'native' %}
     <div class="campaign-{{ settings.mode }}">
       <!-- Layout-specific wrapper start -->
       {% if settings.layout == 'grid' %}
-        <div class="campaign-grid campaign-grid-{{ products.size }}">
+        <div class="campaign-grid">
       {% elsif settings.layout == 'carousel' %}
         <swiper-container class="campaign-carousel">
           <div class="swiper-wrapper">
@@ -102,23 +100,7 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
   
-  .campaign-grid-1 {
-    grid-template-columns: 1fr;
-  }
-  
-  .campaign-grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .campaign-grid-3 {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-  
-  .campaign-grid-4,
-  .campaign-grid-5,
-  .campaign-grid-6 {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
+
   
   @media (max-width: 768px) {
     .campaign-grid {
