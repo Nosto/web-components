@@ -13,7 +13,7 @@ export interface Settings {
 
   // Layout and mode settings
   /** Rendering mode - determines which components and templates are used */
-  mode: "simple" | "native" | "section"
+  mode: "simple" | "dynamic" | "section"
   /** Layout type - grid renders products in a grid, carousel renders in a swiper-based carousel */
   layout: "grid" | "carousel"
   /** Grid size - controls the number of columns in grid layout */
@@ -32,10 +32,10 @@ export interface Settings {
   simpleSizes?: string
 
   // VariantSelector component attributes (optional in SimpleCard)
-  /** If true, preselects the first available variant */
-  variantSelectorPreselect?: boolean
   /** Controls whether VariantSelector should be rendered */
   variantSelector?: boolean
+  /** If true, preselects the first available variant */
+  variantSelectorPreselect?: boolean
 
   // DynamicCard component attributes (used in native mode)
   /** The section to be used for DynamicCard rendering */
