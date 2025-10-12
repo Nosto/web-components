@@ -28,27 +28,27 @@
         {% if settings.mode == 'simple' %}
           <nosto-simple-card
             handle="{{ product.handle }}"
-            {% if settings.alternate %}alternate{% endif %}
-            {% if settings.brand %}brand{% endif %}
-            {% if settings.discount %}discount{% endif %}
-            {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
-            {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
+            {% if settings.simpleAlternate %}alternate{% endif %}
+            {% if settings.simpleBrand %}brand{% endif %}
+            {% if settings.simpleDiscount %}discount{% endif %}
+            {% if settings.simpleRating %}rating{% endif %}
+            {% if settings.simpleSizes %}sizes="{{ settings.simpleSizes }}"{% endif %}
           >
-            {% if product.handle and settings.variantSelector %}
+            {% if settings.variantSelector %}
               <nosto-variant-selector
                 handle="{{ product.handle }}"
-                {% if settings.preselect %}preselect{% endif %}
+                {% if settings.variantSelectorPreselect %}preselect{% endif %}
               ></nosto-variant-selector>
             {% endif %}
           </nosto-simple-card>
         {% elsif settings.mode == 'native' %}
           <nosto-dynamic-card
             handle="{{ product.handle }}"
-            {% if settings.template %}template="{{ settings.template }}"{% endif %}
-            {% if settings.section %}section="{{ settings.section }}"{% endif %}
+            {% if settings.dynamicTemplate %}template="{{ settings.dynamicTemplate }}"{% endif %}
+            {% if settings.dynamicSection %}section="{{ settings.dynamicSection }}"{% endif %}
             {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
             {% if settings.placeholder %}placeholder{% endif %}
-            {% if settings.lazy %}lazy{% endif %}
+            {% if settings.campaignLazy %}lazy{% endif %}
           ></nosto-dynamic-card>
         {% endif %}
         
@@ -76,49 +76,14 @@
   {% if settings.mode == 'section' %}
     <div class="campaign-section">
       <nosto-section-campaign
-        placement="{{ settings.placement }}"
-        {% if settings.section %}section="{{ settings.section }}"{% endif %}
+        placement="{{ settings.campaignPlacement }}"
+        {% if settings.sectionCampaignSection %}section="{{ settings.sectionCampaignSection }}"{% endif %}
       ></nosto-section-campaign>
     </div>
   {% endif %}
 </div>
 
-<!-- Initialize Swiper carousel if layout is carousel -->
-{% if settings.layout == 'carousel' %}
-  <script type="module">
-    // Import Swiper elements from CDN
-    import { register } from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.mjs';
-    
-    // Register Swiper elements
-    register();
-    
-    // Configure swiper-container elements
-    document.addEventListener('DOMContentLoaded', () => {
-      const swiperElement = document.querySelector('swiper-container.campaign-carousel');
-      if (swiperElement) {
-        Object.assign(swiperElement, {
-          slidesPerView: 'auto',
-          spaceBetween: 16,
-          pagination: {
-            clickable: true,
-          },
-          navigation: true,
-          breakpoints: {
-            640: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
-          }
-        });
-      }
-    });
-  </script>
-{% endif %}
+
 
 <style>
   .nosto-campaign-wrapper {
