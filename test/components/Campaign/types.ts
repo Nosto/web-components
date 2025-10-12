@@ -1,18 +1,8 @@
 /**
- * Campaign layout types for controlling how products are displayed
- */
-export type CampaignLayout = "grid" | "carousel"
-
-/**
- * Campaign rendering modes that determine which components are used
- */
-export type CampaignMode = "simple" | "native" | "section"
-
-/**
  * Settings object exposed to liquid templates for Campaign rendering
  * Contains all mapped attributes from Campaign, SimpleCard, VariantSelector and SectionCampaign components
  */
-export interface CampaignSettings {
+export interface Settings {
   // Campaign component attributes
   /** The placement identifier for the campaign */
   placement: string
@@ -23,9 +13,9 @@ export interface CampaignSettings {
 
   // Layout and mode settings
   /** Rendering mode - determines which components and templates are used */
-  mode: CampaignMode
+  mode: "simple" | "native" | "section"
   /** Layout type - grid renders products in a grid, carousel renders in a swiper-based carousel */
-  layout: CampaignLayout
+  layout: "grid" | "carousel"
 
   // SimpleCard component attributes (used in simple mode)
   /** Show alternate product image on hover */
@@ -42,6 +32,8 @@ export interface CampaignSettings {
   // VariantSelector component attributes (optional in SimpleCard)
   /** If true, preselects the first available variant */
   preselect?: boolean
+  /** Controls whether VariantSelector should be rendered */
+  variantSelector?: boolean
 
   // SectionCampaign component attributes (used in section mode)
   /** The section to be used for Section Rendering API based rendering */

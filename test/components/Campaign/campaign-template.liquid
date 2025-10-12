@@ -3,10 +3,7 @@
   Supports simple, native, and section modes with grid and carousel layouts
 -->
 <div class="nosto-campaign-wrapper">
-  <!-- Campaign heading (if provided) -->
-  {% if settings.title %}
-    <h2 class="campaign-title">{{ settings.title }}</h2>
-  {% endif %}
+
   
   <!-- Simple mode: uses SimpleCard with optional VariantSelector -->
   {% if settings.mode == 'simple' %}
@@ -35,7 +32,7 @@
           {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
           {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
         >
-          {% if product.handle and settings.preselect != false %}
+          {% if product.handle and settings.variantSelector %}
             <nosto-variant-selector
               handle="{{ product.handle }}"
               {% if settings.preselect %}preselect{% endif %}
