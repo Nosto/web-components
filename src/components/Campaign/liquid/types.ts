@@ -16,6 +16,8 @@ export interface Settings {
   mode: "simple" | "native" | "section"
   /** Layout type - grid renders products in a grid, carousel renders in a swiper-based carousel */
   layout: "grid" | "carousel"
+  /** Grid size - controls the number of columns in grid layout */
+  gridSize?: number
 
   // SimpleCard component attributes (used in simple mode)
   /** Show alternate product image on hover */

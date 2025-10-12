@@ -8,7 +8,7 @@
     <div class="campaign-{{ settings.mode }}">
       <!-- Layout-specific wrapper start -->
       {% if settings.layout == 'grid' %}
-        <div class="campaign-grid">
+        <div class="campaign-grid{% if settings.gridSize %} campaign-grid-{{ settings.gridSize }}{% endif %}">
       {% elsif settings.layout == 'carousel' %}
         <swiper-container class="campaign-carousel">
           <div class="swiper-wrapper">
@@ -45,8 +45,6 @@
             {% if settings.dynamicTemplate %}template="{{ settings.dynamicTemplate }}"{% endif %}
             {% if settings.dynamicSection %}section="{{ settings.dynamicSection }}"{% endif %}
             {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
-            {% if settings.placeholder %}placeholder{% endif %}
-            {% if settings.campaignLazy %}lazy{% endif %}
           ></nosto-dynamic-card>
         {% endif %}
         
@@ -100,7 +98,30 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
   
-
+  .campaign-grid-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  .campaign-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .campaign-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .campaign-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .campaign-grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .campaign-grid-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
   
   @media (max-width: 768px) {
     .campaign-grid {
