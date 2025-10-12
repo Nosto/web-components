@@ -1,0 +1,229 @@
+<!-- 
+  Campaign liquid template for multiple rendering scenarios
+  Supports simple, native, and section modes with grid and carousel layouts
+-->
+<div class="nosto-campaign-wrapper">
+  <!-- Campaign heading (if provided) -->
+  {% if settings.title %}
+    <h2 class="campaign-title">{{ settings.title }}</h2>
+  {% endif %}
+  
+  <!-- Simple mode: uses SimpleCard with optional VariantSelector -->
+  {% if settings.mode == 'simple' %}
+    <div class="campaign-simple">
+      <!-- Grid layout for simple mode -->
+      {% if settings.layout == 'grid' %}
+        <div class="campaign-grid campaign-grid-{{ products.size }}">
+          {% for product in products %}
+            <div class="campaign-grid-item">
+              <nosto-simple-card
+                handle="{{ product.handle }}"
+                {% if settings.alternate %}alternate{% endif %}
+                {% if settings.brand %}brand{% endif %}
+                {% if settings.discount %}discount{% endif %}
+                {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
+                {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
+              >
+                {% if product.handle and settings.preselect != false %}
+                  <nosto-variant-selector
+                    handle="{{ product.handle }}"
+                    {% if settings.preselect %}preselect{% endif %}
+                  ></nosto-variant-selector>
+                {% endif %}
+              </nosto-simple-card>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      <!-- Carousel layout for simple mode -->
+      {% if settings.layout == 'carousel' %}
+        <div class="campaign-carousel">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              {% for product in products %}
+                <div class="swiper-slide">
+                  <nosto-simple-card
+                    handle="{{ product.handle }}"
+                    {% if settings.alternate %}alternate{% endif %}
+                    {% if settings.brand %}brand{% endif %}
+                    {% if settings.discount %}discount{% endif %}
+                    {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
+                    {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
+                  >
+                    {% if product.handle and settings.preselect != false %}
+                      <nosto-variant-selector
+                        handle="{{ product.handle }}"
+                        {% if settings.preselect %}preselect{% endif %}
+                      ></nosto-variant-selector>
+                    {% endif %}
+                  </nosto-simple-card>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+  <!-- Native mode: uses DynamicCard -->
+  {% if settings.mode == 'native' %}
+    <div class="campaign-native">
+      <!-- Grid layout for native mode -->
+      {% if settings.layout == 'grid' %}
+        <div class="campaign-grid campaign-grid-{{ products.size }}">
+          {% for product in products %}
+            <div class="campaign-grid-item">
+              <nosto-dynamic-card
+                handle="{{ product.handle }}"
+                {% if settings.template %}template="{{ settings.template }}"{% endif %}
+                {% if settings.section %}section="{{ settings.section }}"{% endif %}
+                {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
+                {% if settings.placeholder %}placeholder{% endif %}
+                {% if settings.lazy %}lazy{% endif %}
+              ></nosto-dynamic-card>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      <!-- Carousel layout for native mode -->
+      {% if settings.layout == 'carousel' %}
+        <div class="campaign-carousel">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              {% for product in products %}
+                <div class="swiper-slide">
+                  <nosto-dynamic-card
+                    handle="{{ product.handle }}"
+                    {% if settings.template %}template="{{ settings.template }}"{% endif %}
+                    {% if settings.section %}section="{{ settings.section }}"{% endif %}
+                    {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
+                    {% if settings.placeholder %}placeholder{% endif %}
+                    {% if settings.lazy %}lazy{% endif %}
+                  ></nosto-dynamic-card>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+  <!-- Section mode: uses SectionCampaign without children -->
+  {% if settings.mode == 'section' %}
+    <div class="campaign-section">
+      <nosto-section-campaign
+        placement="{{ settings.placement }}"
+        {% if settings.section %}section="{{ settings.section }}"{% endif %}
+      ></nosto-section-campaign>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Initialize Swiper carousel if layout is carousel -->
+{% if settings.layout == 'carousel' %}
+  <script>
+    // Initialize Swiper when the template is rendered
+    (function() {
+      const swiperElement = document.querySelector('.campaign-carousel .swiper');
+      if (swiperElement && window.Swiper) {
+        new window.Swiper(swiperElement, {
+          slidesPerView: 'auto',
+          spaceBetween: 16,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          breakpoints: {
+            640: {
+              slidesPerView: 2,
+            },
+            768: {
+              slidesPerView: 3,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }
+        });
+      }
+    })();
+  </script>
+{% endif %}
+
+<style>
+  .nosto-campaign-wrapper {
+    width: 100%;
+  }
+  
+  .campaign-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .campaign-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .campaign-grid-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  .campaign-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .campaign-grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .campaign-grid-4,
+  .campaign-grid-5,
+  .campaign-grid-6 {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  
+  @media (max-width: 768px) {
+    .campaign-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.5rem;
+    }
+  }
+  
+  .campaign-carousel {
+    position: relative;
+  }
+  
+  .campaign-carousel .swiper {
+    padding-bottom: 2rem;
+  }
+  
+  .campaign-carousel .swiper-slide {
+    width: auto;
+    min-width: 250px;
+  }
+  
+  .campaign-carousel .swiper-pagination {
+    bottom: 0;
+  }
+  
+  .campaign-section {
+    width: 100%;
+  }
+</style>

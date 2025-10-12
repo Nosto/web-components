@@ -1,11 +1,11 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest"
-import { Campaign, createCampaignSettings } from "@/components/Campaign/Campaign"
+import { Campaign } from "@/components/Campaign/Campaign"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
-import { CampaignSettings, CampaignLayout, CampaignMode } from "@/components/Campaign/types"
+import { CampaignSettings, CampaignLayout, CampaignMode } from "./types"
 import { createElement } from "../../utils/jsx"
 import { compile } from "@/templating/vue"
 import { JSONResult } from "@nosto/nosto-js/client"
@@ -169,7 +169,13 @@ describe("Campaign Template and Settings", () => {
 
   describe("CampaignSettings type", () => {
     it("should create valid campaign settings with default values", () => {
-      const settings = createCampaignSettings(campaign, mockData)
+      const settings: CampaignSettings = {
+        placement: campaign.placement,
+        mode: "simple",
+        layout: "grid",
+        title: mockData.title,
+        products: mockData.products
+      }
 
       expect(settings.placement).toBe("test-placement")
       expect(settings.mode).toBe("simple")
@@ -179,7 +185,13 @@ describe("Campaign Template and Settings", () => {
     })
 
     it("should create campaign settings with custom mode and layout", () => {
-      const settings = createCampaignSettings(campaign, mockData, "native", "carousel")
+      const settings: CampaignSettings = {
+        placement: campaign.placement,
+        mode: "native",
+        layout: "carousel",
+        title: mockData.title,
+        products: mockData.products
+      }
 
       expect(settings.mode).toBe("native")
       expect(settings.layout).toBe("carousel")
@@ -192,7 +204,18 @@ describe("Campaign Template and Settings", () => {
       campaign.lazy = true
       campaign.cartSynced = true
 
-      const settings = createCampaignSettings(campaign, mockData)
+      const settings: CampaignSettings = {
+        placement: campaign.placement,
+        mode: "simple",
+        layout: "grid",
+        title: mockData.title,
+        products: mockData.products,
+        productId: campaign.productId,
+        variantId: campaign.variantId,
+        template: campaign.template,
+        lazy: campaign.lazy,
+        cartSynced: campaign.cartSynced
+      }
 
       expect(settings.productId).toBe("test-product")
       expect(settings.variantId).toBe("test-variant")

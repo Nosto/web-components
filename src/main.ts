@@ -1,6 +1,5 @@
 /* eslint-disable barrel-files/avoid-barrel-files */
-export { Campaign, createCampaignSettings } from "./components/Campaign/Campaign"
-export type { CampaignSettings, CampaignLayout, CampaignMode } from "./components/Campaign/types"
+export { Campaign } from "./components/Campaign/Campaign"
 export { Control } from "./components/Control/Control"
 export { DynamicCard } from "./components/DynamicCard/DynamicCard"
 export { Image } from "./components/Image/Image"

@@ -6,7 +6,6 @@ import { getContext } from "../../templating/context"
 import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
-import { CampaignSettings, CampaignLayout, CampaignMode } from "./types"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -144,49 +143,6 @@ export async function loadCampaign(element: Campaign) {
   } finally {
     element.toggleAttribute("loading", false)
   }
-}
-
-/**
- * Creates a CampaignSettings object from campaign element attributes and JSON response data
- * @param element Campaign element with attributes
- * @param data JSON response data from Nosto
- * @param mode Campaign rendering mode
- * @param layout Campaign layout type
- * @returns CampaignSettings object for use in liquid templates
- */
-export function createCampaignSettings(
-  element: Campaign,
-  data: JSONResult,
-  mode: CampaignMode = "simple",
-  layout: CampaignLayout = "grid"
-): CampaignSettings {
-  const settings: CampaignSettings = {
-    // Campaign attributes
-    placement: element.placement,
-    productId: element.productId,
-    variantId: element.variantId,
-    template: element.template,
-    init: element.init,
-    lazy: element.lazy,
-    cartSynced: element.cartSynced,
-
-    // Layout and mode
-    layout,
-    mode,
-
-    // Extract title from data
-    title: String(
-      (data as unknown as Record<string, unknown>).title ||
-        (data as unknown as Record<string, unknown>).name ||
-        (data as unknown as Record<string, unknown>).campaign_name ||
-        ""
-    ),
-
-    // Extract products array from data
-    products: ((data as unknown as Record<string, unknown>).products as unknown[]) || []
-  }
-
-  return settings
 }
 
 declare global {
