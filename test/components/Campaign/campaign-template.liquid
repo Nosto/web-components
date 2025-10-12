@@ -11,61 +11,54 @@
   <!-- Simple mode: uses SimpleCard with optional VariantSelector -->
   {% if settings.mode == 'simple' %}
     <div class="campaign-simple">
-      <!-- Grid layout for simple mode -->
+      <!-- Layout-specific wrapper start -->
       {% if settings.layout == 'grid' %}
         <div class="campaign-grid campaign-grid-{{ products.size }}">
-          {% for product in products %}
-            <div class="campaign-grid-item">
-              <nosto-simple-card
-                handle="{{ product.handle }}"
-                {% if settings.alternate %}alternate{% endif %}
-                {% if settings.brand %}brand{% endif %}
-                {% if settings.discount %}discount{% endif %}
-                {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
-                {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
-              >
-                {% if product.handle and settings.preselect != false %}
-                  <nosto-variant-selector
-                    handle="{{ product.handle }}"
-                    {% if settings.preselect %}preselect{% endif %}
-                  ></nosto-variant-selector>
-                {% endif %}
-              </nosto-simple-card>
-            </div>
-          {% endfor %}
-        </div>
+      {% elsif settings.layout == 'carousel' %}
+        <swiper-container class="campaign-carousel">
+          <div class="swiper-wrapper">
       {% endif %}
       
-      <!-- Carousel layout for simple mode -->
-      {% if settings.layout == 'carousel' %}
-        <div class="campaign-carousel">
-          <div class="swiper">
-            <div class="swiper-wrapper">
-              {% for product in products %}
-                <div class="swiper-slide">
-                  <nosto-simple-card
-                    handle="{{ product.handle }}"
-                    {% if settings.alternate %}alternate{% endif %}
-                    {% if settings.brand %}brand{% endif %}
-                    {% if settings.discount %}discount{% endif %}
-                    {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
-                    {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
-                  >
-                    {% if product.handle and settings.preselect != false %}
-                      <nosto-variant-selector
-                        handle="{{ product.handle }}"
-                        {% if settings.preselect %}preselect{% endif %}
-                      ></nosto-variant-selector>
-                    {% endif %}
-                  </nosto-simple-card>
-                </div>
-              {% endfor %}
-            </div>
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+      <!-- Single product loop -->
+      {% for product in products %}
+        {% if settings.layout == 'grid' %}
+          <div class="campaign-grid-item">
+        {% elsif settings.layout == 'carousel' %}
+          <swiper-slide>
+        {% endif %}
+        
+        <nosto-simple-card
+          handle="{{ product.handle }}"
+          {% if settings.alternate %}alternate{% endif %}
+          {% if settings.brand %}brand{% endif %}
+          {% if settings.discount %}discount{% endif %}
+          {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
+          {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
+        >
+          {% if product.handle and settings.preselect != false %}
+            <nosto-variant-selector
+              handle="{{ product.handle }}"
+              {% if settings.preselect %}preselect{% endif %}
+            ></nosto-variant-selector>
+          {% endif %}
+        </nosto-simple-card>
+        
+        {% if settings.layout == 'grid' %}
           </div>
+        {% elsif settings.layout == 'carousel' %}
+          </swiper-slide>
+        {% endif %}
+      {% endfor %}
+      
+      <!-- Layout-specific wrapper end -->
+      {% if settings.layout == 'grid' %}
         </div>
+      {% elsif settings.layout == 'carousel' %}
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </swiper-container>
       {% endif %}
     </div>
   {% endif %}
@@ -73,47 +66,47 @@
   <!-- Native mode: uses DynamicCard -->
   {% if settings.mode == 'native' %}
     <div class="campaign-native">
-      <!-- Grid layout for native mode -->
+      <!-- Layout-specific wrapper start -->
       {% if settings.layout == 'grid' %}
         <div class="campaign-grid campaign-grid-{{ products.size }}">
-          {% for product in products %}
-            <div class="campaign-grid-item">
-              <nosto-dynamic-card
-                handle="{{ product.handle }}"
-                {% if settings.template %}template="{{ settings.template }}"{% endif %}
-                {% if settings.section %}section="{{ settings.section }}"{% endif %}
-                {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
-                {% if settings.placeholder %}placeholder{% endif %}
-                {% if settings.lazy %}lazy{% endif %}
-              ></nosto-dynamic-card>
-            </div>
-          {% endfor %}
-        </div>
+      {% elsif settings.layout == 'carousel' %}
+        <swiper-container class="campaign-carousel">
+          <div class="swiper-wrapper">
       {% endif %}
       
-      <!-- Carousel layout for native mode -->
-      {% if settings.layout == 'carousel' %}
-        <div class="campaign-carousel">
-          <div class="swiper">
-            <div class="swiper-wrapper">
-              {% for product in products %}
-                <div class="swiper-slide">
-                  <nosto-dynamic-card
-                    handle="{{ product.handle }}"
-                    {% if settings.template %}template="{{ settings.template }}"{% endif %}
-                    {% if settings.section %}section="{{ settings.section }}"{% endif %}
-                    {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
-                    {% if settings.placeholder %}placeholder{% endif %}
-                    {% if settings.lazy %}lazy{% endif %}
-                  ></nosto-dynamic-card>
-                </div>
-              {% endfor %}
-            </div>
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+      <!-- Single product loop -->
+      {% for product in products %}
+        {% if settings.layout == 'grid' %}
+          <div class="campaign-grid-item">
+        {% elsif settings.layout == 'carousel' %}
+          <swiper-slide>
+        {% endif %}
+        
+        <nosto-dynamic-card
+          handle="{{ product.handle }}"
+          {% if settings.template %}template="{{ settings.template }}"{% endif %}
+          {% if settings.section %}section="{{ settings.section }}"{% endif %}
+          {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
+          {% if settings.placeholder %}placeholder{% endif %}
+          {% if settings.lazy %}lazy{% endif %}
+        ></nosto-dynamic-card>
+        
+        {% if settings.layout == 'grid' %}
           </div>
+        {% elsif settings.layout == 'carousel' %}
+          </swiper-slide>
+        {% endif %}
+      {% endfor %}
+      
+      <!-- Layout-specific wrapper end -->
+      {% if settings.layout == 'grid' %}
         </div>
+      {% elsif settings.layout == 'carousel' %}
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </swiper-container>
       {% endif %}
     </div>
   {% endif %}
@@ -134,19 +127,16 @@
   <script>
     // Initialize Swiper when the template is rendered
     (function() {
-      const swiperElement = document.querySelector('.campaign-carousel .swiper');
-      if (swiperElement && window.Swiper) {
-        new window.Swiper(swiperElement, {
+      const swiperElement = document.querySelector('swiper-container.campaign-carousel');
+      if (swiperElement) {
+        // Configure swiper-container element attributes
+        Object.assign(swiperElement, {
           slidesPerView: 'auto',
           spaceBetween: 16,
           pagination: {
-            el: '.swiper-pagination',
             clickable: true,
           },
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
+          navigation: true,
           breakpoints: {
             640: {
               slidesPerView: 2,
@@ -206,20 +196,17 @@
     }
   }
   
-  .campaign-carousel {
+  swiper-container.campaign-carousel {
     position: relative;
-  }
-  
-  .campaign-carousel .swiper {
     padding-bottom: 2rem;
   }
   
-  .campaign-carousel .swiper-slide {
+  swiper-container.campaign-carousel swiper-slide {
     width: auto;
     min-width: 250px;
   }
   
-  .campaign-carousel .swiper-pagination {
+  swiper-container.campaign-carousel .swiper-pagination {
     bottom: 0;
   }
   
