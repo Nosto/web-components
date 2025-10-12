@@ -2,7 +2,11 @@
   Campaign liquid template for multiple rendering scenarios
   Supports simple, native, and section modes with grid and carousel layouts
 -->
-<div class="nosto-campaign-wrapper">
+<nosto-campaign
+  placement="{{ settings.campaignPlacement }}"
+  {% if settings.campaignLazy %}lazy{% endif %}
+  {% if settings.campaignCartSynced %}cart-synced{% endif %}
+>
   <!-- Simple and Native modes: uses product cards with layout-specific wrappers -->
   {% if settings.mode == 'simple' or settings.mode == 'native' %}
     <div class="campaign-{{ settings.mode }}">
@@ -25,7 +29,7 @@
         <!-- Mode-specific product card -->
         {% if settings.mode == 'simple' %}
           <nosto-simple-card
-            handle="{{ product.handle }}"
+            :handle="product.handle"
             {% if settings.simpleAlternate %}alternate{% endif %}
             {% if settings.simpleBrand %}brand{% endif %}
             {% if settings.simpleDiscount %}discount{% endif %}
@@ -34,14 +38,14 @@
           >
             {% if settings.variantSelector %}
               <nosto-variant-selector
-                handle="{{ product.handle }}"
+                :handle="product.handle"
                 {% if settings.variantSelectorPreselect %}preselect{% endif %}
               ></nosto-variant-selector>
             {% endif %}
           </nosto-simple-card>
         {% elsif settings.mode == 'native' %}
           <nosto-dynamic-card
-            handle="{{ product.handle }}"
+            :handle="product.handle"
             {% if settings.dynamicTemplate %}template="{{ settings.dynamicTemplate }}"{% endif %}
             {% if settings.dynamicSection %}section="{{ settings.dynamicSection }}"{% endif %}
             {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
@@ -72,17 +76,17 @@
   {% if settings.mode == 'section' %}
     <div class="campaign-section">
       <nosto-section-campaign
-        placement="{{ settings.campaignPlacement }}"
         {% if settings.sectionCampaignSection %}section="{{ settings.sectionCampaignSection }}"{% endif %}
       ></nosto-section-campaign>
     </div>
   {% endif %}
-</div>
+</nosto-campaign>
 
 
 
 <style>
-  .nosto-campaign-wrapper {
+  nosto-campaign {
+    display: block;
     width: 100%;
   }
   
