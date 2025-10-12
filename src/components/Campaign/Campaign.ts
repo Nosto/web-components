@@ -63,7 +63,7 @@ import { addRequest } from "./orchestrator"
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     placement: String,
     productId: String,
     variantId: String,
@@ -81,6 +81,7 @@ export class Campaign extends NostoElement {
   lazy?: boolean
   cartSynced?: boolean
 
+  /** @hidden */
   templateElement?: HTMLTemplateElement
 
   async connectedCallback() {

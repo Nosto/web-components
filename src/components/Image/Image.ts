@@ -65,7 +65,7 @@ import { NostoElement } from "../Element"
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     src: String,
     width: Number,
     height: Number,

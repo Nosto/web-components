@@ -36,7 +36,7 @@ import { inject } from "../inject"
 @customElement("nosto-sku-options")
 export class SkuOptions extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     name: String
   }
 

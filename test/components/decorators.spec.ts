@@ -31,7 +31,7 @@ describe("customElement", () => {
     const tagName = "my-element3"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static attributes = {
+      static properties = {
         foo: String,
         bar: Boolean,
         baz: Number,
@@ -60,7 +60,7 @@ describe("customElement", () => {
     const tagName = "my-element4"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static attributes = {
+      static properties = {
         numbers: Array
       }
 
