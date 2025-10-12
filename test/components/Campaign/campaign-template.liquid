@@ -5,9 +5,9 @@
 <div class="nosto-campaign-wrapper">
 
   
-  <!-- Simple mode: uses SimpleCard with optional VariantSelector -->
-  {% if settings.mode == 'simple' %}
-    <div class="campaign-simple">
+  <!-- Simple and Native modes: uses product cards with layout-specific wrappers -->
+  {% if settings.mode == 'simple' or settings.mode == 'native' %}
+    <div class="campaign-{{ settings.mode }}">
       <!-- Layout-specific wrapper start -->
       {% if settings.layout == 'grid' %}
         <div class="campaign-grid campaign-grid-{{ products.size }}">
@@ -24,69 +24,33 @@
           <swiper-slide>
         {% endif %}
         
-        <nosto-simple-card
-          handle="{{ product.handle }}"
-          {% if settings.alternate %}alternate{% endif %}
-          {% if settings.brand %}brand{% endif %}
-          {% if settings.discount %}discount{% endif %}
-          {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
-          {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
-        >
-          {% if product.handle and settings.variantSelector %}
-            <nosto-variant-selector
-              handle="{{ product.handle }}"
-              {% if settings.preselect %}preselect{% endif %}
-            ></nosto-variant-selector>
-          {% endif %}
-        </nosto-simple-card>
-        
-        {% if settings.layout == 'grid' %}
-          </div>
-        {% elsif settings.layout == 'carousel' %}
-          </swiper-slide>
+        <!-- Mode-specific product card -->
+        {% if settings.mode == 'simple' %}
+          <nosto-simple-card
+            handle="{{ product.handle }}"
+            {% if settings.alternate %}alternate{% endif %}
+            {% if settings.brand %}brand{% endif %}
+            {% if settings.discount %}discount{% endif %}
+            {% if settings.rating %}rating="{{ settings.rating }}"{% endif %}
+            {% if settings.sizes %}sizes="{{ settings.sizes }}"{% endif %}
+          >
+            {% if product.handle and settings.variantSelector %}
+              <nosto-variant-selector
+                handle="{{ product.handle }}"
+                {% if settings.preselect %}preselect{% endif %}
+              ></nosto-variant-selector>
+            {% endif %}
+          </nosto-simple-card>
+        {% elsif settings.mode == 'native' %}
+          <nosto-dynamic-card
+            handle="{{ product.handle }}"
+            {% if settings.template %}template="{{ settings.template }}"{% endif %}
+            {% if settings.section %}section="{{ settings.section }}"{% endif %}
+            {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
+            {% if settings.placeholder %}placeholder{% endif %}
+            {% if settings.lazy %}lazy{% endif %}
+          ></nosto-dynamic-card>
         {% endif %}
-      {% endfor %}
-      
-      <!-- Layout-specific wrapper end -->
-      {% if settings.layout == 'grid' %}
-        </div>
-      {% elsif settings.layout == 'carousel' %}
-          </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </swiper-container>
-      {% endif %}
-    </div>
-  {% endif %}
-  
-  <!-- Native mode: uses DynamicCard -->
-  {% if settings.mode == 'native' %}
-    <div class="campaign-native">
-      <!-- Layout-specific wrapper start -->
-      {% if settings.layout == 'grid' %}
-        <div class="campaign-grid campaign-grid-{{ products.size }}">
-      {% elsif settings.layout == 'carousel' %}
-        <swiper-container class="campaign-carousel">
-          <div class="swiper-wrapper">
-      {% endif %}
-      
-      <!-- Single product loop -->
-      {% for product in products %}
-        {% if settings.layout == 'grid' %}
-          <div class="campaign-grid-item">
-        {% elsif settings.layout == 'carousel' %}
-          <swiper-slide>
-        {% endif %}
-        
-        <nosto-dynamic-card
-          handle="{{ product.handle }}"
-          {% if settings.template %}template="{{ settings.template }}"{% endif %}
-          {% if settings.section %}section="{{ settings.section }}"{% endif %}
-          {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
-          {% if settings.placeholder %}placeholder{% endif %}
-          {% if settings.lazy %}lazy{% endif %}
-        ></nosto-dynamic-card>
         
         {% if settings.layout == 'grid' %}
           </div>
@@ -121,12 +85,17 @@
 
 <!-- Initialize Swiper carousel if layout is carousel -->
 {% if settings.layout == 'carousel' %}
-  <script>
-    // Initialize Swiper when the template is rendered
-    (function() {
+  <script type="module">
+    // Import Swiper elements from CDN
+    import { register } from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.mjs';
+    
+    // Register Swiper elements
+    register();
+    
+    // Configure swiper-container elements
+    document.addEventListener('DOMContentLoaded', () => {
       const swiperElement = document.querySelector('swiper-container.campaign-carousel');
       if (swiperElement) {
-        // Configure swiper-container element attributes
         Object.assign(swiperElement, {
           slidesPerView: 'auto',
           spaceBetween: 16,
@@ -147,7 +116,7 @@
           }
         });
       }
-    })();
+    });
   </script>
 {% endif %}
 
