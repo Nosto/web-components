@@ -24,13 +24,7 @@ function generateOptionRowHTML(option: { name: string; values: string[] }) {
 
 function generateOptionValueHTML(name: string, value: string) {
   return html`
-    <button
-      type="button"
-      class="value"
-      part="value"
-      data-option-name="${name}"
-      data-option-value="${value}"
-    >
+    <button type="button" class="value" part="value" data-option-name="${name}" data-option-value="${value}">
       ${value}
     </button>
   `
