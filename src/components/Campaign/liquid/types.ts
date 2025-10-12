@@ -37,7 +37,7 @@ export interface Settings {
   /** If true, preselects the first available variant */
   variantSelectorPreselect?: boolean
 
-  // DynamicCard component attributes (used in native mode)
+  // DynamicCard component attributes (used in dynamic mode)
   /** The section to be used for DynamicCard rendering */
   dynamicSection?: string
   /** The template to be used for DynamicCard rendering */

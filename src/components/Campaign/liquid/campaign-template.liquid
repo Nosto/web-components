@@ -1,88 +1,82 @@
 <!-- 
   Campaign liquid template for multiple rendering scenarios
-  Supports simple, native, and section modes with grid and carousel layouts
+  Supports simple, dynamic, and section modes with grid and carousel layouts
 -->
+{% if settings.mode == 'simple' or settings.mode == 'dynamic' %}
 <nosto-campaign
   placement="{{ settings.campaignPlacement }}"
   {% if settings.campaignLazy %}lazy{% endif %}
   {% if settings.campaignCartSynced %}cart-synced{% endif %}
 >
-  <!-- Simple and Native modes: uses product cards with layout-specific wrappers -->
-  {% if settings.mode == 'simple' or settings.mode == 'native' %}
-    <div class="campaign-{{ settings.mode }}">
-      <!-- Layout-specific wrapper start -->
+  <!-- Simple and Dynamic modes: uses product cards with layout-specific wrappers -->
+  <div class="campaign-{{ settings.mode }}">
+    <!-- Layout-specific wrapper start -->
+    {% if settings.layout == 'grid' %}
+      <div class="campaign-grid{% if settings.gridSize %} campaign-grid-{{ settings.gridSize }}{% endif %}">
+    {% elsif settings.layout == 'carousel' %}
+      <swiper-container class="campaign-carousel">
+        <div class="swiper-wrapper">
+    {% endif %}
+    
+    <!-- Single product loop -->
+    {% for product in products %}
       {% if settings.layout == 'grid' %}
-        <div class="campaign-grid{% if settings.gridSize %} campaign-grid-{{ settings.gridSize }}{% endif %}">
+        <div class="campaign-grid-item">
       {% elsif settings.layout == 'carousel' %}
-        <swiper-container class="campaign-carousel">
-          <div class="swiper-wrapper">
+        <swiper-slide>
       {% endif %}
       
-      <!-- Single product loop -->
-      {% for product in products %}
-        {% if settings.layout == 'grid' %}
-          <div class="campaign-grid-item">
-        {% elsif settings.layout == 'carousel' %}
-          <swiper-slide>
-        {% endif %}
-        
-        <!-- Mode-specific product card -->
-        {% if settings.mode == 'simple' %}
-          <nosto-simple-card
-            :handle="product.handle"
-            {% if settings.simpleAlternate %}alternate{% endif %}
-            {% if settings.simpleBrand %}brand{% endif %}
-            {% if settings.simpleDiscount %}discount{% endif %}
-            {% if settings.simpleRating %}rating{% endif %}
-            {% if settings.simpleSizes %}sizes="{{ settings.simpleSizes }}"{% endif %}
-          >
-            {% if settings.variantSelector %}
-              <nosto-variant-selector
-                :handle="product.handle"
-                {% if settings.variantSelectorPreselect %}preselect{% endif %}
-              ></nosto-variant-selector>
-            {% endif %}
-          </nosto-simple-card>
-        {% elsif settings.mode == 'native' %}
-          <nosto-dynamic-card
-            :handle="product.handle"
-            {% if settings.dynamicTemplate %}template="{{ settings.dynamicTemplate }}"{% endif %}
-            {% if settings.dynamicSection %}section="{{ settings.dynamicSection }}"{% endif %}
-            {% if product.variant_id %}variant-id="{{ product.variant_id }}"{% endif %}
-          ></nosto-dynamic-card>
-        {% endif %}
-        
-        {% if settings.layout == 'grid' %}
-          </div>
-        {% elsif settings.layout == 'carousel' %}
-          </swiper-slide>
-        {% endif %}
-      {% endfor %}
+      <!-- Mode-specific product card -->
+      {% if settings.mode == 'simple' %}
+        <nosto-simple-card
+          :handle="product.handle"
+          {% if settings.simpleAlternate %}alternate{% endif %}
+          {% if settings.simpleBrand %}brand{% endif %}
+          {% if settings.simpleDiscount %}discount{% endif %}
+          {% if settings.simpleRating %}rating{% endif %}
+          {% if settings.simpleSizes %}sizes="{{ settings.simpleSizes }}"{% endif %}
+        >
+          {% if settings.variantSelector %}
+            <nosto-variant-selector
+              :handle="product.handle"
+              {% if settings.variantSelectorPreselect %}preselect{% endif %}
+            ></nosto-variant-selector>
+          {% endif %}
+        </nosto-simple-card>
+      {% elsif settings.mode == 'dynamic' %}
+        <nosto-dynamic-card
+          :handle="product.handle"
+          {% if settings.dynamicTemplate %}template="{{ settings.dynamicTemplate }}"{% endif %}
+          {% if settings.dynamicSection %}section="{{ settings.dynamicSection }}"{% endif %}
+        ></nosto-dynamic-card>
+      {% endif %}
       
-      <!-- Layout-specific wrapper end -->
       {% if settings.layout == 'grid' %}
         </div>
       {% elsif settings.layout == 'carousel' %}
-          </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </swiper-container>
+        </swiper-slide>
       {% endif %}
-    </div>
-  {% endif %}
-  
-  <!-- Section mode: uses SectionCampaign without children -->
-  {% if settings.mode == 'section' %}
-    <div class="campaign-section">
-      <nosto-section-campaign
-        {% if settings.sectionCampaignSection %}section="{{ settings.sectionCampaignSection }}"{% endif %}
-      ></nosto-section-campaign>
-    </div>
-  {% endif %}
+    {% endfor %}
+    
+    <!-- Layout-specific wrapper end -->
+    {% if settings.layout == 'grid' %}
+      </div>
+    {% elsif settings.layout == 'carousel' %}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </swiper-container>
+    {% endif %}
+  </div>
 </nosto-campaign>
-
-
+{% else %}
+<!-- Section mode: uses SectionCampaign without children -->
+<nosto-section-campaign
+  placement="{{ settings.campaignPlacement }}"
+  {% if settings.sectionCampaignSection %}section="{{ settings.sectionCampaignSection }}"{% endif %}
+></nosto-section-campaign>
+{% endif %}
 
 <style>
   nosto-campaign {
@@ -125,7 +119,6 @@
   .campaign-grid-6 {
     grid-template-columns: repeat(6, 1fr);
   }
-  
   
   @media (max-width: 768px) {
     .campaign-grid {
