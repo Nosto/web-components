@@ -44,7 +44,7 @@ import { provide } from "../inject"
 @customElement("nosto-product")
 export class Product extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     productId: String,
     recoId: String,
     skuSelected: Boolean

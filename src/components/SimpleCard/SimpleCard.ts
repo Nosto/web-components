@@ -38,7 +38,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     handle: String,
     alternate: Boolean,
     brand: Boolean,

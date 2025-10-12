@@ -35,7 +35,7 @@ let cachedStyleSheet: CSSStyleSheet | null = null
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     handle: String,
     preselect: Boolean
   }

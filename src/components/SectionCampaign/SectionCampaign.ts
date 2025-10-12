@@ -30,7 +30,7 @@ import { JSONResult } from "@nosto/nosto-js/client"
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     placement: String,
     section: String
   }

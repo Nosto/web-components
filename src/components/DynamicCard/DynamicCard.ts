@@ -31,7 +31,7 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     handle: String,
     section: String,
     template: String,

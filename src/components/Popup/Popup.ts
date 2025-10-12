@@ -29,7 +29,7 @@ import { assertRequired } from "@/utils/assertRequired"
 @customElement("nosto-popup")
 export class Popup extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     name: String,
     segment: String
   }
