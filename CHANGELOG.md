@@ -1,3 +1,11 @@
+## [9.3.1](https://github.com/Nosto/web-components/compare/v9.3.0...v9.3.1) (2025-10-14)
+
+
+### Bug Fixes
+
+* return h3 back ([abfa228](https://github.com/Nosto/web-components/commit/abfa22847bd48ed1a4f2649ecc95055f74ed27cf))
+* update styles ([f7f63da](https://github.com/Nosto/web-components/commit/f7f63dacf5021157512696b222e0bcf450c0409a))
+
 # [9.3.0](https://github.com/Nosto/web-components/compare/v9.2.1...v9.3.0) (2025-10-10)
 
 
