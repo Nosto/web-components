@@ -4,16 +4,11 @@
 
   --row-gap: 0.5rem;
   --row-margin: 1rem;
-  --label-weight: 600;
-  --label-color: #333;
-  --label-size: 0.9rem;
   --values-gap: 0.5rem;
   --value-bg: #f8f9fa;
   --value-border: 1px solid #e1e5e9;
-  --value-radius: 4px;
-  --value-color: #333;
-  --value-font-size: 0.875rem;
   --value-padding: 0.5rem 1rem;
+  --value-margin-bottom: 1rem;
   --value-hover-bg: #e9ecef;
   --value-hover-border: #adb5bd;
   --value-active-bg: #007bff;
@@ -31,6 +26,7 @@
 
 .selector {
   display: block;
+  margin-bottom: var(--value-margin-bottom);
 }
 
 .row {
@@ -44,12 +40,6 @@
   margin-bottom: 0;
 }
 
-.label {
-  font-weight: var(--label-weight);
-  color: var(--label-color);
-  font-size: var(--label-size);
-}
-
 .values {
   display: flex;
   flex-wrap: wrap;
@@ -59,10 +49,7 @@
 .value {
   background: var(--value-bg);
   border: var(--value-border);
-  color: var(--value-color);
   cursor: pointer;
-  font-family: inherit;
-  font-size: var(--value-font-size);
   padding: var(--value-padding);
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -83,3 +70,4 @@
   background: var(--value-active-hover-bg);
   border-color: var(--value-active-hover-border);
 }
+
