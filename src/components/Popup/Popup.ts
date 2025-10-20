@@ -3,6 +3,9 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
+import { shadowContentFactory } from "@/utils/shadowContentFactory"
+
+const setShadowContent = shadowContentFactory(styles)
 
 /**
  * A custom element that displays popup content with dialog and ribbon slots.
@@ -88,15 +91,16 @@ type PopupData = {
 }
 
 function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  element.shadowRoot!.innerHTML = `
-    <style>${styles}</style>
+  setShadowContent(
+    element,
+    `
     <dialog part="dialog">
       <slot name="default"></slot>
     </dialog>
     <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
       <slot name="ribbon">Open</slot>
-    </div>
-  `
+    </div>`
+  )
   if (mode === "open") {
     element.shadowRoot?.querySelector("dialog")?.showModal()
   }

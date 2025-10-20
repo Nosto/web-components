@@ -6,9 +6,9 @@ import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "../SimpleCard/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
+import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
-// Cache the stylesheet for reuse across component instances
-let cachedStyleSheet: CSSStyleSheet | null = null
+const setShadowContent = shadowContentFactory(styles)
 
 /**
  * A custom element that displays product variant options as clickable pills.
@@ -75,21 +75,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
-
-    // Use constructible stylesheets if supported, fallback to inline styles
-    if ("adoptedStyleSheets" in element.shadowRoot!) {
-      if (!cachedStyleSheet) {
-        cachedStyleSheet = new CSSStyleSheet()
-        await cachedStyleSheet.replace(styles)
-      }
-      element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
-      element.shadowRoot!.innerHTML = selectorHTML.html
-    } else {
-      element.shadowRoot!.innerHTML = `
-        <style>${styles}</style>
-        ${selectorHTML.html}
-      `
-    }
+    setShadowContent(element, selectorHTML.html)
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)

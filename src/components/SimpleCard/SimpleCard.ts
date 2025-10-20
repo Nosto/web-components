@@ -8,9 +8,9 @@ import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "./types"
 import { addSkuToCart } from "@nosto/nosto-js"
+import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
-// Cache the stylesheet for reuse across component instances
-let cachedStyleSheet: CSSStyleSheet | null = null
+const setShadowContent = shadowContentFactory(styles)
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -116,21 +116,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     element.productId = productData.id
 
     const cardHTML = generateCardHTML(element, productData)
-
-    // Use constructible stylesheets if supported, fallback to inline styles
-    if ("adoptedStyleSheets" in element.shadowRoot!) {
-      if (!cachedStyleSheet) {
-        cachedStyleSheet = new CSSStyleSheet()
-        await cachedStyleSheet.replace(styles)
-      }
-      element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
-      element.shadowRoot!.innerHTML = cardHTML.html
-    } else {
-      element.shadowRoot!.innerHTML = `
-        <style>${styles}</style>
-        ${cardHTML.html}
-      `
-    }
+    setShadowContent(element, cardHTML.html)
   } finally {
     element.toggleAttribute("loading", false)
   }
