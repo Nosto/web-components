@@ -1,3 +1,10 @@
+## [9.4.1](https://github.com/Nosto/web-components/compare/v9.4.0...v9.4.1) (2025-10-20)
+
+
+### Bug Fixes
+
+* extract shadowRoot population code ([38d7d46](https://github.com/Nosto/web-components/commit/38d7d4651cf396cd8c49daaeece9b91ead89dedd))
+
 # [9.4.0](https://github.com/Nosto/web-components/compare/v9.3.2...v9.4.0) (2025-10-20)
 
 
