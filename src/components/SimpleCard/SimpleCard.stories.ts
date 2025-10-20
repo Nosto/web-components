@@ -162,3 +162,37 @@ export const GridOfCards: Story = {
     </div>
   `
 }
+
+export const WithPreloadedData: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: () => {
+    const product = {
+      id: 123456,
+      title: "Preloaded Product",
+      url: "/products/preloaded-product",
+      vendor: "Nosto Demo",
+      price: 2499, // $24.99 in cents
+      compare_at_price: 2999, // $29.99 in cents
+      images: [
+        "https://cdn.shopify.com/s/files/1/0014/1962/products/demo-product-1.jpg",
+        "https://cdn.shopify.com/s/files/1/0014/1962/products/demo-product-2.jpg"
+      ],
+      media: [
+        { src: "https://cdn.shopify.com/s/files/1/0014/1962/products/demo-product-1.jpg", aspect_ratio: 1.2 },
+        { src: "https://cdn.shopify.com/s/files/1/0014/1962/products/demo-product-2.jpg", aspect_ratio: 1.2 }
+      ]
+    }
+
+    return html`
+      <nosto-simple-card
+        .product=${product}
+        alternate
+        brand
+        discount
+        rating="4.5"
+      >
+        <button n-atc>Add to cart</button>
+      </nosto-simple-card>
+    `
+  }
+}
