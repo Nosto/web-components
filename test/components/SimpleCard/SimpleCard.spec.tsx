@@ -35,21 +35,35 @@ describe("SimpleCard", () => {
   const mockProduct = {
     id: 123456,
     title: "Awesome Test Product",
-    handle: "awesome-test-product",
-    description: "A great product for testing",
     vendor: "Test Brand",
-    tags: ["test", "awesome"],
-    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-    featured_image: "https://example.com/image1.jpg",
     price: 1999, // $19.99 in cents
     compare_at_price: 2499, // $24.99 in cents
+    url: "/products/awesome-test-product",
+    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+    media: [
+      {
+        src: "https://example.com/image1.jpg", 
+        aspect_ratio: 1
+      },
+      {
+        src: "https://example.com/image2.jpg",
+        aspect_ratio: 1
+      }
+    ],
+    // Optional fields for compatibility
+    handle: "awesome-test-product",
+    description: "A great product for testing",
+    tags: ["test", "awesome"],
+    featured_image: "https://example.com/image1.jpg",
     variants: [
       {
         id: 789,
+        name: "Default Title",
         price: 1999, // $19.99 in cents
         compare_at_price: 2499, // $24.99 in cents
-        available: true,
-        title: "Default Title"
+        featured_image: {
+          src: "https://example.com/image1.jpg"
+        }
       }
     ]
   } as ShopifyProduct
@@ -148,10 +162,12 @@ describe("SimpleCard", () => {
       variants: [
         {
           id: 789,
+          name: "Default Title",
           price: 1999,
           compare_at_price: 1999, // same price, no discount
-          available: true,
-          title: "Default Title"
+          featured_image: {
+            src: "https://example.com/image1.jpg"
+          }
         }
       ]
     } as ShopifyProduct
@@ -200,7 +216,8 @@ describe("SimpleCard", () => {
   it("should not render alternate image when product has only one image", async () => {
     const productWithOneImage = {
       ...mockProduct,
-      images: [mockProduct.images[0]] // only one image
+      images: [mockProduct.images[0]], // only one image
+      media: [mockProduct.media[0]] // only one media object
     }
 
     addProductHandlers({
@@ -241,7 +258,8 @@ describe("SimpleCard", () => {
   it("should handle product with no images", async () => {
     const productWithoutImages = {
       ...mockProduct,
-      images: []
+      images: [],
+      media: []
     }
 
     addProductHandlers({
@@ -331,10 +349,12 @@ describe("SimpleCard", () => {
       variants: [
         {
           id: 789,
+          name: "Default Title",
           price: 999, // $9.99 in cents
           compare_at_price: 1299, // $12.99 in cents
-          available: true,
-          title: "Default Title"
+          featured_image: {
+            src: "https://example.com/image1.jpg"
+          }
         }
       ]
     } as ShopifyProduct
@@ -411,87 +431,24 @@ describe("SimpleCard", () => {
   it("should handle variant change events and update images", async () => {
     const variantProduct = {
       ...mockProduct,
-      options: [
-        {
-          name: "Color",
-          position: 1,
-          values: ["Red", "Blue"]
-        }
-      ],
       variants: [
         {
           id: 1001,
-          title: "Red",
-          option1: "Red",
-          option2: null,
-          option3: null,
-          sku: "TEST-RED",
-          requires_shipping: true,
-          taxable: true,
-          featured_image: {
-            id: 555,
-            product_id: 123456,
-            position: 2,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Blue variant image",
-            width: 800,
-            height: 800,
-            src: "https://example.com/red.jpg",
-            variant_ids: [1002]
-          },
-          available: true,
           name: "Red",
-          public_title: "Red",
-          options: ["Red"],
           price: 2499, // Different price
-          weight: 100,
           compare_at_price: 2999,
-          inventory_quantity: 10,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456789",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+          featured_image: {
+            src: "https://example.com/red.jpg"
+          }
         },
         {
           id: 1002,
-          title: "Blue",
-          option1: "Blue",
-          option2: null,
-          option3: null,
-          sku: "TEST-BLUE",
-          requires_shipping: true,
-          taxable: true,
-          featured_image: {
-            id: 555,
-            product_id: 123456,
-            position: 2,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Blue variant image",
-            width: 800,
-            height: 800,
-            src: "https://example.com/blue.jpg",
-            variant_ids: [1002]
-          },
-          available: true,
           name: "Blue",
-          public_title: "Blue",
-          options: ["Blue"],
           price: 1999,
-          weight: 100,
           compare_at_price: 2499,
-          inventory_quantity: 5,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456790",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+          featured_image: {
+            src: "https://example.com/blue.jpg"
+          }
         }
       ]
     } satisfies ShopifyProduct

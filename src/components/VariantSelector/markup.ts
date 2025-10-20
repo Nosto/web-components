@@ -1,5 +1,5 @@
 import { html } from "@/templating/html"
-import type { ShopifyProduct } from "../SimpleCard/types"
+import type { ShopifyProduct } from "./types"
 import type { VariantSelector } from "./VariantSelector"
 
 export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
