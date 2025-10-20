@@ -8,6 +8,9 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return html`
     <div class="card" part="card">
+      <div class="header">
+        <slot name="header"></slot>
+      </div>
       <a href="${normalizeUrl(product.url)}" class="link" part="link">
         ${generateImageHTML(element, product)}
         <div class="content" part="content">
@@ -25,7 +28,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
         </div>
       </a>
       <div class="slot">
-        <slot></slot>
+        <slot name="footer"></slot>
       </div>
     </div>
   `

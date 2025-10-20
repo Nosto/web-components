@@ -79,7 +79,7 @@ export const Default: Story = {
       rating=${args.rating || 0}
       sizes="${args.sizes || ""}"
     >
-      <button n-atc>Add to cart</button>
+      <button slot="footer" n-atc>Add to cart</button>
     </nosto-simple-card>
   `
 }
@@ -94,8 +94,38 @@ export const WithVariantSelector: Story = {
       ?discount=${args.discount}
       rating=${args.rating || 0}
     >
-      <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
-      <button n-atc>Add to cart</button>
+      <nosto-variant-selector slot="footer" handle="${args.handle}"></nosto-variant-selector>
+      <button slot="footer" n-atc>Add to cart</button>
+    </nosto-simple-card>
+  `
+}
+
+export const WithHeaderAndFooter: Story = {
+  args: {
+    handle: handles[0],
+    alternate: true,
+    brand: true,
+    discount: true,
+    rating: 4.2
+  },
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card
+      handle="${args.handle}"
+      ?alternate=${args.alternate}
+      ?brand=${args.brand}
+      ?discount=${args.discount}
+      rating=${args.rating || 0}
+      sizes="${args.sizes || ""}"
+    >
+      <div
+        slot="header"
+        style="background: #ff6b6b; color: white; padding: 0.5rem; text-align: center; font-weight: bold;"
+      >
+        🔥 Limited Time Offer
+      </div>
+      <nosto-variant-selector slot="footer" handle="${args.handle}"></nosto-variant-selector>
+      <button slot="footer" n-atc>Add to cart</button>
     </nosto-simple-card>
   `
 }

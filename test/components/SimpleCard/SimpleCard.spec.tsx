@@ -97,7 +97,9 @@ describe("SimpleCard", () => {
 
     const card = (
       <nosto-simple-card handle="test-product" brand>
-        <button n-atc>Add to Cart</button>
+        <button slot="footer" n-atc>
+          Add to Cart
+        </button>
       </nosto-simple-card>
     ) as SimpleCard
 
@@ -395,7 +397,7 @@ describe("SimpleCard", () => {
     expect(shadowContent).not.toContain("sizes=")
   })
 
-  it("should include slot for additional content", async () => {
+  it("should include slots for header and footer content", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
     })
@@ -404,8 +406,95 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("slot")
-    expect(shadowContent).toContain("<slot></slot>")
+    expect(shadowContent).toContain('slot name="header"')
+    expect(shadowContent).toContain('slot name="footer"')
+  })
+
+  it("should render content in header slot", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (
+      <nosto-simple-card handle="test-product">
+        <div slot="header">Header Content</div>
+      </nosto-simple-card>
+    ) as SimpleCard
+
+    document.body.appendChild(card)
+    await card.connectedCallback()
+
+    const headerSlot = card.shadowRoot?.querySelector('slot[name="header"]') as HTMLSlotElement
+    expect(headerSlot).toBeTruthy()
+
+    const assignedElements = headerSlot.assignedElements()
+    expect(assignedElements).toHaveLength(1)
+    expect(assignedElements[0].textContent).toBe("Header Content")
+  })
+
+  it("should render content in footer slot", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (
+      <nosto-simple-card handle="test-product">
+        <button slot="footer">Footer Button</button>
+      </nosto-simple-card>
+    ) as SimpleCard
+
+    document.body.appendChild(card)
+    await card.connectedCallback()
+
+    const footerSlot = card.shadowRoot?.querySelector('slot[name="footer"]') as HTMLSlotElement
+    expect(footerSlot).toBeTruthy()
+
+    const assignedElements = footerSlot.assignedElements()
+    expect(assignedElements).toHaveLength(1)
+    expect(assignedElements[0].textContent).toBe("Footer Button")
+  })
+
+  it("should render both header and footer content", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (
+      <nosto-simple-card handle="test-product">
+        <div slot="header">Special Offer</div>
+        <button slot="footer" n-atc>
+          Add to Cart
+        </button>
+      </nosto-simple-card>
+    ) as SimpleCard
+
+    document.body.appendChild(card)
+    await card.connectedCallback()
+
+    const headerSlot = card.shadowRoot?.querySelector('slot[name="header"]') as HTMLSlotElement
+    const footerSlot = card.shadowRoot?.querySelector('slot[name="footer"]') as HTMLSlotElement
+
+    expect(headerSlot.assignedElements()).toHaveLength(1)
+    expect(footerSlot.assignedElements()).toHaveLength(1)
+    expect(headerSlot.assignedElements()[0].textContent).toBe("Special Offer")
+    expect(footerSlot.assignedElements()[0].textContent).toBe("Add to Cart")
+  })
+
+  it("should work with empty slots", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    document.body.appendChild(card)
+    await card.connectedCallback()
+
+    const headerSlot = card.shadowRoot?.querySelector('slot[name="header"]') as HTMLSlotElement
+    const footerSlot = card.shadowRoot?.querySelector('slot[name="footer"]') as HTMLSlotElement
+
+    expect(headerSlot.assignedElements()).toHaveLength(0)
+    expect(footerSlot.assignedElements()).toHaveLength(0)
   })
 
   it("should handle variant change events and update images", async () => {

@@ -18,8 +18,9 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  * Fetches product data from `/products/<handle>.js` and renders a card with
  * product image, title, price, and optional brand, discount, and rating information.
  *
- * The component renders inside a shadow DOM with encapsulated styles. Styling can be
- * customized using the following CSS custom properties:
+ * The component renders inside a shadow DOM with encapsulated styles. It provides two named slots:
+ * - `header` slot: for content above the product card (empty by default)
+ * - `footer` slot: for content below the product card (e.g., buttons, variant selectors)
  *
  * @category Campaign level templating
  *
@@ -32,7 +33,10 @@ let cachedStyleSheet: CSSStyleSheet | null = null
  *
  * @example
  * ```html
- * <nosto-simple-card handle="awesome-product" alternate brand discount rating></nosto-simple-card>
+ * <nosto-simple-card handle="awesome-product" alternate brand discount rating>
+ *   <div slot="header">Special Badge</div>
+ *   <button slot="footer" n-atc>Add to cart</button>
+ * </nosto-simple-card>
  * ```
  */
 @customElement("nosto-simple-card", { observe: true })
