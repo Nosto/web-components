@@ -8,7 +8,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return html`
     <div class="card" part="card">
-      <a href="${product.url}" class="link" part="link">
+      <a href="${normalizeUrl(product.url)}" class="link" part="link">
         ${generateImageHTML(element, product)}
         <div class="content" part="content">
           ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
@@ -48,13 +48,15 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
       ${generateNostoImageHTML(primaryImage, product.title, aspectRatio, "img primary", element.sizes)}
-      ${hasAlternate && alternateImage ? generateAlternateImageHTML(alternateImage, product, element.sizes) : ""}
+      ${hasAlternate && alternateImage
+        ? generateNostoImageHTML(alternateImage, product.title, aspectRatio, "img alternate", element.sizes)
+        : ""}
     </div>
   `
 }
 
 function normalizeUrl(url: string) {
-  if (url.startsWith("//") || !url.startsWith("/")) {
+  if (!url || url.startsWith("//") || !url.startsWith("/")) {
     return url
   }
   return createShopifyUrl(url).toString()
@@ -65,20 +67,13 @@ function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, c
     <nosto-image
       src="${normalizeUrl(src)}"
       alt="${alt}"
-      width="300"
+      width="800"
       aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="${className}"
       ${sizes ? html`sizes="${sizes}"` : ""}
     ></nosto-image>
   `
-}
-
-function generateAlternateImageHTML(alternateImage: string, product: ShopifyProduct, sizes?: string) {
-  // Get aspect ratio from the second media object, fallback to 1
-  const aspectRatio = product.media?.[1]?.aspect_ratio || 1
-
-  return generateNostoImageHTML(alternateImage, product.title, aspectRatio, "img alternate", sizes)
 }
 
 function generateRatingHTML(rating: number) {
@@ -100,42 +95,37 @@ function formatPrice(price: number) {
 }
 
 export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
-  if (!element.shadowRoot) return
-
   updateImages(element, variant)
   updatePrices(element, variant)
 }
 
 function updateImages(element: SimpleCard, variant: ShopifyVariant) {
-  if (!element.shadowRoot) return
+  if (!variant.featured_image) return
 
-  const primaryImage = variant.featured_image
-
-  const primaryImgElement = element.shadowRoot.querySelector(".img.primary") as HTMLElement
-  if (primaryImgElement && primaryImage) {
-    primaryImgElement.setAttribute("src", normalizeUrl(primaryImage.src))
+  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
+  if (primaryImgElement) {
+    primaryImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
     primaryImgElement.setAttribute("alt", variant.name)
   }
 
-  if (element.alternate && primaryImage) {
-    const alternateImgElement = element.shadowRoot.querySelector(".img.alternate") as HTMLElement
+  if (element.alternate) {
+    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLElement
     if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(primaryImage.src))
+      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
       alternateImgElement.setAttribute("alt", variant.name)
     }
   }
 }
 
 function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
-  if (!element.shadowRoot) return
   const hasDiscount = element.discount && variant.compare_at_price && variant.compare_at_price > variant.price
 
-  const currentPriceElement = element.shadowRoot.querySelector(".price-current")
+  const currentPriceElement = element.shadowRoot!.querySelector(".price-current")
   if (currentPriceElement) {
     currentPriceElement.textContent = formatPrice(variant.price || 0)
   }
 
-  const originalPriceElement = element.shadowRoot.querySelector(".price-original")
+  const originalPriceElement = element.shadowRoot!.querySelector(".price-original")
   if (hasDiscount && originalPriceElement) {
     originalPriceElement.textContent = formatPrice(variant.compare_at_price!)
   }
