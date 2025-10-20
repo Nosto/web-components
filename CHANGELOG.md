@@ -1,3 +1,11 @@
+# [9.4.0](https://github.com/Nosto/web-components/compare/v9.3.2...v9.4.0) (2025-10-20)
+
+
+### Features
+
+* **Image:** complete shadow DOM rendering, optional layout, and unstyled attribute implementation ([08eb250](https://github.com/Nosto/web-components/commit/08eb250b482189566e6a56a63177ed03458e1d93))
+* **Image:** implement shadow DOM rendering, optional layout, and unstyled attribute ([94a2311](https://github.com/Nosto/web-components/commit/94a231191ddd7ea446355e8ffaf6d4acda857a9f))
+
 ## [9.3.2](https://github.com/Nosto/web-components/compare/v9.3.1...v9.3.2) (2025-10-20)
 
 
