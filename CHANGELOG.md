@@ -1,3 +1,11 @@
+## [9.3.2](https://github.com/Nosto/web-components/compare/v9.3.1...v9.3.2) (2025-10-20)
+
+
+### Bug Fixes
+
+* drop buggy story ([5d55cd0](https://github.com/Nosto/web-components/commit/5d55cd063cfceb039cb803eb8f7a33bb849e1181))
+* drop double escaping ([a469bd6](https://github.com/Nosto/web-components/commit/a469bd627b78ca857547b3418f85e4785138807a))
+
 ## [9.3.1](https://github.com/Nosto/web-components/compare/v9.3.0...v9.3.1) (2025-10-14)
 
 
