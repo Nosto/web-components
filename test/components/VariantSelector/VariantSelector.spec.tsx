@@ -33,35 +33,16 @@ describe("VariantSelector", () => {
   const mockProductWithVariants: ShopifyProduct = {
     id: 123456,
     title: "Variant Test Product",
-    handle: "variant-test-product",
-    description: "A product with variants for testing",
     vendor: "Test Brand",
-    tags: ["test", "variants"],
-    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-    featured_image: "https://example.com/image1.jpg",
     price: 1999, // $19.99 in cents
     compare_at_price: 2499, // $24.99 in cents
-    published_at: "2023-01-01T00:00:00Z",
-    created_at: "2023-01-01T00:00:00Z",
-    type: "Test",
-    price_min: 1999,
-    price_max: 2999,
-    available: true,
-    price_varies: true,
-    compare_at_price_min: 2499,
-    compare_at_price_max: 3499,
-    compare_at_price_varies: true,
     url: "/products/variant-test-product",
+    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
     media: [
       {
-        id: 1,
         src: "https://example.com/image1.jpg",
         alt: "Product image 1",
-        position: 1,
         aspect_ratio: 1,
-        height: 300,
-        width: 300,
-        media_type: "image",
         preview_image: {
           aspect_ratio: 1,
           height: 300,
@@ -70,98 +51,52 @@ describe("VariantSelector", () => {
         }
       }
     ],
-    requires_selling_plan: false,
-    selling_plan_groups: [],
     options: [
       {
         name: "Size",
-        position: 1,
         values: ["Small", "Medium", "Large"]
       },
       {
         name: "Color",
-        position: 2,
         values: ["Red", "Blue", "Green"]
       }
     ],
     variants: [
       {
         id: 1001,
-        title: "Small / Red",
         option1: "Small",
         option2: "Red",
         option3: null,
-        sku: null,
-        requires_shipping: true,
-        taxable: true,
         featured_image: null,
         available: true,
         name: "Small / Red",
-        public_title: null,
         options: ["Small", "Red"],
         price: 1999,
-        weight: 100,
-        compare_at_price: null,
-        inventory_quantity: 10,
-        inventory_management: null,
-        inventory_policy: "deny",
-        barcode: null,
-        quantity_rule: { min: 1, max: null, increment: 1 },
-        quantity_price_breaks: [],
-        requires_selling_plan: false,
-        selling_plan_allocations: []
+        compare_at_price: null
       },
       {
         id: 1002,
-        title: "Medium / Blue",
         option1: "Medium",
         option2: "Blue",
         option3: null,
-        sku: null,
-        requires_shipping: true,
-        taxable: true,
         featured_image: null,
         available: true,
         name: "Medium / Blue",
-        public_title: null,
         options: ["Medium", "Blue"],
         price: 2499,
-        weight: 100,
-        compare_at_price: null,
-        inventory_quantity: 5,
-        inventory_management: null,
-        inventory_policy: "deny",
-        barcode: null,
-        quantity_rule: { min: 1, max: null, increment: 1 },
-        quantity_price_breaks: [],
-        requires_selling_plan: false,
-        selling_plan_allocations: []
+        compare_at_price: null
       },
       {
         id: 1003,
-        title: "Large / Red",
         option1: "Large",
         option2: "Red",
         option3: null,
-        sku: null,
-        requires_shipping: true,
-        taxable: true,
         featured_image: null,
         available: true,
         name: "Large / Red",
-        public_title: null,
         options: ["Large", "Red"],
         price: 2999,
-        weight: 100,
-        compare_at_price: null,
-        inventory_quantity: 3,
-        inventory_management: null,
-        inventory_policy: "deny",
-        barcode: null,
-        quantity_rule: { min: 1, max: null, increment: 1 },
-        quantity_price_breaks: [],
-        requires_selling_plan: false,
-        selling_plan_allocations: []
+        compare_at_price: null
       }
     ]
   }
@@ -171,12 +106,16 @@ describe("VariantSelector", () => {
     options: [],
     variants: [
       {
-        ...mockProductWithVariants.variants[0],
         id: 2001,
-        title: "Default",
         option1: null,
         option2: null,
-        options: []
+        option3: null,
+        featured_image: null,
+        available: true,
+        name: "Default",
+        options: [],
+        price: 1999,
+        compare_at_price: null
       }
     ]
   }
