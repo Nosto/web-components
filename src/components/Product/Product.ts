@@ -44,16 +44,18 @@ import { provide } from "../inject"
 @customElement("nosto-product")
 export class Product extends NostoElement {
   /** @private */
-  static attributes = {
+  static properties = {
     productId: String,
     recoId: String,
     skuSelected: Boolean
   }
 
-  selectedSkuId?: string
   productId!: string
   recoId!: string
   skuSelected?: boolean
+
+  /** @hidden */
+  selectedSkuId?: string
 
   connectedCallback() {
     assertRequired(this, "productId", "recoId")
