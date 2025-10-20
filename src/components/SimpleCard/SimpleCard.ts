@@ -3,12 +3,14 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct } from "./types"
+import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
-import type { VariantChangeDetail } from "./types"
+import type { VariantChangeDetail } from "@/shopify/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { JSONProduct } from "@nosto/nosto-js/client"
+import { convertProduct } from "./convertProduct"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -53,6 +55,8 @@ export class SimpleCard extends NostoElement {
   discount?: boolean
   rating?: number
   sizes?: string
+
+  product?: JSONProduct
 
   /** @hidden */
   productId?: number
@@ -110,6 +114,11 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
+  if (element.product) {
+    const normalized = convertProduct(element.product)
+    const cardHTML = generateCardHTML(element, normalized)
+    setShadowContent(element, cardHTML.html)
+  }
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element.handle)
