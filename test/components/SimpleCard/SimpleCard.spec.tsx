@@ -42,7 +42,7 @@ describe("SimpleCard", () => {
     images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
     media: [
       {
-        src: "https://example.com/image1.jpg", 
+        src: "https://example.com/image1.jpg",
         aspect_ratio: 1
       },
       {

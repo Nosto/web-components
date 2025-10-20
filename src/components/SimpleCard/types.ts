@@ -8,8 +8,6 @@ export type ShopifyVariant = {
   } | null
 }
 
-
-
 export type ShopifyMedia = {
   src: string
   aspect_ratio: number

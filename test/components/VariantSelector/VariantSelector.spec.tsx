@@ -7,7 +7,6 @@ import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/components/VariantSelector/types"
 
-
 describe("VariantSelector", () => {
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     const productUrl = createShopifyUrl("products/:handle.js")
@@ -105,7 +104,7 @@ describe("VariantSelector", () => {
   const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
     options: [
       {
-        name: "Size", 
+        name: "Size",
         values: ["One Size"]
       },
       {

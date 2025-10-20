@@ -9,8 +9,6 @@ export type ShopifyOption = {
   values: string[]
 }
 
-
-
 export type ShopifyProduct = {
   options: ShopifyOption[]
   variants: ShopifyVariant[]
