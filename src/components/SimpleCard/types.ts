@@ -93,6 +93,42 @@ export type ShopifyProduct = {
 }
 
 /**
+ * Simplified product type containing only the fields consumed by generateCardHTML
+ */
+export type SimpleProduct = {
+  id: number
+  title: string
+  url: string
+  vendor?: string
+  price: number
+  compare_at_price?: number | null
+  images?: string[]
+  media?: {
+    src: string
+    aspect_ratio?: number
+  }[]
+}
+
+/**
+ * Converts a ShopifyProduct to a SimpleProduct containing only the fields needed for rendering
+ */
+export function toSimpleProduct(shopifyProduct: ShopifyProduct): SimpleProduct {
+  return {
+    id: shopifyProduct.id,
+    title: shopifyProduct.title,
+    url: shopifyProduct.url,
+    vendor: shopifyProduct.vendor,
+    price: shopifyProduct.price,
+    compare_at_price: shopifyProduct.compare_at_price,
+    images: shopifyProduct.images,
+    media: shopifyProduct.media?.map(m => ({
+      src: m.src,
+      aspect_ratio: m.aspect_ratio
+    }))
+  }
+}
+
+/**
  * Event detail for variant change events
  */
 export type VariantChangeDetail = {

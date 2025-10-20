@@ -5,7 +5,7 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import type { ShopifyProduct } from "@/components/SimpleCard/types"
+import type { ShopifyProduct, SimpleProduct } from "@/components/SimpleCard/types"
 
 describe("SimpleCard", () => {
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
@@ -54,9 +54,9 @@ describe("SimpleCard", () => {
     ]
   } as ShopifyProduct
 
-  it("should throw an error if handle is not provided", async () => {
+  it("should throw an error if neither handle nor product is provided", async () => {
     const card = (<nosto-simple-card />) as SimpleCard
-    await expect(card.connectedCallback()).rejects.toThrowError("Property handle is required.")
+    await expect(card.connectedCallback()).rejects.toThrowError("Either handle or product property is required.")
   })
 
   it("should fetch product data and render basic card", async () => {
@@ -519,5 +519,132 @@ describe("SimpleCard", () => {
     // Verify that the image was updated to the blue variant
     const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
     expect(primaryImg?.src).toBe("https://example.com/blue.jpg")
+  })
+
+  describe("preloaded product data", () => {
+    const mockSimpleProduct: SimpleProduct = {
+      id: 123456,
+      title: "Preloaded Test Product",
+      url: "/products/preloaded-test-product",
+      vendor: "Preloaded Brand",
+      price: 2499, // $24.99 in cents
+      compare_at_price: 2999, // $29.99 in cents
+      images: ["https://example.com/preloaded1.jpg", "https://example.com/preloaded2.jpg"],
+      media: [
+        { src: "https://example.com/preloaded1.jpg", aspect_ratio: 1.5 },
+        { src: "https://example.com/preloaded2.jpg", aspect_ratio: 1.5 }
+      ]
+    }
+
+    it("should render with preloaded product data without making network requests", async () => {
+      const card = (<nosto-simple-card />) as SimpleCard
+      card.product = mockSimpleProduct
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("card")
+      expect(shadowContent).toContain("Preloaded Test Product")
+      expect(shadowContent).toContain("$24.99")
+      expect(shadowContent).toContain("https://example.com/preloaded1.jpg")
+      expect(card.hasAttribute("loading")).toBe(false)
+      expect(card.productId).toBe(123456)
+    })
+
+    it("should render brand when brand attribute is enabled with preloaded data", async () => {
+      const card = (<nosto-simple-card brand />) as SimpleCard
+      card.product = mockSimpleProduct
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Preloaded Brand")
+    })
+
+    it("should render discount when discount attribute is enabled with preloaded data", async () => {
+      const card = (<nosto-simple-card discount />) as SimpleCard
+      card.product = mockSimpleProduct
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("$29.99") // original price
+      expect(shadowContent).toContain("$24.99") // current price
+    })
+
+    it("should render alternate image when alternate attribute is enabled with preloaded data", async () => {
+      const card = (<nosto-simple-card alternate />) as SimpleCard
+      card.product = mockSimpleProduct
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("img primary")
+      expect(shadowContent).toContain("img alternate")
+      expect(shadowContent).toContain("https://example.com/preloaded2.jpg")
+    })
+
+    it("should prefer preloaded product data over handle when both are provided", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+      card.product = mockSimpleProduct
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // Should use preloaded data, not fetched data
+      expect(shadowContent).toContain("Preloaded Test Product")
+      expect(shadowContent).not.toContain("Awesome Test Product")
+    })
+
+    it("should work with minimal product data", async () => {
+      const minimalProduct: SimpleProduct = {
+        id: 999,
+        title: "Minimal Product",
+        url: "/products/minimal",
+        price: 1000 // $10.00
+      }
+
+      const card = (<nosto-simple-card />) as SimpleCard
+      card.product = minimalProduct
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("Minimal Product")
+      expect(shadowContent).toContain("$10.00")
+      expect(shadowContent).toContain("image placeholder") // No images provided
+    })
+
+    it("should handle re-rendering when product property changes", async () => {
+      const product1: SimpleProduct = {
+        id: 1,
+        title: "Product 1",
+        url: "/products/product-1",
+        price: 1000
+      }
+
+      const product2: SimpleProduct = {
+        id: 2,
+        title: "Product 2",
+        url: "/products/product-2",
+        price: 2000
+      }
+
+      const card = (<nosto-simple-card />) as SimpleCard
+      card.product = product1
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+      expect(getShadowContent(card)).toContain("Product 1")
+
+      card.product = product2
+      await card.attributeChangedCallback()
+      expect(getShadowContent(card)).toContain("Product 2")
+    })
   })
 })

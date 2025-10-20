@@ -1,9 +1,9 @@
 import { html } from "@/templating/html"
-import type { ShopifyProduct, ShopifyVariant } from "./types"
+import type { ShopifyVariant, SimpleProduct } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
-export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
+export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
 
   return html`
@@ -31,7 +31,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
