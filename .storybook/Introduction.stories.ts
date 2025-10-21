@@ -62,26 +62,7 @@ export const Overview: Story = {
     </style>
 
     <div class="overview-page">
-      <div class="header">
-        <h1>Nosto Web Components</h1>
-        <p>
-          Custom elements designed to integrate Nosto's personalization and e-commerce solutions into various web
-          platforms
-        </p>
-      </div>
-
-      <div class="quick-links">
-        <h2>Quick Navigation</h2>
-        <div class="quick-links-grid">
-          <a href="https://docs.nosto.com/techdocs/apis/frontend/oss/web-components" class="quick-link" target="_blank">
-            📚 Documentation
-          </a>
-          <a href="https://nosto.github.io/web-components" class="quick-link" target="_blank"> 📖 TypeDoc API </a>
-          <a href="https://github.com/Nosto/web-components" class="quick-link" target="_blank">
-            🔗 GitHub Repository
-          </a>
-        </div>
-      </div>
+      <h1>Nosto Web Components</h1>
 
       <div class="category-section">
         <h2 class="category-title">Store Level Templating</h2>
@@ -97,12 +78,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-campaign--docs" class="component-link" target="_parent">View Docs</a>
-              <a
-                href="/?path=/story/components-campaign--basic-campaign"
-                class="component-link secondary"
-                target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -114,12 +89,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-control--docs" class="component-link" target="_parent">View Docs</a>
-              <a
-                href="/?path=/story/components-control--basic-control"
-                class="component-link secondary"
-                target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -132,9 +101,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-popup--docs" class="component-link" target="_parent">View Docs</a>
-              <a href="/?path=/story/components-popup--dialog-popup" class="component-link secondary" target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -167,9 +133,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-image--docs" class="component-link" target="_parent">View Docs</a>
-              <a href="/?path=/story/components-image--constrained" class="component-link secondary" target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -182,12 +145,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-product--docs" class="component-link" target="_parent">View Docs</a>
-              <a
-                href="/?path=/story/components-product--single-product"
-                class="component-link secondary"
-                target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -199,12 +156,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-skuoptions--docs" class="component-link" target="_parent">View Docs</a>
-              <a
-                href="/?path=/story/components-skuoptions--dual-option-groups"
-                class="component-link secondary"
-                target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -216,12 +167,6 @@ export const Overview: Story = {
             </div>
             <div class="component-links">
               <a href="/?path=/docs/components-simplecard--docs" class="component-link" target="_parent">View Docs</a>
-              <a
-                href="/?path=/story/components-simplecard--simple-product-card"
-                class="component-link secondary"
-                target="_parent"
-                >Stories</a
-              >
             </div>
           </div>
 
@@ -247,12 +192,6 @@ export const Overview: Story = {
             <div class="component-links">
               <a href="/?path=/docs/components-variantselector--docs" class="component-link" target="_parent"
                 >View Docs</a
-              >
-              <a
-                href="/?path=/story/components-variantselector--color-variant-selector"
-                class="component-link secondary"
-                target="_parent"
-                >Stories</a
               >
             </div>
           </div>
