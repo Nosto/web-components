@@ -57,14 +57,13 @@ const mockBuilder = {
 }
 mockNostojs({
   placements: {
-    injectCampaigns() {
-      Object.entries(allCampaignMockData).forEach(([placementId, content]) => {
-        const element = document.querySelector(`nosto-campaign[placement="${placementId}"]`)
-        if (element && "html" in content) {
-          element.innerHTML = content.html
+    injectCampaigns(results: Record<string, { html: string }>, targets: Record<string, HTMLElement>) {
+      Object.entries(results).forEach(([placementId, content]) => {
+        if (targets[placementId] && content.html) {
+          targets[placementId].innerHTML = content.html
         }
       })
-      return { filledElements: Object.keys(allCampaignMockData), unFilledElements: [] }
+      return { filledElements: Object.keys(results), unFilledElements: [] }
     }
   },
   attributeProductClicksInCampaign: () => {},
