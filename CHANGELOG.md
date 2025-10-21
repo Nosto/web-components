@@ -1,3 +1,10 @@
+# [9.5.0](https://github.com/Nosto/web-components/compare/v9.4.1...v9.5.0) (2025-10-21)
+
+
+### Features
+
+* **SimpleCard:** preload data via property ([6e97953](https://github.com/Nosto/web-components/commit/6e979536167d61500f2d907033a8859ff5920af5))
+
 ## [9.4.1](https://github.com/Nosto/web-components/compare/v9.4.0...v9.4.1) (2025-10-20)
 
 
