@@ -13,8 +13,8 @@ const setShadowContent = shadowContentFactory(styles)
  *
  * @category Store level templating
  *
- * @property {string} name - Required name used for analytics and localStorage persistence. The popup's closed state will be remembered.
- * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
+ * @attribute {string} name - Required name used for analytics and localStorage persistence. The popup's closed state will be remembered.
+ * @attribute {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
  *
  * @example
  * Basic popup with dialog and ribbon content:

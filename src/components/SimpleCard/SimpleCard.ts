@@ -25,12 +25,12 @@ const setShadowContent = shadowContentFactory(styles)
  *
  * @category Campaign level templating
  *
- * @property {string} handle - The Shopify product handle to fetch data for. Required.
- * @property {boolean} [alternate] - Show alternate product image on hover. Defaults to false.
- * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
- * @property {boolean} [discount] - Show discount data. Defaults to false.
- * @property {boolean} [rating] - Show product rating. Defaults to false.
- * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ * @attribute {string} handle - The Shopify product handle to fetch data for. Required.
+ * @attribute {boolean} [alternate] - Show alternate product image on hover. Defaults to false.
+ * @attribute {boolean} [brand] - Show brand/vendor data. Defaults to false.
+ * @attribute {boolean} [discount] - Show discount data. Defaults to false.
+ * @attribute {boolean} [rating] - Show product rating. Defaults to false.
+ * @attribute {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  *
  * @example
  * ```html

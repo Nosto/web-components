@@ -22,8 +22,8 @@ const setShadowContent = shadowContentFactory(styles)
  *
  * @category Category level templating
  *
- * @property {string} handle - The Shopify product handle to fetch data for. Required.
- * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
+ * @attribute {string} handle - The Shopify product handle to fetch data for. Required.
+ * @attribute {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  *

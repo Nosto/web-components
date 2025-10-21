@@ -12,8 +12,8 @@ import { JSONResult } from "@nosto/nosto-js/client"
  *
  * @category Store level templating
  *
- * @property {string} placement - The placement identifier for the campaign.
- * @property {string} section - The section to be used for Section Rendering API based rendering.
+ * @attribute {string} placement - The placement identifier for the campaign.
+ * @attribute {string} section - The section to be used for Section Rendering API based rendering.
  *
  * @example
  * Basic usage with Shopify section rendering:

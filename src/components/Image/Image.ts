@@ -14,16 +14,16 @@ import { NostoElement } from "../Element"
  * - Supports only Shopify and BigCommerce image URLs.
  * - Support for format, pad_color and quality to be added in the future.
  *
- * @property {string} src - The source URL of the image.
- * @property {number} [width] - The width of the image in pixels.
- * @property {number} [height] - The height of the image in pixels.
- * @property {number} [aspectRatio] - The aspect ratio of the image (width / height value).
- * @property {Layout} [layout] - The layout of the image. Can be "fixed", "constrained", or "fullWidth".
- * @property {Crop} [crop] - Shopify only. The crop of the image. Can be "center", "left", "right", "top", or "bottom".
- * @property {string} [alt] - Alternative text for the image for accessibility purposes.
- * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
- * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
- * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
+ * @attribute {string} src - The source URL of the image.
+ * @attribute {number} [width] - The width of the image in pixels.
+ * @attribute {number} [height] - The height of the image in pixels.
+ * @attribute {number} [aspect-ratio] - The aspect ratio of the image (width / height value).
+ * @attribute {Layout} [layout] - The layout of the image. Can be "fixed", "constrained", or "fullWidth".
+ * @attribute {Crop} [crop] - Shopify only. The crop of the image. Can be "center", "left", "right", "top", or "bottom".
+ * @attribute {string} [alt] - Alternative text for the image for accessibility purposes.
+ * @attribute {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ * @attribute {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
+ * @attribute {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  *
  * @example
  * Using with Shopify image URL:

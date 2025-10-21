@@ -13,9 +13,9 @@ import { provide } from "../inject"
  *
  * @category Campaign level templating
  *
- * @property {string} productId - Required. The ID of the product.
- * @property {string} recoId - Required. The recommendation slot ID.
- * @property {boolean} skuSelected - Indicates whether a SKU is currently selected.
+ * @attribute {string} product-id - Required. The ID of the product.
+ * @attribute {string} reco-id - Required. The recommendation slot ID.
+ * @attribute {boolean} sku-selected - Indicates whether a SKU is currently selected.
  *
  * @example
  * ```html

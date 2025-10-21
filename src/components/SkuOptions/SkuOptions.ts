@@ -22,7 +22,7 @@ import { inject } from "../inject"
  *
  * @category Campaign level templating
  *
- * @property {string} name - Required. The identifier for this option group
+ * @attribute {string} name - Required. The identifier for this option group
  *
  * @example
  * ```html
