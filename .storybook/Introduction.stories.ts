@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
 
 const meta: Meta = {
-  title: "Introduction/Welcome",
+  title: "Introduction/Overview",
   parameters: {
     docs: {
       page: null // Use custom page
@@ -17,194 +17,51 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-export const Welcome: Story = {
+export const Overview: Story = {
   render: () => html`
     <style>
-      .welcome-page {
+      .overview-page {
         padding: 2rem;
         max-width: 1200px;
         margin: 0 auto;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
-        line-height: 1.6;
-        color: #333;
-      }
-
-      .header {
-        text-align: center;
-        margin-bottom: 3rem;
-        padding: 2rem;
-        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-        color: white;
-        border-radius: 12px;
-      }
-
-      .header h1 {
-        margin: 0 0 1rem 0;
-        font-size: 3rem;
-        font-weight: 700;
-      }
-
-      .header p {
-        margin: 0;
-        font-size: 1.25rem;
-        opacity: 0.9;
       }
 
       .components-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
         margin: 2rem 0;
       }
 
       .component-card {
         border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 1.5rem;
-        background: white;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-      }
-
-      .component-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      }
-
-      .component-card h3 {
-        margin: 0 0 0.5rem 0;
-        color: #ff6b35;
-        font-size: 1.25rem;
-      }
-
-      .component-tag {
-        font-family: "Monaco", "Menlo", monospace;
-        background: #f5f5f5;
-        padding: 0.25rem 0.5rem;
         border-radius: 4px;
-        font-size: 0.875rem;
-        color: #666;
-        margin-bottom: 1rem;
-        display: inline-block;
-      }
-
-      .component-description {
-        color: #666;
-        margin-bottom: 1rem;
-        font-size: 0.95rem;
+        padding: 1rem;
       }
 
       .component-links {
         display: flex;
-        gap: 0.75rem;
+        gap: 0.5rem;
         flex-wrap: wrap;
+        margin-top: 1rem;
       }
 
       .component-link {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.5rem 1rem;
+        padding: 0.25rem 0.5rem;
         background: #ff6b35;
         color: white;
         text-decoration: none;
-        border-radius: 6px;
+        border-radius: 4px;
         font-size: 0.875rem;
-        font-weight: 500;
-        transition: background 0.2s;
-      }
-
-      .component-link:hover {
-        background: #e55a2b;
-        color: white;
       }
 
       .component-link.secondary {
         background: #f0f0f0;
         color: #333;
       }
-
-      .component-link.secondary:hover {
-        background: #e0e0e0;
-        color: #333;
-      }
-
-      .category-section {
-        margin: 3rem 0;
-      }
-
-      .category-title {
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 1rem;
-        border-bottom: 2px solid #ff6b35;
-        padding-bottom: 0.5rem;
-      }
-
-      .category-description {
-        color: #666;
-        margin-bottom: 2rem;
-        font-style: italic;
-      }
-
-      .badge {
-        background: #e3f2fd;
-        color: #1976d2;
-        padding: 0.25rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin-left: 0.5rem;
-      }
-
-      .shopify-badge {
-        background: #e8f5e8;
-        color: #2e7d32;
-      }
-
-      .quick-links {
-        background: #f8f9fa;
-        padding: 2rem;
-        border-radius: 8px;
-        margin: 2rem 0;
-        text-align: center;
-      }
-
-      .quick-links h2 {
-        margin-top: 0;
-        color: #333;
-      }
-
-      .quick-links-grid {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-      }
-
-      .quick-link {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.75rem 1.5rem;
-        background: white;
-        color: #333;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 500;
-        border: 1px solid #e0e0e0;
-        transition: all 0.2s;
-      }
-
-      .quick-link:hover {
-        background: #ff6b35;
-        color: white;
-        border-color: #ff6b35;
-      }
     </style>
 
-    <div class="welcome-page">
+    <div class="overview-page">
       <div class="header">
         <h1>Nosto Web Components</h1>
         <p>
@@ -406,8 +263,7 @@ export const Welcome: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          "Welcome to Nosto Web Components Storybook. This page provides an overview of all available components and their usage."
+        story: "Overview of all available Nosto Web Components with links to their documentation and examples."
       }
     }
   }
