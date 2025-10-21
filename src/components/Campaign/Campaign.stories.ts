@@ -4,31 +4,73 @@ import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
 
-function mockNostoRecs(recommendations: Record<string, unknown>) {
-  const mockBuilder = {
-    disableCampaignInjection: () => mockBuilder,
-    setElements: () => mockBuilder,
-    setResponseMode: () => mockBuilder,
-    setProducts: () => mockBuilder,
-    load: async () => ({ recommendations })
+// Consolidated mock data for all campaign stories
+const allCampaignMockData = {
+  "homepage-hero": {
+    html: `
+      <div class="campaign-content">
+        <h2>Special Offer!</h2>
+        <p>Get 20% off selected items</p>
+        <button class="cta-button">Shop Now</button>
+      </div>
+    `
+  },
+  "product-recommendations": {
+    title: "Recommended for You",
+    products: [
+      { id: "prod-1", title: "Wireless Headphones", price: "$129.99" },
+      { id: "prod-2", title: "Smart Watch", price: "$299.99" },
+      { id: "prod-3", title: "Laptop Stand", price: "$79.99" },
+      { id: "prod-4", title: "Phone Case", price: "$24.99" }
+    ]
+  },
+  "lazy-campaign": {
+    html: `
+      <div class="lazy-campaign-content">
+        <h3>🚀 Lazy Loaded Content</h3>
+        <p>This campaign was loaded when it came into view!</p>
+        <div class="campaign-stats">
+          <span class="stat">📈 +25% CTR</span>
+          <span class="stat">⚡ Optimized Loading</span>
+        </div>
+      </div>
+    `
+  },
+  "manual-campaign": {
+    html: `
+      <div class="manual-campaign-content">
+        <h3>✋ Manually Initialized</h3>
+        <p>This campaign was loaded programmatically</p>
+        <small>Use init="false" to prevent auto-loading</small>
+      </div>
+    `
   }
-  mockNostojs({
-    placements: {
-      injectCampaigns() {
-        Object.entries(recommendations).forEach(([placementId, content]) => {
-          const element = document.querySelector(`nosto-campaign[placement="${placementId}"]`)
-          if (element) {
-            // @ts-expect-error type mismatch
-            element.innerHTML = "html" in content ? content.html : content
-          }
-        })
-        return { filledElements: Object.keys(recommendations), unFilledElements: [] }
-      }
-    },
-    attributeProductClicksInCampaign: () => {},
-    createRecommendationRequest: () => mockBuilder as unknown as RequestBuilder
-  })
 }
+
+// Initialize mock at module level with all campaign data
+const mockBuilder = {
+  disableCampaignInjection: () => mockBuilder,
+  setElements: () => mockBuilder,
+  setResponseMode: () => mockBuilder,
+  setProducts: () => mockBuilder,
+  load: async () => ({ recommendations: allCampaignMockData })
+}
+mockNostojs({
+  placements: {
+    injectCampaigns() {
+      Object.entries(allCampaignMockData).forEach(([placementId, content]) => {
+        const element = document.querySelector(`nosto-campaign[placement="${placementId}"]`)
+        if (element) {
+          // @ts-expect-error type mismatch
+          element.innerHTML = "html" in content ? content.html : content
+        }
+      })
+      return { filledElements: Object.keys(allCampaignMockData), unFilledElements: [] }
+    }
+  },
+  attributeProductClicksInCampaign: () => {},
+  createRecommendationRequest: () => mockBuilder as unknown as RequestBuilder
+})
 
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
@@ -79,19 +121,6 @@ type Story = StoryObj
 
 export const BasicCampaign: Story = {
   render: () => {
-    // Mock campaign data with HTML content
-    mockNostoRecs({
-      "homepage-hero": {
-        html: `
-          <div class="campaign-content">
-            <h2>Special Offer!</h2>
-            <p>Get 20% off selected items</p>
-            <button class="cta-button">Shop Now</button>
-          </div>
-        `
-      }
-    })
-
     return html` <nosto-campaign placement="homepage-hero" product-id="demo-product"> </nosto-campaign> `
   },
   parameters: {
@@ -105,19 +134,6 @@ export const BasicCampaign: Story = {
 
 export const ProductRecommendations: Story = {
   render: () => {
-    // Mock campaign data with product recommendations
-    mockNostoRecs({
-      "product-recommendations": {
-        title: "Recommended for You",
-        products: [
-          { id: "prod-1", title: "Wireless Headphones", price: "$129.99" },
-          { id: "prod-2", title: "Smart Watch", price: "$299.99" },
-          { id: "prod-3", title: "Laptop Stand", price: "$79.99" },
-          { id: "prod-4", title: "Phone Case", price: "$24.99" }
-        ]
-      }
-    })
-
     return html`
       <nosto-campaign placement="product-recommendations" product-id="current-product">
         <template>
@@ -153,22 +169,6 @@ export const ProductRecommendations: Story = {
 
 export const LazyLoadedCampaign: Story = {
   render: () => {
-    // Mock campaign data
-    mockNostoRecs({
-      "lazy-campaign": {
-        html: `
-          <div class="lazy-campaign-content">
-            <h3>🚀 Lazy Loaded Content</h3>
-            <p>This campaign was loaded when it came into view!</p>
-            <div class="campaign-stats">
-              <span class="stat">📈 +25% CTR</span>
-              <span class="stat">⚡ Optimized Loading</span>
-            </div>
-          </div>
-        `
-      }
-    })
-
     return html`
       <div class="spacer">
         <p>👆 Scroll up and down to see the lazy loading in action</p>
@@ -191,19 +191,6 @@ export const LazyLoadedCampaign: Story = {
 
 export const ManualInitialization: Story = {
   render: () => {
-    // Mock campaign data
-    mockNostoRecs({
-      "manual-campaign": {
-        html: `
-          <div class="manual-campaign-content">
-            <h3>✋ Manually Initialized</h3>
-            <p>This campaign was loaded programmatically</p>
-            <small>Use init="false" to prevent auto-loading</small>
-          </div>
-        `
-      }
-    })
-
     return html`
       <div class="manual-controls">
         <button

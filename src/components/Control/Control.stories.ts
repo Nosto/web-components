@@ -3,14 +3,20 @@ import { html } from "lit"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
 
-// Helper function to mock user segments
-function mockSegments(segments: string[]) {
-  mockNostojs({
-    internal: {
-      getSegments: () => Promise.resolve(segments)
-    }
-  })
+// Current segments state that can be dynamically updated
+let currentSegments: string[] = []
+
+// Function to update segments for the current story context
+function setStorySegments(segments: string[]) {
+  currentSegments = segments
 }
+
+// Initialize mock at module level with dynamic segment management
+mockNostojs({
+  internal: {
+    getSegments: () => Promise.resolve(currentSegments)
+  }
+})
 
 // Storybook decorator for wrapping stories with container styling
 const withStoryContainer = (story: () => unknown) => html`
@@ -39,8 +45,8 @@ type Story = StoryObj
 
 export const BasicSegmentation: Story = {
   render: () => {
-    // Mock user segments - user belongs to "premium" segment
-    mockSegments(["premium", "returning-customer"])
+    // Set user segments - user belongs to "premium" segment
+    setStorySegments(["premium", "returning-customer"])
 
     return html`
       <nosto-control>
@@ -68,8 +74,8 @@ export const BasicSegmentation: Story = {
 
 export const NewVisitorExperience: Story = {
   render: () => {
-    // Mock user segments - new visitor
-    mockSegments(["new-visitor"])
+    // Set user segments - new visitor
+    setStorySegments(["new-visitor"])
 
     return html`
       <nosto-control>
@@ -96,8 +102,8 @@ export const NewVisitorExperience: Story = {
 
 export const NoMatchingSegment: Story = {
   render: () => {
-    // Mock user segments - user has segments that don't match any templates
-    mockSegments(["anonymous", "mobile-user"])
+    // Set user segments - user has segments that don't match any templates
+    setStorySegments(["anonymous", "mobile-user"])
 
     return html`
       <nosto-control>
@@ -127,8 +133,8 @@ export const NoMatchingSegment: Story = {
 
 export const VIPCustomerExperience: Story = {
   render: () => {
-    // Mock user segments - VIP customer
-    mockSegments(["vip-customer", "high-value", "premium"])
+    // Set user segments - VIP customer
+    setStorySegments(["vip-customer", "high-value", "premium"])
 
     return html`
       <nosto-control>
