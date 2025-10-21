@@ -3,18 +3,10 @@ import { html } from "lit"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
 
-// Current segments state that can be dynamically updated
-let currentSegments: string[] = []
-
-// Function to update segments for the current story context
-function setStorySegments(segments: string[]) {
-  currentSegments = segments
-}
-
-// Initialize mock at module level with dynamic segment management
+// Initialize mock at module level with fixed segments
 mockNostojs({
   internal: {
-    getSegments: () => Promise.resolve(currentSegments)
+    getSegments: () => Promise.resolve(["new-visitor", "vip-customer"])
   }
 })
 
@@ -45,9 +37,6 @@ type Story = StoryObj
 
 export const BasicSegmentation: Story = {
   render: () => {
-    // Set user segments - user belongs to "premium" segment
-    setStorySegments(["premium", "returning-customer"])
-
     return html`
       <nosto-control>
         <template segment="new-visitor">
@@ -74,9 +63,6 @@ export const BasicSegmentation: Story = {
 
 export const NewVisitorExperience: Story = {
   render: () => {
-    // Set user segments - new visitor
-    setStorySegments(["new-visitor"])
-
     return html`
       <nosto-control>
         <template segment="new-visitor">
@@ -102,9 +88,6 @@ export const NewVisitorExperience: Story = {
 
 export const NoMatchingSegment: Story = {
   render: () => {
-    // Set user segments - user has segments that don't match any templates
-    setStorySegments(["anonymous", "mobile-user"])
-
     return html`
       <nosto-control>
         <div class="default-content">
@@ -112,12 +95,6 @@ export const NoMatchingSegment: Story = {
         </div>
         <template segment="premium">
           <h3>Premium Member</h3>
-        </template>
-        <template segment="new-visitor">
-          <h3>New Visitor</h3>
-        </template>
-        <template segment="vip-customer">
-          <h3>VIP Customer</h3>
         </template>
       </nosto-control>
     `
@@ -133,16 +110,13 @@ export const NoMatchingSegment: Story = {
 
 export const VIPCustomerExperience: Story = {
   render: () => {
-    // Set user segments - VIP customer
-    setStorySegments(["vip-customer", "high-value", "premium"])
-
     return html`
       <nosto-control>
-        <template segment="new-visitor">
-          <h3>New Visitor Content</h3>
-        </template>
         <template segment="vip-customer">
           <h3>💎 VIP Customer Portal</h3>
+        </template>
+        <template segment="new-visitor">
+          <h3>New Visitor Content</h3>
         </template>
         <template segment="premium">
           <h3>Premium Member Content</h3>
