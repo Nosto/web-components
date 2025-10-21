@@ -1,9 +1,9 @@
 import { html } from "@/templating/html"
-import type { ShopifyProduct, ShopifyVariant } from "./types"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { SimpleProduct, SimpleVariant } from "./types"
 
-export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
+export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
 
   return html`
@@ -31,7 +31,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.media?.[0]?.src || product.images?.[0]
   if (!primaryImage) {
@@ -42,14 +42,11 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
     element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
   const alternateImage = product.media?.[1]?.src || product.images?.[1]
 
-  // Get aspect ratio from media object, fallback to 1
-  const aspectRatio = product.media?.[0]?.aspect_ratio || 1
-
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateNostoImageHTML(primaryImage, product.title, aspectRatio, "img primary", element.sizes)}
+      ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
-        ? generateNostoImageHTML(alternateImage, product.title, aspectRatio, "img alternate", element.sizes)
+        ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
     </div>
   `
@@ -62,13 +59,12 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, aspectRatio: number, className: string, sizes?: string) {
+function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
   return html`
     <nosto-image
       src="${normalizeUrl(src)}"
       alt="${alt}"
       width="800"
-      aspect-ratio="${aspectRatio}"
       loading="lazy"
       class="${className}"
       ${sizes ? html`sizes="${sizes}"` : ""}
@@ -94,12 +90,12 @@ function formatPrice(price: number) {
   }).format(amount)
 }
 
-export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
+export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVariant) {
   updateImages(element, variant)
   updatePrices(element, variant)
 }
 
-function updateImages(element: SimpleCard, variant: ShopifyVariant) {
+function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
   const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
@@ -117,7 +113,7 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
   }
 }
 
-function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
+function updatePrices(element: SimpleCard, variant: SimpleVariant) {
   const hasDiscount = element.discount && variant.compare_at_price && variant.compare_at_price > variant.price
 
   const currentPriceElement = element.shadowRoot!.querySelector(".price-current")

@@ -1,4 +1,4 @@
-import type { ShopifyProduct, ShopifyVariant } from "../components/SimpleCard/types"
+import type { ShopifyProduct, ShopifyVariant } from "@/shopify/types"
 
 // Base variant template with common fields
 const baseVariant: Omit<
