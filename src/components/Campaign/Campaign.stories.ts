@@ -60,9 +60,8 @@ mockNostojs({
     injectCampaigns() {
       Object.entries(allCampaignMockData).forEach(([placementId, content]) => {
         const element = document.querySelector(`nosto-campaign[placement="${placementId}"]`)
-        if (element) {
-          // @ts-expect-error type mismatch
-          element.innerHTML = "html" in content ? content.html : content
+        if (element && "html" in content) {
+          element.innerHTML = content.html
         }
       })
       return { filledElements: Object.keys(allCampaignMockData), unFilledElements: [] }
