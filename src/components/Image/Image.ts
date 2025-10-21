@@ -17,7 +17,7 @@ import { NostoElement } from "../Element"
  * @property {string} src - The source URL of the image.
  * @property {number} [width] - The width of the image in pixels.
  * @property {number} [height] - The height of the image in pixels.
- * @property {number} [aspectRatio] - The aspect ratio of the image (width / height value).
+ * @property {number} [aspectRatio] (`aspect-ratio`) - The aspect ratio of the image (width / height value).
  * @property {Layout} [layout] - The layout of the image. Can be "fixed", "constrained", or "fullWidth".
  * @property {Crop} [crop] - Shopify only. The crop of the image. Can be "center", "left", "right", "top", or "bottom".
  * @property {string} [alt] - Alternative text for the image for accessibility purposes.
