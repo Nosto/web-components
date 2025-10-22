@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Nosto Web Components - Component Overview</title>
+    
+    <link rel="stylesheet" href="../node_modules/reveal.js/dist/reset.css" />
+    <link rel="stylesheet" href="../node_modules/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet" href="../node_modules/reveal.js/dist/theme/night.css" id="theme" />
+    <link rel="stylesheet" href="../node_modules/reveal.js/plugin/highlight/monokai.css" />
+    
+    <style>
+      .reveal .slides section {
+        text-align: left;
+      }
+      .reveal .slides section h1,
+      .reveal .slides section h2 {
+        text-align: center;
+        color: #ff6900;
+      }
+      .reveal .slides section h3 {
+        color: #58a6ff;
+      }
+      .reveal pre code {
+        max-height: 500px;
+      }
+      .reveal .progress {
+        color: #ff6900;
+      }
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .component-card {
+        background: rgba(255, 105, 0, 0.1);
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #ff6900;
+      }
+      .component-card h4 {
+        color: #ff6900;
+        margin-top: 0;
+      }
+      .highlight {
+        background: rgba(88, 166, 255, 0.2);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+      }
+      .auto-narration-controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .auto-narration-controls button {
+        margin: 0 5px;
+        padding: 5px 10px;
+        background: #ff6900;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .auto-narration-controls button:hover {
+        background: #e55a00;
+      }
+      .auto-narration-controls button:disabled {
+        background: #666;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="auto-narration-controls">
+      <button id="startNarration">▶️ Start Auto</button>
+      <button id="pauseNarration">⏸️ Pause</button>
+      <button id="stopNarration">⏹️ Stop</button>
+      <span id="narrationStatus">Ready</span>
+    </div>
+
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown="presentation.md" 
+                 data-separator="^---$" 
+                 data-separator-vertical="^--$" 
+                 data-separator-notes="^Note:" 
+                 data-charset="utf-8">
+        </section>
+      </div>
+    </div>
+
+    <script src="../node_modules/reveal.js/dist/reveal.js"></script>
+    <script src="../node_modules/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="../node_modules/reveal.js/plugin/highlight/highlight.js"></script>
+    <script src="../node_modules/reveal.js/plugin/notes/notes.js"></script>
+
+    <script>
+      // Initialize Reveal.js
+      Reveal.initialize({
+        hash: true,
+        transition: 'slide',
+        transitionSpeed: 'default',
+        backgroundTransition: 'fade',
+        controls: true,
+        progress: true,
+        center: true,
+        touch: true,
+        loop: false,
+        rtl: false,
+        navigationMode: 'default',
+        shuffle: false,
+        fragments: true,
+        fragmentInURL: false,
+        embedded: false,
+        help: true,
+        pause: true,
+        showNotes: false,
+        autoSlide: 0, // Will be set by auto narration
+        autoSlideStoppable: true,
+        autoSlideMethod: Reveal.navigateNext,
+        defaultTiming: null,
+        mouseWheel: false,
+        rollingLinks: false,
+        hideInactiveCursor: true,
+        hideCursorTime: 5000,
+        previewLinks: false,
+        viewDistance: 3,
+        mobileViewDistance: 2,
+        
+        // Plugin configuration
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+        
+        markdown: {
+          smartypants: true
+        },
+        
+        highlight: {
+          highlightOnLoad: true,
+          escapeHTML: true
+        }
+      });
+
+      // Auto-narration functionality
+      let autoNarrationInterval;
+      let isNarrating = false;
+      let currentSlide = 0;
+      let slideTimings = []; // Will store timing for each slide
+      
+      const startNarrationBtn = document.getElementById('startNarration');
+      const pauseNarrationBtn = document.getElementById('pauseNarration');
+      const stopNarrationBtn = document.getElementById('stopNarration');
+      const narrationStatus = document.getElementById('narrationStatus');
+
+      // Calculate slide timings based on content length
+      function calculateSlideTiming(slideContent) {
+        // Base timing of 3 seconds, plus time based on content length
+        const baseTime = 3000;
+        const wordsPerMinute = 150;
+        const words = slideContent.split(/\s+/).length;
+        const readingTime = (words / wordsPerMinute) * 60 * 1000;
+        return Math.max(baseTime, readingTime + 2000); // Minimum 3s, plus reading time + 2s buffer
+      }
+
+      // Initialize slide timings when presentation is ready
+      Reveal.on('ready', () => {
+        const slides = Reveal.getSlides();
+        slideTimings = slides.map(slide => {
+          const content = slide.textContent || '';
+          return calculateSlideTiming(content);
+        });
+        
+        // Update status
+        narrationStatus.textContent = `Ready (${slides.length} slides)`;
+      });
+
+      function startAutoNarration() {
+        if (isNarrating) return;
+        
+        isNarrating = true;
+        currentSlide = Reveal.getState().indexh;
+        startNarrationBtn.disabled = true;
+        pauseNarrationBtn.disabled = false;
+        stopNarrationBtn.disabled = false;
+        narrationStatus.textContent = 'Playing...';
+        
+        function nextSlide() {
+          if (!isNarrating) return;
+          
+          const totalSlides = Reveal.getTotalSlides();
+          const currentState = Reveal.getState();
+          
+          if (currentState.indexh < totalSlides - 1) {
+            Reveal.next();
+            const slideIndex = Reveal.getState().indexh;
+            const timing = slideTimings[slideIndex] || 8000;
+            narrationStatus.textContent = `Slide ${slideIndex + 1}/${totalSlides} (${Math.round(timing/1000)}s)`;
+            autoNarrationInterval = setTimeout(nextSlide, timing);
+          } else {
+            stopAutoNarration();
+          }
+        }
+        
+        // Start with current slide timing
+        const timing = slideTimings[currentSlide] || 8000;
+        narrationStatus.textContent = `Slide ${currentSlide + 1}/${Reveal.getTotalSlides()} (${Math.round(timing/1000)}s)`;
+        autoNarrationInterval = setTimeout(nextSlide, timing);
+      }
+
+      function pauseAutoNarration() {
+        isNarrating = false;
+        clearTimeout(autoNarrationInterval);
+        startNarrationBtn.disabled = false;
+        pauseNarrationBtn.disabled = true;
+        narrationStatus.textContent = 'Paused';
+      }
+
+      function stopAutoNarration() {
+        isNarrating = false;
+        clearTimeout(autoNarrationInterval);
+        startNarrationBtn.disabled = false;
+        pauseNarrationBtn.disabled = true;
+        stopNarrationBtn.disabled = true;
+        narrationStatus.textContent = 'Stopped';
+        
+        // Reset to first slide
+        Reveal.slide(0);
+      }
+
+      // Event listeners
+      startNarrationBtn.addEventListener('click', startAutoNarration);
+      pauseNarrationBtn.addEventListener('click', pauseAutoNarration);
+      stopNarrationBtn.addEventListener('click', stopAutoNarration);
+
+      // Listen for manual navigation to update auto-narration
+      Reveal.on('slidechanged', (event) => {
+        if (isNarrating) {
+          currentSlide = event.indexh;
+          // Restart timing for new slide
+          clearTimeout(autoNarrationInterval);
+          const timing = slideTimings[currentSlide] || 8000;
+          narrationStatus.textContent = `Slide ${currentSlide + 1}/${Reveal.getTotalSlides()} (${Math.round(timing/1000)}s)`;
+          autoNarrationInterval = setTimeout(() => {
+            if (isNarrating) {
+              const totalSlides = Reveal.getTotalSlides();
+              if (currentSlide < totalSlides - 1) {
+                Reveal.next();
+              } else {
+                stopAutoNarration();
+              }
+            }
+          }, timing);
+        }
+      });
+
+      // Handle keyboard shortcuts
+      document.addEventListener('keydown', (event) => {
+        if (event.key === ' ' && event.ctrlKey) {
+          event.preventDefault();
+          if (isNarrating) {
+            pauseAutoNarration();
+          } else {
+            startAutoNarration();
+          }
+        } else if (event.key === 'Escape') {
+          stopAutoNarration();
+        }
+      });
+
+      // Initial button states
+      pauseNarrationBtn.disabled = true;
+      stopNarrationBtn.disabled = true;
+    </script>
+  </body>
+</html>
