@@ -85,7 +85,7 @@
       // Auto-narration functionality
       let autoNarrationInterval;
       let isNarrating = false;
-      let currentSlide = 0;
+      let currentSlide = Reveal.getState().indexh;
       let slideTimings = []; // Will store timing for each slide
       
       const startNarrationBtn = document.getElementById('startNarration');
