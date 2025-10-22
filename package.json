@@ -37,7 +37,7 @@
     "visualize": "esbuild-visualizer --metadata ./meta.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "present": "node docs/server.js"
+    "present": "node presentation/server.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
