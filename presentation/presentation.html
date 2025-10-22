@@ -196,7 +196,8 @@
 
       // Handle keyboard shortcuts
       document.addEventListener('keydown', (event) => {
-        if (event.key === ' ' && event.ctrlKey) {
+        // Use Ctrl+P (play/pause) to toggle auto-narration
+        if ((event.key === 'p' || event.key === 'P') && event.ctrlKey) {
           event.preventDefault();
           if (isNarrating) {
             pauseAutoNarration();
