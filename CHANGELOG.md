@@ -1,3 +1,19 @@
+# [9.6.0](https://github.com/Nosto/web-components/compare/v9.5.0...v9.6.0) (2025-10-22)
+
+
+### Bug Fixes
+
+* simplify Campaign mock if-block condition as requested ([f221450](https://github.com/Nosto/web-components/commit/f2214504bf7ac9790bcc05b22eba2b774588f027))
+* simplify Control stories mocking as requested in PR feedback ([0bef310](https://github.com/Nosto/web-components/commit/0bef310b38bce6408c64e54406abca15451aba9e))
+* **storybook:** improve navigation links with proper target attributes ([f04fd74](https://github.com/Nosto/web-components/commit/f04fd745ca157acf6df4c82bfe94fe81979e411e))
+
+
+### Features
+
+* consolidate Storybook mocking for Campaign and Control components ([2020773](https://github.com/Nosto/web-components/commit/2020773a1d3c8ce8af6b37bd04941efd47dfde3f))
+* **storybook:** add minimal overview page with component summary ([f81afd3](https://github.com/Nosto/web-components/commit/f81afd3f6689b63f0d4614233e0460b45328ece9))
+* **storybook:** implement comprehensive frontpage with component overview ([bd83526](https://github.com/Nosto/web-components/commit/bd83526cbeb7463f40634a851516140c367193df))
+
 # [9.5.0](https://github.com/Nosto/web-components/compare/v9.4.1...v9.5.0) (2025-10-21)
 
 
