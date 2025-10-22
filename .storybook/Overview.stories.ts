@@ -77,7 +77,7 @@ export const Overview: Story = {
         <div class="components-grid">
           <div class="component-card">
             <h3>Campaign</h3>
-            <div class="component-tag">&lt;nosto-campaign/&gt;</div>
+            <div class="component-tag">&lt;nosto-campaign&gt;</div>
             <div class="component-description">
               Campaign rendering and product recommendation display. Fetches campaign data from Nosto and injects it
               into the DOM.
@@ -89,7 +89,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>Control</h3>
-            <div class="component-tag">&lt;nosto-control/&gt;</div>
+            <div class="component-tag">&lt;nosto-control&gt;</div>
             <div class="component-description">
               Conditional content rendering based on user segments. Show different content to different user groups.
             </div>
@@ -100,7 +100,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>Popup</h3>
-            <div class="component-tag">&lt;nosto-popup/&gt;</div>
+            <div class="component-tag">&lt;nosto-popup&gt;</div>
             <div class="component-description">
               Popup content with dialog and ribbon slots. Display promotional content, notifications, or interactive
               overlays.
@@ -112,7 +112,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>SectionCampaign</h3>
-            <div class="component-tag">&lt;nosto-section-campaign/&gt;</div>
+            <div class="component-tag">&lt;nosto-section-campaign&gt;</div>
             <div class="component-description">
               Campaign rendering using the Section Rendering API. Shopify-specific implementation for theme sections.
             </div>
@@ -132,7 +132,7 @@ export const Overview: Story = {
         <div class="components-grid">
           <div class="component-card">
             <h3>Image</h3>
-            <div class="component-tag">&lt;nosto-image/&gt;</div>
+            <div class="component-tag">&lt;nosto-image&gt;</div>
             <div class="component-description">
               Progressive image enhancement with optimization. Supports responsive images with Shopify and BigCommerce
               transformations.
@@ -144,7 +144,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>Product</h3>
-            <div class="component-tag">&lt;nosto-product/&gt;</div>
+            <div class="component-tag">&lt;nosto-product&gt;</div>
             <div class="component-description">
               Product interaction and cart management. Handles product data, SKU selection, and add-to-cart
               functionality.
@@ -156,7 +156,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>SkuOptions</h3>
-            <div class="component-tag">&lt;nosto-sku-options/&gt;</div>
+            <div class="component-tag">&lt;nosto-sku-options&gt;</div>
             <div class="component-description">
               Product variant and SKU selection interface. Create interactive option selectors for product variants.
             </div>
@@ -178,7 +178,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>DynamicCard</h3>
-            <div class="component-tag">&lt;nosto-dynamic-card/&gt;</div>
+            <div class="component-tag">&lt;nosto-dynamic-card&gt;</div>
             <div class="component-description">
               Dynamic product card templating for Shopify. Advanced product display with customizable layouts and
               content.
@@ -190,7 +190,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>VariantSelector</h3>
-            <div class="component-tag">&lt;nosto-variant-selector/&gt;</div>
+            <div class="component-tag">&lt;nosto-variant-selector&gt;</div>
             <div class="component-description">
               Product variant options as clickable pills. Shopify-specific variant selection interface with pill-style
               buttons.
