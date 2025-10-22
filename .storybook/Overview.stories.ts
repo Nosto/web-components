@@ -83,7 +83,7 @@ export const Overview: Story = {
               into the DOM.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-campaign--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-campaign--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export const Overview: Story = {
               Conditional content rendering based on user segments. Show different content to different user groups.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-control--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-control--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -106,7 +106,7 @@ export const Overview: Story = {
               overlays.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-popup--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-popup--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -117,9 +117,7 @@ export const Overview: Story = {
               Campaign rendering using the Section Rendering API. Shopify-specific implementation for theme sections.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-sectioncampaign--docs" class="component-link" target="_parent"
-                >View Docs</a
-              >
+              <a href="/?path=/docs/components-sectioncampaign--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
         </div>
@@ -138,7 +136,7 @@ export const Overview: Story = {
               transformations.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-image--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-image--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -150,7 +148,7 @@ export const Overview: Story = {
               functionality.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-product--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-product--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -161,7 +159,7 @@ export const Overview: Story = {
               Product variant and SKU selection interface. Create interactive option selectors for product variants.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-skuoptions--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-skuoptions--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -172,7 +170,7 @@ export const Overview: Story = {
               Simple product card templating for Shopify stores. Streamlined product display with basic information.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-simplecard--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-simplecard--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -184,7 +182,7 @@ export const Overview: Story = {
               content.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-dynamiccard--docs" class="component-link" target="_parent">View Docs</a>
+              <a href="/?path=/docs/components-dynamiccard--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
 
@@ -196,9 +194,7 @@ export const Overview: Story = {
               buttons.
             </div>
             <div class="component-links">
-              <a href="/?path=/docs/components-variantselector--docs" class="component-link" target="_parent"
-                >View Docs</a
-              >
+              <a href="/?path=/docs/components-variantselector--docs" class="component-link" target="_top">View Docs</a>
             </div>
           </div>
         </div>
