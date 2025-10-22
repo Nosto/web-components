@@ -1,0 +1,77 @@
+.reveal {
+  .slides section {
+    text-align: left;
+
+    h1,
+    h2 {
+      text-align: center;
+      color: #ff6900;
+    }
+
+    h3 {
+      color: #58a6ff;
+    }
+  }
+
+  pre code {
+    max-height: 500px;
+  }
+
+  .progress {
+    color: #ff6900;
+  }
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.component-card {
+  background: rgba(255, 105, 0, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ff6900;
+
+  h4 {
+    color: #ff6900;
+    margin-top: 0;
+  }
+}
+
+.highlight {
+  background: rgba(88, 166, 255, 0.2);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.auto-narration-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+
+  button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background: #ff6900;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover {
+      background: #e55a00;
+    }
+
+    &:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
+  }
+}

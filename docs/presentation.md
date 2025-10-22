@@ -334,8 +334,8 @@ All components follow the Nosto custom element pattern:
 ```typescript
 @customElement("nosto-component")
 export class Component extends NostoElement {
-  static attributes = {
-    // Attribute definitions
+  static properties = {
+    // Property definitions
   }
   
   connectedCallback() {
