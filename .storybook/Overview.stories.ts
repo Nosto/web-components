@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/web-components"
 import { html } from "lit"
 
 const meta: Meta = {
-  title: "Introduction/Overview",
+  title: "Overview",
   parameters: {
     docs: {
       page: null // Use custom page
@@ -21,6 +21,7 @@ export const Overview: Story = {
   render: () => html`
     <style>
       .overview-page {
+        font-family: sans-serif;
         padding: 2rem;
         max-width: 1200px;
         margin: 0 auto;
@@ -59,6 +60,15 @@ export const Overview: Story = {
         background: #f0f0f0;
         color: #333;
       }
+
+      .component-tag {
+        font-family: monospace;
+        margin-bottom: 0.5rem;
+      }
+
+      .badge {
+        display: none;
+      }
     </style>
 
     <div class="overview-page">
@@ -71,7 +81,7 @@ export const Overview: Story = {
         <div class="components-grid">
           <div class="component-card">
             <h3>Campaign</h3>
-            <div class="component-tag">&lt;nosto-campaign&gt;</div>
+            <div class="component-tag">&lt;nosto-campaign/&gt;</div>
             <div class="component-description">
               Campaign rendering and product recommendation display. Fetches campaign data from Nosto and injects it
               into the DOM.
@@ -83,7 +93,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>Control</h3>
-            <div class="component-tag">&lt;nosto-control&gt;</div>
+            <div class="component-tag">&lt;nosto-control/&gt;</div>
             <div class="component-description">
               Conditional content rendering based on user segments. Show different content to different user groups.
             </div>
@@ -94,7 +104,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>Popup</h3>
-            <div class="component-tag">&lt;nosto-popup&gt;</div>
+            <div class="component-tag">&lt;nosto-popup/&gt;</div>
             <div class="component-description">
               Popup content with dialog and ribbon slots. Display promotional content, notifications, or interactive
               overlays.
@@ -106,7 +116,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>SectionCampaign <span class="badge shopify-badge">Shopify</span></h3>
-            <div class="component-tag">&lt;nosto-section-campaign&gt;</div>
+            <div class="component-tag">&lt;nosto-section-campaign/&gt;</div>
             <div class="component-description">
               Campaign rendering using the Section Rendering API. Shopify-specific implementation for theme sections.
             </div>
@@ -126,7 +136,7 @@ export const Overview: Story = {
         <div class="components-grid">
           <div class="component-card">
             <h3>Image</h3>
-            <div class="component-tag">&lt;nosto-image&gt;</div>
+            <div class="component-tag">&lt;nosto-image/&gt;</div>
             <div class="component-description">
               Progressive image enhancement with optimization. Supports responsive images with Shopify and BigCommerce
               transformations.
@@ -138,7 +148,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>Product</h3>
-            <div class="component-tag">&lt;nosto-product&gt;</div>
+            <div class="component-tag">&lt;nosto-product/&gt;</div>
             <div class="component-description">
               Product interaction and cart management. Handles product data, SKU selection, and add-to-cart
               functionality.
@@ -150,7 +160,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>SkuOptions</h3>
-            <div class="component-tag">&lt;nosto-sku-options&gt;</div>
+            <div class="component-tag">&lt;nosto-sku-options/&gt;</div>
             <div class="component-description">
               Product variant and SKU selection interface. Create interactive option selectors for product variants.
             </div>
@@ -172,7 +182,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>DynamicCard <span class="badge shopify-badge">Shopify</span></h3>
-            <div class="component-tag">&lt;nosto-dynamic-card&gt;</div>
+            <div class="component-tag">&lt;nosto-dynamic-card/&gt;</div>
             <div class="component-description">
               Dynamic product card templating for Shopify. Advanced product display with customizable layouts and
               content.
@@ -184,7 +194,7 @@ export const Overview: Story = {
 
           <div class="component-card">
             <h3>VariantSelector <span class="badge shopify-badge">Shopify</span></h3>
-            <div class="component-tag">&lt;nosto-variant-selector&gt;</div>
+            <div class="component-tag">&lt;nosto-variant-selector/&gt;</div>
             <div class="component-description">
               Product variant options as clickable pills. Shopify-specific variant selection interface with pill-style
               buttons.
