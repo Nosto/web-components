@@ -228,17 +228,17 @@ describe("Campaign", () => {
       // Verify listener was registered
       expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
 
+      // Clear previous calls
+      mockBuilder.load.mockClear()
+
       // Get the registered callback
       const cartUpdateCallback = mockListen.mock.calls[0][1]
-
-      // Mock the load method on the campaign
-      campaign.load = vi.fn().mockResolvedValue(undefined)
 
       // Simulate cart update
       await cartUpdateCallback()
 
       // Verify the campaign was reloaded
-      expect(campaign.load).toHaveBeenCalled()
+      expect(mockBuilder.load).toHaveBeenCalled()
     })
   })
 })

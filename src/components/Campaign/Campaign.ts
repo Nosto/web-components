@@ -94,7 +94,7 @@ export class Campaign extends NostoElement {
     // Register cart update listener if cart-synced is enabled
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
-      api.listen("cartupdated", this.#load)
+      api.listen("cartUpdated", this.#load)
     }
 
     if (this.init !== "false") {
@@ -116,7 +116,7 @@ export class Campaign extends NostoElement {
     // Unregister cart update listener
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
-      api.unlisten("cartupdated", this.#load)
+      api.unlisten("cartUpdated", this.#load)
     }
   }
 
