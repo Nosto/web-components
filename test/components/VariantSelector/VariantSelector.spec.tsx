@@ -220,11 +220,6 @@ describe("VariantSelector", () => {
 
     const shadowContent = getShadowContent(selector)
     expect(shadowContent).toBe("<slot></slot>")
-
-    // Verify no selector-specific elements are rendered
-    expect(shadowContent).not.toContain("selector")
-    expect(shadowContent).not.toContain("Size")
-    expect(shadowContent).not.toContain("Color")
   })
 
   it("should not preselect by default", async () => {
@@ -492,11 +487,6 @@ describe("VariantSelector", () => {
 
       const shadowContent = getShadowContent(selector)
       expect(shadowContent).toBe("<slot></slot>")
-
-      // Verify no selector-specific elements are rendered
-      expect(shadowContent).not.toContain("selector")
-      expect(shadowContent).not.toContain("Size")
-      expect(shadowContent).not.toContain("Color")
 
       // But selections should still be made internally
       expect(selector.selectedOptions["Size"]).toBe("Medium")
