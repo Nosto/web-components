@@ -16,16 +16,16 @@ import { addRequest } from "./orchestrator"
  * @category Store level templating
  *
  * @property {string} placement (or id) - The placement identifier for the campaign.
- * @property {string} productId - The ID of the product to associate with
+ * @property {string} productId (`product-id`) - The ID of the product to associate with
  * the campaign.
- * @property {string} [variantId] - The variant ID of the product.
+ * @property {string} [variantId] (`variant-id`) - The variant ID of the product.
  * @property {string} template - The ID of the template to use for rendering
  * the campaign. If provided, the campaign will be rendered using this template.
  * @property {string} [init] - If set to "false", the component will not
  * automatically load the campaign on connection. Defaults to "true".
  * @property {boolean} [lazy] - If true, the component will only load the campaign
  * when it comes into view using IntersectionObserver. Defaults to false.
- * @property {boolean} [cartSynced] - If true, the component will reload the campaign
+ * @property {boolean} [cartSynced] (`cart-synced`) - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
  *
