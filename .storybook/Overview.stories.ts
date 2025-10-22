@@ -65,10 +65,6 @@ export const Overview: Story = {
         font-family: monospace;
         margin-bottom: 0.5rem;
       }
-
-      .badge {
-        display: none;
-      }
     </style>
 
     <div class="overview-page">
@@ -115,7 +111,7 @@ export const Overview: Story = {
           </div>
 
           <div class="component-card">
-            <h3>SectionCampaign <span class="badge shopify-badge">Shopify</span></h3>
+            <h3>SectionCampaign</h3>
             <div class="component-tag">&lt;nosto-section-campaign/&gt;</div>
             <div class="component-description">
               Campaign rendering using the Section Rendering API. Shopify-specific implementation for theme sections.
@@ -170,7 +166,7 @@ export const Overview: Story = {
           </div>
 
           <div class="component-card">
-            <h3>SimpleCard <span class="badge shopify-badge">Shopify</span></h3>
+            <h3>SimpleCard</h3>
             <div class="component-tag">&lt;nosto-simple-card&gt;</div>
             <div class="component-description">
               Simple product card templating for Shopify stores. Streamlined product display with basic information.
@@ -181,7 +177,7 @@ export const Overview: Story = {
           </div>
 
           <div class="component-card">
-            <h3>DynamicCard <span class="badge shopify-badge">Shopify</span></h3>
+            <h3>DynamicCard</h3>
             <div class="component-tag">&lt;nosto-dynamic-card/&gt;</div>
             <div class="component-description">
               Dynamic product card templating for Shopify. Advanced product display with customizable layouts and
@@ -193,7 +189,7 @@ export const Overview: Story = {
           </div>
 
           <div class="component-card">
-            <h3>VariantSelector <span class="badge shopify-badge">Shopify</span></h3>
+            <h3>VariantSelector</h3>
             <div class="component-tag">&lt;nosto-variant-selector/&gt;</div>
             <div class="component-description">
               Product variant options as clickable pills. Shopify-specific variant selection interface with pill-style
