@@ -210,7 +210,7 @@ describe("VariantSelector", () => {
     expect(shadowContent).toContain("Green")
   })
 
-  it("should not render for products without variants", async () => {
+  it("should not render selector UI for products without variants but include slot", async () => {
     addProductHandlers({
       "no-variants": { product: mockProductWithoutVariants }
     })
@@ -219,7 +219,7 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     const shadowContent = getShadowContent(selector)
-    expect(shadowContent).toBe("")
+    expect(shadowContent).toBe("<slot></slot>")
   })
 
   it("should not preselect by default", async () => {
@@ -370,6 +370,64 @@ describe("VariantSelector", () => {
     expect(selector.shadowRoot!.querySelector(".value[active]")).toBeFalsy()
   })
 
+  it("should include default slot in shadow DOM", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const shadowRoot = selector.shadowRoot!
+    const slot = shadowRoot.querySelector("slot")
+    expect(slot).toBeTruthy()
+    expect(slot?.tagName.toLowerCase()).toBe("slot")
+  })
+
+  it("should include default slot even when no variants are rendered", async () => {
+    addProductHandlers({
+      "no-variants": { product: mockProductWithoutVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const shadowRoot = selector.shadowRoot!
+    const slot = shadowRoot.querySelector("slot")
+    expect(slot).toBeTruthy()
+    expect(slot?.tagName.toLowerCase()).toBe("slot")
+  })
+
+  it("should render slotted content correctly", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+
+    // Add some content to be slotted
+    const slottedContent = document.createElement("div")
+    slottedContent.textContent = "Slotted Content"
+    slottedContent.className = "slotted-test-content"
+    selector.appendChild(slottedContent)
+
+    document.body.appendChild(selector)
+    await selector.connectedCallback()
+
+    // Check that slot exists
+    const shadowRoot = selector.shadowRoot!
+    const slot = shadowRoot.querySelector("slot")
+    expect(slot).toBeTruthy()
+
+    // Check that slotted content is accessible via the slot
+    const assignedNodes = (slot as HTMLSlotElement).assignedNodes()
+    expect(assignedNodes).toHaveLength(1)
+    expect((assignedNodes[0] as Element).className).toBe("slotted-test-content")
+
+    // Cleanup
+    document.body.removeChild(selector)
+  })
+
   describe("Single-value options", () => {
     it("should auto-select single-value options regardless of preselect attribute", async () => {
       addProductHandlers({
@@ -419,7 +477,7 @@ describe("VariantSelector", () => {
       expect(shadowContent).not.toContain("Cotton")
     })
 
-    it("should not render UI when all options are single-value", async () => {
+    it("should not render selector UI when all options are single-value but include slot", async () => {
       addProductHandlers({
         "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
       })
@@ -428,7 +486,7 @@ describe("VariantSelector", () => {
       await selector.connectedCallback()
 
       const shadowContent = getShadowContent(selector)
-      expect(shadowContent).toBe("")
+      expect(shadowContent).toBe("<slot></slot>")
 
       // But selections should still be made internally
       expect(selector.selectedOptions["Size"]).toBe("Medium")
