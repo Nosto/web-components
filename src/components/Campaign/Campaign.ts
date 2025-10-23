@@ -114,10 +114,11 @@ export class Campaign extends NostoElement {
 
   async disconnectedCallback() {
     // Unregister cart update listener
-    if (this.cartSynced) {
-      const api = await new Promise(nostojs)
-      api.unlisten("cartupdated", this.#load)
+    if (!this.cartSynced) {
+      return;
     }
+    const api = await new Promise(nostojs)
+    api.unlisten("cartupdated", this.#load)
   }
 
   async load() {
