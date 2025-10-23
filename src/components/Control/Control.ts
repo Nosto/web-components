@@ -33,6 +33,33 @@ import { NostoElement } from "../Element"
  *   </template>
  * </nosto-control>
  * ```
+ *
+ * @example
+ * Control element with fallback content when no segments match:
+ * ```html
+ * <nosto-control>
+ *   <!-- Fallback content shown when no user segments match -->
+ *   <div class="default-content">
+ *     <h2>Welcome to our store!</h2>
+ *     <p>Discover our latest products and special offers</p>
+ *     <a href="/collections/all" class="browse-all">Browse All Products</a>
+ *   </div>
+ *
+ *   <template segment="5b71f1500000000000000006">
+ *     <div class="premium-offer">
+ *       <h2>VIP Members Only</h2>
+ *       <p>Exclusive early access to new arrivals</p>
+ *     </div>
+ *   </template>
+ *
+ *   <template segment="5a497a000000000000000001">
+ *     <div class="first-time-visitor">
+ *       <h2>First time here?</h2>
+ *       <p>Sign up for 15% off your first order</p>
+ *     </div>
+ *   </template>
+ * </nosto-control>
+ * ```
  */
 @customElement("nosto-control")
 export class Control extends NostoElement {

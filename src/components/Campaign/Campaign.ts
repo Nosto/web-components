@@ -59,6 +59,26 @@ import { addRequest } from "./orchestrator"
  * ```html
  * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
  * ```
+ *
+ * @example
+ * Campaign with cart-synced functionality for dynamic cart updates:
+ * ```html
+ * <nosto-campaign placement="cart-recommendations" cart-synced>
+ *   <template id="cart-template">
+ *     <div class="cart-recommendations">
+ *       <h3>Complete your purchase</h3>
+ *       <div class="products">
+ *         <div v-for="product in products" class="product-card">
+ *           <img :src="product.imageUrl" :alt="product.name" />
+ *           <h4>{{ product.name }}</h4>
+ *           <span class="price">{{ product.price }}</span>
+ *           <button class="add-to-cart">Add to Cart</button>
+ *         </div>
+ *       </div>
+ *     </div>
+ *   </template>
+ * </nosto-campaign>
+ * ```
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {

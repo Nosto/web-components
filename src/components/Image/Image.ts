@@ -43,7 +43,7 @@ import { NostoElement } from "../Element"
  * <nosto-image
  *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
  *   width="800"
- *   aspectRatio="1.5"
+ *   aspect-ratio="1.5"
  *   alt="Product showcase image"
  *   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
  * </nosto-image>
@@ -55,7 +55,7 @@ import { NostoElement } from "../Element"
  * <nosto-image
  *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
  *   width="800"
- *   aspectRatio="1.5"
+ *   aspect-ratio="1.5"
  *   alt="Product showcase image"
  *   breakpoints="[320, 640, 768, 1024, 1280]">
  * </nosto-image>
