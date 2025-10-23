@@ -38,13 +38,6 @@ import { NostoElement } from "../Element"
  * Control element with fallback content when no segments match:
  * ```html
  * <nosto-control>
- *   <!-- Fallback content shown when no user segments match -->
- *   <div class="default-content">
- *     <h2>Welcome to our store!</h2>
- *     <p>Discover our latest products and special offers</p>
- *     <a href="/collections/all" class="browse-all">Browse All Products</a>
- *   </div>
- *
  *   <template segment="5b71f1500000000000000006">
  *     <div class="premium-offer">
  *       <h2>VIP Members Only</h2>
@@ -58,6 +51,12 @@ import { NostoElement } from "../Element"
  *       <p>Sign up for 15% off your first order</p>
  *     </div>
  *   </template>
+ *
+ *   <div class="default-content">
+ *     <h2>Welcome to our store!</h2>
+ *     <p>Discover our latest products and special offers</p>
+ *     <a href="/collections/all" class="browse-all">Browse All Products</a>
+ *   </div>
  * </nosto-control>
  * ```
  */
