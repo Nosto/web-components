@@ -1,3 +1,10 @@
+# [9.8.0](https://github.com/Nosto/web-components/compare/v9.7.0...v9.8.0) (2025-10-23)
+
+
+### Features
+
+* bump @nosto/nosto-js dependency from 2.7.0 to 2.9.1 ([8b8f3b2](https://github.com/Nosto/web-components/commit/8b8f3b234d0a22d3531e910d1723a702f3ca8824))
+
 # [9.7.0](https://github.com/Nosto/web-components/compare/v9.6.0...v9.7.0) (2025-10-23)
 
 
