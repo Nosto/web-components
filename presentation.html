@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Nosto Web Components</title>
+    
+    <link rel="stylesheet" href="node_modules/reveal.js/dist/reset.css">
+    <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/white.css" id="theme">
+    
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="node_modules/reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+    
+    <style>
+        .reveal .slides section {
+            text-align: left;
+        }
+        .reveal h1, .reveal h2, .reveal h3 {
+            text-align: center;
+        }
+        .component-category {
+            background: #f0f8ff;
+            border-left: 5px solid #007acc;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .store-level {
+            border-left-color: #28a745;
+            background: #f8fff9;
+        }
+        .campaign-level {
+            border-left-color: #dc3545;
+            background: #fff8f8;
+        }
+        .attributes-table {
+            font-size: 0.8em;
+            width: 100%;
+        }
+        .attributes-table th {
+            background: #f5f5f5;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        .attributes-table td {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        .demo-container {
+            background: #f9f9f9;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .component-tag {
+            background: #007acc;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Title Slide -->
+            <section>
+                <h1>Nosto Web Components</h1>
+                <h3>A Complete Guide to All Available Components</h3>
+                <p>
+                    <small>Version 9.8.1 | October 2024</small>
+                </p>
+            </section>
+
+            <!-- Overview Slide -->
+            <section>
+                <h2>Component Categories</h2>
+                <div class="component-category store-level">
+                    <h4>🏪 Store Level Templating (4 components)</h4>
+                    <p>Components that work at the store level for campaigns, controls, and popups</p>
+                    <ul>
+                        <li><span class="component-tag">nosto-campaign</span> - Render Nosto campaigns</li>
+                        <li><span class="component-tag">nosto-control</span> - Conditional content based on segments</li>
+                        <li><span class="component-tag">nosto-popup</span> - Display popup dialogs with segments</li>
+                        <li><span class="component-tag">nosto-section-campaign</span> - Shopify section-based campaigns</li>
+                    </ul>
+                </div>
+                <div class="component-category campaign-level">
+                    <h4>🎯 Campaign Level Templating (6 components)</h4>
+                    <p>Components that work within campaigns for product display and interaction</p>
+                    <ul>
+                        <li><span class="component-tag">nosto-image</span> - Responsive images with Shopify/BigCommerce support</li>
+                        <li><span class="component-tag">nosto-product</span> - Product management with SKU selection</li>
+                        <li><span class="component-tag">nosto-simple-card</span> - Product cards with Shopify data</li>
+                        <li><span class="component-tag">nosto-dynamic-card</span> - Dynamic Shopify product rendering</li>
+                        <li><span class="component-tag">nosto-sku-options</span> - SKU option selection interface</li>
+                        <li><span class="component-tag">nosto-variant-selector</span> - Product variant selection</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Store Level Components Examples -->
+            <section>
+                <h2>Store Level Components - Examples</h2>
+                
+                <section>
+                    <h3><span class="component-tag">nosto-campaign</span></h3>
+                    <div class="demo-container">
+                        <h4>Basic Campaign Rendering</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-campaign placement="front-page"&gt;&lt;/nosto-campaign&gt;
+                        </code></pre>
+                    </div>
+                    
+                    <div class="demo-container">
+                        <h4>With Template and Product Context</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-campaign 
+    placement="product-recommendations" 
+    product-id="123" 
+    variant-id="456" 
+    template="my-template"
+    lazy 
+    cart-synced&gt;
+  &lt;template id="my-template"&gt;
+    &lt;div class="campaign"&gt;
+      &lt;h2&gt;{{ title }}&lt;/h2&gt;
+      &lt;div class="products"&gt;
+        &lt;div v-for="product in products" class="product"&gt;
+          &lt;img :src="product.imageUrl" :alt="product.name" /&gt;
+          &lt;h3&gt;{{ product.name }}&lt;/h3&gt;
+          &lt;span class="price"&gt;{{ product.price }}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/nosto-campaign&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-control</span></h3>
+                    <div class="demo-container">
+                        <h4>Segment-based Conditional Content</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-control&gt;
+  &lt;template segment="5b71f1500000000000000006"&gt;
+    &lt;div class="premium-offer"&gt;
+      &lt;h2&gt;Exclusive Premium Offer!&lt;/h2&gt;
+      &lt;p&gt;Get 20% off your next purchase&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+  &lt;template segment="5a497a000000000000000001"&gt;
+    &lt;div class="welcome-offer"&gt;
+      &lt;h2&gt;Welcome! Get Started&lt;/h2&gt;
+      &lt;p&gt;Use code WELCOME10 for 10% off your first order&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/nosto-control&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-popup</span></h3>
+                    <div class="demo-container">
+                        <h4>Popup with Dialog and Ribbon</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-popup name="promo-popup" segment="5b71f1500000000000000006"&gt;
+  &lt;h2&gt;Special Offer!&lt;/h2&gt;
+  &lt;p&gt;Get 20% off your order today&lt;/p&gt;
+  &lt;button n-close&gt;Close&lt;/button&gt;
+  &lt;div slot="ribbon"&gt;
+    &lt;span&gt;Limited time!&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/nosto-popup&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-section-campaign</span></h3>
+                    <div class="demo-container">
+                        <h4>Shopify Section Rendering</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-section-campaign 
+    placement="front-page" 
+    section="product-recommendations"&gt;
+&lt;/nosto-section-campaign&gt;
+                        </code></pre>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Campaign Level Components Examples -->
+            <section>
+                <h2>Campaign Level Components - Examples</h2>
+                
+                <section>
+                    <h3><span class="component-tag">nosto-image</span></h3>
+                    <div class="demo-container">
+                        <h4>Shopify Responsive Image</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-image 
+    src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+    width="800" 
+    height="600" 
+    crop="center"
+    alt="Product showcase image"
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"&gt;
+&lt;/nosto-image&gt;
+                        </code></pre>
+                    </div>
+
+                    <div class="demo-container">
+                        <h4>BigCommerce Image with Custom Breakpoints</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-image 
+    src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg"
+    width="800" 
+    aspectRatio="1.5"
+    breakpoints="[320, 640, 768, 1024, 1280]"
+    unstyled&gt;
+&lt;/nosto-image&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-product</span></h3>
+                    <div class="demo-container">
+                        <h4>Product with SKU Selector</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-product product-id="123" reco-id="front-page"&gt;
+  &lt;select n-sku-selector&gt;
+    &lt;option value="sku1"&gt;Option 1&lt;/option&gt;
+    &lt;option value="sku2"&gt;Option 2&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;button n-atc&gt;Add to Cart&lt;/button&gt;
+&lt;/nosto-product&gt;
+                        </code></pre>
+                    </div>
+
+                    <div class="demo-container">
+                        <h4>Product with SKU IDs</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-product product-id="123" reco-id="front-page"&gt;
+  &lt;div n-sku-id="456"&gt;
+    &lt;span n-atc&gt;Blue&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div n-sku-id="101"&gt;
+    &lt;span n-atc&gt;Black&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/nosto-product&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-simple-card</span></h3>
+                    <div class="demo-container">
+                        <h4>Product Card with All Features</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-simple-card 
+    handle="awesome-product" 
+    alternate 
+    brand 
+    discount 
+    rating
+    sizes="(max-width: 768px) 100vw, 300px"&gt;
+&lt;/nosto-simple-card&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-dynamic-card</span></h3>
+                    <div class="demo-container">
+                        <h4>Dynamic Shopify Product Card</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-dynamic-card 
+    handle="awesome-product" 
+    template="product-card" 
+    variant-id="123456"
+    placeholder
+    lazy&gt;
+  Placeholder content while loading...
+&lt;/nosto-dynamic-card&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-sku-options</span></h3>
+                    <div class="demo-container">
+                        <h4>SKU Options Selection</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-sku-options name="color"&gt;
+  &lt;span n-option n-skus="123,145"&gt;Black&lt;/span&gt;
+  &lt;span n-option n-skus="223,234,245"&gt;White&lt;/span&gt;
+  &lt;span n-option n-skus="334,345"&gt;Blue&lt;/span&gt;
+&lt;/nosto-sku-options&gt;
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="component-tag">nosto-variant-selector</span></h3>
+                    <div class="demo-container">
+                        <h4>Product Variant Selection</h4>
+                        <pre><code class="html" data-trim data-noescape>
+&lt;nosto-variant-selector 
+    handle="awesome-product"
+    preselect&gt;
+&lt;/nosto-variant-selector&gt;
+                        </code></pre>
+                        <p><small><strong>Emits:</strong> <code>variantchange</code> event with <code>{ variant, product }</code> details</small></p>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Complete Attributes Reference -->
+            <section>
+                <h2>Complete Attributes Reference</h2>
+                
+                <section>
+                    <h3>Store Level Components Attributes</h3>
+                    <table class="attributes-table">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Attribute</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="7"><strong>nosto-campaign</strong></td>
+                                <td>placement (or id)</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Placement identifier for the campaign</td>
+                            </tr>
+                            <tr>
+                                <td>product-id</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Product ID to associate with campaign</td>
+                            </tr>
+                            <tr>
+                                <td>variant-id</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Variant ID of the product</td>
+                            </tr>
+                            <tr>
+                                <td>template</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Template ID for rendering</td>
+                            </tr>
+                            <tr>
+                                <td>init</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Auto-load campaign (default: "true")</td>
+                            </tr>
+                            <tr>
+                                <td>lazy</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Load campaign when in view</td>
+                            </tr>
+                            <tr>
+                                <td>cart-synced</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Reload on cart updates</td>
+                            </tr>
+                            <tr>
+                                <td><strong>nosto-control</strong></td>
+                                <td colspan="4"><em>No attributes - uses template[segment] children</em></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>nosto-popup</strong></td>
+                                <td>name</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Unique name for analytics and persistence</td>
+                            </tr>
+                            <tr>
+                                <td>segment</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Nosto segment precondition</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>nosto-section-campaign</strong></td>
+                                <td>placement</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Placement identifier</td>
+                            </tr>
+                            <tr>
+                                <td>section</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Shopify section ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Campaign Level Components Attributes (Part 1)</h3>
+                    <table class="attributes-table">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Attribute</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="9"><strong>nosto-image</strong></td>
+                                <td>src</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Image source URL (Shopify/BigCommerce)</td>
+                            </tr>
+                            <tr>
+                                <td>width</td>
+                                <td>number</td>
+                                <td>❌</td>
+                                <td>Image width in pixels</td>
+                            </tr>
+                            <tr>
+                                <td>height</td>
+                                <td>number</td>
+                                <td>❌</td>
+                                <td>Image height in pixels</td>
+                            </tr>
+                            <tr>
+                                <td>aspect-ratio</td>
+                                <td>number</td>
+                                <td>❌</td>
+                                <td>Aspect ratio (width/height)</td>
+                            </tr>
+                            <tr>
+                                <td>layout</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>"fixed", "constrained", or "fullWidth"</td>
+                            </tr>
+                            <tr>
+                                <td>crop</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Shopify crop: "center", "left", "right", "top", "bottom"</td>
+                            </tr>
+                            <tr>
+                                <td>alt</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Alternative text for accessibility</td>
+                            </tr>
+                            <tr>
+                                <td>sizes</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Responsive image sizes attribute</td>
+                            </tr>
+                            <tr>
+                                <td>breakpoints</td>
+                                <td>number[]</td>
+                                <td>❌</td>
+                                <td>Custom responsive breakpoints</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3"><strong>nosto-product</strong></td>
+                                <td>product-id</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Product identifier</td>
+                            </tr>
+                            <tr>
+                                <td>reco-id</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Recommendation slot ID</td>
+                            </tr>
+                            <tr>
+                                <td>sku-selected</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Whether SKU is selected (read-only)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Campaign Level Components Attributes (Part 2)</h3>
+                    <table class="attributes-table">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Attribute</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="5"><strong>nosto-simple-card</strong></td>
+                                <td>handle</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Shopify product handle</td>
+                            </tr>
+                            <tr>
+                                <td>alternate</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Show alternate image on hover</td>
+                            </tr>
+                            <tr>
+                                <td>brand</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Show brand/vendor data</td>
+                            </tr>
+                            <tr>
+                                <td>discount</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Show discount information</td>
+                            </tr>
+                            <tr>
+                                <td>rating</td>
+                                <td>number</td>
+                                <td>❌</td>
+                                <td>Product rating display</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="6"><strong>nosto-dynamic-card</strong></td>
+                                <td>handle</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Shopify product handle</td>
+                            </tr>
+                            <tr>
+                                <td>section</td>
+                                <td>string</td>
+                                <td>❌*</td>
+                                <td>Section for rendering (section OR template required)</td>
+                            </tr>
+                            <tr>
+                                <td>template</td>
+                                <td>string</td>
+                                <td>❌*</td>
+                                <td>Template for rendering (section OR template required)</td>
+                            </tr>
+                            <tr>
+                                <td>variant-id</td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>Specific variant ID</td>
+                            </tr>
+                            <tr>
+                                <td>placeholder</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Show placeholder while loading</td>
+                            </tr>
+                            <tr>
+                                <td>lazy</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Load when in view</td>
+                            </tr>
+                            <tr>
+                                <td><strong>nosto-sku-options</strong></td>
+                                <td>name</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Option group identifier</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>nosto-variant-selector</strong></td>
+                                <td>handle</td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>Shopify product handle</td>
+                            </tr>
+                            <tr>
+                                <td>preselect</td>
+                                <td>boolean</td>
+                                <td>❌</td>
+                                <td>Auto-select first option values</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <!-- Summary Slide -->
+            <section>
+                <h2>Summary</h2>
+                <div style="text-align: center;">
+                    <h3>🎯 10 Powerful Web Components</h3>
+                    <div class="component-category">
+                        <p><strong>4 Store Level Components</strong> for campaigns, popups, and conditional content</p>
+                        <p><strong>6 Campaign Level Components</strong> for product display, variants, and interactions</p>
+                    </div>
+                    
+                    <h4>Key Features:</h4>
+                    <ul style="list-style: none; text-align: center;">
+                        <li>🚀 Lazy loading and intersection observer support</li>
+                        <li>🎨 Shopify and BigCommerce integration</li>
+                        <li>📱 Responsive image handling</li>
+                        <li>🛒 Cart synchronization and add-to-cart functionality</li>
+                        <li>🎯 Segment-based conditional rendering</li>
+                        <li>⚡ Shadow DOM encapsulation where needed</li>
+                    </ul>
+                    
+                    <p><small>For detailed documentation and examples, visit the <a href="https://github.com/Nosto/web-components">GitHub repository</a></small></p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="node_modules/reveal.js/dist/reveal.js"></script>
+    <script src="node_modules/reveal.js/plugin/notes/notes.js"></script>
+    <script src="node_modules/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="node_modules/reveal.js/plugin/highlight/highlight.js"></script>
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+        });
+    </script>
+</body>
+</html>

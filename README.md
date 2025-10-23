@@ -37,3 +37,18 @@ Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-compon
 [Library TypeDoc page](https://nosto.github.io/web-components) includes detailed library documentation.
 
 [Interactive Storybook](https://nosto.github.io/web-components/storybook/) provides live examples and documentation for each component.
+
+## Component Presentation
+
+A comprehensive reveal.js presentation showcasing all components is available. To view it:
+
+```bash
+npm run presentation
+```
+
+Then open [http://localhost:3000/presentation.html](http://localhost:3000/presentation.html) in your browser.
+
+The presentation includes:
+- Overview of all 10 components categorized by Store Level and Campaign Level
+- Detailed usage examples for each component
+- Complete attributes reference with descriptions
