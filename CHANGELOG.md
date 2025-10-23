@@ -1,3 +1,10 @@
+## [9.8.1](https://github.com/Nosto/web-components/compare/v9.8.0...v9.8.1) (2025-10-23)
+
+
+### Bug Fixes
+
+* add missing unlisten call ([1002e66](https://github.com/Nosto/web-components/commit/1002e66fc1b8f975b27c726086e8d88b4a7e21c1))
+
 # [9.8.0](https://github.com/Nosto/web-components/compare/v9.7.0...v9.8.0) (2025-10-23)
 
 
