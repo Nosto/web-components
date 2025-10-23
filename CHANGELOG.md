@@ -1,3 +1,10 @@
+# [9.7.0](https://github.com/Nosto/web-components/compare/v9.6.0...v9.7.0) (2025-10-23)
+
+
+### Features
+
+* **VariantSelector:** add default slot to shadow DOM ([8827c2c](https://github.com/Nosto/web-components/commit/8827c2c5285411e0297a2a8a5b8ed330e6a8fd55))
+
 # [9.6.0](https://github.com/Nosto/web-components/compare/v9.5.0...v9.6.0) (2025-10-22)
 
 
