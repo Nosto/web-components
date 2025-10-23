@@ -177,9 +177,11 @@ describe("Campaign", () => {
 
   describe("cart-synced functionality", () => {
     let mockListen: Mock
+    let mockUnlisten: Mock
 
     beforeEach(() => {
       mockListen = vi.fn()
+      mockUnlisten = vi.fn()
     })
 
     afterEach(() => {
@@ -194,6 +196,7 @@ describe("Campaign", () => {
       mockNostojs({
         createRecommendationRequest: () => mockBuilder,
         listen: mockListen,
+        unlisten: mockUnlisten,
         attributeProductClicksInCampaign: vi.fn(),
         placements: {
           injectCampaigns: vi.fn()
@@ -214,11 +217,14 @@ describe("Campaign", () => {
       mockNostojs({
         createRecommendationRequest: () => mockBuilder,
         listen: mockListen,
+        unlisten: mockUnlisten,
         attributeProductClicksInCampaign: vi.fn(),
         placements: {
           injectCampaigns: vi.fn()
         }
       })
+
+      Campaign.prototype.load = vi.fn().mockResolvedValue(undefined)
 
       // Create campaign with cart-synced
       campaign = (<nosto-campaign placement="789" cart-synced={true} />) as Campaign
@@ -231,14 +237,16 @@ describe("Campaign", () => {
       // Get the registered callback
       const cartUpdateCallback = mockListen.mock.calls[0][1]
 
-      // Mock the load method on the campaign
-      campaign.load = vi.fn().mockResolvedValue(undefined)
-
       // Simulate cart update
       await cartUpdateCallback()
 
       // Verify the campaign was reloaded
       expect(campaign.load).toHaveBeenCalled()
+
+      await campaign.disconnectedCallback()
+
+      // Verify unlisten was called on disconnect
+      expect(mockUnlisten).toHaveBeenCalledWith("cartupdated", expect.any(Function))
     })
   })
 })

@@ -84,6 +84,8 @@ export class Campaign extends NostoElement {
   /** @hidden */
   templateElement?: HTMLTemplateElement
 
+  #load = this.load.bind(this)
+
   async connectedCallback() {
     if (!this.placement && !this.id) {
       throw new Error("placement or id attribute is required for Campaign")
@@ -92,7 +94,7 @@ export class Campaign extends NostoElement {
     // Register cart update listener if cart-synced is enabled
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
-      api.listen("cartupdated", () => this.load())
+      api.listen("cartupdated", this.#load)
     }
 
     if (this.init !== "false") {
@@ -108,6 +110,15 @@ export class Campaign extends NostoElement {
         await loadCampaign(this)
       }
     }
+  }
+
+  async disconnectedCallback() {
+    // Unregister cart update listener
+    if (!this.cartSynced) {
+      return
+    }
+    const api = await new Promise(nostojs)
+    api.unlisten("cartupdated", this.#load)
   }
 
   async load() {
