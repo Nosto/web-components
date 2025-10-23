@@ -40,13 +40,19 @@ Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-compon
 
 ## Component Presentation
 
-A comprehensive reveal.js presentation showcasing all components is available. To view it:
+A comprehensive presentation showcasing all components is available in the `presentation/` folder.
+
+### Interactive Presentation
+View the reveal.js presentation:
 
 ```bash
 npm run presentation
 ```
 
-Then open [http://localhost:3000/presentation.html](http://localhost:3000/presentation.html) in your browser.
+Then open [http://localhost:3000/presentation/presentation.html](http://localhost:3000/presentation/presentation.html) in your browser.
+
+### Markdown Documentation
+See [`presentation/README.md`](presentation/README.md) for the complete component guide in markdown format.
 
 The presentation includes:
 - Overview of all 10 components categorized by Store Level and Campaign Level
