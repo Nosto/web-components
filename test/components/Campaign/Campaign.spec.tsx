@@ -204,7 +204,7 @@ describe("Campaign", () => {
 
       await campaign.connectedCallback()
 
-      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
+      expect(mockListen).toHaveBeenCalledWith("cartupdated", expect.any(Function))
     })
 
     it("should reload campaign when cart update event is triggered", async () => {
@@ -226,7 +226,7 @@ describe("Campaign", () => {
       await campaign.connectedCallback()
 
       // Verify listener was registered
-      expect(mockListen).toHaveBeenCalledWith("cartUpdated", expect.any(Function))
+      expect(mockListen).toHaveBeenCalledWith("cartupdated", expect.any(Function))
 
       // Get the registered callback
       const cartUpdateCallback = mockListen.mock.calls[0][1]
