@@ -100,7 +100,7 @@ async function loadAndRenderMarkup(element: DynamicCard) {
 }
 
 async function getMarkup(element: DynamicCard) {
-  const target = createShopifyUrl(`products/${element.handle}`)
+  const target = createShopifyUrl(`/products/${element.handle}`)
 
   if (element.template) {
     target.searchParams.set("view", element.template)
