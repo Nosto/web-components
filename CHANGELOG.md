@@ -1,3 +1,10 @@
+## [9.8.2](https://github.com/Nosto/web-components/compare/v9.8.1...v9.8.2) (2025-10-24)
+
+
+### Bug Fixes
+
+* fix createShopifyUrl logic ([51d6931](https://github.com/Nosto/web-components/commit/51d6931ecf5808ab6d286814da5d33239f0aa526))
+
 ## [9.8.1](https://github.com/Nosto/web-components/compare/v9.8.0...v9.8.1) (2025-10-23)
 
 
