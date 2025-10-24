@@ -80,7 +80,7 @@ export const Overview: Story = {
             <div class="component-tag">&lt;nosto-campaign&gt;</div>
             <div class="component-description">
               Campaign rendering and product recommendation display. Fetches campaign data from Nosto and injects it
-              into the DOM. Intended as a replacement for the store side placement functionality.
+              into the DOM. Intended as a replacement for the static placement injection on store.
             </div>
             <div class="component-links">
               <a href="?path=/docs/components-campaign--docs" class="component-link" target="_top">View Docs</a>
@@ -133,7 +133,8 @@ export const Overview: Story = {
             <div class="component-tag">&lt;nosto-image&gt;</div>
             <div class="component-description">
               Progressive image enhancement with optimization. Supports responsive images with Shopify and BigCommerce
-              transformations. The actual image element is rendered inside the shadow root of the component.
+              transformations. The actual image element is rendered inside the shadow root (Shadow DOM) of the
+              component.
             </div>
             <div class="component-links">
               <a href="?path=/docs/components-image--docs" class="component-link" target="_top">View Docs</a>
@@ -168,7 +169,7 @@ export const Overview: Story = {
             <div class="component-tag">&lt;nosto-simple-card&gt;</div>
             <div class="component-description">
               Simple product card templating for Shopify stores. Streamlined product display with basic information. The
-              card content is rendered inside the shadow root of the component.
+              card content is rendered inside the shadow root (Shadow DOM) of the component.
             </div>
             <div class="component-links">
               <a href="?path=/docs/components-simplecard--docs" class="component-link" target="_top">View Docs</a>
@@ -192,7 +193,7 @@ export const Overview: Story = {
             <div class="component-tag">&lt;nosto-variant-selector&gt;</div>
             <div class="component-description">
               Product variant options as clickable pills. Shopify-specific variant selection interface with pill-style
-              buttons. The content is rendered inside the shadow root of the component.
+              buttons. The content is rendered inside the shadow root (Shadow DOM) of the component.
             </div>
             <div class="component-links">
               <a href="?path=/docs/components-variantselector--docs" class="component-link" target="_top">View Docs</a>
