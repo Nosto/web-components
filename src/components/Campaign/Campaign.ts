@@ -59,6 +59,12 @@ import { addRequest } from "./orchestrator"
  * ```html
  * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
  * ```
+ *
+ * @example
+ * Campaign with cart-synced functionality for dynamic cart updates:
+ * ```html
+ * <nosto-campaign placement="cart-recommendations" cart-synced></nosto-campaign>
+ * ```
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
