@@ -13,7 +13,7 @@ describe("DynamicCard", () => {
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
     // Use createShopifyUrl to get the correct path with Shopify root handling
-    const productUrl = createShopifyUrl("products/:handle")
+    const productUrl = createShopifyUrl("/products/:handle")
     const productPath = productUrl.pathname
 
     addHandlers(

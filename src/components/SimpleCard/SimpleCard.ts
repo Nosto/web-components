@@ -132,7 +132,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 }
 
 async function fetchProductData(handle: string) {
-  const url = createShopifyUrl(`products/${handle}.js`)
+  const url = createShopifyUrl(`/products/${handle}.js`)
   return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 

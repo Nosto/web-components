@@ -10,7 +10,7 @@ import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOpti
 
 describe("VariantSelector", () => {
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    const productUrl = createShopifyUrl("products/:handle.js")
+    const productUrl = createShopifyUrl("/products/:handle.js")
     const productPath = productUrl.pathname
 
     addHandlers(
