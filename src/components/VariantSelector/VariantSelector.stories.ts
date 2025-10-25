@@ -76,7 +76,7 @@ export const WithPreselect: Story = {
 export const WithPreselectVariantId: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: args => html`
-    <nosto-variant-selector handle="${args.handle}" preselect-variant-id="41007289467054"></nosto-variant-selector>
+    <nosto-variant-selector handle="${args.handle}" variantId="41007289467054"></nosto-variant-selector>
   `,
   parameters: {
     docs: {

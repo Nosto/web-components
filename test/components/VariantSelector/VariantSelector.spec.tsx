@@ -530,14 +530,12 @@ describe("VariantSelector", () => {
   })
 
   describe("Variant ID preselection", () => {
-    it("should preselect a variant when preselect-variant-id is provided", async () => {
+    it("should preselect a variant when variantId is provided", async () => {
       addProductHandlers({
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (
-        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="1002" />
-      ) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" variantId="1002" />) as VariantSelector
       await selector.connectedCallback()
 
       // Should preselect Medium / Blue (variant ID 1002)
@@ -551,9 +549,7 @@ describe("VariantSelector", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (
-        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="1003" />
-      ) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" variantId="1003" />) as VariantSelector
 
       let eventDetail: Record<string, unknown> | null = null
       selector.addEventListener("variantchange", (event: Event) => {
@@ -572,7 +568,7 @@ describe("VariantSelector", () => {
       })
 
       const selector = (
-        <nosto-variant-selector handle="variant-test-product" preselect preselect-variant-id="99999" />
+        <nosto-variant-selector handle="variant-test-product" preselect variantId="99999" />
       ) as VariantSelector
       await selector.connectedCallback()
 
@@ -581,13 +577,13 @@ describe("VariantSelector", () => {
       expect(selector.selectedOptions["Color"]).toBe("Red")
     })
 
-    it("should prioritize preselect-variant-id over preselect attribute", async () => {
+    it("should prioritize variantId over preselect attribute", async () => {
       addProductHandlers({
         "variant-test-product": { product: mockProductWithVariants }
       })
 
       const selector = (
-        <nosto-variant-selector handle="variant-test-product" preselect preselect-variant-id="1002" />
+        <nosto-variant-selector handle="variant-test-product" preselect variantId="1002" />
       ) as VariantSelector
       await selector.connectedCallback()
 
@@ -602,9 +598,7 @@ describe("VariantSelector", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (
-        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="99999" />
-      ) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" variantId="99999" />) as VariantSelector
       await selector.connectedCallback()
 
       // Should not select anything
@@ -618,9 +612,7 @@ describe("VariantSelector", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (
-        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="1003" />
-      ) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" variantId="1003" />) as VariantSelector
       await selector.connectedCallback()
 
       const shadowRoot = selector.shadowRoot!
