@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosto Web Components - Presentation</title>
+
+  <link rel="stylesheet" href="../node_modules/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../node_modules/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="../node_modules/reveal.js/dist/theme/white.css" id="theme">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="../node_modules/reveal.js/plugin/highlight/monokai.css">
+
+  <style>
+    .reveal {
+      font-family: "Source Sans Pro", Arial, sans-serif;
+    }
+    
+    .reveal .slides section .fragment {
+      opacity: 0.3;
+    }
+    
+    .reveal .slides section .fragment.visible {
+      opacity: 1;
+    }
+    
+    .reveal h1, .reveal h2, .reveal h3 {
+      color: #2c3e50;
+    }
+    
+    .reveal h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+    }
+    
+    .reveal h2 {
+      font-size: 1.8em;
+      margin-bottom: 0.5em;
+    }
+    
+    .reveal h3 {
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+    }
+    
+    .reveal table {
+      font-size: 0.7em;
+    }
+    
+    .reveal table th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }
+    
+    .reveal pre code {
+      max-height: 600px;
+      font-size: 0.55em;
+      line-height: 1.3;
+    }
+    
+    .reveal code {
+      background-color: #f8f9fa;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    
+    .reveal pre code {
+      background-color: #2d3748;
+      color: #e2e8f0;
+    }
+    
+    /* Custom styling for component categories */
+    .store-level {
+      color: #3182ce;
+    }
+    
+    .campaign-level {
+      color: #38a169;
+    }
+    
+    .shopify-only {
+      color: #805ad5;
+    }
+    
+    .attribute-required {
+      font-weight: bold;
+      color: #e53e3e;
+    }
+    
+    /* Nosto brand colors */
+    .nosto-primary {
+      color: #00d4aa;
+    }
+    
+    .nosto-dark {
+      color: #1a202c;
+    }
+    
+    .reveal .progress {
+      color: #00d4aa;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <!-- Load the markdown content -->
+      <section data-markdown="components.md" 
+               data-separator="^---$" 
+               data-separator-vertical="^--$" 
+               data-charset="utf-8">
+      </section>
+    </div>
+  </div>
+
+  <script src="../node_modules/reveal.js/dist/reveal.js"></script>
+  <script src="../node_modules/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../node_modules/reveal.js/plugin/markdown/markdown.js"></script>
+  <script src="../node_modules/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+      hash: true,
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide', // none/fade/slide/convex/concave/zoom
+      
+      // Learn about plugins: https://revealjs.com/plugins/
+      plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

@@ -37,3 +37,15 @@ Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-compon
 [Library TypeDoc page](https://nosto.github.io/web-components) includes detailed library documentation.
 
 [Interactive Storybook](https://nosto.github.io/web-components/storybook/) provides live examples and documentation for each component.
+
+## Presentation
+
+A comprehensive Reveal.js presentation covering all components with usage examples and attribute documentation is available in the `presentation/` directory.
+
+To run the presentation locally:
+
+```bash
+npm run present
+```
+
+This will start a local HTTP server on port 3000 and automatically open the presentation in your default browser.
