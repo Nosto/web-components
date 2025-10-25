@@ -530,6 +530,11 @@ describe("VariantSelector", () => {
   })
 
   describe("Variant ID preselection", () => {
+    interface VariantChangeEventDetail {
+      variant?: {
+        id?: number
+      }
+    }
     it("should preselect a variant when variantId is provided", async () => {
       addProductHandlers({
         "variant-test-product": { product: mockProductWithVariants }
@@ -559,7 +564,7 @@ describe("VariantSelector", () => {
       await selector.connectedCallback()
 
       expect(eventDetail).toBeTruthy()
-      expect((eventDetail as unknown as { variant?: { id?: number } })?.variant?.id).toBe(1003) // Large / Red
+      expect((eventDetail as unknown as VariantChangeEventDetail)?.variant?.id).toBe(1003) // Large / Red
     })
 
     it("should fall back to preselect behavior if variant ID is not found", async () => {

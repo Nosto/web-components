@@ -113,6 +113,19 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
   }
 
   // Fallback to existing preselection logic
+  // First, try to select the first available variant if preselect is enabled
+  if (element.preselect) {
+    const firstAvailableVariant = product.variants.find(variant => variant.available)
+    if (firstAvailableVariant) {
+      // Set selections based on the first available variant's options
+      product.options.forEach((option, index) => {
+        element.selectedOptions[option.name] = firstAvailableVariant.options[index]
+      })
+      return
+    }
+  }
+
+  // If no available variant found or preselect is false, use original logic
   product.options.forEach(option => {
     // Always auto-select single-value options, or multi-value options when preselect is true
     if (option.values.length === 1 || (element.preselect && option.values.length > 1)) {
