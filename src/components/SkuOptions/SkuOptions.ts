@@ -20,11 +20,11 @@ import { inject } from "../inject"
  * - Registering click events for options
  * - Listening for state changes to update UI
  *
+ * {@include ./examples.md}
+ *
  * @category Campaign level templating
  *
  * @property {string} name - Required. The identifier for this option group
- *
- * {@include ./examples.md}
  */
 @customElement("nosto-sku-options")
 export class SkuOptions extends NostoElement {

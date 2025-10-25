@@ -7,9 +7,9 @@ import { NostoElement } from "../Element"
  * This component replaces its children with the content of the first template
  * that matches any of the current user's Nosto segments.
  *
- * @category Store level templating
- *
  * {@include ./examples.md}
+ *
+ * @category Store level templating
  */
 @customElement("nosto-control")
 export class Control extends NostoElement {

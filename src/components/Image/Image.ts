@@ -8,6 +8,8 @@ import { NostoElement } from "../Element"
  * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
  * refer https://unpic.dev for more details.
  *
+ * {@include ./examples.md}
+ *
  * @category Campaign level templating
  *
  * @remarks
@@ -24,8 +26,6 @@ import { NostoElement } from "../Element"
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
- *
- * {@include ./examples.md}
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {

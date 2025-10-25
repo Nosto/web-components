@@ -13,6 +13,8 @@ import { addRequest } from "./orchestrator"
  * It supports both HTML and JSON response modes, allowing for flexible rendering.
  * The placement or id attribute will be used as the identifier of the placement to be fetched.
  *
+ * {@include ./examples.md}
+ *
  * @category Store level templating
  *
  * @property {string} placement (or id) - The placement identifier for the campaign.
@@ -28,8 +30,6 @@ import { addRequest } from "./orchestrator"
  * @property {boolean} [cartSynced] (`cart-synced`) - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
- *
- * {@include ./examples.md}
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {

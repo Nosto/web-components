@@ -20,14 +20,14 @@ const setShadowContent = shadowContentFactory(styles)
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
  * customized using CSS custom properties.
  *
+ * {@include ./examples.md}
+ *
  * @category Category level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
- *
- * {@include ./examples.md}
  */
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {

@@ -11,14 +11,13 @@ import { provide } from "../inject"
  * This component manages product selection, SKU selection, and add-to-cart functionality.
  * It creates a store and provides methods to interact with product and SKU data.
  *
+ * {@include ./examples.md}
+ *
  * @category Campaign level templating
  *
  * @property {string} productId (`product-id`) - Required. The ID of the product.
  * @property {string} recoId (`reco-id`) - Required. The recommendation slot ID.
  * @property {boolean} skuSelected (`sku-selected`) - Indicates whether a SKU is currently selected.
- *
- * {@include ./examples.md}
- *
  */
 @customElement("nosto-product")
 export class Product extends NostoElement {

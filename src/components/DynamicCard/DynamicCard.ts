@@ -12,6 +12,8 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  *
  * This component is designed to be used in a Shopify environment and fetches product data dynamically.
  *
+ * {@include ./examples.md}
+ *
  * @category Campaign level templating
  *
  * @property {string} handle - The product handle to fetch data for. Required.
@@ -20,8 +22,6 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {string} [variantId] (`variant-id`) - The variant ID to fetch specific variant data. Optional.
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
- *
- * {@include ./examples.md}
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends NostoElement {
