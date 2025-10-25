@@ -289,11 +289,11 @@ NostoImage renders responsive images using the unpic library. Supports Shopify a
 | `width` | `number` | - | Width of the image in pixels |
 | `height` | `number` | - | Height of the image in pixels |
 | `aspect-ratio` | `number` | - | Aspect ratio (width / height) |
-| `layout` | `Layout` | - | Layout: "fixed", "constrained", or "fullWidth" |
-| `crop` | `Crop` | - | **Shopify only.** Crop: "center", "left", "right", "top", "bottom" |
+| `layout` | `"fixed"` \| `"constrained"` \| `"fullWidth"` | - | Layout: "fixed", "constrained", or "fullWidth" |
+| `crop` | `"center"` \| `"left"` \| `"right"` \| `"top"` \| `"bottom"` | - | **Shopify only.** Crop: "center", "left", "right", "top", "bottom" |
 | `alt` | `string` | - | Alternative text for accessibility |
 | `sizes` | `string` | - | Sizes attribute for responsive images |
-| `breakpoints` | `number[]` | - | Custom widths for responsive image generation |
+| `breakpoints` | Array of numbers | - | Custom widths for responsive image generation (e.g., `[320, 640, 768, 1024, 1280]`) |
 | `unstyled` | `boolean` | `false` | Prevents inline styles from being applied |
 
 ---
