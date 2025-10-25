@@ -20,7 +20,7 @@ const setShadowContent = shadowContentFactory(styles)
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
  * customized using CSS custom properties.
  *
- * @category Category level templating
+ * @category Campaign level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
