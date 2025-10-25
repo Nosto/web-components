@@ -68,6 +68,25 @@ export const InSimpleCard_AddToCart: Story = {
   `
 }
 
+export const WithPreselect: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html` <nosto-variant-selector handle="${args.handle}" preselect></nosto-variant-selector> `
+}
+
+export const WithPreselectVariantId: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-variant-selector handle="${args.handle}" preselect-variant-id="41007289467054"></nosto-variant-selector>
+  `,
+  parameters: {
+    docs: {
+      description: {
+        story: "Preselects a specific variant by its ID. The variant ID shown is from the default test product."
+      }
+    }
+  }
+}
+
 export const MultipleProducts: Story = {
   render: () => html`
     <div

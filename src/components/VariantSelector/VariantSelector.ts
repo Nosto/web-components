@@ -24,12 +24,14 @@ const setShadowContent = shadowContentFactory(styles)
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {boolean} preselect - Whether to automatically preselect the first value for each option. Defaults to false.
+ * @property {string} preselect-variant-id - Specific variant ID to preselect. Takes precedence over preselect attribute.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  *
  * @example
  * ```html
  * <nosto-variant-selector handle="awesome-product"></nosto-variant-selector>
+ * <nosto-variant-selector handle="awesome-product" preselect-variant-id="1234567890"></nosto-variant-selector>
  * ```
  */
 @customElement("nosto-variant-selector", { observe: true })
@@ -37,11 +39,13 @@ export class VariantSelector extends NostoElement {
   /** @private */
   static properties = {
     handle: String,
-    preselect: Boolean
+    preselect: Boolean,
+    "preselect-variant-id": String
   }
 
   handle!: string
   preselect?: boolean
+  "preselect-variant-id"?: string
 
   /**
    * Internal state for current selections
@@ -95,6 +99,20 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 }
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
+  // If a specific variant ID is requested, preselect that variant
+  const preselectedVariantId = element["preselect-variant-id"]
+  if (preselectedVariantId) {
+    const targetVariant = product.variants.find(variant => variant.id.toString() === preselectedVariantId)
+    if (targetVariant) {
+      // Set selections based on the target variant's options
+      product.options.forEach((option, index) => {
+        element.selectedOptions[option.name] = targetVariant.options[index]
+      })
+      return
+    }
+  }
+
+  // Fallback to existing preselection logic
   product.options.forEach(option => {
     // Always auto-select single-value options, or multi-value options when preselect is true
     if (option.values.length === 1 || (element.preselect && option.values.length > 1)) {

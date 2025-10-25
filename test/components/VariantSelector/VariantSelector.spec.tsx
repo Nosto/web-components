@@ -528,4 +528,113 @@ describe("VariantSelector", () => {
       expect(variant?.options).toEqual(["Large", "Cotton"])
     })
   })
+
+  describe("Variant ID preselection", () => {
+    it("should preselect a variant when preselect-variant-id is provided", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="1002" />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      // Should preselect Medium / Blue (variant ID 1002)
+      expect(selector.selectedOptions["Size"]).toBe("Medium")
+      expect(selector.selectedOptions["Color"]).toBe("Blue")
+      expect(selector.dataset.variantId).toBe("1002")
+    })
+
+    it("should emit variantchange event when variant ID is preselected", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="1003" />
+      ) as VariantSelector
+
+      let eventDetail: Record<string, unknown> | null = null
+      selector.addEventListener("variantchange", (event: Event) => {
+        eventDetail = (event as CustomEvent).detail
+      })
+
+      await selector.connectedCallback()
+
+      expect(eventDetail).toBeTruthy()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((eventDetail as any)?.variant?.id).toBe(1003) // Large / Red
+    })
+
+    it("should fall back to preselect behavior if variant ID is not found", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" preselect preselect-variant-id="99999" />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      // Should fall back to preselect behavior (first option values)
+      expect(selector.selectedOptions["Size"]).toBe("Small")
+      expect(selector.selectedOptions["Color"]).toBe("Red")
+    })
+
+    it("should prioritize preselect-variant-id over preselect attribute", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" preselect preselect-variant-id="1002" />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      // Should use variant ID, not fallback to preselect behavior
+      expect(selector.selectedOptions["Size"]).toBe("Medium")
+      expect(selector.selectedOptions["Color"]).toBe("Blue")
+      expect(selector.dataset.variantId).toBe("1002")
+    })
+
+    it("should do nothing when invalid variant ID is provided and no preselect", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="99999" />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      // Should not select anything
+      expect(selector.selectedOptions["Size"]).toBeUndefined()
+      expect(selector.selectedOptions["Color"]).toBeUndefined()
+      expect(selector.dataset.variantId).toBeUndefined()
+    })
+
+    it("should update active states when variant ID is preselected", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" preselect-variant-id="1003" />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const largeButton = shadowRoot.querySelector(
+        '[data-option-name="Size"][data-option-value="Large"]'
+      ) as HTMLButtonElement
+      const redButton = shadowRoot.querySelector(
+        '[data-option-name="Color"][data-option-value="Red"]'
+      ) as HTMLButtonElement
+
+      // Large and Red should be active (variant 1003)
+      expect(largeButton.hasAttribute("active")).toBe(true)
+      expect(redButton.hasAttribute("active")).toBe(true)
+    })
+  })
 })
