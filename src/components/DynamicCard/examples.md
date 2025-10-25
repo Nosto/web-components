@@ -8,7 +8,7 @@ Placeholder content while loading...
 </nosto-dynamic-card>
 ```
 
-This example shows how to render a product using a Shopify template with a specific variant. The component fetches the product data and renders it using the specified template, with optional placeholder content shown during loading. This is useful for creating dynamic product cards that match your existing Shopify theme design.
+This example shows how to render a product using a Shopify template with a specific variant. The component fetches the product markup and rendered using the "product-card" Shopify Liquid template, with optional placeholder content shown during loading. This is useful for creating dynamic product cards that match your existing Shopify theme design.
 
 ### Using with section reference for Shopify section rendering
 

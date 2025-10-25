@@ -6,7 +6,7 @@
 <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600" crop="center"></nosto-image>
 ```
 
-This example demonstrates basic image rendering using a Shopify CDN URL with fixed dimensions and center cropping. The component automatically handles Shopify's image transformation API to optimize the image for the specified size.
+This example demonstrates basic image rendering using a Shopify CDN URL with fixed dimensions and center cropping. The componen utilizes the resizing and transformation capabilties of Shopify's Image CDN internally and renders a responsive img element internally.
 
 ### Using with BigCommerce image URL
 

@@ -6,7 +6,7 @@
 <nosto-simple-card handle="awesome-product" alternate brand discount rating></nosto-simple-card>
 ```
 
-This example shows a fully-featured product card that displays all available information: alternate product images on hover, brand/vendor information, discount badges, and product ratings. The card fetches data from Shopify's `/products/{handle}.js` endpoint and renders a complete product presentation.
+This example shows a fully-featured product card that displays all available information: alternate product images on hover, brand/vendor information, discount badges, and product ratings. The card fetches data from Shopify's `/products/{handle}.js` endpoint and renders a complete product presentation. Internally this component renders that product card in the shadow root and can be styled using part selectors.
 
 ### Product card with nested variant selector for interactive options
 
