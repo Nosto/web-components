@@ -12,6 +12,8 @@
 </nosto-product>
 ```
 
+This example shows a product component with a dropdown-style SKU selector. The `n-sku-selector` attribute on the select element allows users to choose between different product variants, while the `n-atc` button handles adding the selected variant to cart.
+
 ### Product with individual SKU elements
 
 ```html
@@ -24,3 +26,5 @@
   </div>
 </nosto-product>
 ```
+
+This demonstrates an alternative SKU selection method using individual elements with `n-sku-id` attributes. Each element represents a specific SKU variant and can be clicked to select that variant and add it to cart. This approach is useful for visual variant selection like color swatches or size buttons.

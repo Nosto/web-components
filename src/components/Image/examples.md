@@ -6,11 +6,15 @@
 <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600" crop="center"></nosto-image>
 ```
 
+This example demonstrates basic image rendering using a Shopify CDN URL with fixed dimensions and center cropping. The component automatically handles Shopify's image transformation API to optimize the image for the specified size.
+
 ### Using with BigCommerce image URL
 
 ```html
 <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600"></nosto-image>
 ```
+
+This shows how to use the component with BigCommerce image URLs. The component recognizes BigCommerce CDN patterns and applies appropriate image transformations for optimal loading performance.
 
 ### Using with responsive sizes attribute
 
@@ -24,6 +28,8 @@
 </nosto-image>
 ```
 
+This example demonstrates responsive image loading with the `sizes` attribute, which helps the browser choose the optimal image size based on viewport width. The aspect ratio is controlled rather than a fixed height, making it more flexible for responsive layouts.
+
 ### Using with custom breakpoints
 
 ```html
@@ -36,6 +42,8 @@
 </nosto-image>
 ```
 
+This shows how to specify custom breakpoints for responsive image generation. Instead of using default breakpoints, you can define specific widths that match your design system or layout requirements.
+
 ### Using with unstyled attribute to prevent inline styles
 
 ```html
@@ -47,3 +55,5 @@
   alt="Product image without inline styles">
 </nosto-image>
 ```
+
+This example shows how to use the `unstyled` attribute to prevent the component from applying inline styles to the image element. This is useful when you want to handle all styling through CSS classes instead of relying on the component's default styling.

@@ -25,6 +25,8 @@
 </nosto-control>
 ```
 
+This example shows how to display different content based on Nosto user segments. Each template element has a `segment` attribute that corresponds to a Nosto segment ID. The component will render the content from the first template whose segment matches the current user's segments, enabling personalized messaging.
+
 ### Control element with fallback content when no segments match
 
 ```html
@@ -50,3 +52,5 @@
   </div>
 </nosto-control>
 ```
+
+This demonstrates segment-based content with fallback behavior. When none of the user's segments match any template, the component will display the default content (elements not wrapped in template tags). This ensures all users see relevant content even if they don't belong to any specific segment.
