@@ -24,14 +24,7 @@ import { inject } from "../inject"
  *
  * @property {string} name - Required. The identifier for this option group
  *
- * @example
- * ```html
- * <nosto-sku-options name="color">
- *   <span n-option n-skus="123,145">Black</span>
- *   <span n-option n-skus="223,234,245">White</span>
- *   <span n-option n-skus="334,345">Blue</span>
- * </nosto-sku-options>
- * ```
+ * @document ./examples.md
  */
 @customElement("nosto-sku-options")
 export class SkuOptions extends NostoElement {

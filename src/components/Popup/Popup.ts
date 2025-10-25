@@ -16,18 +16,7 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {string} name - Required name used for analytics and localStorage persistence. The popup's closed state will be remembered.
  * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
  *
- * @example
- * Basic popup with dialog and ribbon content:
- * ```html
- * <nosto-popup name="promo-popup" segment="5b71f1500000000000000006">
- *   <h2>Special Offer!</h2>
- *   <p>Get 20% off your order today</p>
- *   <button n-close>Close</button>
- *   <div slot="ribbon">
- *     <span>Limited time!</span>
- *   </div>
- * </nosto-popup>
- * ```
+ * @document ./examples.md
  */
 @customElement("nosto-popup")
 export class Popup extends NostoElement {
