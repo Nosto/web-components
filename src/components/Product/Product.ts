@@ -17,7 +17,7 @@ import { provide } from "../inject"
  * @property {string} recoId (`reco-id`) - Required. The recommendation slot ID.
  * @property {boolean} skuSelected (`sku-selected`) - Indicates whether a SKU is currently selected.
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  *
  */
 @customElement("nosto-product")

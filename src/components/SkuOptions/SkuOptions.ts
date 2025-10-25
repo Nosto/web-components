@@ -24,7 +24,7 @@ import { inject } from "../inject"
  *
  * @property {string} name - Required. The identifier for this option group
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-sku-options")
 export class SkuOptions extends NostoElement {

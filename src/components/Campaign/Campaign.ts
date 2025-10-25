@@ -29,7 +29,7 @@ import { addRequest } from "./orchestrator"
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {

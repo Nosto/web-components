@@ -21,7 +21,7 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends NostoElement {

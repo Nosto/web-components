@@ -27,7 +27,7 @@ const setShadowContent = shadowContentFactory(styles)
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {

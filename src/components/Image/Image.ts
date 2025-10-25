@@ -25,7 +25,7 @@ import { NostoElement } from "../Element"
  * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {

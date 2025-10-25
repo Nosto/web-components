@@ -15,7 +15,7 @@ import { JSONResult } from "@nosto/nosto-js/client"
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {

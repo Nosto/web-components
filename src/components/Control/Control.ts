@@ -9,7 +9,7 @@ import { NostoElement } from "../Element"
  *
  * @category Store level templating
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-control")
 export class Control extends NostoElement {

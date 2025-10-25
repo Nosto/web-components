@@ -32,7 +32,7 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {boolean} [rating] - Show product rating. Defaults to false.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  *
- * @document ./examples.md
+ * {@include ./examples.md}
  */
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
