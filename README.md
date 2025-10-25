@@ -37,5 +37,3 @@ Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-compon
 [Library TypeDoc page](https://nosto.github.io/web-components) includes detailed library documentation.
 
 [Interactive Storybook](https://nosto.github.io/web-components/storybook/) provides live examples and documentation for each component.
-
-

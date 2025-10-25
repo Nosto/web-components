@@ -1,9 +1,0 @@
-{
-  "entryPoints": ["src/main.ts"],
-  "out": "./docs",
-  "plugin": ["typedoc-plugin-markdown"],
-  "theme": "markdown",
-  "name": "@nosto/web-components",
-  "readme": "README.md",
-  "mergeReadme": true
-}
