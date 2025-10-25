@@ -27,10 +27,11 @@ Here's an example of a Shopify Liquid template that can be used with the `nosto-
 {% endcomment %}
 
 {% if search.terms != blank %}
+  {% assign handles = search.terms | split: ':' %}
   <div class="product-recommendations">
-    <h2>{{ section.settings.heading | default: "Recommended Products" }}</h2>
+    <h2 nosto-title></h2>
     <div class="product-grid">
-      {% for handle in search.terms %}
+      {% for handle in handles %}
         {% assign product = collections.all.products[handle] %}
         {% if product != blank %}
           <div class="product-card">
@@ -52,18 +53,4 @@ Here's an example of a Shopify Liquid template that can be used with the `nosto-
     </div>
   </div>
 {% endif %}
-
-{% schema %}
-{
-  "name": "Product Recommendations",
-  "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Recommended Products"
-    }
-  ]
-}
-{% endschema %}
 ```
