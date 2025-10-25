@@ -132,7 +132,7 @@ function updateActiveStates(element: VariantSelector) {
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
     const active = !!optionName && element.selectedOptions[optionName] === optionValue
-    button.toggleAttribute("active", active)
+    togglePart(button, "active", active)
   })
 }
 
@@ -149,8 +149,18 @@ function updateUnavailableStates(element: VariantSelector, product: ShopifyProdu
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
     const available = availableOptions.has(`${optionName}::${optionValue}`)
-    button.toggleAttribute("unavailable", !available)
+    togglePart(button, "unavailable", !available)
   })
+}
+
+function togglePart(element: HTMLElement, partName: string, enable: boolean) {
+  const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
+  if (enable) {
+    parts.add(partName)
+  } else {
+    parts.delete(partName)
+  }
+  element.setAttribute("part", Array.from(parts).join(" "))
 }
 
 function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
