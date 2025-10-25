@@ -18,7 +18,7 @@
 <nosto-product product-id="123" reco-id="front-page">
   <div n-sku-id="456">
     <span n-atc>Blue</span>
-  </div>,
+  </div>
   <div n-sku-id="101">
     <span n-atc>Black</span>
   </div>

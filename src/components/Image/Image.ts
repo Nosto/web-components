@@ -26,30 +26,6 @@ import { NostoElement } from "../Element"
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  *
  * @document ./examples.md
- *
- * @example
- * Using with custom breakpoints:
- * ```html
- * <nosto-image
- *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
- *   width="800"
- *   aspect-ratio="1.5"
- *   alt="Product showcase image"
- *   breakpoints="[320, 640, 768, 1024, 1280]">
- * </nosto-image>
- * ```
- *
- * @example
- * Using with unstyled attribute to prevent inline styles:
- * ```html
- * <nosto-image
- *   src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
- *   width="800"
- *   height="600"
- *   unstyled
- *   alt="Product image without inline styles">
- * </nosto-image>
- * ```
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {

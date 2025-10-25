@@ -23,3 +23,27 @@
   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw">
 </nosto-image>
 ```
+
+### Using with custom breakpoints
+
+```html
+<nosto-image
+  src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+  width="800"
+  aspect-ratio="1.5"
+  alt="Product showcase image"
+  breakpoints="[320, 640, 768, 1024, 1280]">
+</nosto-image>
+```
+
+### Using with unstyled attribute to prevent inline styles
+
+```html
+<nosto-image
+  src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+  width="800"
+  height="600"
+  unstyled
+  alt="Product image without inline styles">
+</nosto-image>
+```

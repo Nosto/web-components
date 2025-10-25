@@ -37,3 +37,20 @@ Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-compon
 [Library TypeDoc page](https://nosto.github.io/web-components) includes detailed library documentation.
 
 [Interactive Storybook](https://nosto.github.io/web-components/storybook/) provides live examples and documentation for each component.
+
+### Usage Examples
+
+Component usage examples are located in dedicated `examples.md` files alongside each component:
+
+- [`src/components/Campaign/examples.md`](src/components/Campaign/examples.md)
+- [`src/components/Control/examples.md`](src/components/Control/examples.md)  
+- [`src/components/DynamicCard/examples.md`](src/components/DynamicCard/examples.md)
+- [`src/components/Image/examples.md`](src/components/Image/examples.md)
+- [`src/components/Popup/examples.md`](src/components/Popup/examples.md)
+- [`src/components/Product/examples.md`](src/components/Product/examples.md)
+- [`src/components/SectionCampaign/examples.md`](src/components/SectionCampaign/examples.md)
+- [`src/components/SimpleCard/examples.md`](src/components/SimpleCard/examples.md)
+- [`src/components/SkuOptions/examples.md`](src/components/SkuOptions/examples.md)
+- [`src/components/VariantSelector/examples.md`](src/components/VariantSelector/examples.md)
+
+These examples are automatically included in the [generated TypeDoc documentation](https://nosto.github.io/web-components) as separate pages for each component.
