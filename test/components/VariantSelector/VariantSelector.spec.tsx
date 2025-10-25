@@ -563,8 +563,7 @@ describe("VariantSelector", () => {
       await selector.connectedCallback()
 
       expect(eventDetail).toBeTruthy()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((eventDetail as any)?.variant?.id).toBe(1003) // Large / Red
+      expect((eventDetail as unknown as { variant?: { id?: number } })?.variant?.id).toBe(1003) // Large / Red
     })
 
     it("should fall back to preselect behavior if variant ID is not found", async () => {

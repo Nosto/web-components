@@ -48,6 +48,14 @@ export class VariantSelector extends NostoElement {
   "preselect-variant-id"?: string
 
   /**
+   * Getter for the preselect variant ID to improve code readability
+   * @private
+   */
+  get preselectVariantId(): string | undefined {
+    return this["preselect-variant-id"]
+  }
+
+  /**
    * Internal state for current selections
    * @hidden
    */
@@ -100,7 +108,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   // If a specific variant ID is requested, preselect that variant
-  const preselectedVariantId = element["preselect-variant-id"]
+  const preselectedVariantId = element.preselectVariantId
   if (preselectedVariantId) {
     const targetVariant = product.variants.find(variant => variant.id.toString() === preselectedVariantId)
     if (targetVariant) {
