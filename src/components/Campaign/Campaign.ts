@@ -13,6 +13,8 @@ import { addRequest } from "./orchestrator"
  * It supports both HTML and JSON response modes, allowing for flexible rendering.
  * The placement or id attribute will be used as the identifier of the placement to be fetched.
  *
+ * {@include ./examples.md}
+ *
  * @category Store level templating
  *
  * @property {string} placement (or id) - The placement identifier for the campaign.
@@ -28,43 +30,6 @@ import { addRequest } from "./orchestrator"
  * @property {boolean} [cartSynced] (`cart-synced`) - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
- *
- * @example
- * Basic campaign rendering with HTML mode:
- * ```html
- * <nosto-campaign placement="front-page"></nosto-campaign>
- * ```
- *
- * @example
- * Campaign with template-based rendering:
- * ```html
- * <nosto-campaign placement="front-page" template="my-template">
- *   <template id="my-template">
- *     <div class="campaign">
- *       <h2>{{ title }}</h2>
- *       <div class="products">
- *         <div v-for="product in products" class="product">
- *           <img :src="product.imageUrl" :alt="product.name" />
- *           <h3>{{ product.name }}</h3>
- *           <span class="price">{{ product.price }}</span>
- *         </div>
- *       </div>
- *     </div>
- *   </template>
- * </nosto-campaign>
- * ```
- *
- * @example
- * Campaign with lazy loading and product context:
- * ```html
- * <nosto-campaign placement="product-recommendations" product-id="123" variant-id="456" lazy></nosto-campaign>
- * ```
- *
- * @example
- * Campaign with cart-synced functionality for dynamic cart updates:
- * ```html
- * <nosto-campaign placement="cart-recommendations" cart-synced></nosto-campaign>
- * ```
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {

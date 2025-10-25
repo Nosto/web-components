@@ -10,22 +10,12 @@ import { JSONResult } from "@nosto/nosto-js/client"
  * A custom element that fetches Nosto placement results and renders them using Shopify section templates.
  * This component integrates with Shopify's Section Rendering API to dynamically render campaign content.
  *
+ * {@include ./examples.md}
+ *
  * @category Store level templating
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
- *
- * @example
- * Basic usage with Shopify section rendering:
- * ```html
- * <nosto-section-campaign placement="front-page" section="product-recommendations"></nosto-section-campaign>
- * ```
- *
- * @example
- * Advanced usage for specific product page recommendations:
- * ```html
- * <nosto-section-campaign placement="product-page-cross-sell" section="related-products-section"></nosto-section-campaign>
- * ```
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
