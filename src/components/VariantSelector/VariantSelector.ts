@@ -31,7 +31,7 @@ const setShadowContent = shadowContentFactory(styles)
  * @example
  * ```html
  * <nosto-variant-selector handle="awesome-product"></nosto-variant-selector>
- * <nosto-variant-selector handle="awesome-product" variantId="1234567890"></nosto-variant-selector>
+ * <nosto-variant-selector handle="awesome-product" variant-id="1234567890"></nosto-variant-selector>
  * ```
  */
 @customElement("nosto-variant-selector", { observe: true })
