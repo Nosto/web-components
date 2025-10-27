@@ -60,14 +60,19 @@
   border-color: var(--value-hover-border);
 }
 
-.value[active] {
+.value[part="value active"] {
   background: var(--value-active-bg);
   border-color: var(--value-active-border);
   color: var(--value-active-color);
 }
 
-.value[active]:hover {
+.value[part="value active"]:hover {
   background: var(--value-active-hover-bg);
   border-color: var(--value-active-hover-border);
+}
+
+.value[part="value unavailable"] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 

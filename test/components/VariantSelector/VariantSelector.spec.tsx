@@ -331,15 +331,15 @@ describe("VariantSelector", () => {
     ) as HTMLButtonElement
 
     // Initially Small should be active
-    expect(smallButton.hasAttribute("active")).toBe(true)
-    expect(mediumButton.hasAttribute("active")).toBe(false)
+    expect(smallButton.getAttribute("part")).toBe("value active")
+    expect(mediumButton.getAttribute("part")).toBe("value")
 
     // Click Medium
     mediumButton.click()
 
     // Now Medium should be active
-    expect(smallButton.hasAttribute("active")).toBe(false)
-    expect(mediumButton.hasAttribute("active")).toBe(true)
+    expect(smallButton.getAttribute("part")).toBe("value")
+    expect(mediumButton.getAttribute("part")).toBe("value active")
   })
 
   it("should preselect when preselect attribute is present", async () => {
@@ -353,7 +353,7 @@ describe("VariantSelector", () => {
     expect(selector.selectedOptions["Size"]).toBe("Small")
     expect(selector.selectedOptions["Color"]).toBe("Red")
 
-    expect(selector.shadowRoot!.querySelector(".value[active]")).toBeTruthy()
+    expect(selector.shadowRoot!.querySelector("[part='value active']")).toBeTruthy()
   })
 
   it("should not preselect by default when preselect attribute is not specified", async () => {
@@ -367,7 +367,7 @@ describe("VariantSelector", () => {
     expect(selector.selectedOptions["Size"]).toBeUndefined()
     expect(selector.selectedOptions["Color"]).toBeUndefined()
 
-    expect(selector.shadowRoot!.querySelector(".value[active]")).toBeFalsy()
+    expect(selector.shadowRoot!.querySelector("[part='value active']")).toBeFalsy()
   })
 
   it("should include default slot in shadow DOM", async () => {
