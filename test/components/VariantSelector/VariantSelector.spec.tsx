@@ -528,4 +528,16 @@ describe("VariantSelector", () => {
       expect(variant?.options).toEqual(["Large", "Cotton"])
     })
   })
+
+  it("should preselect options based on given variantId", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="variant-test-product" variantId={1002} />) as VariantSelector
+    await selector.connectedCallback()
+
+    expect(selector.selectedOptions["Size"]).toBe("Medium")
+    expect(selector.selectedOptions["Color"]).toBe("Blue")
+  })
 })
