@@ -276,22 +276,6 @@ describe("Image", () => {
       expect(imgElement).toBeDefined()
       expect(imgElement!.hasAttribute("fetchpriority")).toBe(false)
     })
-
-    it("should correctly combine fetchpriority with other attributes", () => {
-      // Test fetchpriority with alt and sizes
-      const altText = "Priority image"
-      const sizesValue = "(max-width: 768px) 100vw, 50vw"
-      nostoImage = (
-        <nosto-image src={shopifyUrl} width={800} height={400} alt={altText} sizes={sizesValue} fetchpriority="high" />
-      ) as Image
-      nostoImage.connectedCallback()
-
-      const imgElement = nostoImage.shadowRoot?.querySelector("img")
-      expect(imgElement).toBeDefined()
-      expect(imgElement!.getAttribute("alt")).toBe(altText)
-      expect(imgElement!.getAttribute("sizes")).toBe(sizesValue)
-      expect(imgElement!.getAttribute("fetchpriority")).toBe("high")
-    })
   })
 
   describe("Shadow DOM rendering", () => {

@@ -265,32 +265,3 @@ export const CustomBreakpoints: Story = {
     }
   }
 }
-
-export const FetchPriority: Story = {
-  args: {
-    src: "https://picsum.photos/id/25/800/800",
-    width: 400,
-    height: 300,
-    layout: "constrained",
-    fetchpriority: "high"
-  },
-  render: args =>
-    html`<nosto-image
-      src="${args.src}"
-      width="${args.width}"
-      height="${args.height}"
-      layout="${args.layout}"
-      fetchpriority="${ifDefined(args.fetchpriority)}"
-    ></nosto-image>`,
-  parameters: {
-    docs: {
-      description: {
-        story: `
-          Demonstrates the fetchpriority attribute functionality. This attribute provides a hint to the browser about 
-          the priority of this image relative to other images. Valid values are "high", "low", and "auto".
-          Use "high" for above-the-fold content, "low" for below-the-fold content, and "auto" for default behavior.
-        `
-      }
-    }
-  }
-}
