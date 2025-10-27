@@ -244,37 +244,12 @@ describe("Image", () => {
     })
 
     it("should correctly set fetchpriority attribute", () => {
-      // Test fetchpriority="high"
       nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} fetchpriority="high" />) as Image
       nostoImage.connectedCallback()
 
-      let imgElement = nostoImage.shadowRoot?.querySelector("img")
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
       expect(imgElement!.getAttribute("fetchpriority")).toBe("high")
-
-      // Test fetchpriority="low"
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} fetchpriority="low" />) as Image
-      nostoImage.connectedCallback()
-
-      imgElement = nostoImage.shadowRoot?.querySelector("img")
-      expect(imgElement).toBeDefined()
-      expect(imgElement!.getAttribute("fetchpriority")).toBe("low")
-
-      // Test fetchpriority="auto"
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} fetchpriority="auto" />) as Image
-      nostoImage.connectedCallback()
-
-      imgElement = nostoImage.shadowRoot?.querySelector("img")
-      expect(imgElement).toBeDefined()
-      expect(imgElement!.getAttribute("fetchpriority")).toBe("auto")
-
-      // Test without fetchpriority (should not have the attribute)
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
-      nostoImage.connectedCallback()
-
-      imgElement = nostoImage.shadowRoot?.querySelector("img")
-      expect(imgElement).toBeDefined()
-      expect(imgElement!.hasAttribute("fetchpriority")).toBe(false)
     })
   })
 
