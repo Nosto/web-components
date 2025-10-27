@@ -65,13 +65,19 @@ export class SimpleCard extends ReactiveElement {
     this.attachShadow({ mode: "open" })
   }
 
+  /**
+   * Implements the abstract render method from ReactiveElement.
+   *
+   * Fetches and renders the product card markup based on the current properties.
+   * This method is called reactively whenever observed attributes change.
+   */
   async render() {
     await loadAndRenderMarkup(this)
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.render()
+    await super.connectedCallback()
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
   }

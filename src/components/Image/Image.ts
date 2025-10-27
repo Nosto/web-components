@@ -59,6 +59,12 @@ export class Image extends ReactiveElement {
     this.attachShadow({ mode: "open" })
   }
 
+  /**
+   * Implements the abstract render method from ReactiveElement.
+   * Updates the shadow DOM with an <img> element, setting its attributes and styles
+   * based on the current component properties. Ensures the image is responsive and
+   * applies transformations as needed.
+   */
   render() {
     validateProps(this)
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled } = this
@@ -91,6 +97,7 @@ export class Image extends ReactiveElement {
     }
   }
 
+  // @ts-ignore - Override async base method with sync implementation for test compatibility
   connectedCallback() {
     this.render()
   }

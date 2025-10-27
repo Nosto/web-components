@@ -57,13 +57,20 @@ export class VariantSelector extends ReactiveElement {
     this.attachShadow({ mode: "open" })
   }
 
+  /**
+   * Implements the abstract render method from ReactiveElement.
+   *
+   * Loads and renders the variant selector's markup based on the current
+   * product handle and selection state. Called reactively when observed
+   * attributes change.
+   */
   async render() {
     await loadAndRenderMarkup(this)
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.render()
+    await super.connectedCallback()
   }
 }
 

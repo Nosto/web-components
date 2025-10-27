@@ -14,5 +14,9 @@ export abstract class ReactiveElement extends NostoElement {
     }
   }
 
+  async connectedCallback() {
+    await this.render()
+  }
+
   abstract render(): Promise<void> | void
 }

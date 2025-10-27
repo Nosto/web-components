@@ -42,6 +42,11 @@ export class DynamicCard extends ReactiveElement {
   placeholder?: boolean
   lazy?: boolean
 
+  /**
+   * Implements the abstract render method from ReactiveElement.
+   * Fetches and renders the product markup based on the current properties.
+   * Called automatically when observed attributes change, enabling reactive updates.
+   */
   async render() {
     await loadAndRenderMarkup(this)
   }
