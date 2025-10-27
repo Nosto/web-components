@@ -541,33 +541,33 @@ describe("VariantSelector", () => {
     expect(selector.selectedOptions["Color"]).toBe("Blue")
   })
 
-  it("should mark unavailable option values with unavailable part attribute", async () => {
-    const productWithUnavailableVariants: ShopifyProduct = {
-      ...mockProductWithVariants,
-      variants: [
-        {
-          ...mockProductWithVariants.variants[0],
-          id: 1001,
-          options: ["Small", "Red"],
-          available: true
-        },
-        {
-          ...mockProductWithVariants.variants[1],
-          id: 1002,
-          options: ["Medium", "Blue"],
-          available: false // Unavailable
-        },
-        {
-          ...mockProductWithVariants.variants[2],
-          id: 1003,
-          options: ["Large", "Red"],
-          available: true
-        }
-      ]
-    }
+  const mockProductWithUnavailableVariants: ShopifyProduct = {
+    ...mockProductWithVariants,
+    variants: [
+      {
+        ...mockProductWithVariants.variants[0],
+        id: 1001,
+        options: ["Small", "Red"],
+        available: true
+      },
+      {
+        ...mockProductWithVariants.variants[1],
+        id: 1002,
+        options: ["Medium", "Blue"],
+        available: false // Unavailable
+      },
+      {
+        ...mockProductWithVariants.variants[2],
+        id: 1003,
+        options: ["Large", "Red"],
+        available: true
+      }
+    ]
+  }
 
+  it("should mark unavailable option values with unavailable part attribute", async () => {
     addProductHandlers({
-      "unavailable-test": { product: productWithUnavailableVariants }
+      "unavailable-test": { product: mockProductWithUnavailableVariants }
     })
 
     const selector = (<nosto-variant-selector handle="unavailable-test" />) as VariantSelector
@@ -602,32 +602,8 @@ describe("VariantSelector", () => {
   })
 
   it("should apply unavailable part attribute enabling pointer-events: none via CSS", async () => {
-    const productWithUnavailableVariants: ShopifyProduct = {
-      ...mockProductWithVariants,
-      variants: [
-        {
-          ...mockProductWithVariants.variants[0],
-          id: 1001,
-          options: ["Small", "Red"],
-          available: true
-        },
-        {
-          ...mockProductWithVariants.variants[1],
-          id: 1002,
-          options: ["Medium", "Blue"],
-          available: false // Unavailable
-        },
-        {
-          ...mockProductWithVariants.variants[2],
-          id: 1003,
-          options: ["Large", "Red"],
-          available: true
-        }
-      ]
-    }
-
     addProductHandlers({
-      "unavailable-test": { product: productWithUnavailableVariants }
+      "unavailable-test": { product: mockProductWithUnavailableVariants }
     })
 
     const selector = (<nosto-variant-selector handle="unavailable-test" preselect />) as VariantSelector
