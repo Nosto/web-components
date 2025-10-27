@@ -33,7 +33,7 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {boolean} filtered - Whether to only show options leading to available variants. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
- * @fires VariantSelector#@nosto/VariantSelector/rendered - Emitted when the component has finished rendering
+ * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {

@@ -574,7 +574,7 @@ describe("SimpleCard", () => {
 
     // Final content should be from fetched data (network overrides product property)
     expect(getShadowContent(card)).toContain("Awesome Test Product")
-    // Should be called twice - once for product property, once for fetched data
-    expect(eventCount).toBe(2)
+    // Should be called only once for product property render (network fetch doesn't emit when product property exists)
+    expect(eventCount).toBe(1)
   })
 })
