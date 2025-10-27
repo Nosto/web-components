@@ -1,3 +1,17 @@
+# [9.10.0](https://github.com/Nosto/web-components/compare/v9.9.0...v9.10.0) (2025-10-27)
+
+
+### Bug Fixes
+
+* **docs:** correct VariantSelector category from Category to Campaign level templating ([dbcbbbe](https://github.com/Nosto/web-components/commit/dbcbbbee8cd8a1a3216102f420542b74503e78b7))
+* **docs:** remove stray comma and complete example externalization ([8caebf8](https://github.com/Nosto/web-components/commit/8caebf8df5e1bff760878a24bc33a1cc2cbd9f39))
+* **docs:** update SectionCampaign Liquid template example per review feedback ([cd89de8](https://github.com/Nosto/web-components/commit/cd89de899ab277318a302644c0a67336396cb439))
+
+
+### Features
+
+* add typedoc-plugin-markdown and move examples to header section ([30cc435](https://github.com/Nosto/web-components/commit/30cc435aaab66535e7de9ae5f4b921c8b49fa02b))
+
 # [9.9.0](https://github.com/Nosto/web-components/compare/v9.8.2...v9.9.0) (2025-10-27)
 
 
