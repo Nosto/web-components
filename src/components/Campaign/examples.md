@@ -1,6 +1,6 @@
 ## Examples
 
-### Basic campaign rendering with HTML mode
+### Basic campaign rendering with HTML response mode
 
 This is the simplest campaign implementation that fetches content from Nosto for the "front-page" placement and renders it directly using HTML response mode. The campaign content is provided by Nosto's recommendation engine and displayed as-is.
 
