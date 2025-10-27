@@ -13,8 +13,8 @@ This is the simplest campaign implementation that fetches content from Nosto for
 This example demonstrates custom template-based rendering using Vue-like syntax. Instead of using Nosto's pre-rendered HTML, this approach gives you full control over the campaign layout and styling using a template element with Vue directives.
 
 ```html
-<nosto-campaign placement="front-page" template="my-template">
-  <template id="my-template">
+<nosto-campaign placement="front-page">
+  <template>
     <div class="campaign">
       <h2>{{ title }}</h2>
       <div class="products">
