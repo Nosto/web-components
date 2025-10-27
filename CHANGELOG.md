@@ -1,3 +1,10 @@
+## [9.10.2](https://github.com/Nosto/web-components/compare/v9.10.1...v9.10.2) (2025-10-27)
+
+
+### Bug Fixes
+
+* listen only to handle changes ([d25ab1c](https://github.com/Nosto/web-components/commit/d25ab1cf9b67af7a0f283386ff7c80c2b0e9680f))
+
 ## [9.10.1](https://github.com/Nosto/web-components/compare/v9.10.0...v9.10.1) (2025-10-27)
 
 
