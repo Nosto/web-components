@@ -17,6 +17,7 @@
   --value-active-hover-bg: #0056b3;
   --value-active-hover-border: #0056b3;
   --value-focus-color: #007bff;
+  --value-unavailable-opacity: 0.5;
   --loading-opacity: 0.7;
 }
 
@@ -73,7 +74,7 @@
 
 .value[part="value unavailable"] {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: var(--value-unavailable-opacity);
   pointer-events: none;
 }
 
