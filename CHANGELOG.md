@@ -1,3 +1,10 @@
+## [9.10.1](https://github.com/Nosto/web-components/compare/v9.10.0...v9.10.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* improve variant preselection logic ([18b2809](https://github.com/Nosto/web-components/commit/18b280924d58a242e789f01faf2ef23a1ebae269))
+
 # [9.10.0](https://github.com/Nosto/web-components/compare/v9.9.0...v9.10.0) (2025-10-27)
 
 
