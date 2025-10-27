@@ -57,8 +57,8 @@ export class VariantSelector extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback() {
-    if (this.isConnected) {
+  async attributeChangedCallback(name: string) {
+    if (this.isConnected && name === "handle") {
       await loadAndRenderMarkup(this)
     }
   }
