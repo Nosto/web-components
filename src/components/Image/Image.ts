@@ -59,8 +59,8 @@ export class Image extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  attributeChangedCallback(_: string, ov: string | null, nv: string | null) {
-    if (this.isConnected && ov !== nv) {
+  attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
+    if (this.isConnected && oldValue !== newValue) {
       this.connectedCallback()
     }
   }
