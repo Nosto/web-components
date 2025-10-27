@@ -6,6 +6,7 @@ import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/shopify/types"
+import { JSONProduct } from "@nosto/nosto-js/client"
 
 describe("SimpleCard", () => {
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
@@ -519,5 +520,61 @@ describe("SimpleCard", () => {
     // Verify that the image was updated to the blue variant
     const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
     expect(primaryImg?.src).toBe("https://example.com/blue.jpg")
+  })
+
+  it("should emit SimpleCard/rendered event when content is loaded", async () => {
+    const validProduct = { ...mockProduct, title: "Event Test Product" }
+    addProductHandlers({
+      "event-test-handle": { product: validProduct }
+    })
+
+    const card = (<nosto-simple-card handle="event-test-handle" />) as SimpleCard
+
+    // Set up event listener to capture the event
+    let eventEmitted = false
+    card.addEventListener("@nosto/SimpleCard/rendered", () => {
+      eventEmitted = true
+    })
+
+    // Call connectedCallback manually since it's not automatically triggered in tests
+    await card.connectedCallback()
+
+    expect(getShadowContent(card)).toContain("Event Test Product")
+    expect(eventEmitted).toBe(true)
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
+  it("should emit SimpleCard/rendered event when product property is set", async () => {
+    // Set up mock for the network fetch that will also happen
+    addProductHandlers({
+      "test-handle": { product: mockProduct }
+    })
+
+    const mockJSONProduct: JSONProduct = {
+      image_url: "https://example.com/json-product.jpg",
+      alternate_image_urls: ["https://example.com/json-alt.jpg"],
+      name: "JSON Product Test",
+      brand: "JSON Brand",
+      url: "https://example.com/json-product",
+      list_price: 2999,
+      price: 1999
+    } as JSONProduct
+
+    const card = (<nosto-simple-card handle="test-handle" />) as SimpleCard
+    card.product = mockJSONProduct
+
+    // Set up event listener to capture the event
+    let eventCount = 0
+    card.addEventListener("@nosto/SimpleCard/rendered", () => {
+      eventCount++
+    })
+
+    // Call connectedCallback manually - this should render using the product property AND fetch
+    await card.connectedCallback()
+
+    // Final content should be from fetched data (network overrides product property)
+    expect(getShadowContent(card)).toContain("Awesome Test Product")
+    // Should be called twice - once for product property, once for fetched data
+    expect(eventCount).toBe(2)
   })
 })

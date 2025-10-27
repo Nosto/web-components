@@ -10,6 +10,9 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
 const setShadowContent = shadowContentFactory(styles)
 
+/** Event name for the VariantSelector rendered event */
+const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
+
 /**
  * A custom element that displays product variant options as clickable pills.
  *
@@ -30,6 +33,7 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {boolean} filtered - Whether to only show options leading to available variants. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
+ * @fires VariantSelector#@nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {
@@ -92,6 +96,8 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     if (Object.keys(element.selectedOptions).length > 0) {
       emitVariantChange(element, productData)
     }
+
+    element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   } finally {
     element.toggleAttribute("loading", false)
   }
