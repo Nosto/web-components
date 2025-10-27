@@ -23,6 +23,8 @@ const setShadowContent = shadowContentFactory(styles)
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be
  * customized using the following CSS custom properties:
  *
+ * {@include ./examples.md}
+ *
  * @category Campaign level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
@@ -31,20 +33,6 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
- *
- * @example
- * Basic product card with all features:
- * ```html
- * <nosto-simple-card handle="awesome-product" alternate brand discount rating></nosto-simple-card>
- * ```
- *
- * @example
- * Product card with nested variant selector for interactive options:
- * ```html
- * <nosto-simple-card handle="configurable-product" brand discount>
- *   <nosto-variant-selector handle="configurable-product" preselect></nosto-variant-selector>
- * </nosto-simple-card>
- * ```
  */
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
