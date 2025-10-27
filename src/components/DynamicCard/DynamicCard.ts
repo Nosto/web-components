@@ -42,8 +42,8 @@ export class DynamicCard extends NostoElement {
   placeholder?: boolean
   lazy?: boolean
 
-  async attributeChangedCallback() {
-    if (this.isConnected) {
+  async attributeChangedCallback(_: string, ov: string | null, nv: string | null) {
+    if (this.isConnected && ov !== nv) {
       await loadAndRenderMarkup(this)
     }
   }
