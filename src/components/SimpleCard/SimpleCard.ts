@@ -65,8 +65,8 @@ export class SimpleCard extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback() {
-    if (this.isConnected) {
+  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
+    if (this.isConnected && oldValue !== newValue) {
       await loadAndRenderMarkup(this)
     }
   }
