@@ -2,21 +2,23 @@
 
 ### Using with Shopify image URL
 
+This example demonstrates basic image rendering using a Shopify CDN URL with fixed dimensions and center cropping. The componen utilizes the resizing and transformation capabilties of Shopify's Image CDN internally and renders a responsive img element internally.
+
 ```html
 <nosto-image src="https://cdn.shopify.com/static/sample-images/bath.jpeg" width="800" height="600" crop="center"></nosto-image>
 ```
 
-This example demonstrates basic image rendering using a Shopify CDN URL with fixed dimensions and center cropping. The componen utilizes the resizing and transformation capabilties of Shopify's Image CDN internally and renders a responsive img element internally.
-
 ### Using with BigCommerce image URL
+
+This shows how to use the component with BigCommerce image URLs. The component recognizes BigCommerce CDN patterns and applies appropriate image transformations for optimal loading performance.
 
 ```html
 <nosto-image src="https://cdn11.bigcommerce.com/s-hm8pjhul3k/products/4055/images/23603/7-15297__04892.1719977920.1280.1280.jpg" width="800" height="600"></nosto-image>
 ```
 
-This shows how to use the component with BigCommerce image URLs. The component recognizes BigCommerce CDN patterns and applies appropriate image transformations for optimal loading performance.
-
 ### Using with responsive sizes attribute
+
+This example demonstrates responsive image loading with the `sizes` attribute, which helps the browser choose the optimal image size based on viewport width. The aspect ratio is controlled rather than a fixed height, making it more flexible for responsive layouts.
 
 ```html
 <nosto-image
@@ -28,9 +30,9 @@ This shows how to use the component with BigCommerce image URLs. The component r
 </nosto-image>
 ```
 
-This example demonstrates responsive image loading with the `sizes` attribute, which helps the browser choose the optimal image size based on viewport width. The aspect ratio is controlled rather than a fixed height, making it more flexible for responsive layouts.
-
 ### Using with custom breakpoints
+
+This shows how to specify custom breakpoints for responsive image generation. Instead of using default breakpoints, you can define specific widths that match your design system or layout requirements.
 
 ```html
 <nosto-image
@@ -42,9 +44,9 @@ This example demonstrates responsive image loading with the `sizes` attribute, w
 </nosto-image>
 ```
 
-This shows how to specify custom breakpoints for responsive image generation. Instead of using default breakpoints, you can define specific widths that match your design system or layout requirements.
-
 ### Using with unstyled attribute to prevent inline styles
+
+This example shows how to use the `unstyled` attribute to prevent the component from applying inline styles to the image element. This is useful when you want to handle all styling through CSS classes instead of relying on the component's default styling.
 
 ```html
 <nosto-image
@@ -55,5 +57,3 @@ This shows how to specify custom breakpoints for responsive image generation. In
   alt="Product image without inline styles">
 </nosto-image>
 ```
-
-This example shows how to use the `unstyled` attribute to prevent the component from applying inline styles to the image element. This is useful when you want to handle all styling through CSS classes instead of relying on the component's default styling.
