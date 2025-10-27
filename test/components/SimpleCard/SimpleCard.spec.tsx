@@ -295,7 +295,7 @@ describe("SimpleCard", () => {
     expect(getShadowContent(card)).toContain("Product 1")
 
     card.handle = "product-2"
-    await card.attributeChangedCallback()
+    await card.attributeChangedCallback("handle", "product-1", "product-2")
     expect(getShadowContent(card)).toContain("Product 2")
   })
 
