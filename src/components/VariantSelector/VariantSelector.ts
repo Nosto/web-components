@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
@@ -32,7 +32,7 @@ const setShadowContent = shadowContentFactory(styles)
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  */
 @customElement("nosto-variant-selector", { observe: true })
-export class VariantSelector extends NostoElement {
+export class VariantSelector extends ReactiveElement {
   /** @private */
   static properties = {
     handle: String,
@@ -57,15 +57,13 @@ export class VariantSelector extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
+  async render() {
+    await loadAndRenderMarkup(this)
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.render()
   }
 }
 

@@ -2,7 +2,7 @@ import type { Crop, ImageProps } from "./types"
 import { customElement } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 
 /**
  * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
@@ -28,7 +28,7 @@ import { NostoElement } from "../Element"
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  */
 @customElement("nosto-image", { observe: true })
-export class Image extends NostoElement {
+export class Image extends ReactiveElement {
   /** @private */
   static properties = {
     src: String,
@@ -59,14 +59,7 @@ export class Image extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      this.connectedCallback()
-    }
-  }
-
-  connectedCallback() {
-    validateProps(this)
+  render() {
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled } = this
 
     // Create props object and filter out null/undefined values
@@ -95,6 +88,11 @@ export class Image extends NostoElement {
       setProps(img, transformProps, unstyled)
       this.shadowRoot!.replaceChildren(img)
     }
+  }
+
+  connectedCallback() {
+    validateProps(this)
+    this.render()
   }
 }
 

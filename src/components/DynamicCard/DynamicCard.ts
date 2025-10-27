@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
@@ -24,7 +24,7 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
  */
 @customElement("nosto-dynamic-card", { observe: true })
-export class DynamicCard extends NostoElement {
+export class DynamicCard extends ReactiveElement {
   /** @private */
   static properties = {
     handle: String,
@@ -42,10 +42,8 @@ export class DynamicCard extends NostoElement {
   placeholder?: boolean
   lazy?: boolean
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
+  async render() {
+    await loadAndRenderMarkup(this)
   }
 
   async connectedCallback() {
@@ -59,12 +57,12 @@ export class DynamicCard extends NostoElement {
       const observer = new IntersectionObserver(async entries => {
         if (entries[0].isIntersecting) {
           observer.disconnect()
-          await loadAndRenderMarkup(this)
+          await this.render()
         }
       })
       observer.observe(this)
     } else {
-      await loadAndRenderMarkup(this)
+      await this.render()
     }
   }
 }

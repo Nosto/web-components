@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
 import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
@@ -35,7 +35,7 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  */
 @customElement("nosto-simple-card", { observe: true })
-export class SimpleCard extends NostoElement {
+export class SimpleCard extends ReactiveElement {
   /** @private */
   static properties = {
     handle: String,
@@ -65,15 +65,13 @@ export class SimpleCard extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
+  async render() {
+    await loadAndRenderMarkup(this)
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.render()
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
   }

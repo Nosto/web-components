@@ -6,3 +6,13 @@ export abstract class NostoElement extends HTMLElement {
     logFirstUsage()
   }
 }
+
+export abstract class ReactiveElement extends NostoElement {
+  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
+    if (this.isConnected && oldValue !== newValue) {
+      await this.render()
+    }
+  }
+
+  abstract render(): Promise<void> | void
+}
