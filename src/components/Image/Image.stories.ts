@@ -99,6 +99,11 @@ const meta: Meta = {
     unstyled: {
       control: "boolean",
       description: "When enabled, prevents inline styles from being applied to the image element."
+    },
+    fetchpriority: {
+      control: { type: "select" },
+      options: ["high", "low", "auto"],
+      description: "Provides a hint to the browser about the priority of this image relative to other images."
     }
   },
   tags: ["autodocs"]
@@ -255,6 +260,35 @@ export const CustomBreakpoints: Story = {
           Demonstrates the use of custom breakpoints for responsive image generation.
           The component accepts a breakpoints property as a JSON array of numbers representing widths.
           These breakpoints are used by the unpic library to generate appropriate srcset values.
+        `
+      }
+    }
+  }
+}
+
+export const FetchPriority: Story = {
+  args: {
+    src: "https://picsum.photos/id/25/800/800",
+    width: 400,
+    height: 300,
+    layout: "constrained",
+    fetchpriority: "high"
+  },
+  render: args =>
+    html`<nosto-image
+      src="${args.src}"
+      width="${args.width}"
+      height="${args.height}"
+      layout="${args.layout}"
+      fetchpriority="${ifDefined(args.fetchpriority)}"
+    ></nosto-image>`,
+  parameters: {
+    docs: {
+      description: {
+        story: `
+          Demonstrates the fetchpriority attribute functionality. This attribute provides a hint to the browser about 
+          the priority of this image relative to other images. Valid values are "high", "low", and "auto".
+          Use "high" for above-the-fold content, "low" for below-the-fold content, and "auto" for default behavior.
         `
       }
     }

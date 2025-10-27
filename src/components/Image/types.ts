@@ -13,6 +13,7 @@ export type ImageProps = {
   alt?: string
   sizes?: string
   breakpoints?: number[]
+  fetchpriority?: "high" | "low" | "auto"
 }
 
 export type BaseImageProps = UnpicBaseImageProps<Operations, unknown, CoreImageAttributes<CSSStyleDeclaration>>

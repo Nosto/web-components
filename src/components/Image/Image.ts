@@ -26,6 +26,7 @@ import { NostoElement } from "../Element"
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
+ * @property {"high"|"low"|"auto"} [fetchpriority] (`fetch-priority`) - Provides a hint to the browser about the priority of this image relative to other images.
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -40,7 +41,8 @@ export class Image extends NostoElement {
     alt: String,
     sizes: String,
     breakpoints: Array,
-    unstyled: Boolean
+    unstyled: Boolean,
+    fetchpriority: String
   }
 
   src!: string
@@ -53,6 +55,7 @@ export class Image extends NostoElement {
   sizes?: string
   breakpoints?: number[]
   unstyled?: boolean
+  fetchpriority?: "high" | "low" | "auto"
 
   constructor() {
     super()
@@ -67,7 +70,7 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled } = this
+    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = this
 
     // Create props object and filter out null/undefined values
     const rawProps = {
@@ -79,7 +82,8 @@ export class Image extends NostoElement {
       crop,
       alt,
       sizes,
-      breakpoints
+      breakpoints,
+      fetchpriority
     }
 
     // Filter out null and undefined values
