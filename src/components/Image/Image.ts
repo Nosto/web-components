@@ -60,6 +60,7 @@ export class Image extends ReactiveElement {
   }
 
   render() {
+    validateProps(this)
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled } = this
 
     // Create props object and filter out null/undefined values
@@ -91,7 +92,6 @@ export class Image extends ReactiveElement {
   }
 
   connectedCallback() {
-    validateProps(this)
     this.render()
   }
 }
