@@ -1,3 +1,16 @@
+# [9.9.0](https://github.com/Nosto/web-components/compare/v9.8.2...v9.9.0) (2025-10-27)
+
+
+### Bug Fixes
+
+* improve VariantSelector parts exposure ([38c3e46](https://github.com/Nosto/web-components/commit/38c3e4669812da2d570a991bbc571df0f6c2ecda))
+
+
+### Features
+
+* remove all component cards from Storybook overview page ([6ae094a](https://github.com/Nosto/web-components/commit/6ae094a343a2a97fbb4d8112c9589d0d82793b7f))
+* remove overview links from Storybook overview page ([9484faa](https://github.com/Nosto/web-components/commit/9484faabc122b848e27d1dca37f92179ef345e55))
+
 ## [9.8.2](https://github.com/Nosto/web-components/compare/v9.8.1...v9.8.2) (2025-10-24)
 
 
