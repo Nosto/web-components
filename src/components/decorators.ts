@@ -9,7 +9,8 @@ type Flags = {
 }
 
 export function customElement(tagName: string, flags?: Flags) {
-  return function (constructor: ConstructorWithProperties, context?: ClassDecoratorContext) {
+  return function (constructor: ConstructorWithProperties, context?: ClassDecoratorContext): void {
+    // Define properties immediately
     if (constructor.properties) {
       Object.entries(constructor.properties).forEach(([fieldName, type]) => {
         const propertyDescriptor = getPropertyDescriptor(fieldName, type)
@@ -19,8 +20,20 @@ export function customElement(tagName: string, flags?: Flags) {
         constructor.observedAttributes = Object.keys(constructor.properties).map(toKebabCase)
       }
     }
-    if (!window.customElements.get(tagName)) {
-      window.customElements.define(tagName, constructor)
+
+    // Use addInitializer if context is available to ensure custom element registration 
+    // happens after class construction is complete in TypeScript 5.0+ decorator timing
+    const registerElement = () => {
+      if (!window.customElements.get(tagName)) {
+        window.customElements.define(tagName, constructor)
+      }
+    }
+
+    if (context?.addInitializer) {
+      context.addInitializer(registerElement)
+    } else {
+      // Fallback for direct calls or when context is not available
+      registerElement()
     }
   }
 }

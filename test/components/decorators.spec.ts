@@ -27,6 +27,8 @@ describe("customElement", () => {
     expect(window.customElements.define).toHaveBeenCalledTimes(1)
   })
 
+  type TestElement = HTMLElement & Record<string, unknown>
+
   it("should define properties for attributes", () => {
     const tagName = "my-element3"
     @customElement(tagName)
@@ -39,7 +41,7 @@ describe("customElement", () => {
       }
     }
 
-    const e = new constructor() as HTMLElement & Record<string, unknown>
+    const e = new constructor() as TestElement
     e.foo = "hello"
     e.bar = true
     e.baz = 42
@@ -60,7 +62,7 @@ describe("customElement", () => {
       }
     }
 
-    const e = new constructor() as HTMLElement & Record<string, unknown>
+    const e = new constructor() as TestElement
 
     // Test setting array value
     e.numbers = [100, 200, 300]
@@ -101,7 +103,7 @@ describe("customElement", () => {
       }
     }
 
-    const e = new constructor() as HTMLElement & Record<string, unknown>
+    const e = new constructor() as TestElement
 
     // Set initial array value
     e.list = [1, 2, 3]
