@@ -71,27 +71,28 @@ export function customElement<T extends HTMLElement>(tagName: string, flags?: Fl
 }
 
 // Property decorators
-export function attrString(target: HTMLElement, propertyKey: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function attrString(target: any, propertyKey: string) {
   addPropertyMetadata(target, propertyKey, "string")
 }
 
-export function attrBoolean(target: HTMLElement, propertyKey: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function attrBoolean(target: any, propertyKey: string) {
   addPropertyMetadata(target, propertyKey, "boolean")
 }
 
-export function attrNumber(target: HTMLElement, propertyKey: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function attrNumber(target: any, propertyKey: string) {
   addPropertyMetadata(target, propertyKey, "number")
 }
 
-export function attrArray(target: HTMLElement, propertyKey: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function attrArray(target: any, propertyKey: string) {
   addPropertyMetadata(target, propertyKey, "array")
 }
 
-function addPropertyMetadata(
-  target: HTMLElement,
-  propertyKey: string,
-  type: "string" | "boolean" | "number" | "array"
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addPropertyMetadata(target: any, propertyKey: string, type: "string" | "boolean" | "number" | "array") {
   const constructor = target.constructor as ConstructorWithMetadata
   if (!constructor[PROPERTY_METADATA_KEY]) {
     constructor[PROPERTY_METADATA_KEY] = new Map()
