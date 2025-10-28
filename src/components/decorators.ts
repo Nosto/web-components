@@ -1,3 +1,24 @@
+// Internal metadata storage for property decorators
+const OBSERVED_ATTRIBUTES_KEY = Symbol('observedAttributes')
+const PROPERTY_METADATA_KEY = Symbol('propertyMetadata')
+
+type PropertyMetadata = {
+  attributeName: string
+  type: 'string' | 'boolean' | 'number' | 'array'
+}
+
+type ConstructorWithMetadata = {
+  new (): HTMLElement
+  [OBSERVED_ATTRIBUTES_KEY]?: string[]
+  [PROPERTY_METADATA_KEY]?: Map<string, PropertyMetadata>
+  observedAttributes?: string[]
+}
+
+type Flags = {
+  observe?: boolean
+}
+
+// Legacy type for backward compatibility
 type FieldType<T> = T extends string
   ? StringConstructor
   : T extends number
@@ -8,31 +29,72 @@ type FieldType<T> = T extends string
         ? ArrayConstructor
         : never
 
-type ConstructorMetadata<T extends HTMLElement> = {
+type LegacyConstructorMetadata<T extends HTMLElement> = {
   new (): T
   properties?: { [K in keyof T]?: FieldType<T[K]> }
   observedAttributes?: string[]
 }
 
-type Flags = {
-  observe?: boolean
-}
-
 export function customElement<T extends HTMLElement>(tagName: string, flags?: Flags) {
-  return function (constructor: ConstructorMetadata<T>) {
-    if (constructor.properties) {
-      Object.entries(constructor.properties).forEach(([fieldName, type]) => {
+  return function (constructor: ConstructorWithMetadata | LegacyConstructorMetadata<T>) {
+    // Handle new property decorator metadata
+    const metadata = (constructor as ConstructorWithMetadata)[PROPERTY_METADATA_KEY]
+    if (metadata) {
+      metadata.forEach((propMeta, propertyName) => {
+        const propertyDescriptor = getPropertyDescriptorByType(propMeta.attributeName, propMeta.type)
+        Object.defineProperty(constructor.prototype, propertyName, propertyDescriptor)
+      })
+      
+      if (flags?.observe) {
+        const observedAttrs = Array.from(metadata.values()).map(meta => meta.attributeName)
+        constructor.observedAttributes = observedAttrs
+      }
+    }
+    
+    // Handle legacy static properties for backward compatibility
+    const legacyConstructor = constructor as LegacyConstructorMetadata<T>
+    if (legacyConstructor.properties) {
+      Object.entries(legacyConstructor.properties).forEach(([fieldName, type]) => {
         const propertyDescriptor = getPropertyDescriptor(fieldName, type)
         Object.defineProperty(constructor.prototype, fieldName, propertyDescriptor)
       })
       if (flags?.observe) {
-        constructor.observedAttributes = Object.keys(constructor.properties).map(toKebabCase)
+        constructor.observedAttributes = Object.keys(legacyConstructor.properties).map(toKebabCase)
       }
     }
+    
+    // Register the custom element
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
     }
   }
+}
+
+// Property decorators
+export function attrString(target: any, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, 'string')
+}
+
+export function attrBoolean(target: any, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, 'boolean')  
+}
+
+export function attrNumber(target: any, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, 'number')
+}
+
+export function attrArray(target: any, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, 'array')
+}
+
+function addPropertyMetadata(target: any, propertyKey: string, type: 'string' | 'boolean' | 'number' | 'array') {
+  const constructor = target.constructor
+  if (!constructor[PROPERTY_METADATA_KEY]) {
+    constructor[PROPERTY_METADATA_KEY] = new Map()
+  }
+  
+  const attributeName = toKebabCase(propertyKey)
+  constructor[PROPERTY_METADATA_KEY].set(propertyKey, { attributeName, type })
 }
 
 function getPropertyDescriptor(propertyName: string, type: unknown) {
@@ -45,6 +107,20 @@ function getPropertyDescriptor(propertyName: string, type: unknown) {
     return arrayAttribute(attributeName)
   }
   return stringAttribute(attributeName)
+}
+
+function getPropertyDescriptorByType(attributeName: string, type: 'string' | 'boolean' | 'number' | 'array') {
+  switch (type) {
+    case 'boolean':
+      return booleanAttribute(attributeName)
+    case 'number':
+      return numberAttribute(attributeName)
+    case 'array':
+      return arrayAttribute(attributeName)
+    case 'string':
+    default:
+      return stringAttribute(attributeName)
+  }
 }
 
 function toKebabCase(str: string) {

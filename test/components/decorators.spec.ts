@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { customElement } from "../../src/components/decorators"
+import { customElement, attrString, attrBoolean, attrNumber, attrArray } from "../../src/components/decorators"
 
 describe("customElement", () => {
   beforeEach(() => {
@@ -129,5 +129,86 @@ describe("customElement", () => {
     ;(e as any).list = null
     expect(e.hasAttribute("list")).toBe(false)
     expect(e.list).toBeUndefined()
+  })
+})
+
+describe("Property decorators", () => {
+  it("should work with property decorators instead of static properties", () => {
+    const tagName = "new-element1"
+    @customElement(tagName)
+    class NewElement extends HTMLElement {
+      @attrString
+      name!: string
+
+      @attrBoolean  
+      active!: boolean
+
+      @attrNumber
+      count!: number
+
+      @attrArray
+      items!: unknown[]
+    }
+
+    const e = new NewElement()
+
+    // Test string attribute
+    e.name = "test"
+    expect(e.getAttribute("name")).toBe("test")
+    
+    // Test boolean attribute  
+    e.active = true
+    expect(e.getAttribute("active")).toBe("")
+    expect(e.active).toBe(true)
+
+    // Test number attribute
+    e.count = 42
+    expect(e.getAttribute("count")).toBe("42")
+    expect(e.count).toBe(42)
+
+    // Test array attribute
+    e.items = [1, 2, 3]
+    expect(e.getAttribute("items")).toBe("[1,2,3]")
+    expect(e.items).toEqual([1, 2, 3])
+  })
+
+  it("should support kebab-case attribute names for property decorators", () => {
+    const tagName = "new-element2"
+    @customElement(tagName)
+    class NewElement extends HTMLElement {
+      @attrString
+      myProperty!: string
+
+      @attrBoolean
+      isActive!: boolean
+    }
+
+    const e = new NewElement()
+
+    // Test that camelCase properties map to kebab-case attributes
+    e.myProperty = "test"
+    expect(e.getAttribute("my-property")).toBe("test")
+    
+    e.isActive = true
+    expect(e.getAttribute("is-active")).toBe("")
+  })
+
+  it("should support observe flag with property decorators", () => {
+    const tagName = "new-element3"
+    @customElement(tagName, { observe: true })
+    class NewElement extends HTMLElement {
+      @attrString
+      name!: string
+
+      @attrBoolean
+      active!: boolean
+
+      attributeChangedCallback() {
+        // This would be called if observedAttributes is set correctly
+      }
+    }
+
+    // Check that observedAttributes is set correctly
+    expect(NewElement.observedAttributes).toEqual(['name', 'active'])
   })
 })
