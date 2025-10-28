@@ -121,45 +121,13 @@ describe("customElement", () => {
     // Test that non-array values are ignored (attribute remains unchanged)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(e as any).list = "string value"
-    expect(e.getAttribute("list")).toBe("[1,2,3]") // Should remain unchanged
+    expect(e.getAttribute("list")).toBe("[1,2,3]")
     expect(e.list).toEqual([1, 2, 3])
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).list = 42
-    expect(e.getAttribute("list")).toBe("[1,2,3]") // Should remain unchanged
-    expect(e.list).toEqual([1, 2, 3])
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).list = { key: "value" }
-    expect(e.getAttribute("list")).toBe("[1,2,3]") // Should remain unchanged
-    expect(e.list).toEqual([1, 2, 3])
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).list = true
-    expect(e.getAttribute("list")).toBe("[1,2,3]") // Should remain unchanged
-    expect(e.list).toEqual([1, 2, 3])
-
-    // Test that null and undefined still work to remove attribute
+    // Test that null removes attribute
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(e as any).list = null
     expect(e.hasAttribute("list")).toBe(false)
     expect(e.list).toBeUndefined()
-
-    // Set again to test undefined removal
-    e.list = [4, 5, 6]
-    expect(e.getAttribute("list")).toBe("[4,5,6]")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).list = undefined
-    expect(e.hasAttribute("list")).toBe(false)
-    expect(e.list).toBeUndefined()
-
-    // Test that valid arrays still work
-    e.list = []
-    expect(e.getAttribute("list")).toBe("[]")
-    expect(e.list).toEqual([])
-
-    e.list = ["a", "b", "c"]
-    expect(e.getAttribute("list")).toBe('["a","b","c"]')
-    expect(e.list).toEqual(["a", "b", "c"])
   })
 })

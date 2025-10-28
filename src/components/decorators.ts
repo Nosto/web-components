@@ -121,7 +121,6 @@ function arrayAttribute(attributeName: string) {
       } else if (Array.isArray(value)) {
         this.setAttribute(attributeName, JSON.stringify(value))
       }
-      // Ignore non-array values - attribute remains unchanged
     },
     configurable: true,
     enumerable: true
