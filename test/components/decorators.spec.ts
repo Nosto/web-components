@@ -37,14 +37,9 @@ describe("customElement", () => {
         baz: Number,
         qux: Array
       }
-
-      foo!: string
-      bar!: boolean
-      baz!: number
-      qux!: number[]
     }
 
-    const e = new constructor()
+    const e = new constructor() as HTMLElement & Record<string, unknown>
     e.foo = "hello"
     e.bar = true
     e.baz = 42
@@ -63,11 +58,9 @@ describe("customElement", () => {
       static properties = {
         numbers: Array
       }
-
-      numbers!: number[]
     }
 
-    const e = new constructor()
+    const e = new constructor() as HTMLElement & Record<string, unknown>
 
     // Test setting array value
     e.numbers = [100, 200, 300]
@@ -95,8 +88,7 @@ describe("customElement", () => {
     expect(e.numbers).toBeUndefined()
 
     // Test removing attribute
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).numbers = undefined
+    e.numbers = undefined
     expect(e.hasAttribute("numbers")).toBe(false)
   })
 
@@ -107,11 +99,9 @@ describe("customElement", () => {
       static properties = {
         list: Array
       }
-
-      list!: unknown[]
     }
 
-    const e = new constructor()
+    const e = new constructor() as HTMLElement & Record<string, unknown>
 
     // Set initial array value
     e.list = [1, 2, 3]
@@ -119,14 +109,12 @@ describe("customElement", () => {
     expect(e.list).toEqual([1, 2, 3])
 
     // Test that non-array values are ignored (attribute remains unchanged)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).list = "string value"
+    e.list = "string value"
     expect(e.getAttribute("list")).toBe("[1,2,3]")
     expect(e.list).toEqual([1, 2, 3])
 
     // Test that null removes attribute
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).list = null
+    e.list = null
     expect(e.hasAttribute("list")).toBe(false)
     expect(e.list).toBeUndefined()
   })

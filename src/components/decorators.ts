@@ -1,16 +1,6 @@
-type FieldType<T> = T extends string
-  ? StringConstructor
-  : T extends number
-    ? NumberConstructor
-    : T extends boolean
-      ? BooleanConstructor
-      : T extends unknown[]
-        ? ArrayConstructor
-        : never
-
-type ConstructorMetadata<T extends HTMLElement> = {
-  new (): T
-  properties?: { [K in keyof T]?: FieldType<T[K]> }
+type ConstructorWithProperties = {
+  new (...args: unknown[]): HTMLElement
+  properties?: Record<string, unknown>
   observedAttributes?: string[]
 }
 
@@ -18,8 +8,8 @@ type Flags = {
   observe?: boolean
 }
 
-export function customElement<T extends HTMLElement>(tagName: string, flags?: Flags) {
-  return function (constructor: ConstructorMetadata<T>) {
+export function customElement(tagName: string, flags?: Flags) {
+  return function (constructor: ConstructorWithProperties, context?: ClassDecoratorContext) {
     if (constructor.properties) {
       Object.entries(constructor.properties).forEach(([fieldName, type]) => {
         const propertyDescriptor = getPropertyDescriptor(fieldName, type)
