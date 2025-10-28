@@ -99,4 +99,35 @@ describe("customElement", () => {
     ;(e as any).numbers = undefined
     expect(e.hasAttribute("numbers")).toBe(false)
   })
+
+  it("should ignore non-array values in array attribute setter", () => {
+    const tagName = "my-element5"
+    @customElement(tagName)
+    class constructor extends HTMLElement {
+      static properties = {
+        list: Array
+      }
+
+      list!: unknown[]
+    }
+
+    const e = new constructor()
+
+    // Set initial array value
+    e.list = [1, 2, 3]
+    expect(e.getAttribute("list")).toBe("[1,2,3]")
+    expect(e.list).toEqual([1, 2, 3])
+
+    // Test that non-array values are ignored (attribute remains unchanged)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(e as any).list = "string value"
+    expect(e.getAttribute("list")).toBe("[1,2,3]")
+    expect(e.list).toEqual([1, 2, 3])
+
+    // Test that null removes attribute
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(e as any).list = null
+    expect(e.hasAttribute("list")).toBe(false)
+    expect(e.list).toBeUndefined()
+  })
 })

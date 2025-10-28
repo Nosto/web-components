@@ -118,7 +118,7 @@ function arrayAttribute(attributeName: string) {
     set(this: HTMLElement, value?: unknown[]) {
       if (value === null || value === undefined) {
         this.removeAttribute(attributeName)
-      } else {
+      } else if (Array.isArray(value)) {
         this.setAttribute(attributeName, JSON.stringify(value))
       }
     },
