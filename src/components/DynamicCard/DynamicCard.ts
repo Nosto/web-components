@@ -1,8 +1,9 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { customElement, property } from "lit/decorators.js"
+import { LitElement, PropertyValues } from "lit"
+import { logFirstUsage } from "@/logger"
 
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
@@ -23,32 +24,22 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
  */
-@customElement("nosto-dynamic-card", { observe: true })
-export class DynamicCard extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    section: String,
-    template: String,
-    variantId: String,
-    placeholder: Boolean,
-    lazy: Boolean
-  }
+@customElement("nosto-dynamic-card")
+export class DynamicCard extends LitElement {
+  @property() handle!: string
+  @property() section?: string
+  @property() template?: string
+  @property({ attribute: "variant-id" }) variantId?: string
+  @property({ type: Boolean }) placeholder?: boolean
+  @property({ type: Boolean }) lazy?: boolean
 
-  handle!: string
-  section?: string
-  template?: string
-  variantId?: string
-  placeholder?: boolean
-  lazy?: boolean
-
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
+  constructor() {
+    super()
+    logFirstUsage()
   }
 
   async connectedCallback() {
+    super.connectedCallback()
     assertRequired(this, "handle")
     const key = this.template || this.section || ""
     if (this.placeholder && placeholders.has(key)) {
@@ -64,6 +55,12 @@ export class DynamicCard extends NostoElement {
       })
       observer.observe(this)
     } else {
+      await loadAndRenderMarkup(this)
+    }
+  }
+
+  protected async updated(changedProperties: PropertyValues) {
+    if (changedProperties.has("handle") || changedProperties.has("template") || changedProperties.has("section") || changedProperties.has("variantId")) {
       await loadAndRenderMarkup(this)
     }
   }

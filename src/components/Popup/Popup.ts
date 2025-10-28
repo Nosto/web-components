@@ -1,11 +1,9 @@
 import { nostojs } from "@nosto/nosto-js"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { customElement, property, state } from "lit/decorators.js"
+import { LitElement, css, unsafeCSS, html } from "lit"
+import { logFirstUsage } from "@/logger"
 import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
-import { shadowContentFactory } from "@/utils/shadowContentFactory"
-
-const setShadowContent = shadowContentFactory(styles)
 
 /**
  * A custom element that displays popup content with dialog and ribbon slots.
@@ -19,33 +17,50 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
  */
 @customElement("nosto-popup")
-export class Popup extends NostoElement {
-  /** @private */
-  static properties = {
-    name: String,
-    segment: String
-  }
+export class Popup extends LitElement {
+  static styles = css`${unsafeCSS(styles)}`
 
-  name!: string
-  segment?: string
+  @property() name!: string
+  @property() segment?: string
+  @state() popupState: "open" | "ribbon" | "closed" | "loading" = "loading"
 
   constructor() {
     super()
-    this.attachShadow({ mode: "open" })
+    logFirstUsage()
   }
 
   async connectedCallback() {
+    super.connectedCallback()
     assertRequired(this, "name")
     const state = await getPopupState(this.name, this.segment)
     if (state === "closed") {
       this.style.display = "none"
       return
     }
-    if (!this.shadowRoot?.innerHTML) {
-      initializeShadowContent(this, state)
-    }
+    this.popupState = state
     this.addEventListener("click", this)
     setPopupState(this.name, "ribbon")
+  }
+
+  render() {
+    if (this.popupState === "loading") {
+      return html``
+    }
+
+    return html`
+      <dialog part="dialog" ?open=${this.popupState === "open"}>
+        <slot name="default"></slot>
+      </dialog>
+      <div class="ribbon ${this.popupState === "open" ? "hidden" : ""}" part="ribbon">
+        <slot name="ribbon">Open</slot>
+      </div>
+    `
+  }
+
+  protected firstUpdated() {
+    if (this.popupState === "open") {
+      this.shadowRoot?.querySelector("dialog")?.showModal()
+    }
   }
 
   handleEvent(event: Event) {
@@ -79,23 +94,8 @@ type PopupData = {
   state: PopupState
 }
 
-function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  setShadowContent(
-    element,
-    `
-    <dialog part="dialog">
-      <slot name="default"></slot>
-    </dialog>
-    <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
-      <slot name="ribbon">Open</slot>
-    </div>`
-  )
-  if (mode === "open") {
-    element.shadowRoot?.querySelector("dialog")?.showModal()
-  }
-}
-
 function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
+  element.popupState = mode
   const dialog = element.shadowRoot?.querySelector<HTMLDialogElement>("dialog")
   const ribbon = element.shadowRoot?.querySelector(".ribbon")
   if (dialog && ribbon) {

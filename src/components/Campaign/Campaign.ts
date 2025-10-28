@@ -1,9 +1,10 @@
-import { customElement } from "../decorators"
+import { customElement, property } from "lit/decorators.js"
+import { LitElement } from "lit"
+import { logFirstUsage } from "@/logger"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
-import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
 
@@ -32,25 +33,19 @@ import { addRequest } from "./orchestrator"
  * with cart changes. Defaults to false.
  */
 @customElement("nosto-campaign")
-export class Campaign extends NostoElement {
-  /** @private */
-  static properties = {
-    placement: String,
-    productId: String,
-    variantId: String,
-    template: String,
-    init: String,
-    lazy: Boolean,
-    cartSynced: Boolean
-  }
+export class Campaign extends LitElement {
+  @property() placement!: string
+  @property({ attribute: "product-id" }) productId?: string
+  @property({ attribute: "variant-id" }) variantId?: string
+  @property() template?: string
+  @property() init?: string
+  @property({ type: Boolean }) lazy?: boolean
+  @property({ type: Boolean, attribute: "cart-synced" }) cartSynced?: boolean
 
-  placement!: string
-  productId?: string
-  variantId?: string
-  template?: string
-  init?: string
-  lazy?: boolean
-  cartSynced?: boolean
+  constructor() {
+    super()
+    logFirstUsage()
+  }
 
   /** @hidden */
   templateElement?: HTMLTemplateElement
@@ -58,6 +53,7 @@ export class Campaign extends NostoElement {
   #load = this.load.bind(this)
 
   async connectedCallback() {
+    super.connectedCallback()
     if (!this.placement && !this.id) {
       throw new Error("placement or id attribute is required for Campaign")
     }

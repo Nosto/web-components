@@ -1,8 +1,9 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createStore, injectKey, Store } from "./store"
-import { customElement } from "../decorators"
+import { customElement, property } from "lit/decorators.js"
+import { LitElement } from "lit"
+import { logFirstUsage } from "@/logger"
 import { syncSkuData } from "../common"
-import { NostoElement } from "../Element"
 import { provide } from "../inject"
 
 /**
@@ -20,22 +21,21 @@ import { provide } from "../inject"
  * @property {boolean} skuSelected (`sku-selected`) - Indicates whether a SKU is currently selected.
  */
 @customElement("nosto-product")
-export class Product extends NostoElement {
-  /** @private */
-  static properties = {
-    productId: String,
-    recoId: String,
-    skuSelected: Boolean
-  }
-
-  productId!: string
-  recoId!: string
-  skuSelected?: boolean
+export class Product extends LitElement {
+  @property({ attribute: "product-id" }) productId!: string
+  @property({ attribute: "reco-id" }) recoId!: string
+  @property({ type: Boolean, attribute: "sku-selected" }) skuSelected?: boolean
 
   /** @hidden */
   selectedSkuId?: string
 
+  constructor() {
+    super()
+    logFirstUsage()
+  }
+
   connectedCallback() {
+    super.connectedCallback()
     assertRequired(this, "productId", "recoId")
     const store = createStore(this)
     provide(this, injectKey, store)

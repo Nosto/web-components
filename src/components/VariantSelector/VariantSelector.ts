@@ -1,14 +1,12 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { customElement, property, state } from "lit/decorators.js"
+import { LitElement, html, css, unsafeCSS, PropertyValues } from "lit"
+import { logFirstUsage } from "@/logger"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
-import { shadowContentFactory } from "@/utils/shadowContentFactory"
-
-const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
@@ -35,20 +33,15 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
-@customElement("nosto-variant-selector", { observe: true })
-export class VariantSelector extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    variantId: Number,
-    preselect: Boolean,
-    filtered: Boolean
-  }
+@customElement("nosto-variant-selector")
+export class VariantSelector extends LitElement {
+  static styles = css`${unsafeCSS(styles)}`
 
-  handle!: string
-  variantId?: number
-  preselect?: boolean
-  filtered?: boolean
+  @property() handle!: string
+  @property({ type: Number }) variantId?: number
+  @property({ type: Boolean }) preselect?: boolean
+  @property({ type: Boolean }) filtered?: boolean
+  @state() private productData?: ShopifyProduct
 
   /**
    * Internal state for current selections
@@ -58,50 +51,75 @@ export class VariantSelector extends NostoElement {
 
   constructor() {
     super()
-    this.attachShadow({ mode: "open" })
-  }
-
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
+    logFirstUsage()
   }
 
   async connectedCallback() {
+    super.connectedCallback()
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.loadProductData()
   }
-}
 
-async function loadAndRenderMarkup(element: VariantSelector) {
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProductData(element)
+  protected async updated(changedProperties: PropertyValues) {
+    if (changedProperties.has("handle")) {
+      await this.loadProductData()
+    }
+  }
 
-    // Initialize selections with first value of each option
-    initializeDefaultSelections(element, productData)
-
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
-
-    // Setup event listeners for option buttons
-    setupOptionListeners(element)
-
-    // active state for selected options
-    updateActiveStates(element)
-    // unavailable state for options without available variants
-    updateUnavailableStates(element, productData)
-    // TODO disabled state
-
-    if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+  render() {
+    if (!this.productData) {
+      return html`<div>Loading...</div>`
     }
 
-    element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  } finally {
-    element.toggleAttribute("loading", false)
+    return generateVariantSelectorHTML(this, this.productData)
+  }
+
+  protected firstUpdated() {
+    this.setupEventListeners()
+  }
+
+  private async loadProductData() {
+    this.toggleAttribute("loading", true)
+    try {
+      this.productData = await fetchProductData(this)
+      
+      // Initialize selections with first value of each option
+      initializeDefaultSelections(this, this.productData)
+      
+      // Setup active and unavailable states after render
+      this.updateComplete.then(() => {
+        this.updateActiveStates()
+        this.updateUnavailableStates()
+        
+        // Emit variant change if we have selections
+        if (Object.keys(this.selectedOptions).length > 0) {
+          emitVariantChange(this, this.productData!)
+        }
+        
+        // Dispatch rendered event
+        this.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+      })
+    } finally {
+      this.toggleAttribute("loading", false)
+    }
+  }
+
+  private setupEventListeners() {
+    setupOptionListeners(this)
+  }
+
+  private updateActiveStates() {
+    updateActiveStates(this)
+  }
+
+  private updateUnavailableStates() {
+    if (this.productData) {
+      updateUnavailableStates(this, this.productData)
+    }
   }
 }
+
+
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined

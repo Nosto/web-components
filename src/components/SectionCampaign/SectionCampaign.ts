@@ -1,8 +1,9 @@
 import { nostojs } from "@nosto/nosto-js"
 import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { customElement, property } from "lit/decorators.js"
+import { LitElement } from "lit"
+import { logFirstUsage } from "@/logger"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
@@ -18,17 +19,17 @@ import { JSONResult } from "@nosto/nosto-js/client"
  * @property {string} section - The section to be used for Section Rendering API based rendering.
  */
 @customElement("nosto-section-campaign")
-export class SectionCampaign extends NostoElement {
-  /** @private */
-  static properties = {
-    placement: String,
-    section: String
+export class SectionCampaign extends LitElement {
+  @property() placement!: string
+  @property() section!: string
+
+  constructor() {
+    super()
+    logFirstUsage()
   }
 
-  placement!: string
-  section!: string
-
   async connectedCallback() {
+    super.connectedCallback()
     this.toggleAttribute("loading", true)
     try {
       await this.#initializeMarkup()

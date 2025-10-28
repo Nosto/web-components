@@ -1,9 +1,10 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { intersectionOf } from "@/utils/intersectionOf"
 import { injectKey, Store } from "../Product/store"
-import { customElement } from "../decorators"
+import { customElement, property } from "lit/decorators.js"
+import { LitElement } from "lit"
+import { logFirstUsage } from "@/logger"
 import { syncSkuData } from "../common"
-import { NostoElement } from "../Element"
 import { inject } from "../inject"
 
 /**
@@ -27,15 +28,16 @@ import { inject } from "../inject"
  * @property {string} name - Required. The identifier for this option group
  */
 @customElement("nosto-sku-options")
-export class SkuOptions extends NostoElement {
-  /** @private */
-  static properties = {
-    name: String
+export class SkuOptions extends LitElement {
+  @property() name!: string
+
+  constructor() {
+    super()
+    logFirstUsage()
   }
 
-  name!: string
-
   connectedCallback() {
+    super.connectedCallback()
     assertRequired(this, "name")
     initSkuOptions(this, inject(this, injectKey)!)
   }
