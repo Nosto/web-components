@@ -242,6 +242,15 @@ describe("Image", () => {
       expect(imgElement!.getAttribute("alt")).toBe(combinedAltText)
       expect(imgElement!.getAttribute("sizes")).toBe(combinedSizesValue)
     })
+
+    it("should correctly set fetchpriority attribute", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} fetchpriority="high" />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("fetchpriority")).toBe("high")
+    })
   })
 
   describe("Shadow DOM rendering", () => {

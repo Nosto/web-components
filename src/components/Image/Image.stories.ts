@@ -99,6 +99,11 @@ const meta: Meta = {
     unstyled: {
       control: "boolean",
       description: "When enabled, prevents inline styles from being applied to the image element."
+    },
+    fetchpriority: {
+      control: { type: "select" },
+      options: ["high", "low", "auto"],
+      description: "Provides a hint to the browser about the priority of this image relative to other images."
     }
   },
   tags: ["autodocs"]
