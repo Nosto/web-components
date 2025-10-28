@@ -1,3 +1,10 @@
+# [9.12.0](https://github.com/Nosto/web-components/compare/v9.11.0...v9.12.0) (2025-10-28)
+
+
+### Features
+
+* **decorators:** guard arrayAttribute setter against non-array values ([06fc8e1](https://github.com/Nosto/web-components/commit/06fc8e1c0441cd8ad84e00a944a51787c2f2e30a))
+
 # [9.11.0](https://github.com/Nosto/web-components/compare/v9.10.2...v9.11.0) (2025-10-28)
 
 
