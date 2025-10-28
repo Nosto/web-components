@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { customElement, property } from "../../src/components/decorators"
+import { customElement } from "../../src/components/decorators"
 
 describe("customElement", () => {
   beforeEach(() => {

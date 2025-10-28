@@ -14,8 +14,8 @@ type PropertyOptions = {
 }
 
 export function customElement(tagName: string, flags?: Flags) {
-  return function (constructor: ConstructorWithProperties, context?: ClassDecoratorContext): void {
-    // Define properties immediately
+  return function (constructor: ConstructorWithProperties, _context?: ClassDecoratorContext): void {
+    // Define properties immediately - this must happen synchronously
     if (constructor.properties) {
       Object.entries(constructor.properties).forEach(([fieldName, type]) => {
         const propertyDescriptor = getPropertyDescriptor(fieldName, type)
@@ -26,19 +26,9 @@ export function customElement(tagName: string, flags?: Flags) {
       }
     }
 
-    // Use addInitializer if context is available to ensure custom element registration
-    // happens after class construction is complete in TypeScript 5.0+ decorator timing
-    const registerElement = () => {
-      if (!window.customElements.get(tagName)) {
-        window.customElements.define(tagName, constructor)
-      }
-    }
-
-    if (context?.addInitializer) {
-      context.addInitializer(registerElement)
-    } else {
-      // Fallback for direct calls or when context is not available
-      registerElement()
+    // Register the element immediately - the timing doesn't matter for element registration
+    if (!window.customElements.get(tagName)) {
+      window.customElements.define(tagName, constructor)
     }
   }
 }
