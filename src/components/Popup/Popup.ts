@@ -18,7 +18,9 @@ import { assertRequired } from "@/utils/assertRequired"
  */
 @customElement("nosto-popup")
 export class Popup extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `
 
   @property() name!: string
   @property() segment?: string

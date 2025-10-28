@@ -1,6 +1,6 @@
 import type { Crop, ImageProps } from "./types"
 import { customElement, property } from "lit/decorators.js"
-import { LitElement } from "lit"
+import { LitElement, PropertyValues } from "lit"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { logFirstUsage } from "@/logger"
@@ -50,26 +50,39 @@ export class Image extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-    // Only update if we have a valid src to avoid validation errors during tests
+    // Validation needs to happen for tests that expect errors
     if (this.src) {
+      validateProps(this)
       this.updateImage()
     }
   }
 
-  protected updated() {
-    // Only update if component is connected and has valid src
-    if (this.isConnected && this.src) {
+  protected updated(changedProperties: PropertyValues) {
+    // Only update if component is connected, has valid src, and relevant properties changed
+    const relevantProps = [
+      "src",
+      "width",
+      "height",
+      "aspectRatio",
+      "layout",
+      "crop",
+      "alt",
+      "sizes",
+      "breakpoints",
+      "unstyled",
+      "fetchpriority"
+    ]
+    if (this.isConnected && this.src && relevantProps.some(prop => changedProperties.has(prop))) {
+      validateProps(this)
       this.updateImage()
     }
   }
 
   private updateImage() {
-    // Skip validation and updates if not ready
+    // Skip updates if not ready
     if (!this.src || !this.shadowRoot) {
       return
     }
-
-    validateProps(this)
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = this
 
     // Create props object and filter out null/undefined values

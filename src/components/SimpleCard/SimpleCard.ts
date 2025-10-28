@@ -11,7 +11,6 @@ import type { VariantChangeDetail } from "@/shopify/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { JSONProduct } from "@nosto/nosto-js/client"
 
-
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 
@@ -39,7 +38,9 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  */
 @customElement("nosto-simple-card")
 export class SimpleCard extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `
 
   @property() handle!: string
   @property({ type: Boolean }) alternate?: boolean
@@ -66,6 +67,10 @@ export class SimpleCard extends LitElement {
     assertRequired(this, "handle")
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
+    // Load initial data
+    if (this.handle) {
+      await this.loadProductData()
+    }
   }
 
   protected async updated(changedProperties: PropertyValues) {
@@ -76,22 +81,22 @@ export class SimpleCard extends LitElement {
 
   render() {
     if (!this.shopifyProduct) {
-      return html`<div>Loading...</div>`
+      return html`<div role="status" aria-live="polite" aria-label="Loading product">Loading...</div>`
     }
-    
+
     return generateCardHTML(this, this.shopifyProduct)
   }
 
   private async loadProductData() {
     if (!this.handle) return
-    
+
     try {
       const url = createShopifyUrl(`/products/${this.handle}.js`)
       const response = await getJSON<ShopifyProduct>(url.href, { cached: true })
       this.shopifyProduct = response
       this.productId = response.id
       this.variantId = response.variants[0]?.id
-      
+
       // Dispatch rendered event
       this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true }))
     } catch (error) {
@@ -130,8 +135,6 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
   element.variantId = variant.id
   updateSimpleCardContent(element, variant)
 }
-
-
 
 declare global {
   interface HTMLElementTagNameMap {

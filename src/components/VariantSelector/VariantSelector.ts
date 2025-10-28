@@ -35,7 +35,9 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  */
 @customElement("nosto-variant-selector")
 export class VariantSelector extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `
 
   @property() handle!: string
   @property({ type: Number }) variantId?: number
@@ -82,20 +84,20 @@ export class VariantSelector extends LitElement {
     this.toggleAttribute("loading", true)
     try {
       this.productData = await fetchProductData(this)
-      
+
       // Initialize selections with first value of each option
       initializeDefaultSelections(this, this.productData)
-      
+
       // Setup active and unavailable states after render
       this.updateComplete.then(() => {
         this.updateActiveStates()
         this.updateUnavailableStates()
-        
+
         // Emit variant change if we have selections
         if (Object.keys(this.selectedOptions).length > 0) {
           emitVariantChange(this, this.productData!)
         }
-        
+
         // Dispatch rendered event
         this.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
       })
@@ -118,8 +120,6 @@ export class VariantSelector extends LitElement {
     }
   }
 }
-
-
 
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined

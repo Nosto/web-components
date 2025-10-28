@@ -60,7 +60,12 @@ export class DynamicCard extends LitElement {
   }
 
   protected async updated(changedProperties: PropertyValues) {
-    if (changedProperties.has("handle") || changedProperties.has("template") || changedProperties.has("section") || changedProperties.has("variantId")) {
+    if (
+      changedProperties.has("handle") ||
+      changedProperties.has("template") ||
+      changedProperties.has("section") ||
+      changedProperties.has("variantId")
+    ) {
       await loadAndRenderMarkup(this)
     }
   }
