@@ -27,7 +27,10 @@ describe("VariantSelector", () => {
 
   function getShadowContent(selector: VariantSelector) {
     const shadowContent = selector.shadowRoot?.innerHTML || ""
-    return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
+    return shadowContent
+      .replace(/<style>[\s\S]*?<\/style>/g, "") // Remove style tags
+      .replace(/<!--[\s\S]*?-->/g, "") // Remove lit-html comment markers
+      .trim()
   }
 
   const mockProductWithVariants: ShopifyProduct = {

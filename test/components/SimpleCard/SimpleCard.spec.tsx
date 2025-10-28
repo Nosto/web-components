@@ -29,8 +29,11 @@ describe("SimpleCard", () => {
 
   function getShadowContent(card: SimpleCard) {
     const shadowContent = card.shadowRoot?.innerHTML || ""
-    // Remove the style tag and its content to get just the HTML content
-    return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
+    // Remove the style tag and its content, and lit-html comment markers to get just the HTML content
+    return shadowContent
+      .replace(/<style>[\s\S]*?<\/style>/g, "") // Remove style tags
+      .replace(/<!--[\s\S]*?-->/g, "") // Remove lit-html comment markers
+      .trim()
   }
 
   const mockProduct = {

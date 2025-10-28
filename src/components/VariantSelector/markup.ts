@@ -9,7 +9,7 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
   }
 
   const optionRows = product.options.map(option => generateOptionRowHTML(option))
-  
+
   return html`
     <div class="selector" part="selector">
       ${optionRows}
