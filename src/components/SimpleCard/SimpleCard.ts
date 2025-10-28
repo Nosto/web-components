@@ -14,6 +14,9 @@ import { convertProduct } from "./convertProduct"
 
 const setShadowContent = shadowContentFactory(styles)
 
+/** Event name for the SimpleCard rendered event */
+const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
+
 /**
  * A custom element that displays a product card using Shopify product data.
  *
@@ -33,6 +36,8 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ *
+ * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
@@ -115,6 +120,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     const normalized = convertProduct(element.product)
     const cardHTML = generateCardHTML(element, normalized)
     setShadowContent(element, cardHTML.html)
+    element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   }
   element.toggleAttribute("loading", true)
   try {
@@ -123,6 +129,9 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
+    if (!element.product) {
+      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    }
   } finally {
     element.toggleAttribute("loading", false)
   }

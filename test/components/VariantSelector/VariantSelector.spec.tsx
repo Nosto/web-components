@@ -540,4 +540,48 @@ describe("VariantSelector", () => {
     expect(selector.selectedOptions["Size"]).toBe("Medium")
     expect(selector.selectedOptions["Color"]).toBe("Blue")
   })
+
+  it("should emit VariantSelector/rendered event when content is loaded", async () => {
+    addProductHandlers({
+      "event-test-handle": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="event-test-handle" />) as VariantSelector
+
+    // Set up event listener to capture the event
+    let eventEmitted = false
+    selector.addEventListener("@nosto/VariantSelector/rendered", () => {
+      eventEmitted = true
+    })
+
+    // Call connectedCallback manually since it's not automatically triggered in tests
+    await selector.connectedCallback()
+
+    const shadowContent = getShadowContent(selector)
+    expect(shadowContent).toContain("Size:")
+    expect(eventEmitted).toBe(true)
+    expect(selector.hasAttribute("loading")).toBe(false)
+  })
+
+  it("should emit VariantSelector/rendered event even for products without variants", async () => {
+    addProductHandlers({
+      "no-variants": { product: mockProductWithoutVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
+
+    // Set up event listener to capture the event
+    let eventEmitted = false
+    selector.addEventListener("@nosto/VariantSelector/rendered", () => {
+      eventEmitted = true
+    })
+
+    // Call connectedCallback manually since it's not automatically triggered in tests
+    await selector.connectedCallback()
+
+    const shadowContent = getShadowContent(selector)
+    expect(shadowContent).toBe("<slot></slot>")
+    expect(eventEmitted).toBe(true)
+    expect(selector.hasAttribute("loading")).toBe(false)
+  })
 })
