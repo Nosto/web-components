@@ -1,23 +1,26 @@
-import { html } from "@/templating/html"
+import { html, nothing } from "lit"
 import type { ShopifyProduct } from "../../shopify/types"
 import type { VariantSelector } from "./VariantSelector"
 
 export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options or only one variant
   if (!product.options || product.options.length === 0 || product.variants.length <= 1) {
-    return { html: "<slot></slot>" }
+    return html`<slot></slot>`
   }
 
+  const optionRows = product.options.map(option => generateOptionRowHTML(option))
+  
   return html`
     <div class="selector" part="selector">
-      ${product.options.map(option => generateOptionRowHTML(option))}<slot></slot>
+      ${optionRows}
+      <slot></slot>
     </div>
   `
 }
 
 function generateOptionRowHTML(option: { name: string; values: string[] }) {
   if (option.values.length <= 1) {
-    return ""
+    return nothing
   }
 
   return html`

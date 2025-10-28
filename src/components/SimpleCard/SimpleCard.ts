@@ -8,11 +8,11 @@ import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/types"
 import { addSkuToCart } from "@nosto/nosto-js"
-import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { litShadowContentFactory } from "@/utils/litShadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 
-const setShadowContent = shadowContentFactory(styles)
+const setShadowContent = litShadowContentFactory(styles)
 
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
@@ -118,8 +118,8 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 async function loadAndRenderMarkup(element: SimpleCard) {
   if (element.product) {
     const normalized = convertProduct(element.product)
-    const cardHTML = generateCardHTML(element, normalized)
-    setShadowContent(element, cardHTML.html)
+    const cardTemplate = generateCardHTML(element, normalized)
+    setShadowContent(element, cardTemplate)
     element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   }
   element.toggleAttribute("loading", true)
@@ -127,8 +127,8 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     const productData = await fetchProductData(element.handle)
     element.productId = productData.id
 
-    const cardHTML = generateCardHTML(element, productData)
-    setShadowContent(element, cardHTML.html)
+    const cardTemplate = generateCardHTML(element, productData)
+    setShadowContent(element, cardTemplate)
     if (!element.product) {
       element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
     }

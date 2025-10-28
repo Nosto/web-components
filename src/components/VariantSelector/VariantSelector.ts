@@ -6,9 +6,9 @@ import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
-import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { litShadowContentFactory } from "@/utils/litShadowContentFactory"
 
-const setShadowContent = shadowContentFactory(styles)
+const setShadowContent = litShadowContentFactory(styles)
 
 /** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
@@ -81,8 +81,8 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     // Initialize selections with first value of each option
     initializeDefaultSelections(element, productData)
 
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+    const selectorTemplate = generateVariantSelectorHTML(element, productData)
+    setShadowContent(element, selectorTemplate)
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)

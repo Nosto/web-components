@@ -1,4 +1,5 @@
-import { html } from "@/templating/html"
+import { html, nothing } from "lit"
+import { ifDefined } from "lit/directives/if-defined.js"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
@@ -11,7 +12,7 @@ export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
       <a href="${normalizeUrl(product.url)}" class="link" part="link">
         ${generateImageHTML(element, product)}
         <div class="content" part="content">
-          ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
+          ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : nothing}
           <h3 class="title" part="title">${product.title}</h3>
           <div class="price" part="price">
             <span class="price-current" part="price-current"> ${formatPrice(product.price || 0)} </span>
@@ -19,9 +20,9 @@ export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
               ? html`<span class="price-original" part="price-original"
                   >${formatPrice(product.compare_at_price!)}</span
                 >`
-              : ""}
+              : nothing}
           </div>
-          ${element.rating ? generateRatingHTML(element.rating) : ""}
+          ${element.rating ? generateRatingHTML(element.rating) : nothing}
         </div>
       </a>
       <div class="slot">
@@ -47,7 +48,7 @@ function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
       ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
         ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
-        : ""}
+        : nothing}
     </div>
   `
 }
@@ -67,7 +68,7 @@ function generateNostoImageHTML(src: string, alt: string, className: string, siz
       width="800"
       loading="lazy"
       class="${className}"
-      ${sizes ? html`sizes="${sizes}"` : ""}
+      sizes=${ifDefined(sizes)}
     ></nosto-image>
   `
 }
@@ -78,7 +79,8 @@ function generateRatingHTML(rating: number) {
   const hasHalfStar = rating % 1 >= 0.5
   const starDisplay =
     "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
-  return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})</div>`
+  const ratingText = `${starDisplay} (${rating.toFixed(1)})`
+  return html`<div class="rating" part="rating">${ratingText}</div>`
 }
 
 function formatPrice(price: number) {
