@@ -1,5 +1,5 @@
 import type { Crop, ImageProps } from "./types"
-import { customElement } from "../decorators"
+import { customElement, attrString, attrNumber, attrArray, attrBoolean } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
@@ -30,31 +30,37 @@ import { NostoElement } from "../Element"
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
-  /** @private */
-  static properties = {
-    src: String,
-    width: Number,
-    height: Number,
-    aspectRatio: Number,
-    layout: String,
-    crop: String,
-    alt: String,
-    sizes: String,
-    breakpoints: Array,
-    unstyled: Boolean,
-    fetchpriority: String
-  }
-
+  @attrString
   src!: string
+
+  @attrNumber
   width?: number
+
+  @attrNumber
   height?: number
+
+  @attrNumber
   aspectRatio?: number
+
+  @attrString
   layout?: Layout
+
+  @attrString
   crop?: Crop
+
+  @attrString
   alt?: string
+
+  @attrString
   sizes?: string
+
+  @attrArray
   breakpoints?: number[]
+
+  @attrBoolean
   unstyled?: boolean
+
+  @attrString
   fetchpriority?: "high" | "low" | "auto"
 
   constructor() {

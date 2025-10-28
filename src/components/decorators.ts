@@ -1,10 +1,10 @@
 // Internal metadata storage for property decorators
-const OBSERVED_ATTRIBUTES_KEY = Symbol('observedAttributes')
-const PROPERTY_METADATA_KEY = Symbol('propertyMetadata')
+const OBSERVED_ATTRIBUTES_KEY = Symbol("observedAttributes")
+const PROPERTY_METADATA_KEY = Symbol("propertyMetadata")
 
 type PropertyMetadata = {
   attributeName: string
-  type: 'string' | 'boolean' | 'number' | 'array'
+  type: "string" | "boolean" | "number" | "array"
 }
 
 type ConstructorWithMetadata = {
@@ -44,13 +44,13 @@ export function customElement<T extends HTMLElement>(tagName: string, flags?: Fl
         const propertyDescriptor = getPropertyDescriptorByType(propMeta.attributeName, propMeta.type)
         Object.defineProperty(constructor.prototype, propertyName, propertyDescriptor)
       })
-      
+
       if (flags?.observe) {
         const observedAttrs = Array.from(metadata.values()).map(meta => meta.attributeName)
         constructor.observedAttributes = observedAttrs
       }
     }
-    
+
     // Handle legacy static properties for backward compatibility
     const legacyConstructor = constructor as LegacyConstructorMetadata<T>
     if (legacyConstructor.properties) {
@@ -62,7 +62,7 @@ export function customElement<T extends HTMLElement>(tagName: string, flags?: Fl
         constructor.observedAttributes = Object.keys(legacyConstructor.properties).map(toKebabCase)
       }
     }
-    
+
     // Register the custom element
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
@@ -71,28 +71,32 @@ export function customElement<T extends HTMLElement>(tagName: string, flags?: Fl
 }
 
 // Property decorators
-export function attrString(target: any, propertyKey: string) {
-  addPropertyMetadata(target, propertyKey, 'string')
+export function attrString(target: HTMLElement, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, "string")
 }
 
-export function attrBoolean(target: any, propertyKey: string) {
-  addPropertyMetadata(target, propertyKey, 'boolean')  
+export function attrBoolean(target: HTMLElement, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, "boolean")
 }
 
-export function attrNumber(target: any, propertyKey: string) {
-  addPropertyMetadata(target, propertyKey, 'number')
+export function attrNumber(target: HTMLElement, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, "number")
 }
 
-export function attrArray(target: any, propertyKey: string) {
-  addPropertyMetadata(target, propertyKey, 'array')
+export function attrArray(target: HTMLElement, propertyKey: string) {
+  addPropertyMetadata(target, propertyKey, "array")
 }
 
-function addPropertyMetadata(target: any, propertyKey: string, type: 'string' | 'boolean' | 'number' | 'array') {
-  const constructor = target.constructor
+function addPropertyMetadata(
+  target: HTMLElement,
+  propertyKey: string,
+  type: "string" | "boolean" | "number" | "array"
+) {
+  const constructor = target.constructor as ConstructorWithMetadata
   if (!constructor[PROPERTY_METADATA_KEY]) {
     constructor[PROPERTY_METADATA_KEY] = new Map()
   }
-  
+
   const attributeName = toKebabCase(propertyKey)
   constructor[PROPERTY_METADATA_KEY].set(propertyKey, { attributeName, type })
 }
@@ -109,15 +113,15 @@ function getPropertyDescriptor(propertyName: string, type: unknown) {
   return stringAttribute(attributeName)
 }
 
-function getPropertyDescriptorByType(attributeName: string, type: 'string' | 'boolean' | 'number' | 'array') {
+function getPropertyDescriptorByType(attributeName: string, type: "string" | "boolean" | "number" | "array") {
   switch (type) {
-    case 'boolean':
+    case "boolean":
       return booleanAttribute(attributeName)
-    case 'number':
+    case "number":
       return numberAttribute(attributeName)
-    case 'array':
+    case "array":
       return arrayAttribute(attributeName)
-    case 'string':
+    case "string":
     default:
       return stringAttribute(attributeName)
   }

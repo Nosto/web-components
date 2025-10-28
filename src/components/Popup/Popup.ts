@@ -1,5 +1,5 @@
 import { nostojs } from "@nosto/nosto-js"
-import { customElement } from "../decorators"
+import { customElement, attrString } from "../decorators"
 import { NostoElement } from "../Element"
 import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
@@ -20,13 +20,10 @@ const setShadowContent = shadowContentFactory(styles)
  */
 @customElement("nosto-popup")
 export class Popup extends NostoElement {
-  /** @private */
-  static properties = {
-    name: String,
-    segment: String
-  }
-
+  @attrString
   name!: string
+
+  @attrString
   segment?: string
 
   constructor() {

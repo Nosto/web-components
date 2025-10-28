@@ -140,7 +140,7 @@ describe("Property decorators", () => {
       @attrString
       name!: string
 
-      @attrBoolean  
+      @attrBoolean
       active!: boolean
 
       @attrNumber
@@ -155,8 +155,8 @@ describe("Property decorators", () => {
     // Test string attribute
     e.name = "test"
     expect(e.getAttribute("name")).toBe("test")
-    
-    // Test boolean attribute  
+
+    // Test boolean attribute
     e.active = true
     expect(e.getAttribute("active")).toBe("")
     expect(e.active).toBe(true)
@@ -188,7 +188,7 @@ describe("Property decorators", () => {
     // Test that camelCase properties map to kebab-case attributes
     e.myProperty = "test"
     expect(e.getAttribute("my-property")).toBe("test")
-    
+
     e.isActive = true
     expect(e.getAttribute("is-active")).toBe("")
   })
@@ -209,6 +209,9 @@ describe("Property decorators", () => {
     }
 
     // Check that observedAttributes is set correctly
-    expect(NewElement.observedAttributes).toEqual(['name', 'active'])
+    expect((NewElement as typeof HTMLElement & { observedAttributes?: string[] }).observedAttributes).toEqual([
+      "name",
+      "active"
+    ])
   })
 })

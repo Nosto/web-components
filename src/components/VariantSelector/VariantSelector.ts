@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
+import { customElement, attrString, attrNumber, attrBoolean } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
@@ -37,17 +37,16 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  */
 @customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    variantId: Number,
-    preselect: Boolean,
-    filtered: Boolean
-  }
-
+  @attrString
   handle!: string
+
+  @attrNumber
   variantId?: number
+
+  @attrBoolean
   preselect?: boolean
+
+  @attrBoolean
   filtered?: boolean
 
   /**

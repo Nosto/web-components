@@ -1,6 +1,6 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createStore, injectKey, Store } from "./store"
-import { customElement } from "../decorators"
+import { customElement, attrString, attrBoolean } from "../decorators"
 import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
 import { provide } from "../inject"
@@ -21,15 +21,13 @@ import { provide } from "../inject"
  */
 @customElement("nosto-product")
 export class Product extends NostoElement {
-  /** @private */
-  static properties = {
-    productId: String,
-    recoId: String,
-    skuSelected: Boolean
-  }
-
+  @attrString
   productId!: string
+
+  @attrString
   recoId!: string
+
+  @attrBoolean
   skuSelected?: boolean
 
   /** @hidden */

@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
-import { customElement } from "../decorators"
+import { customElement, attrString, attrBoolean } from "../decorators"
 import { NostoElement } from "../Element"
 
 /** Event name for the DynamicCard loaded event */
@@ -25,21 +25,22 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    section: String,
-    template: String,
-    variantId: String,
-    placeholder: Boolean,
-    lazy: Boolean
-  }
-
+  @attrString
   handle!: string
+
+  @attrString
   section?: string
+
+  @attrString
   template?: string
+
+  @attrString
   variantId?: string
+
+  @attrBoolean
   placeholder?: boolean
+
+  @attrBoolean
   lazy?: boolean
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
