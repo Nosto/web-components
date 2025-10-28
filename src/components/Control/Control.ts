@@ -1,6 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { customElement } from "lit/decorators.js"
+import { LitElement } from "lit"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that provides conditional content rendering based on user segments.
@@ -12,8 +13,14 @@ import { NostoElement } from "../Element"
  * @category Store level templating
  */
 @customElement("nosto-control")
-export class Control extends NostoElement {
+export class Control extends LitElement {
+  constructor() {
+    super()
+    logFirstUsage()
+  }
+
   async connectedCallback() {
+    super.connectedCallback()
     const api = await new Promise(nostojs)
     const segments = await api.internal.getSegments()
     const template = Array.from(this.querySelectorAll<HTMLTemplateElement>(":scope > template[segment]")).find(el =>

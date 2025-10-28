@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "lit/decorators.js"
-import { LitElement, html, css, unsafeCSS } from "lit"
+import { LitElement, html, css, unsafeCSS, PropertyValues } from "lit"
 import { logFirstUsage } from "@/logger"
 import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
@@ -64,13 +64,12 @@ export class SimpleCard extends LitElement {
   async connectedCallback() {
     super.connectedCallback()
     assertRequired(this, "handle")
-    await this.loadProductData()
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
   }
 
-  protected async updated() {
-    if (this.isConnected && this.handle) {
+  protected async updated(changedProperties: PropertyValues) {
+    if (changedProperties.has("handle") && this.handle) {
       await this.loadProductData()
     }
   }
@@ -92,9 +91,6 @@ export class SimpleCard extends LitElement {
       this.shopifyProduct = response
       this.productId = response.id
       this.variantId = response.variants[0]?.id
-      
-      // Trigger re-render
-      this.requestUpdate()
       
       // Dispatch rendered event
       this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true }))
