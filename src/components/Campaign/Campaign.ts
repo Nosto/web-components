@@ -1,4 +1,4 @@
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
@@ -33,23 +33,25 @@ import { addRequest } from "./orchestrator"
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
-  /** @private */
-  static properties = {
-    placement: String,
-    productId: String,
-    variantId: String,
-    template: String,
-    init: String,
-    lazy: Boolean,
-    cartSynced: Boolean
-  }
-
+  @property({ type: String })
   placement!: string
+
+  @property({ type: String })
   productId?: string
+
+  @property({ type: String })
   variantId?: string
+
+  @property({ type: String })
   template?: string
+
+  @property({ type: String })
   init?: string
+
+  @property({ type: Boolean })
   lazy?: boolean
+
+  @property({ type: Boolean })
   cartSynced?: boolean
 
   /** @hidden */

@@ -1,11 +1,6 @@
 type ConstructorWithProperties = {
   new (...args: unknown[]): HTMLElement
-  properties?: Record<string, unknown>
   observedAttributes?: string[]
-}
-
-type Flags = {
-  observe?: boolean
 }
 
 type PropertyOptions = {
@@ -13,20 +8,13 @@ type PropertyOptions = {
   attribute?: string | boolean
 }
 
-export function customElement(tagName: string, flags?: Flags) {
-  return function (constructor: ConstructorWithProperties, _context?: ClassDecoratorContext): void {
-    // Define properties immediately - this must happen synchronously
-    if (constructor.properties) {
-      Object.entries(constructor.properties).forEach(([fieldName, type]) => {
-        const propertyDescriptor = getPropertyDescriptor(fieldName, type)
-        Object.defineProperty(constructor.prototype, fieldName, propertyDescriptor)
-      })
-      if (flags?.observe) {
-        constructor.observedAttributes = Object.keys(constructor.properties).map(toKebabCase)
-      }
-    }
+export function customElement(tagName: string) {
+  return function (constructor: ConstructorWithProperties, context: ClassDecoratorContext): void {
+    // Context parameter is required by TypeScript 5.0+ decorator spec
+    // Currently used for compliance, may be extended for future features
+    void context
 
-    // Register the element immediately - the timing doesn't matter for element registration
+    // Register the element immediately
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
     }

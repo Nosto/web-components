@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { customElement } from "../../src/components/decorators"
+import { customElement, property } from "../../src/components/decorators"
 
 describe("customElement", () => {
   beforeEach(() => {
@@ -11,7 +11,9 @@ describe("customElement", () => {
     const tagName = "my-element"
     const constructor = class extends HTMLElement {}
 
-    customElement(tagName)(constructor)
+    // Mock context for manual testing
+    const mockContext = { kind: "class" } as ClassDecoratorContext
+    customElement(tagName)(constructor, mockContext)
 
     expect(window.customElements.define).toHaveBeenCalledWith(tagName, constructor)
   })
@@ -20,28 +22,35 @@ describe("customElement", () => {
     const tagName = "my-element2"
     const constructor = class extends HTMLElement {}
 
-    customElement(tagName)(constructor)
+    // Mock context for manual testing
+    const mockContext = { kind: "class" } as ClassDecoratorContext
+    customElement(tagName)(constructor, mockContext)
     expect(window.customElements.define).toHaveBeenCalledTimes(1)
 
-    customElement(tagName)(constructor)
+    customElement(tagName)(constructor, mockContext)
     expect(window.customElements.define).toHaveBeenCalledTimes(1)
   })
 
   type TestElement = HTMLElement & Record<string, unknown>
 
-  it("should define properties for attributes", () => {
+  it("should define properties for attributes using property decorators", () => {
     const tagName = "my-element3"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static properties = {
-        foo: String,
-        bar: Boolean,
-        baz: Number,
-        qux: Array
-      }
+      @property({ type: String })
+      foo: string = ""
+
+      @property({ type: Boolean })
+      bar: boolean = false
+
+      @property({ type: Number })
+      baz: number = 0
+
+      @property({ type: Array })
+      qux: unknown[] = []
     }
 
-    const e = new constructor() as TestElement
+    const e = new constructor() as unknown as TestElement
     e.foo = "hello"
     e.bar = true
     e.baz = 42
@@ -53,16 +62,15 @@ describe("customElement", () => {
     expect(e.getAttribute("qux")).toBe("[1,2,3]")
   })
 
-  it("should handle array attributes correctly", () => {
+  it("should handle array attributes correctly using property decorators", () => {
     const tagName = "my-element4"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static properties = {
-        numbers: Array
-      }
+      @property({ type: Array })
+      numbers: unknown[] = []
     }
 
-    const e = new constructor() as TestElement
+    const e = new constructor() as unknown as TestElement
 
     // Test setting array value
     e.numbers = [100, 200, 300]
@@ -94,16 +102,15 @@ describe("customElement", () => {
     expect(e.hasAttribute("numbers")).toBe(false)
   })
 
-  it("should ignore non-array values in array attribute setter", () => {
+  it("should ignore non-array values in array attribute setter using property decorators", () => {
     const tagName = "my-element5"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static properties = {
-        list: Array
-      }
+      @property({ type: Array })
+      list: unknown[] = []
     }
 
-    const e = new constructor() as TestElement
+    const e = new constructor() as unknown as TestElement
 
     // Set initial array value
     e.list = [1, 2, 3]

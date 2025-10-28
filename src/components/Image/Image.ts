@@ -1,5 +1,5 @@
 import type { Crop, ImageProps } from "./types"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
@@ -28,33 +28,39 @@ import { NostoElement } from "../Element"
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  * @property {"high"|"low"|"auto"} [fetchpriority] (`fetch-priority`) - Provides a hint to the browser about the priority of this image relative to other images.
  */
-@customElement("nosto-image", { observe: true })
+@customElement("nosto-image")
 export class Image extends NostoElement {
-  /** @private */
-  static properties = {
-    src: String,
-    width: Number,
-    height: Number,
-    aspectRatio: Number,
-    layout: String,
-    crop: String,
-    alt: String,
-    sizes: String,
-    breakpoints: Array,
-    unstyled: Boolean,
-    fetchpriority: String
-  }
-
+  @property({ type: String })
   src!: string
+
+  @property({ type: Number })
   width?: number
+
+  @property({ type: Number })
   height?: number
+
+  @property({ type: Number })
   aspectRatio?: number
+
+  @property({ type: String })
   layout?: Layout
+
+  @property({ type: String })
   crop?: Crop
+
+  @property({ type: String })
   alt?: string
+
+  @property({ type: String })
   sizes?: string
+
+  @property({ type: Array })
   breakpoints?: number[]
+
+  @property({ type: Boolean })
   unstyled?: boolean
+
+  @property({ type: String })
   fetchpriority?: "high" | "low" | "auto"
 
   constructor() {

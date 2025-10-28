@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 
 /** Event name for the DynamicCard loaded event */
@@ -23,23 +23,24 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
  */
-@customElement("nosto-dynamic-card", { observe: true })
+@customElement("nosto-dynamic-card")
 export class DynamicCard extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    section: String,
-    template: String,
-    variantId: String,
-    placeholder: Boolean,
-    lazy: Boolean
-  }
-
+  @property({ type: String })
   handle!: string
+
+  @property({ type: String })
   section?: string
+
+  @property({ type: String })
   template?: string
+
+  @property({ type: String })
   variantId?: string
+
+  @property({ type: Boolean })
   placeholder?: boolean
+
+  @property({ type: Boolean })
   lazy?: boolean
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
