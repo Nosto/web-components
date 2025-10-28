@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement, property, state } from "lit/decorators.js"
+import { customElement, property } from "lit/decorators.js"
 import { LitElement, html, css, unsafeCSS, PropertyValues } from "lit"
 import { logFirstUsage } from "@/logger"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
@@ -43,7 +43,7 @@ export class VariantSelector extends LitElement {
   @property({ type: Number }) variantId?: number
   @property({ type: Boolean }) preselect?: boolean
   @property({ type: Boolean }) filtered?: boolean
-  @state() private productData?: ShopifyProduct
+  #productData?: ShopifyProduct
 
   /**
    * Internal state for current selections
@@ -59,34 +59,37 @@ export class VariantSelector extends LitElement {
   async connectedCallback() {
     super.connectedCallback()
     assertRequired(this, "handle")
-    await this.loadProductData()
+    await this.#loadProductData()
   }
 
   protected async updated(changedProperties: PropertyValues) {
     if (changedProperties.has("handle")) {
-      await this.loadProductData()
+      await this.#loadProductData()
     }
   }
 
   render() {
-    if (!this.productData) {
+    if (!this.#productData) {
       return html`<div>Loading...</div>`
     }
 
-    return generateVariantSelectorHTML(this, this.productData)
+    return generateVariantSelectorHTML(this, this.#productData)
   }
 
   protected firstUpdated() {
     this.setupEventListeners()
   }
 
-  private async loadProductData() {
+  async #loadProductData() {
     this.toggleAttribute("loading", true)
     try {
-      this.productData = await fetchProductData(this)
+      this.#productData = await fetchProductData(this)
+      
+      // Trigger re-render since productData is not reactive
+      this.requestUpdate()
 
       // Initialize selections with first value of each option
-      initializeDefaultSelections(this, this.productData)
+      initializeDefaultSelections(this, this.#productData)
 
       // Setup active and unavailable states after render
       this.updateComplete.then(() => {
@@ -95,7 +98,7 @@ export class VariantSelector extends LitElement {
 
         // Emit variant change if we have selections
         if (Object.keys(this.selectedOptions).length > 0) {
-          emitVariantChange(this, this.productData!)
+          emitVariantChange(this, this.#productData!)
         }
 
         // Dispatch rendered event
@@ -115,8 +118,8 @@ export class VariantSelector extends LitElement {
   }
 
   private updateUnavailableStates() {
-    if (this.productData) {
-      updateUnavailableStates(this, this.productData)
+    if (this.#productData) {
+      updateUnavailableStates(this, this.#productData)
     }
   }
 }

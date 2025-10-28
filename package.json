@@ -38,10 +38,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "dependencies": {
-    "lit": "^3.3.1"
-  },
   "devDependencies": {
+    "lit": "^3.3.1",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@nosto/nosto-js": "^2.9.1",

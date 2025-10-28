@@ -50,7 +50,7 @@ export class SimpleCard extends LitElement {
   @property() sizes?: string
 
   product?: JSONProduct
-  private shopifyProduct?: ShopifyProduct
+  #shopifyProduct?: ShopifyProduct
 
   /** @hidden */
   productId?: number
@@ -69,31 +69,31 @@ export class SimpleCard extends LitElement {
     this.addEventListener("variantchange", this)
     // Load initial data
     if (this.handle) {
-      await this.loadProductData()
+      await this.#loadProductData()
     }
   }
 
   protected async updated(changedProperties: PropertyValues) {
     if (changedProperties.has("handle") && this.handle) {
-      await this.loadProductData()
+      await this.#loadProductData()
     }
   }
 
   render() {
-    if (!this.shopifyProduct) {
+    if (!this.#shopifyProduct) {
       return html`<div role="status" aria-live="polite" aria-label="Loading product">Loading...</div>`
     }
 
-    return generateCardHTML(this, this.shopifyProduct)
+    return generateCardHTML(this, this.#shopifyProduct)
   }
 
-  private async loadProductData() {
+  async #loadProductData() {
     if (!this.handle) return
 
     try {
       const url = createShopifyUrl(`/products/${this.handle}.js`)
       const response = await getJSON<ShopifyProduct>(url.href, { cached: true })
-      this.shopifyProduct = response
+      this.#shopifyProduct = response
       this.productId = response.id
       this.variantId = response.variants[0]?.id
 

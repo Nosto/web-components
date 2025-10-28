@@ -53,7 +53,7 @@ export class Image extends LitElement {
     // Validation needs to happen for tests that expect errors
     if (this.src) {
       validateProps(this)
-      this.updateImage()
+      this.#updateImage()
     }
   }
 
@@ -74,11 +74,11 @@ export class Image extends LitElement {
     ]
     if (this.isConnected && this.src && relevantProps.some(prop => changedProperties.has(prop))) {
       validateProps(this)
-      this.updateImage()
+      this.#updateImage()
     }
   }
 
-  private updateImage() {
+  #updateImage() {
     // Skip updates if not ready
     if (!this.src || !this.shadowRoot) {
       return
