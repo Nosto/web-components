@@ -1,3 +1,19 @@
+# [9.11.0](https://github.com/Nosto/web-components/compare/v9.10.2...v9.11.0) (2025-10-28)
+
+
+### Bug Fixes
+
+* remove FetchPriority story and combination test as requested ([7353b6a](https://github.com/Nosto/web-components/commit/7353b6a548739be0fa15ab5fdebd2e785a0c9822))
+* simplify fetchpriority test to single value as requested ([46c6bde](https://github.com/Nosto/web-components/commit/46c6bde7e5bc3f97d37b555e22a67d7c27b65a2d))
+* **VariantSelector:** disable pointer interactions on unavailable values ([1db3fd6](https://github.com/Nosto/web-components/commit/1db3fd68cf6456f8426a3705d01f91213c60d6e6))
+
+
+### Features
+
+* **Image:** add fetchpriority attribute support ([e9c48ea](https://github.com/Nosto/web-components/commit/e9c48ea187c7ce0cd643413a10522b375aef4b4a))
+* **SimpleCard/VariantSelector:** emit post-render events ([d25e9f8](https://github.com/Nosto/web-components/commit/d25e9f878ba83cc2badb44d7896b7f8f9b1a6d00))
+* **SimpleCard/VariantSelector:** emit post-render events ([24280fe](https://github.com/Nosto/web-components/commit/24280fe8b50d0fbdf48a8b2b427097a77a659a98))
+
 ## [9.10.2](https://github.com/Nosto/web-components/compare/v9.10.1...v9.10.2) (2025-10-27)
 
 
