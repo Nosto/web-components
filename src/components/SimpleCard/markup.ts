@@ -1,4 +1,4 @@
-import { html } from "@/templating/html"
+import { html } from "lit"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"

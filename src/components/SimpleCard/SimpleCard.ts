@@ -1,18 +1,16 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { customElement, property } from "lit/decorators.js"
+import { LitElement, html, css, unsafeCSS } from "lit"
+import { logFirstUsage } from "@/logger"
 import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/types"
 import { addSkuToCart } from "@nosto/nosto-js"
-import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
-import { convertProduct } from "./convertProduct"
 
-const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
@@ -39,26 +37,19 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  *
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
-@customElement("nosto-simple-card", { observe: true })
-export class SimpleCard extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    alternate: Boolean,
-    brand: Boolean,
-    discount: Boolean,
-    rating: Number,
-    sizes: String
-  }
+@customElement("nosto-simple-card")
+export class SimpleCard extends LitElement {
+  static styles = css`${unsafeCSS(styles)}`
 
-  handle!: string
-  alternate?: boolean
-  brand?: boolean
-  discount?: boolean
-  rating?: number
-  sizes?: string
+  @property() handle!: string
+  @property({ type: Boolean }) alternate?: boolean
+  @property({ type: Boolean }) brand?: boolean
+  @property({ type: Boolean }) discount?: boolean
+  @property({ type: Number }) rating?: number
+  @property() sizes?: string
 
   product?: JSONProduct
+  private shopifyProduct?: ShopifyProduct
 
   /** @hidden */
   productId?: number
@@ -67,20 +58,49 @@ export class SimpleCard extends NostoElement {
 
   constructor() {
     super()
-    this.attachShadow({ mode: "open" })
-  }
-
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
+    logFirstUsage()
   }
 
   async connectedCallback() {
+    super.connectedCallback()
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.loadProductData()
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
+  }
+
+  protected async updated() {
+    if (this.isConnected && this.handle) {
+      await this.loadProductData()
+    }
+  }
+
+  render() {
+    if (!this.shopifyProduct) {
+      return html`<div>Loading...</div>`
+    }
+    
+    return generateCardHTML(this, this.shopifyProduct)
+  }
+
+  private async loadProductData() {
+    if (!this.handle) return
+    
+    try {
+      const url = createShopifyUrl(`/products/${this.handle}.js`)
+      const response = await getJSON<ShopifyProduct>(url.href, { cached: true })
+      this.shopifyProduct = response
+      this.productId = response.id
+      this.variantId = response.variants[0]?.id
+      
+      // Trigger re-render
+      this.requestUpdate()
+      
+      // Dispatch rendered event
+      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true }))
+    } catch (error) {
+      console.error("Failed to load product:", error)
+    }
   }
 
   handleEvent(event: Event) {
@@ -115,32 +135,7 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
   updateSimpleCardContent(element, variant)
 }
 
-async function loadAndRenderMarkup(element: SimpleCard) {
-  if (element.product) {
-    const normalized = convertProduct(element.product)
-    const cardHTML = generateCardHTML(element, normalized)
-    setShadowContent(element, cardHTML.html)
-    element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  }
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProductData(element.handle)
-    element.productId = productData.id
 
-    const cardHTML = generateCardHTML(element, productData)
-    setShadowContent(element, cardHTML.html)
-    if (!element.product) {
-      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-    }
-  } finally {
-    element.toggleAttribute("loading", false)
-  }
-}
-
-async function fetchProductData(handle: string) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href, { cached: true })
-}
 
 declare global {
   interface HTMLElementTagNameMap {
