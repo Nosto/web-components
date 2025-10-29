@@ -54,7 +54,7 @@ export class Image extends NostoElement {
   }
 
   connectedCallback() {
-    validateProps(this)
+    this.validateProps()
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = this
 
     // Create props object and filter out null/undefined values
@@ -78,44 +78,44 @@ export class Image extends NostoElement {
 
     let img = this.shadowRoot!.querySelector("img")
     if (img) {
-      setProps(img, transformProps, unstyled)
+      this.setProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
-      setProps(img, transformProps, unstyled)
+      this.setProps(img, transformProps, unstyled)
       this.shadowRoot!.replaceChildren(img)
     }
   }
-}
 
-function setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
-  const { style, ...props } = transform(transformProps)
-  Object.entries(props).forEach(([key, value]) => {
-    if (value != null) {
-      img.setAttribute(key, String(value))
-    }
-  })
-  if (!unstyled) {
-    Object.assign(img.style, style)
-  }
-}
-
-function validateProps(element: Image) {
-  if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
-    throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
-  }
-  if (element.layout !== "fullWidth" && element.layout !== undefined) {
-    if (!element.width && !element.height) {
-      throw new Error("At least one of 'width' or 'height' must be provided.")
+  private setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
+    const { style, ...props } = transform(transformProps)
+    Object.entries(props).forEach(([key, value]) => {
+      if (value != null) {
+        img.setAttribute(key, String(value))
+      }
+    })
+    if (!unstyled) {
+      Object.assign(img.style, style)
     }
   }
-  if (element.breakpoints) {
-    const invalidItems = element.breakpoints.filter(
-      item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
-    )
-    if (invalidItems.length > 0) {
-      throw new Error(
-        `All breakpoints must be positive finite numbers, found these illegal entries ${JSON.stringify(invalidItems)}`
+
+  private validateProps() {
+    if (this.layout && !["fixed", "constrained", "fullWidth"].includes(this.layout)) {
+      throw new Error(`Invalid layout: ${this.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
+    }
+    if (this.layout !== "fullWidth" && this.layout !== undefined) {
+      if (!this.width && !this.height) {
+        throw new Error("At least one of 'width' or 'height' must be provided.")
+      }
+    }
+    if (this.breakpoints) {
+      const invalidItems = this.breakpoints.filter(
+        item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
       )
+      if (invalidItems.length > 0) {
+        throw new Error(
+          `All breakpoints must be positive finite numbers, found these illegal entries ${JSON.stringify(invalidItems)}`
+        )
+      }
     }
   }
 }

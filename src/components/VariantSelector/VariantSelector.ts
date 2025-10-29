@@ -55,138 +55,161 @@ export class VariantSelector extends NostoElement {
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
+      await this.loadAndRenderMarkup()
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.loadAndRenderMarkup()
   }
-}
 
-async function loadAndRenderMarkup(element: VariantSelector) {
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProductData(element)
+  private async loadAndRenderMarkup() {
+    this.toggleAttribute("loading", true)
+    try {
+      const productData = await this.fetchProductData()
 
-    // Initialize selections with first value of each option
-    initializeDefaultSelections(element, productData)
+      // Initialize selections with first value of each option
+      this.initializeDefaultSelections(productData)
 
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+      const selectorHTML = generateVariantSelectorHTML(this, productData)
+      setShadowContent(this, selectorHTML.html)
 
-    // Setup event listeners for option buttons
-    setupOptionListeners(element)
+      // Setup event listeners for option buttons
+      this.setupOptionListeners()
 
-    // active state for selected options
-    updateActiveStates(element)
-    // unavailable state for options without available variants
-    updateUnavailableStates(element, productData)
-    // TODO disabled state
+      // active state for selected options
+      this.updateActiveStates()
+      // unavailable state for options without available variants
+      this.updateUnavailableStates(productData)
+      // TODO disabled state
 
-    if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+      if (Object.keys(this.selectedOptions).length > 0) {
+        this.emitVariantChange(productData)
+      }
+
+      this.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    } finally {
+      this.toggleAttribute("loading", false)
     }
-
-    element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  } finally {
-    element.toggleAttribute("loading", false)
   }
-}
 
-function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  let variant: ShopifyVariant | undefined
-  if (element.variantId) {
-    variant = product.variants.find(v => v.id === element.variantId)
-  } else if (element.preselect) {
-    variant = product.variants.find(v => v.available)
+  private initializeDefaultSelections(product: ShopifyProduct) {
+    let variant: ShopifyVariant | undefined
+    if (this.variantId) {
+      variant = product.variants.find(v => v.id === this.variantId)
+    } else if (this.preselect) {
+      variant = product.variants.find(v => v.available)
+    }
+    if (variant) {
+      product.options.forEach((option, index) => {
+        this.selectedOptions[option.name] = variant.options[index]
+      })
+    } else {
+      product.options.forEach(option => {
+        if (option.values.length === 1) {
+          this.selectedOptions[option.name] = option.values[0]
+        }
+      })
+    }
   }
-  if (variant) {
-    product.options.forEach((option, index) => {
-      element.selectedOptions[option.name] = variant.options[index]
-    })
-  } else {
-    product.options.forEach(option => {
-      if (option.values.length === 1) {
-        element.selectedOptions[option.name] = option.values[0]
+
+  private setupOptionListeners() {
+    this.shadowRoot!.addEventListener("click", async e => {
+      const target = e.target as HTMLElement
+      if (target.classList.contains("value")) {
+        e.preventDefault()
+        const { optionName, optionValue } = target.dataset
+        if (optionName && optionValue) {
+          await this.selectOption(optionName, optionValue)
+        }
       }
     })
   }
-}
 
-function setupOptionListeners(element: VariantSelector) {
-  element.shadowRoot!.addEventListener("click", async e => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains("value")) {
-      e.preventDefault()
-      const { optionName, optionValue } = target.dataset
-      if (optionName && optionValue) {
-        await selectOption(element, optionName, optionValue)
-      }
+  async selectOption(optionName: string, value: string) {
+    if (this.selectedOptions[optionName] === value) {
+      return
     }
-  })
+    this.selectedOptions[optionName] = value
+    this.updateActiveStates()
+
+    // Fetch product data and emit variant change
+    const productData = await this.fetchProductData()
+    this.emitVariantChange(productData)
+  }
+
+  private updateActiveStates() {
+    this.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+      const { optionName, optionValue } = button.dataset
+      const active = !!optionName && this.selectedOptions[optionName] === optionValue
+      this.togglePart(button, "active", active)
+    })
+  }
+
+  private updateUnavailableStates(product: ShopifyProduct) {
+    const availableOptions = new Set<string>()
+    const optionNames = product.options.map(option => option.name)
+    product.variants
+      .filter(v => v.available)
+      .forEach(variant => {
+        variant.options.forEach((optionValue, i) => {
+          availableOptions.add(`${optionNames[i]}::${optionValue}`)
+        })
+      })
+    this.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+      const { optionName, optionValue } = button.dataset
+      const available = availableOptions.has(`${optionName}::${optionValue}`)
+      this.togglePart(button, "unavailable", !available)
+    })
+  }
+
+  private togglePart(element: HTMLElement, partName: string, enable: boolean) {
+    const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
+    if (enable) {
+      parts.add(partName)
+    } else {
+      parts.delete(partName)
+    }
+    element.setAttribute("part", Array.from(parts).join(" "))
+  }
+
+  private emitVariantChange(product: ShopifyProduct) {
+    const variant = getSelectedVariant(this, product)
+    if (variant) {
+      this.variantId = variant.id
+      const detail: VariantChangeDetail = { variant }
+      this.dispatchEvent(
+        new CustomEvent("variantchange", {
+          detail,
+          bubbles: true
+        })
+      )
+    }
+  }
+
+  private async fetchProductData() {
+    const url = createShopifyUrl(`/products/${this.handle}.js`)
+    const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
+
+    if (this.filtered) {
+      return { ...data, options: this.filteredOptions(data) }
+    }
+    return data
+  }
+
+  private filteredOptions(product: ShopifyProduct) {
+    return product.options.map(option => {
+      return {
+        ...option,
+        values: option.values.filter(value => product.variants.some(variant => variant.options.includes(value)))
+      }
+    })
+  }
 }
 
 export async function selectOption(element: VariantSelector, optionName: string, value: string) {
-  if (element.selectedOptions[optionName] === value) {
-    return
-  }
-  element.selectedOptions[optionName] = value
-  updateActiveStates(element)
-
-  // Fetch product data and emit variant change
-  const productData = await fetchProductData(element)
-  emitVariantChange(element, productData)
-}
-
-function updateActiveStates(element: VariantSelector) {
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const active = !!optionName && element.selectedOptions[optionName] === optionValue
-    togglePart(button, "active", active)
-  })
-}
-
-function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
-  const availableOptions = new Set<string>()
-  const optionNames = product.options.map(option => option.name)
-  product.variants
-    .filter(v => v.available)
-    .forEach(variant => {
-      variant.options.forEach((optionValue, i) => {
-        availableOptions.add(`${optionNames[i]}::${optionValue}`)
-      })
-    })
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const available = availableOptions.has(`${optionName}::${optionValue}`)
-    togglePart(button, "unavailable", !available)
-  })
-}
-
-function togglePart(element: HTMLElement, partName: string, enable: boolean) {
-  const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
-  if (enable) {
-    parts.add(partName)
-  } else {
-    parts.delete(partName)
-  }
-  element.setAttribute("part", Array.from(parts).join(" "))
-}
-
-function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
-  const variant = getSelectedVariant(element, product)
-  if (variant) {
-    element.variantId = variant.id
-    const detail: VariantChangeDetail = { variant }
-    element.dispatchEvent(
-      new CustomEvent("variantchange", {
-        detail,
-        bubbles: true
-      })
-    )
-  }
+  return element.selectOption(optionName, value)
 }
 
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
@@ -199,25 +222,6 @@ export function getSelectedVariant(element: VariantSelector, product: ShopifyPro
       })
     }) || null
   )
-}
-
-async function fetchProductData({ handle, filtered }: VariantSelector) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
-
-  if (filtered) {
-    return { ...data, options: filteredOptions(data) }
-  }
-  return data
-}
-
-function filteredOptions(product: ShopifyProduct) {
-  return product.options.map(option => {
-    return {
-      ...option,
-      values: option.values.filter(value => product.variants.some(variant => variant.options.includes(value)))
-    }
-  })
 }
 
 declare global {

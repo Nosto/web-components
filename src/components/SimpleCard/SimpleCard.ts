@@ -4,7 +4,8 @@ import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "@/shopify/types"
-import { generateCardHTML, updateSimpleCardContent } from "./markup"
+import { html } from "@/templating/html"
+import type { SimpleVariant, SimpleProduct } from "./types"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/types"
 import { addSkuToCart } from "@nosto/nosto-js"
@@ -62,13 +63,13 @@ export class SimpleCard extends NostoElement {
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
+      await this.loadAndRenderMarkup()
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.loadAndRenderMarkup()
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
   }
@@ -76,60 +77,184 @@ export class SimpleCard extends NostoElement {
   handleEvent(event: Event) {
     switch (event.type) {
       case "click":
-        onClick(this, event as MouseEvent)
+        this.onClick(event as MouseEvent)
         break
       case "variantchange":
-        onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
+        this.onVariantChange(event as CustomEvent<VariantChangeDetail>)
     }
   }
-}
 
-function isAddToCartClick(event: MouseEvent) {
-  return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
-}
+  private isAddToCartClick(event: MouseEvent) {
+    return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
+  }
 
-async function onClick(element: SimpleCard, event: MouseEvent) {
-  if (isAddToCartClick(event) && element.productId && element.variantId) {
+  private async onClick(event: MouseEvent) {
+    if (this.isAddToCartClick(event) && this.productId && this.variantId) {
+      event.stopPropagation()
+      await addSkuToCart({
+        productId: this.productId.toString(),
+        skuId: this.variantId.toString()
+      })
+    }
+  }
+
+  private onVariantChange(event: CustomEvent<VariantChangeDetail>) {
     event.stopPropagation()
-    await addSkuToCart({
-      productId: element.productId.toString(),
-      skuId: element.variantId.toString()
-    })
+    const { variant } = event.detail
+    this.variantId = variant.id
+    this.updateSimpleCardContent(variant)
   }
-}
 
-function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
-  event.stopPropagation()
-  const { variant } = event.detail
-  element.variantId = variant.id
-  updateSimpleCardContent(element, variant)
-}
-
-async function loadAndRenderMarkup(element: SimpleCard) {
-  if (element.product) {
-    const normalized = convertProduct(element.product)
-    const cardHTML = generateCardHTML(element, normalized)
-    setShadowContent(element, cardHTML.html)
-    element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  }
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProductData(element.handle)
-    element.productId = productData.id
-
-    const cardHTML = generateCardHTML(element, productData)
-    setShadowContent(element, cardHTML.html)
-    if (!element.product) {
-      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+  private async loadAndRenderMarkup() {
+    if (this.product) {
+      const normalized = convertProduct(this.product)
+      const cardHTML = this.generateCardHTML(normalized)
+      setShadowContent(this, cardHTML.html)
+      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
     }
-  } finally {
-    element.toggleAttribute("loading", false)
-  }
-}
+    this.toggleAttribute("loading", true)
+    try {
+      const productData = await this.fetchProductData(this.handle)
+      this.productId = productData.id
 
-async function fetchProductData(handle: string) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href, { cached: true })
+      const cardHTML = this.generateCardHTML(productData)
+      setShadowContent(this, cardHTML.html)
+      if (!this.product) {
+        this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+      }
+    } finally {
+      this.toggleAttribute("loading", false)
+    }
+  }
+
+  private async fetchProductData(handle: string) {
+    const url = createShopifyUrl(`/products/${handle}.js`)
+    return getJSON<ShopifyProduct>(url.href, { cached: true })
+  }
+
+  private updateSimpleCardContent(variant: SimpleVariant) {
+    this.updateImages(variant)
+    this.updatePrices(variant)
+  }
+
+  private updateImages(variant: SimpleVariant) {
+    if (!variant.featured_image) return
+
+    const primaryImgElement = this.shadowRoot!.querySelector(".img.primary") as HTMLElement
+    if (primaryImgElement) {
+      primaryImgElement.setAttribute("src", this.normalizeUrl(variant.featured_image.src))
+      primaryImgElement.setAttribute("alt", variant.name)
+    }
+
+    if (this.alternate) {
+      const alternateImgElement = this.shadowRoot!.querySelector(".img.alternate") as HTMLElement
+      if (alternateImgElement) {
+        alternateImgElement.setAttribute("src", this.normalizeUrl(variant.featured_image.src))
+        alternateImgElement.setAttribute("alt", variant.name)
+      }
+    }
+  }
+
+  private updatePrices(variant: SimpleVariant) {
+    const hasDiscount = this.discount && variant.compare_at_price && variant.compare_at_price > variant.price
+
+    const currentPriceElement = this.shadowRoot!.querySelector(".price-current")
+    if (currentPriceElement) {
+      currentPriceElement.textContent = this.formatPrice(variant.price || 0)
+    }
+
+    const originalPriceElement = this.shadowRoot!.querySelector(".price-original")
+    if (hasDiscount && originalPriceElement) {
+      originalPriceElement.textContent = this.formatPrice(variant.compare_at_price!)
+    }
+  }
+
+  private normalizeUrl(url: string) {
+    if (!url || url.startsWith("//") || !url.startsWith("/")) {
+      return url
+    }
+    return createShopifyUrl(url).toString()
+  }
+
+  private formatPrice(price: number) {
+    // Convert from cents to dollars and format
+    const amount = price / 100
+    return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
+      style: "currency",
+      currency: window.Shopify?.currency?.active ?? "USD"
+    }).format(amount)
+  }
+
+  private generateCardHTML(product: SimpleProduct) {
+    const hasDiscount = this.discount && product.compare_at_price && product.compare_at_price > product.price
+
+    return html`
+      <div class="card" part="card">
+        <a href="${this.normalizeUrl(product.url)}" class="link" part="link">
+          ${this.generateImageHTML(product)}
+          <div class="content" part="content">
+            ${this.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
+            <h3 class="title" part="title">${product.title}</h3>
+            <div class="price" part="price">
+              <span class="price-current" part="price-current"> ${this.formatPrice(product.price || 0)} </span>
+              ${hasDiscount
+                ? html`<span class="price-original" part="price-original"
+                    >${this.formatPrice(product.compare_at_price!)}</span
+                  >`
+                : ""}
+            </div>
+            ${this.rating ? this.generateRatingHTML(this.rating) : ""}
+          </div>
+        </a>
+        <div class="slot">
+          <slot></slot>
+        </div>
+      </div>
+    `
+  }
+
+  private generateImageHTML(product: SimpleProduct) {
+    // Use media objects first, fallback to images array
+    const primaryImage = product.media?.[0]?.src || product.images?.[0]
+    if (!primaryImage) {
+      return html`<div class="image placeholder"></div>`
+    }
+
+    const hasAlternate =
+      this.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
+    const alternateImage = product.media?.[1]?.src || product.images?.[1]
+
+    return html`
+      <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
+        ${this.generateNostoImageHTML(primaryImage, product.title, "img primary", this.sizes)}
+        ${hasAlternate && alternateImage
+          ? this.generateNostoImageHTML(alternateImage, product.title, "img alternate", this.sizes)
+          : ""}
+      </div>
+    `
+  }
+
+  private generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
+    return html`
+      <nosto-image
+        src="${this.normalizeUrl(src)}"
+        alt="${alt}"
+        width="800"
+        loading="lazy"
+        class="${className}"
+        ${sizes ? html`sizes="${sizes}"` : ""}
+      ></nosto-image>
+    `
+  }
+
+  private generateRatingHTML(rating: number) {
+    // Generate star display based on numeric rating
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 >= 0.5
+    const starDisplay =
+      "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
+    return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})</div>`
+  }
 }
 
 declare global {

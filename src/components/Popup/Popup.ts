@@ -36,7 +36,7 @@ export class Popup extends NostoElement {
       return
     }
     if (!this.shadowRoot?.innerHTML) {
-      initializeShadowContent(this, state)
+      this.initializeShadowContent(state)
     }
     this.addEventListener("click", this)
     setPopupState(this.name, "ribbon")
@@ -54,13 +54,48 @@ export class Popup extends NostoElement {
       event.stopPropagation()
     }
     if (toClose) {
-      closePopup(this)
+      this.closePopup()
     } else if (toOpen) {
-      updateShadowContent(this, "open")
+      this.updateShadowContent("open")
     } else if (toRibbon) {
       setPopupState(this.name, "ribbon")
-      updateShadowContent(this, "ribbon")
+      this.updateShadowContent("ribbon")
     }
+  }
+
+  private initializeShadowContent(mode: "open" | "ribbon" = "open") {
+    setShadowContent(
+      this,
+      `
+      <dialog part="dialog">
+        <slot name="default"></slot>
+      </dialog>
+      <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
+        <slot name="ribbon">Open</slot>
+      </div>`
+    )
+    if (mode === "open") {
+      this.shadowRoot?.querySelector("dialog")?.showModal()
+    }
+  }
+
+  private updateShadowContent(mode: "open" | "ribbon" = "open") {
+    const dialog = this.shadowRoot?.querySelector<HTMLDialogElement>("dialog")
+    const ribbon = this.shadowRoot?.querySelector(".ribbon")
+    if (dialog && ribbon) {
+      if (mode === "ribbon") {
+        dialog.close()
+        ribbon.classList.remove("hidden")
+      } else {
+        dialog.showModal()
+        ribbon.classList.add("hidden")
+      }
+    }
+  }
+
+  private closePopup() {
+    setPopupState(this.name, "closed")
+    this.style.display = "none"
   }
 }
 
@@ -71,41 +106,6 @@ type PopupState = "open" | "ribbon" | "closed"
 type PopupData = {
   name: string
   state: PopupState
-}
-
-function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  setShadowContent(
-    element,
-    `
-    <dialog part="dialog">
-      <slot name="default"></slot>
-    </dialog>
-    <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
-      <slot name="ribbon">Open</slot>
-    </div>`
-  )
-  if (mode === "open") {
-    element.shadowRoot?.querySelector("dialog")?.showModal()
-  }
-}
-
-function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  const dialog = element.shadowRoot?.querySelector<HTMLDialogElement>("dialog")
-  const ribbon = element.shadowRoot?.querySelector(".ribbon")
-  if (dialog && ribbon) {
-    if (mode === "ribbon") {
-      dialog.close()
-      ribbon.classList.remove("hidden")
-    } else {
-      dialog.showModal()
-      ribbon.classList.add("hidden")
-    }
-  }
-}
-
-function closePopup(element: Popup) {
-  setPopupState(element.name, "closed")
-  element.style.display = "none"
 }
 
 async function getPopupState(name: string, segment?: string): Promise<PopupState> {
