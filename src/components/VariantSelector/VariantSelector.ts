@@ -10,7 +10,7 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
 const setShadowContent = shadowContentFactory(styles)
 
-const placeholders = new Map<string, string>()
+let placeholder = ""
 
 /** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
@@ -65,12 +65,9 @@ export class VariantSelector extends NostoElement {
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    if (this.placeholder && placeholders.has(this.handle)) {
+    if (this.placeholder && placeholder) {
       this.toggleAttribute("loading", true)
-      const cachedContent = placeholders.get(this.handle) || ""
-      setShadowContent(this, cachedContent)
-      // Setup event listeners for cached content
-      setupOptionListeners(this)
+      setShadowContent(this, placeholder)
     }
     await loadAndRenderMarkup(this)
   }
@@ -88,7 +85,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     setShadowContent(element, selectorHTML.html)
 
     // Cache the rendered HTML for placeholder use
-    placeholders.set(element.handle, selectorHTML.html)
+    placeholder = selectorHTML.html
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)
