@@ -10,6 +10,8 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
 const setShadowContent = shadowContentFactory(styles)
 
+const placeholders = new Map<string, string>()
+
 /** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
 
@@ -31,6 +33,7 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {string} variantId - (Optional) The ID of the variant to preselect on load.
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} filtered - Whether to only show options leading to available variants. Defaults to false.
+ * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -41,6 +44,7 @@ export class VariantSelector extends NostoElement {
   @property(Number) variantId?: number
   @property(Boolean) preselect?: boolean
   @property(Boolean) filtered?: boolean
+  @property(Boolean) placeholder?: boolean
 
   /**
    * Internal state for current selections
@@ -61,6 +65,13 @@ export class VariantSelector extends NostoElement {
 
   async connectedCallback() {
     assertRequired(this, "handle")
+    if (this.placeholder && placeholders.has(this.handle)) {
+      this.toggleAttribute("loading", true)
+      const cachedContent = placeholders.get(this.handle) || ""
+      setShadowContent(this, cachedContent)
+      // Setup event listeners for cached content
+      setupOptionListeners(this)
+    }
     await loadAndRenderMarkup(this)
   }
 }
@@ -75,6 +86,9 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
     setShadowContent(element, selectorHTML.html)
+
+    // Cache the rendered HTML for placeholder use
+    placeholders.set(element.handle, selectorHTML.html)
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)
