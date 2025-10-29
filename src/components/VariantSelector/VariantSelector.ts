@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { logFirstUsage } from "@/logger"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -35,45 +36,53 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
-@customElement("nosto-variant-selector", { observe: true })
-export class VariantSelector extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    variantId: Number,
-    preselect: Boolean,
-    filtered: Boolean
-  }
+const VariantSelector = {
+  tag: "nosto-variant-selector",
+  handle: "",
+  variantId: 0,
+  preselect: false,
+  filtered: false,
+  selectedOptions: {},
 
-  handle!: string
-  variantId?: number
-  preselect?: boolean
-  filtered?: boolean
+  render: () => html`<slot></slot>`,
 
-  /**
-   * Internal state for current selections
-   * @hidden
-   */
-  selectedOptions: Record<string, string> = {}
+  connect: (host: any) => {
+    logFirstUsage()
 
-  constructor() {
-    super()
-    this.attachShadow({ mode: "open" })
-  }
-
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
+    // Create shadow DOM
+    if (!host.shadowRoot) {
+      host.attachShadow({ mode: "open" })
     }
-  }
 
-  async connectedCallback() {
-    assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    // Initialize selectedOptions
+    host.selectedOptions = {}
+
+    const init = async () => {
+      assertRequired(host, "handle")
+      await loadAndRenderMarkup(host)
+    }
+
+    // Watch for attribute changes
+    const observer = new MutationObserver(() => {
+      if (host.isConnected) {
+        loadAndRenderMarkup(host).catch(console.error)
+      }
+    })
+
+    observer.observe(host, {
+      attributes: true,
+      attributeFilter: ["handle", "variant-id", "preselect", "filtered"]
+    })
+
+    init().catch(console.error)
+
+    return () => {
+      observer.disconnect()
+    }
   }
 }
 
-async function loadAndRenderMarkup(element: VariantSelector) {
+async function loadAndRenderMarkup(element: any) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProductData(element)
@@ -103,7 +112,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   }
 }
 
-function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
+function initializeDefaultSelections(element: any, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
     variant = product.variants.find(v => v.id === element.variantId)
@@ -123,7 +132,7 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
   }
 }
 
-function setupOptionListeners(element: VariantSelector) {
+function setupOptionListeners(element: any) {
   element.shadowRoot!.addEventListener("click", async e => {
     const target = e.target as HTMLElement
     if (target.classList.contains("value")) {
@@ -136,7 +145,7 @@ function setupOptionListeners(element: VariantSelector) {
   })
 }
 
-export async function selectOption(element: VariantSelector, optionName: string, value: string) {
+export async function selectOption(element: any, optionName: string, value: string) {
   if (element.selectedOptions[optionName] === value) {
     return
   }
@@ -148,7 +157,7 @@ export async function selectOption(element: VariantSelector, optionName: string,
   emitVariantChange(element, productData)
 }
 
-function updateActiveStates(element: VariantSelector) {
+function updateActiveStates(element: any) {
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
     const active = !!optionName && element.selectedOptions[optionName] === optionValue
@@ -156,7 +165,7 @@ function updateActiveStates(element: VariantSelector) {
   })
 }
 
-function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
+function updateUnavailableStates(element: any, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
   const optionNames = product.options.map(option => option.name)
   product.variants
@@ -183,7 +192,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
   element.setAttribute("part", Array.from(parts).join(" "))
 }
 
-function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
+function emitVariantChange(element: any, product: ShopifyProduct) {
   const variant = getSelectedVariant(element, product)
   if (variant) {
     element.variantId = variant.id
@@ -197,7 +206,7 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   }
 }
 
-export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
+export function getSelectedVariant(element: any, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
       return product.options.every((option, index) => {
@@ -209,7 +218,7 @@ export function getSelectedVariant(element: VariantSelector, product: ShopifyPro
   )
 }
 
-async function fetchProductData({ handle, filtered }: VariantSelector) {
+async function fetchProductData({ handle, filtered }: any) {
   const url = createShopifyUrl(`/products/${handle}.js`)
   const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
 
@@ -228,8 +237,19 @@ function filteredOptions(product: ShopifyProduct) {
   })
 }
 
+// Define the hybrid component
+define(VariantSelector)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-variant-selector": VariantSelector
+    "nosto-variant-selector": HTMLElement & {
+      handle: string
+      variantId?: number
+      preselect?: boolean
+      filtered?: boolean
+      selectedOptions: Record<string, string>
+    }
   }
 }
+
+export { VariantSelector }

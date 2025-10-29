@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+import { html, define } from "hybrids"
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
@@ -11,6 +11,7 @@ import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
+import { logFirstUsage } from "@/logger"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -39,57 +40,63 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  *
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
-@customElement("nosto-simple-card", { observe: true })
-export class SimpleCard extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    alternate: Boolean,
-    brand: Boolean,
-    discount: Boolean,
-    rating: Number,
-    sizes: String
-  }
+const SimpleCard = {
+  tag: "nosto-simple-card",
+  handle: "",
+  alternate: false,
+  brand: false,
+  discount: false,
+  rating: 0,
+  sizes: "",
+  product: undefined,
+  productId: 0,
+  variantId: 0,
 
-  handle!: string
-  alternate?: boolean
-  brand?: boolean
-  discount?: boolean
-  rating?: number
-  sizes?: string
+  render: () => html`<slot></slot>`,
 
-  product?: JSONProduct
+  connect: (host: any) => {
+    logFirstUsage()
 
-  /** @hidden */
-  productId?: number
-  /** @hidden */
-  variantId?: number
-
-  constructor() {
-    super()
-    this.attachShadow({ mode: "open" })
-  }
-
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
+    // Create shadow DOM
+    if (!host.shadowRoot) {
+      host.attachShadow({ mode: "open" })
     }
-  }
 
-  async connectedCallback() {
-    assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
-    this.addEventListener("click", this)
-    this.addEventListener("variantchange", this)
-  }
+    const handleEvent = (event: Event) => {
+      switch (event.type) {
+        case "click":
+          onClick(host, event as MouseEvent)
+          break
+        case "variantchange":
+          onVariantChange(host, event as CustomEvent<VariantChangeDetail>)
+      }
+    }
 
-  handleEvent(event: Event) {
-    switch (event.type) {
-      case "click":
-        onClick(this, event as MouseEvent)
-        break
-      case "variantchange":
-        onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
+    const init = async () => {
+      assertRequired(host, "handle")
+      await loadAndRenderMarkup(host)
+      host.addEventListener("click", handleEvent)
+      host.addEventListener("variantchange", handleEvent)
+    }
+
+    // Watch for attribute changes
+    const observer = new MutationObserver(() => {
+      if (host.isConnected) {
+        loadAndRenderMarkup(host).catch(console.error)
+      }
+    })
+
+    observer.observe(host, {
+      attributes: true,
+      attributeFilter: ["handle", "alternate", "brand", "discount", "rating", "sizes"]
+    })
+
+    init().catch(console.error)
+
+    return () => {
+      observer.disconnect()
+      host.removeEventListener("click", handleEvent)
+      host.removeEventListener("variantchange", handleEvent)
     }
   }
 }
@@ -98,7 +105,7 @@ function isAddToCartClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
 }
 
-async function onClick(element: SimpleCard, event: MouseEvent) {
+async function onClick(element: any, event: MouseEvent) {
   if (isAddToCartClick(event) && element.productId && element.variantId) {
     event.stopPropagation()
     await addSkuToCart({
@@ -108,14 +115,14 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
   }
 }
 
-function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
+function onVariantChange(element: any, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
   element.variantId = variant.id
   updateSimpleCardContent(element, variant)
 }
 
-async function loadAndRenderMarkup(element: SimpleCard) {
+async function loadAndRenderMarkup(element: any) {
   if (element.product) {
     const normalized = convertProduct(element.product)
     const cardHTML = generateCardHTML(element, normalized)
@@ -142,8 +149,23 @@ async function fetchProductData(handle: string) {
   return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
+// Define the hybrid component
+define(SimpleCard)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-simple-card": SimpleCard
+    "nosto-simple-card": HTMLElement & {
+      handle: string
+      alternate?: boolean
+      brand?: boolean
+      discount?: boolean
+      rating?: number
+      sizes?: string
+      product?: JSONProduct
+      productId?: number
+      variantId?: number
+    }
   }
 }
+
+export { SimpleCard }

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { assertRequired } from "@/utils/assertRequired"
 import { createStore, injectKey, Store } from "./store"
-import { customElement } from "../decorators"
 import { syncSkuData } from "../common"
-import { NostoElement } from "../Element"
 import { provide } from "../inject"
+import { logFirstUsage } from "@/logger"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -19,35 +20,35 @@ import { provide } from "../inject"
  * @property {string} recoId (`reco-id`) - Required. The recommendation slot ID.
  * @property {boolean} skuSelected (`sku-selected`) - Indicates whether a SKU is currently selected.
  */
-@customElement("nosto-product")
-export class Product extends NostoElement {
-  /** @private */
-  static properties = {
-    productId: String,
-    recoId: String,
-    skuSelected: Boolean
-  }
+const Product = {
+  tag: "nosto-product",
+  productId: "",
+  recoId: "",
+  skuSelected: false,
+  selectedSkuId: "",
 
-  productId!: string
-  recoId!: string
-  skuSelected?: boolean
+  render: () => html`<slot></slot>`,
 
-  /** @hidden */
-  selectedSkuId?: string
+  connect: (host: any) => {
+    logFirstUsage()
 
-  connectedCallback() {
-    assertRequired(this, "productId", "recoId")
-    const store = createStore(this)
-    provide(this, injectKey, store)
-    addListeners(this, store)
-    registerSkuSelectors(this, store)
-    registerSkuIds(this, store)
-    registerAtcButtons(this, store)
-    registerSkuData(this, store)
+    // Validate required attributes
+    assertRequired(host, "productId", "recoId")
+
+    // Setup store and provide it
+    const store = createStore(host)
+    provide(host, injectKey, store)
+
+    // Setup listeners and registrations
+    addListeners(host, store)
+    registerSkuSelectors(host, store)
+    registerSkuIds(host, store)
+    registerAtcButtons(host, store)
+    registerSkuData(host, store)
   }
 }
 
-function addListeners(element: Product, { listen }: Store) {
+function addListeners(element: any, { listen }: Store) {
   listen("selectedSkuId", selectedSkuId => {
     element.selectedSkuId = selectedSkuId
     element.skuSelected = !!selectedSkuId
@@ -70,29 +71,29 @@ function addListeners(element: Product, { listen }: Store) {
   })
 }
 
-function registerSkuSelectors(element: Product, { selectSkuId }: Store) {
-  element.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
-    element.dataset.tracked = "true"
-    selectSkuId(element.value)
-    element.addEventListener("change", () => selectSkuId(element.value))
+function registerSkuSelectors(element: any, { selectSkuId }: Store) {
+  element.querySelectorAll("select[n-sku-selector]").forEach((selectElement: HTMLSelectElement) => {
+    selectElement.dataset.tracked = "true"
+    selectSkuId(selectElement.value)
+    selectElement.addEventListener("change", () => selectSkuId(selectElement.value))
   })
 }
 
-function registerSkuIds(element: Product, { selectSkuId, setSkuFields }: Store) {
-  element.querySelectorAll<HTMLElement>("[n-sku-id]:not([n-atc])").forEach(element => {
-    element.dataset.tracked = "true"
-    element.addEventListener("click", () => {
-      selectSkuId(element.getAttribute("n-sku-id")!)
-      syncSkuData(element, setSkuFields)
+function registerSkuIds(element: any, { selectSkuId, setSkuFields }: Store) {
+  element.querySelectorAll("[n-sku-id]:not([n-atc])").forEach((skuElement: HTMLElement) => {
+    skuElement.dataset.tracked = "true"
+    skuElement.addEventListener("click", () => {
+      selectSkuId(skuElement.getAttribute("n-sku-id")!)
+      syncSkuData(skuElement, setSkuFields)
     })
   })
 }
 
-function registerAtcButtons(element: Product, { addToCart, selectSkuId }: Store) {
-  element.querySelectorAll<HTMLElement>("[n-atc]:not([n-option])").forEach(element => {
-    element.dataset.tracked = "true"
-    element.addEventListener("click", async () => {
-      const skuId = element.closest("[n-sku-id]")?.getAttribute("n-sku-id")
+function registerAtcButtons(element: any, { addToCart, selectSkuId }: Store) {
+  element.querySelectorAll("[n-atc]:not([n-option])").forEach((button: HTMLElement) => {
+    button.dataset.tracked = "true"
+    button.addEventListener("click", async () => {
+      const skuId = button.closest("[n-sku-id]")?.getAttribute("n-sku-id")
       if (skuId) {
         selectSkuId(skuId)
       }
@@ -101,7 +102,7 @@ function registerAtcButtons(element: Product, { addToCart, selectSkuId }: Store)
   })
 }
 
-function registerSkuData(element: Product, { setSkus }: Store) {
+function registerSkuData(element: any, { setSkus }: Store) {
   const dataEl = element.querySelector("script[n-sku-data]")
   if (dataEl) {
     const parsed = JSON.parse(dataEl.innerHTML)
@@ -115,8 +116,18 @@ function registerSkuData(element: Product, { setSkus }: Store) {
   }
 }
 
+// Define the hybrid component
+define(Product)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-product": Product
+    "nosto-product": HTMLElement & {
+      productId: string
+      recoId: string
+      skuSelected?: boolean
+      selectedSkuId?: string
+    }
   }
 }
+
+export { Product }

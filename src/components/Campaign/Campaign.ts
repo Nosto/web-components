@@ -1,11 +1,12 @@
-import { customElement } from "../decorators"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { nostojs } from "@nosto/nosto-js"
 import { AttributedCampaignResult, JSONResult } from "@nosto/nosto-js/client"
 import { compile } from "@/templating/vue"
 import { getContext } from "../../templating/context"
-import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -31,73 +32,85 @@ import { addRequest } from "./orchestrator"
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
  */
-@customElement("nosto-campaign")
-export class Campaign extends NostoElement {
-  /** @private */
-  static properties = {
-    placement: String,
-    productId: String,
-    variantId: String,
-    template: String,
-    init: String,
-    lazy: Boolean,
-    cartSynced: Boolean
-  }
+const Campaign = {
+  tag: "nosto-campaign",
+  placement: "",
+  productId: "",
+  variantId: "",
+  template: "",
+  init: "true",
+  lazy: false,
+  cartSynced: false,
+  templateElement: undefined,
 
-  placement!: string
-  productId?: string
-  variantId?: string
-  template?: string
-  init?: string
-  lazy?: boolean
-  cartSynced?: boolean
+  render: () => html`<slot></slot>`,
 
-  /** @hidden */
-  templateElement?: HTMLTemplateElement
+  connect: (host: any) => {
+    logFirstUsage()
 
-  #load = this.load.bind(this)
-
-  async connectedCallback() {
-    if (!this.placement && !this.id) {
+    if (!host.placement && !host.id) {
       throw new Error("placement or id attribute is required for Campaign")
     }
 
-    // Register cart update listener if cart-synced is enabled
-    if (this.cartSynced) {
-      const api = await new Promise(nostojs)
-      api.listen("cartupdated", this.#load)
-    }
+    const loadFn = () => loadCampaign(host)
 
-    if (this.init !== "false") {
-      if (this.lazy) {
-        const observer = new IntersectionObserver(async entries => {
-          if (entries[0].isIntersecting) {
-            observer.disconnect()
-            await loadCampaign(this)
-          }
-        })
-        observer.observe(this)
-      } else {
-        await loadCampaign(this)
+    // Setup cart sync listener if enabled
+    const setupCartSync = async () => {
+      if (host.cartSynced) {
+        const api = await new Promise(nostojs)
+        api.listen("cartupdated", loadFn)
+
+        // Return cleanup function for cart listener
+        return async () => {
+          const api = await new Promise(nostojs)
+          api.unlisten("cartupdated", loadFn)
+        }
       }
+      return () => {}
     }
-  }
 
-  async disconnectedCallback() {
-    // Unregister cart update listener
-    if (!this.cartSynced) {
-      return
+    // Initialize campaign loading
+    const initCampaign = () => {
+      if (host.init !== "false") {
+        if (host.lazy) {
+          const observer = new IntersectionObserver(async entries => {
+            if (entries[0].isIntersecting) {
+              observer.disconnect()
+              await loadCampaign(host)
+            }
+          })
+          observer.observe(host)
+          return () => observer.disconnect()
+        } else {
+          loadCampaign(host).catch(console.error)
+          return () => {}
+        }
+      }
+      return () => {}
     }
-    const api = await new Promise(nostojs)
-    api.unlisten("cartupdated", this.#load)
-  }
 
-  async load() {
-    await loadCampaign(this)
+    // Store cleanup functions
+    let cartCleanup: (() => void) | (() => Promise<void>) = () => {}
+    let initCleanup = () => {}
+
+    // Setup
+    setupCartSync().then(cleanup => {
+      cartCleanup = cleanup
+    })
+    initCleanup = initCampaign()
+
+    // Expose load method
+    host.load = () => loadCampaign(host)
+
+    // Return cleanup function
+    return async () => {
+      initCleanup()
+      await cartCleanup()
+    }
   }
 }
 
-export async function loadCampaign(element: Campaign) {
+export async function loadCampaign(element: any) {
   element.toggleAttribute("loading", true)
   try {
     const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
@@ -128,8 +141,23 @@ export async function loadCampaign(element: Campaign) {
   }
 }
 
+// Define the hybrid component
+define(Campaign)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-campaign": Campaign
+    "nosto-campaign": HTMLElement & {
+      placement: string
+      productId?: string
+      variantId?: string
+      template?: string
+      init?: string
+      lazy?: boolean
+      cartSynced?: boolean
+      templateElement?: HTMLTemplateElement
+      load: () => Promise<void>
+    }
   }
 }
+
+export { Campaign }

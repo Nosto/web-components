@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { define } from "hybrids"
 import type { Crop, ImageProps } from "./types"
-import { customElement } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
-import { NostoElement } from "../Element"
+import { logFirstUsage } from "@/logger"
 
 /**
  * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
@@ -28,76 +29,87 @@ import { NostoElement } from "../Element"
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  * @property {"high"|"low"|"auto"} [fetchpriority] (`fetch-priority`) - Provides a hint to the browser about the priority of this image relative to other images.
  */
-@customElement("nosto-image", { observe: true })
-export class Image extends NostoElement {
-  /** @private */
-  static properties = {
-    src: String,
-    width: Number,
-    height: Number,
-    aspectRatio: Number,
-    layout: String,
-    crop: String,
-    alt: String,
-    sizes: String,
-    breakpoints: Array,
-    unstyled: Boolean,
-    fetchpriority: String
-  }
+const Image = {
+  tag: "nosto-image",
+  src: "",
+  width: 0,
+  height: 0,
+  aspectRatio: 0,
+  layout: "",
+  crop: "",
+  alt: "",
+  sizes: "",
+  breakpoints: undefined,
+  unstyled: false,
+  fetchpriority: "",
 
-  src!: string
-  width?: number
-  height?: number
-  aspectRatio?: number
-  layout?: Layout
-  crop?: Crop
-  alt?: string
-  sizes?: string
-  breakpoints?: number[]
-  unstyled?: boolean
-  fetchpriority?: "high" | "low" | "auto"
+  connect: (host: any) => {
+    logFirstUsage()
 
-  constructor() {
-    super()
-    this.attachShadow({ mode: "open" })
-  }
-
-  attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      this.connectedCallback()
-    }
-  }
-
-  connectedCallback() {
-    validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = this
-
-    // Create props object and filter out null/undefined values
-    const rawProps = {
-      src,
-      width,
-      height,
-      aspectRatio,
-      layout,
-      crop,
-      alt,
-      sizes,
-      breakpoints,
-      fetchpriority
+    // Create shadow DOM
+    if (!host.shadowRoot) {
+      host.attachShadow({ mode: "open" })
     }
 
-    // Filter out null and undefined values
-    const transformProps = Object.fromEntries(
-      Object.entries(rawProps).filter(([, value]) => value != null)
-    ) as ImageProps
+    // Function to update image
+    const updateImage = () => {
+      validateProps(host)
+      const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = host
 
-    let img = this.shadowRoot!.querySelector("img")
-    if (img) {
-      setProps(img, transformProps, unstyled)
-    } else {
-      img = document.createElement("img")
-      setProps(img, transformProps, unstyled)
-      this.shadowRoot!.replaceChildren(img)
+      // Create props object and filter out null/undefined values
+      const rawProps = {
+        src,
+        width,
+        height,
+        aspectRatio,
+        layout,
+        crop,
+        alt,
+        sizes,
+        breakpoints,
+        fetchpriority
+      }
+
+      // Filter out null and undefined values
+      const transformProps = Object.fromEntries(
+        Object.entries(rawProps).filter(([, value]) => value != null && value !== "" && value !== 0)
+      ) as ImageProps
+
+      let img = host.shadowRoot!.querySelector("img")
+      if (img) {
+        setProps(img, transformProps, unstyled)
+      } else {
+        img = document.createElement("img")
+        setProps(img, transformProps, unstyled)
+        host.shadowRoot!.replaceChildren(img)
+      }
+    }
+
+    // Initial render
+    updateImage()
+
+    // Re-render when attributes change
+    const observer = new MutationObserver(updateImage)
+
+    observer.observe(host, {
+      attributes: true,
+      attributeFilter: [
+        "src",
+        "width",
+        "height",
+        "aspect-ratio",
+        "layout",
+        "crop",
+        "alt",
+        "sizes",
+        "breakpoints",
+        "unstyled",
+        "fetch-priority"
+      ]
+    })
+
+    return () => {
+      observer.disconnect()
     }
   }
 }
@@ -114,7 +126,7 @@ function setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: 
   }
 }
 
-function validateProps(element: Image) {
+function validateProps(element: any) {
   if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
     throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
   }
@@ -135,8 +147,25 @@ function validateProps(element: Image) {
   }
 }
 
+// Define the hybrid component
+define(Image)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-image": Image
+    "nosto-image": HTMLElement & {
+      src: string
+      width?: number
+      height?: number
+      aspectRatio?: number
+      layout?: Layout
+      crop?: Crop
+      alt?: string
+      sizes?: string
+      breakpoints?: number[]
+      unstyled?: boolean
+      fetchpriority?: "high" | "low" | "auto"
+    }
   }
 }
+
+export { Image }

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { assertRequired } from "@/utils/assertRequired"
 import { intersectionOf } from "@/utils/intersectionOf"
 import { injectKey, Store } from "../Product/store"
-import { customElement } from "../decorators"
 import { syncSkuData } from "../common"
-import { NostoElement } from "../Element"
 import { inject } from "../inject"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -26,26 +27,25 @@ import { inject } from "../inject"
  *
  * @property {string} name - Required. The identifier for this option group
  */
-@customElement("nosto-sku-options")
-export class SkuOptions extends NostoElement {
-  /** @private */
-  static properties = {
-    name: String
-  }
+const SkuOptions = {
+  tag: "nosto-sku-options",
+  name: "",
 
-  name!: string
+  render: () => html`<slot></slot>`,
 
-  connectedCallback() {
-    assertRequired(this, "name")
-    initSkuOptions(this, inject(this, injectKey)!)
+  connect: (host: any) => {
+    logFirstUsage()
+
+    assertRequired(host, "name")
+    initSkuOptions(host, inject(host, injectKey)!)
   }
 }
 
-function initSkuOptions(element: SkuOptions, store: Store) {
+function initSkuOptions(element: any, store: Store) {
   store.registerOptionGroup()
   const optionId = element.name
   // implementation via [n-option] elements
-  const optionElements = Array.from(element.querySelectorAll<HTMLElement>("[n-option]"))
+  const optionElements = Array.from(element.querySelectorAll("[n-option]")) as HTMLElement[]
   if (optionElements.length) {
     optionElements.forEach(element => (element.dataset.tracked = "true"))
     registerClickEvents(optionId, store, optionElements)
@@ -54,7 +54,7 @@ function initSkuOptions(element: SkuOptions, store: Store) {
     return
   }
   // implementation via <select> element
-  const select = element.querySelector<HTMLSelectElement>("select[n-target]")
+  const select = element.querySelector("select[n-target]") as HTMLSelectElement
   if (select) {
     select.dataset.tracked = "true"
     registerSelectChange(optionId, store, select)
@@ -64,7 +64,7 @@ function initSkuOptions(element: SkuOptions, store: Store) {
 }
 
 function handleSelectPreselection(optionId: string, { selectSkuOption }: Store, select: HTMLSelectElement) {
-  const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
+  const selected = select.querySelector("option[n-skus]:checked") as HTMLElement
   if (selected) {
     const skuIds = getAllSkus(selected)
     selectSkuOption(optionId, skuIds)
@@ -73,7 +73,7 @@ function handleSelectPreselection(optionId: string, { selectSkuOption }: Store, 
 
 function registerSelectChange(optionId: string, { selectSkuOption }: Store, select: HTMLSelectElement) {
   select.addEventListener("change", () => {
-    const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
+    const selected = select.querySelector("option[n-skus]:checked") as HTMLElement
     if (!selected) {
       return
     }
@@ -151,8 +151,15 @@ function setAvailability(elements: Element[]) {
   })
 }
 
+// Define the hybrid component
+define(SkuOptions)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-sku-options": SkuOptions
+    "nosto-sku-options": HTMLElement & {
+      name: string
+    }
   }
 }
+
+export { SkuOptions }

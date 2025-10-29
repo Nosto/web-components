@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { nostojs } from "@nosto/nosto-js"
 import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that fetches Nosto placement results and renders them using Shopify section templates.
@@ -17,42 +18,44 @@ import { JSONResult } from "@nosto/nosto-js/client"
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
  */
-@customElement("nosto-section-campaign")
-export class SectionCampaign extends NostoElement {
-  /** @private */
-  static properties = {
-    placement: String,
-    section: String
-  }
+const SectionCampaign = {
+  tag: "nosto-section-campaign",
+  placement: "",
+  section: "",
 
-  placement!: string
-  section!: string
+  render: () => html`<slot></slot>`,
 
-  async connectedCallback() {
-    this.toggleAttribute("loading", true)
-    try {
-      await this.#initializeMarkup()
-    } finally {
-      this.toggleAttribute("loading", false)
+  connect: (host: any) => {
+    logFirstUsage()
+
+    const initializeMarkup = async () => {
+      const api = await new Promise(nostojs)
+      const rec = (await addRequest({
+        placement: host.placement,
+        responseMode: "JSON_ORIGINAL" // TODO use a responseMode that returns only the needed data
+      })) as JSONResult
+      if (!rec) {
+        return
+      }
+      const markup = await getSectionMarkup(host, rec)
+      host.innerHTML = markup
+      api.attributeProductClicksInCampaign(host, rec)
     }
-  }
 
-  async #initializeMarkup() {
-    const api = await new Promise(nostojs)
-    const rec = (await addRequest({
-      placement: this.placement,
-      responseMode: "JSON_ORIGINAL" // TODO use a responseMode that returns only the needed data
-    })) as JSONResult
-    if (!rec) {
-      return
+    const init = async () => {
+      host.toggleAttribute("loading", true)
+      try {
+        await initializeMarkup()
+      } finally {
+        host.toggleAttribute("loading", false)
+      }
     }
-    const markup = await getSectionMarkup(this, rec)
-    this.innerHTML = markup
-    api.attributeProductClicksInCampaign(this, rec)
+
+    init().catch(console.error)
   }
 }
 
-async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
+async function getSectionMarkup(element: any, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
   const target = createShopifyUrl("/search")
   target.searchParams.set("section_id", element.section)
@@ -69,8 +72,16 @@ async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }
 
+// Define the hybrid component
+define(SectionCampaign)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-section-campaign": SectionCampaign
+    "nosto-section-campaign": HTMLElement & {
+      placement: string
+      section: string
+    }
   }
 }
+
+export { SectionCampaign }

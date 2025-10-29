@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { nostojs } from "@nosto/nosto-js"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
+import { logFirstUsage } from "@/logger"
 
 /**
  * A custom element that provides conditional content rendering based on user segments.
@@ -11,24 +12,39 @@ import { NostoElement } from "../Element"
  *
  * @category Store level templating
  */
-@customElement("nosto-control")
-export class Control extends NostoElement {
-  async connectedCallback() {
-    const api = await new Promise(nostojs)
-    const segments = await api.internal.getSegments()
-    const template = Array.from(this.querySelectorAll<HTMLTemplateElement>(":scope > template[segment]")).find(el =>
-      // TODO provide more filtering options: schedule, affinities etc
-      segments?.includes(el.getAttribute("segment")!)
-    )
-    if (template) {
-      const clone = template.content.cloneNode(true) as DocumentFragment
-      this.replaceChildren(...clone.childNodes)
+const Control = {
+  tag: "nosto-control",
+
+  render: () => html`<slot></slot>`,
+
+  connect: (host: any) => {
+    logFirstUsage()
+
+    // Setup segments-based content replacement
+    const setupSegments = async () => {
+      const api = await new Promise(nostojs)
+      const segments = await api.internal.getSegments()
+      const template = Array.from(host.querySelectorAll(":scope > template[segment]")).find((el: any) =>
+        // TODO provide more filtering options: schedule, affinities etc
+        segments?.includes(el.getAttribute("segment")!)
+      ) as HTMLTemplateElement
+      if (template) {
+        const clone = template.content.cloneNode(true) as DocumentFragment
+        host.replaceChildren(...clone.childNodes)
+      }
     }
+
+    setupSegments().catch(console.error)
   }
 }
 
+// Define the hybrid component
+define(Control)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-control": Control
+    "nosto-control": HTMLElement
   }
 }
+
+export { Control }

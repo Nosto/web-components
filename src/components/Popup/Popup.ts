@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { html, define } from "hybrids"
 import { nostojs } from "@nosto/nosto-js"
-import { customElement } from "../decorators"
-import { NostoElement } from "../Element"
 import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { logFirstUsage } from "@/logger"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -18,54 +19,60 @@ const setShadowContent = shadowContentFactory(styles)
  * @property {string} name - Required name used for analytics and localStorage persistence. The popup's closed state will be remembered.
  * @property {string} [segment] - Optional Nosto segment that acts as a precondition for activation. Only users in this segment will see the popup.
  */
-@customElement("nosto-popup")
-export class Popup extends NostoElement {
-  /** @private */
-  static properties = {
-    name: String,
-    segment: String
-  }
+const Popup = {
+  tag: "nosto-popup",
+  name: "",
+  segment: "",
 
-  name!: string
-  segment?: string
+  render: () => html`<slot></slot>`,
 
-  constructor() {
-    super()
-    this.attachShadow({ mode: "open" })
-  }
+  connect: (host: any) => {
+    logFirstUsage()
 
-  async connectedCallback() {
-    assertRequired(this, "name")
-    const state = await getPopupState(this.name, this.segment)
-    if (state === "closed") {
-      this.style.display = "none"
-      return
+    // Create shadow DOM
+    if (!host.shadowRoot) {
+      host.attachShadow({ mode: "open" })
     }
-    if (!this.shadowRoot?.innerHTML) {
-      initializeShadowContent(this, state)
-    }
-    this.addEventListener("click", this)
-    setPopupState(this.name, "ribbon")
-  }
 
-  handleEvent(event: Event) {
-    const target = event.target as HTMLElement
-    const toClose = target?.matches("[n-close]") || target?.closest("[n-close]")
-    const toRibbon = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
-    const toOpen = target?.matches("[slot='ribbon']") || target?.closest("[slot='ribbon']")
-    console.log("Popup clicked:", target, { toOpen, toClose, toRibbon })
+    const handleEvent = (event: Event) => {
+      const target = event.target as HTMLElement
+      const toClose = target?.matches("[n-close]") || target?.closest("[n-close]")
+      const toRibbon = target?.matches("[n-ribbon]") || target?.closest("[n-ribbon]")
+      const toOpen = target?.matches("[slot='ribbon']") || target?.closest("[slot='ribbon']")
+      console.log("Popup clicked:", target, { toOpen, toClose, toRibbon })
 
-    if (toOpen || toClose || toRibbon) {
-      event.preventDefault()
-      event.stopPropagation()
+      if (toOpen || toClose || toRibbon) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+      if (toClose) {
+        closePopup(host)
+      } else if (toOpen) {
+        updateShadowContent(host, "open")
+      } else if (toRibbon) {
+        setPopupState(host.name, "ribbon")
+        updateShadowContent(host, "ribbon")
+      }
     }
-    if (toClose) {
-      closePopup(this)
-    } else if (toOpen) {
-      updateShadowContent(this, "open")
-    } else if (toRibbon) {
-      setPopupState(this.name, "ribbon")
-      updateShadowContent(this, "ribbon")
+
+    const init = async () => {
+      assertRequired(host, "name")
+      const state = await getPopupState(host.name, host.segment)
+      if (state === "closed") {
+        host.style.display = "none"
+        return
+      }
+      if (!host.shadowRoot?.innerHTML) {
+        initializeShadowContent(host, state)
+      }
+      host.addEventListener("click", handleEvent)
+      setPopupState(host.name, "ribbon")
+    }
+
+    init().catch(console.error)
+
+    return () => {
+      host.removeEventListener("click", handleEvent)
     }
   }
 }
@@ -79,7 +86,7 @@ type PopupData = {
   state: PopupState
 }
 
-function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
+function initializeShadowContent(element: any, mode: "open" | "ribbon" = "open") {
   setShadowContent(
     element,
     `
@@ -95,7 +102,7 @@ function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open
   }
 }
 
-function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
+function updateShadowContent(element: any, mode: "open" | "ribbon" = "open") {
   const dialog = element.shadowRoot?.querySelector<HTMLDialogElement>("dialog")
   const ribbon = element.shadowRoot?.querySelector(".ribbon")
   if (dialog && ribbon) {
@@ -109,7 +116,7 @@ function updateShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
   }
 }
 
-function closePopup(element: Popup) {
+function closePopup(element: any) {
   setPopupState(element.name, "closed")
   element.style.display = "none"
 }
@@ -139,8 +146,16 @@ async function checkSegment(segment: string) {
   return segments?.includes(segment) || false
 }
 
+// Define the hybrid component
+define(Popup)
+
 declare global {
   interface HTMLElementTagNameMap {
-    "nosto-popup": Popup
+    "nosto-popup": HTMLElement & {
+      name: string
+      segment?: string
+    }
   }
 }
+
+export { Popup }
