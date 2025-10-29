@@ -1,3 +1,10 @@
+## [9.12.1](https://github.com/Nosto/web-components/compare/v9.12.0...v9.12.1) (2025-10-29)
+
+
+### Bug Fixes
+
+* use property decorators ([d3c50ed](https://github.com/Nosto/web-components/commit/d3c50edef173fb488aee4e67b2a0140f2cac5781))
+
 # [9.12.0](https://github.com/Nosto/web-components/compare/v9.11.0...v9.12.0) (2025-10-28)
 
 
