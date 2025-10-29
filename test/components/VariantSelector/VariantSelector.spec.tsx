@@ -599,9 +599,7 @@ describe("VariantSelector", () => {
     expect(initialContent).toContain("Size:")
 
     // Second, render with placeholder enabled - should use cached content immediately
-    const selector2 = (
-      <nosto-variant-selector handle="variant-test-product" placeholder={true} />
-    ) as VariantSelector
+    const selector2 = (<nosto-variant-selector handle="variant-test-product" placeholder={true} />) as VariantSelector
     await selector2.connectedCallback()
 
     const placeholderContent = getShadowContent(selector2)

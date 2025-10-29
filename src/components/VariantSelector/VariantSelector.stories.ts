@@ -83,3 +83,20 @@ export const MultipleProducts: Story = {
     </div>
   `
 }
+
+export const WithPlaceholder: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
+      <nosto-variant-selector handle="${args.handle}" placeholder></nosto-variant-selector>
+    </nosto-simple-card>
+  `,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the `placeholder` attribute is set, the component will display cached content from a previous render while loading new data. This is useful for preventing layout shifts and providing a better user experience."
+      }
+    }
+  }
+}
