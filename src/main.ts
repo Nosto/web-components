@@ -9,3 +9,7 @@ export { SectionCampaign } from "./components/SectionCampaign/SectionCampaign"
 export { SimpleCard } from "./components/SimpleCard/SimpleCard"
 export { SkuOptions } from "./components/SkuOptions/SkuOptions"
 export { VariantSelector } from "./components/VariantSelector/VariantSelector"
+
+// Hybrids POC exports
+export { HybridSimpleCardDescriptor } from "./components/SimpleCard/SimpleCardHybrid"
+export { html as hybridHtml } from "./templating/hybrids"
