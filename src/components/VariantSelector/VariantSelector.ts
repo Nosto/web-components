@@ -55,37 +55,37 @@ export class VariantSelector extends NostoElement {
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
-      await this.loadAndRenderMarkup()
+      await this.#loadAndRenderMarkup()
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.loadAndRenderMarkup()
+    await this.#loadAndRenderMarkup()
   }
 
-  private async loadAndRenderMarkup() {
+  async #loadAndRenderMarkup() {
     this.toggleAttribute("loading", true)
     try {
-      const productData = await this.fetchProductData()
+      const productData = await this.#fetchProductData()
 
       // Initialize selections with first value of each option
-      this.initializeDefaultSelections(productData)
+      this.#initializeDefaultSelections(productData)
 
       const selectorHTML = generateVariantSelectorHTML(this, productData)
       setShadowContent(this, selectorHTML.html)
 
       // Setup event listeners for option buttons
-      this.setupOptionListeners()
+      this.#setupOptionListeners()
 
       // active state for selected options
-      this.updateActiveStates()
+      this.#updateActiveStates()
       // unavailable state for options without available variants
-      this.updateUnavailableStates(productData)
+      this.#updateUnavailableStates(productData)
       // TODO disabled state
 
       if (Object.keys(this.selectedOptions).length > 0) {
-        this.emitVariantChange(productData)
+        this.#emitVariantChange(productData)
       }
 
       this.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
@@ -94,7 +94,7 @@ export class VariantSelector extends NostoElement {
     }
   }
 
-  private initializeDefaultSelections(product: ShopifyProduct) {
+  #initializeDefaultSelections(product: ShopifyProduct) {
     let variant: ShopifyVariant | undefined
     if (this.variantId) {
       variant = product.variants.find(v => v.id === this.variantId)
@@ -114,7 +114,7 @@ export class VariantSelector extends NostoElement {
     }
   }
 
-  private setupOptionListeners() {
+  #setupOptionListeners() {
     this.shadowRoot!.addEventListener("click", async e => {
       const target = e.target as HTMLElement
       if (target.classList.contains("value")) {
@@ -132,22 +132,22 @@ export class VariantSelector extends NostoElement {
       return
     }
     this.selectedOptions[optionName] = value
-    this.updateActiveStates()
+    this.#updateActiveStates()
 
     // Fetch product data and emit variant change
-    const productData = await this.fetchProductData()
-    this.emitVariantChange(productData)
+    const productData = await this.#fetchProductData()
+    this.#emitVariantChange(productData)
   }
 
-  private updateActiveStates() {
+  #updateActiveStates() {
     this.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
       const { optionName, optionValue } = button.dataset
       const active = !!optionName && this.selectedOptions[optionName] === optionValue
-      this.togglePart(button, "active", active)
+      this.#togglePart(button, "active", active)
     })
   }
 
-  private updateUnavailableStates(product: ShopifyProduct) {
+  #updateUnavailableStates(product: ShopifyProduct) {
     const availableOptions = new Set<string>()
     const optionNames = product.options.map(option => option.name)
     product.variants
@@ -160,11 +160,11 @@ export class VariantSelector extends NostoElement {
     this.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
       const { optionName, optionValue } = button.dataset
       const available = availableOptions.has(`${optionName}::${optionValue}`)
-      this.togglePart(button, "unavailable", !available)
+      this.#togglePart(button, "unavailable", !available)
     })
   }
 
-  private togglePart(element: HTMLElement, partName: string, enable: boolean) {
+  #togglePart(element: HTMLElement, partName: string, enable: boolean) {
     const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
     if (enable) {
       parts.add(partName)
@@ -174,7 +174,7 @@ export class VariantSelector extends NostoElement {
     element.setAttribute("part", Array.from(parts).join(" "))
   }
 
-  private emitVariantChange(product: ShopifyProduct) {
+  #emitVariantChange(product: ShopifyProduct) {
     const variant = getSelectedVariant(this, product)
     if (variant) {
       this.variantId = variant.id
@@ -188,17 +188,17 @@ export class VariantSelector extends NostoElement {
     }
   }
 
-  private async fetchProductData() {
+  async #fetchProductData() {
     const url = createShopifyUrl(`/products/${this.handle}.js`)
     const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
 
     if (this.filtered) {
-      return { ...data, options: this.filteredOptions(data) }
+      return { ...data, options: this.#filteredOptions(data) }
     }
     return data
   }
 
-  private filteredOptions(product: ShopifyProduct) {
+  #filteredOptions(product: ShopifyProduct) {
     return product.options.map(option => {
       return {
         ...option,

@@ -32,14 +32,14 @@ export class Product extends NostoElement {
     assertRequired(this, "productId", "recoId")
     const store = createStore(this)
     provide(this, injectKey, store)
-    this.addListeners(store)
-    this.registerSkuSelectors(store)
-    this.registerSkuIds(store)
-    this.registerAtcButtons(store)
-    this.registerSkuData(store)
+    this.#addListeners(store)
+    this.#registerSkuSelectors(store)
+    this.#registerSkuIds(store)
+    this.#registerAtcButtons(store)
+    this.#registerSkuData(store)
   }
 
-  private addListeners({ listen }: Store) {
+  #addListeners({ listen }: Store) {
     listen("selectedSkuId", selectedSkuId => {
       this.selectedSkuId = selectedSkuId
       this.skuSelected = !!selectedSkuId
@@ -62,7 +62,7 @@ export class Product extends NostoElement {
     })
   }
 
-  private registerSkuSelectors({ selectSkuId }: Store) {
+  #registerSkuSelectors({ selectSkuId }: Store) {
     this.querySelectorAll<HTMLSelectElement>("select[n-sku-selector]").forEach(element => {
       element.dataset.tracked = "true"
       selectSkuId(element.value)
@@ -70,7 +70,7 @@ export class Product extends NostoElement {
     })
   }
 
-  private registerSkuIds({ selectSkuId, setSkuFields }: Store) {
+  #registerSkuIds({ selectSkuId, setSkuFields }: Store) {
     this.querySelectorAll<HTMLElement>("[n-sku-id]:not([n-atc])").forEach(element => {
       element.dataset.tracked = "true"
       element.addEventListener("click", () => {
@@ -80,7 +80,7 @@ export class Product extends NostoElement {
     })
   }
 
-  private registerAtcButtons({ addToCart, selectSkuId }: Store) {
+  #registerAtcButtons({ addToCart, selectSkuId }: Store) {
     this.querySelectorAll<HTMLElement>("[n-atc]:not([n-option])").forEach(element => {
       element.dataset.tracked = "true"
       element.addEventListener("click", async () => {
@@ -93,7 +93,7 @@ export class Product extends NostoElement {
     })
   }
 
-  private registerSkuData({ setSkus }: Store) {
+  #registerSkuData({ setSkus }: Store) {
     const dataEl = this.querySelector("script[n-sku-data]")
     if (dataEl) {
       const parsed = JSON.parse(dataEl.innerHTML)

@@ -36,7 +36,7 @@ export class Popup extends NostoElement {
       return
     }
     if (!this.shadowRoot?.innerHTML) {
-      this.initializeShadowContent(state)
+      this.#initializeShadowContent(state)
     }
     this.addEventListener("click", this)
     setPopupState(this.name, "ribbon")
@@ -54,16 +54,16 @@ export class Popup extends NostoElement {
       event.stopPropagation()
     }
     if (toClose) {
-      this.closePopup()
+      this.#closePopup()
     } else if (toOpen) {
-      this.updateShadowContent("open")
+      this.#updateShadowContent("open")
     } else if (toRibbon) {
       setPopupState(this.name, "ribbon")
-      this.updateShadowContent("ribbon")
+      this.#updateShadowContent("ribbon")
     }
   }
 
-  private initializeShadowContent(mode: "open" | "ribbon" = "open") {
+  #initializeShadowContent(mode: "open" | "ribbon" = "open") {
     setShadowContent(
       this,
       `
@@ -79,7 +79,7 @@ export class Popup extends NostoElement {
     }
   }
 
-  private updateShadowContent(mode: "open" | "ribbon" = "open") {
+  #updateShadowContent(mode: "open" | "ribbon" = "open") {
     const dialog = this.shadowRoot?.querySelector<HTMLDialogElement>("dialog")
     const ribbon = this.shadowRoot?.querySelector(".ribbon")
     if (dialog && ribbon) {
@@ -93,7 +93,7 @@ export class Popup extends NostoElement {
     }
   }
 
-  private closePopup() {
+  #closePopup() {
     setPopupState(this.name, "closed")
     this.style.display = "none"
   }

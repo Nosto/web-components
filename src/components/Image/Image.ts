@@ -54,7 +54,7 @@ export class Image extends NostoElement {
   }
 
   connectedCallback() {
-    this.validateProps()
+    this.#validateProps()
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = this
 
     // Create props object and filter out null/undefined values
@@ -78,15 +78,15 @@ export class Image extends NostoElement {
 
     let img = this.shadowRoot!.querySelector("img")
     if (img) {
-      this.setProps(img, transformProps, unstyled)
+      this.#setProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
-      this.setProps(img, transformProps, unstyled)
+      this.#setProps(img, transformProps, unstyled)
       this.shadowRoot!.replaceChildren(img)
     }
   }
 
-  private setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
+  #setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
     const { style, ...props } = transform(transformProps)
     Object.entries(props).forEach(([key, value]) => {
       if (value != null) {
@@ -98,7 +98,7 @@ export class Image extends NostoElement {
     }
   }
 
-  private validateProps() {
+  #validateProps() {
     if (this.layout && !["fixed", "constrained", "fullWidth"].includes(this.layout)) {
       throw new Error(`Invalid layout: ${this.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
     }
