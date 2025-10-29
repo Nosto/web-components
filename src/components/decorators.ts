@@ -1,33 +1,15 @@
-type FieldType<T> = T extends string
-  ? StringConstructor
-  : T extends number
-    ? NumberConstructor
-    : T extends boolean
-      ? BooleanConstructor
-      : T extends unknown[]
-        ? ArrayConstructor
-        : never
+type FieldType = StringConstructor | NumberConstructor | BooleanConstructor | ArrayConstructor
 
 type ConstructorMetadata<T extends HTMLElement> = {
   new (): T
-  properties?: { [K in keyof T]?: FieldType<T[K]> }
+  mappedAttributes?: string[]
   observedAttributes?: string[]
 }
 
-type Flags = {
-  observe?: boolean
-}
-
-export function customElement<T extends HTMLElement>(tagName: string, flags?: Flags) {
+export function customElement<T extends HTMLElement>(tagName: string, flags?: { observe?: boolean }) {
   return function (constructor: ConstructorMetadata<T>) {
-    if (constructor.properties) {
-      Object.entries(constructor.properties).forEach(([fieldName, type]) => {
-        const propertyDescriptor = getPropertyDescriptor(fieldName, type)
-        Object.defineProperty(constructor.prototype, fieldName, propertyDescriptor)
-      })
-      if (flags?.observe) {
-        constructor.observedAttributes = Object.keys(constructor.properties).map(toKebabCase)
-      }
+    if (flags?.observe) {
+      constructor.observedAttributes = constructor.prototype.mappedAttributes || []
     }
     if (!window.customElements.get(tagName)) {
       window.customElements.define(tagName, constructor)
@@ -35,7 +17,20 @@ export function customElement<T extends HTMLElement>(tagName: string, flags?: Fl
   }
 }
 
-function getPropertyDescriptor(propertyName: string, type: unknown) {
+export function property(type: FieldType) {
+  return function (target: unknown, propertyName: string) {
+    Object.defineProperty(target, propertyName, getPropertyDescriptor(propertyName, type))
+    const prototype = target as ConstructorMetadata<HTMLElement>
+    const attributeName = toKebabCase(propertyName)
+    if (!prototype.mappedAttributes) {
+      prototype.mappedAttributes = [attributeName]
+    } else if (!prototype.mappedAttributes.includes(attributeName)) {
+      prototype.mappedAttributes.push(attributeName)
+    }
+  }
+}
+
+function getPropertyDescriptor(propertyName: string, type: FieldType) {
   const attributeName = toKebabCase(propertyName)
   if (type === Boolean) {
     return booleanAttribute(attributeName)

@@ -1,7 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
 import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
@@ -19,14 +19,8 @@ import { JSONResult } from "@nosto/nosto-js/client"
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
-  /** @private */
-  static properties = {
-    placement: String,
-    section: String
-  }
-
-  placement!: string
-  section!: string
+  @property(String) placement!: string
+  @property(String) section!: string
 
   async connectedCallback() {
     this.toggleAttribute("loading", true)
