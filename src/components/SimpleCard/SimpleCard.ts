@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
@@ -41,22 +41,12 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  */
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    alternate: Boolean,
-    brand: Boolean,
-    discount: Boolean,
-    rating: Number,
-    sizes: String
-  }
-
-  handle!: string
-  alternate?: boolean
-  brand?: boolean
-  discount?: boolean
-  rating?: number
-  sizes?: string
+  @property(String) handle!: string
+  @property(Boolean) alternate?: boolean
+  @property(Boolean) brand?: boolean
+  @property(Boolean) discount?: boolean
+  @property(Number) rating?: number
+  @property(String) sizes?: string
 
   product?: JSONProduct
 

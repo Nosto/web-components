@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
@@ -35,20 +35,12 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
-@customElement("nosto-variant-selector", { observe: true })
+@customElement("nosto-variant-selector")
 export class VariantSelector extends NostoElement {
-  /** @private */
-  static properties = {
-    handle: String,
-    variantId: Number,
-    preselect: Boolean,
-    filtered: Boolean
-  }
-
-  handle!: string
-  variantId?: number
-  preselect?: boolean
-  filtered?: boolean
+  @property(String) handle!: string
+  @property(Number) variantId?: number
+  @property(Boolean) preselect?: boolean
+  @property(Boolean) filtered?: boolean
 
   /**
    * Internal state for current selections

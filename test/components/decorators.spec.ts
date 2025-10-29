@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { customElement } from "../../src/components/decorators"
+import { customElement, property } from "@/components/decorators"
 
 describe("customElement", () => {
   beforeEach(() => {
@@ -27,21 +27,26 @@ describe("customElement", () => {
     expect(window.customElements.define).toHaveBeenCalledTimes(1)
   })
 
+  it("should update observedAttributes when observe flag is set", () => {
+    const tagName = "my-element-observe"
+    @customElement(tagName, { observe: true })
+    class constructor extends HTMLElement {
+      @property(String) foo!: string
+      @property(Boolean) bar!: boolean
+    }
+
+    // @ts-expect-error type mismatch
+    expect(constructor.observedAttributes).toEqual(["foo", "bar"])
+  })
+
   it("should define properties for attributes", () => {
     const tagName = "my-element3"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static properties = {
-        foo: String,
-        bar: Boolean,
-        baz: Number,
-        qux: Array
-      }
-
-      foo!: string
-      bar!: boolean
-      baz!: number
-      qux!: number[]
+      @property(String) foo!: string
+      @property(Boolean) bar!: boolean
+      @property(Number) baz!: number
+      @property(Array) qux!: number[]
     }
 
     const e = new constructor()
@@ -60,11 +65,7 @@ describe("customElement", () => {
     const tagName = "my-element4"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static properties = {
-        numbers: Array
-      }
-
-      numbers!: number[]
+      @property(Array) numbers!: number[]
     }
 
     const e = new constructor()
@@ -95,8 +96,8 @@ describe("customElement", () => {
     expect(e.numbers).toBeUndefined()
 
     // Test removing attribute
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(e as any).numbers = undefined
+    // @ts-expect-error type mismatch
+    e.numbers = undefined
     expect(e.hasAttribute("numbers")).toBe(false)
   })
 
@@ -104,11 +105,7 @@ describe("customElement", () => {
     const tagName = "my-element5"
     @customElement(tagName)
     class constructor extends HTMLElement {
-      static properties = {
-        list: Array
-      }
-
-      list!: unknown[]
+      @property(Array) list!: unknown[]
     }
 
     const e = new constructor()

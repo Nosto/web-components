@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { intersectionOf } from "@/utils/intersectionOf"
 import { injectKey, Store } from "../Product/store"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
 import { inject } from "../inject"
@@ -28,12 +28,7 @@ import { inject } from "../inject"
  */
 @customElement("nosto-sku-options")
 export class SkuOptions extends NostoElement {
-  /** @private */
-  static properties = {
-    name: String
-  }
-
-  name!: string
+  @property(String) name!: string
 
   connectedCallback() {
     assertRequired(this, "name")
