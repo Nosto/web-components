@@ -584,4 +584,44 @@ describe("VariantSelector", () => {
     expect(eventEmitted).toBe(true)
     expect(selector.hasAttribute("loading")).toBe(false)
   })
+
+  it("should use placeholder content when placeholder attribute is set", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
+
+    // First, render without placeholder to populate cache
+    const selector1 = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    await selector1.connectedCallback()
+
+    const initialContent = getShadowContent(selector1)
+    expect(initialContent).toContain("Size:")
+
+    // Second, render with placeholder enabled - should use cached content immediately
+    const selector2 = (<nosto-variant-selector handle="variant-test-product" placeholder={true} />) as VariantSelector
+    await selector2.connectedCallback()
+
+    const placeholderContent = getShadowContent(selector2)
+    expect(placeholderContent).toContain("Size:")
+    expect(selector2.hasAttribute("loading")).toBe(false)
+  })
+
+  it("should use cached placeholder content even with different handle", async () => {
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants },
+      "different-handle": { product: mockProductWithVariants }
+    })
+
+    // First, render without placeholder to populate cache for variant-test-product
+    const selector1 = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    await selector1.connectedCallback()
+
+    // Second, render with placeholder enabled with different handle - should use cached content
+    const selector2 = (<nosto-variant-selector handle="different-handle" placeholder={true} />) as VariantSelector
+    await selector2.connectedCallback()
+
+    const content = getShadowContent(selector2)
+    expect(content).toContain("Size:")
+    expect(selector2.hasAttribute("loading")).toBe(false)
+  })
 })
