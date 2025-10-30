@@ -30,6 +30,10 @@ import { addRequest } from "./orchestrator"
  * @property {boolean} [cartSynced] (`cart-synced`) - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
+ * @property {boolean} [urlSynced] (`url-synced`) - If true, the component will reload the campaign
+ * whenever a successful page navigation occurs via the Navigation API. Useful for keeping
+ * campaigns in sync with URL changes (e.g., category-specific recommendations). Requires
+ * browser support for the Navigation API. Defaults to false.
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
@@ -40,6 +44,7 @@ export class Campaign extends NostoElement {
   @property(String) init?: string
   @property(Boolean) lazy?: boolean
   @property(Boolean) cartSynced?: boolean
+  @property(Boolean) urlSynced?: boolean
 
   /** @hidden */
   templateElement?: HTMLTemplateElement
@@ -55,6 +60,11 @@ export class Campaign extends NostoElement {
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
       api.listen("cartupdated", this.#load)
+    }
+
+    // Register navigation listener if url-synced is enabled
+    if (this.urlSynced && typeof navigation !== "undefined" && navigation.addEventListener) {
+      navigation.addEventListener("navigatesuccess", this.#load)
     }
 
     if (this.init !== "false") {
@@ -74,11 +84,15 @@ export class Campaign extends NostoElement {
 
   async disconnectedCallback() {
     // Unregister cart update listener
-    if (!this.cartSynced) {
-      return
+    if (this.cartSynced) {
+      const api = await new Promise(nostojs)
+      api.unlisten("cartupdated", this.#load)
     }
-    const api = await new Promise(nostojs)
-    api.unlisten("cartupdated", this.#load)
+
+    // Unregister navigation listener
+    if (this.urlSynced && typeof navigation !== "undefined" && navigation.removeEventListener) {
+      navigation.removeEventListener("navigatesuccess", this.#load)
+    }
   }
 
   async load() {
