@@ -1,3 +1,16 @@
+# [9.13.0](https://github.com/Nosto/web-components/compare/v9.12.1...v9.13.0) (2025-10-30)
+
+
+### Bug Fixes
+
+* **VariantSelector:** lint formatting ([5757a0b](https://github.com/Nosto/web-components/commit/5757a0b4ed400e8f4a68071fdb0d37dcb116fe8c))
+* **VariantSelector:** simplify placeholder to single string and skip listener setup ([7631fcb](https://github.com/Nosto/web-components/commit/7631fcb306c2872f5065b6dee6c99945abaef1f3))
+
+
+### Features
+
+* **VariantSelector:** add placeholder attribute implementation and tests ([c8bddb2](https://github.com/Nosto/web-components/commit/c8bddb2b88f8291e51808ab583bd8d5e71073877))
+
 ## [9.12.1](https://github.com/Nosto/web-components/compare/v9.12.0...v9.12.1) (2025-10-29)
 
 
