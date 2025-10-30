@@ -11,6 +11,7 @@ import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
+import { Props } from "@/types"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -83,6 +84,8 @@ export class SimpleCard extends NostoElement {
     }
   }
 }
+
+export type SimpleCardProps = Props<SimpleCard>
 
 function isAddToCartClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")

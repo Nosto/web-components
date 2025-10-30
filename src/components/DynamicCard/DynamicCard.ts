@@ -3,6 +3,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
+import { Props } from "@/types"
 
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
@@ -58,6 +59,8 @@ export class DynamicCard extends NostoElement {
     }
   }
 }
+
+export type DynamicCardProps = Props<DynamicCard>
 
 const placeholders = new Map<string, string>()
 

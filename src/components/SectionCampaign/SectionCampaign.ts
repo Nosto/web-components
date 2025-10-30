@@ -5,6 +5,7 @@ import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
+import { Props } from "@/types"
 
 /**
  * A custom element that fetches Nosto placement results and renders them using Shopify section templates.
@@ -45,6 +46,8 @@ export class SectionCampaign extends NostoElement {
     api.attributeProductClicksInCampaign(this, rec)
   }
 }
+
+export type SectionCampaignProps = Props<SectionCampaign>
 
 async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")

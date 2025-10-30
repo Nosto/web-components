@@ -6,6 +6,7 @@ import { getContext } from "../../templating/context"
 import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
+import { Props } from "@/types"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -85,6 +86,8 @@ export class Campaign extends NostoElement {
     await loadCampaign(this)
   }
 }
+
+export type CampaignProps = Props<Campaign>
 
 export async function loadCampaign(element: Campaign) {
   element.toggleAttribute("loading", true)

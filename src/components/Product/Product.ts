@@ -4,6 +4,7 @@ import { customElement, property } from "../decorators"
 import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
 import { provide } from "../inject"
+import { Props } from "@/types"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -39,6 +40,8 @@ export class Product extends NostoElement {
     registerSkuData(this, store)
   }
 }
+
+export type ProductProps = Props<Product>
 
 function addListeners(element: Product, { listen }: Store) {
   listen("selectedSkuId", selectedSkuId => {

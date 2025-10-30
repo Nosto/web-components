@@ -1,8 +1,9 @@
-import type { Crop, ImageProps } from "./types"
+import type { Crop } from "./types"
 import { customElement, property } from "../decorators"
 import type { Layout } from "@unpic/core/base"
 import { transform } from "./transform"
 import { NostoElement } from "../Element"
+import { Props } from "@/types"
 
 /**
  * NostoImage is a custom element that renders an image with responsive capabilities using the unpic library.
@@ -74,7 +75,7 @@ export class Image extends NostoElement {
     // Filter out null and undefined values
     const transformProps = Object.fromEntries(
       Object.entries(rawProps).filter(([, value]) => value != null)
-    ) as ImageProps
+    ) as unknown as ImageProps
 
     let img = this.shadowRoot!.querySelector("img")
     if (img) {
@@ -86,6 +87,8 @@ export class Image extends NostoElement {
     }
   }
 }
+
+export type ImageProps = Props<Image>
 
 function setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
   const { style, ...props } = transform(transformProps)

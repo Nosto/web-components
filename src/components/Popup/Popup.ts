@@ -4,6 +4,7 @@ import { NostoElement } from "../Element"
 import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { Props } from "@/types"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -63,6 +64,8 @@ export class Popup extends NostoElement {
     }
   }
 }
+
+export type PopupProps = Props<Popup>
 
 const key = "nosto:web-components:popup"
 

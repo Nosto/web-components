@@ -7,6 +7,7 @@ import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shop
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { Props } from "@/types"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -64,6 +65,8 @@ export class VariantSelector extends NostoElement {
     await loadAndRenderMarkup(this)
   }
 }
+
+export type VariantSelectorProps = Props<VariantSelector>
 
 async function loadAndRenderMarkup(element: VariantSelector) {
   element.toggleAttribute("loading", true)

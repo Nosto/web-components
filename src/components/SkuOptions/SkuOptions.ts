@@ -5,6 +5,7 @@ import { customElement, property } from "../decorators"
 import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
 import { inject } from "../inject"
+import { Props } from "@/types"
 
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
@@ -35,6 +36,8 @@ export class SkuOptions extends NostoElement {
     initSkuOptions(this, inject(this, injectKey)!)
   }
 }
+
+export type SkuOptionsProps = Props<SkuOptions>
 
 function initSkuOptions(element: SkuOptions, store: Store) {
   store.registerOptionGroup()
