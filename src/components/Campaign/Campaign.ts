@@ -56,12 +56,10 @@ export class Campaign extends NostoElement {
       throw new Error("placement or id attribute is required for Campaign")
     }
 
-    // Register cart update listener if cart-synced is enabled
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
       api.listen("cartupdated", this.#load)
     }
-    // Register navigation listener if url-synced is enabled
     if (this.urlSynced && typeof navigation !== "undefined" && navigation.addEventListener) {
       navigation.addEventListener("navigatesuccess", this.#load)
     }
@@ -82,12 +80,10 @@ export class Campaign extends NostoElement {
   }
 
   async disconnectedCallback() {
-    // Unregister cart update listener
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
       api.unlisten("cartupdated", this.#load)
     }
-    // Unregister navigation listener
     if (this.urlSynced && typeof navigation !== "undefined" && navigation.removeEventListener) {
       navigation.removeEventListener("navigatesuccess", this.#load)
     }

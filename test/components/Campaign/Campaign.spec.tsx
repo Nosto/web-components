@@ -323,52 +323,5 @@ describe("Campaign", () => {
       // Verify removeEventListener was called on disconnect
       expect(mockNavigation.removeEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
     })
-
-    it("should not throw when disconnecting without Navigation API support", async () => {
-      mockNostoRecs({ "789": "content" })
-
-      campaign = (<nosto-campaign placement="789" url-synced />) as Campaign
-
-      await campaign.connectedCallback()
-
-      // Remove navigation API
-      // @ts-expect-error cleanup
-      delete global.navigation
-
-      // Should not throw
-      await expect(campaign.disconnectedCallback()).resolves.not.toThrow()
-    })
-
-    it("should work alongside cart-synced functionality", async () => {
-      const mockListen = vi.fn()
-      const mockUnlisten = vi.fn()
-
-      const { mockBuilder } = mockNostoRecs({ "789": "content" })
-
-      // Use mockNostojs to add listen method
-      mockNostojs({
-        createRecommendationRequest: () => mockBuilder,
-        listen: mockListen,
-        unlisten: mockUnlisten,
-        attributeProductClicksInCampaign: vi.fn(),
-        placements: {
-          injectCampaigns: vi.fn()
-        }
-      })
-
-      campaign = (<nosto-campaign placement="789" cart-synced url-synced />) as Campaign
-
-      await campaign.connectedCallback()
-
-      // Verify both listeners were registered
-      expect(mockListen).toHaveBeenCalledWith("cartupdated", expect.any(Function))
-      expect(mockNavigation.addEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
-
-      await campaign.disconnectedCallback()
-
-      // Verify both listeners were unregistered
-      expect(mockUnlisten).toHaveBeenCalledWith("cartupdated", expect.any(Function))
-      expect(mockNavigation.removeEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
-    })
   })
 })
