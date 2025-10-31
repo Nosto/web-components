@@ -536,52 +536,17 @@ describe("SimpleCard", () => {
       variants: [
         {
           ...mockProduct.variants[0],
-          id: 1001,
-          title: "Red",
-          option1: "Red",
-          sku: "TEST-RED",
           featured_image: {
-            id: 555,
-            product_id: 123456,
-            position: 1,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Red variant image",
-            width: 800,
-            height: 800,
-            src: "https://cdn.shopify.com/s/files/1/0000/0001/products/red.jpg",
-            variant_ids: [1001]
-          },
-          name: "Red",
-          public_title: "Red",
-          options: ["Red"],
-          price: 2499,
-          compare_at_price: 2999
+            src: "https://cdn.shopify.com/s/files/1/0000/0001/products/red.jpg"
+          } as any,
+          name: "Red"
         },
         {
           ...mockProduct.variants[0],
-          id: 1002,
-          title: "Blue",
-          option1: "Blue",
-          sku: "TEST-BLUE",
           featured_image: {
-            id: 556,
-            product_id: 123456,
-            position: 2,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Blue variant image",
-            width: 800,
-            height: 800,
-            src: "https://cdn.shopify.com/s/files/1/0000/0001/products/blue.jpg",
-            variant_ids: [1002]
-          },
-          name: "Blue",
-          public_title: "Blue",
-          options: ["Blue"],
-          price: 1999,
-          compare_at_price: 2499,
-          barcode: "123456790"
+            src: "https://cdn.shopify.com/s/files/1/0000/0001/products/blue.jpg"
+          } as any,
+          name: "Blue"
         }
       ]
     } satisfies ShopifyProduct
@@ -623,41 +588,11 @@ describe("SimpleCard", () => {
       ...mockProduct,
       variants: [
         {
-          id: 1001,
-          title: "Small",
-          option1: "Small",
-          option2: null,
-          option3: null,
-          sku: "TEST-SMALL",
-          requires_shipping: true,
-          taxable: true,
+          ...mockProduct.variants[0],
           featured_image: {
-            id: 555,
-            product_id: 123456,
-            position: 1,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Small variant",
-            width: 800,
-            height: 800,
-            src: "https://example.com/small.jpg",
-            variant_ids: [1001]
-          },
-          available: true,
-          name: "Small Size",
-          public_title: "Small",
-          options: ["Small"],
-          price: 1999,
-          weight: 100,
-          compare_at_price: 2499,
-          inventory_quantity: 10,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456789",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+            src: "https://example.com/small.jpg"
+          } as any,
+          name: "Small Size"
         }
       ]
     } satisfies ShopifyProduct
