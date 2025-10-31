@@ -3,6 +3,7 @@ import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "@/components/Image/transform"
+import { escapeHtml } from "@/utils/escapeHtml"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -78,19 +79,23 @@ function generateImageElement(src: string, alt: string, className: string, sizes
     delete props.sizes
   }
 
-  // Build style attribute string
+  // Build style attribute string, converting camelCase to kebab-case
   const styleAttr = Object.entries(style || {})
-    .map(([key, value]) => `${key}:${value}`)
+    .map(([key, value]) => `${toKebabCase(key)}:${value}`)
     .join(";")
 
-  // Build all attributes string, filtering out null/undefined values
+  // Build all attributes string, filtering out null/undefined values and escaping values
   const attributeEntries = Object.entries(props).filter(([, value]) => value != null)
-  const attributesStr = attributeEntries.map(([key, value]) => `${key}="${value}"`).join(" ")
+  const attributesStr = attributeEntries.map(([key, value]) => `${key}="${escapeHtml(String(value))}"`).join(" ")
 
   // Construct the full img tag with all attributes
-  const imgTag = `<img ${attributesStr} loading="lazy" class="${className}"${styleAttr ? ` style="${styleAttr}"` : ""} />`
+  const imgTag = `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${escapeHtml(styleAttr)}"` : ""} />`
 
   return { html: imgTag }
+}
+
+function toKebabCase(str: string) {
+  return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
 }
 
 function generateRatingHTML(rating: number) {
