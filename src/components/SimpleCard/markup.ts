@@ -119,17 +119,49 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
+  const normalizedSrc = normalizeUrl(variant.featured_image.src)
+
+  const imageProps = {
+    src: normalizedSrc,
+    width: 800,
+    alt: variant.name,
+    sizes: element.sizes
+  }
+
+  const { style, ...transformedProps } = transform(imageProps)
+
+  const props =
+    !element.sizes && transformedProps.sizes
+      ? Object.fromEntries(Object.entries(transformedProps).filter(([key]) => key !== "sizes"))
+      : transformedProps
+
+  const styleAttr = Object.entries(style || {})
+    .map(([key, value]) => `${toKebabCase(key)}:${value}`)
+    .join(";")
+
+  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
   if (primaryImgElement) {
-    primaryImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-    primaryImgElement.setAttribute("alt", variant.name)
+    Object.entries(props).forEach(([key, value]) => {
+      if (value != null) {
+        primaryImgElement.setAttribute(key, String(value))
+      }
+    })
+    if (styleAttr) {
+      primaryImgElement.setAttribute("style", styleAttr)
+    }
   }
 
   if (element.alternate) {
-    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLElement
+    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLImageElement
     if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-      alternateImgElement.setAttribute("alt", variant.name)
+      Object.entries(props).forEach(([key, value]) => {
+        if (value != null) {
+          alternateImgElement.setAttribute(key, String(value))
+        }
+      })
+      if (styleAttr) {
+        alternateImgElement.setAttribute("style", styleAttr)
+      }
     }
   }
 }
