@@ -73,26 +73,21 @@ function generateImageElement(src: string, alt: string, className: string, sizes
 
   const { style, ...transformedProps } = transform(imageProps)
 
-  // If sizes was not explicitly provided, filter out the auto-generated sizes attribute
-  // to maintain the same behavior as the original nosto-image component
   const props =
     !sizes && transformedProps.sizes
       ? Object.fromEntries(Object.entries(transformedProps).filter(([key]) => key !== "sizes"))
       : transformedProps
 
-  // Build style attribute string, converting camelCase to kebab-case
   const styleAttr = Object.entries(style || {})
     .map(([key, value]) => `${toKebabCase(key)}:${value}`)
     .join(";")
 
-  // Build all attributes string, filtering out null/undefined values and escaping values
   const attributeEntries = Object.entries(props).filter(([, value]) => value != null)
   const attributesStr = attributeEntries.map(([key, value]) => `${key}="${escapeHtml(String(value))}"`).join(" ")
 
-  // Construct the full img tag with all attributes
-  const imgTag = `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${escapeHtml(styleAttr)}"` : ""} />`
-
-  return { html: imgTag }
+  return {
+    html: `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${escapeHtml(styleAttr)}"` : ""} />`
+  }
 }
 
 function toKebabCase(str: string) {
