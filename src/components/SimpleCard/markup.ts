@@ -128,30 +128,24 @@ function updateImages(element: SimpleCard, variant: SimpleVariant) {
 
   const { props, styleAttr } = getTransformedImageAttributes(variant.featured_image.src, variant.name, element.sizes)
 
-  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
-  if (primaryImgElement) {
+  const applyImageAttributes = (imgElement: HTMLImageElement | null) => {
+    if (!imgElement) return
     Object.entries(props).forEach(([key, value]) => {
       if (value != null) {
-        primaryImgElement.setAttribute(key, String(value))
+        imgElement.setAttribute(key, String(value))
       }
     })
     if (styleAttr) {
-      primaryImgElement.setAttribute("style", styleAttr)
+      imgElement.setAttribute("style", styleAttr)
     }
   }
 
+  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
+  applyImageAttributes(primaryImgElement)
+
   if (element.alternate) {
     const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLImageElement
-    if (alternateImgElement) {
-      Object.entries(props).forEach(([key, value]) => {
-        if (value != null) {
-          alternateImgElement.setAttribute(key, String(value))
-        }
-      })
-      if (styleAttr) {
-        alternateImgElement.setAttribute("style", styleAttr)
-      }
-    }
+    applyImageAttributes(alternateImgElement)
   }
 }
 

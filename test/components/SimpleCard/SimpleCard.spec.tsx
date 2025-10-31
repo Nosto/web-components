@@ -538,14 +538,14 @@ describe("SimpleCard", () => {
           ...mockProduct.variants[0],
           featured_image: {
             src: "https://cdn.shopify.com/s/files/1/0000/0001/products/red.jpg"
-          } as any,
+          } as { src: string },
           name: "Red"
         },
         {
           ...mockProduct.variants[0],
           featured_image: {
             src: "https://cdn.shopify.com/s/files/1/0000/0001/products/blue.jpg"
-          } as any,
+          } as { src: string },
           name: "Blue"
         }
       ]
@@ -591,7 +591,7 @@ describe("SimpleCard", () => {
           ...mockProduct.variants[0],
           featured_image: {
             src: "https://example.com/small.jpg"
-          } as any,
+          } as { src: string },
           name: "Small Size"
         }
       ]
