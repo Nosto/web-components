@@ -709,4 +709,68 @@ describe("SimpleCard", () => {
     // Srcset should contain multiple image URLs with different widths
     expect(shadowContent).toMatch(/https:\/\/cdn\.shopify\.com.*?\s+\d+w/)
   })
+
+  it("should not escape style attribute", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Style attribute should contain valid CSS with colons and semicolons, not escaped
+    expect(shadowContent).toMatch(/style="[^"]*object-fit:cover/)
+    expect(shadowContent).toMatch(/style="[^"]*max-width:800px/)
+    expect(shadowContent).toMatch(/style="[^"]*width:100%/)
+    // Should NOT contain HTML-escaped versions of CSS syntax
+    expect(shadowContent).not.toContain("&#039;")
+    expect(shadowContent).not.toContain("&quot;object-fit")
+  })
+
+  it("should escape alt attribute but not style attribute", async () => {
+    const productWithSpecialChars = {
+      ...mockProduct,
+      title: 'Test "Product" & <More>'
+    }
+
+    addProductHandlers({
+      "test-product": { product: productWithSpecialChars }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Alt attribute should be escaped (quotes and ampersands)
+    expect(shadowContent).toContain('alt="Test &quot;Product&quot; &amp;')
+    expect(shadowContent).toMatch(/alt="Test &quot;Product&quot; &amp; <More>"/)
+    // Style attribute should NOT be escaped
+    expect(shadowContent).toMatch(/style="object-fit:cover;max-width:800px;width:100%"/)
+  })
+
+  it("should properly format style with kebab-case properties", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const img = card.shadowRoot?.querySelector("img")
+    expect(img).toBeTruthy()
+
+    const styleAttr = img?.getAttribute("style")
+    expect(styleAttr).toBeTruthy()
+    // Should contain kebab-case CSS properties
+    expect(styleAttr).toContain("object-fit:cover")
+    expect(styleAttr).toContain("max-width:800px")
+    expect(styleAttr).toContain("width:100%")
+    // Should NOT contain camelCase CSS properties
+    expect(styleAttr).not.toContain("objectFit")
+    expect(styleAttr).not.toContain("maxWidth")
+  })
 })
