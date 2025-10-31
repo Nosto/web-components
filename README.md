@@ -37,3 +37,31 @@ Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-compon
 [Library TypeDoc page](https://nosto.github.io/web-components) includes detailed library documentation.
 
 [Interactive Storybook](https://nosto.github.io/web-components/storybook/) provides live examples and documentation for each component.
+
+## TypeScript Support
+
+This library includes TypeScript type definitions for all custom elements. Props types are exported for type-safe component usage:
+
+```typescript
+import type {
+  CampaignProps,
+  ControlProps,
+  DynamicCardProps,
+  ImageProps,
+  PopupProps,
+  ProductProps,
+  SectionCampaignProps,
+  SimpleCardProps,
+  SkuOptionsProps,
+  VariantSelectorProps
+} from '@nosto/web-components'
+
+// Example: Type-safe component props
+const cardProps: SimpleCardProps = {
+  handle: "product-handle",
+  brand: true,
+  discount: true
+}
+```
+
+All Props types are available via the main entry point for convenient access. See the [TypeDoc documentation](https://nosto.github.io/web-components) for detailed type information.
