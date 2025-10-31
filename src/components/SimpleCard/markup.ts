@@ -115,7 +115,7 @@ function updateImages(element: SimpleCard, variant: SimpleVariant) {
   imagesToUpdate.forEach(img => {
     img!.setAttribute("alt", variant.name)
     if (style?.cssText) {
-      img.style = style.cssText
+      img.style.cssText = style.cssText
     }
     Object.entries(props).forEach(([key, value]) => {
       if (value != null) {
