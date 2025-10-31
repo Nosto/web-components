@@ -62,7 +62,7 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateImageElement(src: string, alt: string, className: string, sizes?: string) {
+function getTransformedImageAttributes(src: string, alt: string, sizes?: string) {
   const normalizedSrc = normalizeUrl(src)
 
   const imageProps = {
@@ -82,6 +82,12 @@ function generateImageElement(src: string, alt: string, className: string, sizes
   const styleAttr = Object.entries(style || {})
     .map(([key, value]) => `${toKebabCase(key)}:${value}`)
     .join(";")
+
+  return { props, styleAttr }
+}
+
+function generateImageElement(src: string, alt: string, className: string, sizes?: string) {
+  const { props, styleAttr } = getTransformedImageAttributes(src, alt, sizes)
 
   const attributesStr = Object.entries(props)
     .filter(([, value]) => value != null)
@@ -119,25 +125,7 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const normalizedSrc = normalizeUrl(variant.featured_image.src)
-
-  const imageProps = {
-    src: normalizedSrc,
-    width: 800,
-    alt: variant.name,
-    sizes: element.sizes
-  }
-
-  const { style, ...transformedProps } = transform(imageProps)
-
-  const props =
-    !element.sizes && transformedProps.sizes
-      ? Object.fromEntries(Object.entries(transformedProps).filter(([key]) => key !== "sizes"))
-      : transformedProps
-
-  const styleAttr = Object.entries(style || {})
-    .map(([key, value]) => `${toKebabCase(key)}:${value}`)
-    .join(";")
+  const { props, styleAttr } = getTransformedImageAttributes(variant.featured_image.src, variant.name, element.sizes)
 
   const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
   if (primaryImgElement) {
