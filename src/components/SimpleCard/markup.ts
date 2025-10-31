@@ -2,6 +2,7 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
+import { transform } from "@/components/Image/transform"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -60,16 +61,56 @@ function normalizeUrl(url: string) {
 }
 
 function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
-  return html`
-    <nosto-image
-      src="${normalizeUrl(src)}"
-      alt="${alt}"
-      width="800"
-      loading="lazy"
-      class="${className}"
-      ${sizes ? html`sizes="${sizes}"` : ""}
-    ></nosto-image>
-  `
+  const normalizedSrc = normalizeUrl(src)
+
+  if (sizes) {
+    // When sizes is provided, use the full transform to generate srcset
+    const imageProps = transform({
+      src: normalizedSrc,
+      width: 800,
+      alt,
+      sizes
+    })
+
+    return html`
+      <img
+        src="${imageProps.src}"
+        ${imageProps.srcset ? html`srcset="${imageProps.srcset}"` : ""}
+        alt="${imageProps.alt || alt}"
+        width="800"
+        loading="lazy"
+        class="${className}"
+        sizes="${imageProps.sizes}"
+        ${imageProps.style ? buildStyleAttribute(imageProps.style) : ""}
+      />
+    `
+  } else {
+    // When sizes is not provided, generate a simple img without srcset
+    const imageProps = transform({
+      src: normalizedSrc,
+      width: 800,
+      alt
+    })
+
+    return html`
+      <img
+        src="${imageProps.src}"
+        alt="${imageProps.alt || alt}"
+        width="800"
+        loading="lazy"
+        class="${className}"
+        ${imageProps.style ? buildStyleAttribute(imageProps.style) : ""}
+      />
+    `
+  }
+}
+
+function buildStyleAttribute(style: CSSStyleDeclaration) {
+  const styleString = Object.entries(style)
+    .filter(([, value]) => value != null && value !== "")
+    .map(([key, value]) => `${key}: ${value}`)
+    .join("; ")
+  return styleString ? html`style="${styleString}"` : ""
 }
 
 function generateRatingHTML(rating: number) {
@@ -98,17 +139,43 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
+  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
   if (primaryImgElement) {
-    primaryImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-    primaryImgElement.setAttribute("alt", variant.name)
+    const normalizedSrc = normalizeUrl(variant.featured_image.src)
+    const imageProps = transform({
+      src: normalizedSrc,
+      width: 800,
+      alt: variant.name,
+      sizes: element.sizes
+    })
+
+    if (imageProps.src) {
+      primaryImgElement.src = String(imageProps.src)
+    }
+    if (imageProps.srcset) {
+      primaryImgElement.srcset = String(imageProps.srcset)
+    }
+    primaryImgElement.alt = variant.name
   }
 
   if (element.alternate) {
-    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLElement
+    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLImageElement
     if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-      alternateImgElement.setAttribute("alt", variant.name)
+      const normalizedSrc = normalizeUrl(variant.featured_image.src)
+      const imageProps = transform({
+        src: normalizedSrc,
+        width: 800,
+        alt: variant.name,
+        sizes: element.sizes
+      })
+
+      if (imageProps.src) {
+        alternateImgElement.src = String(imageProps.src)
+      }
+      if (imageProps.srcset) {
+        alternateImgElement.srcset = String(imageProps.srcset)
+      }
+      alternateImgElement.alt = variant.name
     }
   }
 }
