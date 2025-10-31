@@ -73,14 +73,14 @@ export function generateImgHtml(src: string, alt: string, className: string, siz
     ${Object.entries(props)
       .filter(([, value]) => value != null)
       .map(([key, value]) => html`${key}="${value}" `)}
-    style="${styleText(style)}"
+    style="${styleText(style as object)}"
   />`
 }
 
 function styleText(style: object) {
-  const el = document.createElement("span")
-  Object.assign(el.style, style)
-  return el.style.cssText
+  return Object.entries(style)
+    .map(([key, value]) => `${key}: ${value};`)
+    .join(" ")
 }
 
 function generateRatingHTML(rating: number) {
