@@ -89,7 +89,7 @@ function generateImageElement(src: string, alt: string, className: string, sizes
     .join(" ")
 
   return {
-    html: `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${escapeHtml(styleAttr)}"` : ""} />`
+    html: `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${styleAttr}"` : ""} />`
   }
 }
 
