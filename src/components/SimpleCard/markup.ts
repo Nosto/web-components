@@ -69,6 +69,7 @@ export function generateImgHtml(src: string, alt: string, className: string, siz
   })
   return html`<img
     alt="${alt}"
+    part="${className}"
     class="${className}"
     ${Object.entries(props)
       .filter(([, value]) => value != null)
