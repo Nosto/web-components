@@ -2,6 +2,7 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
+import { transform } from "../Image/transform"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -44,9 +45,9 @@ function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
+      ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
-        ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
+        ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
     </div>
   `
@@ -59,17 +60,20 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
-  return html`
-    <nosto-image
-      src="${normalizeUrl(src)}"
-      alt="${alt}"
-      width="800"
-      loading="lazy"
-      class="${className}"
-      ${sizes ? html`sizes="${sizes}"` : ""}
-    ></nosto-image>
-  `
+function generateImgHtml(src: string, alt: string, className: string, sizes?: string) {
+  const { style, ...props } = transform({
+    src: normalizeUrl(src),
+    width: 800,
+    sizes
+  })
+  return html`<img
+    alt="${alt}"
+    class="${className}"
+    ${Object.entries(props)
+      .filter(([, value]) => value != null)
+      .map(([key, value]) => html`${key}="${value}"`)}
+    style="${style.cssText}"
+  />`
 }
 
 function generateRatingHTML(rating: number) {
@@ -98,19 +102,27 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
-  if (primaryImgElement) {
-    primaryImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-    primaryImgElement.setAttribute("alt", variant.name)
-  }
+  const { style, ...props } = transform({
+    src: normalizeUrl(variant.featured_image.src),
+    width: 800,
+    sizes: element.sizes
+  })
+  const imagesToUpdate = [
+    element.shadowRoot!.querySelector<HTMLElement>(".img.primary"),
+    element.alternate && element.shadowRoot!.querySelector<HTMLElement>(".img.alternate")
+  ].filter(Boolean) as HTMLElement[]
 
-  if (element.alternate) {
-    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLElement
-    if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-      alternateImgElement.setAttribute("alt", variant.name)
+  imagesToUpdate.forEach(img => {
+    img!.setAttribute("alt", variant.name)
+    if (style?.cssText) {
+      img.style = style.cssText
     }
-  }
+    Object.entries(props).forEach(([key, value]) => {
+      if (value != null) {
+        img!.setAttribute(key, String(value))
+      }
+    })
+  })
 }
 
 function updatePrices(element: SimpleCard, variant: SimpleVariant) {

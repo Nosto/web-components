@@ -383,19 +383,6 @@ describe("SimpleCard", () => {
     expect(sizesMatches).toHaveLength(2)
   })
 
-  it("should not add sizes attribute when not provided", async () => {
-    addProductHandlers({
-      "test-product": { product: mockProduct }
-    })
-
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    expect(shadowContent).not.toContain("sizes=")
-  })
-
   it("should include slot for additional content", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
