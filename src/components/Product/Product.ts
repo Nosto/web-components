@@ -5,6 +5,8 @@ import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
 import { provide } from "../inject"
 
+export type { ProductProps } from "./types"
+
 /**
  * Custom element that represents a Nosto product component.
  *

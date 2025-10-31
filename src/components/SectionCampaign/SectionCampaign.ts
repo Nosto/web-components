@@ -6,6 +6,8 @@ import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
 
+export type { SectionCampaignProps } from "./types"
+
 /**
  * A custom element that fetches Nosto placement results and renders them using Shopify section templates.
  * This component integrates with Shopify's Section Rendering API to dynamically render campaign content.

@@ -12,6 +12,8 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 
+export type { SimpleCardProps } from "./types"
+
 const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the SimpleCard rendered event */

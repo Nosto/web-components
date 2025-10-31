@@ -4,6 +4,8 @@ import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 
+export type { DynamicCardProps } from "./types"
+
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 

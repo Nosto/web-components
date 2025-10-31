@@ -8,6 +8,8 @@ import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
+export type { VariantSelectorProps } from "./types"
+
 const setShadowContent = shadowContentFactory(styles)
 
 let placeholder = ""

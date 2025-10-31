@@ -5,6 +5,8 @@ import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
+export type { PopupProps } from "./types"
+
 const setShadowContent = shadowContentFactory(styles)
 
 /**

@@ -6,6 +6,8 @@ import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
 import { inject } from "../inject"
 
+export type { SkuOptionsProps } from "./types"
+
 /**
  * A custom element that manages SKU (Stock Keeping Unit) options in a product selection interface.
  *

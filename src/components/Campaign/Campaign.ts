@@ -7,6 +7,8 @@ import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
 
+export type { CampaignProps } from "./types"
+
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
  * This component fetches campaign data from Nosto and injects it into the DOM.
