@@ -535,14 +535,11 @@ describe("SimpleCard", () => {
       ],
       variants: [
         {
+          ...mockProduct.variants[0],
           id: 1001,
           title: "Red",
           option1: "Red",
-          option2: null,
-          option3: null,
           sku: "TEST-RED",
-          requires_shipping: true,
-          taxable: true,
           featured_image: {
             id: 555,
             product_id: 123456,
@@ -555,31 +552,18 @@ describe("SimpleCard", () => {
             src: "https://cdn.shopify.com/s/files/1/0000/0001/products/red.jpg",
             variant_ids: [1001]
           },
-          available: true,
           name: "Red",
           public_title: "Red",
           options: ["Red"],
           price: 2499,
-          weight: 100,
-          compare_at_price: 2999,
-          inventory_quantity: 10,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456789",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+          compare_at_price: 2999
         },
         {
+          ...mockProduct.variants[0],
           id: 1002,
           title: "Blue",
           option1: "Blue",
-          option2: null,
-          option3: null,
           sku: "TEST-BLUE",
-          requires_shipping: true,
-          taxable: true,
           featured_image: {
             id: 556,
             product_id: 123456,
@@ -592,21 +576,12 @@ describe("SimpleCard", () => {
             src: "https://cdn.shopify.com/s/files/1/0000/0001/products/blue.jpg",
             variant_ids: [1002]
           },
-          available: true,
           name: "Blue",
           public_title: "Blue",
           options: ["Blue"],
           price: 1999,
-          weight: 100,
           compare_at_price: 2499,
-          inventory_quantity: 5,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456790",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+          barcode: "123456790"
         }
       ]
     } satisfies ShopifyProduct
