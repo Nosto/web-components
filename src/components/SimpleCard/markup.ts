@@ -3,7 +3,6 @@ import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "@/components/Image/transform"
-import { escapeHtml } from "@/utils/escapeHtml"
 import { toKebabCase } from "@/components/decorators"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
@@ -89,14 +88,16 @@ function getTransformedImageAttributes(src: string, alt: string, sizes?: string)
 function generateImageElement(src: string, alt: string, className: string, sizes?: string) {
   const { props, styleAttr } = getTransformedImageAttributes(src, alt, sizes)
 
-  const attributesStr = Object.entries(props)
+  const attributes = Object.entries(props)
     .filter(([, value]) => value != null)
-    .map(([key, value]) => `${key}="${escapeHtml(String(value))}"`)
-    .join(" ")
+    .map(([key, value]) => html`${key}="${value}"`)
 
-  return {
-    html: `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${styleAttr}"` : ""} />`
-  }
+  return html`<img
+    ${attributes}
+    loading="lazy"
+    class="${className}"
+    ${styleAttr ? html` style="${{ html: styleAttr }}"` : ""}
+  />`
 }
 
 function generateRatingHTML(rating: number) {
