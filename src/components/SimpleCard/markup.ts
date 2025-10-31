@@ -83,8 +83,10 @@ function generateImageElement(src: string, alt: string, className: string, sizes
     .map(([key, value]) => `${toKebabCase(key)}:${value}`)
     .join(";")
 
-  const attributeEntries = Object.entries(props).filter(([, value]) => value != null)
-  const attributesStr = attributeEntries.map(([key, value]) => `${key}="${escapeHtml(String(value))}"`).join(" ")
+  const attributesStr = Object.entries(props)
+    .filter(([, value]) => value != null)
+    .map(([key, value]) => `${key}="${escapeHtml(String(value))}"`)
+    .join(" ")
 
   return {
     html: `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${escapeHtml(styleAttr)}"` : ""} />`
