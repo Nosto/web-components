@@ -540,14 +540,14 @@ describe("SimpleCard", () => {
             src: "https://cdn.shopify.com/s/files/1/0000/0001/products/red.jpg"
           } as { src: string },
           name: "Red"
-        },
+        } as (typeof mockProduct.variants)[0],
         {
           ...mockProduct.variants[0],
           featured_image: {
             src: "https://cdn.shopify.com/s/files/1/0000/0001/products/blue.jpg"
           } as { src: string },
           name: "Blue"
-        }
+        } as (typeof mockProduct.variants)[0]
       ]
     } satisfies ShopifyProduct
 
@@ -593,7 +593,7 @@ describe("SimpleCard", () => {
             src: "https://example.com/small.jpg"
           } as { src: string },
           name: "Small Size"
-        }
+        } as (typeof mockProduct.variants)[0]
       ]
     } satisfies ShopifyProduct
 
