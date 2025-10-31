@@ -4,6 +4,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "@/components/Image/transform"
 import { escapeHtml } from "@/utils/escapeHtml"
+import { toKebabCase } from "@/components/decorators"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -88,10 +89,6 @@ function generateImageElement(src: string, alt: string, className: string, sizes
   return {
     html: `<img ${attributesStr} loading="lazy" class="${escapeHtml(className)}"${styleAttr ? ` style="${escapeHtml(styleAttr)}"` : ""} />`
   }
-}
-
-function toKebabCase(str: string) {
-  return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
 }
 
 function generateRatingHTML(rating: number) {
