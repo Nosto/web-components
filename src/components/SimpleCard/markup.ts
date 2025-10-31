@@ -66,14 +66,21 @@ function generateImgHtml(src: string, alt: string, className: string, sizes?: st
     width: 800,
     sizes
   })
+  console.log("img", { style, props })
   return html`<img
     alt="${alt}"
     class="${className}"
     ${Object.entries(props)
       .filter(([, value]) => value != null)
       .map(([key, value]) => html`${key}="${value}"`)}
-    style="${style.cssText}"
+    style="${styleText(style)}"
   />`
+}
+
+function styleText(style: object) {
+  const el = document.createElement("span")
+  Object.assign(el.style, style)
+  return el.style.cssText
 }
 
 function generateRatingHTML(rating: number) {
@@ -114,9 +121,7 @@ function updateImages(element: SimpleCard, variant: SimpleVariant) {
 
   imagesToUpdate.forEach(img => {
     img!.setAttribute("alt", variant.name)
-    if (style?.cssText) {
-      img.style.cssText = style.cssText
-    }
+    Object.assign(img.style, style ?? {})
     Object.entries(props).forEach(([key, value]) => {
       if (value != null) {
         img!.setAttribute(key, String(value))
