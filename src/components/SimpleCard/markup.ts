@@ -2,6 +2,7 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
+import { transform } from "@/components/Image/transform"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -44,9 +45,9 @@ function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
+      ${generateImageElement(primaryImage, product.title, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
-        ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
+        ? generateImageElement(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
     </div>
   `
@@ -59,17 +60,37 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
-  return html`
-    <nosto-image
-      src="${normalizeUrl(src)}"
-      alt="${alt}"
-      width="800"
-      loading="lazy"
-      class="${className}"
-      ${sizes ? html`sizes="${sizes}"` : ""}
-    ></nosto-image>
-  `
+function generateImageElement(src: string, alt: string, className: string, sizes?: string) {
+  const normalizedSrc = normalizeUrl(src)
+
+  const imageProps = {
+    src: normalizedSrc,
+    width: 800,
+    alt,
+    sizes
+  }
+
+  const { style, ...props } = transform(imageProps)
+
+  // If sizes was not explicitly provided, remove the auto-generated sizes attribute
+  // to maintain the same behavior as the original nosto-image component
+  if (!sizes && props.sizes) {
+    delete props.sizes
+  }
+
+  // Build style attribute string
+  const styleAttr = Object.entries(style || {})
+    .map(([key, value]) => `${key}:${value}`)
+    .join(";")
+
+  // Build all attributes string, filtering out null/undefined values
+  const attributeEntries = Object.entries(props).filter(([, value]) => value != null)
+  const attributesStr = attributeEntries.map(([key, value]) => `${key}="${value}"`).join(" ")
+
+  // Construct the full img tag with all attributes
+  const imgTag = `<img ${attributesStr} loading="lazy" class="${className}"${styleAttr ? ` style="${styleAttr}"` : ""} />`
+
+  return { html: imgTag }
 }
 
 function generateRatingHTML(rating: number) {
