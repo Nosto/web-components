@@ -2,6 +2,8 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
+import { transform } from "@/components/Image/transform"
+import { toKebabCase } from "@/components/decorators"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -44,9 +46,9 @@ function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
+      ${generateImageElement(primaryImage, product.title, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
-        ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
+        ? generateImageElement(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
     </div>
   `
@@ -59,17 +61,43 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
-  return html`
-    <nosto-image
-      src="${normalizeUrl(src)}"
-      alt="${alt}"
-      width="800"
-      loading="lazy"
-      class="${className}"
-      ${sizes ? html`sizes="${sizes}"` : ""}
-    ></nosto-image>
-  `
+function getTransformedImageAttributes(src: string, alt: string, sizes?: string) {
+  const normalizedSrc = normalizeUrl(src)
+
+  const imageProps = {
+    src: normalizedSrc,
+    width: 800,
+    alt,
+    sizes
+  }
+
+  const { style, ...transformedProps } = transform(imageProps)
+
+  const props =
+    !sizes && transformedProps.sizes
+      ? Object.fromEntries(Object.entries(transformedProps).filter(([key]) => key !== "sizes"))
+      : transformedProps
+
+  const styleAttr = Object.entries(style || {})
+    .map(([key, value]) => `${toKebabCase(key)}:${value}`)
+    .join(";")
+
+  return { props, styleAttr }
+}
+
+function generateImageElement(src: string, alt: string, className: string, sizes?: string) {
+  const { props, styleAttr } = getTransformedImageAttributes(src, alt, sizes)
+
+  const attributes = Object.entries(props)
+    .filter(([, value]) => value != null)
+    .map(([key, value]) => html`${key}="${value}"`)
+
+  return html`<img
+    ${attributes}
+    loading="lazy"
+    class="${className}"
+    ${styleAttr ? html` style="${{ html: styleAttr }}"` : ""}
+  />`
 }
 
 function generateRatingHTML(rating: number) {
@@ -98,18 +126,26 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
-  if (primaryImgElement) {
-    primaryImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-    primaryImgElement.setAttribute("alt", variant.name)
+  const { props, styleAttr } = getTransformedImageAttributes(variant.featured_image.src, variant.name, element.sizes)
+
+  const applyImageAttributes = (imgElement: HTMLImageElement | null) => {
+    if (!imgElement) return
+    Object.entries(props).forEach(([key, value]) => {
+      if (value != null) {
+        imgElement.setAttribute(key, String(value))
+      }
+    })
+    if (styleAttr) {
+      imgElement.setAttribute("style", styleAttr)
+    }
   }
 
+  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
+  applyImageAttributes(primaryImgElement)
+
   if (element.alternate) {
-    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLElement
-    if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-      alternateImgElement.setAttribute("alt", variant.name)
-    }
+    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLImageElement
+    applyImageAttributes(alternateImgElement)
   }
 }
 

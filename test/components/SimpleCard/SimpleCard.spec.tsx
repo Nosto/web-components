@@ -522,6 +522,106 @@ describe("SimpleCard", () => {
     expect(primaryImg?.src).toBe("https://example.com/blue.jpg")
   })
 
+  it("should update srcset when variant changes with Shopify images", async () => {
+    const variantProduct = {
+      ...mockProduct,
+      images: ["https://cdn.shopify.com/s/files/1/0000/0001/products/initial.jpg"],
+      options: [
+        {
+          name: "Color",
+          position: 1,
+          values: ["Red", "Blue"]
+        }
+      ],
+      variants: [
+        {
+          ...mockProduct.variants[0],
+          featured_image: {
+            src: "https://cdn.shopify.com/s/files/1/0000/0001/products/red.jpg"
+          } as { src: string },
+          name: "Red"
+        } as (typeof mockProduct.variants)[0],
+        {
+          ...mockProduct.variants[0],
+          featured_image: {
+            src: "https://cdn.shopify.com/s/files/1/0000/0001/products/blue.jpg"
+          } as { src: string },
+          name: "Blue"
+        } as (typeof mockProduct.variants)[0]
+      ]
+    } satisfies ShopifyProduct
+
+    addProductHandlers({
+      "variant-product": { product: variantProduct }
+    })
+
+    const card = (<nosto-simple-card handle="variant-product" />) as SimpleCard
+    await card.connectedCallback()
+
+    const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+    const initialSrcset = primaryImg?.getAttribute("srcset")
+    // Initial image should have srcset since it's a Shopify URL
+    expect(initialSrcset).toBeTruthy()
+    expect(initialSrcset).toContain("initial.jpg")
+
+    // Simulate variant change event
+    const variantChangeEvent = new CustomEvent("variantchange", {
+      detail: {
+        variant: variantProduct.variants[1] // Blue variant
+      },
+      bubbles: true
+    })
+
+    card.dispatchEvent(variantChangeEvent)
+
+    // Wait for the event to be processed
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Verify that srcset was updated to blue variant
+    const updatedSrcset = primaryImg?.getAttribute("srcset")
+    expect(updatedSrcset).toContain("blue.jpg")
+    expect(updatedSrcset).not.toContain("initial.jpg")
+  })
+
+  it("should update alt attribute when variant changes", async () => {
+    const variantProduct = {
+      ...mockProduct,
+      variants: [
+        {
+          ...mockProduct.variants[0],
+          featured_image: {
+            src: "https://example.com/small.jpg"
+          } as { src: string },
+          name: "Small Size"
+        } as (typeof mockProduct.variants)[0]
+      ]
+    } satisfies ShopifyProduct
+
+    addProductHandlers({
+      "variant-product": { product: variantProduct }
+    })
+
+    const card = (<nosto-simple-card handle="variant-product" />) as SimpleCard
+    await card.connectedCallback()
+
+    // Simulate variant change event
+    const variantChangeEvent = new CustomEvent("variantchange", {
+      detail: {
+        variant: variantProduct.variants[0]
+      },
+      bubbles: true
+    })
+
+    card.dispatchEvent(variantChangeEvent)
+
+    // Wait for the event to be processed
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Verify that alt was updated
+    const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+    expect(primaryImg?.getAttribute("alt")).toBe("Small Size")
+  })
+
   it("should emit SimpleCard/rendered event when content is loaded", async () => {
     const validProduct = { ...mockProduct, title: "Event Test Product" }
     addProductHandlers({
@@ -576,5 +676,201 @@ describe("SimpleCard", () => {
     expect(getShadowContent(card)).toContain("Awesome Test Product")
     // Should be called only once for product property render (network fetch doesn't emit when product property exists)
     expect(eventCount).toBe(1)
+  })
+
+  it("should render img element with basic attributes", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("<img")
+    expect(shadowContent).toContain('loading="lazy"')
+    expect(shadowContent).toContain('decoding="async"')
+    expect(shadowContent).toContain('width="800"')
+  })
+
+  it("should render img element with proper style attribute", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Style should be in kebab-case format
+    expect(shadowContent).toContain("style=")
+    expect(shadowContent).toMatch(/object-fit:cover/)
+    expect(shadowContent).toMatch(/max-width:800px/)
+    expect(shadowContent).toMatch(/width:100%/)
+  })
+
+  it("should escape special characters in alt attribute", async () => {
+    const productWithSpecialChars = {
+      ...mockProduct,
+      title: 'Product with "quotes" & <tags>'
+    }
+
+    addProductHandlers({
+      "test-product": { product: productWithSpecialChars }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Alt attribute should have escaped HTML entities
+    expect(shadowContent).toContain("&quot;quotes&quot;")
+    expect(shadowContent).toContain("&amp;")
+    expect(shadowContent).toContain("&lt;tags&gt;")
+  })
+
+  it("should render img element with width attribute", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain('width="800"')
+  })
+
+  it("should not render nosto-image web component", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Should NOT contain nosto-image element
+    expect(shadowContent).not.toContain("<nosto-image")
+    expect(shadowContent).not.toContain("</nosto-image>")
+    // Should contain img element instead
+    expect(shadowContent).toContain("<img")
+  })
+
+  it("should render img with class attribute", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain('class="img primary"')
+  })
+
+  it("should escape class attribute values", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const img = card.shadowRoot?.querySelector("img")
+    expect(img).toBeTruthy()
+    expect(img?.className).toBe("img primary")
+  })
+
+  it("should render srcset for responsive images", async () => {
+    const productWithShopifyImage = {
+      ...mockProduct,
+      images: ["https://cdn.shopify.com/s/files/1/0000/0001/products/image.jpg"]
+    }
+
+    addProductHandlers({
+      "test-product": { product: productWithShopifyImage }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Should have srcset for responsive images
+    expect(shadowContent).toContain("srcset=")
+    // Srcset should contain multiple image URLs with different widths
+    expect(shadowContent).toMatch(/https:\/\/cdn\.shopify\.com.*?\s+\d+w/)
+  })
+
+  it("should not escape style attribute", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Style attribute should contain valid CSS with colons and semicolons, not escaped
+    expect(shadowContent).toMatch(/style="[^"]*object-fit:cover/)
+    expect(shadowContent).toMatch(/style="[^"]*max-width:800px/)
+    expect(shadowContent).toMatch(/style="[^"]*width:100%/)
+    // Should NOT contain HTML-escaped versions of CSS syntax
+    expect(shadowContent).not.toContain("&#039;")
+    expect(shadowContent).not.toContain("&quot;object-fit")
+  })
+
+  it("should escape alt attribute but not style attribute", async () => {
+    const productWithSpecialChars = {
+      ...mockProduct,
+      title: 'Test "Product" & <More>'
+    }
+
+    addProductHandlers({
+      "test-product": { product: productWithSpecialChars }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    // Alt attribute should be escaped (quotes and ampersands)
+    expect(shadowContent).toContain('alt="Test &quot;Product&quot; &amp;')
+    expect(shadowContent).toMatch(/alt="Test &quot;Product&quot; &amp; <More>"/)
+    // Style attribute should NOT be escaped
+    expect(shadowContent).toMatch(/style="object-fit:cover;max-width:800px;width:100%"/)
+  })
+
+  it("should properly format style with kebab-case properties", async () => {
+    addProductHandlers({
+      "test-product": { product: mockProduct }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const img = card.shadowRoot?.querySelector("img")
+    expect(img).toBeTruthy()
+
+    const styleAttr = img?.getAttribute("style")
+    expect(styleAttr).toBeTruthy()
+    // Should contain kebab-case CSS properties
+    expect(styleAttr).toContain("object-fit:cover")
+    expect(styleAttr).toContain("max-width:800px")
+    expect(styleAttr).toContain("width:100%")
+    // Should NOT contain camelCase CSS properties
+    expect(styleAttr).not.toContain("objectFit")
+    expect(styleAttr).not.toContain("maxWidth")
   })
 })

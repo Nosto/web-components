@@ -42,7 +42,7 @@ function getPropertyDescriptor(propertyName: string, type: FieldType) {
   return stringAttribute(attributeName)
 }
 
-function toKebabCase(str: string) {
+export function toKebabCase(str: string) {
   return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
 }
 
