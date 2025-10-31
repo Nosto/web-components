@@ -71,13 +71,14 @@ function generateImageElement(src: string, alt: string, className: string, sizes
     sizes
   }
 
-  const { style, ...props } = transform(imageProps)
+  const { style, ...transformedProps } = transform(imageProps)
 
-  // If sizes was not explicitly provided, remove the auto-generated sizes attribute
+  // If sizes was not explicitly provided, filter out the auto-generated sizes attribute
   // to maintain the same behavior as the original nosto-image component
-  if (!sizes && props.sizes) {
-    delete props.sizes
-  }
+  const props =
+    !sizes && transformedProps.sizes
+      ? Object.fromEntries(Object.entries(transformedProps).filter(([key]) => key !== "sizes"))
+      : transformedProps
 
   // Build style attribute string, converting camelCase to kebab-case
   const styleAttr = Object.entries(style || {})
