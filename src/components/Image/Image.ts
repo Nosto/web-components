@@ -78,16 +78,16 @@ export class Image extends NostoElement {
 
     let img = this.shadowRoot!.querySelector("img")
     if (img) {
-      setProps(img, transformProps, unstyled)
+      setImageProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
-      setProps(img, transformProps, unstyled)
+      setImageProps(img, transformProps, unstyled)
       this.shadowRoot!.replaceChildren(img)
     }
   }
 }
 
-function setProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
+export function setImageProps(img: HTMLImageElement, transformProps: ImageProps, unstyled?: boolean) {
   const { style, ...props } = transform(transformProps)
   Object.entries(props).forEach(([key, value]) => {
     if (value != null) {

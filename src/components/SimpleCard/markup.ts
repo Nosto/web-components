@@ -3,6 +3,7 @@ import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "../Image/transform"
+import { setImageProps } from "../Image/Image"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -108,25 +109,17 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const { style, ...props } = transform({
+  const props = {
     src: normalizeUrl(variant.featured_image.src),
     width: 800,
     sizes: element.sizes
-  })
+  }
   const imagesToUpdate = [
-    element.shadowRoot!.querySelector<HTMLElement>(".img.primary"),
-    element.alternate && element.shadowRoot!.querySelector<HTMLElement>(".img.alternate")
-  ].filter(Boolean) as HTMLElement[]
+    element.shadowRoot!.querySelector(".img.primary"),
+    element.alternate && element.shadowRoot!.querySelector(".img.alternate")
+  ].filter(Boolean) as HTMLImageElement[]
 
-  imagesToUpdate.forEach(img => {
-    img!.setAttribute("alt", variant.name)
-    Object.assign(img.style, style ?? {})
-    Object.entries(props).forEach(([key, value]) => {
-      if (value != null) {
-        img!.setAttribute(key, String(value))
-      }
-    })
-  })
+  imagesToUpdate.forEach(img => setImageProps(img, props))
 }
 
 function updatePrices(element: SimpleCard, variant: SimpleVariant) {
