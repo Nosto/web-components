@@ -60,19 +60,18 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateImgHtml(src: string, alt: string, className: string, sizes?: string) {
+export function generateImgHtml(src: string, alt: string, className: string, sizes?: string) {
   const { style, ...props } = transform({
     src: normalizeUrl(src),
     width: 800,
     sizes
   })
-  console.log("img", { style, props })
   return html`<img
     alt="${alt}"
     class="${className}"
     ${Object.entries(props)
       .filter(([, value]) => value != null)
-      .map(([key, value]) => html`${key}="${value}"`)}
+      .map(([key, value]) => html`${key}="${value}" `)}
     style="${styleText(style)}"
   />`
 }
