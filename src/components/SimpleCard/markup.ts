@@ -106,11 +106,16 @@ function generateNostoImageHTML(src: string, alt: string, className: string, siz
 }
 
 function buildStyleAttribute(style: CSSStyleDeclaration) {
-  const styleString = Object.entries(style)
-    .filter(([, value]) => value != null && value !== "")
-    .map(([key, value]) => `${key}: ${value}`)
-    .join("; ")
-  return styleString ? html`style="${styleString}"` : ""
+  const styleEntries: string[] = []
+  // Iterate through style properties using numeric indices
+  for (let i = 0; i < style.length; i++) {
+    const property = style[i]
+    const value = style.getPropertyValue(property)
+    if (value) {
+      styleEntries.push(`${property}: ${value}`)
+    }
+  }
+  return styleEntries.length > 0 ? html`style="${styleEntries.join("; ")}"` : ""
 }
 
 function generateRatingHTML(rating: number) {
