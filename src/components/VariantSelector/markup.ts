@@ -5,7 +5,7 @@ import type { VariantSelector } from "./VariantSelector"
 export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options or only one variant
   if (!product.options || product.options.length === 0 || product.variants.length <= 1) {
-    return { html: "<slot></slot>" }
+    return html`<slot></slot>`
   }
 
   return html`
