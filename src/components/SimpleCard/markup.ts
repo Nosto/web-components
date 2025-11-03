@@ -92,13 +92,7 @@ function generateImageElement(src: string, alt: string, className: string, sizes
     .filter(([, value]) => value != null)
     .map(([key, value]) => html`${key}="${value}"`)
 
-  return html`<img
-    ${attributes}
-    loading="lazy"
-    class="${className}"
-    alt="${alt}"
-    style="${styleAttr}"
-  />`
+  return html`<img ${attributes} loading="lazy" class="${className}" alt="${alt}" style="${styleAttr}" />`
 }
 
 function generateRatingHTML(rating: number) {
