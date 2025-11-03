@@ -1,3 +1,11 @@
+## [9.13.1](https://github.com/Nosto/web-components/compare/v9.13.0...v9.13.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* **SimpleCard:** use img.style.cssText instead of img.style assignment ([688ef0f](https://github.com/Nosto/web-components/commit/688ef0fcc74af1650325412c0629fabfd39a369e))
+* use img directly in SimpleCard ([9a61a8b](https://github.com/Nosto/web-components/commit/9a61a8bfcc8e0e49321933a85cc33f5896c31519))
+
 # [9.13.0](https://github.com/Nosto/web-components/compare/v9.12.1...v9.13.0) (2025-10-30)
 
 
