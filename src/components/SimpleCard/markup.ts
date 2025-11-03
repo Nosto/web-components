@@ -96,7 +96,8 @@ function generateImageElement(src: string, alt: string, className: string, sizes
     ${attributes}
     loading="lazy"
     class="${className}"
-    ${styleAttr ? html` style="${{ html: styleAttr }}"` : ""}
+    alt="${alt}"
+    style="${styleAttr || ""}"
   />`
 }
 
