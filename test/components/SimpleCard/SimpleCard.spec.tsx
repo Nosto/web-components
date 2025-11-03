@@ -282,7 +282,11 @@ describe("SimpleCard", () => {
 
   it("should re-render when handle attribute changes", async () => {
     const product1 = { ...mockProduct, title: "Product 1" }
-    const product2 = { ...mockProduct, title: "Product 2" }
+    const product2 = {
+      ...mockProduct,
+      images: ["https://example.com/image3.jpg", "https://example.com/image4.jpg"],
+      title: "Product 2"
+    }
 
     addProductHandlers({
       "product-1": { product: product1 },
@@ -294,10 +298,12 @@ describe("SimpleCard", () => {
 
     await card.connectedCallback()
     expect(getShadowContent(card)).toContain("Product 1")
+    expect(getShadowContent(card)).toContain("https://example.com/image1.jpg")
 
     card.handle = "product-2"
     await card.attributeChangedCallback("handle", "product-1", "product-2")
     expect(getShadowContent(card)).toContain("Product 2")
+    expect(getShadowContent(card)).toContain("https://example.com/image3.jpg")
   })
 
   it("should escape HTML in product data", async () => {
@@ -381,19 +387,6 @@ describe("SimpleCard", () => {
     // Should contain sizes attribute twice - once for primary, once for alternate
     const sizesMatches = shadowContent.match(new RegExp(`sizes="${sizesValue.replace(/[()]/g, "\\$&")}"`, "g"))
     expect(sizesMatches).toHaveLength(2)
-  })
-
-  it("should not add sizes attribute when not provided", async () => {
-    addProductHandlers({
-      "test-product": { product: mockProduct }
-    })
-
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    expect(shadowContent).not.toContain("sizes=")
   })
 
   it("should include slot for additional content", async () => {

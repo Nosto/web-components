@@ -2,7 +2,6 @@ import { transformBaseImageProps } from "@unpic/core/base"
 import type { BaseImageProps, ImageProps } from "./types"
 import { transform as bcTransform } from "./bigcommerce"
 import { transform as shopifyTransform } from "./shopify"
-import { toCamelCase } from "@/utils/toCamelCase"
 
 function getTransformer(url: string) {
   if (url.includes("shopify")) {
@@ -11,12 +10,10 @@ function getTransformer(url: string) {
   if (url.includes("bigcommerce")) {
     return bcTransform
   }
-  // TODO nailgun image support
 }
 
 export function transform({ crop, ...props }: ImageProps) {
   const transformer = getTransformer(props.src)!
-
   const imageProps = {
     ...props,
     transformer,
@@ -24,15 +21,5 @@ export function transform({ crop, ...props }: ImageProps) {
       crop
     }
   } as BaseImageProps
-
-  const transformedProps = transformBaseImageProps(imageProps)
-
-  const normalizedStyles = Object.fromEntries(
-    Object.entries(transformedProps.style || {}).map(([k, v]) => [toCamelCase(k), v])
-  ) as unknown as CSSStyleDeclaration
-
-  return {
-    ...transformedProps,
-    style: normalizedStyles
-  }
+  return transformBaseImageProps(imageProps)
 }

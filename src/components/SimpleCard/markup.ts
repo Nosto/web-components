@@ -2,6 +2,8 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
+import { transform } from "../Image/transform"
+import { setImageProps } from "../Image/Image"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -44,9 +46,9 @@ function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateNostoImageHTML(primaryImage, product.title, "img primary", element.sizes)}
+      ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
       ${hasAlternate && alternateImage
-        ? generateNostoImageHTML(alternateImage, product.title, "img alternate", element.sizes)
+        ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
     </div>
   `
@@ -59,17 +61,27 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-function generateNostoImageHTML(src: string, alt: string, className: string, sizes?: string) {
-  return html`
-    <nosto-image
-      src="${normalizeUrl(src)}"
-      alt="${alt}"
-      width="800"
-      loading="lazy"
-      class="${className}"
-      ${sizes ? html`sizes="${sizes}"` : ""}
-    ></nosto-image>
-  `
+export function generateImgHtml(src: string, alt: string, className: string, sizes?: string) {
+  const { style, ...props } = transform({
+    src: normalizeUrl(src),
+    width: 800,
+    sizes
+  })
+  return html`<img
+    alt="${alt}"
+    part="${className}"
+    class="${className}"
+    ${Object.entries(props)
+      .filter(([, value]) => value != null)
+      .map(([key, value]) => html`${key}="${value}" `)}
+    style="${styleText(style as object)}"
+  />`
+}
+
+function styleText(style: object) {
+  return Object.entries(style)
+    .map(([key, value]) => `${key}: ${value};`)
+    .join(" ")
 }
 
 function generateRatingHTML(rating: number) {
@@ -98,19 +110,17 @@ export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVari
 function updateImages(element: SimpleCard, variant: SimpleVariant) {
   if (!variant.featured_image) return
 
-  const primaryImgElement = element.shadowRoot!.querySelector(".img.primary") as HTMLElement
-  if (primaryImgElement) {
-    primaryImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-    primaryImgElement.setAttribute("alt", variant.name)
+  const props = {
+    src: normalizeUrl(variant.featured_image.src),
+    width: 800,
+    sizes: element.sizes
   }
+  const imagesToUpdate = [
+    element.shadowRoot!.querySelector(".img.primary"),
+    element.alternate && element.shadowRoot!.querySelector(".img.alternate")
+  ].filter(Boolean) as HTMLImageElement[]
 
-  if (element.alternate) {
-    const alternateImgElement = element.shadowRoot!.querySelector(".img.alternate") as HTMLElement
-    if (alternateImgElement) {
-      alternateImgElement.setAttribute("src", normalizeUrl(variant.featured_image.src))
-      alternateImgElement.setAttribute("alt", variant.name)
-    }
-  }
+  imagesToUpdate.forEach(img => setImageProps(img, props))
 }
 
 function updatePrices(element: SimpleCard, variant: SimpleVariant) {
