@@ -6,6 +6,7 @@ import { getContext } from "../../templating/context"
 import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
+import { isNavigationApiSupported } from "@/utils/navigationApi"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -30,6 +31,10 @@ import { addRequest } from "./orchestrator"
  * @property {boolean} [cartSynced] (`cart-synced`) - If true, the component will reload the campaign
  * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
  * with cart changes. Defaults to false.
+ * @property {boolean} [navSynced] (`nav-synced`) - If true, the component will reload the campaign
+ * whenever a successful page navigation occurs via the Navigation API. Useful for keeping
+ * campaigns in sync with URL changes (e.g., category-specific recommendations). Requires
+ * browser support for the Navigation API. Defaults to false.
  */
 @customElement("nosto-campaign")
 export class Campaign extends NostoElement {
@@ -40,6 +45,7 @@ export class Campaign extends NostoElement {
   @property(String) init?: string
   @property(Boolean) lazy?: boolean
   @property(Boolean) cartSynced?: boolean
+  @property(Boolean) navSynced?: boolean
 
   /** @hidden */
   templateElement?: HTMLTemplateElement
@@ -51,10 +57,16 @@ export class Campaign extends NostoElement {
       throw new Error("placement or id attribute is required for Campaign")
     }
 
-    // Register cart update listener if cart-synced is enabled
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
       api.listen("cartupdated", this.#load)
+    }
+    if (this.navSynced) {
+      if (isNavigationApiSupported()) {
+        navigation.addEventListener("navigatesuccess", this.#load)
+      } else {
+        console.warn("Navigation API is not supported in this browser. The nav-synced feature will not work.")
+      }
     }
 
     if (this.init !== "false") {
@@ -73,12 +85,13 @@ export class Campaign extends NostoElement {
   }
 
   async disconnectedCallback() {
-    // Unregister cart update listener
-    if (!this.cartSynced) {
-      return
+    if (this.cartSynced) {
+      const api = await new Promise(nostojs)
+      api.unlisten("cartupdated", this.#load)
     }
-    const api = await new Promise(nostojs)
-    api.unlisten("cartupdated", this.#load)
+    if (this.navSynced && isNavigationApiSupported()) {
+      navigation.removeEventListener("navigatesuccess", this.#load)
+    }
   }
 
   async load() {

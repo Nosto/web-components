@@ -14,6 +14,12 @@ interface Window {
   }
 }
 
+// Navigation API types for browser feature detection
+declare const navigation: {
+  addEventListener(type: "navigatesuccess", listener: () => void): void
+  removeEventListener(type: "navigatesuccess", listener: () => void): void
+}
+
 declare module "*.css" {
   const content: string
   export default content

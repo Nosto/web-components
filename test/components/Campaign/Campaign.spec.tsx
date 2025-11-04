@@ -249,4 +249,79 @@ describe("Campaign", () => {
       expect(mockUnlisten).toHaveBeenCalledWith("cartupdated", expect.any(Function))
     })
   })
+
+  describe("nav-synced functionality", () => {
+    let mockNavigation: {
+      addEventListener: Mock
+      removeEventListener: Mock
+    }
+
+    beforeEach(() => {
+      // Mock Navigation API
+      mockNavigation = {
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn()
+      }
+      // @ts-expect-error partial mock assignment
+      global.navigation = mockNavigation
+    })
+
+    afterEach(() => {
+      // @ts-expect-error cleanup
+      delete global.navigation
+      restoreNostojs()
+      vi.clearAllMocks()
+    })
+
+    it("should register navigation listener when nav-synced is true", async () => {
+      mockNostoRecs({ "789": "content" })
+
+      campaign = (<nosto-campaign placement="789" nav-synced />) as Campaign
+
+      await campaign.connectedCallback()
+
+      expect(mockNavigation.addEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
+    })
+
+    it("should not register navigation listener when Navigation API is not supported", async () => {
+      // @ts-expect-error cleanup
+      delete global.navigation
+
+      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
+
+      mockNostoRecs({ "789": "content" })
+
+      campaign = (<nosto-campaign placement="789" nav-synced />) as Campaign
+
+      await campaign.connectedCallback()
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "Navigation API is not supported in this browser. The nav-synced feature will not work."
+      )
+
+      consoleWarnSpy.mockRestore()
+    })
+
+    it("should reload campaign when navigation success event is triggered", async () => {
+      mockNostoRecs({ "789": "original content" })
+
+      Campaign.prototype.load = vi.fn().mockResolvedValue(undefined)
+
+      campaign = (<nosto-campaign placement="789" nav-synced={true} />) as Campaign
+
+      await campaign.connectedCallback()
+
+      expect(mockNavigation.addEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
+
+      const navigationCallback = mockNavigation.addEventListener.mock.calls[0][1]
+
+      await navigationCallback()
+
+      expect(campaign.load).toHaveBeenCalled()
+
+      await campaign.disconnectedCallback()
+
+      expect(mockNavigation.removeEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
+    })
+  })
 })
