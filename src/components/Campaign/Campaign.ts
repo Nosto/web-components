@@ -65,7 +65,7 @@ export class Campaign extends NostoElement {
       if (isNavigationApiSupported()) {
         navigation.addEventListener("navigatesuccess", this.#load)
       } else {
-        console.error("Navigation API is not supported in this browser. The url-synced feature will not work.")
+        console.warn("Navigation API is not supported in this browser. The url-synced feature will not work.")
       }
     }
 

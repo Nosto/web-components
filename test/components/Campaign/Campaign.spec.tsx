@@ -288,7 +288,7 @@ describe("Campaign", () => {
       // @ts-expect-error cleanup
       delete global.navigation
 
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
 
       mockNostoRecs({ "789": "content" })
 
@@ -296,12 +296,12 @@ describe("Campaign", () => {
 
       await campaign.connectedCallback()
 
-      // Should log error about Navigation API not being supported
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      // Should log warning about Navigation API not being supported
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
         "Navigation API is not supported in this browser. The url-synced feature will not work."
       )
 
-      consoleErrorSpy.mockRestore()
+      consoleWarnSpy.mockRestore()
     })
 
     it("should reload campaign when navigation success event is triggered", async () => {
