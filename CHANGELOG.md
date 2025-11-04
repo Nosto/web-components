@@ -1,3 +1,10 @@
+# [9.14.0](https://github.com/Nosto/web-components/compare/v9.13.1...v9.14.0) (2025-11-04)
+
+
+### Features
+
+* **Campaign:** add urlSynced property to reload on navigation changes ([c2b5552](https://github.com/Nosto/web-components/commit/c2b5552ba90f7a50263f27eacf4eedac37108e02))
+
 ## [9.13.1](https://github.com/Nosto/web-components/compare/v9.13.0...v9.13.1) (2025-11-03)
 
 
