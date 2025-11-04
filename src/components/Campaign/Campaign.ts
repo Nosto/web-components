@@ -6,6 +6,7 @@ import { getContext } from "../../templating/context"
 import { NostoElement } from "../Element"
 import { getTemplate } from "../common"
 import { addRequest } from "./orchestrator"
+import { isNavigationApiSupported } from "../../utils/navigationApi"
 
 /**
  * A custom element that renders a Nosto campaign based on the provided placement and fetched campaign data.
@@ -60,8 +61,12 @@ export class Campaign extends NostoElement {
       const api = await new Promise(nostojs)
       api.listen("cartupdated", this.#load)
     }
-    if (this.urlSynced && typeof navigation !== "undefined" && navigation.addEventListener) {
-      navigation.addEventListener("navigatesuccess", this.#load)
+    if (this.urlSynced) {
+      if (isNavigationApiSupported()) {
+        navigation.addEventListener("navigatesuccess", this.#load)
+      } else {
+        console.error("Navigation API is not supported in this browser. The url-synced feature will not work.")
+      }
     }
 
     if (this.init !== "false") {
@@ -84,7 +89,7 @@ export class Campaign extends NostoElement {
       const api = await new Promise(nostojs)
       api.unlisten("cartupdated", this.#load)
     }
-    if (this.urlSynced && typeof navigation !== "undefined" && navigation.removeEventListener) {
+    if (this.urlSynced && isNavigationApiSupported()) {
       navigation.removeEventListener("navigatesuccess", this.#load)
     }
   }
