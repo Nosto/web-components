@@ -1,3 +1,3 @@
-export function isNavigationApiSupported(): boolean {
+export function isNavigationApiSupported() {
   return typeof navigation !== "undefined" && !!navigation?.addEventListener && !!navigation?.removeEventListener
 }
