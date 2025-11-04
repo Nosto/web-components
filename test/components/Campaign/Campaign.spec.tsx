@@ -250,7 +250,7 @@ describe("Campaign", () => {
     })
   })
 
-  describe("url-synced functionality", () => {
+  describe("nav-synced functionality", () => {
     let mockNavigation: {
       addEventListener: Mock
       removeEventListener: Mock
@@ -273,10 +273,10 @@ describe("Campaign", () => {
       vi.clearAllMocks()
     })
 
-    it("should register navigation listener when url-synced is true", async () => {
+    it("should register navigation listener when nav-synced is true", async () => {
       mockNostoRecs({ "789": "content" })
 
-      campaign = (<nosto-campaign placement="789" url-synced />) as Campaign
+      campaign = (<nosto-campaign placement="789" nav-synced />) as Campaign
 
       await campaign.connectedCallback()
 
@@ -292,13 +292,13 @@ describe("Campaign", () => {
 
       mockNostoRecs({ "789": "content" })
 
-      campaign = (<nosto-campaign placement="789" url-synced />) as Campaign
+      campaign = (<nosto-campaign placement="789" nav-synced />) as Campaign
 
       await campaign.connectedCallback()
 
       // Should log warning about Navigation API not being supported
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        "Navigation API is not supported in this browser. The url-synced feature will not work."
+        "Navigation API is not supported in this browser. The nav-synced feature will not work."
       )
 
       consoleWarnSpy.mockRestore()
@@ -309,8 +309,8 @@ describe("Campaign", () => {
 
       Campaign.prototype.load = vi.fn().mockResolvedValue(undefined)
 
-      // Create campaign with url-synced
-      campaign = (<nosto-campaign placement="789" url-synced={true} />) as Campaign
+      // Create campaign with nav-synced
+      campaign = (<nosto-campaign placement="789" nav-synced={true} />) as Campaign
 
       await campaign.connectedCallback()
 
