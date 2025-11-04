@@ -284,7 +284,6 @@ describe("Campaign", () => {
     })
 
     it("should not register navigation listener when Navigation API is not supported", async () => {
-      // Remove navigation API
       // @ts-expect-error cleanup
       delete global.navigation
 
@@ -296,7 +295,6 @@ describe("Campaign", () => {
 
       await campaign.connectedCallback()
 
-      // Should log warning about Navigation API not being supported
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         "Navigation API is not supported in this browser. The nav-synced feature will not work."
       )
@@ -309,26 +307,20 @@ describe("Campaign", () => {
 
       Campaign.prototype.load = vi.fn().mockResolvedValue(undefined)
 
-      // Create campaign with nav-synced
       campaign = (<nosto-campaign placement="789" nav-synced={true} />) as Campaign
 
       await campaign.connectedCallback()
 
-      // Verify listener was registered
       expect(mockNavigation.addEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
 
-      // Get the registered callback
       const navigationCallback = mockNavigation.addEventListener.mock.calls[0][1]
 
-      // Simulate navigation success
       await navigationCallback()
 
-      // Verify the campaign was reloaded
       expect(campaign.load).toHaveBeenCalled()
 
       await campaign.disconnectedCallback()
 
-      // Verify removeEventListener was called on disconnect
       expect(mockNavigation.removeEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
     })
   })
