@@ -1,3 +1,15 @@
+# [9.15.0](https://github.com/Nosto/web-components/compare/v9.14.0...v9.15.0) (2025-11-05)
+
+
+### Bug Fixes
+
+* **Image:** move part attribute to connectedCallback and remove redundant test ([b973624](https://github.com/Nosto/web-components/commit/b97362416480bbfb128ff417f4d0be851b6bd6de))
+
+
+### Features
+
+* **Image:** expose inner img element via part="img" for external styling ([46a83a2](https://github.com/Nosto/web-components/commit/46a83a22841dc8e9b0e30fbe433f0343b6fddf28))
+
 # [9.14.0](https://github.com/Nosto/web-components/compare/v9.13.1...v9.14.0) (2025-11-04)
 
 
