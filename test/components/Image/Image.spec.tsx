@@ -339,4 +339,15 @@ describe("Image", () => {
       expect(imgElement?.srcset).toBeDefined()
     })
   })
+
+  describe("Shadow DOM parts", () => {
+    it("should expose img element with part='img' attribute", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement?.getAttribute("part")).toBe("img")
+    })
+  })
 })

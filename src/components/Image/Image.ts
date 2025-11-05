@@ -15,6 +15,7 @@ import { NostoElement } from "../Element"
  * @remarks
  * - Supports only Shopify and BigCommerce image URLs.
  * - Support for format, pad_color and quality to be added in the future.
+ * - The inner `<img>` element can be styled from outside the shadow DOM using the `::part(img)` selector.
  *
  * @property {string} src - The source URL of the image.
  * @property {number} [width] - The width of the image in pixels.
@@ -81,6 +82,7 @@ export class Image extends NostoElement {
       setImageProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
+      img.setAttribute("part", "img")
       setImageProps(img, transformProps, unstyled)
       this.shadowRoot!.replaceChildren(img)
     }
