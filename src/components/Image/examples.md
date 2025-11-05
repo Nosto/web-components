@@ -57,3 +57,28 @@ This example shows how to use the `unstyled` attribute to prevent the component 
   alt="Product image without inline styles">
 </nosto-image>
 ```
+
+### Styling the inner img element using ::part()
+
+The inner `<img>` element is exposed via `part="img"`, allowing you to style it from outside the shadow DOM using CSS `::part()` selectors. This is useful for applying custom styles like border-radius, filters, or other visual effects.
+
+```html
+<style>
+  nosto-image::part(img) {
+    border-radius: 8px;
+    filter: grayscale(50%);
+    transition: filter 0.3s ease;
+  }
+  
+  nosto-image:hover::part(img) {
+    filter: grayscale(0%);
+  }
+</style>
+
+<nosto-image
+  src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+  width="800"
+  height="600"
+  alt="Product image with custom styling">
+</nosto-image>
+```
