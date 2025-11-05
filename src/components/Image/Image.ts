@@ -82,6 +82,7 @@ export class Image extends NostoElement {
       setImageProps(img, transformProps, unstyled)
     } else {
       img = document.createElement("img")
+      img.setAttribute("part", "img")
       setImageProps(img, transformProps, unstyled)
       this.shadowRoot!.replaceChildren(img)
     }
@@ -95,7 +96,6 @@ export function setImageProps(img: HTMLImageElement, transformProps: ImageProps,
       img.setAttribute(key, String(value))
     }
   })
-  img.setAttribute("part", "img")
   if (!unstyled) {
     Object.assign(img.style, style)
   }

@@ -349,20 +349,5 @@ describe("Image", () => {
       expect(imgElement).toBeDefined()
       expect(imgElement?.getAttribute("part")).toBe("img")
     })
-
-    it("should have part='img' attribute when reusing existing img element", () => {
-      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
-
-      // Manually insert an img element into the existing shadow root
-      const existingImg = document.createElement("img")
-      nostoImage.shadowRoot!.appendChild(existingImg)
-
-      // Call connectedCallback to trigger the update
-      nostoImage.connectedCallback()
-
-      // Verify part attribute is set
-      const imgElement = nostoImage.shadowRoot?.querySelector("img")
-      expect(imgElement?.getAttribute("part")).toBe("img")
-    })
   })
 })
