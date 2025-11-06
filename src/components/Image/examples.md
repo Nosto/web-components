@@ -58,6 +58,34 @@ This example shows how to use the `unstyled` attribute to prevent the component 
 </nosto-image>
 ```
 
+### Using lazy loading for performance optimization
+
+This example demonstrates using the `loading="lazy"` attribute to defer loading of images until they're near the viewport. This is particularly useful for images below the fold, improving initial page load performance by only loading images when needed.
+
+```html
+<nosto-image
+  src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+  width="800"
+  height="600"
+  loading="lazy"
+  alt="Product image with lazy loading">
+</nosto-image>
+```
+
+### Using eager loading for critical images
+
+This example shows how to use the `loading="eager"` attribute to prioritize immediate loading of critical images. This is useful for above-the-fold images or hero banners that should be visible as soon as possible.
+
+```html
+<nosto-image
+  src="https://cdn.shopify.com/static/sample-images/bath.jpeg"
+  width="1200"
+  height="600"
+  loading="eager"
+  alt="Hero banner with eager loading">
+</nosto-image>
+```
+
 ### Styling the inner img element using ::part()
 
 The inner `<img>` element is exposed via `part="img"`, allowing you to style it from outside the shadow DOM using CSS `::part()` selectors. This is useful for applying custom styles like border-radius, filters, or other visual effects.
