@@ -20,7 +20,7 @@ export function getTemplate(element: CampaignElement): HTMLTemplateElement {
   }
   const template = element.template
     ? document.querySelector<HTMLTemplateElement>(`template#${element.template}`)
-    : element.querySelector<HTMLTemplateElement>(":scope > template")
+    : Array.from(element.children).find((child): child is HTMLTemplateElement => child.tagName === "TEMPLATE")
   if (!template) {
     throw new Error(`Template with id "${element.template}" not found.`)
   }

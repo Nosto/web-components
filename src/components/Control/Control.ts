@@ -16,10 +16,12 @@ export class Control extends NostoElement {
   async connectedCallback() {
     const api = await new Promise(nostojs)
     const segments = await api.internal.getSegments()
-    const template = Array.from(this.querySelectorAll<HTMLTemplateElement>(":scope > template[segment]")).find(el =>
-      // TODO provide more filtering options: schedule, affinities etc
-      segments?.includes(el.getAttribute("segment")!)
-    )
+    const template = Array.from(this.children)
+      .filter((child): child is HTMLTemplateElement => child.tagName === "TEMPLATE" && child.hasAttribute("segment"))
+      .find(el =>
+        // TODO provide more filtering options: schedule, affinities etc
+        segments?.includes(el.getAttribute("segment")!)
+      )
     if (template) {
       const clone = template.content.cloneNode(true) as DocumentFragment
       this.replaceChildren(...clone.childNodes)

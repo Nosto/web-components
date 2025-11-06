@@ -102,7 +102,10 @@ export class Campaign extends NostoElement {
 export async function loadCampaign(element: Campaign) {
   element.toggleAttribute("loading", true)
   try {
-    const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
+    const useTemplate =
+      element.templateElement ||
+      element.template ||
+      Array.from(element.children).find(child => child.tagName === "TEMPLATE")
     const placement = element.placement ?? element.id
     const api = await new Promise(nostojs)
 

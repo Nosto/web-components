@@ -50,6 +50,33 @@ describe("Campaign", () => {
     expect(campaign.innerHTML).toBe(`<span>recommended content</span>`)
   })
 
+  it("should only select direct template children, not nested ones", async () => {
+    const htmlContent = "direct template content"
+    const { mockBuilder } = mockNostoRecs({ "456": { html: htmlContent } })
+
+    campaign = (<nosto-campaign placement="456" productId="123" />) as Campaign
+
+    // Add a direct template child
+    const directTemplate = document.createElement("template")
+    directTemplate.innerHTML = "<span>{{ html }}</span>"
+    campaign.appendChild(directTemplate)
+
+    // Add a nested template inside a div (should be ignored)
+    const wrapper = document.createElement("div")
+    const nestedTemplate = document.createElement("template")
+    nestedTemplate.innerHTML = "<span>This should be ignored</span>"
+    wrapper.appendChild(nestedTemplate)
+    campaign.appendChild(wrapper)
+
+    await campaign.connectedCallback()
+
+    expect(mockBuilder.load).toHaveBeenCalledWith()
+    // The direct template should be used and compiled, replacing all content
+    expect(campaign.innerHTML).toBe(`<span>direct template content</span>`)
+    // Verify the nested template wasn't used by checking the content doesn't include "ignored"
+    expect(campaign.innerHTML).not.toContain("ignored")
+  })
+
   it("should render campaign-level templated HTML if template is provided", async () => {
     const templateId = "campaign-template"
     const template = document.createElement("template")

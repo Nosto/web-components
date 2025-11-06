@@ -36,4 +36,25 @@ describe("Control", () => {
 
     expect(control.innerHTML).toBe(originalContent)
   })
+
+  it("should only select direct template children with segment attribute, not nested ones", async () => {
+    const control = (
+      <nosto-control>
+        <template segment="test">direct template content</template>
+      </nosto-control>
+    ) as Control
+
+    // Add a nested template inside a div (should be ignored)
+    const wrapper = document.createElement("div")
+    const nestedTemplate = document.createElement("template")
+    nestedTemplate.setAttribute("segment", "test")
+    nestedTemplate.innerHTML = "nested content that should be ignored"
+    wrapper.appendChild(nestedTemplate)
+    control.appendChild(wrapper)
+
+    await control.connectedCallback()
+
+    // Should use the direct template, not the nested one
+    expect(control.innerHTML).toBe("direct template content")
+  })
 })
