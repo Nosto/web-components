@@ -29,15 +29,6 @@ import { NostoElement } from "../Element"
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  * @property {"high"|"low"|"auto"} [fetchpriority] (`fetch-priority`) - Provides a hint to the browser about the priority of this image relative to other images.
  * @property {"lazy"|"eager"} [loading] - The loading behavior of the image. Use "lazy" for lazy loading or "eager" for immediate loading.
- *
- * @example
- * ```html
- * <!-- Lazy load an image -->
- * <nosto-image src="/product.jpg" width="400" height="300" loading="lazy" alt="Product image"></nosto-image>
- *
- * <!-- Eagerly load an image -->
- * <nosto-image src="/hero.jpg" width="1200" height="600" loading="eager" alt="Hero image"></nosto-image>
- * ```
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
