@@ -11,6 +11,7 @@ import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
+import getProductByHandle from "./getProduct.graphql"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -114,7 +115,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   }
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element.handle)
+    const productData = await fetchProductDataGraphQL(element.handle)
     element.productId = productData.id
 
     const cardHTML = generateCardHTML(element, productData)
@@ -127,9 +128,29 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   }
 }
 
+// @ts-expect-error
 async function fetchProductData(handle: string) {
   const url = createShopifyUrl(`/products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href, { cached: true })
+  return getJSON<ShopifyProduct>({ url: url.href }, { cached: true })
+}
+
+async function fetchProductDataGraphQL(handle: string) {
+  // Nosto BE GraphQL version 2025-04 not working for tokenless requests, using 2025-10
+  const url = createShopifyUrl(`/api/2025-10/graphql.json`)
+  const response = await getJSON<{ data: { productByHandle: ShopifyProduct } }>({
+    url: url.href,
+    requestInit: {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({
+        query: getProductByHandle,
+        variables: { handle }
+      })
+    }
+  })
+  return response.data.productByHandle
 }
 
 declare global {

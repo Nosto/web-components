@@ -1,8 +1,9 @@
 import { resolve } from "path"
 import { defineConfig } from "vitest/config"
+import graphqlLoader from "vite-plugin-graphql-loader"
 
 export default defineConfig(() => ({
-  plugins: [],
+  plugins: [graphqlLoader()],
   resolve: {
     alias: {
       "@": resolve(import.meta.dirname, "./src")

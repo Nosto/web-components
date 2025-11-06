@@ -102,7 +102,7 @@ describe("fetch facade", () => {
         })
       )
 
-      const result = await getJSON("https://api.example.com/data")
+      const result = await getJSON({ url: "https://api.example.com/data" })
       expect(result).toEqual(mockData)
     })
 
@@ -113,7 +113,7 @@ describe("fetch facade", () => {
         })
       )
 
-      await expect(getJSON("https://api.example.com/error")).rejects.toThrow(
+      await expect(getJSON({ url: "https://api.example.com/error" })).rejects.toThrow(
         "Failed to fetch https://api.example.com/error: 500 Internal Server Error"
       )
     })
@@ -125,8 +125,8 @@ describe("fetch facade", () => {
 
       addHandlers(handler)
 
-      const result1 = await getJSON("https://api.example.com/cached", { cached: true })
-      const result2 = await getJSON("https://api.example.com/cached", { cached: true })
+      const result1 = await getJSON({ url: "https://api.example.com/cached" }, { cached: true })
+      const result2 = await getJSON({ url: "https://api.example.com/cached" }, { cached: true })
 
       expect(result1).toEqual({ count: 1, message: "Response 1" })
       expect(result2).toEqual({ count: 1, message: "Response 1" })
@@ -140,8 +140,8 @@ describe("fetch facade", () => {
 
       addHandlers(handler)
 
-      const result1 = await getJSON("https://api.example.com/uncached")
-      const result2 = await getJSON("https://api.example.com/uncached", { cached: false })
+      const result1 = await getJSON({ url: "https://api.example.com/uncached" })
+      const result2 = await getJSON({ url: "https://api.example.com/uncached" }, { cached: false })
 
       expect(result1).toEqual({ count: 1, message: "Response 1" })
       expect(result2).toEqual({ count: 2, message: "Response 2" })
@@ -156,7 +156,7 @@ describe("fetch facade", () => {
       )
 
       const textResult = await getText("https://example.com/mixed", { cached: true })
-      const jsonResult = await getJSON("https://example.com/mixed", { cached: true })
+      const jsonResult = await getJSON({ url: "https://example.com/mixed" }, { cached: true })
 
       expect(textResult).toBe('{"message": "Hello"}')
       expect(jsonResult).toEqual({ message: "Hello" })

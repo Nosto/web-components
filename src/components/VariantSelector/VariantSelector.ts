@@ -214,7 +214,7 @@ export function getSelectedVariant(element: VariantSelector, product: ShopifyPro
 
 async function fetchProductData({ handle, filtered }: VariantSelector) {
   const url = createShopifyUrl(`/products/${handle}.js`)
-  const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
+  const data = await getJSON<ShopifyProduct>({ url: url.href }, { cached: true })
 
   if (filtered) {
     return { ...data, options: filteredOptions(data) }

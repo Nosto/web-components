@@ -1,8 +1,22 @@
 import esbuild from "esbuild"
 import fs from "fs"
 
+const graphqlLoader = {
+  name: "graphql-loader",
+  setup(build) {
+    build.onLoad({ filter: /\.graphql$/ }, async args => {
+      const contents = await fs.promises.readFile(args.path, "utf8")
+      return {
+        contents: `export default \`${contents.replace(/`/g, "\\`")}\`;`,
+        loader: "js"
+      }
+    })
+  }
+}
+
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
+  plugins: [graphqlLoader],
   bundle: true,
   minifyIdentifiers: true,
   minifySyntax: true,
