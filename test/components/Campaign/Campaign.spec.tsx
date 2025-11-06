@@ -175,6 +175,14 @@ describe("Campaign", () => {
     expect(mockBuilder.load).not.toHaveBeenCalled()
   })
 
+  it("should mirror id from placement if id is not supplied", async () => {
+    const placementValue = "test-placement"
+    mockNostoRecs({ [placementValue]: {} })
+    const campaign = (<nosto-campaign placement={placementValue} />) as Campaign
+    await campaign.connectedCallback()
+    expect(campaign.id).toBe(placementValue)
+  })
+
   describe("cart-synced functionality", () => {
     let mockListen: Mock
     let mockUnlisten: Mock

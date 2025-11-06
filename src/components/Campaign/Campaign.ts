@@ -57,6 +57,10 @@ export class Campaign extends NostoElement {
       throw new Error("placement or id attribute is required for Campaign")
     }
 
+    if (this.placement && !this.id) {
+      this.setAttribute("id", this.placement)
+    }
+
     if (this.cartSynced) {
       const api = await new Promise(nostojs)
       api.listen("cartupdated", this.#load)
@@ -102,7 +106,7 @@ export class Campaign extends NostoElement {
 export async function loadCampaign(element: Campaign) {
   element.toggleAttribute("loading", true)
   try {
-    const useTemplate = element.templateElement || element.template || element.querySelector(":scope > template")
+    const useTemplate = element.templateElement || element.template || element.querySelector("template")
     const placement = element.placement ?? element.id
     const api = await new Promise(nostojs)
 
