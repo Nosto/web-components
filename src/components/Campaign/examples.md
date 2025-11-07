@@ -8,6 +8,14 @@ This is the simplest campaign implementation that fetches content from Nosto for
 <nosto-campaign placement="front-page"></nosto-campaign>
 ```
 
+or alternatively
+
+```html
+<nosto-campaign id="front-page"></nosto-campaign>
+```
+
+for better compatibility with the scoped styling conventions in our Velocity templates.
+
 ### Campaign with template-based rendering
 
 This example demonstrates custom template-based rendering using Vue-like syntax. Instead of using Nosto's pre-rendered HTML, this approach gives you full control over the campaign layout and styling using a template element with Vue directives.
