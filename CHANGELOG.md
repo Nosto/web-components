@@ -1,3 +1,10 @@
+# [9.16.0](https://github.com/Nosto/web-components/compare/v9.15.0...v9.16.0) (2025-11-07)
+
+
+### Features
+
+* **Image:** add support for loading attribute ([70479b1](https://github.com/Nosto/web-components/commit/70479b1e3831a781fa03f86cbedd8ae31634bb85))
+
 # [9.15.0](https://github.com/Nosto/web-components/compare/v9.14.0...v9.15.0) (2025-11-05)
 
 
