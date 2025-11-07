@@ -28,6 +28,7 @@ import { NostoElement } from "../Element"
  * @property {number[]} [breakpoints] - Custom widths for responsive image generation. Default breakpoints are generated based on common screen sizes.
  * @property {boolean} [unstyled] - When present, prevents inline styles from being applied to the image element.
  * @property {"high"|"low"|"auto"} [fetchpriority] (`fetch-priority`) - Provides a hint to the browser about the priority of this image relative to other images.
+ * @property {"lazy"|"eager"} [loading] - The loading behavior of the image. Use "lazy" for lazy loading or "eager" for immediate loading.
  */
 @customElement("nosto-image", { observe: true })
 export class Image extends NostoElement {
@@ -42,6 +43,7 @@ export class Image extends NostoElement {
   @property(Array) breakpoints?: number[]
   @property(Boolean) unstyled?: boolean
   @property(String) fetchpriority?: "high" | "low" | "auto"
+  @property(String) loading?: "lazy" | "eager"
 
   constructor() {
     super()
@@ -56,7 +58,8 @@ export class Image extends NostoElement {
 
   connectedCallback() {
     validateProps(this)
-    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority } = this
+    const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority, loading } =
+      this
 
     // Create props object and filter out null/undefined values
     const rawProps = {
@@ -69,7 +72,8 @@ export class Image extends NostoElement {
       alt,
       sizes,
       breakpoints,
-      fetchpriority
+      fetchpriority,
+      loading
     }
 
     // Filter out null and undefined values

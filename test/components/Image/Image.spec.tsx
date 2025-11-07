@@ -251,6 +251,34 @@ describe("Image", () => {
       expect(imgElement).toBeDefined()
       expect(imgElement!.getAttribute("fetchpriority")).toBe("high")
     })
+
+    it("should correctly set loading attribute to lazy", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} loading="lazy" />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("loading")).toBe("lazy")
+    })
+
+    it("should correctly set loading attribute to eager", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} loading="eager" />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      expect(imgElement!.getAttribute("loading")).toBe("eager")
+    })
+
+    it("should have default loading attribute when not specified", () => {
+      nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
+      nostoImage.connectedCallback()
+
+      const imgElement = nostoImage.shadowRoot?.querySelector("img")
+      expect(imgElement).toBeDefined()
+      // The transform function from unpic may set a default loading value
+      expect(imgElement!.hasAttribute("loading")).toBe(true)
+    })
   })
 
   describe("Shadow DOM rendering", () => {

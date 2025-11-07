@@ -104,6 +104,11 @@ const meta: Meta = {
       control: { type: "select" },
       options: ["high", "low", "auto"],
       description: "Provides a hint to the browser about the priority of this image relative to other images."
+    },
+    loading: {
+      control: { type: "select" },
+      options: ["lazy", "eager"],
+      description: "The loading behavior of the image. Use 'lazy' for lazy loading or 'eager' for immediate loading."
     }
   },
   tags: ["autodocs"]
