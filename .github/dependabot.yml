@@ -47,34 +47,6 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
-          - "jsdom"
-          - "msw"
-      # TypeScript and type definitions
-      typescript:
-        patterns:
-          - "typescript"
-          - "typescript-eslint"
-          - "@types/*"
-          - "typedoc"
-      # Build tools
-      build-tools:
-        patterns:
-          - "esbuild"
-          - "esbuild-*"
-          - "vite"
-      # Code quality and commit tools
-      code-quality:
-        patterns:
-          - "prettier"
-          - "@commitlint/*"
-          - "husky"
-      # UI and component libraries
-      ui-libraries:
-        patterns:
-          - "lit"
-          - "swiper"
-          - "unpic"
-          - "@unpic/*"
       # Nosto packages
       nosto:
         patterns:
