@@ -1,4 +1,4 @@
-import { ShopifyProduct, ShopifyVariant } from "./types"
+import { ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
 
 type GenericGraphQLType = {
   data: {
@@ -10,9 +10,10 @@ type GenericGraphQLType = {
 export function flattenResponse(obj: GenericGraphQLType) {
   const product = obj.data.product
 
+  // Flatten images from nodes structure
+  let images: ShopifyImage[] = []
   if (hasImagesNodes(product)) {
-    const images = product.images as { nodes: unknown }
-    product.images = images.nodes
+    images = (product.images as { nodes: ShopifyImage[] }).nodes
   }
 
   const productTyped = product as ShopifyProduct
@@ -22,7 +23,6 @@ export function flattenResponse(obj: GenericGraphQLType) {
   if (hasVariantsNodes(product)) {
     const variantsData = product.variants as { nodes: ShopifyVariant[] }
     variants = variantsData.nodes
-    product.variants = variants
   }
 
   // Get price and compareAtPrice from first variant if available
@@ -34,6 +34,7 @@ export function flattenResponse(obj: GenericGraphQLType) {
     ...product,
     price,
     compareAtPrice,
+    images,
     variants
   } as ShopifyProduct
 }
