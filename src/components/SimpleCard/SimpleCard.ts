@@ -70,15 +70,9 @@ export class SimpleCard extends NostoElement {
   }
 
   async connectedCallback() {
-    if (this.mock) {
-      const cardHTML = generateCardHTML(this, mockProduct)
-      setShadowContent(this, cardHTML.html)
-      this.dispatchEvent(
-        new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
-      )
+    if (!this.mock) {
+      assertRequired(this, "handle")
     }
-
-    assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
@@ -117,6 +111,14 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
+  if (element.mock) {
+    const cardHTML = generateCardHTML(element, mockProduct)
+    setShadowContent(element, cardHTML.html)
+    element.dispatchEvent(
+      new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
+    )
+    return
+  }
   if (element.product) {
     const normalized = convertProduct(element.product)
     const cardHTML = generateCardHTML(element, normalized)
