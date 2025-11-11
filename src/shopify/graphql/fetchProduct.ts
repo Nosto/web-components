@@ -4,7 +4,7 @@ import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw
 import { ShopifyProduct } from "./types"
 
 export async function fetchProduct(handle: string) {
-  // Nosto BE GraphQL version 2025-04 not working for tokenless requests, using 2025-10
+  // Shopify Storefront GraphQL version 2025-04 not working for tokenless requests, using 2025-10
   const url = createShopifyUrl(`/api/2025-10/graphql.json`)
   const response = await fetch(url.href, {
     headers: {
