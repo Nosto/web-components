@@ -20,10 +20,10 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: () => html`
-      <div>
-        The nosto-dynamic-card component is designed to fetch live product data from Shopify and does not
-        render in Storybook when mock is false. To view an example, please see the <strong>Mock</strong> story.
-      </div>
+    <div>
+      The nosto-dynamic-card component is designed to fetch live product data from Shopify and does not render in
+      Storybook when mock is false. To view an example, please see the <strong>Mock</strong> story.
+    </div>
   `
 }
 
@@ -33,9 +33,7 @@ export const Mock: Story = {
   },
   render: args => html`
     <div style="max-width: 300px">
-      <nosto-dynamic-card
-        mock=${args.mock}
-      ></nosto-dynamic-card>
+      <nosto-dynamic-card mock=${args.mock}></nosto-dynamic-card>
     </div>
   `
 }
