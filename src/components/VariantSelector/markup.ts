@@ -1,6 +1,6 @@
 import { html } from "@/templating/html"
 import type { VariantSelector } from "./VariantSelector"
-import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types";
+import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
 
 export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options or only one variant

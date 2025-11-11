@@ -15,18 +15,12 @@ export function flattenResponse(obj: GenericGraphQLType) {
     product.images = images.nodes
   }
 
+  const firstVariant = (product as ShopifyProduct).options[0].optionValues[0].firstSelectableVariant
+
   return {
     ...product,
-    // FXIME
-    price: {
-      amount: "0",
-      currencyCode: "USD"
-    },
-    // FIXME
-    compareAtPrice: {
-      amount: "0",
-      currencyCode: "USD"
-    }
+    price: firstVariant.price,
+    compareAtPrice: firstVariant.compareAtPrice
   } as ShopifyProduct
 }
 

@@ -3,6 +3,7 @@ import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
 import { ShopifyProduct } from "./types"
 
+// TODO add catching
 export async function fetchProduct(handle: string) {
   // Shopify Storefront GraphQL version 2025-04 not working for tokenless requests, using 2025-10
   const url = createShopifyUrl(`/api/2025-10/graphql.json`)
@@ -14,7 +15,8 @@ export async function fetchProduct(handle: string) {
     body: JSON.stringify({
       query: getProductByHandle,
       variables: {
-        country: "US",
+        language: window.Shopify?.locale?.toUpperCase() || "EN",
+        country: window.Shopify?.country || "US",
         handle
       }
     })

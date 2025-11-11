@@ -92,11 +92,10 @@ function generateRatingHTML(rating: number) {
 
 function formatPrice({ amount, currencyCode }: ShopifyMoney) {
   // Convert from cents to dollars and format
-  const number = +amount / 100
   return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
     style: "currency",
     currency: currencyCode
-  }).format(number)
+  }).format(+amount)
 }
 
 export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {

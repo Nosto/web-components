@@ -10,6 +10,7 @@ interface Window {
     currency?: {
       active?: string
     }
+    country?: string
     locale?: string
   }
 }

@@ -1,4 +1,4 @@
-query ProductByHandle($country: CountryCode!, $handle: String!) @inContext(country: $country) {
+query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: String!) @inContext(country: $country language: $language) {
   product(handle: $handle) {
     id
     title

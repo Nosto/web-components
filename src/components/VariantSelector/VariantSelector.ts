@@ -5,6 +5,8 @@ import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
+import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { parseId } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -77,7 +79,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     const productData = await fetchProduct(element.handle)
 
     // Initialize selections with first value of each option
-    //initializeDefaultSelections(element, productData)
+    initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
     setShadowContent(element, selectorHTML.html)
@@ -91,11 +93,11 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     // active state for selected options
     updateActiveStates(element)
     // unavailable state for options without available variants
-    //updateUnavailableStates(element, productData)
+    updateUnavailableStates(element, productData)
     // TODO disabled state
 
     if (Object.keys(element.selectedOptions).length > 0) {
-      //emitVariantChange(element, productData)
+      emitVariantChange(element, productData)
     }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
@@ -104,7 +106,8 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   }
 }
 
-/*function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
+// FIXME
+function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
     variant = product.variants.find(v => v.id === element.variantId)
@@ -122,7 +125,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
       }
     })
   }
-}*/
+}
 
 function setupOptionListeners(element: VariantSelector) {
   element.shadowRoot!.addEventListener("click", async e => {
@@ -145,8 +148,8 @@ export async function selectOption(element: VariantSelector, optionName: string,
   updateActiveStates(element)
 
   // Fetch product data and emit variant change
-  //const productData = await fetchProductData(element)
-  //emitVariantChange(element, productData)
+  const productData = await fetchProduct(element.handle)
+  emitVariantChange(element, productData)
 }
 
 function updateActiveStates(element: VariantSelector) {
@@ -157,7 +160,8 @@ function updateActiveStates(element: VariantSelector) {
   })
 }
 
-/*function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
+// FIXME
+function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
   const optionNames = product.options.map(option => option.name)
   product.variants
@@ -172,7 +176,7 @@ function updateActiveStates(element: VariantSelector) {
     const available = availableOptions.has(`${optionName}::${optionValue}`)
     togglePart(button, "unavailable", !available)
   })
-}*/
+}
 
 function togglePart(element: HTMLElement, partName: string, enable: boolean) {
   const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
@@ -184,10 +188,10 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
   element.setAttribute("part", Array.from(parts).join(" "))
 }
 
-/*function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
+function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   const variant = getSelectedVariant(element, product)
   if (variant) {
-    element.variantId = variant.id
+    element.variantId = parseId(variant.id)
     const detail: VariantChangeDetail = { variant }
     element.dispatchEvent(
       new CustomEvent("variantchange", {
@@ -196,9 +200,10 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
       })
     )
   }
-}*/
+}
 
-/*export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
+// FIXME
+export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
       return product.options.every((option, index) => {
@@ -208,16 +213,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
       })
     }) || null
   )
-}*/
-
-/*function filteredOptions(product: ShopifyProduct) {
-  return product.options.map(option => {
-    return {
-      ...option,
-      values: option.values.filter(value => product.variants.some(variant => variant.options.includes(value)))
-    }
-  })
-}*/
+}
 
 declare global {
   interface HTMLElementTagNameMap {
