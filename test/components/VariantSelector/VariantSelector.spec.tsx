@@ -5,29 +5,22 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import type { ShopifyProduct as RestProduct } from "@/shopify/rest/types"
+import type { ShopifyProduct } from "@/shopify/rest/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
-import { convertRestToGraphQL } from "../../utils/convertRestToGraphQL"
 
 describe("VariantSelector", () => {
-  function addProductHandlers(responses: Record<string, { product?: RestProduct; status?: number }>) {
-    const graphqlUrl = createShopifyUrl("/api/2025-10/graphql.json")
-    const graphqlPath = graphqlUrl.pathname
+  function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
+    const productUrl = createShopifyUrl("/products/:handle.js")
+    const productPath = productUrl.pathname
 
     addHandlers(
-      http.post(graphqlPath, async ({ request }) => {
-        const body = (await request.json()) as { query: string; variables: { handle: string } }
-        const handle = body.variables.handle
+      http.get(productPath, ({ params }) => {
+        const handle = params.handle as string
         const response = responses[handle]
         if (!response) {
-          return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
+          return HttpResponse.json({ error: "Not Found" }, { status: 404 })
         }
-        if (response.status && response.status !== 200) {
-          return HttpResponse.json({ errors: [{ message: "Error" }] }, { status: response.status })
-        }
-        const product = response.product!
-        const graphqlResponse = convertRestToGraphQL(product)
-        return HttpResponse.json(graphqlResponse, { status: 200 })
+        return HttpResponse.json(response.product || response, { status: response.status || 200 })
       })
     )
   }
@@ -37,7 +30,7 @@ describe("VariantSelector", () => {
     return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
   }
 
-  const mockProductWithVariants: RestProduct = {
+  const mockProductWithVariants: ShopifyProduct = {
     id: 123456,
     title: "Variant Test Product",
     handle: "variant-test-product",
@@ -173,7 +166,7 @@ describe("VariantSelector", () => {
     ]
   }
 
-  const mockProductWithoutVariants: RestProduct = {
+  const mockProductWithoutVariants: ShopifyProduct = {
     ...mockProductWithVariants,
     options: [],
     variants: [
@@ -264,7 +257,7 @@ describe("VariantSelector", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((eventDetail as any)?.variant).toBeTruthy()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1003") // Large / Red
+    expect((eventDetail as any)?.variant?.id).toBe(1003) // Large / Red
   })
 
   it("should update selected variant when options change", async () => {
@@ -276,14 +269,13 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     // Initial selection should be first variant (Small/Red)
-    const graphQLProduct = convertRestToGraphQL(mockProductWithVariants).data.product
-    expect(getSelectedVariant(selector, graphQLProduct)?.id).toBe("gid://shopify/ProductVariant/1001")
+    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe(1001)
 
     // Change to Medium/Blue
     await selectOption(selector, "Size", "Medium")
     await selectOption(selector, "Color", "Blue")
 
-    expect(getSelectedVariant(selector, graphQLProduct)?.id).toBe("gid://shopify/ProductVariant/1002")
+    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe(1002)
   })
 
   it("should handle option button clicks", async () => {
@@ -517,7 +509,7 @@ describe("VariantSelector", () => {
 
       expect(eventDetail).toBeTruthy()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/4001")
+      expect((eventDetail as any)?.variant?.id).toBe(4001)
     })
 
     it("should correctly select variants with mixed single and multi-value options", async () => {
@@ -531,13 +523,9 @@ describe("VariantSelector", () => {
       // Select a size option (Material is auto-selected)
       await selectOption(selector, "Size", "Large")
 
-      const graphQLProduct = convertRestToGraphQL(mockProductWithSingleValueOptionTest).data.product
-      const variant = getSelectedVariant(selector, graphQLProduct)
-      expect(variant?.id).toBe("gid://shopify/ProductVariant/3003") // Large / Cotton
-      expect(variant?.selectedOptions).toEqual([
-        { name: "Size", value: "Large" },
-        { name: "Material", value: "Cotton" }
-      ])
+      const variant = getSelectedVariant(selector, mockProductWithSingleValueOptionTest)
+      expect(variant?.id).toBe(3003) // Large / Cotton
+      expect(variant?.options).toEqual(["Large", "Cotton"])
     })
   })
 
