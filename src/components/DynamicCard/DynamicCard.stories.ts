@@ -3,8 +3,6 @@ import { html } from "lit"
 import { updateShopifyRoot } from "../../utils/storybook"
 
 const root = "https://nosto-shopify1.myshopify.com/"
-const handles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
-
 window.Shopify = {
   routes: {
     root
@@ -16,7 +14,6 @@ const meta: Meta = {
   component: "nosto-dynamic-card",
   decorators: [
     (story, context) => {
-      // Update Shopify root if provided via args
       if (context.args?.root) {
         updateShopifyRoot(context.args.root)
       }
@@ -59,7 +56,7 @@ const meta: Meta = {
   },
   args: {
     root,
-    handle: handles[0],
+    handle: "red-sneakers",
     template: "card",
     section: "",
     variantId: "",
@@ -75,10 +72,7 @@ type Story = StoryObj
 
 export const Default: Story = {
   args: {
-      mock: true,
-      handle: handles[1],
-      template: "card",
-      placeholder: true
+      mock: true
   },
   decorators: [story => html`<div style="max-width: 600px; margin: 0 auto;">${story()}</div>`],
   render: args => html`
