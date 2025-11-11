@@ -51,6 +51,10 @@ const meta: Meta = {
     sizes: {
       control: "text",
       description: "The sizes attribute for responsive images"
+    },
+    mock: {
+      control: "boolean",
+      description: "Display a mock preview instead of fetching real product data"
     }
   },
   args: {
@@ -60,7 +64,8 @@ const meta: Meta = {
     brand: false,
     discount: false,
     rating: 0,
-    sizes: ""
+    sizes: "",
+    mock: false
   },
   tags: ["autodocs"]
 }
@@ -160,5 +165,28 @@ export const GridOfCards: Story = {
         `
       )}
     </div>
+  `
+}
+
+export const MockPreview: Story = {
+  args: {
+    mock: true,
+    brand: true,
+    discount: true,
+    rating: 4.5
+  },
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card
+      handle="${args.handle}"
+      ?mock=${args.mock}
+      ?alternate=${args.alternate}
+      ?brand=${args.brand}
+      ?discount=${args.discount}
+      rating=${args.rating || 0}
+      sizes="${args.sizes || ""}"
+    >
+      <button n-atc>Add to cart</button>
+    </nosto-simple-card>
   `
 }

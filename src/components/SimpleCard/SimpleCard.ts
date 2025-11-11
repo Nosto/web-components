@@ -4,7 +4,7 @@ import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import type { ShopifyProduct } from "@/shopify/types"
-import { generateCardHTML, updateSimpleCardContent } from "./markup"
+import { generateCardHTML, generateMockCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/types"
 import { addSkuToCart } from "@nosto/nosto-js"
@@ -36,6 +36,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ * @property {boolean} [mock] - If true, renders a visual placeholder instead of fetching real product data. Defaults to false.
  *
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
@@ -47,6 +48,7 @@ export class SimpleCard extends NostoElement {
   @property(Boolean) discount?: boolean
   @property(Number) rating?: number
   @property(String) sizes?: string
+  @property(Boolean) mock?: boolean
 
   product?: JSONProduct
 
@@ -106,6 +108,14 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
+  // If mock mode is enabled, render mock template and skip fetching
+  if (element.mock) {
+    const mockHTML = generateMockCardHTML(element)
+    setShadowContent(element, mockHTML.html)
+    element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    return
+  }
+
   if (element.product) {
     const normalized = convertProduct(element.product)
     const cardHTML = generateCardHTML(element, normalized)

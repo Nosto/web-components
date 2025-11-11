@@ -570,4 +570,73 @@ describe("SimpleCard", () => {
     // Should be called only once for product property render (network fetch doesn't emit when product property exists)
     expect(eventCount).toBe(1)
   })
+
+  it("should render mock template when mock attribute is set", async () => {
+    const card = (<nosto-simple-card handle="test-product" mock />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("mock")
+    expect(shadowContent).toContain("Mock Product Title")
+    expect(shadowContent).toContain("$99.99")
+    expect(shadowContent).toContain("placeholder mock")
+    expect(card.hasAttribute("loading")).toBe(false)
+  })
+
+  it("should render mock template with brand when mock and brand attributes are set", async () => {
+    const card = (<nosto-simple-card handle="test-product" mock brand />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("Mock Brand")
+  })
+
+  it("should render mock template with discount when mock and discount attributes are set", async () => {
+    const card = (<nosto-simple-card handle="test-product" mock discount />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("$129.99") // original price
+    expect(shadowContent).toContain("$99.99") // discounted price
+  })
+
+  it("should render mock template with rating when mock and rating attributes are set", async () => {
+    const card = (<nosto-simple-card handle="test-product" mock rating={4.5} />) as SimpleCard
+
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("★★★★☆ (4.5)")
+  })
+
+  it("should not fetch product data when mock is true", async () => {
+    // Add handlers that would fail if called
+    addProductHandlers({
+      "test-product": { status: 500 }
+    })
+
+    const card = (<nosto-simple-card handle="test-product" mock />) as SimpleCard
+
+    // Should not throw even though the handler would return 500
+    await card.connectedCallback()
+
+    const shadowContent = getShadowContent(card)
+    expect(shadowContent).toContain("Mock Product Title")
+  })
+
+  it("should emit SimpleCard/rendered event when mock is true", async () => {
+    const card = (<nosto-simple-card handle="test-product" mock />) as SimpleCard
+
+    let eventEmitted = false
+    card.addEventListener("@nosto/SimpleCard/rendered", () => {
+      eventEmitted = true
+    })
+
+    await card.connectedCallback()
+
+    expect(eventEmitted).toBe(true)
+  })
 })

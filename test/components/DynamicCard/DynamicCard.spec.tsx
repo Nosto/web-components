@@ -348,4 +348,52 @@ describe("DynamicCard", () => {
     // Should extract content from the section element
     expect(card.innerHTML).toBe("<div>Section content</div>")
   })
+
+  it("should render mock template when mock attribute is set", async () => {
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" mock />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toContain("Mock Product Title")
+    expect(card.innerHTML).toContain("MOCK PREVIEW")
+    expect(card.innerHTML).toContain("$99.99")
+  })
+
+  it("should not fetch product data when mock is true", async () => {
+    // Add handlers that would fail if called
+    addProductHandlers({
+      "test-handle": { markup: "Should not fetch", status: 500 }
+    })
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" mock />) as DynamicCard
+
+    // Should not throw even though the handler would return 500
+    await card.connectedCallback()
+
+    expect(card.innerHTML).toContain("Mock Product Title")
+    expect(card.innerHTML).not.toContain("Should not fetch")
+  })
+
+  it("should emit DynamicCard/loaded event when mock is true", async () => {
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" mock />) as DynamicCard
+
+    let eventEmitted = false
+    card.addEventListener("@nosto/DynamicCard/loaded", () => {
+      eventEmitted = true
+    })
+
+    await card.connectedCallback()
+
+    expect(eventEmitted).toBe(true)
+    expect(card.innerHTML).toContain("Mock Product Title")
+  })
+
+  it("should not set loading attribute when mock is true", async () => {
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" mock />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.hasAttribute("loading")).toBe(false)
+    expect(card.innerHTML).toContain("Mock Product Title")
+  })
 })

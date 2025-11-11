@@ -107,3 +107,20 @@
   content: "No image available";
 }
 
+.image.placeholder.mock {
+  background: linear-gradient(135deg, #e0e0e0 25%, #f5f5f5 25%, #f5f5f5 50%, #e0e0e0 50%, #e0e0e0 75%, #f5f5f5 75%, #f5f5f5);
+  background-size: 40px 40px;
+}
+
+.image.placeholder.mock::after {
+  content: "MOCK PREVIEW";
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+.card.mock {
+  border: 2px dashed #ccc;
+  opacity: 0.8;
+}
+

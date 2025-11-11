@@ -5,6 +5,28 @@ import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
 
+export function generateMockCardHTML(element: SimpleCard) {
+  return html`
+    <div class="card mock" part="card">
+      <div class="link" part="link">
+        <div class="image placeholder mock" part="image"></div>
+        <div class="content" part="content">
+          ${element.brand ? html`<div class="brand" part="brand">Mock Brand</div>` : ""}
+          <h3 class="title" part="title">Mock Product Title</h3>
+          <div class="price" part="price">
+            <span class="price-current" part="price-current"> $99.99 </span>
+            ${element.discount ? html`<span class="price-original" part="price-original">$129.99</span>` : ""}
+          </div>
+          ${element.rating ? generateRatingHTML(element.rating) : ""}
+        </div>
+      </div>
+      <div class="slot">
+        <slot></slot>
+      </div>
+    </div>
+  `
+}
+
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
 
