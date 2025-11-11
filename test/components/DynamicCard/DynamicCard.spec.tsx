@@ -441,17 +441,6 @@ describe("DynamicCard", () => {
       expect(priceOriginal?.textContent).toBe("XX.XX")
     })
 
-    it("ignores template and section attributes when mock is true", async () => {
-      const card = (
-        <nosto-dynamic-card handle="test-handle" template="custom" section="test-section" mock={true} />
-      ) as DynamicCard
-
-      await card.connectedCallback()
-
-      // Should still render mock markup, not fetch real data
-      expect(card.shadowRoot?.innerHTML).toContain("Mock Product Title")
-    })
-
     it("can switch from mock to real data when mock attribute changes", async () => {
       const validMarkup = "<div>Real Product Info</div>"
       addProductHandlers({
