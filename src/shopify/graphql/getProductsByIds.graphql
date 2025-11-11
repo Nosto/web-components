@@ -1,0 +1,73 @@
+query ProductsByIds($country: CountryCode!, $ids: [ID!]!) @inContext(country: $country) {
+  nodes(ids: $ids) {
+    ... on Product {
+      id
+      title
+      vendor
+      description
+      encodedVariantExistence
+      onlineStoreUrl
+      availableForSale
+      images(first: 10) {
+        nodes {
+          altText
+          height
+          width
+          thumbhash
+          url
+        }
+      }
+      featuredImage {
+        altText
+        height
+        width
+        thumbhash
+        url
+      }
+      options(first: 50) {
+        name
+        optionValues {
+          firstSelectableVariant {
+            availableForSale
+            title
+            id
+            image {
+              altText
+              url
+              width
+              height
+              thumbhash
+            }
+            price {
+              currencyCode
+              amount
+            }
+            compareAtPrice {
+              currencyCode
+              amount
+            }
+            product {
+              onlineStoreUrl
+            }
+          }
+          name
+          swatch {
+            color
+            image {
+              alt
+              id
+              mediaContentType
+              previewImage {
+                url
+                width
+                height
+                altText
+                thumbhash
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

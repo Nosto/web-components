@@ -4,6 +4,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
+import { ShopifyProductGraphQL } from "@/shopify/types"
 
 export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
@@ -67,6 +68,7 @@ export function generateImgHtml(src: string, alt: string, className: string, siz
     width: 800,
     sizes
   })
+
   return html`<img
     alt="${alt}"
     part="${className}"
@@ -135,4 +137,37 @@ function updatePrices(element: SimpleCard, variant: SimpleVariant) {
   if (hasDiscount && originalPriceElement) {
     originalPriceElement.textContent = formatPrice(variant.compare_at_price!)
   }
+}
+
+export function generateCardHTMLFromShopify(element: SimpleCard, product: ShopifyProductGraphQL) {
+  const url = product.onlineStoreUrl || "#"
+  const primaryImage = product.featuredImage?.url || product.images?.[0]?.url
+  const alternateImage = product.images?.[1]?.url
+  const hasAlternate = !!(element.alternate && alternateImage)
+
+  return html`
+    <div class="card" part="card">
+      <a href="${url}" class="link" part="link">
+        <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
+          ${primaryImage
+            ? generateImgHtml(primaryImage, product.title, "img primary", element.sizes)
+            : html`<div class="image placeholder"></div>`}
+          ${hasAlternate && alternateImage
+            ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
+            : ""}
+        </div>
+        <div class="content" part="content">
+          ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
+          <h3 class="title" part="title">${product.title}</h3>
+          <div class="price" part="price">
+            <span class="price-current" part="price-current"> </span>
+          </div>
+          ${element.rating ? generateRatingHTML(element.rating) : ""}
+        </div>
+      </a>
+      <div class="slot">
+        <slot></slot>
+      </div>
+    </div>
+  `
 }

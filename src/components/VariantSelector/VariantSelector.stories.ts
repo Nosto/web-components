@@ -50,7 +50,13 @@ export const Default: Story = {
 }
 
 export const InSimpleCard: Story = {
+  args: {
+    root: "https://maninostolocal.myshopify.com/",
+    handle: "3-4-sleeve-kimono-dress-coral"
+  },
+
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+
   render: args => html`
     <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
       <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>

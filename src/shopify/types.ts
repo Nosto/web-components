@@ -92,6 +92,55 @@ export type ShopifyProduct = {
   selling_plan_groups: unknown[]
 }
 
+export type ShopifyProductGraphQL = {
+  id: string
+  title: string
+  vendor: string
+  description: string
+  encodedVariantExistence: string
+  onlineStoreUrl: string
+  availableForSale: boolean
+  images: ShopifyImageGraphQL[]
+  featuredImage: ShopifyImageGraphQL
+  options: ShopifyOptionGraphQL[]
+}
+
+export type ShopifyImageGraphQL = {
+  altText: string | null
+  height: number
+  width: number
+  thumbhash: string | null
+  url: string
+}
+
+export type ShopifyOptionGraphQL = {
+  name: string
+  optionValues: ShopifyOptionValueGraphQL[]
+}
+
+export type ShopifyOptionValueGraphQL = {
+  firstSelectableVariant: ShopifyVariantGraphQL
+  name: string
+  swatch: string | null
+}
+
+export type ShopifyVariantGraphQL = {
+  availableForSale: boolean
+  title: string
+  id: string
+  image: ShopifyImageGraphQL
+  price: ShopifyMoneyGraphQL
+  compareAtPrice: ShopifyMoneyGraphQL | null
+  product: {
+    onlineStoreUrl: string
+  }
+}
+
+export type ShopifyMoneyGraphQL = {
+  currencyCode: string
+  amount: string
+}
+
 /**
  * Event detail for variant change events
  */

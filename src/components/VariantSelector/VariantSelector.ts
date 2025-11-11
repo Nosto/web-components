@@ -3,10 +3,19 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
-import { generateVariantSelectorHTML } from "./markup"
+import type {
+  ShopifyProduct,
+  ShopifyProductGraphQL,
+  ShopifyVariant,
+  VariantChangeDetail,
+  ShopifyVariantGraphQL
+} from "@/shopify/types"
+import { generateVariantSelectorHTMLFromGraphQL } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { store } from "../SimpleCard/store"
+import { parseId } from "@/utils/graphQL"
+import { fetchProduct } from "@/shopify/graphql/fetch" // Assumed utility for fetching product by handle
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -57,11 +66,11 @@ export class VariantSelector extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
+  /*async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
       await loadAndRenderMarkup(this)
     }
-  }
+  }*/
 
   async connectedCallback() {
     assertRequired(this, "handle")
@@ -69,19 +78,20 @@ export class VariantSelector extends NostoElement {
       this.toggleAttribute("loading", true)
       setShadowContent(this, placeholder)
     }
-    await loadAndRenderMarkup(this)
+    store.subscribe(async (product?: ShopifyProductGraphQL) => {
+      if (product) {
+        await loadAndRenderMarkup(this, product)
+      }
+    })
   }
 }
 
-async function loadAndRenderMarkup(element: VariantSelector) {
+async function loadAndRenderMarkup(element: VariantSelector, productData: ShopifyProductGraphQL) {
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element)
-
     // Initialize selections with first value of each option
-    initializeDefaultSelections(element, productData)
-
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
+    initializeDefaultSelectionsGraphQL(element, productData)
+    const selectorHTML = generateVariantSelectorHTMLFromGraphQL(element, productData.options)
     setShadowContent(element, selectorHTML.html)
 
     // Cache the rendered HTML for placeholder use
@@ -93,11 +103,11 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     // active state for selected options
     updateActiveStates(element)
     // unavailable state for options without available variants
-    updateUnavailableStates(element, productData)
+    updateUnavailableStatesGraphQL(element, productData)
     // TODO disabled state
 
     if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+      emitVariantChangeGraphQL(element, productData)
     }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
@@ -106,6 +116,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   }
 }
 
+// @ts-expect-error
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
@@ -126,6 +137,53 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
   }
 }
 
+function initializeDefaultSelectionsGraphQL(element: VariantSelector, product: ShopifyProductGraphQL) {
+  let variantId: string | undefined
+  let variant: ShopifyVariantGraphQL | undefined
+
+  if (element.variantId) {
+    // Find variant by id in all optionValues
+    for (const option of product.options) {
+      for (const value of option.optionValues) {
+        if (value.firstSelectableVariant.id === String(element.variantId)) {
+          variantId = value.firstSelectableVariant.id
+          variant = value.firstSelectableVariant
+          break
+        }
+      }
+      if (variant) break
+    }
+  } else if (element.preselect) {
+    // Find first available variant
+    for (const option of product.options) {
+      for (const value of option.optionValues) {
+        if (value.firstSelectableVariant.availableForSale) {
+          variantId = value.firstSelectableVariant.id
+          variant = value.firstSelectableVariant
+          break
+        }
+      }
+      if (variant) break
+    }
+  }
+
+  if (variant) {
+    product.options.forEach(option => {
+      // Find the optionValue that matches the selected variant
+      const selectedValue = option.optionValues.find(v => v.firstSelectableVariant.id === variantId)
+      if (selectedValue) {
+        element.selectedOptions[option.name] = selectedValue.name
+      }
+    })
+  } else {
+    product.options.forEach(option => {
+      if (option.optionValues.length === 1) {
+        element.selectedOptions[option.name] = option.optionValues[0].name
+      }
+    })
+  }
+}
+
 function setupOptionListeners(element: VariantSelector) {
   element.shadowRoot!.addEventListener("click", async e => {
     const target = e.target as HTMLElement
@@ -133,7 +191,7 @@ function setupOptionListeners(element: VariantSelector) {
       e.preventDefault()
       const { optionName, optionValue } = target.dataset
       if (optionName && optionValue) {
-        await selectOption(element, optionName, optionValue)
+        await selectOptionGraphQL(element, optionName, optionValue)
       }
     }
   })
@@ -151,6 +209,15 @@ export async function selectOption(element: VariantSelector, optionName: string,
   emitVariantChange(element, productData)
 }
 
+export async function selectOptionGraphQL(element: VariantSelector, optionName: string, value: string) {
+  if (element.selectedOptions[optionName] === value) {
+    return
+  }
+  element.selectedOptions[optionName] = value
+  updateActiveStates(element)
+  emitVariantChangeGraphQL(element, store.state.product!)
+}
+
 function updateActiveStates(element: VariantSelector) {
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
@@ -159,6 +226,7 @@ function updateActiveStates(element: VariantSelector) {
   })
 }
 
+// @ts-expect-error
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
   const optionNames = product.options.map(option => option.name)
@@ -169,6 +237,23 @@ function updateUnavailableStates(element: VariantSelector, product: ShopifyProdu
         availableOptions.add(`${optionNames[i]}::${optionValue}`)
       })
     })
+  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+    const { optionName, optionValue } = button.dataset
+    const available = availableOptions.has(`${optionName}::${optionValue}`)
+    togglePart(button, "unavailable", !available)
+  })
+}
+
+function updateUnavailableStatesGraphQL(element: VariantSelector, product: ShopifyProductGraphQL) {
+  const availableOptions = new Set<string>()
+  product.options.forEach(option => {
+    option.optionValues.forEach(value => {
+      const variant = value.firstSelectableVariant
+      if (variant.availableForSale) {
+        availableOptions.add(`${option.name}::${value.name}`)
+      }
+    })
+  })
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
     const available = availableOptions.has(`${optionName}::${optionValue}`)
@@ -200,6 +285,19 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   }
 }
 
+async function emitVariantChangeGraphQL(element: VariantSelector, product: ShopifyProductGraphQL) {
+  const variant = await getSelectedVariantGraphQL(element, product)
+  if (variant) {
+    element.variantId = parseId(variant.id)
+    element.dispatchEvent(
+      new CustomEvent("variantchange", {
+        detail: { variant },
+        bubbles: true
+      })
+    )
+  }
+}
+
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
@@ -210,6 +308,38 @@ export function getSelectedVariant(element: VariantSelector, product: ShopifyPro
       })
     }) || null
   )
+}
+
+export async function getSelectedVariantGraphQL(
+  element: VariantSelector,
+  product: ShopifyProductGraphQL
+): Promise<ShopifyVariantGraphQL | null> {
+  for (const option of product.options) {
+    for (const value of option.optionValues) {
+      const matches = product.options.every(opt => {
+        const selectedValue = element.selectedOptions[opt.name]
+        return selectedValue === (opt.name === option.name ? value.name : selectedValue)
+      })
+      if (matches) {
+        const variant = value.firstSelectableVariant
+        const variantProductUrl = variant.product?.onlineStoreUrl
+        const productUrl = product.onlineStoreUrl
+        if (variantProductUrl && productUrl && variantProductUrl !== productUrl) {
+          // Extract handle from last part of URL
+          const handle = variantProductUrl.split("/").filter(Boolean).pop() || ""
+          if (handle) {
+            // Fetch new product data via GraphQL
+            const newProduct = await fetchProduct(handle)
+            if (newProduct) {
+              store.state.product = newProduct
+            }
+          }
+        }
+        return variant
+      }
+    }
+  }
+  return null
 }
 
 async function fetchProductData({ handle, filtered }: VariantSelector) {
