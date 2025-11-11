@@ -3,8 +3,16 @@ import type { VariantSelector } from "./VariantSelector"
 import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
 
 export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
-  // Don't render if there are no options or only one variant
+  // Don't render if there are no options
   if (!product.options || product.options.length === 0) {
+    return html`<slot></slot>`
+  }
+
+  // Check if there are any multi-value options (options with more than one value)
+  const hasMultiValueOptions = product.options.some(option => option.optionValues.length > 1)
+
+  // If all options are single-value, don't render the selector
+  if (!hasMultiValueOptions) {
     return html`<slot></slot>`
   }
 

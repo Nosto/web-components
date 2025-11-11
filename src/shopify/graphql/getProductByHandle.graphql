@@ -67,5 +67,31 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
         }
       }
     }
+    variants(first: 250) {
+      nodes {
+        id
+        title
+        availableForSale
+        selectedOptions {
+          name
+          value
+        }
+        image {
+          altText
+          url
+          width
+          height
+          thumbhash
+        }
+        price {
+          currencyCode
+          amount
+        }
+        compareAtPrice {
+          currencyCode
+          amount
+        }
+      }
+    }
   }
 }

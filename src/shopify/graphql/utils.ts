@@ -1,4 +1,4 @@
-import { ShopifyProduct } from "./types"
+import { ShopifyProduct, ShopifyVariant } from "./types"
 
 type GenericGraphQLType = {
   data: {
@@ -15,12 +15,26 @@ export function flattenResponse(obj: GenericGraphQLType) {
     product.images = images.nodes
   }
 
-  const firstVariant = (product as ShopifyProduct).options[0].optionValues[0].firstSelectableVariant
+  const productTyped = product as ShopifyProduct
+
+  // Flatten variants from nodes structure
+  let variants: ShopifyVariant[] = []
+  if (hasVariantsNodes(product)) {
+    const variantsData = product.variants as { nodes: ShopifyVariant[] }
+    variants = variantsData.nodes
+    product.variants = variants
+  }
+
+  // Get price and compareAtPrice from first variant if available
+  const firstVariant = productTyped.options[0]?.optionValues[0]?.firstSelectableVariant || variants[0]
+  const price = firstVariant?.price || { currencyCode: "USD", amount: "0" }
+  const compareAtPrice = firstVariant?.compareAtPrice || null
 
   return {
     ...product,
-    price: firstVariant.price,
-    compareAtPrice: firstVariant.compareAtPrice
+    price,
+    compareAtPrice,
+    variants
   } as ShopifyProduct
 }
 
@@ -28,6 +42,16 @@ function hasImagesNodes(product: Record<string, unknown>) {
   return "images" in product && product.images && typeof product.images === "object" && "nodes" in product.images
 }
 
+function hasVariantsNodes(product: Record<string, unknown>) {
+  return (
+    "variants" in product && product.variants && typeof product.variants === "object" && "nodes" in product.variants
+  )
+}
+
 export function parseId(graphQLId: string): number {
   return Number(graphQLId.split("/").at(-1))
+}
+
+export function toVariantGid(variantId: number): string {
+  return `gid://shopify/ProductVariant/${variantId}`
 }
