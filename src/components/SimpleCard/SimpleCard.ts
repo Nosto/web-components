@@ -11,6 +11,7 @@ import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
+import { mockProduct } from "./mockProduct"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -36,7 +37,8 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
- *
+ * @property {boolean} [mock] - If true, uses mock data instead of fetching from Shopify. Defaults to false.
+ * 
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-simple-card", { observe: true })
@@ -47,6 +49,7 @@ export class SimpleCard extends NostoElement {
   @property(Boolean) discount?: boolean
   @property(Number) rating?: number
   @property(String) sizes?: string
+  @property(Boolean) mock?: boolean
 
   product?: JSONProduct
 
@@ -67,6 +70,12 @@ export class SimpleCard extends NostoElement {
   }
 
   async connectedCallback() {
+    if (this.mock) {
+      const cardHTML = generateCardHTML(this, mockProduct)
+      setShadowContent(this, cardHTML.html)
+      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    }
+
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
     this.addEventListener("click", this)

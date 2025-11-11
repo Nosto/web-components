@@ -162,3 +162,20 @@ export const GridOfCards: Story = {
     </div>
   `
 }
+
+export const Mocked: Story = {
+  args: {
+    handle: handles[0],
+    alternate: true,
+    brand: true,
+    discount: true,
+    rating: 4.2,
+    mock: true
+  },
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: args => html`
+    <nosto-simple-card
+      mock="${args.mock}"
+    ></nosto-simple-card>
+  `
+}
