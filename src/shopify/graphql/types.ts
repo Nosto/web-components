@@ -13,6 +13,7 @@ export type ShopifyProduct = {
   // augmented fields
   price: ShopifyMoney
   compareAtPrice: ShopifyMoney | null
+  variants: ShopifyVariant[]
 }
 
 export type ShopifyImage = {
@@ -30,6 +31,7 @@ export type ShopifyOption = {
 
 export type ShopifyOptionValue = {
   firstSelectableVariant: ShopifyVariant
+  adjacentVariants: ShopifyVariant[]
   name: string
   swatch: string | null
 }
@@ -41,9 +43,15 @@ export type ShopifyVariant = {
   image?: ShopifyImage
   price: ShopifyMoney
   compareAtPrice: ShopifyMoney | null
-  product: {
+  selectedOptions?: ShopifySelectedOption[]
+  product?: {
     onlineStoreUrl: string
   }
+}
+
+export type ShopifySelectedOption = {
+  name: string
+  value: string
 }
 
 export type ShopifyMoney = {

@@ -106,22 +106,22 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   }
 }
 
-// FIXME
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
-    variant = product.variants.find(v => v.id === element.variantId)
+    const variantIdStr = `gid://shopify/ProductVariant/${element.variantId}`
+    variant = product.variants.find(v => v.id === variantIdStr)
   } else if (element.preselect) {
-    variant = product.variants.find(v => v.available)
+    variant = product.variants.find(v => v.availableForSale)
   }
-  if (variant) {
-    product.options.forEach((option, index) => {
-      element.selectedOptions[option.name] = variant.options[index]
+  if (variant && variant.selectedOptions) {
+    variant.selectedOptions.forEach(selectedOption => {
+      element.selectedOptions[selectedOption.name] = selectedOption.value
     })
   } else {
     product.options.forEach(option => {
-      if (option.values.length === 1) {
-        element.selectedOptions[option.name] = option.values[0]
+      if (option.optionValues.length === 1) {
+        element.selectedOptions[option.name] = option.optionValues[0].name
       }
     })
   }
@@ -160,16 +160,16 @@ function updateActiveStates(element: VariantSelector) {
   })
 }
 
-// FIXME
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
-  const optionNames = product.options.map(option => option.name)
   product.variants
-    .filter(v => v.available)
+    .filter(v => v.availableForSale)
     .forEach(variant => {
-      variant.options.forEach((optionValue, i) => {
-        availableOptions.add(`${optionNames[i]}::${optionValue}`)
-      })
+      if (variant.selectedOptions) {
+        variant.selectedOptions.forEach(selectedOption => {
+          availableOptions.add(`${selectedOption.name}::${selectedOption.value}`)
+        })
+      }
     })
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
@@ -202,14 +202,14 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   }
 }
 
-// FIXME
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
-      return product.options.every((option, index) => {
+      if (!variant.selectedOptions) return false
+      return product.options.every(option => {
         const selectedValue = element.selectedOptions[option.name]
-        const variantValue = variant.options[index]
-        return selectedValue === variantValue
+        const variantOption = variant.selectedOptions!.find(so => so.name === option.name)
+        return variantOption && selectedValue === variantOption.value
       })
     }) || null
   )

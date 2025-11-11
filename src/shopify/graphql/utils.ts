@@ -1,4 +1,4 @@
-import { ShopifyProduct } from "./types"
+import { ShopifyProduct, ShopifyVariant } from "./types"
 
 type GenericGraphQLType = {
   data: {
@@ -15,12 +15,33 @@ export function flattenResponse(obj: GenericGraphQLType) {
     product.images = images.nodes
   }
 
-  const firstVariant = (product as ShopifyProduct).options[0].optionValues[0].firstSelectableVariant
+  const productTyped = product as ShopifyProduct
+
+  // Collect all unique variants from adjacentVariants across all option values
+  const variantsMap = new Map<string, ShopifyVariant>()
+
+  for (const option of productTyped.options) {
+    for (const optionValue of option.optionValues) {
+      if (optionValue.adjacentVariants) {
+        for (const variant of optionValue.adjacentVariants) {
+          variantsMap.set(variant.id, variant)
+        }
+      }
+    }
+  }
+
+  const variants = Array.from(variantsMap.values())
+
+  // Get price and compareAtPrice from first variant if available
+  const firstVariant = productTyped.options[0]?.optionValues[0]?.firstSelectableVariant || variants[0]
+  const price = firstVariant?.price || { currencyCode: "USD", amount: "0" }
+  const compareAtPrice = firstVariant?.compareAtPrice || null
 
   return {
     ...product,
-    price: firstVariant.price,
-    compareAtPrice: firstVariant.compareAtPrice
+    price,
+    compareAtPrice,
+    variants
   } as ShopifyProduct
 }
 
