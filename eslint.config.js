@@ -1,3 +1,4 @@
+import storybook from "eslint-plugin-storybook"
 import globals from "globals"
 import tseslint from "typescript-eslint"
 import eslintConfigPrettier from "eslint-config-prettier"
@@ -37,5 +38,6 @@ export default tseslint.config(
     }
   },
   eslintConfigPrettier,
-  eslintPluginPrettierRecommended
+  eslintPluginPrettierRecommended,
+  storybook.configs["flat/recommended"]
 )

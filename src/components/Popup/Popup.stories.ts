@@ -1,4 +1,4 @@
-import type { StoryObj, Meta } from "@storybook/web-components"
+import type { StoryObj, Meta } from "@storybook/web-components-vite"
 import { html } from "lit"
 
 import "./Popup"

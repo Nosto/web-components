@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/web-components"
+import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
