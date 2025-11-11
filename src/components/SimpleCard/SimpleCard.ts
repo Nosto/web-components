@@ -38,7 +38,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @property {boolean} [rating] - Show product rating. Defaults to false.
  * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  * @property {boolean} [mock] - If true, uses mock data instead of fetching from Shopify. Defaults to false.
- * 
+ *
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-simple-card", { observe: true })
@@ -73,7 +73,9 @@ export class SimpleCard extends NostoElement {
     if (this.mock) {
       const cardHTML = generateCardHTML(this, mockProduct)
       setShadowContent(this, cardHTML.html)
-      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+      this.dispatchEvent(
+        new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
+      )
     }
 
     assertRequired(this, "handle")
