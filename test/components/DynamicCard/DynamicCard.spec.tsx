@@ -348,4 +348,140 @@ describe("DynamicCard", () => {
     // Should extract content from the section element
     expect(card.innerHTML).toBe("<div>Section content</div>")
   })
+
+  describe("Mock state", () => {
+    it("renders mock markup when mock attribute is true", async () => {
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+
+      // Should render shadow DOM with mock markup
+      expect(card.shadowRoot).not.toBeNull()
+      expect(card.shadowRoot?.innerHTML).toContain("Mock Product Title")
+      expect(card.shadowRoot?.innerHTML).toContain("Mock Brand")
+      expect(card.shadowRoot?.innerHTML).toContain("https://cdn.nosto.com/nosto/7/mock")
+    })
+
+    it("does not fetch from Shopify when mock attribute is true", async () => {
+      let fetchCalled = false
+      addHandlers(
+        http.get("/products/:handle", () => {
+          fetchCalled = true
+          return HttpResponse.text("<div>Should not be called</div>")
+        })
+      )
+
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(fetchCalled).toBe(false)
+    })
+
+    it("emits DynamicCard/loaded event when mock attribute is true", async () => {
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      let eventEmitted = false
+      card.addEventListener("@nosto/DynamicCard/loaded", () => {
+        eventEmitted = true
+      })
+
+      await card.connectedCallback()
+
+      expect(eventEmitted).toBe(true)
+    })
+
+    it("does not require handle when mock attribute is true", async () => {
+      // When mock is true, handle should not be required
+      const card = (<nosto-dynamic-card mock={true} />) as DynamicCard
+
+      // Should not throw an error
+      await expect(card.connectedCallback()).resolves.not.toThrow()
+      expect(card.shadowRoot?.innerHTML).toContain("Mock Product Title")
+    })
+
+    it("renders mock markup with expected structure", async () => {
+      const card = (<nosto-dynamic-card mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+
+      const shadowRoot = card.shadowRoot
+      expect(shadowRoot).not.toBeNull()
+
+      // Check for the expected card structure
+      const cardElement = shadowRoot?.querySelector(".card")
+      expect(cardElement).not.toBeNull()
+
+      // Check for image
+      const imageDiv = shadowRoot?.querySelector(".image")
+      expect(imageDiv).not.toBeNull()
+      const img = shadowRoot?.querySelector("img")
+      expect(img).not.toBeNull()
+      expect(img?.getAttribute("src")).toBe("https://cdn.nosto.com/nosto/7/mock")
+      expect(img?.getAttribute("alt")).toBe("Mock Product Image")
+
+      // Check for title
+      const title = shadowRoot?.querySelector(".title")
+      expect(title).not.toBeNull()
+      expect(title?.textContent).toBe("Mock Product Title")
+
+      // Check for brand
+      const brand = shadowRoot?.querySelector(".brand")
+      expect(brand).not.toBeNull()
+      expect(brand?.textContent).toBe("Mock Brand")
+
+      // Check for price structure
+      const priceDiv = shadowRoot?.querySelector(".price")
+      expect(priceDiv).not.toBeNull()
+      const priceCurrent = shadowRoot?.querySelector(".price-current")
+      expect(priceCurrent).not.toBeNull()
+      expect(priceCurrent?.textContent).toBe("XX.XX")
+      const priceOriginal = shadowRoot?.querySelector(".price-original")
+      expect(priceOriginal).not.toBeNull()
+      expect(priceOriginal?.textContent).toBe("XX.XX")
+    })
+
+    it("ignores template and section attributes when mock is true", async () => {
+      const card = (
+        <nosto-dynamic-card handle="test-handle" template="custom" section="test-section" mock={true} />
+      ) as DynamicCard
+
+      await card.connectedCallback()
+
+      // Should still render mock markup, not fetch real data
+      expect(card.shadowRoot?.innerHTML).toContain("Mock Product Title")
+    })
+
+    it("can switch from mock to real data when mock attribute changes", async () => {
+      const validMarkup = "<div>Real Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+      document.body.appendChild(card)
+
+      // Initially renders mock
+      await card.connectedCallback()
+      expect(card.shadowRoot?.innerHTML).toContain("Mock Product Title")
+
+      // Switch to real data
+      card.mock = false
+      await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
+
+      expect(card.innerHTML).toBe(validMarkup)
+
+      document.body.removeChild(card)
+    })
+
+    it("does not set loading attribute when mock is true", async () => {
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.hasAttribute("loading")).toBe(false)
+    })
+  })
 })
