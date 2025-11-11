@@ -95,19 +95,3 @@ export const MockPreview: Story = {
     <nosto-dynamic-card handle="${args.handle}" template="${args.template}" ?mock=${args.mock}></nosto-dynamic-card>
   `
 }
-
-export const WithSection: Story = {
-  args: {
-    section: "product-card",
-    template: ""
-  },
-  decorators: [story => html`<div style="max-width: 600px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-dynamic-card
-      handle="${args.handle}"
-      section="${args.section}"
-      ?placeholder=${args.placeholder}
-      ?lazy=${args.lazy}
-    ></nosto-dynamic-card>
-  `
-}
