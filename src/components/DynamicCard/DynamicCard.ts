@@ -3,6 +3,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
+import styles from "./styles.css?raw"
 
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
@@ -42,6 +43,14 @@ export class DynamicCard extends NostoElement {
 
   async connectedCallback() {
     assertRequired(this, "handle")
+
+    // If mock mode is enabled, render mock template immediately and skip all other logic
+    if (this.mock) {
+      this.innerHTML = generateMockMarkup()
+      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+      return
+    }
+
     const key = this.template || this.section || ""
     if (this.placeholder && placeholders.has(key)) {
       this.toggleAttribute("loading", true)
@@ -65,28 +74,22 @@ const placeholders = new Map<string, string>()
 
 function generateMockMarkup() {
   return `
-    <div style="border: 2px dashed #ccc; padding: 1rem; background: #f9f9f9; opacity: 0.8; text-align: center;">
-      <div style="background: linear-gradient(135deg, #e0e0e0 25%, #f5f5f5 25%, #f5f5f5 50%, #e0e0e0 50%, #e0e0e0 75%, #f5f5f5 75%, #f5f5f5); background-size: 40px 40px; min-height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <span style="font-weight: bold; font-size: 1.2rem; color: #999;">MOCK PREVIEW</span>
+    <style>${styles}</style>
+    <div class="mock-card">
+      <div class="mock-image">
+        <span class="mock-text">MOCK PREVIEW</span>
       </div>
-      <h3 style="margin: 0.5rem 0; color: #666;">Mock Product Title</h3>
-      <p style="margin: 0.5rem 0; color: #999;">Mock Brand</p>
-      <div style="margin: 0.5rem 0;">
-        <span style="font-weight: bold; color: #333;">$99.99</span>
-        <span style="text-decoration: line-through; color: #999; margin-left: 0.5rem;">$129.99</span>
+      <h3 class="mock-title">Mock Product Title</h3>
+      <p class="mock-brand">Mock Brand</p>
+      <div class="mock-price">
+        <span class="mock-price-current">XX.XX</span>
+        <span class="mock-price-original">XX.XX</span>
       </div>
     </div>
   `
 }
 
 async function loadAndRenderMarkup(element: DynamicCard) {
-  // If mock mode is enabled, render mock template and skip fetching
-  if (element.mock) {
-    element.innerHTML = generateMockMarkup()
-    element.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
-    return
-  }
-
   element.toggleAttribute("loading", true)
   try {
     element.innerHTML = await getMarkup(element)

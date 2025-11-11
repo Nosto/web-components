@@ -14,8 +14,8 @@ export function generateMockCardHTML(element: SimpleCard) {
           ${element.brand ? html`<div class="brand" part="brand">Mock Brand</div>` : ""}
           <h3 class="title" part="title">Mock Product Title</h3>
           <div class="price" part="price">
-            <span class="price-current" part="price-current"> $99.99 </span>
-            ${element.discount ? html`<span class="price-original" part="price-original">$129.99</span>` : ""}
+            <span class="price-current" part="price-current"> XX.XX </span>
+            ${element.discount ? html`<span class="price-original" part="price-original">XX.XX</span>` : ""}
           </div>
           ${element.rating ? generateRatingHTML(element.rating) : ""}
         </div>

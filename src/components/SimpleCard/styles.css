@@ -14,6 +14,10 @@
   --slot-padding: 1rem;
   --slot-padding-top: 0.5rem;
   --loading-opacity: 0.7;
+  --mock-pattern-light: #f5f5f5;
+  --mock-pattern-dark: #e0e0e0;
+  --mock-text-color: #999;
+  --mock-border-color: #ccc;
 }
 
 :host([loading]) {
@@ -108,7 +112,7 @@
 }
 
 .image.placeholder.mock {
-  background: linear-gradient(135deg, #e0e0e0 25%, #f5f5f5 25%, #f5f5f5 50%, #e0e0e0 50%, #e0e0e0 75%, #f5f5f5 75%, #f5f5f5);
+  background: linear-gradient(135deg, var(--mock-pattern-dark) 25%, var(--mock-pattern-light) 25%, var(--mock-pattern-light) 50%, var(--mock-pattern-dark) 50%, var(--mock-pattern-dark) 75%, var(--mock-pattern-light) 75%, var(--mock-pattern-light));
   background-size: 40px 40px;
 }
 
@@ -116,11 +120,11 @@
   content: "MOCK PREVIEW";
   font-weight: bold;
   font-size: 1.2rem;
-  color: #999;
+  color: var(--mock-text-color);
 }
 
 .card.mock {
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--mock-border-color);
   opacity: 0.8;
 }
 

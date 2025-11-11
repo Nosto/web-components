@@ -579,7 +579,7 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("mock")
     expect(shadowContent).toContain("Mock Product Title")
-    expect(shadowContent).toContain("$99.99")
+    expect(shadowContent).toContain("XX.XX")
     expect(shadowContent).toContain("placeholder mock")
     expect(card.hasAttribute("loading")).toBe(false)
   })
@@ -599,8 +599,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("$129.99") // original price
-    expect(shadowContent).toContain("$99.99") // discounted price
+    expect(shadowContent).toContain("XX.XX")
   })
 
   it("should render mock template with rating when mock and rating attributes are set", async () => {

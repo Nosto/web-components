@@ -1,0 +1,48 @@
+.mock-card {
+  border: 2px dashed var(--mock-border-color, #ccc);
+  padding: 1rem;
+  background: var(--mock-bg, #f9f9f9);
+  opacity: 0.8;
+  text-align: center;
+}
+
+.mock-image {
+  background: linear-gradient(135deg, var(--mock-pattern-dark, #e0e0e0) 25%, var(--mock-pattern-light, #f5f5f5) 25%, var(--mock-pattern-light, #f5f5f5) 50%, var(--mock-pattern-dark, #e0e0e0) 50%, var(--mock-pattern-dark, #e0e0e0) 75%, var(--mock-pattern-light, #f5f5f5) 75%, var(--mock-pattern-light, #f5f5f5));
+  background-size: 40px 40px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.mock-text {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--mock-text-color, #999);
+}
+
+.mock-title {
+  margin: 0.5rem 0;
+  color: var(--mock-title-color, #666);
+}
+
+.mock-brand {
+  margin: 0.5rem 0;
+  color: var(--mock-text-color, #999);
+}
+
+.mock-price {
+  margin: 0.5rem 0;
+}
+
+.mock-price-current {
+  font-weight: bold;
+  color: var(--mock-price-color, #333);
+}
+
+.mock-price-original {
+  text-decoration: line-through;
+  color: var(--mock-text-color, #999);
+  margin-left: 0.5rem;
+}

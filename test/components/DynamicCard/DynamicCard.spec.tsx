@@ -356,7 +356,7 @@ describe("DynamicCard", () => {
 
     expect(card.innerHTML).toContain("Mock Product Title")
     expect(card.innerHTML).toContain("MOCK PREVIEW")
-    expect(card.innerHTML).toContain("$99.99")
+    expect(card.innerHTML).toContain("XX.XX")
   })
 
   it("should not fetch product data when mock is true", async () => {
@@ -395,5 +395,44 @@ describe("DynamicCard", () => {
 
     expect(card.hasAttribute("loading")).toBe(false)
     expect(card.innerHTML).toContain("Mock Product Title")
+  })
+
+  it("should bypass lazy loading when mock is true", async () => {
+    const mockObserver = {
+      observe: vi.fn(),
+      disconnect: vi.fn()
+    }
+    // @ts-expect-error partial mock assignment
+    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    const card = (<nosto-dynamic-card handle="test-handle" template="default" mock lazy />) as DynamicCard
+
+    await card.connectedCallback()
+
+    // Mock should render immediately without using IntersectionObserver
+    expect(mockObserver.observe).not.toHaveBeenCalled()
+    expect(card.innerHTML).toContain("Mock Product Title")
+
+    vi.unstubAllGlobals()
+  })
+
+  it("should bypass placeholder when mock is true", async () => {
+    // First, load a card with same template to populate placeholder cache
+    const validMarkup = "<div>Product Info</div>"
+    addProductHandlers({
+      "test-handle": {
+        markup: validMarkup
+      }
+    })
+
+    const card1 = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
+    await card1.connectedCallback()
+
+    // Now create mock card with placeholder - should show mock, not placeholder
+    const card2 = (<nosto-dynamic-card handle="test-handle2" template="default" mock placeholder />) as DynamicCard
+    await card2.connectedCallback()
+
+    expect(card2.innerHTML).toContain("Mock Product Title")
+    expect(card2.innerHTML).not.toContain("Product Info")
   })
 })
