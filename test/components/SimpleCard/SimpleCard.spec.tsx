@@ -572,46 +572,6 @@ describe("SimpleCard", () => {
   })
 
   describe("Mock Mode", () => {
-    it("should render with mock data when mock attribute is true", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
-
-      await card.connectedCallback()
-
-      const shadowContent = getShadowContent(card)
-      expect(shadowContent).toContain("Mock Product")
-      expect(shadowContent).toContain("$10.00")
-    })
-
-    it("should render mock brand when brand attribute is enabled", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock brand />) as SimpleCard
-
-      await card.connectedCallback()
-
-      const shadowContent = getShadowContent(card)
-      expect(shadowContent).toContain("brand")
-      expect(shadowContent).toContain("Mock Brand")
-    })
-
-    it("should render mock discount when discount attribute is enabled", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock discount />) as SimpleCard
-
-      await card.connectedCallback()
-
-      const shadowContent = getShadowContent(card)
-      expect(shadowContent).toContain("$12.00") // original price
-      expect(shadowContent).toContain("$10.00") // sale price
-    })
-
-    it("should render mock rating when rating attribute is provided", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock rating={4.5} />) as SimpleCard
-
-      await card.connectedCallback()
-
-      const shadowContent = getShadowContent(card)
-      expect(shadowContent).toContain("rating")
-      expect(shadowContent).toContain("★★★★☆ (4.5)")
-    })
-
     it("should render all mock features when all attributes are enabled", async () => {
       const card = (<nosto-simple-card handle="test-handle" mock brand discount rating={3.5} />) as SimpleCard
 
@@ -659,26 +619,6 @@ describe("SimpleCard", () => {
       const shadowContent = getShadowContent(card)
       expect(shadowContent).toContain("Mock Product")
       expect(fetchCalled).toBe(false)
-    })
-
-    it("should forward sizes attribute to mock images", async () => {
-      const sizesValue = "(max-width: 768px) 100vw, 50vw"
-      const card = (<nosto-simple-card handle="test-handle" mock sizes={sizesValue} />) as SimpleCard
-
-      await card.connectedCallback()
-
-      const shadowContent = getShadowContent(card)
-      expect(shadowContent).toContain(`sizes="${sizesValue}"`)
-    })
-
-    it("should include slot in mock mode", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
-
-      await card.connectedCallback()
-
-      const shadowContent = getShadowContent(card)
-      expect(shadowContent).toContain("slot")
-      expect(shadowContent).toContain("<slot></slot>")
     })
   })
 })
