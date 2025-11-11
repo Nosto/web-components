@@ -76,6 +76,9 @@ export class SimpleCard extends NostoElement {
       this.dispatchEvent(
         new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
       )
+      this.addEventListener("click", this)
+      this.addEventListener("variantchange", this)
+      return
     }
 
     assertRequired(this, "handle")
