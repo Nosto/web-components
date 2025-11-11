@@ -39,6 +39,11 @@ export class DynamicCard extends NostoElement {
   @property(Boolean) lazy?: boolean
   @property(Boolean) mock?: boolean
 
+  constructor() {
+    super()
+    this.attachShadow({ mode: "open" })
+  }
+
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
       await loadAndRenderMarkup(this)
@@ -47,10 +52,7 @@ export class DynamicCard extends NostoElement {
 
   async connectedCallback() {
     if (this.mock) {
-      if (!this.shadowRoot) {
-        this.attachShadow({ mode: "open" })
-      }
-      setShadowContent(this, generateMockMarkup())
+      setShadowContent(this, generateMockMarkup().html)
       this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
       return
     }

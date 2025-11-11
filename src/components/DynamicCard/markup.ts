@@ -13,5 +13,5 @@ export function generateMockMarkup() {
         <span class="price-original">XX.XX</span>
       </div>
     </div>
-  `.html
+  `
 }
