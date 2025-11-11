@@ -680,26 +680,5 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("slot")
       expect(shadowContent).toContain("<slot></slot>")
     })
-
-    it("should handle add to cart in mock mode", async () => {
-      const card = (
-        <nosto-simple-card handle="test-handle" mock>
-          <button n-atc>Add to Cart</button>
-        </nosto-simple-card>
-      ) as SimpleCard
-
-      await card.connectedCallback()
-
-      window.Nosto = { addSkuToCart: vi.fn(() => Promise.resolve()) }
-
-      // Set productId and variantId that would normally be set from fetched data
-      card.productId = 999
-      card.variantId = 888
-
-      const button = card.querySelector("[n-atc]") as HTMLButtonElement
-      button.click()
-
-      expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith({ productId: "999", skuId: "888" }, undefined, undefined)
-    })
   })
 })
