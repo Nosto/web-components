@@ -1,4 +1,4 @@
-import { html } from "@/templating/html";
+import { html } from "@/templating/html"
 
 export function generateMockMarkup() {
   return html`

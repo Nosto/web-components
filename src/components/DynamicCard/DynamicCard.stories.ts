@@ -72,7 +72,7 @@ type Story = StoryObj
 
 export const Default: Story = {
   args: {
-      mock: true
+    mock: true
   },
   decorators: [story => html`<div style="max-width: 600px; margin: 0 auto;">${story()}</div>`],
   render: args => html`
