@@ -1,16 +1,20 @@
+import { ShopifyImage, ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
-import { SimpleProduct } from "./types"
 
 export function convertProduct(product: JSONProduct) {
   return {
-    media: [product.image_url!, ...(product.alternate_image_urls ?? [])].map(src => ({ src })),
+    images: [product.image_url!, ...(product.alternate_image_urls ?? [])].map(url => ({ url }) as ShopifyImage),
     title: product.name,
     vendor: product.brand!,
-    url: product.url,
-    images: [],
-    compare_at_price: normalizePrice(product.list_price!),
-    price: normalizePrice(product.price)
-  } satisfies SimpleProduct
+    compareAtPrice: {
+      amount: String(normalizePrice(product.list_price!)),
+      currencyCode: product.price_currency_code!
+    },
+    price: {
+      amount: String(normalizePrice(product.price)),
+      currencyCode: product.price_currency_code!
+    }
+  } as ShopifyProduct
 }
 
 function normalizePrice(price: number) {

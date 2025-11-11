@@ -1,16 +1,15 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
-import type { VariantChangeDetail } from "@/shopify/types"
+import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
+import { fetchProduct } from "@/shopify/graphql/fetchProduct"
+import { parseId } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -101,7 +100,7 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
-  element.variantId = variant.id
+  element.variantId = parseId(variant.id)
   updateSimpleCardContent(element, variant)
 }
 
@@ -114,8 +113,8 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   }
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element.handle)
-    element.productId = productData.id
+    const productData = await fetchProduct(element.handle)
+    element.productId = parseId(productData.id)
 
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
@@ -125,11 +124,6 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   } finally {
     element.toggleAttribute("loading", false)
   }
-}
-
-async function fetchProductData(handle: string) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
 declare global {

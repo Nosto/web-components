@@ -1,4 +1,4 @@
-import type { ShopifyProduct, ShopifyVariant } from "@/shopify/types"
+import type { ShopifyProduct, ShopifyVariant } from "@/shopify/rest/types"
 
 // Base variant template with common fields
 const baseVariant: Omit<

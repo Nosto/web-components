@@ -5,7 +5,7 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import type { ShopifyProduct } from "@/shopify/types"
+import type { ShopifyProduct } from "@/shopify/rest/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 
 describe("SimpleCard", () => {

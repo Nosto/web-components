@@ -1,26 +1,24 @@
 import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { SimpleProduct, SimpleVariant } from "./types"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
+import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 
-export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
-  const hasDiscount = element.discount && product.compare_at_price && product.compare_at_price > product.price
+export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
+  const hasDiscount = element.discount && isDiscounted(product)
 
   return html`
     <div class="card" part="card">
-      <a href="${normalizeUrl(product.url)}" class="link" part="link">
+      <a href="${normalizeUrl(product.onlineStoreUrl)}" class="link" part="link">
         ${generateImageHTML(element, product)}
         <div class="content" part="content">
           ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
           <h3 class="title" part="title">${product.title}</h3>
           <div class="price" part="price">
-            <span class="price-current" part="price-current"> ${formatPrice(product.price || 0)} </span>
+            <span class="price-current" part="price-current"> ${formatPrice(product.price)} </span>
             ${hasDiscount
-              ? html`<span class="price-original" part="price-original"
-                  >${formatPrice(product.compare_at_price!)}</span
-                >`
+              ? html`<span class="price-original" part="price-original">${formatPrice(product.compareAtPrice!)}</span>`
               : ""}
           </div>
           ${element.rating ? generateRatingHTML(element.rating) : ""}
@@ -33,16 +31,15 @@ export function generateCardHTML(element: SimpleCard, product: SimpleProduct) {
   `
 }
 
-function generateImageHTML(element: SimpleCard, product: SimpleProduct) {
+function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
-  const primaryImage = product.media?.[0]?.src || product.images?.[0]
+  const primaryImage = product.images?.[0]?.url
   if (!primaryImage) {
     return html`<div class="image placeholder"></div>`
   }
 
-  const hasAlternate =
-    element.alternate && ((product.media && product.media.length > 1) || (product.images && product.images.length > 1))
-  const alternateImage = product.media?.[1]?.src || product.images?.[1]
+  const hasAlternate = element.alternate && product.images && product.images.length > 1
+  const alternateImage = product.images?.[1].url
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
@@ -93,25 +90,25 @@ function generateRatingHTML(rating: number) {
   return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})</div>`
 }
 
-function formatPrice(price: number) {
+function formatPrice({ amount, currencyCode }: ShopifyMoney) {
   // Convert from cents to dollars and format
-  const amount = price / 100
+  const number = +amount / 100
   return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
     style: "currency",
-    currency: window.Shopify?.currency?.active ?? "USD"
-  }).format(amount)
+    currency: currencyCode
+  }).format(number)
 }
 
-export function updateSimpleCardContent(element: SimpleCard, variant: SimpleVariant) {
+export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
   updateImages(element, variant)
   updatePrices(element, variant)
 }
 
-function updateImages(element: SimpleCard, variant: SimpleVariant) {
-  if (!variant.featured_image) return
+function updateImages(element: SimpleCard, variant: ShopifyVariant) {
+  if (!variant.image) return
 
   const props = {
-    src: normalizeUrl(variant.featured_image.src),
+    src: normalizeUrl(variant.image.url),
     width: 800,
     sizes: element.sizes
   }
@@ -123,16 +120,20 @@ function updateImages(element: SimpleCard, variant: SimpleVariant) {
   imagesToUpdate.forEach(img => setImageProps(img, props))
 }
 
-function updatePrices(element: SimpleCard, variant: SimpleVariant) {
-  const hasDiscount = element.discount && variant.compare_at_price && variant.compare_at_price > variant.price
+function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
+  const hasDiscount = element.discount && isDiscounted(variant)
 
   const currentPriceElement = element.shadowRoot!.querySelector(".price-current")
   if (currentPriceElement) {
-    currentPriceElement.textContent = formatPrice(variant.price || 0)
+    currentPriceElement.textContent = formatPrice(variant.price)
   }
 
   const originalPriceElement = element.shadowRoot!.querySelector(".price-original")
   if (hasDiscount && originalPriceElement) {
-    originalPriceElement.textContent = formatPrice(variant.compare_at_price!)
+    originalPriceElement.textContent = formatPrice(variant.compareAtPrice!)
   }
+}
+
+function isDiscounted(prices: { compareAtPrice: ShopifyMoney | null; price: ShopifyMoney }) {
+  return prices.compareAtPrice && +prices.compareAtPrice.amount > +prices.price.amount
 }

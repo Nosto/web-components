@@ -1,10 +1,10 @@
 import { html } from "@/templating/html"
-import type { ShopifyProduct } from "../../shopify/types"
 import type { VariantSelector } from "./VariantSelector"
+import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types";
 
 export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options or only one variant
-  if (!product.options || product.options.length === 0 || product.variants.length <= 1) {
+  if (!product.options || product.options.length === 0) {
     return html`<slot></slot>`
   }
 
@@ -15,23 +15,26 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
   `
 }
 
-function generateOptionRowHTML(option: { name: string; values: string[] }) {
-  if (option.values.length <= 1) {
+function generateOptionRowHTML(option: ShopifyOption) {
+  if (option.optionValues.length <= 1) {
     return ""
   }
 
   return html`
     <div class="row" part="row">
       <div class="label" part="label">${option.name}:</div>
-      <div class="values" part="values">${option.values.map(value => generateOptionValueHTML(option.name, value))}</div>
+      <div class="values" part="values">
+        ${option.optionValues.map(value => generateOptionValueHTML(option.name, value))}
+      </div>
     </div>
   `
 }
 
-function generateOptionValueHTML(name: string, value: string) {
+function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {
+  // TODO expand to actual swatch rendering
   return html`
-    <button type="button" class="value" part="value" data-option-name="${name}" data-option-value="${value}">
-      ${value}
+    <button type="button" class="value" part="value" data-option-name="${name}" data-option-value="${value.name}">
+      ${value.name}
     </button>
   `
 }

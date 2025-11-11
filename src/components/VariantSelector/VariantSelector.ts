@@ -1,12 +1,10 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -76,10 +74,10 @@ export class VariantSelector extends NostoElement {
 async function loadAndRenderMarkup(element: VariantSelector) {
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element)
+    const productData = await fetchProduct(element.handle)
 
     // Initialize selections with first value of each option
-    initializeDefaultSelections(element, productData)
+    //initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
     setShadowContent(element, selectorHTML.html)
@@ -93,11 +91,11 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     // active state for selected options
     updateActiveStates(element)
     // unavailable state for options without available variants
-    updateUnavailableStates(element, productData)
+    //updateUnavailableStates(element, productData)
     // TODO disabled state
 
     if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+      //emitVariantChange(element, productData)
     }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
@@ -106,7 +104,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
   }
 }
 
-function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
+/*function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
     variant = product.variants.find(v => v.id === element.variantId)
@@ -124,7 +122,7 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
       }
     })
   }
-}
+}*/
 
 function setupOptionListeners(element: VariantSelector) {
   element.shadowRoot!.addEventListener("click", async e => {
@@ -147,8 +145,8 @@ export async function selectOption(element: VariantSelector, optionName: string,
   updateActiveStates(element)
 
   // Fetch product data and emit variant change
-  const productData = await fetchProductData(element)
-  emitVariantChange(element, productData)
+  //const productData = await fetchProductData(element)
+  //emitVariantChange(element, productData)
 }
 
 function updateActiveStates(element: VariantSelector) {
@@ -159,7 +157,7 @@ function updateActiveStates(element: VariantSelector) {
   })
 }
 
-function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
+/*function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
   const optionNames = product.options.map(option => option.name)
   product.variants
@@ -174,7 +172,7 @@ function updateUnavailableStates(element: VariantSelector, product: ShopifyProdu
     const available = availableOptions.has(`${optionName}::${optionValue}`)
     togglePart(button, "unavailable", !available)
   })
-}
+}*/
 
 function togglePart(element: HTMLElement, partName: string, enable: boolean) {
   const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
@@ -186,7 +184,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
   element.setAttribute("part", Array.from(parts).join(" "))
 }
 
-function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
+/*function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   const variant = getSelectedVariant(element, product)
   if (variant) {
     element.variantId = variant.id
@@ -198,9 +196,9 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
       })
     )
   }
-}
+}*/
 
-export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
+/*export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
       return product.options.every((option, index) => {
@@ -210,26 +208,16 @@ export function getSelectedVariant(element: VariantSelector, product: ShopifyPro
       })
     }) || null
   )
-}
+}*/
 
-async function fetchProductData({ handle, filtered }: VariantSelector) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
-
-  if (filtered) {
-    return { ...data, options: filteredOptions(data) }
-  }
-  return data
-}
-
-function filteredOptions(product: ShopifyProduct) {
+/*function filteredOptions(product: ShopifyProduct) {
   return product.options.map(option => {
     return {
       ...option,
       values: option.values.filter(value => product.variants.some(variant => variant.options.includes(value)))
     }
   })
-}
+}*/
 
 declare global {
   interface HTMLElementTagNameMap {
