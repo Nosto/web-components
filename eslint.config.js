@@ -1,37 +1,43 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
+import storybook from "eslint-plugin-storybook"
 import globals from "globals"
 import tseslint from "typescript-eslint"
 import eslintConfigPrettier from "eslint-config-prettier"
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import barrelFiles from "eslint-plugin-barrel-files"
 
-export default tseslint.config({ ignores: ["dist", "docs"] }, {
-  extends: [...tseslint.configs.recommended],
-  files: ["**/*.{js,ts,tsx}"],
-  languageOptions: {
-    ecmaVersion: 2020,
-    globals: globals.browser
-  }
-}, {
-  plugins: {
-    "barrel-files": barrelFiles
+export default tseslint.config(
+  { ignores: ["dist", "docs"] },
+  {
+    extends: [...tseslint.configs.recommended],
+    files: ["**/*.{js,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser
+    }
   },
-  files: ["src/**/*.{js,ts,tsx}"],
-  rules: {
-    "barrel-files/avoid-barrel-files": 2,
-    "barrel-files/avoid-namespace-import": 2,
-    "barrel-files/avoid-re-export-all": 2
-  }
-}, {
-  files: ["**/*.tsx"],
-  rules: {
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        varsIgnorePattern: "createElement"
-      }
-    ]
-  }
-}, eslintConfigPrettier, eslintPluginPrettierRecommended, storybook.configs["flat/recommended"]);
+  {
+    plugins: {
+      "barrel-files": barrelFiles
+    },
+    files: ["src/**/*.{js,ts,tsx}"],
+    rules: {
+      "barrel-files/avoid-barrel-files": 2,
+      "barrel-files/avoid-namespace-import": 2,
+      "barrel-files/avoid-re-export-all": 2
+    }
+  },
+  {
+    files: ["**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "createElement"
+        }
+      ]
+    }
+  },
+  eslintConfigPrettier,
+  eslintPluginPrettierRecommended,
+  storybook.configs["flat/recommended"]
+)
