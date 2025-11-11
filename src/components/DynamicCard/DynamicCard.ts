@@ -3,6 +3,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
+import { html } from "@/templating/html"
 import styles from "./styles.css?raw"
 
 /** Event name for the DynamicCard loaded event */
@@ -73,8 +74,10 @@ export class DynamicCard extends NostoElement {
 const placeholders = new Map<string, string>()
 
 function generateMockMarkup() {
-  return `
-    <style>${styles}</style>
+  return html`
+    <style>
+      ${{ html: styles }}
+    </style>
     <div class="mock-card">
       <div class="mock-image">
         <span class="mock-text">MOCK PREVIEW</span>
@@ -86,7 +89,7 @@ function generateMockMarkup() {
         <span class="mock-price-original">XX.XX</span>
       </div>
     </div>
-  `
+  `.html
 }
 
 async function loadAndRenderMarkup(element: DynamicCard) {
