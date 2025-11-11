@@ -49,30 +49,6 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
             onlineStoreUrl
           }
         }
-        adjacentVariants(first: 250) {
-          id
-          title
-          availableForSale
-          selectedOptions {
-            name
-            value
-          }
-          image {
-            altText
-            url
-            width
-            height
-            thumbhash
-          }
-          price {
-            currencyCode
-            amount
-          }
-          compareAtPrice {
-            currencyCode
-            amount
-          }
-        }
         name
         swatch {
           color
@@ -88,6 +64,32 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
               thumbhash
             }
           }
+        }
+      }
+    }
+    variants(first: 250) {
+      nodes {
+        id
+        title
+        availableForSale
+        selectedOptions {
+          name
+          value
+        }
+        image {
+          altText
+          url
+          width
+          height
+          thumbhash
+        }
+        price {
+          currencyCode
+          amount
+        }
+        compareAtPrice {
+          currencyCode
+          amount
         }
       }
     }

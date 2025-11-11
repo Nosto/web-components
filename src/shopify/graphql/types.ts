@@ -31,7 +31,6 @@ export type ShopifyOption = {
 
 export type ShopifyOptionValue = {
   firstSelectableVariant: ShopifyVariant
-  adjacentVariants: ShopifyVariant[]
   name: string
   swatch: string | null
 }

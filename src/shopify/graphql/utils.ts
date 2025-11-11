@@ -17,20 +17,13 @@ export function flattenResponse(obj: GenericGraphQLType) {
 
   const productTyped = product as ShopifyProduct
 
-  // Collect all unique variants from adjacentVariants across all option values
-  const variantsMap = new Map<string, ShopifyVariant>()
-
-  for (const option of productTyped.options) {
-    for (const optionValue of option.optionValues) {
-      if (optionValue.adjacentVariants) {
-        for (const variant of optionValue.adjacentVariants) {
-          variantsMap.set(variant.id, variant)
-        }
-      }
-    }
+  // Flatten variants from nodes structure
+  let variants: ShopifyVariant[] = []
+  if (hasVariantsNodes(product)) {
+    const variantsData = product.variants as { nodes: ShopifyVariant[] }
+    variants = variantsData.nodes
+    product.variants = variants
   }
-
-  const variants = Array.from(variantsMap.values())
 
   // Get price and compareAtPrice from first variant if available
   const firstVariant = productTyped.options[0]?.optionValues[0]?.firstSelectableVariant || variants[0]
@@ -49,6 +42,16 @@ function hasImagesNodes(product: Record<string, unknown>) {
   return "images" in product && product.images && typeof product.images === "object" && "nodes" in product.images
 }
 
+function hasVariantsNodes(product: Record<string, unknown>) {
+  return (
+    "variants" in product && product.variants && typeof product.variants === "object" && "nodes" in product.variants
+  )
+}
+
 export function parseId(graphQLId: string): number {
   return Number(graphQLId.split("/").at(-1))
+}
+
+export function toVariantGid(variantId: number): string {
+  return `gid://shopify/ProductVariant/${variantId}`
 }

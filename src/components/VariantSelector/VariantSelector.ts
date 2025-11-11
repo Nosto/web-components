@@ -6,7 +6,7 @@ import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
-import { parseId } from "@/shopify/graphql/utils"
+import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -109,7 +109,7 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
-    const variantIdStr = `gid://shopify/ProductVariant/${element.variantId}`
+    const variantIdStr = toVariantGid(element.variantId)
     variant = product.variants.find(v => v.id === variantIdStr)
   } else if (element.preselect) {
     variant = product.variants.find(v => v.availableForSale)
