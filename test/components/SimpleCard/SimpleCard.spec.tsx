@@ -25,8 +25,7 @@ describe("SimpleCard", () => {
         // Wrap images and variants in nodes structure for GraphQL response
         const graphqlProduct = {
           ...product,
-          images: { nodes: product.images },
-          variants: { nodes: product.variants }
+          images: { nodes: product.images }
         }
         return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
       })
@@ -465,11 +464,27 @@ describe("SimpleCard", () => {
           optionValues: [
             {
               name: "Red",
-              swatch: null
+              swatch: null,
+              firstSelectableVariant: {
+                id: "gid://shopify/ProductVariant/1001",
+                title: "Red",
+                availableForSale: true,
+                price: { currencyCode: "USD", amount: "24.99" },
+                compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+                product: { onlineStoreUrl: "/products/variant-product" }
+              }
             },
             {
               name: "Blue",
-              swatch: null
+              swatch: null,
+              firstSelectableVariant: {
+                id: "gid://shopify/ProductVariant/1002",
+                title: "Blue",
+                availableForSale: true,
+                price: { currencyCode: "USD", amount: "19.99" },
+                compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+                product: { onlineStoreUrl: "/products/variant-product" }
+              }
             }
           ]
         }

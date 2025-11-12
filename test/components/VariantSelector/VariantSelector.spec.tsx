@@ -25,8 +25,7 @@ describe("VariantSelector", () => {
         // Wrap images and variants in nodes structure for GraphQL response
         const graphqlProduct = {
           ...product,
-          images: { nodes: product.images },
-          variants: { nodes: product.variants }
+          images: { nodes: product.images }
         }
         return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
       })
@@ -75,15 +74,39 @@ describe("VariantSelector", () => {
         optionValues: [
           {
             name: "Small",
-            swatch: null
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1001",
+              title: "Small / Red",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
           },
           {
             name: "Medium",
-            swatch: null
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1002",
+              title: "Medium / Blue",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "24.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
           },
           {
             name: "Large",
-            swatch: null
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1003",
+              title: "Large / Red",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "29.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
           }
         ]
       },
@@ -92,15 +115,39 @@ describe("VariantSelector", () => {
         optionValues: [
           {
             name: "Red",
-            swatch: null
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1001",
+              title: "Small / Red",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
           },
           {
             name: "Blue",
-            swatch: null
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1002",
+              title: "Medium / Blue",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "24.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
           },
           {
             name: "Green",
-            swatch: null
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1004",
+              title: "Small / Green",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
           }
         ]
       }

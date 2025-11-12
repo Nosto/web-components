@@ -26,6 +26,29 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
     options(first: 50) {
       name
       optionValues {
+        firstSelectableVariant {
+          availableForSale
+          title
+          id
+          image {
+            altText
+            url
+            width
+            height
+            thumbhash
+          }
+          price {
+            currencyCode
+            amount
+          }
+          compareAtPrice {
+            currencyCode
+            amount
+          }
+          product {
+            onlineStoreUrl
+          }
+        }
         name
         swatch {
           color
@@ -41,32 +64,6 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
               thumbhash
             }
           }
-        }
-      }
-    }
-    variants(first: 250) {
-      nodes {
-        id
-        title
-        availableForSale
-        selectedOptions {
-          name
-          value
-        }
-        image {
-          altText
-          url
-          width
-          height
-          thumbhash
-        }
-        price {
-          currencyCode
-          amount
-        }
-        compareAtPrice {
-          currencyCode
-          amount
         }
       }
     }

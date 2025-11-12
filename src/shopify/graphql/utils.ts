@@ -10,18 +10,21 @@ type GenericGraphQLType = {
 export function flattenResponse(obj: GenericGraphQLType) {
   const product = obj.data.product
 
+  const typedProduct = product as ShopifyProduct
+
   // Flatten images from nodes structure
   let images: ShopifyImage[] = []
   if (hasImagesNodes(product)) {
     images = (product.images as { nodes: ShopifyImage[] }).nodes
   }
 
-  // Flatten variants from nodes structure
-  let variants: ShopifyVariant[] = []
-  if (hasVariantsNodes(product)) {
-    const variantsData = product.variants as { nodes: ShopifyVariant[] }
-    variants = variantsData.nodes
-  }
+  // collect variants from option values
+  const variants =
+    typedProduct.variants ??
+    typedProduct.options
+      .flatMap(option => option.optionValues)
+      .map(ov => ov.firstSelectableVariant)
+      .filter((v): v is ShopifyVariant => v != null)
 
   // Get price and compareAtPrice from first variant if available
   const firstVariant = variants.find(v => v.availableForSale) || variants[0]
@@ -39,12 +42,6 @@ export function flattenResponse(obj: GenericGraphQLType) {
 
 function hasImagesNodes(product: Record<string, unknown>) {
   return "images" in product && product.images && typeof product.images === "object" && "nodes" in product.images
-}
-
-function hasVariantsNodes(product: Record<string, unknown>) {
-  return (
-    "variants" in product && product.variants && typeof product.variants === "object" && "nodes" in product.variants
-  )
 }
 
 export function parseId(graphQLId: string): number {

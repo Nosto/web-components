@@ -30,6 +30,7 @@ export type ShopifyOption = {
 }
 
 export type ShopifyOptionValue = {
+  firstSelectableVariant: ShopifyVariant | null
   name: string
   swatch: string | null
 }
