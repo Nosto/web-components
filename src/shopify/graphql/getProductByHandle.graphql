@@ -9,18 +9,10 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
     availableForSale
     images(first: 10) {
       nodes {
-        altText
-        height
-        width
-        thumbhash
         url
       }
     }
     featuredImage {
-      altText
-      height
-      width
-      thumbhash
       url
     }
     options(first: 50) {
@@ -31,11 +23,7 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
           title
           id
           image {
-            altText
             url
-            width
-            height
-            thumbhash
           }
           price {
             currencyCode
@@ -46,7 +34,11 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
             amount
           }
           product {
-            onlineStoreUrl
+            handle
+          }
+          selectedOptions {
+            name
+            value
           }
         }
         name
@@ -58,10 +50,6 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
             mediaContentType
             previewImage {
               url
-              width
-              height
-              altText
-              thumbhash
             }
           }
         }
