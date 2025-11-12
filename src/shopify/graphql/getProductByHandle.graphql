@@ -1,4 +1,5 @@
-query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: String!) @inContext(country: $country language: $language) {
+query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle: String!)
+@inContext(country: $country, language: $language) {
   product(handle: $handle) {
     id
     title
@@ -15,31 +16,14 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
     featuredImage {
       url
     }
+    adjacentVariants {
+      ...VariantFragment
+    }
     options(first: 50) {
       name
       optionValues {
         firstSelectableVariant {
-          availableForSale
-          title
-          id
-          image {
-            url
-          }
-          price {
-            currencyCode
-            amount
-          }
-          compareAtPrice {
-            currencyCode
-            amount
-          }
-          product {
-            handle
-          }
-          selectedOptions {
-            name
-            value
-          }
+          ...VariantFragment
         }
         name
         swatch {
@@ -55,5 +39,29 @@ query ProductByHandle($country: CountryCode! $language: LanguageCode! $handle: S
         }
       }
     }
+  }
+}
+
+fragment VariantFragment on ProductVariant {
+  availableForSale
+  title
+  id
+  image {
+    url
+  }
+  price {
+    currencyCode
+    amount
+  }
+  compareAtPrice {
+    currencyCode
+    amount
+  }
+  product {
+    handle
+  }
+  selectedOptions {
+    name
+    value
   }
 }

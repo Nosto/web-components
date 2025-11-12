@@ -9,6 +9,7 @@ export type ShopifyProduct = {
   images: ShopifyImage[]
   featuredImage: ShopifyImage
   options: ShopifyOption[]
+  adjacentVariants: ShopifyVariant[]
 
   // augmented fields
   price: ShopifyMoney
@@ -44,7 +45,7 @@ export type ShopifyVariant = {
   compareAtPrice: ShopifyMoney | null
   selectedOptions?: ShopifySelectedOption[]
   product?: {
-    onlineStoreUrl: string
+    handle: string
   }
 }
 

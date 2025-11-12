@@ -18,13 +18,8 @@ export function flattenResponse(obj: GenericGraphQLType) {
     images = (product.images as { nodes: ShopifyImage[] }).nodes
   }
 
-  // collect variants from option values
-  const variants =
-    typedProduct.variants ??
-    typedProduct.options
-      .flatMap(option => option.optionValues)
-      .map(ov => ov.firstSelectableVariant)
-      .filter((v): v is ShopifyVariant => v != null)
+  // collect variants from option values and adjacentVariants
+  const variants = typedProduct.variants ?? getCombinedVariants(typedProduct)
 
   // Get price and compareAtPrice from first variant if available
   const firstVariant = variants.find(v => v.availableForSale) || variants[0]
@@ -38,6 +33,25 @@ export function flattenResponse(obj: GenericGraphQLType) {
     images,
     variants
   } as ShopifyProduct
+}
+
+function getCombinedVariants(product: ShopifyProduct) {
+  const variantsMap = new Map<string, ShopifyVariant>()
+
+  product.options
+    .flatMap(option => option.optionValues)
+    .map(ov => ov.firstSelectableVariant)
+    .filter((v): v is ShopifyVariant => v != null)
+    .forEach(variant => {
+      variantsMap.set(variant.id, variant)
+    })
+
+  // also include adjacent variants
+  product.adjacentVariants.forEach(variant => {
+    variantsMap.set(variant.id, variant)
+  })
+
+  return Array.from(variantsMap.values())
 }
 
 function hasImagesNodes(product: Record<string, unknown>) {
