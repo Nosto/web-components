@@ -4,6 +4,7 @@ import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { mockNostoRecs } from "../../mockNostoRecs"
 import { createElement } from "../../utils/jsx"
+import { createMockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("Campaign", () => {
   let campaign: Campaign
@@ -112,19 +113,13 @@ describe("Campaign", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    class MockIntersectionObserver {
-      observe = mockObserve
-      disconnect = mockDisconnect
-      unobserve = vi.fn()
-      takeRecords = vi.fn(() => [])
-      root = null
-      rootMargin = ""
-      thresholds = []
-
-      constructor(callback: IntersectionObserverCallback) {
+    const MockIntersectionObserver = createMockIntersectionObserver({
+      observe: mockObserve,
+      disconnect: mockDisconnect,
+      onCallback: callback => {
         observerCallback = callback
       }
-    }
+    })
 
     vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
@@ -154,19 +149,13 @@ describe("Campaign", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    class MockIntersectionObserver {
-      observe = mockObserve
-      disconnect = mockDisconnect
-      unobserve = vi.fn()
-      takeRecords = vi.fn(() => [])
-      root = null
-      rootMargin = ""
-      thresholds = []
-
-      constructor(callback: IntersectionObserverCallback) {
+    const MockIntersectionObserver = createMockIntersectionObserver({
+      observe: mockObserve,
+      disconnect: mockDisconnect,
+      onCallback: callback => {
         observerCallback = callback
       }
-    }
+    })
 
     vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
@@ -190,17 +179,10 @@ describe("Campaign", () => {
     const mockObserve = vi.fn()
     const mockDisconnect = vi.fn()
 
-    class MockIntersectionObserver {
-      observe = mockObserve
-      disconnect = mockDisconnect
-      unobserve = vi.fn()
-      takeRecords = vi.fn(() => [])
-      root = null
-      rootMargin = ""
-      thresholds = []
-
-      constructor() {}
-    }
+    const MockIntersectionObserver = createMockIntersectionObserver({
+      observe: mockObserve,
+      disconnect: mockDisconnect
+    })
 
     vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 

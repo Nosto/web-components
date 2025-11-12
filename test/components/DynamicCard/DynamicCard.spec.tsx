@@ -5,6 +5,7 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { createMockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("DynamicCard", () => {
   afterEach(() => {
@@ -97,17 +98,10 @@ describe("DynamicCard", () => {
     const mockObserve = vi.fn()
     const mockDisconnect = vi.fn()
 
-    class MockIntersectionObserver {
-      observe = mockObserve
-      disconnect = mockDisconnect
-      unobserve = vi.fn()
-      takeRecords = vi.fn(() => [])
-      root = null
-      rootMargin = ""
-      thresholds = []
-
-      constructor() {}
-    }
+    const MockIntersectionObserver = createMockIntersectionObserver({
+      observe: mockObserve,
+      disconnect: mockDisconnect
+    })
 
     vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
@@ -146,19 +140,13 @@ describe("DynamicCard", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    class MockIntersectionObserver {
-      observe = mockObserve
-      disconnect = mockDisconnect
-      unobserve = vi.fn()
-      takeRecords = vi.fn(() => [])
-      root = null
-      rootMargin = ""
-      thresholds = []
-
-      constructor(callback: IntersectionObserverCallback) {
+    const MockIntersectionObserver = createMockIntersectionObserver({
+      observe: mockObserve,
+      disconnect: mockDisconnect,
+      onCallback: callback => {
         observerCallback = callback
       }
-    }
+    })
 
     vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
@@ -315,19 +303,13 @@ describe("DynamicCard", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    class MockIntersectionObserver {
-      observe = mockObserve
-      disconnect = mockDisconnect
-      unobserve = vi.fn()
-      takeRecords = vi.fn(() => [])
-      root = null
-      rootMargin = ""
-      thresholds = []
-
-      constructor(callback: IntersectionObserverCallback) {
+    const MockIntersectionObserver = createMockIntersectionObserver({
+      observe: mockObserve,
+      disconnect: mockDisconnect,
+      onCallback: callback => {
         observerCallback = callback
       }
-    }
+    })
 
     vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
