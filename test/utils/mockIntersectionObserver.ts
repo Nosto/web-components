@@ -16,14 +16,13 @@ export interface MockIntersectionObserverOptions {
 }
 
 /**
- * Creates a mock IntersectionObserver class for testing
+ * Mocks the global IntersectionObserver for testing
  * @param options Configuration options for the mock
- * @returns A mock IntersectionObserver class
  */
-export function createMockIntersectionObserver(options: MockIntersectionObserverOptions = {}) {
+export function mockIntersectionObserver(options: MockIntersectionObserverOptions = {}) {
   const { observe = vi.fn(), disconnect = vi.fn(), onCallback } = options
 
-  return class MockIntersectionObserver {
+  class MockIntersectionObserver {
     observe = observe
     disconnect = disconnect
     unobserve = vi.fn()
@@ -38,4 +37,6 @@ export function createMockIntersectionObserver(options: MockIntersectionObserver
       }
     }
   }
+
+  vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 }

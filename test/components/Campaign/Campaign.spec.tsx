@@ -4,7 +4,7 @@ import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { mockNostoRecs } from "../../mockNostoRecs"
 import { createElement } from "../../utils/jsx"
-import { createMockIntersectionObserver } from "../../utils/mockIntersectionObserver"
+import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("Campaign", () => {
   let campaign: Campaign
@@ -113,15 +113,13 @@ describe("Campaign", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    const MockIntersectionObserver = createMockIntersectionObserver({
+    mockIntersectionObserver({
       observe: mockObserve,
       disconnect: mockDisconnect,
       onCallback: callback => {
         observerCallback = callback
       }
     })
-
-    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     campaign = (<nosto-campaign placement="456" productId="123" lazy={true} />) as Campaign
 
@@ -149,15 +147,13 @@ describe("Campaign", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    const MockIntersectionObserver = createMockIntersectionObserver({
+    mockIntersectionObserver({
       observe: mockObserve,
       disconnect: mockDisconnect,
       onCallback: callback => {
         observerCallback = callback
       }
     })
-
-    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     campaign = (<nosto-campaign placement="456" productId="123" lazy={true} />) as Campaign
 
@@ -179,12 +175,10 @@ describe("Campaign", () => {
     const mockObserve = vi.fn()
     const mockDisconnect = vi.fn()
 
-    const MockIntersectionObserver = createMockIntersectionObserver({
+    mockIntersectionObserver({
       observe: mockObserve,
       disconnect: mockDisconnect
     })
-
-    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     campaign = (<nosto-campaign placement="456" productId="123" init="false" lazy={true} />) as Campaign
 

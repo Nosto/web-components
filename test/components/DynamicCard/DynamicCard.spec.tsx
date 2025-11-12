@@ -5,7 +5,7 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { createMockIntersectionObserver } from "../../utils/mockIntersectionObserver"
+import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("DynamicCard", () => {
   afterEach(() => {
@@ -98,12 +98,10 @@ describe("DynamicCard", () => {
     const mockObserve = vi.fn()
     const mockDisconnect = vi.fn()
 
-    const MockIntersectionObserver = createMockIntersectionObserver({
+    mockIntersectionObserver({
       observe: mockObserve,
       disconnect: mockDisconnect
     })
-
-    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
     await card.connectedCallback()
@@ -140,15 +138,13 @@ describe("DynamicCard", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    const MockIntersectionObserver = createMockIntersectionObserver({
+    mockIntersectionObserver({
       observe: mockObserve,
       disconnect: mockDisconnect,
       onCallback: callback => {
         observerCallback = callback
       }
     })
-
-    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     // Call connectedCallback manually
     await card.connectedCallback()
@@ -303,15 +299,13 @@ describe("DynamicCard", () => {
     const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    const MockIntersectionObserver = createMockIntersectionObserver({
+    mockIntersectionObserver({
       observe: mockObserve,
       disconnect: mockDisconnect,
       onCallback: callback => {
         observerCallback = callback
       }
     })
-
-    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     const card = (<nosto-dynamic-card handle="lazy-handle" template="lazy-template" lazy />) as DynamicCard
 
