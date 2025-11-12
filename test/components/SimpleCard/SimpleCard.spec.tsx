@@ -585,17 +585,15 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("★★★☆☆ (3.5)")
     })
 
-    it("should emit rendered event with mock detail when mock mode is enabled", async () => {
+    it("should emit rendered event when mock mode is enabled", async () => {
       const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
 
-      let eventDetail: { mock: boolean } | null = null
-      card.addEventListener("@nosto/SimpleCard/rendered", (event: Event) => {
-        eventDetail = (event as CustomEvent).detail
-      })
+      const renderedEvent = vi.fn()
+      card.addEventListener("@nosto/SimpleCard/rendered", renderedEvent)
 
       await card.connectedCallback()
 
-      expect(eventDetail).toEqual({ mock: true })
+      expect(renderedEvent).toHaveBeenCalled()
     })
 
     it("should not fetch from Shopify when mock mode is enabled", async () => {

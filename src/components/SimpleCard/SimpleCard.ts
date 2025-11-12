@@ -132,9 +132,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
     if (!element.product) {
-      element.dispatchEvent(
-        new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true })
-      )
+      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
     }
   } finally {
     element.toggleAttribute("loading", false)
