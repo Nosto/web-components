@@ -108,12 +108,25 @@ describe("Campaign", () => {
     const { mockBuilder } = mockNostoRecs({ "456": htmlContent })
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
+    const mockObserve = vi.fn()
+    const mockDisconnect = vi.fn()
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    class MockIntersectionObserver {
+      observe = mockObserve
+      disconnect = mockDisconnect
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ""
+      thresholds = []
+
+      constructor(callback: IntersectionObserverCallback) {
+        observerCallback = callback
+      }
     }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     campaign = (<nosto-campaign placement="456" productId="123" lazy={true} />) as Campaign
 
@@ -121,58 +134,85 @@ describe("Campaign", () => {
 
     // Should not load immediately
     expect(mockBuilder.load).not.toHaveBeenCalled()
-    expect(mockObserver.observe).toHaveBeenCalledWith(campaign)
+    expect(mockObserve).toHaveBeenCalledWith(campaign)
 
-    // Simulate intersection - get the callback function and call it
-    const observerCallback = (global.IntersectionObserver as Mock).mock.calls[0][0]
-    await observerCallback([{ isIntersecting: true }])
+    // Simulate intersection
+    await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockBuilder.load).toHaveBeenCalled()
-    expect(mockObserver.disconnect).toHaveBeenCalled()
+    expect(mockDisconnect).toHaveBeenCalled()
     expect(campaign.innerHTML).toBe(htmlContent)
+
+    vi.unstubAllGlobals()
   })
 
   it("should not load campaign lazily when intersection is false", async () => {
     const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
+    const mockObserve = vi.fn()
+    const mockDisconnect = vi.fn()
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    class MockIntersectionObserver {
+      observe = mockObserve
+      disconnect = mockDisconnect
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ""
+      thresholds = []
+
+      constructor(callback: IntersectionObserverCallback) {
+        observerCallback = callback
+      }
     }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     campaign = (<nosto-campaign placement="456" productId="123" lazy={true} />) as Campaign
 
     await campaign.connectedCallback()
 
-    // Simulate no intersection - get the callback function and call it
-    const observerCallback = (global.IntersectionObserver as Mock).mock.calls[0][0]
-    await observerCallback([{ isIntersecting: false }])
+    // Simulate no intersection
+    await observerCallback!([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockBuilder.load).not.toHaveBeenCalled()
-    expect(mockObserver.disconnect).not.toHaveBeenCalled()
+    expect(mockDisconnect).not.toHaveBeenCalled()
+
+    vi.unstubAllGlobals()
   })
 
   it('should respect init="false" even when lazy is set', async () => {
     const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
+    const mockObserve = vi.fn()
+    const mockDisconnect = vi.fn()
+
+    class MockIntersectionObserver {
+      observe = mockObserve
+      disconnect = mockDisconnect
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ""
+      thresholds = []
+
+      constructor() {}
     }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     campaign = (<nosto-campaign placement="456" productId="123" init="false" lazy={true} />) as Campaign
 
     await campaign.connectedCallback()
 
     // Should not create observer or load when init="false"
-    expect(mockObserver.observe).not.toHaveBeenCalled()
+    expect(mockObserve).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
+
+    vi.unstubAllGlobals()
   })
 
   describe("cart-synced functionality", () => {

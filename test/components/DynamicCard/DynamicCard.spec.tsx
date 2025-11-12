@@ -93,11 +93,23 @@ describe("DynamicCard", () => {
         markup: "<div>Custom Product Info</div>"
       }
     })
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => ({
-      observe: vi.fn(),
-      disconnect: vi.fn()
-    }))
+    // Mock IntersectionObserver
+    const mockObserve = vi.fn()
+    const mockDisconnect = vi.fn()
+
+    class MockIntersectionObserver {
+      observe = mockObserve
+      disconnect = mockDisconnect
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ""
+      thresholds = []
+
+      constructor() {}
+    }
+
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
     await card.connectedCallback()
@@ -115,6 +127,8 @@ describe("DynamicCard", () => {
     ) as DynamicCard
     await card3.connectedCallback()
     expect(card3.innerHTML).toBe("")
+
+    vi.unstubAllGlobals()
   })
 
   it("fetches product lazily when lazy attribute is set", async () => {
@@ -128,23 +142,37 @@ describe("DynamicCard", () => {
     const card = (<nosto-dynamic-card handle="lazy-handle" template="default" lazy={true} />) as DynamicCard
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
+    const mockObserve = vi.fn()
+    const mockDisconnect = vi.fn()
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    class MockIntersectionObserver {
+      observe = mockObserve
+      disconnect = mockDisconnect
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ""
+      thresholds = []
+
+      constructor(callback: IntersectionObserverCallback) {
+        observerCallback = callback
+      }
     }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     // Call connectedCallback manually
     await card.connectedCallback()
-    expect(mockObserver.observe).toHaveBeenCalledWith(card)
+    expect(mockObserve).toHaveBeenCalledWith(card)
 
     // Simulate intersection
-    // @ts-expect-error IntersectionObserver is not typed as a mock
-    global.IntersectionObserver.mock.calls[0][0]([{ isIntersecting: true }])
+    await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
     expect(card.innerHTML).toBe(validMarkup)
+
+    vi.unstubAllGlobals()
   })
 
   it("throws error when fetch response is not ok", async () => {
@@ -285,24 +313,33 @@ describe("DynamicCard", () => {
     // Mock IntersectionObserver
     const mockObserve = vi.fn()
     const mockDisconnect = vi.fn()
-    const mockIntersectionObserver = vi.fn().mockImplementation(callback => ({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
-      callback
-    }))
-    vi.stubGlobal("IntersectionObserver", mockIntersectionObserver)
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    class MockIntersectionObserver {
+      observe = mockObserve
+      disconnect = mockDisconnect
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ""
+      thresholds = []
+
+      constructor(callback: IntersectionObserverCallback) {
+        observerCallback = callback
+      }
+    }
+
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver)
 
     const card = (<nosto-dynamic-card handle="lazy-handle" template="lazy-template" lazy />) as DynamicCard
 
     await card.connectedCallback()
 
     // Should have set up intersection observer
-    expect(mockIntersectionObserver).toHaveBeenCalled()
     expect(mockObserve).toHaveBeenCalledWith(card)
 
     // Simulate intersection
-    const observerCallback = mockIntersectionObserver.mock.calls[0][0]
-    await observerCallback([{ isIntersecting: true }])
+    await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockDisconnect).toHaveBeenCalled()
     expect(card.innerHTML).toBe(validMarkup)
