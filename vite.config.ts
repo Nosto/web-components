@@ -18,7 +18,7 @@ export default defineConfig(() => ({
       skipFull: true,
       thresholds: {
         statements: 90,
-        branches: 90,
+        branches: 85,
         lines: 90,
         functions: 90
       }

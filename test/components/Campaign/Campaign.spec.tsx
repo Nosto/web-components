@@ -4,6 +4,7 @@ import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { mockNostoRecs } from "../../mockNostoRecs"
 import { createElement } from "../../utils/jsx"
+import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("Campaign", () => {
   let campaign: Campaign
@@ -108,12 +109,13 @@ describe("Campaign", () => {
     const { mockBuilder } = mockNostoRecs({ "456": htmlContent })
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
-    }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    const { observe, disconnect } = mockIntersectionObserver({
+      onCallback: callback => {
+        observerCallback = callback
+      }
+    })
 
     campaign = (<nosto-campaign placement="456" productId="123" lazy={true} />) as Campaign
 
@@ -121,14 +123,13 @@ describe("Campaign", () => {
 
     // Should not load immediately
     expect(mockBuilder.load).not.toHaveBeenCalled()
-    expect(mockObserver.observe).toHaveBeenCalledWith(campaign)
+    expect(observe).toHaveBeenCalledWith(campaign)
 
-    // Simulate intersection - get the callback function and call it
-    const observerCallback = (global.IntersectionObserver as Mock).mock.calls[0][0]
-    await observerCallback([{ isIntersecting: true }])
+    // Simulate intersection
+    await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockBuilder.load).toHaveBeenCalled()
-    expect(mockObserver.disconnect).toHaveBeenCalled()
+    expect(disconnect).toHaveBeenCalled()
     expect(campaign.innerHTML).toBe(htmlContent)
   })
 
@@ -136,42 +137,37 @@ describe("Campaign", () => {
     const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
-    }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    const { disconnect } = mockIntersectionObserver({
+      onCallback: callback => {
+        observerCallback = callback
+      }
+    })
 
     campaign = (<nosto-campaign placement="456" productId="123" lazy={true} />) as Campaign
 
     await campaign.connectedCallback()
 
-    // Simulate no intersection - get the callback function and call it
-    const observerCallback = (global.IntersectionObserver as Mock).mock.calls[0][0]
-    await observerCallback([{ isIntersecting: false }])
+    // Simulate no intersection
+    await observerCallback!([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockBuilder.load).not.toHaveBeenCalled()
-    expect(mockObserver.disconnect).not.toHaveBeenCalled()
+    expect(disconnect).not.toHaveBeenCalled()
   })
 
   it('should respect init="false" even when lazy is set', async () => {
     const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
-    }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+    const { observe } = mockIntersectionObserver()
 
     campaign = (<nosto-campaign placement="456" productId="123" init="false" lazy={true} />) as Campaign
 
     await campaign.connectedCallback()
 
     // Should not create observer or load when init="false"
-    expect(mockObserver.observe).not.toHaveBeenCalled()
+    expect(observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
   })
 

@@ -27,5 +27,6 @@ beforeAll(() => {
 beforeEach(() => {
   document.body.innerHTML = ""
   vi.resetAllMocks()
+  vi.unstubAllGlobals()
   clearCache()
 })
