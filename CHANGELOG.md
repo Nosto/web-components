@@ -1,3 +1,24 @@
+# [9.18.0](https://github.com/Nosto/web-components/compare/v9.17.0...v9.18.0) (2025-11-12)
+
+
+### Bug Fixes
+
+* additional checks ([eb0e161](https://github.com/Nosto/web-components/commit/eb0e1615afb3648b2e7120d1b034f246255ff21a))
+* event listeners ([c1d7817](https://github.com/Nosto/web-components/commit/c1d7817a94a4e25e5761d9ebaacfb7fef2efc3c9))
+* lint ([6a0980e](https://github.com/Nosto/web-components/commit/6a0980e5bf7423c865900303af6176db87575ce0))
+* lint ([f114a83](https://github.com/Nosto/web-components/commit/f114a8348ac8d7c014e36dbe98449646d879a009))
+* reviews ([2f5fe3a](https://github.com/Nosto/web-components/commit/2f5fe3a845a675500ceef75a13a7fdefd64b4ec5))
+* reviews ([ec81435](https://github.com/Nosto/web-components/commit/ec814354f1849232c4751737cc3b761eb764b9af))
+* reviews ([43aac32](https://github.com/Nosto/web-components/commit/43aac32d38b861c4798740e775fac889abf230a0))
+* **SimpleCard:** remove event listeners from mock mode ([c0d5bc3](https://github.com/Nosto/web-components/commit/c0d5bc37b9d2c925c8d6afc3b74cf6e7aaaabdcb))
+* tests ([65ded71](https://github.com/Nosto/web-components/commit/65ded711a6465c70d6e523ed83780786f004e2c4))
+
+
+### Features
+
+* mock mode ([eaf4b52](https://github.com/Nosto/web-components/commit/eaf4b5299d6120c50b02445301d32213ba26e4fb))
+* **SimpleCard:** add mock mode tests and fix early return ([102c856](https://github.com/Nosto/web-components/commit/102c85687c9755342fa8023176430026ea278fb1))
+
 # [9.17.0](https://github.com/Nosto/web-components/compare/v9.16.0...v9.17.0) (2025-11-12)
 
 
