@@ -118,7 +118,7 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
-  if (element.product) {
+  if (element.product && !element.mock) {
     const normalized = convertProduct(element.product)
     const cardHTML = generateCardHTML(element, normalized)
     setShadowContent(element, cardHTML.html)
@@ -131,7 +131,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
-    if (!element.product) {
+    if (!element.product || element.mock) {
       element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: element.mock } }))
     }
   } finally {
