@@ -1,3 +1,10 @@
+## [9.18.1](https://github.com/Nosto/web-components/compare/v9.18.0...v9.18.1) (2025-11-12)
+
+
+### Bug Fixes
+
+* **tests:** update IntersectionObserver mocking for Vitest 4.x compatibility ([bfa7201](https://github.com/Nosto/web-components/commit/bfa7201c73ea629e3ed6312c76a379698627e1ec))
+
 # [9.18.0](https://github.com/Nosto/web-components/compare/v9.17.0...v9.18.0) (2025-11-12)
 
 
