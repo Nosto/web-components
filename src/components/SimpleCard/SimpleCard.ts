@@ -126,13 +126,15 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   }
   element.toggleAttribute("loading", true)
   try {
-    const productData = element.mock ? mockProduct : (await fetchProductData(element.handle))
+    const productData = element.mock ? mockProduct : await fetchProductData(element.handle)
     element.productId = productData.id
 
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
     if (!element.product || element.mock) {
-      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: element.mock } }))
+      element.dispatchEvent(
+        new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: element.mock } })
+      )
     }
   } finally {
     element.toggleAttribute("loading", false)
