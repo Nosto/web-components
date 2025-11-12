@@ -3,6 +3,11 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
+import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import styles from "./styles.css?raw"
+import { generateMockMarkup } from "./markup"
+
+const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
@@ -22,6 +27,7 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {string} [variantId] (`variant-id`) - The variant ID to fetch specific variant data. Optional.
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
+ * @property {boolean} [mock] - If true, the component will render mock markup instead of fetching real data. Defaults to false.
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends NostoElement {
@@ -31,6 +37,7 @@ export class DynamicCard extends NostoElement {
   @property(String) variantId?: string
   @property(Boolean) placeholder?: boolean
   @property(Boolean) lazy?: boolean
+  @property(Boolean) mock?: boolean
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
@@ -39,6 +46,17 @@ export class DynamicCard extends NostoElement {
   }
 
   async connectedCallback() {
+    if (this.mock) {
+      if (!this.shadowRoot) {
+        this.attachShadow({ mode: "open" })
+      }
+      setShadowContent(this, generateMockMarkup().html)
+      this.dispatchEvent(
+        new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
+      )
+      return
+    }
+
     assertRequired(this, "handle")
     const key = this.template || this.section || ""
     if (this.placeholder && placeholders.has(key)) {

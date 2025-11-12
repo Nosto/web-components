@@ -604,4 +604,53 @@ describe("SimpleCard", () => {
     // Should be called only once for product property render (network fetch doesn't emit when product property exists)
     expect(eventCount).toBe(1)
   })
+
+  describe("Mock Mode", () => {
+    it("should render all mock features when all attributes are enabled", async () => {
+      const card = (<nosto-simple-card handle="test-handle" mock brand discount rating={3.5} />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("Mock Product")
+      expect(shadowContent).toContain("Mock Brand")
+      expect(shadowContent).toContain("$12.00") // original price
+      expect(shadowContent).toContain("$10.00") // sale price
+      expect(shadowContent).toContain("★★★☆☆ (3.5)")
+    })
+
+    it("should emit rendered event when mock mode is enabled", async () => {
+      const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
+
+      const renderedEvent = vi.fn()
+      card.addEventListener("@nosto/SimpleCard/rendered", renderedEvent)
+
+      await card.connectedCallback()
+
+      expect(renderedEvent).toHaveBeenCalled()
+    })
+
+    it("should not fetch from Shopify when mock mode is enabled", async () => {
+      let fetchCalled = false
+      addProductHandlers({
+        "test-handle": {
+          product: {
+            ...mockProduct,
+            get id() {
+              fetchCalled = true
+              return 123
+            }
+          }
+        }
+      })
+
+      const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("Mock Product")
+      expect(fetchCalled).toBe(false)
+    })
+  })
 })
