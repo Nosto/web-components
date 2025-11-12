@@ -113,8 +113,6 @@ describe("DynamicCard", () => {
     ) as DynamicCard
     await card3.connectedCallback()
     expect(card3.innerHTML).toBe("")
-
-    vi.unstubAllGlobals()
   })
 
   it("fetches product lazily when lazy attribute is set", async () => {
@@ -145,8 +143,6 @@ describe("DynamicCard", () => {
 
     await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
     expect(card.innerHTML).toBe(validMarkup)
-
-    vi.unstubAllGlobals()
   })
 
   it("throws error when fetch response is not ok", async () => {
@@ -210,9 +206,6 @@ describe("DynamicCard", () => {
     await card.connectedCallback()
 
     expect(card.innerHTML).toBe(validMarkup)
-
-    // Restore original globals
-    vi.unstubAllGlobals()
   })
 
   it("emits DynamicCard/loaded event when content is loaded", async () => {
@@ -255,9 +248,6 @@ describe("DynamicCard", () => {
     await card.connectedCallback()
 
     expect(card.innerHTML).toBe(validMarkup)
-
-    // Restore original globals
-    vi.unstubAllGlobals()
   })
 
   it("throws error when markup contains body or html tags", async () => {
@@ -305,8 +295,6 @@ describe("DynamicCard", () => {
 
     expect(disconnect).toHaveBeenCalled()
     expect(card.innerHTML).toBe(validMarkup)
-
-    vi.unstubAllGlobals()
   })
 
   it("includes variant parameter when variantId is provided", async () => {

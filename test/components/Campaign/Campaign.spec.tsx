@@ -131,8 +131,6 @@ describe("Campaign", () => {
     expect(mockBuilder.load).toHaveBeenCalled()
     expect(disconnect).toHaveBeenCalled()
     expect(campaign.innerHTML).toBe(htmlContent)
-
-    vi.unstubAllGlobals()
   })
 
   it("should not load campaign lazily when intersection is false", async () => {
@@ -156,8 +154,6 @@ describe("Campaign", () => {
 
     expect(mockBuilder.load).not.toHaveBeenCalled()
     expect(disconnect).not.toHaveBeenCalled()
-
-    vi.unstubAllGlobals()
   })
 
   it('should respect init="false" even when lazy is set', async () => {
@@ -173,8 +169,6 @@ describe("Campaign", () => {
     // Should not create observer or load when init="false"
     expect(observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
-
-    vi.unstubAllGlobals()
   })
 
   describe("cart-synced functionality", () => {
