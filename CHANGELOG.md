@@ -1,3 +1,21 @@
+# [9.17.0](https://github.com/Nosto/web-components/compare/v9.16.0...v9.17.0) (2025-11-12)
+
+
+### Bug Fixes
+
+* lint ([2ae17e8](https://github.com/Nosto/web-components/commit/2ae17e83d513df07e1d7ce9d8620db5bcc9323ac))
+* lint ([92575b8](https://github.com/Nosto/web-components/commit/92575b88c9f095e8170817385bfdbbb024469b2a))
+* remove handles ([6757a18](https://github.com/Nosto/web-components/commit/6757a18fa3e2357d1e638a7818c7a816d8b68172))
+* reviews ([a765b92](https://github.com/Nosto/web-components/commit/a765b92015d31d8aa2d681ac677efbbf778eb301))
+* reviews ([5e6e35a](https://github.com/Nosto/web-components/commit/5e6e35a55bb023470878cd41cb46345fa3a4bbc7))
+* reviews ([a27fe83](https://github.com/Nosto/web-components/commit/a27fe834ead810b91cb1227b04ff493db1210b08))
+* story fixes ([5fc6546](https://github.com/Nosto/web-components/commit/5fc6546d6cc0105c0ce600dbc741681af367abac))
+
+
+### Features
+
+* mock mode ([996f3d3](https://github.com/Nosto/web-components/commit/996f3d3ce15cbbf131c80bd0a88af255df1f6eaf))
+
 # [9.16.0](https://github.com/Nosto/web-components/compare/v9.15.0...v9.16.0) (2025-11-07)
 
 
