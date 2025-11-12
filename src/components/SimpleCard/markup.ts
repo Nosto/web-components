@@ -39,7 +39,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   }
 
   const hasAlternate = element.alternate && product.images && product.images.length > 1
-  const alternateImage = product.images?.[1].url
+  const alternateImage = hasAlternate ? product.images[1].url : undefined
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
