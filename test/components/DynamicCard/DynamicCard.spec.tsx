@@ -95,13 +95,7 @@ describe("DynamicCard", () => {
       }
     })
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
-
-    mockIntersectionObserver({
-      observe: mockObserve,
-      disconnect: mockDisconnect
-    })
+    mockIntersectionObserver()
 
     const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
     await card.connectedCallback()
@@ -134,13 +128,9 @@ describe("DynamicCard", () => {
     const card = (<nosto-dynamic-card handle="lazy-handle" template="default" lazy={true} />) as DynamicCard
 
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    mockIntersectionObserver({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
+    const { observe } = mockIntersectionObserver({
       onCallback: callback => {
         observerCallback = callback
       }
@@ -148,7 +138,7 @@ describe("DynamicCard", () => {
 
     // Call connectedCallback manually
     await card.connectedCallback()
-    expect(mockObserve).toHaveBeenCalledWith(card)
+    expect(observe).toHaveBeenCalledWith(card)
 
     // Simulate intersection
     await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
@@ -295,13 +285,9 @@ describe("DynamicCard", () => {
     })
 
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    mockIntersectionObserver({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
+    const { observe, disconnect } = mockIntersectionObserver({
       onCallback: callback => {
         observerCallback = callback
       }
@@ -312,12 +298,12 @@ describe("DynamicCard", () => {
     await card.connectedCallback()
 
     // Should have set up intersection observer
-    expect(mockObserve).toHaveBeenCalledWith(card)
+    expect(observe).toHaveBeenCalledWith(card)
 
     // Simulate intersection
     await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
-    expect(mockDisconnect).toHaveBeenCalled()
+    expect(disconnect).toHaveBeenCalled()
     expect(card.innerHTML).toBe(validMarkup)
 
     vi.unstubAllGlobals()

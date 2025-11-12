@@ -109,13 +109,9 @@ describe("Campaign", () => {
     const { mockBuilder } = mockNostoRecs({ "456": htmlContent })
 
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    mockIntersectionObserver({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
+    const { observe, disconnect } = mockIntersectionObserver({
       onCallback: callback => {
         observerCallback = callback
       }
@@ -127,13 +123,13 @@ describe("Campaign", () => {
 
     // Should not load immediately
     expect(mockBuilder.load).not.toHaveBeenCalled()
-    expect(mockObserve).toHaveBeenCalledWith(campaign)
+    expect(observe).toHaveBeenCalledWith(campaign)
 
     // Simulate intersection
     await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockBuilder.load).toHaveBeenCalled()
-    expect(mockDisconnect).toHaveBeenCalled()
+    expect(disconnect).toHaveBeenCalled()
     expect(campaign.innerHTML).toBe(htmlContent)
 
     vi.unstubAllGlobals()
@@ -143,13 +139,9 @@ describe("Campaign", () => {
     const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
     let observerCallback: IntersectionObserverCallback | null = null
 
-    mockIntersectionObserver({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
+    const { disconnect } = mockIntersectionObserver({
       onCallback: callback => {
         observerCallback = callback
       }
@@ -163,7 +155,7 @@ describe("Campaign", () => {
     await observerCallback!([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     expect(mockBuilder.load).not.toHaveBeenCalled()
-    expect(mockDisconnect).not.toHaveBeenCalled()
+    expect(disconnect).not.toHaveBeenCalled()
 
     vi.unstubAllGlobals()
   })
@@ -172,20 +164,14 @@ describe("Campaign", () => {
     const { mockBuilder } = mockNostoRecs({ "456": {} })
 
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
-
-    mockIntersectionObserver({
-      observe: mockObserve,
-      disconnect: mockDisconnect
-    })
+    const { observe } = mockIntersectionObserver()
 
     campaign = (<nosto-campaign placement="456" productId="123" init="false" lazy={true} />) as Campaign
 
     await campaign.connectedCallback()
 
     // Should not create observer or load when init="false"
-    expect(mockObserve).not.toHaveBeenCalled()
+    expect(observe).not.toHaveBeenCalled()
     expect(mockBuilder.load).not.toHaveBeenCalled()
 
     vi.unstubAllGlobals()
