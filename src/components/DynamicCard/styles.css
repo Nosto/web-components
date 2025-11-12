@@ -1,0 +1,56 @@
+:host {
+  --mock-border-color: #ccc;
+  --mock-bg: #f9f9f9;
+  --mock-pattern-dark: #e0e0e0;
+  --mock-pattern-light: #f5f5f5;
+  --mock-text-color: #999;
+  --mock-title-color: #666;
+  --mock-price-color: #333;
+}
+
+.card {
+  border: 2px dashed var(--mock-border-color);
+  padding: 1rem;
+  background: var(--mock-bg, #f9f9f9);
+  opacity: 0.8;
+  text-align: center;
+}
+
+.image {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.text {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--mock-text-color);
+}
+
+.title {
+  margin: 0.5rem 0;
+  color: var(--mock-title-color);
+}
+
+.brand {
+  margin: 0.5rem 0;
+  color: var(--mock-text-color);
+}
+
+.price {
+  margin: 0.5rem 0;
+}
+
+.price-current {
+  font-weight: bold;
+  color: var(--mock-price-color);
+}
+
+.price-original {
+  text-decoration: line-through;
+  color: var(--mock-text-color);
+  margin-left: 0.5rem;
+}
