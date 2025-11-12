@@ -30,39 +30,15 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
       optionValues: [
         {
           name: "Small",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1001",
-            title: "Small / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { onlineStoreUrl: "/products/single-value-demo-tshirt" }
-          }
+          swatch: null
         },
         {
           name: "Medium",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1002",
-            title: "Medium / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { onlineStoreUrl: "/products/single-value-demo-tshirt" }
-          }
+          swatch: null
         },
         {
           name: "Large",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1003",
-            title: "Large / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "29.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { onlineStoreUrl: "/products/single-value-demo-tshirt" }
-          }
+          swatch: null
         }
       ]
     },
@@ -71,15 +47,7 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
       optionValues: [
         {
           name: "Cotton",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1001",
-            title: "Small / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { onlineStoreUrl: "/products/single-value-demo-tshirt" }
-          }
+          swatch: null
         }
       ]
     }
@@ -153,15 +121,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
       optionValues: [
         {
           name: "One Size",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/2001",
-            title: "One Size / Natural",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { onlineStoreUrl: "/products/all-single-value-product" }
-          }
+          swatch: null
         }
       ]
     },
@@ -170,15 +130,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
       optionValues: [
         {
           name: "Natural",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/2001",
-            title: "One Size / Natural",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { onlineStoreUrl: "/products/all-single-value-product" }
-          }
+          swatch: null
         }
       ]
     }
@@ -238,39 +190,15 @@ const baseTestProduct: ShopifyProduct = {
       optionValues: [
         {
           name: "Small",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1001",
-            title: "Small / Red",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         },
         {
           name: "Medium",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1002",
-            title: "Medium / Blue",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         },
         {
           name: "Large",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1003",
-            title: "Large / Red",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "29.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         }
       ]
     },
@@ -279,39 +207,15 @@ const baseTestProduct: ShopifyProduct = {
       optionValues: [
         {
           name: "Red",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1001",
-            title: "Small / Red",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         },
         {
           name: "Blue",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1002",
-            title: "Medium / Blue",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         },
         {
           name: "Green",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1004",
-            title: "Small / Green",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         }
       ]
     }
@@ -342,39 +246,15 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
       optionValues: [
         {
           name: "Small",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/3001",
-            title: "Small / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         },
         {
           name: "Medium",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/3002",
-            title: "Medium / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         },
         {
           name: "Large",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/3003",
-            title: "Large / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         }
       ]
     },
@@ -383,15 +263,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
       optionValues: [
         {
           name: "Cotton",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/3001",
-            title: "Small / Cotton",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         }
       ]
     }
@@ -441,15 +313,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
       optionValues: [
         {
           name: "Medium",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/4001",
-            title: "Medium / Red",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         }
       ]
     },
@@ -458,15 +322,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
       optionValues: [
         {
           name: "Red",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/4001",
-            title: "Medium / Red",
-            availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { onlineStoreUrl: "/products/variant-test-product" }
-          }
+          swatch: null
         }
       ]
     }

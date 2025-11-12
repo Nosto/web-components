@@ -465,27 +465,11 @@ describe("SimpleCard", () => {
           optionValues: [
             {
               name: "Red",
-              swatch: null,
-              firstSelectableVariant: {
-                id: "gid://shopify/ProductVariant/1001",
-                title: "Red",
-                availableForSale: true,
-                price: { currencyCode: "USD", amount: "24.99" },
-                compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-                product: { onlineStoreUrl: "/products/variant-product" }
-              }
+              swatch: null
             },
             {
               name: "Blue",
-              swatch: null,
-              firstSelectableVariant: {
-                id: "gid://shopify/ProductVariant/1002",
-                title: "Blue",
-                availableForSale: true,
-                price: { currencyCode: "USD", amount: "19.99" },
-                compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-                product: { onlineStoreUrl: "/products/variant-product" }
-              }
+              swatch: null
             }
           ]
         }

@@ -16,8 +16,6 @@ export function flattenResponse(obj: GenericGraphQLType) {
     images = (product.images as { nodes: ShopifyImage[] }).nodes
   }
 
-  const productTyped = product as ShopifyProduct
-
   // Flatten variants from nodes structure
   let variants: ShopifyVariant[] = []
   if (hasVariantsNodes(product)) {
@@ -26,7 +24,7 @@ export function flattenResponse(obj: GenericGraphQLType) {
   }
 
   // Get price and compareAtPrice from first variant if available
-  const firstVariant = productTyped.options[0]?.optionValues[0]?.firstSelectableVariant || variants[0]
+  const firstVariant = variants.find(v => v.availableForSale) || variants[0]
   const price = firstVariant?.price || { currencyCode: "USD", amount: "0" }
   const compareAtPrice = firstVariant?.compareAtPrice || null
 

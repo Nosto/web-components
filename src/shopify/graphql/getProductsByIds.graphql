@@ -27,29 +27,6 @@ query ProductsByIds($country: CountryCode!, $ids: [ID!]!) @inContext(country: $c
       options(first: 50) {
         name
         optionValues {
-          firstSelectableVariant {
-            availableForSale
-            title
-            id
-            image {
-              altText
-              url
-              width
-              height
-              thumbhash
-            }
-            price {
-              currencyCode
-              amount
-            }
-            compareAtPrice {
-              currencyCode
-              amount
-            }
-            product {
-              onlineStoreUrl
-            }
-          }
           name
           swatch {
             color

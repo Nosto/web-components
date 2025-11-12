@@ -75,39 +75,15 @@ describe("VariantSelector", () => {
         optionValues: [
           {
             name: "Small",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1001",
-              title: "Small / Red",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "19.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
+            swatch: null
           },
           {
             name: "Medium",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1002",
-              title: "Medium / Blue",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "24.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
+            swatch: null
           },
           {
             name: "Large",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1003",
-              title: "Large / Red",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "29.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
+            swatch: null
           }
         ]
       },
@@ -116,39 +92,15 @@ describe("VariantSelector", () => {
         optionValues: [
           {
             name: "Red",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1001",
-              title: "Small / Red",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "19.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
+            swatch: null
           },
           {
             name: "Blue",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1002",
-              title: "Medium / Blue",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "24.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
+            swatch: null
           },
           {
             name: "Green",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1004",
-              title: "Small / Green",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "19.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
+            swatch: null
           }
         ]
       }
