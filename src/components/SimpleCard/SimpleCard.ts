@@ -11,12 +11,20 @@ import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
-import { mockProduct } from "./mockProduct"
 
 const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
+
+export const mockProduct = {
+  title: "Mock Product",
+  vendor: "Mock Brand",
+  url: "/products/mock-product",
+  images: ["https://cdn.nosto.com/nosto/7/mock"],
+  price: 1000,
+  compare_at_price: 1200
+}
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -70,9 +78,7 @@ export class SimpleCard extends NostoElement {
   }
 
   async connectedCallback() {
-    if (!this.mock) {
-      assertRequired(this, "handle")
-    }
+    assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
     this.addEventListener("click", this)
     this.addEventListener("variantchange", this)
