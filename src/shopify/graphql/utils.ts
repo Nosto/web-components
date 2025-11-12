@@ -59,7 +59,12 @@ function hasImagesNodes(product: Record<string, unknown>) {
 }
 
 export function parseId(graphQLId: string): number {
-  return Number(graphQLId.split("/").at(-1))
+  const split = graphQLId.split("/")
+  return Number(split[split.length - 1])
+}
+
+export function toProductId(productId: number): string {
+  return `gid://shopify/Product/${productId}`
 }
 
 export function toVariantGid(variantId: number): string {

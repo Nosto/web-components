@@ -45,6 +45,7 @@ describe("VariantSelector", () => {
     encodedVariantExistence: "",
     onlineStoreUrl: "/products/variant-test-product",
     availableForSale: true,
+    adjacentVariants: [],
     images: [
       {
         altText: "Product image 1",

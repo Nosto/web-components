@@ -7,6 +7,7 @@ import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
+import { toProductId } from "@/shopify/graphql/utils"
 
 describe("SimpleCard", () => {
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
@@ -46,6 +47,7 @@ describe("SimpleCard", () => {
     encodedVariantExistence: "",
     onlineStoreUrl: "/products/awesome-test-product",
     availableForSale: true,
+    adjacentVariants: [],
     images: [
       {
         altText: "Product image 1",
@@ -638,7 +640,7 @@ describe("SimpleCard", () => {
             ...mockProduct,
             get id() {
               fetchCalled = true
-              return 123
+              return toProductId(123)
             }
           }
         }

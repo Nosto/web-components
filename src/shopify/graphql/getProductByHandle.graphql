@@ -58,7 +58,7 @@ fragment VariantFragment on ProductVariant {
     amount
   }
   product {
-    handle
+    onlineStoreUrl
   }
   selectedOptions {
     name

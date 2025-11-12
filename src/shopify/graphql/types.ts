@@ -45,7 +45,7 @@ export type ShopifyVariant = {
   compareAtPrice: ShopifyMoney | null
   selectedOptions?: ShopifySelectedOption[]
   product?: {
-    handle: string
+    onlineStoreUrl: string
   }
 }
 

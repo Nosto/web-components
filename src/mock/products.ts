@@ -24,6 +24,7 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
     thumbhash: null,
     url: "https://picsum.photos/400/400?random=1"
   },
+  adjacentVariants: [],
   options: [
     {
       name: "Size",
@@ -131,6 +132,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/all-single-value-product",
   availableForSale: true,
+  adjacentVariants: [],
   images: [
     {
       altText: "Product image",
@@ -209,6 +211,7 @@ const baseTestProduct: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/variant-test-product",
   availableForSale: true,
+  adjacentVariants: [],
   images: [
     {
       altText: "Product image 1",
