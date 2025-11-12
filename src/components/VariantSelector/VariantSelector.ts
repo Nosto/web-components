@@ -32,7 +32,6 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {string} variantId - (Optional) The ID of the variant to preselect on load.
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
- * @property {boolean} filtered - Whether to only show options leading to available variants. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
@@ -43,7 +42,6 @@ export class VariantSelector extends NostoElement {
   @property(String) handle!: string
   @property(Number) variantId?: number
   @property(Boolean) preselect?: boolean
-  @property(Boolean) filtered?: boolean
   @property(Boolean) placeholder?: boolean
 
   /**
