@@ -18,6 +18,7 @@ const setShadowContent = shadowContentFactory(styles)
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 
 export const mockProduct = {
+  id: 7001,
   title: "Mock Product",
   vendor: "Mock Brand",
   url: "/products/mock-product",
@@ -117,14 +118,6 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
-  if (element.mock) {
-    const cardHTML = generateCardHTML(element, mockProduct)
-    setShadowContent(element, cardHTML.html)
-    element.dispatchEvent(
-      new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
-    )
-    return
-  }
   if (element.product) {
     const normalized = convertProduct(element.product)
     const cardHTML = generateCardHTML(element, normalized)
@@ -133,13 +126,13 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   }
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element.handle)
+    const productData = element.mock ? mockProduct : (await fetchProductData(element.handle))
     element.productId = productData.id
 
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
     if (!element.product) {
-      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true, detail: { mock: element.mock } }))
     }
   } finally {
     element.toggleAttribute("loading", false)
