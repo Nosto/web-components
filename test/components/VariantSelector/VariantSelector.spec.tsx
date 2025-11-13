@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector, selectOption, getSelectedVariant } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -7,8 +7,13 @@ import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
+import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 
 describe("VariantSelector", () => {
+  beforeEach(() => {
+    clearProductCache()
+  })
+
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     const graphqlUrl = createShopifyUrl("/api/2025-10/graphql.json")
     const graphqlPath = graphqlUrl.pathname

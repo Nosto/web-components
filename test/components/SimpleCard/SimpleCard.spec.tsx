@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
@@ -8,8 +8,13 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
+import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 
 describe("SimpleCard", () => {
+  beforeEach(() => {
+    clearProductCache()
+  })
+
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
     const graphqlUrl = createShopifyUrl("/api/2025-10/graphql.json")
     const graphqlPath = graphqlUrl.pathname

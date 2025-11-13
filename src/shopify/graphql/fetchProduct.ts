@@ -3,8 +3,13 @@ import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
 import { ShopifyProduct } from "./types"
 
-// TODO add catching
+const productCache = new Map<string, ShopifyProduct>()
+
 export async function fetchProduct(handle: string) {
+  if (productCache.has(handle)) {
+    return productCache.get(handle)!
+  }
+
   // Shopify Storefront GraphQL version 2025-04 not working for tokenless requests, using 2025-10
   const url = createShopifyUrl(`/api/2025-10/graphql.json`)
   const response = await fetch(url.href, {
@@ -25,5 +30,11 @@ export async function fetchProduct(handle: string) {
     throw new Error(`Failed to fetch product data: ${response.status} ${response.statusText}`)
   }
   const responseData = await response.json()
-  return flattenResponse(responseData) as ShopifyProduct
+  const flattened = flattenResponse(responseData) as ShopifyProduct
+  productCache.set(handle, flattened)
+  return flattened
+}
+
+export function clearProductCache() {
+  productCache.clear()
 }
