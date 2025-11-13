@@ -1,3 +1,17 @@
+# [9.19.0](https://github.com/Nosto/web-components/compare/v9.18.1...v9.19.0) (2025-11-13)
+
+
+### Features
+
+* storefront graphql api ([1c816e3](https://github.com/Nosto/web-components/commit/1c816e3b80804b73fa8d81af1eb790f093b2de23))
+* update tests to use GraphQL shopify types ([66bc526](https://github.com/Nosto/web-components/commit/66bc5261385e1cc88c820d88fcfa1e2ce1be581a))
+* **VariantSelector:** add adjacentVariants support to GraphQL query ([41e4875](https://github.com/Nosto/web-components/commit/41e48755d229cc3e8d9588b0280539d1beccff43))
+
+
+### Reverts
+
+* remove test changes and convertRestToGraphQL helper ([4b6d6e5](https://github.com/Nosto/web-components/commit/4b6d6e5ab7a33bea07607e4bd1e7aea80b0b53ba))
+
 ## [9.18.1](https://github.com/Nosto/web-components/compare/v9.18.0...v9.18.1) (2025-11-12)
 
 
