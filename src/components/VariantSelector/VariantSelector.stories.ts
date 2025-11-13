@@ -8,17 +8,6 @@ const root = "https://nosto-shopify1.myshopify.com/"
 // Fallback handles in case the API call fails
 const fallbackHandles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
 
-let handles: string[]
-try {
-  handles = await getExampleHandles(root, 12)
-  if (!handles || handles.length === 0) {
-    handles = fallbackHandles
-  }
-} catch (error) {
-  console.warn("Failed to fetch example handles, using fallback:", error)
-  handles = fallbackHandles
-}
-
 window.Shopify = {
   routes: {
     root
@@ -37,6 +26,19 @@ const meta: Meta = {
       return story()
     }
   ],
+  loaders: [
+    async () => {
+      try {
+        const handles = await getExampleHandles(root, 12)
+        return {
+          handles: handles && handles.length > 0 ? handles : fallbackHandles
+        }
+      } catch (error) {
+        console.warn("Failed to fetch example handles, using fallback:", error)
+        return { handles: fallbackHandles }
+      }
+    }
+  ],
   argTypes: {
     root: {
       control: "text",
@@ -49,7 +51,7 @@ const meta: Meta = {
   },
   args: {
     root,
-    handle: handles[0]
+    handle: fallbackHandles[0]
   },
   tags: ["autodocs"]
 }
@@ -82,19 +84,35 @@ export const InSimpleCard_AddToCart: Story = {
 }
 
 export const MultipleProducts: Story = {
-  render: () => html`
-    <div
-      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px;"
-    >
-      ${handles.map(
-        (handle: string) => html`
-          <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
-            <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
-          </nosto-simple-card>
-        `
-      )}
-    </div>
-  `
+  loaders: [
+    async () => {
+      try {
+        const handles = await getExampleHandles(root, 12)
+        return {
+          handles: handles && handles.length > 0 ? handles : fallbackHandles
+        }
+      } catch (error) {
+        console.warn("Failed to fetch example handles, using fallback:", error)
+        return { handles: fallbackHandles }
+      }
+    }
+  ],
+  render: (_args, { loaded }) => {
+    const handles = (loaded?.handles as string[]) || fallbackHandles
+    return html`
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px;"
+      >
+        ${handles.map(
+          (handle: string) => html`
+            <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
+              <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
+            </nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  }
 }
 
 export const WithPlaceholder: Story = {
