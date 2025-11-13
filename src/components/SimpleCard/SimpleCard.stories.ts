@@ -26,17 +26,9 @@ const meta: Meta = {
     }
   ],
   loaders: [
-    async () => {
-      try {
-        const handles = await getExampleHandles(root, 12)
-        return {
-          handles: handles && handles.length > 0 ? handles : fallbackHandles
-        }
-      } catch (error) {
-        console.warn("Failed to fetch example handles, using fallback:", error)
-        return { handles: fallbackHandles }
-      }
-    }
+    async () => ({
+      handles: await getExampleHandles(root, 12)
+    })
   ],
   argTypes: {
     root: {
@@ -117,17 +109,9 @@ export const WithVariantSelector: Story = {
 
 export const WithAllFeatures: Story = {
   loaders: [
-    async () => {
-      try {
-        const handles = await getExampleHandles(root, 12)
-        return {
-          handles: handles && handles.length > 0 ? handles : fallbackHandles
-        }
-      } catch (error) {
-        console.warn("Failed to fetch example handles, using fallback:", error)
-        return { handles: fallbackHandles }
-      }
-    }
+    async () => ({
+      handles: await getExampleHandles(root, 12)
+    })
   ],
   render: (args, { loaded }) => {
     const handles = (loaded?.handles as string[]) || fallbackHandles
@@ -153,17 +137,9 @@ export const WithAllFeatures: Story = {
 
 export const WithResponsiveSizes: Story = {
   loaders: [
-    async () => {
-      try {
-        const handles = await getExampleHandles(root, 12)
-        return {
-          handles: handles && handles.length > 0 ? handles : fallbackHandles
-        }
-      } catch (error) {
-        console.warn("Failed to fetch example handles, using fallback:", error)
-        return { handles: fallbackHandles }
-      }
-    }
+    async () => ({
+      handles: await getExampleHandles(root, 12)
+    })
   ],
   render: (args, { loaded }) => {
     const handles = (loaded?.handles as string[]) || fallbackHandles
@@ -190,17 +166,9 @@ export const WithResponsiveSizes: Story = {
 
 export const GridOfCards: Story = {
   loaders: [
-    async () => {
-      try {
-        const handles = await getExampleHandles(root, 12)
-        return {
-          handles: handles && handles.length > 0 ? handles : fallbackHandles
-        }
-      } catch (error) {
-        console.warn("Failed to fetch example handles, using fallback:", error)
-        return { handles: fallbackHandles }
-      }
-    }
+    async () => ({
+      handles: await getExampleHandles(root, 12)
+    })
   ],
   render: (_args, { loaded }) => {
     const handles = (loaded?.handles as string[]) || fallbackHandles

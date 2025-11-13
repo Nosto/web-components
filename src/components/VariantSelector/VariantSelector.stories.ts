@@ -27,17 +27,9 @@ const meta: Meta = {
     }
   ],
   loaders: [
-    async () => {
-      try {
-        const handles = await getExampleHandles(root, 12)
-        return {
-          handles: handles && handles.length > 0 ? handles : fallbackHandles
-        }
-      } catch (error) {
-        console.warn("Failed to fetch example handles, using fallback:", error)
-        return { handles: fallbackHandles }
-      }
-    }
+    async () => ({
+      handles: await getExampleHandles(root, 12)
+    })
   ],
   argTypes: {
     root: {
@@ -85,17 +77,9 @@ export const InSimpleCard_AddToCart: Story = {
 
 export const MultipleProducts: Story = {
   loaders: [
-    async () => {
-      try {
-        const handles = await getExampleHandles(root, 12)
-        return {
-          handles: handles && handles.length > 0 ? handles : fallbackHandles
-        }
-      } catch (error) {
-        console.warn("Failed to fetch example handles, using fallback:", error)
-        return { handles: fallbackHandles }
-      }
-    }
+    async () => ({
+      handles: await getExampleHandles(root, 12)
+    })
   ],
   render: (_args, { loaded }) => {
     const handles = (loaded?.handles as string[]) || fallbackHandles
