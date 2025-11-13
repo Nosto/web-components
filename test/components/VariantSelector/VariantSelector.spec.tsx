@@ -5,7 +5,12 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
-import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
+import {
+  mockProductWithSingleValueOptionTest,
+  mockProductWithAllSingleValueOptionsTest,
+  mockProductWithVariants,
+  mockProductWithoutVariants
+} from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { apiUrl } from "@/shopify/graphql/constants"
 
@@ -39,176 +44,6 @@ describe("VariantSelector", () => {
   function getShadowContent(selector: VariantSelector) {
     const shadowContent = selector.shadowRoot?.innerHTML || ""
     return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
-  }
-
-  const mockProductWithVariants: ShopifyProduct = {
-    id: "gid://shopify/Product/123456",
-    title: "Variant Test Product",
-    vendor: "Test Brand",
-    description: "A product with variants for testing",
-    encodedVariantExistence: "",
-    onlineStoreUrl: "/products/variant-test-product",
-    availableForSale: true,
-    adjacentVariants: [],
-    images: [
-      {
-        altText: "Product image 1",
-        height: 300,
-        width: 300,
-        thumbhash: null,
-        url: "https://example.com/image1.jpg"
-      },
-      {
-        altText: "Product image 2",
-        height: 300,
-        width: 300,
-        thumbhash: null,
-        url: "https://example.com/image2.jpg"
-      }
-    ],
-    featuredImage: {
-      altText: "Product image 1",
-      height: 300,
-      width: 300,
-      thumbhash: null,
-      url: "https://example.com/image1.jpg"
-    },
-    options: [
-      {
-        name: "Size",
-        optionValues: [
-          {
-            name: "Small",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1001",
-              title: "Small / Red",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "19.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
-          },
-          {
-            name: "Medium",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1002",
-              title: "Medium / Blue",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "24.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
-          },
-          {
-            name: "Large",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1003",
-              title: "Large / Red",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "29.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
-          }
-        ]
-      },
-      {
-        name: "Color",
-        optionValues: [
-          {
-            name: "Red",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1001",
-              title: "Small / Red",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "19.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
-          },
-          {
-            name: "Blue",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1002",
-              title: "Medium / Blue",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "24.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
-          },
-          {
-            name: "Green",
-            swatch: null,
-            firstSelectableVariant: {
-              id: "gid://shopify/ProductVariant/1004",
-              title: "Small / Green",
-              availableForSale: true,
-              price: { currencyCode: "USD", amount: "19.99" },
-              compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
-            }
-          }
-        ]
-      }
-    ],
-    price: { currencyCode: "USD", amount: "19.99" },
-    compareAtPrice: null,
-    variants: [
-      {
-        id: "gid://shopify/ProductVariant/1001",
-        title: "Small / Red",
-        availableForSale: true,
-        selectedOptions: [
-          { name: "Size", value: "Small" },
-          { name: "Color", value: "Red" }
-        ],
-        price: { currencyCode: "USD", amount: "19.99" },
-        compareAtPrice: null
-      },
-      {
-        id: "gid://shopify/ProductVariant/1002",
-        title: "Medium / Blue",
-        availableForSale: true,
-        selectedOptions: [
-          { name: "Size", value: "Medium" },
-          { name: "Color", value: "Blue" }
-        ],
-        price: { currencyCode: "USD", amount: "24.99" },
-        compareAtPrice: null
-      },
-      {
-        id: "gid://shopify/ProductVariant/1003",
-        title: "Large / Red",
-        availableForSale: true,
-        selectedOptions: [
-          { name: "Size", value: "Large" },
-          { name: "Color", value: "Red" }
-        ],
-        price: { currencyCode: "USD", amount: "29.99" },
-        compareAtPrice: null
-      }
-    ]
-  }
-
-  const mockProductWithoutVariants: ShopifyProduct = {
-    ...mockProductWithVariants,
-    options: [],
-    variants: [
-      {
-        id: "gid://shopify/ProductVariant/2001",
-        title: "Default",
-        availableForSale: true,
-        selectedOptions: [],
-        price: { currencyCode: "USD", amount: "19.99" },
-        compareAtPrice: null
-      }
-    ]
   }
 
   it("should be defined as a custom element", () => {

@@ -9,6 +9,7 @@ import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { apiUrl } from "@/shopify/graphql/constants"
+import { mockProduct } from "@/mock/products"
 
 describe("SimpleCard", () => {
   beforeEach(() => {
@@ -41,53 +42,6 @@ describe("SimpleCard", () => {
     const shadowContent = card.shadowRoot?.innerHTML || ""
     // Remove the style tag and its content to get just the HTML content
     return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
-  }
-
-  const mockProduct: ShopifyProduct = {
-    id: "gid://shopify/Product/123456",
-    title: "Awesome Test Product",
-    vendor: "Test Brand",
-    description: "A great product for testing",
-    encodedVariantExistence: "",
-    onlineStoreUrl: "/products/awesome-test-product",
-    availableForSale: true,
-    adjacentVariants: [],
-    images: [
-      {
-        altText: "Product image 1",
-        height: 400,
-        width: 400,
-        thumbhash: null,
-        url: "https://example.com/image1.jpg"
-      },
-      {
-        altText: "Product image 2",
-        height: 400,
-        width: 400,
-        thumbhash: null,
-        url: "https://example.com/image2.jpg"
-      }
-    ],
-    featuredImage: {
-      altText: "Product image 1",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://example.com/image1.jpg"
-    },
-    options: [],
-    price: { currencyCode: "USD", amount: "19.99" },
-    compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-    variants: [
-      {
-        id: "gid://shopify/ProductVariant/789",
-        title: "Default Title",
-        availableForSale: true,
-        selectedOptions: [],
-        price: { currencyCode: "USD", amount: "19.99" },
-        compareAtPrice: { currencyCode: "USD", amount: "24.99" }
-      }
-    ]
   }
 
   it("should throw an error if handle is not provided", async () => {
