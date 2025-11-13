@@ -1,26 +1,37 @@
 /** @jsx createElement */
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector, selectOption, getSelectedVariant } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import type { ShopifyProduct } from "@/shopify/types"
+import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
+import { clearProductCache } from "@/shopify/graphql/fetchProduct"
+import { apiUrl } from "@/shopify/graphql/constants"
 
 describe("VariantSelector", () => {
+  beforeEach(() => {
+    clearProductCache()
+  })
+
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    const productUrl = createShopifyUrl("/products/:handle.js")
-    const productPath = productUrl.pathname
+    const graphqlPath = apiUrl.pathname
 
     addHandlers(
-      http.get(productPath, ({ params }) => {
-        const handle = params.handle as string
+      http.post(graphqlPath, async ({ request }) => {
+        const body = (await request.json()) as { variables: { handle: string } }
+        const handle = body.variables.handle
         const response = responses[handle]
         if (!response) {
-          return HttpResponse.json({ error: "Not Found" }, { status: 404 })
+          return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
         }
-        return HttpResponse.json(response.product || response, { status: response.status || 200 })
+        const product = (response.product || response) as ShopifyProduct
+        // Wrap images and variants in nodes structure for GraphQL response
+        const graphqlProduct = {
+          ...product,
+          images: { nodes: product.images }
+        }
+        return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
       })
     )
   }
@@ -31,137 +42,156 @@ describe("VariantSelector", () => {
   }
 
   const mockProductWithVariants: ShopifyProduct = {
-    id: 123456,
+    id: "gid://shopify/Product/123456",
     title: "Variant Test Product",
-    handle: "variant-test-product",
-    description: "A product with variants for testing",
     vendor: "Test Brand",
-    tags: ["test", "variants"],
-    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-    featured_image: "https://example.com/image1.jpg",
-    price: 1999, // $19.99 in cents
-    compare_at_price: 2499, // $24.99 in cents
-    published_at: "2023-01-01T00:00:00Z",
-    created_at: "2023-01-01T00:00:00Z",
-    type: "Test",
-    price_min: 1999,
-    price_max: 2999,
-    available: true,
-    price_varies: true,
-    compare_at_price_min: 2499,
-    compare_at_price_max: 3499,
-    compare_at_price_varies: true,
-    url: "/products/variant-test-product",
-    media: [
+    description: "A product with variants for testing",
+    encodedVariantExistence: "",
+    onlineStoreUrl: "/products/variant-test-product",
+    availableForSale: true,
+    adjacentVariants: [],
+    images: [
       {
-        id: 1,
-        src: "https://example.com/image1.jpg",
-        alt: "Product image 1",
-        position: 1,
-        aspect_ratio: 1,
+        altText: "Product image 1",
         height: 300,
         width: 300,
-        media_type: "image",
-        preview_image: {
-          aspect_ratio: 1,
-          height: 300,
-          width: 300,
-          src: "https://example.com/image1.jpg"
-        }
+        thumbhash: null,
+        url: "https://example.com/image1.jpg"
+      },
+      {
+        altText: "Product image 2",
+        height: 300,
+        width: 300,
+        thumbhash: null,
+        url: "https://example.com/image2.jpg"
       }
     ],
-    requires_selling_plan: false,
-    selling_plan_groups: [],
+    featuredImage: {
+      altText: "Product image 1",
+      height: 300,
+      width: 300,
+      thumbhash: null,
+      url: "https://example.com/image1.jpg"
+    },
     options: [
       {
         name: "Size",
-        position: 1,
-        values: ["Small", "Medium", "Large"]
+        optionValues: [
+          {
+            name: "Small",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1001",
+              title: "Small / Red",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
+          },
+          {
+            name: "Medium",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1002",
+              title: "Medium / Blue",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "24.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
+          },
+          {
+            name: "Large",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1003",
+              title: "Large / Red",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "29.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
+          }
+        ]
       },
       {
         name: "Color",
-        position: 2,
-        values: ["Red", "Blue", "Green"]
+        optionValues: [
+          {
+            name: "Red",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1001",
+              title: "Small / Red",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
+          },
+          {
+            name: "Blue",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1002",
+              title: "Medium / Blue",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "24.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
+          },
+          {
+            name: "Green",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1004",
+              title: "Small / Green",
+              availableForSale: true,
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { onlineStoreUrl: "/products/variant-test-product" }
+            }
+          }
+        ]
       }
     ],
+    price: { currencyCode: "USD", amount: "19.99" },
+    compareAtPrice: null,
     variants: [
       {
-        id: 1001,
+        id: "gid://shopify/ProductVariant/1001",
         title: "Small / Red",
-        option1: "Small",
-        option2: "Red",
-        option3: null,
-        sku: null,
-        requires_shipping: true,
-        taxable: true,
-        featured_image: null,
-        available: true,
-        name: "Small / Red",
-        public_title: null,
-        options: ["Small", "Red"],
-        price: 1999,
-        weight: 100,
-        compare_at_price: null,
-        inventory_quantity: 10,
-        inventory_management: null,
-        inventory_policy: "deny",
-        barcode: null,
-        quantity_rule: { min: 1, max: null, increment: 1 },
-        quantity_price_breaks: [],
-        requires_selling_plan: false,
-        selling_plan_allocations: []
+        availableForSale: true,
+        selectedOptions: [
+          { name: "Size", value: "Small" },
+          { name: "Color", value: "Red" }
+        ],
+        price: { currencyCode: "USD", amount: "19.99" },
+        compareAtPrice: null
       },
       {
-        id: 1002,
+        id: "gid://shopify/ProductVariant/1002",
         title: "Medium / Blue",
-        option1: "Medium",
-        option2: "Blue",
-        option3: null,
-        sku: null,
-        requires_shipping: true,
-        taxable: true,
-        featured_image: null,
-        available: true,
-        name: "Medium / Blue",
-        public_title: null,
-        options: ["Medium", "Blue"],
-        price: 2499,
-        weight: 100,
-        compare_at_price: null,
-        inventory_quantity: 5,
-        inventory_management: null,
-        inventory_policy: "deny",
-        barcode: null,
-        quantity_rule: { min: 1, max: null, increment: 1 },
-        quantity_price_breaks: [],
-        requires_selling_plan: false,
-        selling_plan_allocations: []
+        availableForSale: true,
+        selectedOptions: [
+          { name: "Size", value: "Medium" },
+          { name: "Color", value: "Blue" }
+        ],
+        price: { currencyCode: "USD", amount: "24.99" },
+        compareAtPrice: null
       },
       {
-        id: 1003,
+        id: "gid://shopify/ProductVariant/1003",
         title: "Large / Red",
-        option1: "Large",
-        option2: "Red",
-        option3: null,
-        sku: null,
-        requires_shipping: true,
-        taxable: true,
-        featured_image: null,
-        available: true,
-        name: "Large / Red",
-        public_title: null,
-        options: ["Large", "Red"],
-        price: 2999,
-        weight: 100,
-        compare_at_price: null,
-        inventory_quantity: 3,
-        inventory_management: null,
-        inventory_policy: "deny",
-        barcode: null,
-        quantity_rule: { min: 1, max: null, increment: 1 },
-        quantity_price_breaks: [],
-        requires_selling_plan: false,
-        selling_plan_allocations: []
+        availableForSale: true,
+        selectedOptions: [
+          { name: "Size", value: "Large" },
+          { name: "Color", value: "Red" }
+        ],
+        price: { currencyCode: "USD", amount: "29.99" },
+        compareAtPrice: null
       }
     ]
   }
@@ -171,12 +201,12 @@ describe("VariantSelector", () => {
     options: [],
     variants: [
       {
-        ...mockProductWithVariants.variants[0],
-        id: 2001,
+        id: "gid://shopify/ProductVariant/2001",
         title: "Default",
-        option1: null,
-        option2: null,
-        options: []
+        availableForSale: true,
+        selectedOptions: [],
+        price: { currencyCode: "USD", amount: "19.99" },
+        compareAtPrice: null
       }
     ]
   }
@@ -257,7 +287,7 @@ describe("VariantSelector", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((eventDetail as any)?.variant).toBeTruthy()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((eventDetail as any)?.variant?.id).toBe(1003) // Large / Red
+    expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1003") // Large / Red
   })
 
   it("should update selected variant when options change", async () => {
@@ -269,13 +299,13 @@ describe("VariantSelector", () => {
     await selector.connectedCallback()
 
     // Initial selection should be first variant (Small/Red)
-    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe(1001)
+    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe("gid://shopify/ProductVariant/1001")
 
     // Change to Medium/Blue
     await selectOption(selector, "Size", "Medium")
     await selectOption(selector, "Color", "Blue")
 
-    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe(1002)
+    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe("gid://shopify/ProductVariant/1002")
   })
 
   it("should handle option button clicks", async () => {
@@ -509,7 +539,7 @@ describe("VariantSelector", () => {
 
       expect(eventDetail).toBeTruthy()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((eventDetail as any)?.variant?.id).toBe(4001)
+      expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/4001")
     })
 
     it("should correctly select variants with mixed single and multi-value options", async () => {
@@ -524,8 +554,11 @@ describe("VariantSelector", () => {
       await selectOption(selector, "Size", "Large")
 
       const variant = getSelectedVariant(selector, mockProductWithSingleValueOptionTest)
-      expect(variant?.id).toBe(3003) // Large / Cotton
-      expect(variant?.options).toEqual(["Large", "Cotton"])
+      expect(variant?.id).toBe("gid://shopify/ProductVariant/3003") // Large / Cotton
+      expect(variant?.selectedOptions).toEqual([
+        { name: "Size", value: "Large" },
+        { name: "Material", value: "Cotton" }
+      ])
     })
   })
 

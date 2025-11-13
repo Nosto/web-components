@@ -1,0 +1,67 @@
+query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle: String!)
+@inContext(country: $country, language: $language) {
+  product(handle: $handle) {
+    id
+    title
+    vendor
+    description
+    encodedVariantExistence
+    onlineStoreUrl
+    availableForSale
+    images(first: 10) {
+      nodes {
+        url
+      }
+    }
+    featuredImage {
+      url
+    }
+    adjacentVariants {
+      ...VariantFragment
+    }
+    options(first: 50) {
+      name
+      optionValues {
+        firstSelectableVariant {
+          ...VariantFragment
+        }
+        name
+        swatch {
+          color
+          image {
+            alt
+            id
+            mediaContentType
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment VariantFragment on ProductVariant {
+  availableForSale
+  title
+  id
+  image {
+    url
+  }
+  price {
+    currencyCode
+    amount
+  }
+  compareAtPrice {
+    currencyCode
+    amount
+  }
+  product {
+    onlineStoreUrl
+  }
+  selectedOptions {
+    name
+    value
+  }
+}
