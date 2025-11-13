@@ -8,6 +8,11 @@ const root = "https://nosto-shopify1.myshopify.com/"
 // Fallback handles in case the API call fails
 const fallbackHandles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
 
+// Shared loader for fetching example handles
+const exampleHandlesLoader = async (context: { args: Record<string, unknown> }) => ({
+  handles: await getExampleHandles((context.args.root as string) || root, 12)
+})
+
 window.Shopify = {
   routes: {
     root
@@ -26,11 +31,7 @@ const meta: Meta = {
       return story()
     }
   ],
-  loaders: [
-    async context => ({
-      handles: await getExampleHandles(context.args.root, 12)
-    })
-  ],
+  loaders: [exampleHandlesLoader],
   argTypes: {
     root: {
       control: "text",
@@ -76,11 +77,7 @@ export const InSimpleCard_AddToCart: Story = {
 }
 
 export const MultipleProducts: Story = {
-  loaders: [
-    async context => ({
-      handles: await getExampleHandles(context.args.root, 12)
-    })
-  ],
+  loaders: [exampleHandlesLoader],
   render: (_args, { loaded }) => {
     const handles = (loaded?.handles as string[]) || fallbackHandles
     return html`
