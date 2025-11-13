@@ -1,0 +1,126 @@
+name: Shopify API Validation
+
+on:
+  schedule:
+    # Run bi-annually: January 15th and July 15th at 9:00 AM UTC
+    - cron: '0 9 15 1,7 *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  validate-shopify-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Set up Node.js
+        uses: actions/setup-node@89d709d423dc495668cd762a18dd4a070611be3f
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Create validation issue
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const currentDate = new Date().toISOString().split('T')[0];
+            const issueTitle = `Bi-Annual Shopify API Validation - ${currentDate}`;
+            const issueBody = `## Bi-Annual Shopify API Validation Check
+            
+            This is an automated validation check for Shopify API usage in the repository.
+            
+            ### Validation Steps Required:
+            
+            - [ ] Verify current Shopify API version (\`2025-10\`) is still supported
+            - [ ] Check for any new Shopify API versions available
+            - [ ] Validate GraphQL queries against current Storefront API schema
+            - [ ] Review Shopify deprecation notices in [developer changelog](https://shopify.dev/changelog)
+            - [ ] Update API version if a newer stable version is available and recommended
+            - [ ] Run all tests to ensure compatibility
+            
+            ### Current Implementation:
+            
+            - **API Version:** \`2025-10\`
+            - **API Type:** Storefront GraphQL API
+            - **Endpoint:** \`/api/2025-10/graphql.json\`
+            - **GraphQL Queries:**
+              - \`getProductByHandle.graphql\`
+              - \`getProductsByIds.graphql\`
+            
+            ### Resources:
+            
+            - [Shopify API Versioning](https://shopify.dev/docs/api/usage/versioning)
+            - [Shopify Developer Changelog](https://shopify.dev/changelog)
+            - [Storefront API Documentation](https://shopify.dev/docs/api/storefront)
+            
+            ### Last Validation:
+            
+            See PR #636 for the previous validation results.
+            
+            ---
+            
+            **Note:** This issue is automatically created bi-annually to ensure our Shopify API integration remains up-to-date and follows best practices.`;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['maintenance', 'shopify', 'api']
+            });
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const currentDate = new Date().toISOString().split('T')[0];
+            const issueTitle = `⚠️ Shopify API Validation Failed - ${currentDate}`;
+            const issueBody = `## Shopify API Validation Check Failed
+            
+            The automated bi-annual Shopify API validation check has failed.
+            
+            ### Action Required:
+            
+            The validation workflow encountered errors. This could indicate:
+            - Test failures
+            - Linting errors
+            - Type checking errors
+            - Build failures
+            
+            ### Next Steps:
+            
+            1. Review the [failed workflow run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            2. Investigate the specific failures
+            3. Validate Shopify API integration manually
+            4. Fix any identified issues
+            5. Consider updating to the latest Shopify API version if deprecations are affecting the code
+            
+            ### Resources:
+            
+            - [Shopify API Versioning](https://shopify.dev/docs/api/usage/versioning)
+            - [Shopify Developer Changelog](https://shopify.dev/changelog)
+            
+            ---
+            
+            **This is an automated alert from the bi-annual Shopify API validation workflow.**`;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['bug', 'shopify', 'api', 'urgent']
+            });
