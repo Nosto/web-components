@@ -48,7 +48,7 @@ function getCombinedVariants(product: ShopifyProduct) {
 
   // also include adjacent variants
   product.adjacentVariants.forEach(variant => {
-    variantsMap.set(variant.id, variant)
+    variantsMap.set(variant.id, variant as ShopifyVariant)
   })
 
   return Array.from(variantsMap.values())

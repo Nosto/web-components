@@ -1,15 +1,14 @@
-export type ShopifyProduct = {
-  id: string
-  title: string
-  vendor: string
-  description: string
-  encodedVariantExistence: string
-  onlineStoreUrl: string
-  availableForSale: boolean
+import type * as StorefrontTypes from "@/types/storefront.types"
+import type { ProductByHandleQuery, VariantFragmentFragment } from "@/types/storefront.generated"
+
+// Extract the product type from the generated query type
+type GeneratedProduct = NonNullable<ProductByHandleQuery["product"]>
+
+export type ShopifyProduct = Omit<GeneratedProduct, "images" | "featuredImage" | "options"> & {
+  // Flattened images array from the connection
   images: ShopifyImage[]
   featuredImage: ShopifyImage
   options: ShopifyOption[]
-  adjacentVariants: ShopifyVariant[]
 
   // augmented fields
   price: ShopifyMoney
@@ -18,10 +17,10 @@ export type ShopifyProduct = {
 }
 
 export type ShopifyImage = {
-  altText: string | null
-  height: number
-  width: number
-  thumbhash: string | null
+  altText?: string | null
+  height?: number
+  width?: number
+  thumbhash?: string | null
   url: string
 }
 
@@ -36,10 +35,10 @@ export type ShopifyOptionValue = {
   swatch: string | null
 }
 
-export type ShopifyVariant = {
-  availableForSale: boolean
-  title: string
-  id: string
+export type ShopifyVariant = Omit<
+  VariantFragmentFragment,
+  "price" | "compareAtPrice" | "image" | "selectedOptions" | "product"
+> & {
   image?: ShopifyImage
   price: ShopifyMoney
   compareAtPrice: ShopifyMoney | null
@@ -49,10 +48,7 @@ export type ShopifyVariant = {
   }
 }
 
-export type ShopifySelectedOption = {
-  name: string
-  value: string
-}
+export type ShopifySelectedOption = StorefrontTypes.SelectedOption
 
 export type ShopifyMoney = {
   currencyCode: string

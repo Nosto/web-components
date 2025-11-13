@@ -51,9 +51,9 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-function normalizeUrl(url: string) {
+function normalizeUrl(url?: string | null) {
   if (!url || url.startsWith("//") || !url.startsWith("/")) {
-    return url
+    return url || ""
   }
   return createShopifyUrl(url).toString()
 }
