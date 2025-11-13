@@ -25,7 +25,7 @@
     "url": "git+https://github.com/Nosto/web-components.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.types.json && node esbuild.mjs && npm run typedoc",
+    "build": "npm run codegen && tsc --project tsconfig.types.json && node esbuild.mjs && npm run typedoc",
     "preview": "vite preview",
     "lint": "eslint",
     "lint-fix": "eslint --fix",
