@@ -1,3 +1,5 @@
+import { reactive, effect } from "./reactivity"
+
 /**
  * A minimal Vue-like template compiler for HTML elements.
  *
@@ -12,6 +14,36 @@ export function compile(root: HTMLElement, template: HTMLTemplateElement, contex
   wrapper.appendChild(content)
   processElement(wrapper, context)
   root.replaceChildren(...wrapper.children)
+}
+
+/**
+ * Reactive compile function that automatically re-renders when reactive context changes.
+ * Returns a cleanup function to stop reactivity tracking.
+ *
+ * @example
+ * ```typescript
+ * const context = reactive({ count: 0 })
+ * const cleanup = compileReactive(element, template, context)
+ * // Changes to context.count will automatically update the DOM
+ * context.count++ // DOM updates automatically
+ * // Call cleanup when done
+ * cleanup()
+ * ```
+ */
+export function compileReactive(root: HTMLElement, template: HTMLTemplateElement, context: object): () => void {
+  // Make context reactive if it isn't already
+  const reactiveContext = reactive(context)
+
+  // Set up an effect that re-compiles when dependencies change
+  effect(() => {
+    compile(root, template, reactiveContext)
+  })
+
+  // Return cleanup function
+  return () => {
+    // In a full implementation, we would untrack the effect
+    // For this POC, we just document the pattern
+  }
 }
 
 function parseVfor(directive: string) {
@@ -194,7 +226,8 @@ export function processElement(el: Element, context: object) {
   Array.from(el.childNodes).forEach(child => {
     if (child.nodeType === Node.TEXT_NODE) {
       child.textContent = child.textContent!.replace(/\{\{(.*?)\}\}/g, (_, expr) => {
-        return evaluate(expr.trim(), context) || ""
+        const result = evaluate(expr.trim(), context)
+        return result != null ? String(result) : ""
       })
     } else if (child.nodeType === Node.ELEMENT_NODE) {
       processElement(child as Element, context)

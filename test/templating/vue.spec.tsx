@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
-import { processElement } from "@/templating/vue"
+import { processElement, compileReactive } from "@/templating/vue"
+import { reactive } from "@/templating/reactivity"
 import { createElement } from "../utils/jsx"
 
 describe("vue:compile", () => {
@@ -226,5 +227,116 @@ describe("vue:compile", () => {
     expect(container.innerHTML.trim().replace(/\s+/g, " ")).toEqual(
       `<div class="item">{{ item }}</div> <div class="item">{{ item }}</div> <div class="item">{{ item }}</div>`
     )
+  })
+})
+
+describe("vue:compileReactive", () => {
+  let container: HTMLElement
+
+  beforeEach(() => {
+    container = document.createElement("div")
+    document.body.appendChild(container)
+  })
+
+  it("should reactively update v-text when context changes", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `<div id="test" v-text="message"></div>`
+
+    const context = reactive({ message: "Hello" })
+    compileReactive(container, template, context)
+
+    expect(container.querySelector("#test")?.textContent).toBe("Hello")
+
+    context.message = "World"
+    // Give reactivity time to update (should be synchronous)
+    expect(container.querySelector("#test")?.textContent).toBe("World")
+  })
+
+  it("should reactively update mustache interpolation", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `<div id="test">Count: {{ count }}</div>`
+
+    const context = reactive({ count: 0 })
+    compileReactive(container, template, context)
+
+    expect(container.querySelector("#test")?.textContent).toBe("Count: 0")
+
+    context.count = 5
+    expect(container.querySelector("#test")?.textContent).toBe("Count: 5")
+  })
+
+  it("should reactively update v-show", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `<div id="test" v-show="visible">Content</div>`
+
+    const context = reactive({ visible: true })
+    compileReactive(container, template, context)
+
+    const el = container.querySelector("#test") as HTMLElement
+    expect(el?.style.display).toBe("")
+
+    context.visible = false
+    const updatedEl = container.querySelector("#test") as HTMLElement
+    expect(updatedEl?.style.display).toBe("none")
+  })
+
+  it("should reactively update v-if", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `<div id="test" v-if="show">Content</div>`
+
+    const context = reactive({ show: true })
+    compileReactive(container, template, context)
+
+    expect(container.querySelector("#test")).not.toBeNull()
+
+    context.show = false
+    expect(container.querySelector("#test")).toBeNull()
+  })
+
+  it("should reactively update v-for", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `
+      <ul id="list">
+        <li v-for="item in items" v-text="item"></li>
+      </ul>
+    `
+
+    const context = reactive({ items: ["a", "b"] })
+    compileReactive(container, template, context)
+
+    let items = container.querySelectorAll("li")
+    expect(items.length).toBe(2)
+    expect(Array.from(items).map(li => li.textContent)).toEqual(["a", "b"])
+
+    context.items = ["x", "y", "z"]
+    items = container.querySelectorAll("li")
+    expect(items.length).toBe(3)
+    expect(Array.from(items).map(li => li.textContent)).toEqual(["x", "y", "z"])
+  })
+
+  it("should handle nested reactive properties", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `<div id="test" v-text="user.name"></div>`
+
+    const context = reactive({ user: { name: "Alice" } })
+    compileReactive(container, template, context)
+
+    expect(container.querySelector("#test")?.textContent).toBe("Alice")
+
+    context.user.name = "Bob"
+    expect(container.querySelector("#test")?.textContent).toBe("Bob")
+  })
+
+  it("should work with v-bind reactive updates", () => {
+    const template = document.createElement("template")
+    template.innerHTML = `<div id="test" :title="tooltip">Content</div>`
+
+    const context = reactive({ tooltip: "Original" })
+    compileReactive(container, template, context)
+
+    expect(container.querySelector("#test")?.getAttribute("title")).toBe("Original")
+
+    context.tooltip = "Updated"
+    expect(container.querySelector("#test")?.getAttribute("title")).toBe("Updated")
   })
 })
