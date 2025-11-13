@@ -1,10 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { updateShopifyRoot } from "../../utils/storybook"
+import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 import "./VariantSelector"
 
 const root = "https://nosto-shopify1.myshopify.com/"
-const handles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
+// Fallback handles in case the API call fails
+const fallbackHandles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
+
+let handles: string[]
+try {
+  handles = await getExampleHandles(root, 12)
+  if (!handles || handles.length === 0) {
+    handles = fallbackHandles
+  }
+} catch (error) {
+  console.warn("Failed to fetch example handles, using fallback:", error)
+  handles = fallbackHandles
+}
 
 window.Shopify = {
   routes: {
@@ -74,7 +87,7 @@ export const MultipleProducts: Story = {
       style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px;"
     >
       ${handles.map(
-        handle => html`
+        (handle: string) => html`
           <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
             <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
           </nosto-simple-card>
