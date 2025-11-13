@@ -23,6 +23,9 @@ export async function getExampleHandles(root: string, amount = 12) {
     },
     body: JSON.stringify({ query })
   })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch example handles from ${endpoint}: ${response.status} ${response.statusText}`)
+  }
   const data = await response.json()
   const handles = data?.data?.products?.edges?.map((edge: { node: { handle: string } }) => edge.node.handle) ?? []
   cache.set(root, handles)

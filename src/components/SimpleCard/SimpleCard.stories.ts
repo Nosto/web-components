@@ -69,6 +69,29 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
+export const Default: Story = {
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1rem; max-width: 1200px;">
+        ${handles.map(
+          (handle: string) => html`
+            <nosto-simple-card
+              handle="${handle}"
+              ?alternate=${args.alternate}
+              ?brand=${args.brand}
+              ?discount=${args.discount}
+              rating=${args.rating || 0}
+              sizes="${args.sizes || ""}"
+            ></nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  },
+  decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`]
+}
+
 export const SingleCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
@@ -85,8 +108,7 @@ export const SingleCard: Story = {
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
     `
-  },
-  loaders: [exampleHandlesLoader]
+  }
 }
 
 export const WithVariantSelector: Story = {
@@ -105,12 +127,10 @@ export const WithVariantSelector: Story = {
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
     `
-  },
-  loaders: [exampleHandlesLoader]
+  }
 }
 
 export const WithAllFeatures: Story = {
-  loaders: [exampleHandlesLoader],
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
@@ -131,30 +151,6 @@ export const WithAllFeatures: Story = {
     rating: 4.2
   },
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
-}
-
-export const Default: Story = {
-  loaders: [exampleHandlesLoader],
-  render: (_args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    return html`
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
-        ${handles.map(
-          (handle: string) => html`
-            <nosto-simple-card
-              handle="${handle}"
-              alternate
-              brand
-              discount
-              rating="3.8"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            ></nosto-simple-card>
-          `
-        )}
-      </div>
-    `
-  },
-  decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`]
 }
 
 export const Mocked: Story = {

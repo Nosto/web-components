@@ -45,13 +45,29 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
+export const Default: Story = {
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
+        ${handles.map(
+          (handle: string) => html`
+            <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
+              <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
+            </nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  }
+}
+
 export const SingleProduct: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (_args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html` <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector> `
-  },
-  loaders: [exampleHandlesLoader]
+  }
 }
 
 export const InSimpleCard: Story = {
@@ -63,8 +79,7 @@ export const InSimpleCard: Story = {
         <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
       </nosto-simple-card>
     `
-  },
-  loaders: [exampleHandlesLoader]
+  }
 }
 
 export const InSimpleCard_AddToCart: Story = {
@@ -76,27 +91,6 @@ export const InSimpleCard_AddToCart: Story = {
         <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
-    `
-  },
-  loaders: [exampleHandlesLoader]
-}
-
-export const Default: Story = {
-  loaders: [exampleHandlesLoader],
-  render: (_args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    return html`
-      <div
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px;"
-      >
-        ${handles.map(
-          (handle: string) => html`
-            <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
-              <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
-            </nosto-simple-card>
-          `
-        )}
-      </div>
     `
   }
 }
@@ -111,7 +105,6 @@ export const WithPlaceholder: Story = {
       </nosto-simple-card>
     `
   },
-  loaders: [exampleHandlesLoader],
   parameters: {
     docs: {
       description: {
