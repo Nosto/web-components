@@ -1,7 +1,7 @@
 import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
 import { ShopifyProduct } from "./types"
-import { apiUrl } from "./constants"
+import { getApiUrl } from "./constants"
 
 const productCache = new Map<string, ShopifyProduct>()
 
@@ -10,7 +10,7 @@ export async function fetchProduct(handle: string) {
     return productCache.get(handle)!
   }
 
-  const response = await fetch(apiUrl.href, {
+  const response = await fetch(getApiUrl().href, {
     headers: {
       "Content-Type": "application/json"
     },
