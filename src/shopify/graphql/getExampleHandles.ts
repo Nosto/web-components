@@ -1,4 +1,9 @@
+const cache = new Map<string, string[]>()
+
 export async function getExampleHandles(root: string, amount = 12) {
+  if (cache.has(root)) {
+    return cache.get(root)!
+  }
   const endpoint = `${root}api/2025-10/graphql.json`
   const query = `
     {
@@ -19,5 +24,7 @@ export async function getExampleHandles(root: string, amount = 12) {
     body: JSON.stringify({ query })
   })
   const data = await response.json()
-  return data?.data?.products?.edges?.map((edge: { node: { handle: string } }) => edge.node.handle) ?? []
+  const handles = data?.data?.products?.edges?.map((edge: { node: { handle: string } }) => edge.node.handle) ?? []
+  cache.set(root, handles)
+  return handles
 }
