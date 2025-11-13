@@ -2,23 +2,30 @@ import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
 import { ShopifyProduct } from "./types"
 import { apiUrl } from "./constants"
-import { createGraphQLClient } from "@shopify/graphql-client"
+import { createGraphQLClient, GraphQLClient } from "@shopify/graphql-client"
 
 const productCache = new Map<string, ShopifyProduct>()
+
+let client: GraphQLClient | null = null
+
+function getClient() {
+  if (!client) {
+    client = createGraphQLClient({
+      url: apiUrl.href,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  }
+  return client
+}
 
 export async function fetchProduct(handle: string) {
   if (productCache.has(handle)) {
     return productCache.get(handle)!
   }
 
-  const client = createGraphQLClient({
-    url: apiUrl.href,
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-
-  const { data, errors } = await client.request(getProductByHandle, {
+  const { data, errors } = await getClient().request(getProductByHandle, {
     variables: {
       language: window.Shopify?.locale?.toUpperCase() || "EN",
       country: window.Shopify?.country || "US",
@@ -26,8 +33,17 @@ export async function fetchProduct(handle: string) {
     }
   })
 
-  if (errors?.networkStatusCode) {
-    throw new Error(`Failed to fetch product data: ${errors.networkStatusCode} ${errors.message || "Unknown error"}`)
+  if (errors) {
+    const statusCode = errors.networkStatusCode ? `${errors.networkStatusCode} ` : ""
+    let errorMessage = errors.message || ""
+    if (Array.isArray(errors.graphQLErrors) && errors.graphQLErrors.length > 0) {
+      errorMessage += errors.graphQLErrors
+        .map((e: { message?: string }) => e.message)
+        .filter(Boolean)
+        .join("; ")
+    }
+    if (!errorMessage) errorMessage = "Unknown error"
+    throw new Error(`Failed to fetch product data: ${statusCode}${errorMessage}`)
   }
 
   if (!data) {
