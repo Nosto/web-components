@@ -4,12 +4,10 @@ import { updateShopifyRoot } from "../../utils/storybook"
 import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 
 const root = "https://nosto-shopify1.myshopify.com/"
-// Fallback handles in case the API call fails
-const fallbackHandles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
 
 // Shared loader for fetching example handles
-const exampleHandlesLoader = async (context: { args: Record<string, unknown> }) => ({
-  handles: await getExampleHandles((context.args.root as string) || root, 12)
+const exampleHandlesLoader = async (context: { args: { root?: string } }) => ({
+  handles: await getExampleHandles(context.args.root || root, 12)
 })
 
 window.Shopify = {
@@ -36,10 +34,6 @@ const meta: Meta = {
       control: "text",
       description: "The Shopify store root URL"
     },
-    handle: {
-      control: "text",
-      description: "The Shopify product handle to fetch data for"
-    },
     alternate: {
       control: "boolean",
       description: "Show alternate product image on hover"
@@ -63,7 +57,6 @@ const meta: Meta = {
   },
   args: {
     root,
-    handle: fallbackHandles[0],
     alternate: false,
     brand: false,
     discount: false,
@@ -76,42 +69,50 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-export const Default: Story = {
+export const SingleCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card
-      handle="${args.handle}"
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      rating=${args.rating || 0}
-      sizes="${args.sizes || ""}"
-    >
-      <button n-atc>Add to cart</button>
-    </nosto-simple-card>
-  `
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?alternate=${args.alternate}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+        sizes="${args.sizes || ""}"
+      >
+        <button n-atc>Add to cart</button>
+      </nosto-simple-card>
+    `
+  },
+  loaders: [exampleHandlesLoader]
 }
 
 export const WithVariantSelector: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card
-      handle="${args.handle}"
-      ?alternate=${args.alternate}
-      ?brand=${args.brand}
-      ?discount=${args.discount}
-      rating=${args.rating || 0}
-    >
-      <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
-      <button n-atc>Add to cart</button>
-    </nosto-simple-card>
-  `
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?alternate=${args.alternate}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+      >
+        <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
+        <button n-atc>Add to cart</button>
+      </nosto-simple-card>
+    `
+  },
+  loaders: [exampleHandlesLoader]
 }
 
 export const WithAllFeatures: Story = {
   loaders: [exampleHandlesLoader],
   render: (args, { loaded }) => {
-    const handles = (loaded?.handles as string[]) || fallbackHandles
+    const handles = loaded?.handles as string[]
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
@@ -132,10 +133,10 @@ export const WithAllFeatures: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
 }
 
-export const GridOfCards: Story = {
+export const Default: Story = {
   loaders: [exampleHandlesLoader],
   render: (_args, { loaded }) => {
-    const handles = (loaded?.handles as string[]) || fallbackHandles
+    const handles = loaded?.handles as string[]
     return html`
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
         ${handles.map(

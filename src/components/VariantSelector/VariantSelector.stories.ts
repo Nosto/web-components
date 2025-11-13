@@ -5,12 +5,10 @@ import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 import "./VariantSelector"
 
 const root = "https://nosto-shopify1.myshopify.com/"
-// Fallback handles in case the API call fails
-const fallbackHandles = ["good-ol-shoes", "awesome-sneakers", "old-school-kicks", "insane-shoes"]
 
 // Shared loader for fetching example handles
-const exampleHandlesLoader = async (context: { args: Record<string, unknown> }) => ({
-  handles: await getExampleHandles((context.args.root as string) || root, 12)
+const exampleHandlesLoader = async (context: { args: { root?: string } }) => ({
+  handles: await getExampleHandles(context.args.root || root, 12)
 })
 
 window.Shopify = {
@@ -36,15 +34,10 @@ const meta: Meta = {
     root: {
       control: "text",
       description: "The Shopify store root URL"
-    },
-    handle: {
-      control: "text",
-      description: "The Shopify product handle to fetch data for"
     }
   },
   args: {
-    root,
-    handle: fallbackHandles[0]
+    root
   },
   tags: ["autodocs"]
 }
@@ -52,34 +45,46 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-export const Default: Story = {
+export const SingleProduct: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html` <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector> `
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html` <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector> `
+  },
+  loaders: [exampleHandlesLoader]
 }
 
 export const InSimpleCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
-      <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
-    </nosto-simple-card>
-  `
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
+      </nosto-simple-card>
+    `
+  },
+  loaders: [exampleHandlesLoader]
 }
 
 export const InSimpleCard_AddToCart: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
-      <nosto-variant-selector handle="${args.handle}"></nosto-variant-selector>
-      <button n-atc>Add to cart</button>
-    </nosto-simple-card>
-  `
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
+        <button n-atc>Add to cart</button>
+      </nosto-simple-card>
+    `
+  },
+  loaders: [exampleHandlesLoader]
 }
 
-export const MultipleProducts: Story = {
+export const Default: Story = {
   loaders: [exampleHandlesLoader],
   render: (_args, { loaded }) => {
-    const handles = (loaded?.handles as string[]) || fallbackHandles
+    const handles = loaded?.handles as string[]
     return html`
       <div
         style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px;"
@@ -98,11 +103,15 @@ export const MultipleProducts: Story = {
 
 export const WithPlaceholder: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: args => html`
-    <nosto-simple-card handle="${args.handle}" alternate brand discount rating="4.5">
-      <nosto-variant-selector handle="${args.handle}" placeholder></nosto-variant-selector>
-    </nosto-simple-card>
-  `,
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}" placeholder></nosto-variant-selector>
+      </nosto-simple-card>
+    `
+  },
+  loaders: [exampleHandlesLoader],
   parameters: {
     docs: {
       description: {
