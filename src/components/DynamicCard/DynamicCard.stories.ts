@@ -33,7 +33,7 @@ export const Mock: Story = {
   },
   render: args => html`
     <div style="max-width: 300px">
-      <nosto-dynamic-card mock=${args.mock}></nosto-dynamic-card>
+      <nosto-dynamic-card handle="mock" mock=${args.mock}></nosto-dynamic-card>
     </div>
   `
 }
