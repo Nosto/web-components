@@ -86,7 +86,7 @@ describe("VariantSelector", () => {
               availableForSale: true,
               price: { currencyCode: "USD", amount: "19.99" },
               compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
             }
           },
           {
@@ -98,7 +98,7 @@ describe("VariantSelector", () => {
               availableForSale: true,
               price: { currencyCode: "USD", amount: "24.99" },
               compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
             }
           },
           {
@@ -110,7 +110,7 @@ describe("VariantSelector", () => {
               availableForSale: true,
               price: { currencyCode: "USD", amount: "29.99" },
               compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
             }
           }
         ]
@@ -127,7 +127,7 @@ describe("VariantSelector", () => {
               availableForSale: true,
               price: { currencyCode: "USD", amount: "19.99" },
               compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
             }
           },
           {
@@ -139,7 +139,7 @@ describe("VariantSelector", () => {
               availableForSale: true,
               price: { currencyCode: "USD", amount: "24.99" },
               compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
             }
           },
           {
@@ -151,7 +151,7 @@ describe("VariantSelector", () => {
               availableForSale: true,
               price: { currencyCode: "USD", amount: "19.99" },
               compareAtPrice: null,
-              product: { onlineStoreUrl: "/products/variant-test-product" }
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
             }
           }
         ]
@@ -169,7 +169,8 @@ describe("VariantSelector", () => {
           { name: "Color", value: "Red" }
         ],
         price: { currencyCode: "USD", amount: "19.99" },
-        compareAtPrice: null
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
       },
       {
         id: "gid://shopify/ProductVariant/1002",
@@ -180,7 +181,8 @@ describe("VariantSelector", () => {
           { name: "Color", value: "Blue" }
         ],
         price: { currencyCode: "USD", amount: "24.99" },
-        compareAtPrice: null
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
       },
       {
         id: "gid://shopify/ProductVariant/1003",
@@ -191,7 +193,8 @@ describe("VariantSelector", () => {
           { name: "Color", value: "Red" }
         ],
         price: { currencyCode: "USD", amount: "29.99" },
-        compareAtPrice: null
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
       }
     ]
   }
@@ -206,7 +209,8 @@ describe("VariantSelector", () => {
         availableForSale: true,
         selectedOptions: [],
         price: { currencyCode: "USD", amount: "19.99" },
-        compareAtPrice: null
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
       }
     ]
   }
