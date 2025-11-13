@@ -4,10 +4,10 @@ import { VariantSelector, selectOption, getSelectedVariant } from "@/components/
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
+import { apiUrl } from "@/shopify/graphql/constants"
 
 describe("VariantSelector", () => {
   beforeEach(() => {
@@ -15,8 +15,7 @@ describe("VariantSelector", () => {
   })
 
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    const graphqlUrl = createShopifyUrl("/api/2025-10/graphql.json")
-    const graphqlPath = graphqlUrl.pathname
+    const graphqlPath = apiUrl.pathname
 
     addHandlers(
       http.post(graphqlPath, async ({ request }) => {

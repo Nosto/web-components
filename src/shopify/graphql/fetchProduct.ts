@@ -1,7 +1,7 @@
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
 import { ShopifyProduct } from "./types"
+import { apiUrl } from "./constants"
 
 const productCache = new Map<string, ShopifyProduct>()
 
@@ -11,8 +11,7 @@ export async function fetchProduct(handle: string) {
   }
 
   // Shopify Storefront GraphQL version 2025-04 not working for tokenless requests, using 2025-10
-  const url = createShopifyUrl(`/api/2025-10/graphql.json`)
-  const response = await fetch(url.href, {
+  const response = await fetch(apiUrl.href, {
     headers: {
       "Content-Type": "application/json"
     },

@@ -38,7 +38,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
     return html`<div class="image placeholder"></div>`
   }
 
-  const hasAlternate = element.alternate && product.images && product.images.length > 1
+  const hasAlternate = element.alternate && product.images?.length > 1
   const alternateImage = hasAlternate ? product.images[1].url : undefined
 
   return html`
