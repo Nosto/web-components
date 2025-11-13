@@ -10,7 +10,6 @@ export async function fetchProduct(handle: string) {
     return productCache.get(handle)!
   }
 
-  // Shopify Storefront GraphQL version 2025-04 not working for tokenless requests, using 2025-10
   const response = await fetch(apiUrl.href, {
     headers: {
       "Content-Type": "application/json"
