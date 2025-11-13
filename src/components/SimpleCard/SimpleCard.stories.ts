@@ -26,8 +26,8 @@ const meta: Meta = {
     }
   ],
   loaders: [
-    async () => ({
-      handles: await getExampleHandles(root, 12)
+    async context => ({
+      handles: await getExampleHandles(context.args.root, 12)
     })
   ],
   argTypes: {
@@ -109,8 +109,8 @@ export const WithVariantSelector: Story = {
 
 export const WithAllFeatures: Story = {
   loaders: [
-    async () => ({
-      handles: await getExampleHandles(root, 12)
+    async context => ({
+      handles: await getExampleHandles(context.args.root, 12)
     })
   ],
   render: (args, { loaded }) => {
@@ -135,39 +135,10 @@ export const WithAllFeatures: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
 }
 
-export const WithResponsiveSizes: Story = {
-  loaders: [
-    async () => ({
-      handles: await getExampleHandles(root, 12)
-    })
-  ],
-  render: (args, { loaded }) => {
-    const handles = (loaded?.handles as string[]) || fallbackHandles
-    return html`
-      <nosto-simple-card
-        handle="${handles[0]}"
-        ?alternate=${args.alternate}
-        ?brand=${args.brand}
-        ?discount=${args.discount}
-        rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
-      ></nosto-simple-card>
-    `
-  },
-  args: {
-    alternate: true,
-    brand: true,
-    discount: true,
-    rating: 4.2,
-    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-  },
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
-}
-
 export const GridOfCards: Story = {
   loaders: [
-    async () => ({
-      handles: await getExampleHandles(root, 12)
+    async context => ({
+      handles: await getExampleHandles(context.args.root, 12)
     })
   ],
   render: (_args, { loaded }) => {

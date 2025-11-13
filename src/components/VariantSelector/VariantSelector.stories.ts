@@ -27,8 +27,8 @@ const meta: Meta = {
     }
   ],
   loaders: [
-    async () => ({
-      handles: await getExampleHandles(root, 12)
+    async context => ({
+      handles: await getExampleHandles(context.args.root, 12)
     })
   ],
   argTypes: {
@@ -77,8 +77,8 @@ export const InSimpleCard_AddToCart: Story = {
 
 export const MultipleProducts: Story = {
   loaders: [
-    async () => ({
-      handles: await getExampleHandles(root, 12)
+    async context => ({
+      handles: await getExampleHandles(context.args.root, 12)
     })
   ],
   render: (_args, { loaded }) => {
