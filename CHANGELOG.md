@@ -1,3 +1,10 @@
+## [9.20.2](https://github.com/Nosto/web-components/compare/v9.20.1...v9.20.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* add error handling to cached wrapper ([5f5824b](https://github.com/Nosto/web-components/commit/5f5824b5309cd2d39022e67d9cbd89460c8755d5))
+
 ## [9.20.1](https://github.com/Nosto/web-components/compare/v9.20.0...v9.20.1) (2025-11-14)
 
 
