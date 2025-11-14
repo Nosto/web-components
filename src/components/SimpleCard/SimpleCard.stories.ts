@@ -72,6 +72,7 @@ type Story = StoryObj
 export const Default: Story = {
   argTypes: {
     columns: {
+      description: "Number of columns to display in the grid",
       control: { type: "range", min: 1, max: 8, step: 1 },
       table: {
         category: "Storybook options"
@@ -79,11 +80,11 @@ export const Default: Story = {
     }
   },
   args: {
-    columns: 4
+    columns: 5
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    const displayHandles = Array.from({ length: args.columns }, (_, i) => handles[i % handles.length])
+    const displayHandles = handles.slice(0, args.columns)
     return html`
       <div
         style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;"
