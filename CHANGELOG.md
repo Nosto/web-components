@@ -1,3 +1,17 @@
+# [9.20.0](https://github.com/Nosto/web-components/compare/v9.19.0...v9.20.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* add product.id field to all variants in mock data and tests ([1ecb330](https://github.com/Nosto/web-components/commit/1ecb330efa6038132c0b9e1a70cdcbdce944c7b4))
+* update SimpleCard.productId on variant change ([b1a404f](https://github.com/Nosto/web-components/commit/b1a404f874a641430670d09f6cd74fe86f8bcb13))
+* use function to get api url ([f7fcb5e](https://github.com/Nosto/web-components/commit/f7fcb5eccf49e13df3643faa52a8f697d108332e))
+
+
+### Features
+
+* use getExampleHandles in SimpleCard and VariantSelector stories ([5b90530](https://github.com/Nosto/web-components/commit/5b9053018c0dedf069d98520bc4d64039571bb9e))
+
 # [9.19.0](https://github.com/Nosto/web-components/compare/v9.18.1...v9.19.0) (2025-11-13)
 
 

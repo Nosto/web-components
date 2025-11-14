@@ -8,7 +8,7 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { apiUrl } from "@/shopify/graphql/constants"
+import { getApiUrl } from "@/shopify/graphql/constants"
 
 describe("SimpleCard", () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe("SimpleCard", () => {
   })
 
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    const graphqlPath = apiUrl.pathname
+    const graphqlPath = getApiUrl().pathname
 
     addHandlers(
       http.post(graphqlPath, async ({ request }) => {
@@ -85,7 +85,8 @@ describe("SimpleCard", () => {
         availableForSale: true,
         selectedOptions: [],
         price: { currencyCode: "USD", amount: "19.99" },
-        compareAtPrice: { currencyCode: "USD", amount: "24.99" }
+        compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+        product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
       }
     ]
   }
@@ -188,7 +189,8 @@ describe("SimpleCard", () => {
           availableForSale: true,
           selectedOptions: [],
           price: { currencyCode: "USD", amount: "19.99" },
-          compareAtPrice: { currencyCode: "USD", amount: "19.99" } // same price, no discount
+          compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
+          product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
         }
       ]
     }
@@ -400,7 +402,8 @@ describe("SimpleCard", () => {
           availableForSale: true,
           selectedOptions: [],
           price: { currencyCode: "USD", amount: "9.99" },
-          compareAtPrice: { currencyCode: "USD", amount: "12.99" }
+          compareAtPrice: { currencyCode: "USD", amount: "12.99" },
+          product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
         }
       ]
     }
@@ -477,7 +480,7 @@ describe("SimpleCard", () => {
                 availableForSale: true,
                 price: { currencyCode: "USD", amount: "24.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-                product: { onlineStoreUrl: "/products/variant-product" }
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
               }
             },
             {
@@ -489,7 +492,7 @@ describe("SimpleCard", () => {
                 availableForSale: true,
                 price: { currencyCode: "USD", amount: "19.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-                product: { onlineStoreUrl: "/products/variant-product" }
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
               }
             }
           ]
@@ -509,7 +512,8 @@ describe("SimpleCard", () => {
             url: "https://example.com/red.jpg"
           },
           price: { currencyCode: "USD", amount: "24.99" },
-          compareAtPrice: { currencyCode: "USD", amount: "29.99" }
+          compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+          product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
         },
         {
           id: "gid://shopify/ProductVariant/1002",
@@ -524,7 +528,8 @@ describe("SimpleCard", () => {
             url: "https://example.com/blue.jpg"
           },
           price: { currencyCode: "USD", amount: "19.99" },
-          compareAtPrice: { currencyCode: "USD", amount: "24.99" }
+          compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+          product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
         }
       ]
     }

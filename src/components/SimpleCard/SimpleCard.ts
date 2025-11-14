@@ -127,6 +127,7 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
+  element.productId = parseId(variant.product.id)
   element.variantId = parseId(variant.id)
   updateSimpleCardContent(element, variant)
 }
