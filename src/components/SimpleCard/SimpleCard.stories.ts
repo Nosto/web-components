@@ -154,7 +154,7 @@ export const WithAllFeatures: Story = {
 }
 
 export const Mocked: Story = {
-  render: args => html` <nosto-simple-card mock="${args.mock}"></nosto-simple-card> `,
+  render: args => html` <nosto-simple-card handle="mock" mock="${args.mock}"></nosto-simple-card> `,
   args: {
     mock: true
   },
