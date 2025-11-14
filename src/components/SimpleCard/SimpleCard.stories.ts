@@ -80,7 +80,7 @@ export const Default: Story = {
     }
   },
   args: {
-    columns: 5
+    columns: 4
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
