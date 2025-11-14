@@ -1,3 +1,5 @@
+import { ExampleHandlesQuery } from "./queries"
+
 const cache = new Map<string, Promise<string[]>>()
 
 export async function getExampleHandles(root: string, amount = 12) {
@@ -9,23 +11,15 @@ export async function getExampleHandles(root: string, amount = 12) {
 
 async function getHandles(root: string, amount: number) {
   const endpoint = `${root}api/2025-10/graphql.json`
-  const query = `
-    {
-      products(first: ${amount}) {
-        edges {
-          node {
-            handle
-          }
-        }
-      }
-    }
-  `
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ query })
+    body: JSON.stringify({
+      query: ExampleHandlesQuery,
+      variables: { first: amount }
+    })
   })
   if (!response.ok) {
     throw new Error(`Failed to fetch example handles from ${endpoint}: ${response.status} ${response.statusText}`)
