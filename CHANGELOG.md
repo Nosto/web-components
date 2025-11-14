@@ -1,3 +1,16 @@
+# [9.22.0](https://github.com/Nosto/web-components/compare/v9.21.0...v9.22.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* lint ([78f8b3f](https://github.com/Nosto/web-components/commit/78f8b3f1245f59c5ff9af5a409353fd3fd8784b4))
+* product count optional ([40e9067](https://github.com/Nosto/web-components/commit/40e906722560522e0fb2f08a1166bfe81f82dc37))
+
+
+### Features
+
+* variant and simple card number of products to render ([5471e6c](https://github.com/Nosto/web-components/commit/5471e6c1ee41fdd26bb1d54ecd196e1ce1b0e80a))
+
 # [9.21.0](https://github.com/Nosto/web-components/compare/v9.20.2...v9.21.0) (2025-11-14)
 
 
