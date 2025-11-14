@@ -6,7 +6,7 @@ import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 const root = "https://nosto-shopify1.myshopify.com/"
 
 // Shared loader for fetching example handles
-const exampleHandlesLoader = async (context: { args: { root?: string, products?: number } }) => {
+const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
   const { products, root: argRoot } = context.args
   return {
     handles: await getExampleHandles(argRoot || root, products || 12)
