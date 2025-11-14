@@ -1,13 +1,6 @@
-const cache = new Map<string, Promise<string[]>>()
+import { cached } from "@/utils/cached"
 
-export async function getExampleHandles(root: string, amount = 12) {
-  if (!cache.has(root)) {
-    cache.set(root, getHandles(root, amount))
-  }
-  return cache.get(root)!
-}
-
-async function getHandles(root: string, amount: number) {
+export const [getExampleHandles, clearCache] = cached(async (root: string, amount = 12) => {
   const endpoint = `${root}api/2025-10/graphql.json`
   const query = `
     {
@@ -32,4 +25,4 @@ async function getHandles(root: string, amount: number) {
   }
   const data = await response.json()
   return data?.data?.products?.edges?.map((edge: { node: { handle: string } }) => edge.node.handle) ?? []
-}
+})
