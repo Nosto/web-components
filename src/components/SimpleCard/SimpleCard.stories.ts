@@ -153,6 +153,43 @@ export const WithAllFeatures: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
 }
 
+export const GridOfCards: Story = {
+  argTypes: {
+    columns: {
+      control: { type: "range", min: 1, max: 8, step: 1 },
+      table: {
+        category: "Storybook options"
+      }
+    }
+  },
+  args: {
+    columns: 4
+  },
+  decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    const displayHandles = Array.from({ length: args.columns }, (_, i) => handles[i % handles.length])
+    return html`
+      <div
+        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;"
+      >
+        ${displayHandles.map(
+          handle => html`
+            <nosto-simple-card
+              handle="${handle}"
+              ?alternate=${args.alternate}
+              ?brand=${args.brand}
+              ?discount=${args.discount}
+              rating=${args.rating || 0}
+              sizes="${args.sizes || ""}"
+            ></nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  }
+}
+
 export const Mocked: Story = {
   render: args => html` <nosto-simple-card handle="mock" mock="${args.mock}"></nosto-simple-card> `,
   args: {
