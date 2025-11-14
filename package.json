@@ -42,7 +42,6 @@
     "@0no-co/graphqlsp": "^1.15.1",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "@graphql-tools/graphql-tag-pluck": "^8.3.25",
     "@nosto/nosto-js": "^2.9.3",
     "@shopify/storefront-api-client": "^1.0.9",
     "@storybook/addon-docs": "^10.0.7",
