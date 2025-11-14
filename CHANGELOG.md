@@ -1,3 +1,10 @@
+## [9.20.1](https://github.com/Nosto/web-components/compare/v9.20.0...v9.20.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* add cacheable wrapper for functions ([3441d59](https://github.com/Nosto/web-components/commit/3441d59322cce58cd5bfec84c641d9be88d53430))
+
 # [9.20.0](https://github.com/Nosto/web-components/compare/v9.19.0...v9.20.0) (2025-11-14)
 
 
