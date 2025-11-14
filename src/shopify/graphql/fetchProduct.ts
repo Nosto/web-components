@@ -1,6 +1,5 @@
 import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
-import { ShopifyProduct } from "./types"
 import { getApiUrl } from "./constants"
 import { cached } from "@/utils/cached"
 
@@ -23,5 +22,5 @@ export const [fetchProduct, clearProductCache] = cached(async (handle: string) =
     throw new Error(`Failed to fetch product data: ${response.status} ${response.statusText}`)
   }
   const responseData = await response.json()
-  return flattenResponse(responseData) as ShopifyProduct
+  return flattenResponse(responseData)
 })
