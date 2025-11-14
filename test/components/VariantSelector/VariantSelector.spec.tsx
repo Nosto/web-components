@@ -7,7 +7,7 @@ import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { apiUrl } from "@/shopify/graphql/constants"
+import { getApiUrl } from "@/shopify/graphql/constants"
 
 describe("VariantSelector", () => {
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe("VariantSelector", () => {
   })
 
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    const graphqlPath = apiUrl.pathname
+    const graphqlPath = getApiUrl().pathname
 
     addHandlers(
       http.post(graphqlPath, async ({ request }) => {
