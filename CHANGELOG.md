@@ -1,3 +1,21 @@
+# [9.21.0](https://github.com/Nosto/web-components/compare/v9.20.2...v9.21.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* lint ([c8a7163](https://github.com/Nosto/web-components/commit/c8a7163c9893f7dbb5d8336f4477dad8305e5c8b))
+* moved to default ([0ed5613](https://github.com/Nosto/web-components/commit/0ed56133cb30721a251de8095ac6a63e760d3387))
+* review ([d0b4e32](https://github.com/Nosto/web-components/commit/d0b4e32cd25a678ba7d6d2736ba90cfc1e9c0c28))
+* reviews ([e5a1b78](https://github.com/Nosto/web-components/commit/e5a1b789a824a1a684646abd32357c7e0a99bc8e))
+* reviews ([4b07070](https://github.com/Nosto/web-components/commit/4b07070829476a341b0cc47c261dacaa06786d57))
+
+
+### Features
+
+* grid ([1f522f0](https://github.com/Nosto/web-components/commit/1f522f046f5faab42a18cd7dc2ad710afd70f0c8))
+* storybook simple card custom column count ([33eb117](https://github.com/Nosto/web-components/commit/33eb1171aa53d4f1e556ef9a2bddf4d1c06d0b42))
+* storybook variant selector custom grid columns ([43f2ad3](https://github.com/Nosto/web-components/commit/43f2ad3494146841f6fa09d354948535fed61426))
+
 ## [9.20.2](https://github.com/Nosto/web-components/compare/v9.20.1...v9.20.2) (2025-11-14)
 
 
