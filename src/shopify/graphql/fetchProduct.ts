@@ -1,5 +1,5 @@
 import { flattenResponse } from "./utils"
-import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
+import { ProductByHandleQuery } from "./queries"
 import { ShopifyProduct } from "./types"
 import { getApiUrl } from "./constants"
 
@@ -16,7 +16,7 @@ export async function fetchProduct(handle: string) {
     },
     method: "POST",
     body: JSON.stringify({
-      query: getProductByHandle,
+      query: ProductByHandleQuery,
       variables: {
         language: window.Shopify?.locale?.toUpperCase() || "EN",
         country: window.Shopify?.country || "US",
