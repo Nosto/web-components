@@ -46,7 +46,7 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
-    argTypes: {
+  argTypes: {
     columns: {
       description: "Number of columns to display in the grid",
       control: { type: "range", min: 1, max: 8, step: 1 },
@@ -61,7 +61,9 @@ export const Default: Story = {
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
-      <div style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
+      <div
+        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;"
+      >
         ${handles.map(
           handle => html`
             <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
