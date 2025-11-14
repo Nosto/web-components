@@ -144,23 +144,39 @@ export const WithResponsiveSizes: Story = {
 }
 
 export const GridOfCards: Story = {
+  argTypes: {
+    columns: {
+      control: { type: "range", min: 1, max: 8, step: 1 },
+      table: {
+        category: "Storybook options"
+      }
+    }
+  },
+  args: {
+    columns: 4
+  },
   decorators: [story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`],
-  render: () => html`
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;">
-      ${handles.map(
-        handle => html`
-          <nosto-simple-card
-            handle="${handle}"
-            alternate
-            brand
-            discount
-            rating="3.8"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          ></nosto-simple-card>
-        `
-      )}
-    </div>
-  `
+  render: args => {
+    const displayHandles = Array.from({ length: args.columns }, (_, i) => handles[i % handles.length])
+    return html`
+      <div
+        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;"
+      >
+        ${displayHandles.map(
+          handle => html`
+            <nosto-simple-card
+              handle="${handle}"
+              alternate
+              brand
+              discount
+              rating="3.8"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            ></nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  }
 }
 
 export const Mocked: Story = {
