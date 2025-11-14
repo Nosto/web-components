@@ -11,7 +11,11 @@ export function cached<K extends unknown[], V>(fn: (...keys: K) => Promise<V>) {
   function wrapped(...keys: K): Promise<V> {
     const cacheKey = keys.join(":")
     if (!cache.has(cacheKey)) {
-      cache.set(cacheKey, fn(...keys))
+      const promise = fn(...keys).catch(err => {
+        cache.delete(cacheKey)
+        throw err
+      })
+      cache.set(cacheKey, promise)
     }
     return cache.get(cacheKey)!
   }
