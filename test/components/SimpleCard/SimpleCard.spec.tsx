@@ -1,28 +1,38 @@
 /** @jsx createElement */
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import type { ShopifyProduct } from "@/shopify/types"
+import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
+import { toProductId } from "@/shopify/graphql/utils"
+import { clearProductCache } from "@/shopify/graphql/fetchProduct"
+import { getApiUrl } from "@/shopify/graphql/constants"
 
 describe("SimpleCard", () => {
+  beforeEach(() => {
+    clearProductCache()
+  })
+
   function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    // Use createShopifyUrl to get the correct path with Shopify root handling
-    const productUrl = createShopifyUrl("products/:handle.js")
-    const productPath = productUrl.pathname
+    const graphqlPath = getApiUrl().pathname
 
     addHandlers(
-      http.get(productPath, ({ params }) => {
-        const handle = params.handle as string
+      http.post(graphqlPath, async ({ request }) => {
+        const body = (await request.json()) as { variables: { handle: string } }
+        const handle = body.variables.handle
         const response = responses[handle]
         if (!response) {
-          return HttpResponse.json({ error: "Not Found" }, { status: 404 })
+          return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
         }
-        // SimpleCard expects the product data directly, not wrapped in a product property
-        return HttpResponse.json(response.product || response, { status: response.status || 200 })
+        const product = (response.product || response) as ShopifyProduct
+        // Wrap images and variants in nodes structure for GraphQL response
+        const graphqlProduct = {
+          ...product,
+          images: { nodes: product.images }
+        }
+        return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
       })
     )
   }
@@ -33,27 +43,53 @@ describe("SimpleCard", () => {
     return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
   }
 
-  const mockProduct = {
-    id: 123456,
+  const mockProduct: ShopifyProduct = {
+    id: "gid://shopify/Product/123456",
     title: "Awesome Test Product",
-    handle: "awesome-test-product",
-    description: "A great product for testing",
     vendor: "Test Brand",
-    tags: ["test", "awesome"],
-    images: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-    featured_image: "https://example.com/image1.jpg",
-    price: 1999, // $19.99 in cents
-    compare_at_price: 2499, // $24.99 in cents
+    description: "A great product for testing",
+    encodedVariantExistence: "",
+    onlineStoreUrl: "/products/awesome-test-product",
+    availableForSale: true,
+    adjacentVariants: [],
+    images: [
+      {
+        altText: "Product image 1",
+        height: 400,
+        width: 400,
+        thumbhash: null,
+        url: "https://example.com/image1.jpg"
+      },
+      {
+        altText: "Product image 2",
+        height: 400,
+        width: 400,
+        thumbhash: null,
+        url: "https://example.com/image2.jpg"
+      }
+    ],
+    featuredImage: {
+      altText: "Product image 1",
+      height: 400,
+      width: 400,
+      thumbhash: null,
+      url: "https://example.com/image1.jpg"
+    },
+    options: [],
+    price: { currencyCode: "USD", amount: "19.99" },
+    compareAtPrice: { currencyCode: "USD", amount: "24.99" },
     variants: [
       {
-        id: 789,
-        price: 1999, // $19.99 in cents
-        compare_at_price: 2499, // $24.99 in cents
-        available: true,
-        title: "Default Title"
+        id: "gid://shopify/ProductVariant/789",
+        title: "Default Title",
+        availableForSale: true,
+        selectedOptions: [],
+        price: { currencyCode: "USD", amount: "19.99" },
+        compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+        product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
       }
     ]
-  } as ShopifyProduct
+  }
 
   it("should throw an error if handle is not provided", async () => {
     const card = (<nosto-simple-card />) as SimpleCard
@@ -142,20 +178,22 @@ describe("SimpleCard", () => {
   })
 
   it("should not render original price when product has no discount", async () => {
-    const productWithoutDiscount = {
+    const productWithoutDiscount: ShopifyProduct = {
       ...mockProduct,
-      price: 1999,
-      compare_at_price: 1999, // same price, no discount
+      price: { currencyCode: "USD", amount: "19.99" },
+      compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
       variants: [
         {
-          id: 789,
-          price: 1999,
-          compare_at_price: 1999, // same price, no discount
-          available: true,
-          title: "Default Title"
+          id: "gid://shopify/ProductVariant/789",
+          title: "Default Title",
+          availableForSale: true,
+          selectedOptions: [],
+          price: { currencyCode: "USD", amount: "19.99" },
+          compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
+          product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
         }
       ]
-    } as ShopifyProduct
+    }
 
     addProductHandlers({
       "test-product": { product: productWithoutDiscount }
@@ -281,10 +319,32 @@ describe("SimpleCard", () => {
   })
 
   it("should re-render when handle attribute changes", async () => {
-    const product1 = { ...mockProduct, title: "Product 1" }
-    const product2 = {
+    const product1: ShopifyProduct = { ...mockProduct, title: "Product 1" }
+    const product2: ShopifyProduct = {
       ...mockProduct,
-      images: ["https://example.com/image3.jpg", "https://example.com/image4.jpg"],
+      images: [
+        {
+          altText: "Product image 3",
+          height: 400,
+          width: 400,
+          thumbhash: null,
+          url: "https://example.com/image3.jpg"
+        },
+        {
+          altText: "Product image 4",
+          height: 400,
+          width: 400,
+          thumbhash: null,
+          url: "https://example.com/image4.jpg"
+        }
+      ],
+      featuredImage: {
+        altText: "Product image 3",
+        height: 400,
+        width: 400,
+        thumbhash: null,
+        url: "https://example.com/image3.jpg"
+      },
       title: "Product 2"
     }
 
@@ -331,20 +391,22 @@ describe("SimpleCard", () => {
   })
 
   it("should format price correctly", async () => {
-    const productWithDifferentPrice = {
+    const productWithDifferentPrice: ShopifyProduct = {
       ...mockProduct,
-      price: 999, // $9.99 in cents
-      compare_at_price: 1299, // $12.99 in cents
+      price: { currencyCode: "USD", amount: "9.99" },
+      compareAtPrice: { currencyCode: "USD", amount: "12.99" },
       variants: [
         {
-          id: 789,
-          price: 999, // $9.99 in cents
-          compare_at_price: 1299, // $12.99 in cents
-          available: true,
-          title: "Default Title"
+          id: "gid://shopify/ProductVariant/789",
+          title: "Default Title",
+          availableForSale: true,
+          selectedOptions: [],
+          price: { currencyCode: "USD", amount: "9.99" },
+          compareAtPrice: { currencyCode: "USD", amount: "12.99" },
+          product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
         }
       ]
-    } as ShopifyProduct
+    }
 
     addProductHandlers({
       "test-product": { product: productWithDifferentPrice }
@@ -403,92 +465,74 @@ describe("SimpleCard", () => {
   })
 
   it("should handle variant change events and update images", async () => {
-    const variantProduct = {
+    const variantProduct: ShopifyProduct = {
       ...mockProduct,
       options: [
         {
           name: "Color",
-          position: 1,
-          values: ["Red", "Blue"]
+          optionValues: [
+            {
+              name: "Red",
+              swatch: null,
+              firstSelectableVariant: {
+                id: "gid://shopify/ProductVariant/1001",
+                title: "Red",
+                availableForSale: true,
+                price: { currencyCode: "USD", amount: "24.99" },
+                compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+              }
+            },
+            {
+              name: "Blue",
+              swatch: null,
+              firstSelectableVariant: {
+                id: "gid://shopify/ProductVariant/1002",
+                title: "Blue",
+                availableForSale: true,
+                price: { currencyCode: "USD", amount: "19.99" },
+                compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+              }
+            }
+          ]
         }
       ],
       variants: [
         {
-          id: 1001,
+          id: "gid://shopify/ProductVariant/1001",
           title: "Red",
-          option1: "Red",
-          option2: null,
-          option3: null,
-          sku: "TEST-RED",
-          requires_shipping: true,
-          taxable: true,
-          featured_image: {
-            id: 555,
-            product_id: 123456,
-            position: 2,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Blue variant image",
-            width: 800,
+          availableForSale: true,
+          selectedOptions: [{ name: "Color", value: "Red" }],
+          image: {
+            altText: "Red variant image",
             height: 800,
-            src: "https://example.com/red.jpg",
-            variant_ids: [1002]
+            width: 800,
+            thumbhash: null,
+            url: "https://example.com/red.jpg"
           },
-          available: true,
-          name: "Red",
-          public_title: "Red",
-          options: ["Red"],
-          price: 2499, // Different price
-          weight: 100,
-          compare_at_price: 2999,
-          inventory_quantity: 10,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456789",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+          price: { currencyCode: "USD", amount: "24.99" },
+          compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+          product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
         },
         {
-          id: 1002,
+          id: "gid://shopify/ProductVariant/1002",
           title: "Blue",
-          option1: "Blue",
-          option2: null,
-          option3: null,
-          sku: "TEST-BLUE",
-          requires_shipping: true,
-          taxable: true,
-          featured_image: {
-            id: 555,
-            product_id: 123456,
-            position: 2,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
-            alt: "Blue variant image",
-            width: 800,
+          availableForSale: true,
+          selectedOptions: [{ name: "Color", value: "Blue" }],
+          image: {
+            altText: "Blue variant image",
             height: 800,
-            src: "https://example.com/blue.jpg",
-            variant_ids: [1002]
+            width: 800,
+            thumbhash: null,
+            url: "https://example.com/blue.jpg"
           },
-          available: true,
-          name: "Blue",
-          public_title: "Blue",
-          options: ["Blue"],
-          price: 1999,
-          weight: 100,
-          compare_at_price: 2499,
-          inventory_quantity: 5,
-          inventory_management: "shopify",
-          inventory_policy: "deny",
-          barcode: "123456790",
-          quantity_rule: { min: 1, max: null, increment: 1 },
-          quantity_price_breaks: [],
-          requires_selling_plan: false,
-          selling_plan_allocations: []
+          price: { currencyCode: "USD", amount: "19.99" },
+          compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+          product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
         }
       ]
-    } satisfies ShopifyProduct
+    }
 
     addProductHandlers({
       "variant-product": { product: variantProduct }
@@ -550,7 +594,8 @@ describe("SimpleCard", () => {
       brand: "JSON Brand",
       url: "https://example.com/json-product",
       list_price: 2999,
-      price: 1999
+      price: 1999,
+      price_currency_code: "USD"
     } as JSONProduct
 
     const card = (<nosto-simple-card handle="test-handle" />) as SimpleCard
@@ -604,7 +649,7 @@ describe("SimpleCard", () => {
             ...mockProduct,
             get id() {
               fetchCalled = true
-              return 123
+              return toProductId(123)
             }
           }
         }

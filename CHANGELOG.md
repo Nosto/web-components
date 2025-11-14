@@ -1,3 +1,91 @@
+## [9.20.2](https://github.com/Nosto/web-components/compare/v9.20.1...v9.20.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* add error handling to cached wrapper ([5f5824b](https://github.com/Nosto/web-components/commit/5f5824b5309cd2d39022e67d9cbd89460c8755d5))
+
+## [9.20.1](https://github.com/Nosto/web-components/compare/v9.20.0...v9.20.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* add cacheable wrapper for functions ([3441d59](https://github.com/Nosto/web-components/commit/3441d59322cce58cd5bfec84c641d9be88d53430))
+
+# [9.20.0](https://github.com/Nosto/web-components/compare/v9.19.0...v9.20.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* add product.id field to all variants in mock data and tests ([1ecb330](https://github.com/Nosto/web-components/commit/1ecb330efa6038132c0b9e1a70cdcbdce944c7b4))
+* update SimpleCard.productId on variant change ([b1a404f](https://github.com/Nosto/web-components/commit/b1a404f874a641430670d09f6cd74fe86f8bcb13))
+* use function to get api url ([f7fcb5e](https://github.com/Nosto/web-components/commit/f7fcb5eccf49e13df3643faa52a8f697d108332e))
+
+
+### Features
+
+* use getExampleHandles in SimpleCard and VariantSelector stories ([5b90530](https://github.com/Nosto/web-components/commit/5b9053018c0dedf069d98520bc4d64039571bb9e))
+
+# [9.19.0](https://github.com/Nosto/web-components/compare/v9.18.1...v9.19.0) (2025-11-13)
+
+
+### Features
+
+* storefront graphql api ([1c816e3](https://github.com/Nosto/web-components/commit/1c816e3b80804b73fa8d81af1eb790f093b2de23))
+* update tests to use GraphQL shopify types ([66bc526](https://github.com/Nosto/web-components/commit/66bc5261385e1cc88c820d88fcfa1e2ce1be581a))
+* **VariantSelector:** add adjacentVariants support to GraphQL query ([41e4875](https://github.com/Nosto/web-components/commit/41e48755d229cc3e8d9588b0280539d1beccff43))
+
+
+### Reverts
+
+* remove test changes and convertRestToGraphQL helper ([4b6d6e5](https://github.com/Nosto/web-components/commit/4b6d6e5ab7a33bea07607e4bd1e7aea80b0b53ba))
+
+## [9.18.1](https://github.com/Nosto/web-components/compare/v9.18.0...v9.18.1) (2025-11-12)
+
+
+### Bug Fixes
+
+* **tests:** update IntersectionObserver mocking for Vitest 4.x compatibility ([bfa7201](https://github.com/Nosto/web-components/commit/bfa7201c73ea629e3ed6312c76a379698627e1ec))
+
+# [9.18.0](https://github.com/Nosto/web-components/compare/v9.17.0...v9.18.0) (2025-11-12)
+
+
+### Bug Fixes
+
+* additional checks ([eb0e161](https://github.com/Nosto/web-components/commit/eb0e1615afb3648b2e7120d1b034f246255ff21a))
+* event listeners ([c1d7817](https://github.com/Nosto/web-components/commit/c1d7817a94a4e25e5761d9ebaacfb7fef2efc3c9))
+* lint ([6a0980e](https://github.com/Nosto/web-components/commit/6a0980e5bf7423c865900303af6176db87575ce0))
+* lint ([f114a83](https://github.com/Nosto/web-components/commit/f114a8348ac8d7c014e36dbe98449646d879a009))
+* reviews ([2f5fe3a](https://github.com/Nosto/web-components/commit/2f5fe3a845a675500ceef75a13a7fdefd64b4ec5))
+* reviews ([ec81435](https://github.com/Nosto/web-components/commit/ec814354f1849232c4751737cc3b761eb764b9af))
+* reviews ([43aac32](https://github.com/Nosto/web-components/commit/43aac32d38b861c4798740e775fac889abf230a0))
+* **SimpleCard:** remove event listeners from mock mode ([c0d5bc3](https://github.com/Nosto/web-components/commit/c0d5bc37b9d2c925c8d6afc3b74cf6e7aaaabdcb))
+* tests ([65ded71](https://github.com/Nosto/web-components/commit/65ded711a6465c70d6e523ed83780786f004e2c4))
+
+
+### Features
+
+* mock mode ([eaf4b52](https://github.com/Nosto/web-components/commit/eaf4b5299d6120c50b02445301d32213ba26e4fb))
+* **SimpleCard:** add mock mode tests and fix early return ([102c856](https://github.com/Nosto/web-components/commit/102c85687c9755342fa8023176430026ea278fb1))
+
+# [9.17.0](https://github.com/Nosto/web-components/compare/v9.16.0...v9.17.0) (2025-11-12)
+
+
+### Bug Fixes
+
+* lint ([2ae17e8](https://github.com/Nosto/web-components/commit/2ae17e83d513df07e1d7ce9d8620db5bcc9323ac))
+* lint ([92575b8](https://github.com/Nosto/web-components/commit/92575b88c9f095e8170817385bfdbbb024469b2a))
+* remove handles ([6757a18](https://github.com/Nosto/web-components/commit/6757a18fa3e2357d1e638a7818c7a816d8b68172))
+* reviews ([a765b92](https://github.com/Nosto/web-components/commit/a765b92015d31d8aa2d681ac677efbbf778eb301))
+* reviews ([5e6e35a](https://github.com/Nosto/web-components/commit/5e6e35a55bb023470878cd41cb46345fa3a4bbc7))
+* reviews ([a27fe83](https://github.com/Nosto/web-components/commit/a27fe834ead810b91cb1227b04ff493db1210b08))
+* story fixes ([5fc6546](https://github.com/Nosto/web-components/commit/5fc6546d6cc0105c0ce600dbc741681af367abac))
+
+
+### Features
+
+* mock mode ([996f3d3](https://github.com/Nosto/web-components/commit/996f3d3ce15cbbf131c80bd0a88af255df1f6eaf))
+
 # [9.16.0](https://github.com/Nosto/web-components/compare/v9.15.0...v9.16.0) (2025-11-07)
 
 

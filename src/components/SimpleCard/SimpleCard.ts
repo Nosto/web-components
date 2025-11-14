@@ -1,16 +1,15 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct } from "@/shopify/types"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
-import type { VariantChangeDetail } from "@/shopify/types"
+import type { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
+import { fetchProduct } from "@/shopify/graphql/fetchProduct"
+import { parseId, toProductId } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -18,14 +17,29 @@ const setShadowContent = shadowContentFactory(styles)
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 
 export const mockProduct = {
-  id: 7001,
+  id: toProductId(7001),
+  availableForSale: true,
   title: "Mock Product",
   vendor: "Mock Brand",
-  url: "/products/mock-product",
-  images: ["https://cdn.nosto.com/nosto/7/mock"],
-  price: 1000,
-  compare_at_price: 1200
-}
+  onlineStoreUrl: "/products/mock-product",
+  images: [
+    {
+      url: "https://cdn.nosto.com/nosto/7/mock",
+      altText: "Mock Product Image",
+      width: 800,
+      height: 800,
+      thumbhash: null
+    }
+  ],
+  price: {
+    amount: "10",
+    currencyCode: "USD"
+  },
+  compareAtPrice: {
+    amount: "12",
+    currencyCode: "USD"
+  }
+} as ShopifyProduct
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -113,7 +127,8 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
-  element.variantId = variant.id
+  element.productId = parseId(variant.product.id)
+  element.variantId = parseId(variant.id)
   updateSimpleCardContent(element, variant)
 }
 
@@ -126,8 +141,8 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   }
   element.toggleAttribute("loading", true)
   try {
-    const productData = element.mock ? mockProduct : await fetchProductData(element.handle)
-    element.productId = productData.id
+    const productData = element.mock ? mockProduct : await fetchProduct(element.handle)
+    element.productId = parseId(productData.id)
 
     const cardHTML = generateCardHTML(element, productData)
     setShadowContent(element, cardHTML.html)
@@ -137,11 +152,6 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   } finally {
     element.toggleAttribute("loading", false)
   }
-}
-
-async function fetchProductData(handle: string) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  return getJSON<ShopifyProduct>(url.href, { cached: true })
 }
 
 declare global {

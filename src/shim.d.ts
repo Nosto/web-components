@@ -10,6 +10,7 @@ interface Window {
     currency?: {
       active?: string
     }
+    country?: string
     locale?: string
   }
 }
@@ -26,6 +27,11 @@ declare module "*.css" {
 }
 
 declare module "*.css?raw" {
+  const content: string
+  export default content
+}
+
+declare module "*.graphql?raw" {
   const content: string
   export default content
 }

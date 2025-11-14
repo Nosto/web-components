@@ -8,7 +8,7 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2018",
   sourcemap: true,
-  loader: { ".css": "text" }
+  loader: { ".css": "text", ".graphql": "text" }
 }
 
 async function build() {

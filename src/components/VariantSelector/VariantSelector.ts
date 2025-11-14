@@ -1,12 +1,12 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { getJSON } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import type { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { fetchProduct } from "@/shopify/graphql/fetchProduct"
+import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -32,7 +32,6 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {string} variantId - (Optional) The ID of the variant to preselect on load.
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
- * @property {boolean} filtered - Whether to only show options leading to available variants. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
@@ -43,7 +42,6 @@ export class VariantSelector extends NostoElement {
   @property(String) handle!: string
   @property(Number) variantId?: number
   @property(Boolean) preselect?: boolean
-  @property(Boolean) filtered?: boolean
   @property(Boolean) placeholder?: boolean
 
   /**
@@ -76,7 +74,7 @@ export class VariantSelector extends NostoElement {
 async function loadAndRenderMarkup(element: VariantSelector) {
   element.toggleAttribute("loading", true)
   try {
-    const productData = await fetchProductData(element)
+    const productData = await fetchProduct(element.handle)
 
     // Initialize selections with first value of each option
     initializeDefaultSelections(element, productData)
@@ -109,18 +107,19 @@ async function loadAndRenderMarkup(element: VariantSelector) {
 function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
-    variant = product.variants.find(v => v.id === element.variantId)
+    const variantIdStr = toVariantGid(element.variantId)
+    variant = product.variants.find(v => v.id === variantIdStr)
   } else if (element.preselect) {
-    variant = product.variants.find(v => v.available)
+    variant = product.variants.find(v => v.availableForSale)
   }
-  if (variant) {
-    product.options.forEach((option, index) => {
-      element.selectedOptions[option.name] = variant.options[index]
+  if (variant && variant.selectedOptions) {
+    variant.selectedOptions.forEach(selectedOption => {
+      element.selectedOptions[selectedOption.name] = selectedOption.value
     })
   } else {
     product.options.forEach(option => {
-      if (option.values.length === 1) {
-        element.selectedOptions[option.name] = option.values[0]
+      if (option.optionValues.length === 1) {
+        element.selectedOptions[option.name] = option.optionValues[0].name
       }
     })
   }
@@ -147,7 +146,7 @@ export async function selectOption(element: VariantSelector, optionName: string,
   updateActiveStates(element)
 
   // Fetch product data and emit variant change
-  const productData = await fetchProductData(element)
+  const productData = await fetchProduct(element.handle)
   emitVariantChange(element, productData)
 }
 
@@ -161,13 +160,14 @@ function updateActiveStates(element: VariantSelector) {
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
-  const optionNames = product.options.map(option => option.name)
   product.variants
-    .filter(v => v.available)
+    .filter(v => v.availableForSale)
     .forEach(variant => {
-      variant.options.forEach((optionValue, i) => {
-        availableOptions.add(`${optionNames[i]}::${optionValue}`)
-      })
+      if (variant.selectedOptions) {
+        variant.selectedOptions.forEach(selectedOption => {
+          availableOptions.add(`${selectedOption.name}::${selectedOption.value}`)
+        })
+      }
     })
   element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
     const { optionName, optionValue } = button.dataset
@@ -189,7 +189,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
 function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   const variant = getSelectedVariant(element, product)
   if (variant) {
-    element.variantId = variant.id
+    element.variantId = parseId(variant.id)
     const detail: VariantChangeDetail = { variant }
     element.dispatchEvent(
       new CustomEvent("variantchange", {
@@ -203,32 +203,14 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
-      return product.options.every((option, index) => {
+      if (!variant.selectedOptions) return false
+      return product.options.every(option => {
         const selectedValue = element.selectedOptions[option.name]
-        const variantValue = variant.options[index]
-        return selectedValue === variantValue
+        const variantOption = variant.selectedOptions!.find(so => so.name === option.name)
+        return variantOption && selectedValue === variantOption.value
       })
     }) || null
   )
-}
-
-async function fetchProductData({ handle, filtered }: VariantSelector) {
-  const url = createShopifyUrl(`/products/${handle}.js`)
-  const data = await getJSON<ShopifyProduct>(url.href, { cached: true })
-
-  if (filtered) {
-    return { ...data, options: filteredOptions(data) }
-  }
-  return data
-}
-
-function filteredOptions(product: ShopifyProduct) {
-  return product.options.map(option => {
-    return {
-      ...option,
-      values: option.values.filter(value => product.variants.some(variant => variant.options.includes(value)))
-    }
-  })
 }
 
 declare global {

@@ -5,6 +5,7 @@ import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("DynamicCard", () => {
   afterEach(() => {
@@ -93,11 +94,8 @@ describe("DynamicCard", () => {
         markup: "<div>Custom Product Info</div>"
       }
     })
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => ({
-      observe: vi.fn(),
-      disconnect: vi.fn()
-    }))
+    // Mock IntersectionObserver
+    mockIntersectionObserver()
 
     const card = (<nosto-dynamic-card handle="test-handle" template="default" />) as DynamicCard
     await card.connectedCallback()
@@ -128,20 +126,20 @@ describe("DynamicCard", () => {
     const card = (<nosto-dynamic-card handle="lazy-handle" template="default" lazy={true} />) as DynamicCard
 
     // Mock IntersectionObserver
-    const mockObserver = {
-      observe: vi.fn(),
-      disconnect: vi.fn()
-    }
-    // @ts-expect-error partial mock assignment
-    global.IntersectionObserver = vi.fn(() => mockObserver)
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    const { observe } = mockIntersectionObserver({
+      onCallback: callback => {
+        observerCallback = callback
+      }
+    })
 
     // Call connectedCallback manually
     await card.connectedCallback()
-    expect(mockObserver.observe).toHaveBeenCalledWith(card)
+    expect(observe).toHaveBeenCalledWith(card)
 
     // Simulate intersection
-    // @ts-expect-error IntersectionObserver is not typed as a mock
-    global.IntersectionObserver.mock.calls[0][0]([{ isIntersecting: true }])
+    await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
     await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
     expect(card.innerHTML).toBe(validMarkup)
@@ -208,9 +206,6 @@ describe("DynamicCard", () => {
     await card.connectedCallback()
 
     expect(card.innerHTML).toBe(validMarkup)
-
-    // Restore original globals
-    vi.unstubAllGlobals()
   })
 
   it("emits DynamicCard/loaded event when content is loaded", async () => {
@@ -253,9 +248,6 @@ describe("DynamicCard", () => {
     await card.connectedCallback()
 
     expect(card.innerHTML).toBe(validMarkup)
-
-    // Restore original globals
-    vi.unstubAllGlobals()
   })
 
   it("throws error when markup contains body or html tags", async () => {
@@ -283,31 +275,26 @@ describe("DynamicCard", () => {
     })
 
     // Mock IntersectionObserver
-    const mockObserve = vi.fn()
-    const mockDisconnect = vi.fn()
-    const mockIntersectionObserver = vi.fn().mockImplementation(callback => ({
-      observe: mockObserve,
-      disconnect: mockDisconnect,
-      callback
-    }))
-    vi.stubGlobal("IntersectionObserver", mockIntersectionObserver)
+    let observerCallback: IntersectionObserverCallback | null = null
+
+    const { observe, disconnect } = mockIntersectionObserver({
+      onCallback: callback => {
+        observerCallback = callback
+      }
+    })
 
     const card = (<nosto-dynamic-card handle="lazy-handle" template="lazy-template" lazy />) as DynamicCard
 
     await card.connectedCallback()
 
     // Should have set up intersection observer
-    expect(mockIntersectionObserver).toHaveBeenCalled()
-    expect(mockObserve).toHaveBeenCalledWith(card)
+    expect(observe).toHaveBeenCalledWith(card)
 
     // Simulate intersection
-    const observerCallback = mockIntersectionObserver.mock.calls[0][0]
-    await observerCallback([{ isIntersecting: true }])
+    await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
 
-    expect(mockDisconnect).toHaveBeenCalled()
+    expect(disconnect).toHaveBeenCalled()
     expect(card.innerHTML).toBe(validMarkup)
-
-    vi.unstubAllGlobals()
   })
 
   it("includes variant parameter when variantId is provided", async () => {
@@ -347,5 +334,70 @@ describe("DynamicCard", () => {
 
     // Should extract content from the section element
     expect(card.innerHTML).toBe("<div>Section content</div>")
+  })
+
+  describe("Mock state", () => {
+    function checkStructure(shadowRoot: ShadowRoot | null) {
+      expect(shadowRoot).not.toBeNull()
+      expect(shadowRoot?.innerHTML).toContain("Mock Product Title")
+      expect(shadowRoot?.innerHTML).toContain("Mock Brand")
+      expect(shadowRoot?.innerHTML).toContain("https://cdn.nosto.com/nosto/7/mock")
+    }
+    it("renders mock markup when mock attribute is true", async () => {
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+      checkStructure(card.shadowRoot)
+    })
+
+    it("does not fetch from Shopify when mock attribute is true", async () => {
+      let fetchCalled = false
+      addHandlers(
+        http.get("/products/:handle", () => {
+          fetchCalled = true
+          return HttpResponse.text("<div>Should not be called</div>")
+        })
+      )
+
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(fetchCalled).toBe(false)
+      checkStructure(card.shadowRoot)
+    })
+
+    it("emits DynamicCard/loaded event when mock attribute is true", async () => {
+      const card = (<nosto-dynamic-card handle="test-handle" template="default" mock={true} />) as DynamicCard
+
+      let eventEmitted = false
+      card.addEventListener("@nosto/DynamicCard/loaded", () => {
+        eventEmitted = true
+      })
+
+      await card.connectedCallback()
+
+      expect(eventEmitted).toBe(true)
+      checkStructure(card.shadowRoot)
+    })
+
+    it("does not require handle when mock attribute is true", async () => {
+      // When mock is true, handle should not be required
+      const card = (<nosto-dynamic-card mock={true} />) as DynamicCard
+
+      // Should not throw an error
+      await expect(card.connectedCallback()).resolves.not.toThrow()
+      checkStructure(card.shadowRoot)
+    })
+
+    it("renders mock markup with expected structure", async () => {
+      const card = (<nosto-dynamic-card mock={true} />) as DynamicCard
+
+      await card.connectedCallback()
+
+      const shadowRoot = card.shadowRoot
+      expect(shadowRoot).not.toBeNull()
+      checkStructure(card.shadowRoot)
+    })
   })
 })

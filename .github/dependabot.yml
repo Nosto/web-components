@@ -1,6 +1,5 @@
 version: 2
 updates:
-  # Monitor GitHub Actions workflows for third-party action updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -13,41 +12,25 @@ updates:
       prefix: "chore"
       include: "scope"
     open-pull-requests-limit: 5
-    reviewers:
-      - "manikandan-ravikumar"
-
-  # Monitor npm dependencies with logical grouping by module type
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
     labels:
       - "dependencies"
     commit-message:
-      prefix: "chore"
-      include: "scope"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "manikandan-ravikumar"
+      prefix: "deps"
+    open-pull-requests-limit: 10
     groups:
-      # Storybook related packages
       storybook:
         patterns:
           - "@storybook/*"
           - "storybook"
-      # ESLint and linting tools
       eslint:
         patterns:
           - "eslint"
           - "eslint-*"
-      # Testing frameworks and tools
-      testing:
+      vitest:
         patterns:
           - "vitest"
           - "@vitest/*"
-      # Nosto packages
-      nosto:
-        patterns:
-          - "@nosto/*"
