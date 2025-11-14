@@ -84,12 +84,11 @@ export const Default: Story = {
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    const displayHandles = handles.slice(0, args.columns)
     return html`
       <div
         style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;"
       >
-        ${displayHandles.map(
+        ${handles.map(
           handle => html`
             <nosto-simple-card
               handle="${handle}"
