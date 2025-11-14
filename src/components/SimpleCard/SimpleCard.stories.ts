@@ -9,7 +9,7 @@ const root = "https://nosto-shopify1.myshopify.com/"
 const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
   const { products, root: argRoot } = context.args
   return {
-    handles: await getExampleHandles(argRoot || root, products || 12)
+    handles: await getExampleHandles(argRoot || root, products)
   }
 }
 
