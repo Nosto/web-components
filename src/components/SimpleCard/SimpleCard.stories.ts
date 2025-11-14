@@ -6,9 +6,12 @@ import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 const root = "https://nosto-shopify1.myshopify.com/"
 
 // Shared loader for fetching example handles
-const exampleHandlesLoader = async (context: { args: { root?: string } }) => ({
-  handles: await getExampleHandles(context.args.root || root, 12)
-})
+const exampleHandlesLoader = async (context: { args: { root?: string, products?: number } }) => {
+  const { products, root: argRoot } = context.args
+  return {
+    handles: await getExampleHandles(argRoot || root, products || 12)
+  }
+}
 
 window.Shopify = {
   routes: {
@@ -75,12 +78,20 @@ export const Default: Story = {
       description: "Number of columns to display in the grid",
       control: { type: "range", min: 1, max: 8, step: 1 },
       table: {
-        category: "Storybook options"
+        category: "Layout options"
+      }
+    },
+    products: {
+      description: "Number of products to display in the grid",
+      control: { type: "range", min: 1, max: 20, step: 1 },
+      table: {
+        category: "Layout options"
       }
     }
   },
   args: {
-    columns: 4
+    columns: 4,
+    products: 12
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
