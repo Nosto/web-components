@@ -158,5 +158,5 @@ export const Mocked: Story = {
   args: {
     mock: true
   },
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
 }
