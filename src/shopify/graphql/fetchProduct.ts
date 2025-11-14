@@ -1,15 +1,9 @@
 import { flattenResponse } from "./utils"
 import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
-import { ShopifyProduct } from "./types"
 import { getApiUrl } from "./constants"
+import { cached } from "@/utils/cached"
 
-const productCache = new Map<string, ShopifyProduct>()
-
-export async function fetchProduct(handle: string) {
-  if (productCache.has(handle)) {
-    return productCache.get(handle)!
-  }
-
+export const [fetchProduct, clearProductCache] = cached(async (handle: string) => {
   const response = await fetch(getApiUrl().href, {
     headers: {
       "Content-Type": "application/json"
@@ -28,11 +22,5 @@ export async function fetchProduct(handle: string) {
     throw new Error(`Failed to fetch product data: ${response.status} ${response.statusText}`)
   }
   const responseData = await response.json()
-  const flattened = flattenResponse(responseData) as ShopifyProduct
-  productCache.set(handle, flattened)
-  return flattened
-}
-
-export function clearProductCache() {
-  productCache.clear()
-}
+  return flattenResponse(responseData)
+})
