@@ -67,17 +67,11 @@ export const Default: Story = {
     placeholder: {
       description:
         "If true, the component will display cached content from a previous render while loading new data. Useful for preventing layout shifts.",
-      control: { type: "boolean" },
-      table: {
-        category: "Component options"
-      }
+      control: { type: "boolean" }
     },
     preselect: {
       description: "Whether to automatically preselect the options of the first available variant",
-      control: { type: "boolean" },
-      table: {
-        category: "Component options"
-      }
+      control: { type: "boolean" }
     }
   },
   args: {
