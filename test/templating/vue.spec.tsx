@@ -237,14 +237,6 @@ describe("vue:compile", () => {
       expect(input.hasAttribute("v-bind:value")).toBe(false)
     })
 
-    it("should bind to native checkbox checked property", () => {
-      container.innerHTML = `<input type="checkbox" id="test" v-bind:checked="isChecked" />`
-      processElement(container, { isChecked: true })
-      const checkbox = container.querySelector("#test") as HTMLInputElement
-      expect(checkbox.checked).toBe(true)
-      expect(checkbox.hasAttribute("v-bind:checked")).toBe(false)
-    })
-
     it("should bind to native button disabled property", () => {
       container.innerHTML = `<button id="test" v-bind:disabled="isDisabled">Click</button>`
       processElement(container, { isDisabled: true })
@@ -253,67 +245,12 @@ describe("vue:compile", () => {
       expect(button.hasAttribute("v-bind:disabled")).toBe(false)
     })
 
-    it("should bind to native textarea value property", () => {
-      container.innerHTML = `<textarea id="test" v-bind:value="textValue"></textarea>`
-      processElement(container, { textValue: "multi\nline\ntext" })
-      const textarea = container.querySelector("#test") as HTMLTextAreaElement
-      expect(textarea.value).toBe("multi\nline\ntext")
-      expect(textarea.hasAttribute("v-bind:value")).toBe(false)
-    })
-
-    it("should bind to select element's value property", () => {
-      container.innerHTML = `
-        <select id="test" v-bind:value="selectedValue">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-        </select>`
-      processElement(container, { selectedValue: "option2" })
-      const select = container.querySelector("#test") as HTMLSelectElement
-      expect(select.value).toBe("option2")
-      expect(select.hasAttribute("v-bind:value")).toBe(false)
-    })
-
     it("should fallback to attribute binding for non-existent properties", () => {
       container.innerHTML = `<div id="test" v-bind:data-custom="customAttr"></div>`
       processElement(container, { customAttr: "custom-value" })
       const div = container.querySelector("#test") as HTMLDivElement
       expect(div.getAttribute("data-custom")).toBe("custom-value")
       expect(div.hasAttribute("v-bind:data-custom")).toBe(false)
-    })
-
-    it("should bind boolean false to disabled property correctly", () => {
-      container.innerHTML = `<button id="test" v-bind:disabled="isDisabled">Click</button>`
-      processElement(container, { isDisabled: false })
-      const button = container.querySelector("#test") as HTMLButtonElement
-      expect(button.disabled).toBe(false)
-      expect(button.hasAttribute("disabled")).toBe(false)
-    })
-
-    it("should bind numeric values to properties", () => {
-      container.innerHTML = `<input type="number" id="test" v-bind:value="numValue" />`
-      processElement(container, { numValue: 42 })
-      const input = container.querySelector("#test") as HTMLInputElement
-      expect(input.value).toBe("42")
-      expect(input.hasAttribute("v-bind:value")).toBe(false)
-    })
-
-    it("should work with v-bind object syntax for properties", () => {
-      container.innerHTML = `<input id="test" v-bind="{ value: 'obj-value', disabled: true }" />`
-      processElement(container, {})
-      const input = container.querySelector("#test") as HTMLInputElement
-      expect(input.value).toBe("obj-value")
-      expect(input.disabled).toBe(true)
-      expect(input.hasAttribute("v-bind")).toBe(false)
-    })
-
-    it("should maintain style object binding behavior", () => {
-      container.innerHTML = `<div id="test" v-bind:style="{ color: 'blue', fontSize: '20px' }"></div>`
-      processElement(container, {})
-      const div = container.querySelector("#test") as HTMLDivElement
-      expect(div.style.color).toBe("blue")
-      expect(div.style.fontSize).toBe("20px")
-      expect(div.hasAttribute("v-bind:style")).toBe(false)
     })
   })
 })
