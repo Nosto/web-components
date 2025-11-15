@@ -34,6 +34,10 @@ function setAttribute(el: Element, name: string, value: unknown) {
   }
   if (el instanceof HTMLElement && name === "style" && value && typeof value === "object") {
     Object.assign(el.style, value)
+  } else if (name in el) {
+    // Bind directly to property when it exists on the element
+    // @ts-expect-error setting property directly
+    el[name] = value
   } else {
     el.setAttribute(name, String(value))
   }
