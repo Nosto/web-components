@@ -227,4 +227,30 @@ describe("vue:compile", () => {
       `<div class="item">{{ item }}</div> <div class="item">{{ item }}</div> <div class="item">{{ item }}</div>`
     )
   })
+
+  describe("property binding", () => {
+    it("should bind to native input value property instead of attribute", () => {
+      container.innerHTML = `<input id="test" v-bind:value="inputValue" />`
+      processElement(container, { inputValue: "test-value" })
+      const input = container.querySelector("#test") as HTMLInputElement
+      expect(input.value).toBe("test-value")
+      expect(input.hasAttribute("v-bind:value")).toBe(false)
+    })
+
+    it("should bind to native button disabled property", () => {
+      container.innerHTML = `<button id="test" v-bind:disabled="isDisabled">Click</button>`
+      processElement(container, { isDisabled: true })
+      const button = container.querySelector("#test") as HTMLButtonElement
+      expect(button.disabled).toBe(true)
+      expect(button.hasAttribute("v-bind:disabled")).toBe(false)
+    })
+
+    it("should fallback to attribute binding for non-existent properties", () => {
+      container.innerHTML = `<div id="test" v-bind:data-custom="customAttr"></div>`
+      processElement(container, { customAttr: "custom-value" })
+      const div = container.querySelector("#test") as HTMLDivElement
+      expect(div.getAttribute("data-custom")).toBe("custom-value")
+      expect(div.hasAttribute("v-bind:data-custom")).toBe(false)
+    })
+  })
 })
