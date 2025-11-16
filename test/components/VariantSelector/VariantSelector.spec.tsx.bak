@@ -201,7 +201,9 @@ describe("VariantSelector", () => {
   })
 
   it("should render variant options for products with multiple variants", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
@@ -219,7 +221,9 @@ describe("VariantSelector", () => {
   })
 
   it("should not render selector UI for products without variants but include slot", async () => {
-    addProductHandlers([{ ...mockProductWithoutVariants, handle: "no-variants" }])
+    addProductHandlers({
+      "no-variants": { product: mockProductWithoutVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
     await selector.connectedCallback()
@@ -229,7 +233,9 @@ describe("VariantSelector", () => {
   })
 
   it("should not preselect by default", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
@@ -242,7 +248,9 @@ describe("VariantSelector", () => {
   })
 
   it("should emit variantchange event on option selection", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
@@ -263,7 +271,9 @@ describe("VariantSelector", () => {
   })
 
   it("should update selected variant when options change", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
     await selector.connectedCallback()
@@ -279,7 +289,9 @@ describe("VariantSelector", () => {
   })
 
   it("should handle option button clicks", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
@@ -313,7 +325,9 @@ describe("VariantSelector", () => {
   })
 
   it("should update active states when selection changes", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
     await selector.connectedCallback()
@@ -339,7 +353,9 @@ describe("VariantSelector", () => {
   })
 
   it("should preselect when preselect attribute is present", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect />) as VariantSelector
     await selector.connectedCallback()
@@ -351,7 +367,9 @@ describe("VariantSelector", () => {
   })
 
   it("should not preselect by default when preselect attribute is not specified", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
@@ -363,7 +381,9 @@ describe("VariantSelector", () => {
   })
 
   it("should include default slot in shadow DOM", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
@@ -375,7 +395,9 @@ describe("VariantSelector", () => {
   })
 
   it("should include default slot even when no variants are rendered", async () => {
-    addProductHandlers([{ ...mockProductWithoutVariants, handle: "no-variants" }])
+    addProductHandlers({
+      "no-variants": { product: mockProductWithoutVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
     await selector.connectedCallback()
@@ -387,7 +409,9 @@ describe("VariantSelector", () => {
   })
 
   it("should render slotted content correctly", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
 
@@ -416,7 +440,9 @@ describe("VariantSelector", () => {
 
   describe("Single-value options", () => {
     it("should auto-select single-value options regardless of preselect attribute", async () => {
-      addProductHandlers([{ ...mockProductWithSingleValueOptionTest, handle: "single-value-test" }])
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
+      })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
       await selector.connectedCallback()
@@ -428,7 +454,9 @@ describe("VariantSelector", () => {
     })
 
     it("should auto-select single-value options even when preselect is true", async () => {
-      addProductHandlers([{ ...mockProductWithSingleValueOptionTest, handle: "single-value-test" }])
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
+      })
 
       const selector = (<nosto-variant-selector handle="single-value-test" preselect />) as VariantSelector
       await selector.connectedCallback()
@@ -439,7 +467,9 @@ describe("VariantSelector", () => {
     })
 
     it("should hide single-value options from rendered UI", async () => {
-      addProductHandlers([{ ...mockProductWithSingleValueOptionTest, handle: "single-value-test" }])
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
+      })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
       await selector.connectedCallback()
@@ -458,7 +488,9 @@ describe("VariantSelector", () => {
     })
 
     it("should not render selector UI when all options are single-value but include slot", async () => {
-      addProductHandlers([{ ...mockProductWithAllSingleValueOptionsTest, handle: "all-single-value-test" }])
+      addProductHandlers({
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
+      })
 
       const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
       await selector.connectedCallback()
@@ -472,7 +504,9 @@ describe("VariantSelector", () => {
     })
 
     it("should emit variantchange event for products with single-value options", async () => {
-      addProductHandlers([{ ...mockProductWithAllSingleValueOptionsTest, handle: "all-single-value-test" }])
+      addProductHandlers({
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
+      })
 
       const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
 
@@ -489,7 +523,9 @@ describe("VariantSelector", () => {
     })
 
     it("should correctly select variants with mixed single and multi-value options", async () => {
-      addProductHandlers([{ ...mockProductWithSingleValueOptionTest, handle: "single-value-test" }])
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
+      })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
       await selector.connectedCallback()
@@ -507,7 +543,9 @@ describe("VariantSelector", () => {
   })
 
   it("should preselect options based on given variantId", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" variantId={1002} />) as VariantSelector
     await selector.connectedCallback()
@@ -517,7 +555,9 @@ describe("VariantSelector", () => {
   })
 
   it("should emit VariantSelector/rendered event when content is loaded", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "event-test-handle" }])
+    addProductHandlers({
+      "event-test-handle": { product: mockProductWithVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="event-test-handle" />) as VariantSelector
 
@@ -537,7 +577,9 @@ describe("VariantSelector", () => {
   })
 
   it("should emit VariantSelector/rendered event even for products without variants", async () => {
-    addProductHandlers([{ ...mockProductWithoutVariants, handle: "no-variants" }])
+    addProductHandlers({
+      "no-variants": { product: mockProductWithoutVariants }
+    })
 
     const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
 
@@ -557,7 +599,9 @@ describe("VariantSelector", () => {
   })
 
   it("should use placeholder content when placeholder attribute is set", async () => {
-    addProductHandlers([{ ...mockProductWithVariants, handle: "variant-test-product" }])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants }
+    })
 
     // First, render without placeholder to populate cache
     const selector1 = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -576,10 +620,10 @@ describe("VariantSelector", () => {
   })
 
   it("should use cached placeholder content even with different handle", async () => {
-    addProductHandlers([
-      { ...mockProductWithVariants, handle: "variant-test-product" },
-      { ...mockProductWithVariants, handle: "different-handle" }
-    ])
+    addProductHandlers({
+      "variant-test-product": { product: mockProductWithVariants },
+      "different-handle": { product: mockProductWithVariants }
+    })
 
     // First, render without placeholder to populate cache for variant-test-product
     const selector1 = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector

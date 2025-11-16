@@ -3,8 +3,20 @@ import { http, HttpResponse } from "msw"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { getApiUrl } from "@/shopify/graphql/constants"
 
-export function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
+type ProductWithHandle = ShopifyProduct & { handle: string }
+
+export function addProductHandlers(products: (ShopifyProduct & { handle: string })[]) {
   const graphqlPath = getApiUrl().pathname
+  const productsByHandle = products.reduce(
+    (acc, product) => {
+      const handle = (product as ProductWithHandle).handle
+      if (handle) {
+        acc[handle] = product
+      }
+      return acc
+    },
+    {} as Record<string, ShopifyProduct>
+  )
 
   addHandlers(
     http.post(graphqlPath, async ({ request }) => {
@@ -19,11 +31,10 @@ export function addProductHandlers(responses: Record<string, { product?: Shopify
 
         const nodes = requestedHandles
           .map(handle => {
-            const response = responses[handle]
-            if (!response || response.status === 404 || response.status === 500) {
+            const product = productsByHandle[handle]
+            if (!product) {
               return null
             }
-            const product = (response.product || response) as ShopifyProduct
             return {
               ...product,
               handle,
@@ -31,19 +42,6 @@ export function addProductHandlers(responses: Record<string, { product?: Shopify
             }
           })
           .filter((p): p is NonNullable<typeof p> => p !== null)
-
-        // Check if any of the requested products had error status
-        const errorResponse = requestedHandles.find(h => {
-          const resp = responses[h]
-          return resp && (resp.status === 500 || resp.status === 404)
-        })
-
-        if (errorResponse && responses[errorResponse]) {
-          return HttpResponse.json(
-            { errors: [{ message: "Error" }] },
-            { status: responses[errorResponse].status || 500 }
-          )
-        }
 
         return HttpResponse.json({ data: { products: { nodes } } })
       }
