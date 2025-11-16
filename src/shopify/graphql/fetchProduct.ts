@@ -113,8 +113,4 @@ function requestProduct(handle: string): Promise<ShopifyProduct> {
   })
 }
 
-async function fetchProductUncached(handle: string): Promise<ShopifyProduct> {
-  return requestProduct(handle)
-}
-
-export const [fetchProduct, clearProductCache] = cached(fetchProductUncached)
+export const [fetchProduct, clearProductCache] = cached(requestProduct)
