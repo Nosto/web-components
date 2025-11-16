@@ -11,55 +11,13 @@ type PendingRequest = {
   reject: (error: Error) => void
 }
 
-class ProductBatcher {
-  private pendingRequests: Map<string, PendingRequest[]> = new Map()
-  private scheduledFlush: number | null = null
-
-  request(handle: string): Promise<ShopifyProduct> {
-    return new Promise((resolve, reject) => {
-      // Get or create array for this handle
-      const requests = this.pendingRequests.get(handle) || []
-      requests.push({ handle, resolve, reject })
-      this.pendingRequests.set(handle, requests)
-
-      // Schedule flush if not already scheduled
-      if (this.scheduledFlush === null) {
-        this.scheduledFlush = requestAnimationFrame(() => this.flush())
-      }
-    })
+function createProductBatcher() {
+  const state = {
+    pendingRequests: new Map<string, PendingRequest[]>(),
+    scheduledFlush: null as number | null
   }
 
-  private async flush() {
-    this.scheduledFlush = null
-
-    // Get unique handles from pending requests
-    const handles = Array.from(this.pendingRequests.keys())
-    const requestsMap = new Map(this.pendingRequests)
-    this.pendingRequests.clear()
-
-    if (handles.length === 0) {
-      return
-    }
-
-    try {
-      if (handles.length === 1) {
-        // Single request - use original query
-        await this.fetchSingle(handles[0], requestsMap.get(handles[0])!)
-      } else {
-        // Batch request - use batch query
-        await this.fetchBatch(handles, requestsMap)
-      }
-    } catch (error) {
-      // Reject all pending requests with the error
-      for (const requests of requestsMap.values()) {
-        for (const request of requests) {
-          request.reject(error instanceof Error ? error : new Error(String(error)))
-        }
-      }
-    }
-  }
-
-  private async fetchSingle(handle: string, requests: PendingRequest[]) {
+  async function fetchSingle(handle: string, requests: PendingRequest[]) {
     const response = await fetch(getApiUrl().href, {
       headers: {
         "Content-Type": "application/json"
@@ -91,7 +49,7 @@ class ProductBatcher {
     }
   }
 
-  private async fetchBatch(handles: string[], requestsMap: Map<string, PendingRequest[]>) {
+  async function fetchBatch(handles: string[], requestsMap: Map<string, PendingRequest[]>) {
     // Build variables for batch query (up to 10 handles)
     const batchSize = Math.min(handles.length, 10)
     const variables: Record<string, string> = {
@@ -167,9 +125,55 @@ class ProductBatcher {
       }
     }
   }
+
+  async function flush() {
+    state.scheduledFlush = null
+
+    // Get unique handles from pending requests
+    const handles = Array.from(state.pendingRequests.keys())
+    const requestsMap = new Map(state.pendingRequests)
+    state.pendingRequests.clear()
+
+    if (handles.length === 0) {
+      return
+    }
+
+    try {
+      if (handles.length === 1) {
+        // Single request - use original query
+        await fetchSingle(handles[0], requestsMap.get(handles[0])!)
+      } else {
+        // Batch request - use batch query
+        await fetchBatch(handles, requestsMap)
+      }
+    } catch (error) {
+      // Reject all pending requests with the error
+      for (const requests of requestsMap.values()) {
+        for (const request of requests) {
+          request.reject(error instanceof Error ? error : new Error(String(error)))
+        }
+      }
+    }
+  }
+
+  function request(handle: string): Promise<ShopifyProduct> {
+    return new Promise((resolve, reject) => {
+      // Get or create array for this handle
+      const requests = state.pendingRequests.get(handle) || []
+      requests.push({ handle, resolve, reject })
+      state.pendingRequests.set(handle, requests)
+
+      // Schedule flush if not already scheduled
+      if (state.scheduledFlush === null) {
+        state.scheduledFlush = requestAnimationFrame(() => flush())
+      }
+    })
+  }
+
+  return { request }
 }
 
-const batcher = new ProductBatcher()
+const batcher = createProductBatcher()
 
 async function fetchProductUncached(handle: string): Promise<ShopifyProduct> {
   return batcher.request(handle)
