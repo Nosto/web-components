@@ -33,8 +33,9 @@ function setAttribute(el: Element, name: string, value: unknown) {
       // Bind directly to property when it exists on the element
       // @ts-expect-error setting property directly
       el[name] = value
+    } else {
+      el.removeAttribute(name)
     }
-    el.removeAttribute(name)
     return
   }
   if (el instanceof HTMLElement && name === "style" && value && typeof value === "object") {

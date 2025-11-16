@@ -123,11 +123,11 @@ describe("vue:compile", () => {
   })
 
   it("should skip null and undefined values in v-bind", () => {
-    container.append(<div id="test" v-bind="{ title: null, 'data-val': undefined }"></div>)
+    container.append(<div id="test" v-bind="{ 'data-attr1': null, 'data-attr2': undefined }"></div>)
     processElement(container, {})
     const el = container.querySelector("#test") as HTMLElement
-    expect(el.hasAttribute("title")).toBe(false)
-    expect(el.hasAttribute("data-val")).toBe(false)
+    expect(el.hasAttribute("data-attr1")).toBe(false)
+    expect(el.hasAttribute("data-attr2")).toBe(false)
     expect(el.hasAttribute("v-bind")).toBe(false)
   })
 
