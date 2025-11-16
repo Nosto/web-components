@@ -9,6 +9,10 @@ export function provide<T>(element: HTMLElement, key: symbol, value: T) {
   map.set(key, value)
 }
 
+export function unprovide(element: HTMLElement): void {
+  mapping.delete(element)
+}
+
 export function inject<T>(element: HTMLElement, key: symbol): T | undefined {
   let current: HTMLElement | null = element
   while (current) {
@@ -28,8 +32,4 @@ export function inject<T>(element: HTMLElement, key: symbol): T | undefined {
     }
   }
   return undefined
-}
-
-export function unprovide(element: HTMLElement): void {
-  mapping.delete(element)
 }

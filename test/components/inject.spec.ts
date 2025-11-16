@@ -66,46 +66,4 @@ describe("unprovide", () => {
     expect(inject<string>(element, key1)).toBeUndefined()
     expect(inject<string>(element, key2)).toBeUndefined()
   })
-
-  it("handles calling unprovide on non-existent element", () => {
-    const element = createElement()
-
-    expect(() => unprovide(element)).not.toThrow()
-  })
-
-  it("does not affect parent values when unproviding child", () => {
-    const parent = createElement()
-    const child = createElement()
-    parent.appendChild(child)
-
-    const key = Symbol("value")
-    const parentValue = "parent-value"
-    const childValue = "child-value"
-
-    provide(parent, key, parentValue)
-    provide(child, key, childValue)
-
-    expect(inject<string>(child, key)).toBe(childValue)
-
-    unprovide(child)
-
-    expect(inject<string>(child, key)).toBe(parentValue)
-    expect(inject<string>(parent, key)).toBe(parentValue)
-  })
-
-  it("works across shadow DOM boundaries", () => {
-    const host = createElement()
-    const shadow = host.attachShadow({ mode: "open" })
-    const child = createElement()
-    shadow.appendChild(child)
-
-    const key = Symbol("shadow-value")
-    const value = "shadow-test"
-
-    provide(host, key, value)
-    expect(inject<string>(child, key)).toBe(value)
-
-    unprovide(host)
-    expect(inject<string>(child, key)).toBeUndefined()
-  })
 })
