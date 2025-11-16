@@ -30,6 +30,12 @@ This package provides the following custom elements:
 | SkuOptions      | `nosto-sku-options`      | Product variant and SKU selection interface     |              |
 | VariantSelector | `nosto-variant-selector` | Product variant options as clickable pills      | Shopify only |
 
+## Shopify Section Definitions
+
+The [`shopify-sections/`](./shopify-sections) directory contains ready-to-use Shopify section definition files (`.liquid`) that work seamlessly with Nosto web components. These sections can be copied directly into your Shopify theme's `sections/` directory.
+
+See the [Shopify Sections README](./shopify-sections/README.md) for detailed documentation on available sections and how to use them.
+
 ## Documentation
 
 Read our [Techdocs](https://docs.nosto.com/techdocs/apis/frontend/oss/web-components) for more information on how to use these components.
