@@ -51,6 +51,16 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
     responseData.data.products.nodes.forEach((productNode: { handle: string }) => {
       const product = flattenResponse({ data: { product: productNode } })
       productsByHandle.set(productNode.handle, product)
+
+      // Also map by variant.product.onlineStoreUrl derived handles
+      product.variants?.forEach(variant => {
+        if (variant.product?.onlineStoreUrl) {
+          const match = variant.product.onlineStoreUrl.match(/\/products\/([^/?]+)/)
+          if (match?.[1]) {
+            productsByHandle.set(match[1], product)
+          }
+        }
+      })
     })
   }
 
