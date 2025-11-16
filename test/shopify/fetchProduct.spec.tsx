@@ -108,26 +108,12 @@ describe("fetchProduct", () => {
     variants: []
   }
 
-  function wrapProduct(product: ShopifyProduct) {
+  function wrapProduct(product: ShopifyProduct, handle: string) {
     return {
       ...product,
+      handle,
       images: { nodes: product.images }
     }
-  }
-
-  function setupSingleProductHandler(handle: string, product: ShopifyProduct) {
-    const graphqlPath = getApiUrl().pathname
-
-    addHandlers(
-      http.post(graphqlPath, async ({ request }) => {
-        const body = (await request.json()) as { query: string; variables: { handle: string } }
-        // Check if this is a single product query
-        if (body.variables.handle === handle && body.query.includes("ProductByHandle")) {
-          return HttpResponse.json({ data: { product: wrapProduct(product) } })
-        }
-        return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
-      })
-    )
   }
 
   function setupBatchProductHandler(products: Record<string, ShopifyProduct>) {
@@ -135,36 +121,19 @@ describe("fetchProduct", () => {
 
     addHandlers(
       http.post(graphqlPath, async ({ request }) => {
-        const body = (await request.json()) as { query: string; variables: Record<string, string> }
+        const body = (await request.json()) as { query: string; variables: { query?: string; first?: number } }
 
-        // Check if this is a batch query
-        if (body.query.includes("ProductsByHandles")) {
-          const responseData: Record<string, unknown> = {}
+        // Check if this is a batch query with products query
+        if (body.query.includes("ProductsByHandles") && body.variables.query) {
+          // Parse the query string to extract handles
+          const handleMatches = body.variables.query.match(/handle:([^\s)]+)/g)
+          const requestedHandles = handleMatches ? handleMatches.map(m => m.replace("handle:", "")) : []
 
-          // Map handles to products
-          for (let i = 1; i <= 10; i++) {
-            const handleKey = `handle${i}`
-            const productKey = `product${i}`
-            const handle = body.variables[handleKey]
+          const nodes = requestedHandles
+            .map(handle => (products[handle] ? wrapProduct(products[handle], handle) : null))
+            .filter((p): p is ReturnType<typeof wrapProduct> => p !== null)
 
-            if (handle && products[handle]) {
-              responseData[productKey] = wrapProduct(products[handle])
-            } else if (handle) {
-              // Handle exists but product not found - return null
-              responseData[productKey] = null
-            }
-          }
-
-          return HttpResponse.json({ data: responseData })
-        }
-
-        // Check if this is a single product query
-        if (body.query.includes("ProductByHandle")) {
-          const handle = body.variables.handle
-          if (products[handle]) {
-            return HttpResponse.json({ data: { product: wrapProduct(products[handle]) } })
-          }
-          return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
+          return HttpResponse.json({ data: { products: { nodes } } })
         }
 
         return HttpResponse.json({ errors: [{ message: "Invalid query" }] }, { status: 400 })
@@ -173,7 +142,9 @@ describe("fetchProduct", () => {
   }
 
   it("should fetch a single product", async () => {
-    setupSingleProductHandler("product-1", mockProduct1)
+    setupBatchProductHandler({
+      "product-1": mockProduct1
+    })
 
     const product = await fetchProduct("product-1")
 
@@ -236,7 +207,7 @@ describe("fetchProduct", () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
   })
 
-  it("should handle single product request when only one product is requested", async () => {
+  it("should handle single product request using batch query", async () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
@@ -250,11 +221,11 @@ describe("fetchProduct", () => {
     // Wait for any pending requests
     await new Promise(resolve => setTimeout(resolve, 50))
 
-    // Should use single product query for efficiency
+    // Should use batch query even for single product
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     const fetchCall = fetchSpy.mock.calls[0]
     const requestBody = JSON.parse(fetchCall[1]?.body as string)
-    expect(requestBody.query).toContain("ProductByHandle")
+    expect(requestBody.query).toContain("ProductsByHandles")
   })
 
   it("should use cache for subsequent requests", async () => {
@@ -332,8 +303,8 @@ describe("fetchProduct", () => {
     const product2Promise = fetchProduct("product-2")
     await product2Promise
 
-    // Should have made two separate requests
-    expect(fetchSpy.mock.calls.length).toBeGreaterThanOrEqual(1)
+    // Should have made two separate requests (one for each frame)
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
   })
 
   it("should handle up to 10 products in a single batch", async () => {

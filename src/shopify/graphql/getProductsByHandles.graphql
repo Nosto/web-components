@@ -1,85 +1,47 @@
 query ProductsByHandles(
   $country: CountryCode!
   $language: LanguageCode!
-  $handle1: String
-  $handle2: String
-  $handle3: String
-  $handle4: String
-  $handle5: String
-  $handle6: String
-  $handle7: String
-  $handle8: String
-  $handle9: String
-  $handle10: String
+  $query: String!
+  $first: Int!
 )
 @inContext(country: $country, language: $language) {
-  product1: product(handle: $handle1) {
-    ...ProductFragment
-  }
-  product2: product(handle: $handle2) {
-    ...ProductFragment
-  }
-  product3: product(handle: $handle3) {
-    ...ProductFragment
-  }
-  product4: product(handle: $handle4) {
-    ...ProductFragment
-  }
-  product5: product(handle: $handle5) {
-    ...ProductFragment
-  }
-  product6: product(handle: $handle6) {
-    ...ProductFragment
-  }
-  product7: product(handle: $handle7) {
-    ...ProductFragment
-  }
-  product8: product(handle: $handle8) {
-    ...ProductFragment
-  }
-  product9: product(handle: $handle9) {
-    ...ProductFragment
-  }
-  product10: product(handle: $handle10) {
-    ...ProductFragment
-  }
-}
-
-fragment ProductFragment on Product {
-  id
-  title
-  vendor
-  description
-  encodedVariantExistence
-  onlineStoreUrl
-  availableForSale
-  images(first: 10) {
+  products(first: $first, query: $query) {
     nodes {
-      url
-    }
-  }
-  featuredImage {
-    url
-  }
-  adjacentVariants {
-    ...VariantFragment
-  }
-  options(first: 50) {
-    name
-    optionValues {
-      firstSelectableVariant {
+      id
+      handle
+      title
+      vendor
+      description
+      encodedVariantExistence
+      onlineStoreUrl
+      availableForSale
+      images(first: 10) {
+        nodes {
+          url
+          altText
+          height
+          width
+          thumbhash
+        }
+      }
+      featuredImage {
+        url
+        altText
+        height
+        width
+        thumbhash
+      }
+      adjacentVariants {
         ...VariantFragment
       }
-      name
-      swatch {
-        color
-        image {
-          alt
-          id
-          mediaContentType
-          previewImage {
-            url
+      options(first: 50) {
+        name
+        optionValues {
+          firstSelectableVariant {
+            ...VariantFragment
           }
+          name
+          swatch
         }
       }
     }
@@ -92,6 +54,10 @@ fragment VariantFragment on ProductVariant {
   id
   image {
     url
+    altText
+    height
+    width
+    thumbhash
   }
   price {
     currencyCode

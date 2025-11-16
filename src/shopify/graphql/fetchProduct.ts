@@ -1,5 +1,4 @@
 import { flattenResponse } from "./utils"
-import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
 import getProductsByHandles from "@/shopify/graphql/getProductsByHandles.graphql?raw"
 import { getApiUrl } from "./constants"
 import { cached } from "@/utils/cached"
@@ -17,49 +16,9 @@ function createProductBatcher() {
     scheduledFlush: null as number | null
   }
 
-  async function fetchSingle(handle: string, requests: PendingRequest[]) {
-    const response = await fetch(getApiUrl().href, {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      method: "POST",
-      body: JSON.stringify({
-        query: getProductByHandle,
-        variables: {
-          language: window.Shopify?.locale?.toUpperCase() || "EN",
-          country: window.Shopify?.country || "US",
-          handle
-        }
-      })
-    })
-
-    if (!response.ok) {
-      const error = new Error(`Failed to fetch product data: ${response.status} ${response.statusText}`)
-      for (const request of requests) {
-        request.reject(error)
-      }
-      return
-    }
-
-    const responseData = await response.json()
-    const product = flattenResponse(responseData)
-
-    for (const request of requests) {
-      request.resolve(product)
-    }
-  }
-
   async function fetchBatch(handles: string[], requestsMap: Map<string, PendingRequest[]>) {
-    // Build variables for batch query (up to 10 handles)
-    const batchSize = Math.min(handles.length, 10)
-    const variables: Record<string, string> = {
-      language: window.Shopify?.locale?.toUpperCase() || "EN",
-      country: window.Shopify?.country || "US"
-    }
-
-    for (let i = 0; i < batchSize; i++) {
-      variables[`handle${i + 1}`] = handles[i]
-    }
+    // Build query string to match products by handle
+    const queryString = handles.map(h => `handle:${h}`).join(" OR ")
 
     const response = await fetch(getApiUrl().href, {
       headers: {
@@ -68,7 +27,12 @@ function createProductBatcher() {
       method: "POST",
       body: JSON.stringify({
         query: getProductsByHandles,
-        variables
+        variables: {
+          language: window.Shopify?.locale?.toUpperCase() || "EN",
+          country: window.Shopify?.country || "US",
+          query: queryString,
+          first: handles.length
+        }
       })
     })
 
@@ -84,43 +48,29 @@ function createProductBatcher() {
 
     const responseData = await response.json()
 
-    // Process each product in the batch response
-    for (let i = 0; i < batchSize; i++) {
-      const productKey = `product${i + 1}`
-      const handle = handles[i]
-      const requests = requestsMap.get(handle)
+    // Create a map of handle to product
+    const productsByHandle = new Map<string, ShopifyProduct>()
+    if (responseData.data?.products?.nodes) {
+      for (const productNode of responseData.data.products.nodes) {
+        const product = flattenResponse({ data: { product: productNode } })
+        productsByHandle.set(productNode.handle, product)
+      }
+    }
 
+    // Resolve or reject each request
+    for (const handle of handles) {
+      const requests = requestsMap.get(handle)
       if (!requests) continue
 
-      if (responseData.data?.[productKey]) {
-        try {
-          const product = flattenResponse({ data: { product: responseData.data[productKey] } })
-          for (const request of requests) {
-            request.resolve(product)
-          }
-        } catch (error) {
-          for (const request of requests) {
-            request.reject(error instanceof Error ? error : new Error(String(error)))
-          }
+      const product = productsByHandle.get(handle)
+      if (product) {
+        for (const request of requests) {
+          request.resolve(product)
         }
       } else {
         const error = new Error(`Product not found: ${handle}`)
         for (const request of requests) {
           request.reject(error)
-        }
-      }
-    }
-
-    // Handle any remaining handles beyond batch size (shouldn't happen but safety check)
-    if (handles.length > 10) {
-      for (let i = 10; i < handles.length; i++) {
-        const handle = handles[i]
-        const requests = requestsMap.get(handle)
-        if (requests) {
-          const error = new Error(`Batch size exceeded for handle: ${handle}`)
-          for (const request of requests) {
-            request.reject(error)
-          }
         }
       }
     }
@@ -139,13 +89,7 @@ function createProductBatcher() {
     }
 
     try {
-      if (handles.length === 1) {
-        // Single request - use original query
-        await fetchSingle(handles[0], requestsMap.get(handles[0])!)
-      } else {
-        // Batch request - use batch query
-        await fetchBatch(handles, requestsMap)
-      }
+      await fetchBatch(handles, requestsMap)
     } catch (error) {
       // Reject all pending requests with the error
       for (const requests of requestsMap.values()) {
