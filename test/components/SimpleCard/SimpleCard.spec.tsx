@@ -50,7 +50,10 @@ describe("SimpleCard", () => {
           })
 
           if (errorResponse && responses[errorResponse]) {
-            return HttpResponse.json({ errors: [{ message: "Error" }] }, { status: responses[errorResponse].status || 500 })
+            return HttpResponse.json(
+              { errors: [{ message: "Error" }] },
+              { status: responses[errorResponse].status || 500 }
+            )
           }
 
           return HttpResponse.json({ data: { products: { nodes } } })
