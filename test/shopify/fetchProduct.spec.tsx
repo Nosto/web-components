@@ -121,7 +121,26 @@ describe("fetchProduct", () => {
 
     addHandlers(
       http.post(graphqlPath, async ({ request }) => {
-        const body = (await request.json()) as { query: string; variables: { query?: string; first?: number } }
+        const body = (await request.json()) as {
+          query: string
+          variables: { query?: string; handle?: string; first?: number }
+        }
+
+        // Check if this is a single product query
+        if (body.query.includes("ProductByHandle") && body.variables.handle) {
+          const handle = body.variables.handle
+          const product = products[handle]
+
+          if (!product) {
+            return HttpResponse.json({ data: { product: null } })
+          }
+
+          return HttpResponse.json({
+            data: {
+              product: wrapProduct(product, handle)
+            }
+          })
+        }
 
         // Check if this is a batch query with products query
         if (body.query.includes("ProductsByHandles") && body.variables.query) {
@@ -207,7 +226,7 @@ describe("fetchProduct", () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
   })
 
-  it("should handle single product request using batch query", async () => {
+  it("should handle single product request using single product query", async () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
@@ -221,11 +240,11 @@ describe("fetchProduct", () => {
     // Wait for any pending requests
     await new Promise(resolve => setTimeout(resolve, 50))
 
-    // Should use batch query even for single product
+    // Should use single product query for single product
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     const fetchCall = fetchSpy.mock.calls[0]
     const requestBody = JSON.parse(fetchCall[1]?.body as string)
-    expect(requestBody.query).toContain("ProductsByHandles")
+    expect(requestBody.query).toContain("ProductByHandle")
   })
 
   it("should use cache for subsequent requests", async () => {

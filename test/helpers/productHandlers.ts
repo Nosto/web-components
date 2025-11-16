@@ -21,9 +21,32 @@ export function addProductHandlers(products: (ShopifyProduct & { handle: string 
   addHandlers(
     http.post(graphqlPath, async ({ request }) => {
       const url = new URL(request.url)
-      const body = (await request.json()) as { query: string; variables: { query?: string; first?: number } }
+      const body = (await request.json()) as {
+        query: string
+        variables: { query?: string; handle?: string; first?: number; language?: string; country?: string }
+      }
 
-      // Check if this is a batch query with products query by checking the path
+      // Check if this is a single product query
+      if (url.pathname === graphqlPath && body.variables.handle && !body.variables.query) {
+        const handle = body.variables.handle
+        const product = productsByHandle[handle]
+
+        if (!product) {
+          return HttpResponse.json({ data: { product: null } })
+        }
+
+        return HttpResponse.json({
+          data: {
+            product: {
+              ...product,
+              handle,
+              images: { nodes: product.images }
+            }
+          }
+        })
+      }
+
+      // Check if this is a batch query with products query
       if (url.pathname === graphqlPath && body.variables.query) {
         // Parse the query string to extract handles
         const handleMatches = body.variables.query.match(/handle:([^\s)]+)/g)
@@ -46,6 +69,7 @@ export function addProductHandlers(products: (ShopifyProduct & { handle: string 
         return HttpResponse.json({ data: { products: { nodes } } })
       }
 
+      console.error("Unmatched GraphQL request:", { pathname: url.pathname, variables: body.variables, graphqlPath })
       return HttpResponse.json({ errors: [{ message: "Invalid query" }] }, { status: 400 })
     })
   )
