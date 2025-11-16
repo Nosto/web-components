@@ -37,11 +37,9 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
 
   if (!response.ok) {
     const error = new Error(`Failed to fetch product data: ${response.status} ${response.statusText}`)
-    for (const requests of requestsMap.values()) {
-      for (const request of requests) {
-        request.reject(error)
-      }
-    }
+    Array.from(requestsMap.values())
+      .flatMap(requests => requests)
+      .forEach(request => request.reject(error))
     return
   }
 
@@ -50,10 +48,10 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
   // Create a map of handle to product
   const productsByHandle = new Map<string, ShopifyProduct>()
   if (responseData.data?.products?.nodes) {
-    for (const productNode of responseData.data.products.nodes) {
+    responseData.data.products.nodes.forEach((productNode: { handle: string }) => {
       const product = flattenResponse({ data: { product: productNode } })
       productsByHandle.set(productNode.handle, product)
-    }
+    })
   }
 
   // Resolve or reject each request
@@ -63,14 +61,10 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
 
     const product = productsByHandle.get(handle)
     if (product) {
-      for (const request of requests) {
-        request.resolve(product)
-      }
+      requests.forEach(request => request.resolve(product))
     } else {
       const error = new Error(`Product not found: ${handle}`)
-      for (const request of requests) {
-        request.reject(error)
-      }
+      requests.forEach(request => request.reject(error))
     }
   }
 }
@@ -91,11 +85,9 @@ async function flush() {
     await fetchBatch(handles, requestsMap)
   } catch (error) {
     // Reject all pending requests with the error
-    for (const requests of requestsMap.values()) {
-      for (const request of requests) {
-        request.reject(error instanceof Error ? error : new Error(String(error)))
-      }
-    }
+    Array.from(requestsMap.values())
+      .flatMap(requests => requests)
+      .forEach(request => request.reject(error instanceof Error ? error : new Error(String(error))))
   }
 }
 
