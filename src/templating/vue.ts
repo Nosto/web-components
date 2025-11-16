@@ -29,8 +29,8 @@ function parseVfor(directive: string) {
 
 function setAttribute(el: Element, name: string, value: unknown) {
   if (value === undefined || value === null) {
-    if (name in el) {
-      // Bind directly to property when it exists on the element
+    if (name in el && !name.startsWith('on')) {
+      // Bind directly to property when it exists on the element and is not an event handler
       // @ts-expect-error setting property directly
       el[name] = value
     } else {
