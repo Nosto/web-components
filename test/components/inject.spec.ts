@@ -67,43 +67,10 @@ describe("unprovide", () => {
     expect(inject<string>(element, key2)).toBeUndefined()
   })
 
-  it("removes specific key-value pair", () => {
-    const element = createElement()
-    const key1 = Symbol("value1")
-    const key2 = Symbol("value2")
-    const value1 = "test1"
-    const value2 = "test2"
-
-    provide(element, key1, value1)
-    provide(element, key2, value2)
-
-    unprovide(element, key1)
-
-    expect(inject<string>(element, key1)).toBeUndefined()
-    expect(inject<string>(element, key2)).toBe(value2)
-  })
-
   it("handles calling unprovide on non-existent element", () => {
     const element = createElement()
-    const key = Symbol("value")
 
-    // Should not throw when unproviding from element without any provided values
     expect(() => unprovide(element)).not.toThrow()
-    expect(() => unprovide(element, key)).not.toThrow()
-  })
-
-  it("handles calling unprovide on non-existent key", () => {
-    const element = createElement()
-    const key1 = Symbol("value1")
-    const key2 = Symbol("value2")
-
-    provide(element, key1, "test")
-
-    // Should not throw when unproviding non-existent key
-    expect(() => unprovide(element, key2)).not.toThrow()
-
-    // Original value should still be available
-    expect(inject<string>(element, key1)).toBe("test")
   })
 
   it("does not affect parent values when unproviding child", () => {
@@ -118,35 +85,12 @@ describe("unprovide", () => {
     provide(parent, key, parentValue)
     provide(child, key, childValue)
 
-    // Child should see its own value
     expect(inject<string>(child, key)).toBe(childValue)
 
-    // Unprovide child value
-    unprovide(child, key)
+    unprovide(child)
 
-    // Child should now see parent value
     expect(inject<string>(child, key)).toBe(parentValue)
-
-    // Parent value should be unaffected
     expect(inject<string>(parent, key)).toBe(parentValue)
-  })
-
-  it("cleans up mapping when last key is removed", () => {
-    const element = createElement()
-    const key = Symbol("value")
-    const value = "test"
-
-    provide(element, key, value)
-    expect(inject<string>(element, key)).toBe(value)
-
-    unprovide(element, key)
-
-    // After removing the last key, inject should return undefined
-    expect(inject<string>(element, key)).toBeUndefined()
-
-    // Providing again should work correctly
-    provide(element, key, value)
-    expect(inject<string>(element, key)).toBe(value)
   })
 
   it("works across shadow DOM boundaries", () => {
@@ -161,7 +105,7 @@ describe("unprovide", () => {
     provide(host, key, value)
     expect(inject<string>(child, key)).toBe(value)
 
-    unprovide(host, key)
+    unprovide(host)
     expect(inject<string>(child, key)).toBeUndefined()
   })
 })
