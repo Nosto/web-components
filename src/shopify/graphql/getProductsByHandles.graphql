@@ -41,7 +41,17 @@ query ProductsByHandles(
             ...VariantFragment
           }
           name
-          swatch
+          swatch {
+            color
+            image {
+              alt
+              id
+              mediaContentType
+              previewImage {
+                url
+              }
+            }
+          }
         }
       }
     }
