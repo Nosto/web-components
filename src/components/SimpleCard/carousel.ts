@@ -13,8 +13,8 @@ export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduc
     <div class="image carousel" part="image">
       <div class="carousel-images">
         ${images.map(
-          (img, index) => html`
-            <div class="carousel-slide" data-index="${index}">
+          img => html`
+            <div class="carousel-slide">
               ${generateImgHtml(img.url, product.title, "img carousel-img", element.sizes)}
             </div>
           `
@@ -38,9 +38,9 @@ export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduc
 
 export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {
   const target = event.target as HTMLElement
-  const index = parseInt(target.getAttribute("data-carousel-indicator") || "0")
+  const index = parseInt(target.dataset.carouselIndicator || "0")
   const carouselImages = element.shadowRoot?.querySelector(".carousel-images")
-  const slide = element.shadowRoot?.querySelector(`.carousel-slide[data-index="${index}"]`)
+  const slide = carouselImages?.querySelector(`.carousel-slide:nth-child(${index + 1})`)
 
   if (carouselImages && slide) {
     slide.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" })
