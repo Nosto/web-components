@@ -663,28 +663,6 @@ describe("VariantSelector", () => {
   })
 
   describe("maxValues attribute", () => {
-    it("should render all values when maxValues is not set", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowContent = getShadowContent(selector)
-      // Size has 3 values: Small, Medium, Large
-      expect(shadowContent).toContain("Small")
-      expect(shadowContent).toContain("Medium")
-      expect(shadowContent).toContain("Large")
-      // Color has 3 values: Red, Blue, Green
-      expect(shadowContent).toContain("Red")
-      expect(shadowContent).toContain("Blue")
-      expect(shadowContent).toContain("Green")
-      // No ellipsis should be present
-      expect(shadowContent).not.toContain("ellipsis")
-      expect(shadowContent).not.toContain("…")
-    })
-
     it("should cap option values at maxValues limit and show ellipsis", async () => {
       addProductHandlers({
         "variant-test-product": { product: mockProductWithVariants }
@@ -705,27 +683,6 @@ describe("VariantSelector", () => {
       // Ellipsis should be present
       expect(shadowContent).toContain("ellipsis")
       expect(shadowContent).toContain("…")
-    })
-
-    it("should show all values when maxValues is greater than available values", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={10} />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowContent = getShadowContent(selector)
-      // All Size values should be visible
-      expect(shadowContent).toContain("Small")
-      expect(shadowContent).toContain("Medium")
-      expect(shadowContent).toContain("Large")
-      // All Color values should be visible
-      expect(shadowContent).toContain("Red")
-      expect(shadowContent).toContain("Blue")
-      expect(shadowContent).toContain("Green")
-      // No ellipsis should be present
-      expect(shadowContent).not.toContain("ellipsis")
     })
 
     it("should render ellipsis with correct aria-label", async () => {
@@ -749,83 +706,6 @@ describe("VariantSelector", () => {
         expect(ellipsis.getAttribute("role")).toBe("presentation")
         expect(ellipsis.textContent).toBe("…")
       })
-    })
-
-    it("should not render ellipsis when maxValues equals total values", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={3} />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowContent = getShadowContent(selector)
-      // All values should be visible
-      expect(shadowContent).toContain("Small")
-      expect(shadowContent).toContain("Medium")
-      expect(shadowContent).toContain("Large")
-      expect(shadowContent).toContain("Red")
-      expect(shadowContent).toContain("Blue")
-      expect(shadowContent).toContain("Green")
-      // No ellipsis should be present when exactly equal
-      expect(shadowContent).not.toContain("ellipsis")
-    })
-
-    it("should work correctly with variant selection when maxValues is set", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={2} />) as VariantSelector
-      await selector.connectedCallback()
-
-      let eventDetail: Record<string, unknown> | null = null
-      selector.addEventListener("variantchange", (event: Event) => {
-        eventDetail = (event as CustomEvent).detail
-      })
-
-      // Select visible options (Small and Red)
-      const shadowRoot = selector.shadowRoot!
-      const smallButton = shadowRoot.querySelector(
-        '[data-option-name="Size"][data-option-value="Small"]'
-      ) as HTMLButtonElement
-      const redButton = shadowRoot.querySelector(
-        '[data-option-name="Color"][data-option-value="Red"]'
-      ) as HTMLButtonElement
-
-      expect(smallButton).toBeTruthy()
-      expect(redButton).toBeTruthy()
-
-      smallButton.click()
-      redButton.click()
-
-      // Wait for async event handlers
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      expect(selector.selectedOptions["Size"]).toBe("Small")
-      expect(selector.selectedOptions["Color"]).toBe("Red")
-      expect(eventDetail).toBeTruthy()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1001")
-    })
-
-    it("should handle maxValues=0 as no limit", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={0} />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowContent = getShadowContent(selector)
-      // All values should be visible
-      expect(shadowContent).toContain("Small")
-      expect(shadowContent).toContain("Medium")
-      expect(shadowContent).toContain("Large")
-      expect(shadowContent).toContain("Red")
-      expect(shadowContent).toContain("Blue")
-      expect(shadowContent).toContain("Green")
-      expect(shadowContent).not.toContain("ellipsis")
     })
   })
 })

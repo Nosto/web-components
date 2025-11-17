@@ -172,7 +172,7 @@ export const WithMaxValues: Story = {
         ${handles.slice(0, 6).map(
           handle => html`
             <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
-              <nosto-variant-selector handle="${handle}" maxValues="${args.maxValues}"></nosto-variant-selector>
+              <nosto-variant-selector handle="${handle}" maxValues=${args.maxValues}></nosto-variant-selector>
             </nosto-simple-card>
           `
         )}
