@@ -85,9 +85,7 @@ export const Default: Story = {
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
-      <div
-        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;"
-      >
+      <div style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;">
         ${handles.map(
           handle => html`
             <nosto-dynamic-card
