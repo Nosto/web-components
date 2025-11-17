@@ -3,7 +3,7 @@ import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
-import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/generated"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)

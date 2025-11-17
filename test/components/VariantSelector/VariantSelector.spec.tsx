@@ -4,7 +4,7 @@ import { VariantSelector, selectOption, getSelectedVariant } from "@/components/
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyProduct } from "@/shopify/generated"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/constants"

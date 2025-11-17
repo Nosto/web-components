@@ -1,4 +1,4 @@
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyProduct } from "@/shopify/generated"
 
 export const mockProductWithSingleValueOption: ShopifyProduct = {
   id: "gid://shopify/Product/123456",

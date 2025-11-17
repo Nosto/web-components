@@ -1,4 +1,4 @@
-import { ShopifyImage, ShopifyProduct } from "@/shopify/graphql/types"
+import { ShopifyImage, ShopifyProduct } from "@/shopify/generated"
 import { JSONProduct } from "@nosto/nosto-js/client"
 
 export function convertProduct({
