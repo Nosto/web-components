@@ -25,7 +25,7 @@
     "url": "git+https://github.com/Nosto/web-components.git"
   },
   "scripts": {
-    "codegen": "echo 'GraphQL types are pre-generated in src/shopify/generated'",
+    "codegen": "echo 'Running GraphQL codegen (requires network access)...' && graphql-codegen --config codegen.ts",
     "build": "tsc --project tsconfig.types.json && node esbuild.mjs && npm run typedoc",
     "preview": "vite preview",
     "lint": "eslint",
