@@ -123,11 +123,11 @@ describe("vue:compile", () => {
   })
 
   it("should skip null and undefined values in v-bind", () => {
-    container.append(<div id="test" v-bind="{ title: null, 'data-val': undefined }"></div>)
+    container.append(<div id="test" v-bind="{ 'data-attr1': null, 'data-attr2': undefined }"></div>)
     processElement(container, {})
     const el = container.querySelector("#test") as HTMLElement
-    expect(el.hasAttribute("title")).toBe(false)
-    expect(el.hasAttribute("data-val")).toBe(false)
+    expect(el.hasAttribute("data-attr1")).toBe(false)
+    expect(el.hasAttribute("data-attr2")).toBe(false)
     expect(el.hasAttribute("v-bind")).toBe(false)
   })
 
@@ -226,5 +226,31 @@ describe("vue:compile", () => {
     expect(container.innerHTML.trim().replace(/\s+/g, " ")).toEqual(
       `<div class="item">{{ item }}</div> <div class="item">{{ item }}</div> <div class="item">{{ item }}</div>`
     )
+  })
+
+  describe("property binding", () => {
+    it("should bind to native input value property instead of attribute", () => {
+      container.innerHTML = `<input id="test" v-bind:value="inputValue" />`
+      processElement(container, { inputValue: "test-value" })
+      const input = container.querySelector("#test") as HTMLInputElement
+      expect(input.value).toBe("test-value")
+      expect(input.hasAttribute("v-bind:value")).toBe(false)
+    })
+
+    it("should bind to native button disabled property", () => {
+      container.innerHTML = `<button id="test" v-bind:disabled="isDisabled">Click</button>`
+      processElement(container, { isDisabled: true })
+      const button = container.querySelector("#test") as HTMLButtonElement
+      expect(button.disabled).toBe(true)
+      expect(button.hasAttribute("v-bind:disabled")).toBe(false)
+    })
+
+    it("should fallback to attribute binding for non-existent properties", () => {
+      container.innerHTML = `<div id="test" v-bind:data-custom="customAttr"></div>`
+      processElement(container, { customAttr: "custom-value" })
+      const div = container.querySelector("#test") as HTMLDivElement
+      expect(div.getAttribute("data-custom")).toBe("custom-value")
+      expect(div.hasAttribute("v-bind:data-custom")).toBe(false)
+    })
   })
 })

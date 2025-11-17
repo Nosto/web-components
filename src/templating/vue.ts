@@ -29,11 +29,21 @@ function parseVfor(directive: string) {
 
 function setAttribute(el: Element, name: string, value: unknown) {
   if (value === undefined || value === null) {
-    el.removeAttribute(name)
+    if (name in el && !name.startsWith("on")) {
+      // Bind directly to property when it exists on the element and is not an event handler
+      // @ts-expect-error setting property directly
+      el[name] = value
+    } else {
+      el.removeAttribute(name)
+    }
     return
   }
   if (el instanceof HTMLElement && name === "style" && value && typeof value === "object") {
     Object.assign(el.style, value)
+  } else if (name in el && !name.startsWith("on")) {
+    // Bind directly to property when it exists on the element
+    // @ts-expect-error setting property directly
+    el[name] = value
   } else {
     el.setAttribute(name, String(value))
   }
