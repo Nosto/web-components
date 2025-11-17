@@ -1,15 +1,41 @@
 import type { SimpleCard } from "./SimpleCard"
+import type { ShopifyProduct } from "@/shopify/graphql/types"
+import { html } from "@/templating/html"
+import { generateImgHtml } from "./markup"
 
-/**
- * Interface to track scroll timeout for debouncing
- */
 export interface ElementWithScrollTimeout extends SimpleCard {
   _scrollTimeout?: ReturnType<typeof setTimeout>
 }
 
-/**
- * Handles indicator button clicks to navigate to a specific slide
- */
+export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
+  const images = product.images
+  return html`
+    <div class="image carousel" part="image">
+      <div class="carousel-images">
+        ${images.map(
+          (img, index) => html`
+            <div class="carousel-slide" data-index="${index}">
+              ${generateImgHtml(img.url, product.title, "img carousel-img", element.sizes)}
+            </div>
+          `
+        )}
+      </div>
+      <div class="carousel-indicators" part="carousel-indicators">
+        ${images.map(
+          (_, index) => html`
+            <button
+              class="carousel-indicator ${index === 0 ? "active" : ""}"
+              part="carousel-indicator"
+              aria-label="Go to image ${index + 1}"
+              data-carousel-indicator="${index}"
+            ></button>
+          `
+        )}
+      </div>
+    </div>
+  `
+}
+
 export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {
   const target = event.target as HTMLElement
   const index = parseInt(target.getAttribute("data-carousel-indicator") || "0")
@@ -21,27 +47,18 @@ export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {
   }
 }
 
-/**
- * Handles scroll events on the carousel to update active indicator
- * Uses debouncing to avoid excessive updates
- */
 export function onCarouselScroll(element: SimpleCard, event: Event) {
   const target = event.target as HTMLElement
   if (!target.classList.contains("carousel-images")) return
 
   const elementWithTimeout = element as ElementWithScrollTimeout
 
-  // Debounce scroll updates to avoid too frequent updates
   clearTimeout(elementWithTimeout._scrollTimeout)
   elementWithTimeout._scrollTimeout = setTimeout(() => {
     updateCarouselIndicators(element)
   }, 100)
 }
 
-/**
- * Updates carousel indicators based on the current scroll position
- * Determines which slide is most visible and marks its indicator as active
- */
 export function updateCarouselIndicators(element: SimpleCard) {
   const carouselImages = element.shadowRoot?.querySelector(".carousel-images") as HTMLElement
   if (!carouselImages) return
@@ -50,7 +67,6 @@ export function updateCarouselIndicators(element: SimpleCard) {
   const indicators = element.shadowRoot?.querySelectorAll(".carousel-indicator")
   if (!slides.length || !indicators) return
 
-  // Find the slide that is most visible (closest to the left edge of the container)
   const containerLeft = carouselImages.scrollLeft
   const containerWidth = carouselImages.clientWidth
   const centerPoint = containerLeft + containerWidth / 2
@@ -70,7 +86,6 @@ export function updateCarouselIndicators(element: SimpleCard) {
     }
   })
 
-  // Update indicators
   indicators.forEach((indicator, index) => {
     if (index === closestIndex) {
       indicator.classList.add("active")

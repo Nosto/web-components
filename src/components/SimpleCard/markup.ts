@@ -4,6 +4,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
 import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { generateCarouselHTML } from "./carousel"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
@@ -52,35 +53,6 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
       ${hasAlternate && alternateImage
         ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
-    </div>
-  `
-}
-
-function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
-  const images = product.images
-  return html`
-    <div class="image carousel" part="image">
-      <div class="carousel-images">
-        ${images.map(
-          (img, index) => html`
-            <div class="carousel-slide" data-index="${index}">
-              ${generateImgHtml(img.url, product.title, "img carousel-img", element.sizes)}
-            </div>
-          `
-        )}
-      </div>
-      <div class="carousel-indicators" part="carousel-indicators">
-        ${images.map(
-          (_, index) => html`
-            <button
-              class="carousel-indicator ${index === 0 ? "active" : ""}"
-              part="carousel-indicator"
-              aria-label="Go to image ${index + 1}"
-              data-carousel-indicator="${index}"
-            ></button>
-          `
-        )}
-      </div>
     </div>
   `
 }
