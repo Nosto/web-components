@@ -92,8 +92,8 @@ export const Default: Story = {
           handle => html`
             <nosto-dynamic-card
               handle="${handle}"
-              template="${args.template || ""}"
-              section="${args.section || ""}"
+              template="${args.template}"
+              section="${args.section}"
               ?mock=${args.mock}
             ></nosto-dynamic-card>
           `
