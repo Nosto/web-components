@@ -19,6 +19,7 @@
   --value-focus-color: #007bff;
   --value-unavailable-opacity: 0.5;
   --loading-opacity: 0.7;
+  --ellipsis-color: #6c757d;
 }
 
 :host([loading]) {
@@ -83,7 +84,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--value-padding);
-  color: #6c757d;
+  color: var(--ellipsis-color);
   font-size: 1.2em;
   line-height: 1;
   user-select: none;

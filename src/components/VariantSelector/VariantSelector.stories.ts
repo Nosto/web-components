@@ -188,34 +188,3 @@ export const WithMaxValues: Story = {
     }
   }
 }
-
-export const WithMaxValuesComparison: Story = {
-  render: (_args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    const handle = handles[0]
-    return html`
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 800px; margin: 0 auto;">
-        <div>
-          <h3 style="margin-bottom: 1rem;">Without maxValues</h3>
-          <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
-            <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
-          </nosto-simple-card>
-        </div>
-        <div>
-          <h3 style="margin-bottom: 1rem;">With maxValues=2</h3>
-          <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
-            <nosto-variant-selector handle="${handle}" maxValues="2"></nosto-variant-selector>
-          </nosto-simple-card>
-        </div>
-      </div>
-    `
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "This story compares the variant selector with and without maxValues. The left card shows all available options, while the right card limits each option to 2 values with an ellipsis indicator for additional values."
-      }
-    }
-  }
-}
