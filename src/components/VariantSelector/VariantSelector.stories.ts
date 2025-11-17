@@ -97,7 +97,7 @@ export const Default: Story = {
                 handle="${handle}"
                 ?placeholder=${args.placeholder}
                 ?preselect=${args.preselect}
-                maxValues=${args.maxValues}
+                max-values="${args.maxValues}"
               ></nosto-variant-selector>
             </nosto-simple-card>
           `
@@ -177,7 +177,7 @@ export const WithMaxValues: Story = {
         ${handles.slice(0, 6).map(
           handle => html`
             <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
-              <nosto-variant-selector handle="${handle}" maxValues=${args.maxValues}></nosto-variant-selector>
+              <nosto-variant-selector handle="${handle}" max-values="${args.maxValues}"></nosto-variant-selector>
             </nosto-simple-card>
           `
         )}
