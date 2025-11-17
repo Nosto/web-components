@@ -38,7 +38,7 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
-@customElement("nosto-variant-selector")
+@customElement("nosto-variant-selector", { observe: true })
 export class VariantSelector extends NostoElement {
   @property(String) handle!: string
   @property(Number) variantId?: number
