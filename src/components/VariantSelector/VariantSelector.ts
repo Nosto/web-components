@@ -33,6 +33,7 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {string} variantId - (Optional) The ID of the variant to preselect on load.
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
+ * @property {number} maxValues - (Optional) Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -43,6 +44,7 @@ export class VariantSelector extends NostoElement {
   @property(Number) variantId?: number
   @property(Boolean) preselect?: boolean
   @property(Boolean) placeholder?: boolean
+  @property(Number) maxValues?: number
 
   /**
    * Internal state for current selections

@@ -154,3 +154,68 @@ export const WithPlaceholder: Story = {
     }
   }
 }
+
+export const WithMaxValues: Story = {
+  argTypes: {
+    maxValues: {
+      description: "Maximum number of option values to display per option",
+      control: { type: "number", min: 1, max: 10, step: 1 }
+    }
+  },
+  args: {
+    maxValues: 3
+  },
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0.1rem; max-width: 1200px;">
+        ${handles.slice(0, 6).map(
+          handle => html`
+            <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
+              <nosto-variant-selector handle="${handle}" maxValues="${args.maxValues}"></nosto-variant-selector>
+            </nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the `maxValues` attribute is set, the component limits the number of option values displayed per option. An ellipsis (…) is shown when there are more values available than the specified limit. This is useful for products with many option values to keep the UI compact."
+      }
+    }
+  }
+}
+
+export const WithMaxValuesComparison: Story = {
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    const handle = handles[0]
+    return html`
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 800px; margin: 0 auto;">
+        <div>
+          <h3 style="margin-bottom: 1rem;">Without maxValues</h3>
+          <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
+            <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
+          </nosto-simple-card>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 1rem;">With maxValues=2</h3>
+          <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
+            <nosto-variant-selector handle="${handle}" maxValues="2"></nosto-variant-selector>
+          </nosto-simple-card>
+        </div>
+      </div>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "This story compares the variant selector with and without maxValues. The left card shows all available options, while the right card limits each option to 2 values with an ellipsis indicator for additional values."
+      }
+    }
+  }
+}

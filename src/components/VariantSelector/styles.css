@@ -78,3 +78,14 @@
   pointer-events: none;
 }
 
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--value-padding);
+  color: #6c757d;
+  font-size: 1.2em;
+  line-height: 1;
+  user-select: none;
+}
+
