@@ -3,10 +3,6 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { html } from "@/templating/html"
 import { generateImgHtml } from "./markup"
 
-export interface ElementWithScrollTimeout extends SimpleCard {
-  _scrollTimeout?: ReturnType<typeof setTimeout>
-}
-
 export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
   const images = product.images
   return html`
@@ -51,12 +47,7 @@ export function onCarouselScroll(element: SimpleCard, event: Event) {
   const target = event.target as HTMLElement
   if (!target.classList.contains("carousel-images")) return
 
-  const elementWithTimeout = element as ElementWithScrollTimeout
-
-  clearTimeout(elementWithTimeout._scrollTimeout)
-  elementWithTimeout._scrollTimeout = setTimeout(() => {
-    updateCarouselIndicators(element)
-  }, 100)
+  updateCarouselIndicators(element)
 }
 
 export function updateCarouselIndicators(element: SimpleCard) {
@@ -87,10 +78,6 @@ export function updateCarouselIndicators(element: SimpleCard) {
   })
 
   indicators.forEach((indicator, index) => {
-    if (index === closestIndex) {
-      indicator.classList.add("active")
-    } else {
-      indicator.classList.remove("active")
-    }
+    indicator.classList.toggle("active", index === closestIndex)
   })
 }
