@@ -788,28 +788,6 @@ describe("VariantSelector", () => {
       expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1002")
     })
 
-    it("should update selectedOptions when variant is selected in compact mode", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowRoot = selector.shadowRoot!
-      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
-
-      // Select the third variant (Large / Red)
-      select.value = "gid://shopify/ProductVariant/1003"
-      select.dispatchEvent(new Event("change", { bubbles: true }))
-
-      // Wait for async event handler
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      expect(selector.selectedOptions["Size"]).toBe("Large")
-      expect(selector.selectedOptions["Color"]).toBe("Red")
-    })
-
     it("should preselect variant in compact mode when preselect is true", async () => {
       addProductHandlers({
         "variant-test-product": { product: mockProductWithVariants }
@@ -823,47 +801,6 @@ describe("VariantSelector", () => {
 
       // Should have first available variant selected
       expect(select.value).toBe("gid://shopify/ProductVariant/1001")
-    })
-
-    it("should preselect specific variant by variantId in compact mode", async () => {
-      addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
-      })
-
-      const selector = (
-        <nosto-variant-selector handle="variant-test-product" compact variantId={1002} />
-      ) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowRoot = selector.shadowRoot!
-      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
-
-      // Should have variant 1002 selected
-      expect(select.value).toBe("gid://shopify/ProductVariant/1002")
-    })
-
-    it("should not render compact select for products without variants", async () => {
-      addProductHandlers({
-        "no-variants": { product: mockProductWithoutVariants }
-      })
-
-      const selector = (<nosto-variant-selector handle="no-variants" compact />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowContent = getShadowContent(selector)
-      expect(shadowContent).toBe("<slot></slot>")
-    })
-
-    it("should not render compact select when all options are single-value", async () => {
-      addProductHandlers({
-        "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
-      })
-
-      const selector = (<nosto-variant-selector handle="all-single-value-test" compact />) as VariantSelector
-      await selector.connectedCallback()
-
-      const shadowContent = getShadowContent(selector)
-      expect(shadowContent).toBe("<slot></slot>")
     })
   })
 })

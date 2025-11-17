@@ -63,9 +63,6 @@ function generateCompactSelectHTML(product: ShopifyProduct) {
 
 function generateVariantOptionHTML(variant: ShopifyVariant) {
   const availabilityText = variant.availableForSale ? "" : " (Sold Out)"
-  return html`
-    <option value="${variant.id}" data-available="${variant.availableForSale}">
-      ${variant.title}${availabilityText}
-    </option>
-  `
+  const disabledAttr = variant.availableForSale ? "" : ' disabled="disabled"'
+  return html` <option value="${variant.id}" ${disabledAttr}>${variant.title}${availabilityText}</option> `
 }

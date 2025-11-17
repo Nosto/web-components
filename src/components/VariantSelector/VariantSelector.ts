@@ -207,14 +207,8 @@ function updateActiveStates(element: VariantSelector) {
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   if (element.compact) {
-    // Disable unavailable options in select dropdown
-    const select = element.shadowRoot!.querySelector<HTMLSelectElement>(".compact-select")
-    if (select) {
-      select.querySelectorAll<HTMLOptionElement>("option").forEach(option => {
-        const available = option.dataset.available === "true"
-        option.disabled = !available && option.value !== ""
-      })
-    }
+    // In compact mode, unavailable options are already disabled in the markup
+    return
   } else {
     // Update button states in default mode
     const availableOptions = new Set<string>()
