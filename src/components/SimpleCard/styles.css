@@ -14,6 +14,9 @@
   --slot-padding: 1rem;
   --slot-padding-top: 0.5rem;
   --loading-opacity: 0.7;
+  --carousel-indicator-bg: rgba(255, 255, 255, 0.6);
+  --carousel-indicator-bg-hover: rgba(255, 255, 255, 0.8);
+  --carousel-indicator-bg-active: rgba(255, 255, 255, 1);
 }
 
 :host([loading]) {
@@ -150,17 +153,17 @@
   height: 0.5rem;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--carousel-indicator-bg);
   cursor: pointer;
   padding: 0;
   transition: background 0.2s ease;
 }
 
 .carousel-indicator:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--carousel-indicator-bg-hover);
 }
 
 .carousel-indicator.active {
-  background: rgba(255, 255, 255, 1);
+  background: var(--carousel-indicator-bg-active);
 }
 
