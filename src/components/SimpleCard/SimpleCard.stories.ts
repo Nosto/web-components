@@ -97,7 +97,7 @@ export const Default: Story = {
     const handles = loaded?.handles as string[]
     return html`
       <div
-        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem; max-width: 1200px;"
+        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 1rem; max-width: 1200px;"
       >
         ${handles.map(
           handle => html`
