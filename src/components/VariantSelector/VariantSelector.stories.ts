@@ -91,8 +91,8 @@ export const Default: Story = {
             <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
               <nosto-variant-selector
                 handle="${handle}"
-                ?placeholder="${args.placeholder}"
-                ?preselect="${args.preselect}"
+                ?placeholder=${args.placeholder}
+                ?preselect=${args.preselect}
               ></nosto-variant-selector>
             </nosto-simple-card>
           `
