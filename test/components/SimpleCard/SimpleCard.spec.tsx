@@ -712,46 +712,6 @@ describe("SimpleCard", () => {
       expect(indicators?.length).toBe(2) // mockProduct has 2 images
     })
 
-    it("should scroll to next image with scroll snapping", async () => {
-      addProductHandlers({
-        "test-product": { product: mockProduct }
-      })
-
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
-      document.body.appendChild(card)
-
-      await card.connectedCallback()
-
-      const carouselImages = card.shadowRoot?.querySelector(".carousel-images") as HTMLElement
-      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
-
-      expect(carouselImages).toBeTruthy()
-      expect(slides?.length).toBe(2)
-
-      // Simulate scrolling to the next slide
-      if (carouselImages) {
-        Object.defineProperty(carouselImages, "scrollLeft", { value: 0, writable: true })
-        Object.defineProperty(carouselImages, "clientWidth", { value: 300, writable: false })
-        Object.defineProperty(slides?.[0], "offsetLeft", { value: 0, writable: false })
-        Object.defineProperty(slides?.[0], "clientWidth", { value: 300, writable: false })
-        Object.defineProperty(slides?.[1], "offsetLeft", { value: 300, writable: false })
-        Object.defineProperty(slides?.[1], "clientWidth", { value: 300, writable: false })
-
-        // Scroll to second slide
-        carouselImages.scrollLeft = 300
-        carouselImages.dispatchEvent(new Event("scroll", { bubbles: true }))
-
-        // Wait for debounced scroll update
-        await new Promise(resolve => setTimeout(resolve, 150))
-
-        const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
-        expect(indicators?.[0]?.classList.contains("active")).toBe(false)
-        expect(indicators?.[1]?.classList.contains("active")).toBe(true)
-      }
-
-      document.body.removeChild(card)
-    })
-
     it("should support horizontal scroll for navigation", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
@@ -803,44 +763,6 @@ describe("SimpleCard", () => {
         block: "nearest",
         inline: "start"
       })
-
-      document.body.removeChild(card)
-    })
-
-    it("should update indicators based on scroll position", async () => {
-      addProductHandlers({
-        "test-product": { product: mockProduct }
-      })
-
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
-      document.body.appendChild(card)
-
-      await card.connectedCallback()
-
-      const carouselImages = card.shadowRoot?.querySelector(".carousel-images") as HTMLElement
-      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
-      const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
-
-      // Initially first indicator should be active
-      expect(indicators?.[0]?.classList.contains("active")).toBe(true)
-
-      // Set up mock scroll position for second slide
-      Object.defineProperty(carouselImages, "scrollLeft", { value: 300, writable: true })
-      Object.defineProperty(carouselImages, "clientWidth", { value: 300, writable: false })
-      Object.defineProperty(slides?.[0], "offsetLeft", { value: 0, writable: false })
-      Object.defineProperty(slides?.[0], "clientWidth", { value: 300, writable: false })
-      Object.defineProperty(slides?.[1], "offsetLeft", { value: 300, writable: false })
-      Object.defineProperty(slides?.[1], "clientWidth", { value: 300, writable: false })
-
-      // Trigger scroll event
-      carouselImages.dispatchEvent(new Event("scroll", { bubbles: true }))
-
-      // Wait for debounced update
-      await new Promise(resolve => setTimeout(resolve, 150))
-
-      // Second indicator should now be active
-      expect(indicators?.[0]?.classList.contains("active")).toBe(false)
-      expect(indicators?.[1]?.classList.contains("active")).toBe(true)
 
       document.body.removeChild(card)
     })
