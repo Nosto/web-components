@@ -63,11 +63,22 @@ export const Default: Story = {
       table: {
         category: "Layout options"
       }
+    },
+    placeholder: {
+      description:
+        "If true, the component will display cached content from a previous render while loading new data. Useful for preventing layout shifts",
+      control: { type: "boolean" }
+    },
+    preselect: {
+      description: "Whether to automatically preselect the options of the first available variant",
+      control: { type: "boolean" }
     }
   },
   args: {
     columns: 4,
-    products: 12
+    products: 12,
+    placeholder: false,
+    preselect: false
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
@@ -78,7 +89,11 @@ export const Default: Story = {
         ${handles.map(
           handle => html`
             <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
-              <nosto-variant-selector handle="${handle}"></nosto-variant-selector>
+              <nosto-variant-selector
+                handle="${handle}"
+                ?placeholder=${args.placeholder}
+                ?preselect=${args.preselect}
+              ></nosto-variant-selector>
             </nosto-simple-card>
           `
         )}
