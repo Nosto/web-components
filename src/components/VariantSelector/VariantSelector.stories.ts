@@ -82,7 +82,8 @@ export const Default: Story = {
     columns: 4,
     products: 12,
     placeholder: false,
-    preselect: false
+    preselect: false,
+    maxValues: 5
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
