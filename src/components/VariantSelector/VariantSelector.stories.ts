@@ -66,7 +66,7 @@ export const Default: Story = {
     },
     placeholder: {
       description:
-        "If true, the component will display cached content from a previous render while loading new data. Useful for preventing layout shifts.",
+        "If true, the component will display cached content from a previous render while loading new data. Useful for preventing layout shifts",
       control: { type: "boolean" }
     },
     preselect: {
