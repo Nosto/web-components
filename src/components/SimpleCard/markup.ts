@@ -59,11 +59,11 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
 function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
   const images = product.images
   return html`
-    <div class="image carousel" part="image" data-current-index="0">
-      <div class="carousel-images" data-carousel-swipe>
+    <div class="image carousel" part="image">
+      <div class="carousel-images">
         ${images.map(
           (img, index) => html`
-            <div class="carousel-slide ${index === 0 ? "active" : ""}" data-index="${index}">
+            <div class="carousel-slide" data-index="${index}">
               ${generateImgHtml(img.url, product.title, "img carousel-img", element.sizes)}
             </div>
           `

@@ -101,12 +101,9 @@ export class SimpleCard extends NostoElement {
     this.shadowRoot?.addEventListener("click", this)
     this.addEventListener("variantchange", this)
 
-    // Add touch/pointer event listeners for carousel swipe
+    // Add scroll listener for carousel to update indicators
     if (this.carousel) {
-      this.shadowRoot?.addEventListener("pointerdown", this)
-      this.shadowRoot?.addEventListener("pointermove", this)
-      this.shadowRoot?.addEventListener("pointerup", this)
-      this.shadowRoot?.addEventListener("pointercancel", this)
+      this.shadowRoot?.addEventListener("scroll", this, { capture: true })
     }
   }
 
@@ -118,15 +115,8 @@ export class SimpleCard extends NostoElement {
       case "variantchange":
         onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
         break
-      case "pointerdown":
-        onPointerDown(this, event as PointerEvent)
-        break
-      case "pointermove":
-        onPointerMove(this, event as PointerEvent)
-        break
-      case "pointerup":
-      case "pointercancel":
-        onPointerEnd(this, event as PointerEvent)
+      case "scroll":
+        onCarouselScroll(this, event)
         break
     }
   }
@@ -136,25 +126,8 @@ function isAddToCartClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
 }
 
-// Swipe gesture tracking
-interface SwipeState {
-  startX: number
-  startY: number
-  currentX: number
-  currentY: number
-  isDragging: boolean
-  pointerId: number | null
-}
-
-const swipeStates = new WeakMap<SimpleCard, SwipeState>()
-
 function isCarouselIndicatorClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.hasAttribute("data-carousel-indicator")
-}
-
-function isCarouselSwipeArea(event: PointerEvent) {
-  const target = event.target as HTMLElement
-  return target.hasAttribute("data-carousel-swipe") || target.closest("[data-carousel-swipe]") !== null
 }
 
 async function onClick(element: SimpleCard, event: MouseEvent) {
@@ -176,94 +149,68 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 
 function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {
   const target = event.target as HTMLElement
-  const newIndex = parseInt(target.getAttribute("data-carousel-indicator") || "0")
-  navigateToSlide(element, newIndex)
-}
+  const index = parseInt(target.getAttribute("data-carousel-indicator") || "0")
+  const carouselImages = element.shadowRoot?.querySelector(".carousel-images")
+  const slide = element.shadowRoot?.querySelector(`.carousel-slide[data-index="${index}"]`)
 
-function navigateToSlide(element: SimpleCard, newIndex: number) {
-  const carouselContainer = element.shadowRoot?.querySelector(".image.carousel")
-  if (!carouselContainer) return
-
-  const currentIndex = parseInt(carouselContainer.getAttribute("data-current-index") || "0")
-  const slides = carouselContainer.querySelectorAll(".carousel-slide")
-  const indicators = carouselContainer.querySelectorAll(".carousel-indicator")
-
-  if (newIndex !== currentIndex && newIndex >= 0 && newIndex < slides.length) {
-    // Update active slide
-    slides[currentIndex]?.classList.remove("active")
-    slides[newIndex]?.classList.add("active")
-
-    // Update active indicator
-    indicators[currentIndex]?.classList.remove("active")
-    indicators[newIndex]?.classList.add("active")
-
-    // Update current index
-    carouselContainer.setAttribute("data-current-index", newIndex.toString())
+  if (carouselImages && slide) {
+    slide.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" })
   }
 }
 
-function onPointerDown(element: SimpleCard, event: PointerEvent) {
-  if (!isCarouselSwipeArea(event)) return
-
-  const swipeArea = event.target as HTMLElement
-  const carouselSwipe = swipeArea.closest("[data-carousel-swipe]") as HTMLElement
-  if (!carouselSwipe) return
-
-  // Capture the pointer to this element (optional for test compatibility)
-  if (typeof carouselSwipe.setPointerCapture === "function") {
-    carouselSwipe.setPointerCapture(event.pointerId)
-  }
-
-  swipeStates.set(element, {
-    startX: event.clientX,
-    startY: event.clientY,
-    currentX: event.clientX,
-    currentY: event.clientY,
-    isDragging: true,
-    pointerId: event.pointerId
-  })
+interface ElementWithScrollTimeout extends SimpleCard {
+  _scrollTimeout?: ReturnType<typeof setTimeout>
 }
 
-function onPointerMove(element: SimpleCard, event: PointerEvent) {
-  const state = swipeStates.get(element)
-  if (!state || !state.isDragging || state.pointerId !== event.pointerId) return
+function onCarouselScroll(element: SimpleCard, event: Event) {
+  const target = event.target as HTMLElement
+  if (!target.classList.contains("carousel-images")) return
 
-  state.currentX = event.clientX
-  state.currentY = event.clientY
+  const elementWithTimeout = element as ElementWithScrollTimeout
+
+  // Debounce scroll updates to avoid too frequent updates
+  clearTimeout(elementWithTimeout._scrollTimeout)
+  elementWithTimeout._scrollTimeout = setTimeout(() => {
+    updateCarouselIndicators(element)
+  }, 100)
 }
 
-function onPointerEnd(element: SimpleCard, event: PointerEvent) {
-  const state = swipeStates.get(element)
-  if (!state || !state.isDragging || state.pointerId !== event.pointerId) return
+function updateCarouselIndicators(element: SimpleCard) {
+  const carouselImages = element.shadowRoot?.querySelector(".carousel-images") as HTMLElement
+  if (!carouselImages) return
 
-  const deltaX = state.currentX - state.startX
-  const deltaY = state.currentY - state.startY
-  const absDeltaX = Math.abs(deltaX)
-  const absDeltaY = Math.abs(deltaY)
+  const slides = carouselImages.querySelectorAll(".carousel-slide")
+  const indicators = element.shadowRoot?.querySelectorAll(".carousel-indicator")
+  if (!slides.length || !indicators) return
 
-  // Only handle horizontal swipes (where horizontal movement is greater than vertical)
-  if (absDeltaX > absDeltaY && absDeltaX > 50) {
-    const carouselContainer = element.shadowRoot?.querySelector(".image.carousel")
-    if (carouselContainer) {
-      const currentIndex = parseInt(carouselContainer.getAttribute("data-current-index") || "0")
-      const slides = carouselContainer.querySelectorAll(".carousel-slide")
-      const totalSlides = slides.length
+  // Find the slide that is most visible (closest to the left edge of the container)
+  const containerLeft = carouselImages.scrollLeft
+  const containerWidth = carouselImages.clientWidth
+  const centerPoint = containerLeft + containerWidth / 2
 
-      let newIndex = currentIndex
-      if (deltaX > 0) {
-        // Swipe right - go to previous
-        newIndex = (currentIndex - 1 + totalSlides) % totalSlides
-      } else {
-        // Swipe left - go to next
-        newIndex = (currentIndex + 1) % totalSlides
-      }
+  let closestIndex = 0
+  let closestDistance = Infinity
 
-      navigateToSlide(element, newIndex)
+  slides.forEach((slide, index) => {
+    const slideElement = slide as HTMLElement
+    const slideLeft = slideElement.offsetLeft
+    const slideCenter = slideLeft + slideElement.clientWidth / 2
+    const distance = Math.abs(slideCenter - centerPoint)
+
+    if (distance < closestDistance) {
+      closestDistance = distance
+      closestIndex = index
     }
-  }
+  })
 
-  state.isDragging = false
-  state.pointerId = null
+  // Update indicators
+  indicators.forEach((indicator, index) => {
+    if (index === closestIndex) {
+      indicator.classList.add("active")
+    } else {
+      indicator.classList.remove("active")
+    }
+  })
 }
 
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {

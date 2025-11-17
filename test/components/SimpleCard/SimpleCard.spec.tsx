@@ -677,7 +677,7 @@ describe("SimpleCard", () => {
 
       const shadowContent = getShadowContent(card)
       expect(shadowContent).toContain("carousel")
-      expect(shadowContent).toContain("data-carousel-swipe")
+      expect(shadowContent).toContain("carousel-images")
       expect(shadowContent).toContain("carousel-indicators")
     })
 
@@ -696,7 +696,7 @@ describe("SimpleCard", () => {
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)
-      expect(shadowContent).not.toContain("data-carousel-swipe")
+      expect(shadowContent).not.toContain("carousel-images")
     })
 
     it("should render carousel indicators for each image", async () => {
@@ -712,7 +712,7 @@ describe("SimpleCard", () => {
       expect(indicators?.length).toBe(2) // mockProduct has 2 images
     })
 
-    it("should navigate to next image when swiped left", async () => {
+    it("should scroll to next image with scroll snapping", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
@@ -722,30 +722,37 @@ describe("SimpleCard", () => {
 
       await card.connectedCallback()
 
-      const swipeArea = card.shadowRoot?.querySelector("[data-carousel-swipe]") as HTMLElement
-      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
-
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
-
-      // Simulate swipe left gesture (next image)
-      const pointerDown = new PointerEvent("pointerdown", { clientX: 200, clientY: 100, pointerId: 1, bubbles: true })
-      const pointerMove = new PointerEvent("pointermove", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
-      const pointerUp = new PointerEvent("pointerup", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
-
-      swipeArea.dispatchEvent(pointerDown)
-      swipeArea.dispatchEvent(pointerMove)
-      swipeArea.dispatchEvent(pointerUp)
-
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
-
+      const carouselImages = card.shadowRoot?.querySelector(".carousel-images") as HTMLElement
       const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
-      expect(slides?.[0]?.classList.contains("active")).toBe(false)
-      expect(slides?.[1]?.classList.contains("active")).toBe(true)
+
+      expect(carouselImages).toBeTruthy()
+      expect(slides?.length).toBe(2)
+
+      // Simulate scrolling to the next slide
+      if (carouselImages) {
+        Object.defineProperty(carouselImages, "scrollLeft", { value: 0, writable: true })
+        Object.defineProperty(carouselImages, "clientWidth", { value: 300, writable: false })
+        Object.defineProperty(slides?.[0], "offsetLeft", { value: 0, writable: false })
+        Object.defineProperty(slides?.[0], "clientWidth", { value: 300, writable: false })
+        Object.defineProperty(slides?.[1], "offsetLeft", { value: 300, writable: false })
+        Object.defineProperty(slides?.[1], "clientWidth", { value: 300, writable: false })
+
+        // Scroll to second slide
+        carouselImages.scrollLeft = 300
+        carouselImages.dispatchEvent(new Event("scroll", { bubbles: true }))
+
+        // Wait for debounced scroll update
+        await new Promise(resolve => setTimeout(resolve, 150))
+
+        const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
+        expect(indicators?.[0]?.classList.contains("active")).toBe(false)
+        expect(indicators?.[1]?.classList.contains("active")).toBe(true)
+      }
 
       document.body.removeChild(card)
     })
 
-    it("should navigate to previous image when swiped right", async () => {
+    it("should support horizontal scroll for navigation", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
@@ -755,26 +762,11 @@ describe("SimpleCard", () => {
 
       await card.connectedCallback()
 
-      const swipeArea = card.shadowRoot?.querySelector("[data-carousel-swipe]") as HTMLElement
-      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
+      const carouselImages = card.shadowRoot?.querySelector(".carousel-images") as HTMLElement
 
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
-
-      // Simulate swipe right gesture (previous image, wraps around)
-      const pointerDown = new PointerEvent("pointerdown", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
-      const pointerMove = new PointerEvent("pointermove", { clientX: 200, clientY: 100, pointerId: 1, bubbles: true })
-      const pointerUp = new PointerEvent("pointerup", { clientX: 200, clientY: 100, pointerId: 1, bubbles: true })
-
-      swipeArea.dispatchEvent(pointerDown)
-      swipeArea.dispatchEvent(pointerMove)
-      swipeArea.dispatchEvent(pointerUp)
-
-      // Should wrap around to last image
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
-
-      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
-      expect(slides?.[0]?.classList.contains("active")).toBe(false)
-      expect(slides?.[1]?.classList.contains("active")).toBe(true)
+      expect(carouselImages).toBeTruthy()
+      // Check that scroll container exists for horizontal scrolling
+      expect(carouselImages.classList.contains("carousel-images")).toBe(true)
 
       document.body.removeChild(card)
     })
@@ -790,24 +782,32 @@ describe("SimpleCard", () => {
       await card.connectedCallback()
 
       const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
-      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
+      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
 
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
+      expect(indicators?.[0]?.classList.contains("active")).toBe(true)
+      expect(indicators?.[1]?.classList.contains("active")).toBe(false)
+
+      // Mock scrollIntoView for the second slide
+      const scrollIntoViewMock = vi.fn()
+      slides?.forEach(slide => {
+        slide.scrollIntoView = scrollIntoViewMock
+      })
 
       // Click on second indicator
       const secondIndicator = indicators?.[1] as HTMLButtonElement
       secondIndicator.click()
 
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
-
-      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
-      expect(slides?.[0]?.classList.contains("active")).toBe(false)
-      expect(slides?.[1]?.classList.contains("active")).toBe(true)
+      // Verify scrollIntoView was called
+      expect(scrollIntoViewMock).toHaveBeenCalledWith({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start"
+      })
 
       document.body.removeChild(card)
     })
 
-    it("should not trigger swipe with small movements", async () => {
+    it("should update indicators based on scroll position", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
@@ -817,22 +817,30 @@ describe("SimpleCard", () => {
 
       await card.connectedCallback()
 
-      const swipeArea = card.shadowRoot?.querySelector("[data-carousel-swipe]") as HTMLElement
-      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
+      const carouselImages = card.shadowRoot?.querySelector(".carousel-images") as HTMLElement
+      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
+      const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
 
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
+      // Initially first indicator should be active
+      expect(indicators?.[0]?.classList.contains("active")).toBe(true)
 
-      // Simulate small movement (less than 50px threshold)
-      const pointerDown = new PointerEvent("pointerdown", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
-      const pointerMove = new PointerEvent("pointermove", { clientX: 120, clientY: 100, pointerId: 1, bubbles: true })
-      const pointerUp = new PointerEvent("pointerup", { clientX: 120, clientY: 100, pointerId: 1, bubbles: true })
+      // Set up mock scroll position for second slide
+      Object.defineProperty(carouselImages, "scrollLeft", { value: 300, writable: true })
+      Object.defineProperty(carouselImages, "clientWidth", { value: 300, writable: false })
+      Object.defineProperty(slides?.[0], "offsetLeft", { value: 0, writable: false })
+      Object.defineProperty(slides?.[0], "clientWidth", { value: 300, writable: false })
+      Object.defineProperty(slides?.[1], "offsetLeft", { value: 300, writable: false })
+      Object.defineProperty(slides?.[1], "clientWidth", { value: 300, writable: false })
 
-      swipeArea.dispatchEvent(pointerDown)
-      swipeArea.dispatchEvent(pointerMove)
-      swipeArea.dispatchEvent(pointerUp)
+      // Trigger scroll event
+      carouselImages.dispatchEvent(new Event("scroll", { bubbles: true }))
 
-      // Should remain on first image
-      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
+      // Wait for debounced update
+      await new Promise(resolve => setTimeout(resolve, 150))
+
+      // Second indicator should now be active
+      expect(indicators?.[0]?.classList.contains("active")).toBe(false)
+      expect(indicators?.[1]?.classList.contains("active")).toBe(true)
 
       document.body.removeChild(card)
     })
@@ -849,7 +857,7 @@ describe("SimpleCard", () => {
       const shadowContent = getShadowContent(card)
       // Should have carousel elements
       expect(shadowContent).toContain("carousel")
-      expect(shadowContent).toContain("data-carousel-swipe")
+      expect(shadowContent).toContain("carousel-images")
       // Should NOT have alternate image class
       expect(shadowContent).not.toContain("img alternate")
     })

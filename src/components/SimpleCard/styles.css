@@ -113,25 +113,25 @@
 }
 
 .carousel-images {
-  position: relative;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   width: 100%;
-  overflow: hidden;
-  touch-action: pan-y pinch-zoom;
-  cursor: grab;
 }
 
-.carousel-images:active {
-  cursor: grabbing;
+.carousel-images::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-slide {
-  display: none;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   width: 100%;
-  user-select: none;
-}
-
-.carousel-slide.active {
-  display: block;
 }
 
 .carousel-indicators {
