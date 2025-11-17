@@ -1,3 +1,19 @@
+# [9.24.0](https://github.com/Nosto/web-components/compare/v9.23.0...v9.24.0) (2025-11-17)
+
+
+### Bug Fixes
+
+* **VariantSelector:** remove table category sections from placeholder and preselect controls ([2ebf716](https://github.com/Nosto/web-components/commit/2ebf71613228ced6210d3c15cc637b2cb767615a))
+* **vue:** apply property binding to null/undefined values and remove redundant tests ([9f32d0e](https://github.com/Nosto/web-components/commit/9f32d0e3310a682fd27f4c2a529509d4cdb919ce))
+* **vue:** exclude event handler properties from property binding ([2a8c240](https://github.com/Nosto/web-components/commit/2a8c24098b50791545f498969eb8f4f79c26ba98))
+* **vue:** move removeAttribute to else branch for null/undefined values ([175329e](https://github.com/Nosto/web-components/commit/175329e30d1d2d0605e3a07fd3fc8fa277246687))
+
+
+### Features
+
+* **VariantSelector:** add placeholder and preselect controls to Default story ([bf4c0d4](https://github.com/Nosto/web-components/commit/bf4c0d49cfe0257b9d2071085f03dfdead848410))
+* **vue:** enhance setAttribute to bind properties when available ([eafc25c](https://github.com/Nosto/web-components/commit/eafc25ce03153ead3b4b3f18409ca7a890641461))
+
 # [9.23.0](https://github.com/Nosto/web-components/compare/v9.22.0...v9.23.0) (2025-11-17)
 
 
