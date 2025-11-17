@@ -56,6 +56,7 @@ export const mockProduct = {
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
  * @property {boolean} [alternate] - Show alternate product image on hover. Defaults to false.
+ * @property {boolean} [carousel] - Show image carousel with arrow navigation. Defaults to false.
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
@@ -68,6 +69,7 @@ export const mockProduct = {
 export class SimpleCard extends NostoElement {
   @property(String) handle!: string
   @property(Boolean) alternate?: boolean
+  @property(Boolean) carousel?: boolean
   @property(Boolean) brand?: boolean
   @property(Boolean) discount?: boolean
   @property(Number) rating?: number
@@ -96,6 +98,7 @@ export class SimpleCard extends NostoElement {
     assertRequired(this, "handle")
     await loadAndRenderMarkup(this)
     this.addEventListener("click", this)
+    this.shadowRoot?.addEventListener("click", this)
     this.addEventListener("variantchange", this)
   }
 
@@ -114,13 +117,63 @@ function isAddToCartClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
 }
 
+function isCarouselNavigation(event: MouseEvent) {
+  return (
+    event.target instanceof HTMLElement &&
+    (event.target.hasAttribute("data-carousel-prev") ||
+      event.target.hasAttribute("data-carousel-next") ||
+      event.target.hasAttribute("data-carousel-indicator"))
+  )
+}
+
 async function onClick(element: SimpleCard, event: MouseEvent) {
+  if (isCarouselNavigation(event)) {
+    event.preventDefault()
+    event.stopPropagation()
+    handleCarouselNavigation(element, event)
+    return
+  }
+
   if (isAddToCartClick(event) && element.productId && element.variantId) {
     event.stopPropagation()
     await addSkuToCart({
       productId: element.productId.toString(),
       skuId: element.variantId.toString()
     })
+  }
+}
+
+function handleCarouselNavigation(element: SimpleCard, event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const carouselContainer = element.shadowRoot?.querySelector(".image.carousel")
+  if (!carouselContainer) return
+
+  const currentIndex = parseInt(carouselContainer.getAttribute("data-current-index") || "0")
+  const slides = carouselContainer.querySelectorAll(".carousel-slide")
+  const indicators = carouselContainer.querySelectorAll(".carousel-indicator")
+  const totalSlides = slides.length
+
+  let newIndex = currentIndex
+
+  if (target.hasAttribute("data-carousel-prev")) {
+    newIndex = (currentIndex - 1 + totalSlides) % totalSlides
+  } else if (target.hasAttribute("data-carousel-next")) {
+    newIndex = (currentIndex + 1) % totalSlides
+  } else if (target.hasAttribute("data-carousel-indicator")) {
+    newIndex = parseInt(target.getAttribute("data-carousel-indicator") || "0")
+  }
+
+  if (newIndex !== currentIndex) {
+    // Update active slide
+    slides[currentIndex]?.classList.remove("active")
+    slides[newIndex]?.classList.add("active")
+
+    // Update active indicator
+    indicators[currentIndex]?.classList.remove("active")
+    indicators[newIndex]?.classList.add("active")
+
+    // Update current index
+    carouselContainer.setAttribute("data-current-index", newIndex.toString())
   }
 }
 

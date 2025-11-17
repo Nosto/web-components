@@ -664,4 +664,174 @@ describe("SimpleCard", () => {
       expect(fetchCalled).toBe(false)
     })
   })
+
+  describe("Carousel Mode", () => {
+    it("should render carousel when carousel attribute is enabled", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("carousel")
+      expect(shadowContent).toContain("carousel-prev")
+      expect(shadowContent).toContain("carousel-next")
+      expect(shadowContent).toContain("carousel-indicators")
+    })
+
+    it("should not render carousel when product has only one image", async () => {
+      const productWithOneImage = {
+        ...mockProduct,
+        images: [mockProduct.images[0]]
+      }
+
+      addProductHandlers({
+        "test-product": { product: productWithOneImage }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).not.toContain("carousel-prev")
+      expect(shadowContent).not.toContain("carousel-next")
+    })
+
+    it("should render carousel indicators for each image", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
+      expect(indicators?.length).toBe(2) // mockProduct has 2 images
+    })
+
+    it("should navigate to next image when next button is clicked", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+
+      const nextButton = card.shadowRoot?.querySelector("[data-carousel-next]") as HTMLButtonElement
+      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
+
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
+
+      nextButton.click()
+
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
+
+      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
+      expect(slides?.[0]?.classList.contains("active")).toBe(false)
+      expect(slides?.[1]?.classList.contains("active")).toBe(true)
+
+      document.body.removeChild(card)
+    })
+
+    it("should navigate to previous image when prev button is clicked", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+
+      const prevButton = card.shadowRoot?.querySelector("[data-carousel-prev]") as HTMLButtonElement
+      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
+
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
+
+      prevButton.click()
+
+      // Should wrap around to last image
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
+
+      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
+      expect(slides?.[0]?.classList.contains("active")).toBe(false)
+      expect(slides?.[1]?.classList.contains("active")).toBe(true)
+
+      document.body.removeChild(card)
+    })
+
+    it("should navigate to specific image when indicator is clicked", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+
+      const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
+      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
+
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
+
+      // Click on second indicator
+      const secondIndicator = indicators?.[1] as HTMLButtonElement
+      secondIndicator.click()
+
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
+
+      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
+      expect(slides?.[0]?.classList.contains("active")).toBe(false)
+      expect(slides?.[1]?.classList.contains("active")).toBe(true)
+
+      document.body.removeChild(card)
+    })
+
+    it("should prevent default link navigation when carousel arrows are clicked", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+
+      const nextButton = card.shadowRoot?.querySelector("[data-carousel-next]") as HTMLButtonElement
+
+      const clickEvent = new MouseEvent("click", { bubbles: true, cancelable: true })
+      const preventDefault = vi.spyOn(clickEvent, "preventDefault")
+
+      nextButton.dispatchEvent(clickEvent)
+
+      expect(preventDefault).toHaveBeenCalled()
+
+      document.body.removeChild(card)
+    })
+
+    it("should prefer carousel mode over alternate mode when both are enabled", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel alternate />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // Should have carousel elements
+      expect(shadowContent).toContain("carousel")
+      expect(shadowContent).toContain("carousel-prev")
+      // Should NOT have alternate image class
+      expect(shadowContent).not.toContain("img alternate")
+    })
+  })
 })

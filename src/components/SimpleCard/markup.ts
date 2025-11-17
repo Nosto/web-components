@@ -38,6 +38,11 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
     return html`<div class="image placeholder"></div>`
   }
 
+  // Carousel mode takes precedence over alternate mode
+  if (element.carousel && product.images?.length > 1) {
+    return generateCarouselHTML(element, product)
+  }
+
   const hasAlternate = element.alternate && product.images?.length > 1
   const alternateImage = hasAlternate ? product.images[1].url : undefined
 
@@ -47,6 +52,41 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
       ${hasAlternate && alternateImage
         ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
         : ""}
+    </div>
+  `
+}
+
+function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
+  const images = product.images
+  return html`
+    <div class="image carousel" part="image" data-current-index="0">
+      <div class="carousel-images">
+        ${images.map(
+          (img, index) => html`
+            <div class="carousel-slide ${index === 0 ? "active" : ""}" data-index="${index}">
+              ${generateImgHtml(img.url, product.title, "img carousel-img", element.sizes)}
+            </div>
+          `
+        )}
+      </div>
+      <button class="carousel-arrow carousel-prev" part="carousel-prev" aria-label="Previous image" data-carousel-prev>
+        &#8249;
+      </button>
+      <button class="carousel-arrow carousel-next" part="carousel-next" aria-label="Next image" data-carousel-next>
+        &#8250;
+      </button>
+      <div class="carousel-indicators" part="carousel-indicators">
+        ${images.map(
+          (_, index) => html`
+            <button
+              class="carousel-indicator ${index === 0 ? "active" : ""}"
+              part="carousel-indicator"
+              aria-label="Go to image ${index + 1}"
+              data-carousel-indicator="${index}"
+            ></button>
+          `
+        )}
+      </div>
     </div>
   `
 }
