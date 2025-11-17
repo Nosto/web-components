@@ -36,7 +36,7 @@ function generateOptionRowHTML(option: ShopifyOption, maxValues?: number) {
       <div class="label" part="label">${option.name}:</div>
       <div class="values" part="values">
         ${valuesToRender.map(value => generateOptionValueHTML(option.name, value))}${hasMore
-          ? generateEllipsis(option.optionValues.length - maxValues)
+          ? generateEllipsis(option.optionValues.length - maxValues!)
           : ""}
       </div>
     </div>
@@ -44,9 +44,7 @@ function generateOptionRowHTML(option: ShopifyOption, maxValues?: number) {
 }
 
 function generateEllipsis(moreCount: number) {
-  return html`<span class="ellipsis" part="ellipsis" role="presentation" aria-label="${moreCount} more options"
-    >…</span
-  >`
+  return html`<span class="ellipsis" part="ellipsis" role="img" aria-label="${moreCount} more options">…</span>`
 }
 
 function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {

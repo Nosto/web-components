@@ -703,7 +703,7 @@ describe("VariantSelector", () => {
         expect(ariaLabel).toContain("more options")
         // Each option has 3 values, maxValues is 1, so 2 more
         expect(ariaLabel).toContain("2 more options")
-        expect(ellipsis.getAttribute("role")).toBe("presentation")
+        expect(ellipsis.getAttribute("role")).toBe("img")
         expect(ellipsis.textContent).toBe("…")
       })
     })

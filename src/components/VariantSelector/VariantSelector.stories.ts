@@ -72,6 +72,10 @@ export const Default: Story = {
     preselect: {
       description: "Whether to automatically preselect the options of the first available variant",
       control: { type: "boolean" }
+    },
+    maxValues: {
+      description: "Maximum number of option values to display per option",
+      control: { type: "number", min: 1, max: 10, step: 1 }
     }
   },
   args: {
@@ -93,6 +97,7 @@ export const Default: Story = {
                 handle="${handle}"
                 ?placeholder=${args.placeholder}
                 ?preselect=${args.preselect}
+                maxValues=${args.maxValues}
               ></nosto-variant-selector>
             </nosto-simple-card>
           `
