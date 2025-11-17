@@ -1,3 +1,10 @@
+# [9.23.0](https://github.com/Nosto/web-components/compare/v9.22.0...v9.23.0) (2025-11-17)
+
+
+### Features
+
+* **DynamicCard:** extend storybook story with controls ([5638717](https://github.com/Nosto/web-components/commit/56387171a88da502b811442090f13291fc08f39a))
+
 # [9.22.0](https://github.com/Nosto/web-components/compare/v9.21.0...v9.22.0) (2025-11-14)
 
 
