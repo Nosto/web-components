@@ -128,7 +128,7 @@ function isAddToCartClick(event: MouseEvent) {
 }
 
 function isCarouselIndicatorClick(event: MouseEvent) {
-  return event.target instanceof HTMLElement && event.target.hasAttribute("data-carousel-indicator")
+  return event.target instanceof HTMLElement && event.target.classList.contains("carousel-indicator")
 }
 
 async function onClick(element: SimpleCard, event: MouseEvent) {

@@ -23,7 +23,6 @@ export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduc
               class="carousel-indicator ${index === 0 ? "active" : ""}"
               part="carousel-indicator"
               aria-label="Go to image ${index + 1}"
-              data-carousel-indicator="${index}"
             ></button>
           `
         )}
@@ -34,11 +33,15 @@ export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduc
 
 export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {
   const target = event.target as HTMLElement
-  const index = parseInt(target.dataset.carouselIndicator || "0")
+  const indicators = element.shadowRoot?.querySelectorAll(".carousel-indicator")
+  const index = indicators ? Array.from(indicators).indexOf(target) : -1
+
+  if (index === -1) return
+
   const carouselImages = element.shadowRoot?.querySelector(".carousel-images")
   const slide = carouselImages?.querySelector(`.carousel-slide:nth-child(${index + 1})`)
 
-  if (carouselImages && slide) {
+  if (slide) {
     slide.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" })
   }
 }
