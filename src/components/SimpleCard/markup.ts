@@ -60,7 +60,7 @@ function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
   const images = product.images
   return html`
     <div class="image carousel" part="image" data-current-index="0">
-      <div class="carousel-images">
+      <div class="carousel-images" data-carousel-swipe>
         ${images.map(
           (img, index) => html`
             <div class="carousel-slide ${index === 0 ? "active" : ""}" data-index="${index}">
@@ -69,12 +69,6 @@ function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
           `
         )}
       </div>
-      <button class="carousel-arrow carousel-prev" part="carousel-prev" aria-label="Previous image" data-carousel-prev>
-        &#8249;
-      </button>
-      <button class="carousel-arrow carousel-next" part="carousel-next" aria-label="Next image" data-carousel-next>
-        &#8250;
-      </button>
       <div class="carousel-indicators" part="carousel-indicators">
         ${images.map(
           (_, index) => html`

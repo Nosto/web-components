@@ -677,8 +677,7 @@ describe("SimpleCard", () => {
 
       const shadowContent = getShadowContent(card)
       expect(shadowContent).toContain("carousel")
-      expect(shadowContent).toContain("carousel-prev")
-      expect(shadowContent).toContain("carousel-next")
+      expect(shadowContent).toContain("data-carousel-swipe")
       expect(shadowContent).toContain("carousel-indicators")
     })
 
@@ -697,8 +696,7 @@ describe("SimpleCard", () => {
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)
-      expect(shadowContent).not.toContain("carousel-prev")
-      expect(shadowContent).not.toContain("carousel-next")
+      expect(shadowContent).not.toContain("data-carousel-swipe")
     })
 
     it("should render carousel indicators for each image", async () => {
@@ -714,7 +712,7 @@ describe("SimpleCard", () => {
       expect(indicators?.length).toBe(2) // mockProduct has 2 images
     })
 
-    it("should navigate to next image when next button is clicked", async () => {
+    it("should navigate to next image when swiped left", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
@@ -724,12 +722,19 @@ describe("SimpleCard", () => {
 
       await card.connectedCallback()
 
-      const nextButton = card.shadowRoot?.querySelector("[data-carousel-next]") as HTMLButtonElement
+      const swipeArea = card.shadowRoot?.querySelector("[data-carousel-swipe]") as HTMLElement
       const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
 
       expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
 
-      nextButton.click()
+      // Simulate swipe left gesture (next image)
+      const pointerDown = new PointerEvent("pointerdown", { clientX: 200, clientY: 100, pointerId: 1, bubbles: true })
+      const pointerMove = new PointerEvent("pointermove", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
+      const pointerUp = new PointerEvent("pointerup", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
+
+      swipeArea.dispatchEvent(pointerDown)
+      swipeArea.dispatchEvent(pointerMove)
+      swipeArea.dispatchEvent(pointerUp)
 
       expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
 
@@ -740,7 +745,7 @@ describe("SimpleCard", () => {
       document.body.removeChild(card)
     })
 
-    it("should navigate to previous image when prev button is clicked", async () => {
+    it("should navigate to previous image when swiped right", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
@@ -750,12 +755,19 @@ describe("SimpleCard", () => {
 
       await card.connectedCallback()
 
-      const prevButton = card.shadowRoot?.querySelector("[data-carousel-prev]") as HTMLButtonElement
+      const swipeArea = card.shadowRoot?.querySelector("[data-carousel-swipe]") as HTMLElement
       const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
 
       expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
 
-      prevButton.click()
+      // Simulate swipe right gesture (previous image, wraps around)
+      const pointerDown = new PointerEvent("pointerdown", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
+      const pointerMove = new PointerEvent("pointermove", { clientX: 200, clientY: 100, pointerId: 1, bubbles: true })
+      const pointerUp = new PointerEvent("pointerup", { clientX: 200, clientY: 100, pointerId: 1, bubbles: true })
+
+      swipeArea.dispatchEvent(pointerDown)
+      swipeArea.dispatchEvent(pointerMove)
+      swipeArea.dispatchEvent(pointerUp)
 
       // Should wrap around to last image
       expect(carouselContainer?.getAttribute("data-current-index")).toBe("1")
@@ -795,7 +807,7 @@ describe("SimpleCard", () => {
       document.body.removeChild(card)
     })
 
-    it("should prevent default link navigation when carousel arrows are clicked", async () => {
+    it("should not trigger swipe with small movements", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
@@ -805,14 +817,22 @@ describe("SimpleCard", () => {
 
       await card.connectedCallback()
 
-      const nextButton = card.shadowRoot?.querySelector("[data-carousel-next]") as HTMLButtonElement
+      const swipeArea = card.shadowRoot?.querySelector("[data-carousel-swipe]") as HTMLElement
+      const carouselContainer = card.shadowRoot?.querySelector(".image.carousel")
 
-      const clickEvent = new MouseEvent("click", { bubbles: true, cancelable: true })
-      const preventDefault = vi.spyOn(clickEvent, "preventDefault")
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
 
-      nextButton.dispatchEvent(clickEvent)
+      // Simulate small movement (less than 50px threshold)
+      const pointerDown = new PointerEvent("pointerdown", { clientX: 100, clientY: 100, pointerId: 1, bubbles: true })
+      const pointerMove = new PointerEvent("pointermove", { clientX: 120, clientY: 100, pointerId: 1, bubbles: true })
+      const pointerUp = new PointerEvent("pointerup", { clientX: 120, clientY: 100, pointerId: 1, bubbles: true })
 
-      expect(preventDefault).toHaveBeenCalled()
+      swipeArea.dispatchEvent(pointerDown)
+      swipeArea.dispatchEvent(pointerMove)
+      swipeArea.dispatchEvent(pointerUp)
+
+      // Should remain on first image
+      expect(carouselContainer?.getAttribute("data-current-index")).toBe("0")
 
       document.body.removeChild(card)
     })
@@ -829,7 +849,7 @@ describe("SimpleCard", () => {
       const shadowContent = getShadowContent(card)
       // Should have carousel elements
       expect(shadowContent).toContain("carousel")
-      expect(shadowContent).toContain("carousel-prev")
+      expect(shadowContent).toContain("data-carousel-swipe")
       // Should NOT have alternate image class
       expect(shadowContent).not.toContain("img alternate")
     })
