@@ -661,4 +661,209 @@ describe("VariantSelector", () => {
     expect(content).toContain("Size:")
     expect(selector2.hasAttribute("loading")).toBe(false)
   })
+
+  describe("Compact mode", () => {
+    it("should render a select dropdown when compact attribute is set", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowContent = getShadowContent(selector)
+      expect(shadowContent).toContain("compact-select")
+      expect(shadowContent).toContain("<select")
+      expect(shadowContent).not.toContain('class="value"')
+    })
+
+    it("should include all variants as options in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+      const options = Array.from(select.querySelectorAll("option"))
+
+      // Should have 1 placeholder + 3 variants
+      expect(options.length).toBe(4)
+      expect(options[0].value).toBe("")
+      expect(options[0].textContent).toContain("Select a variant")
+      expect(options[1].textContent).toContain("Small / Red")
+      expect(options[2].textContent).toContain("Medium / Blue")
+      expect(options[3].textContent).toContain("Large / Red")
+    })
+
+    it("should show availability status in option text", async () => {
+      const productWithUnavailable: ShopifyProduct = {
+        ...mockProductWithVariants,
+        variants: [
+          {
+            ...mockProductWithVariants.variants[0],
+            availableForSale: true
+          },
+          {
+            ...mockProductWithVariants.variants[1],
+            availableForSale: false,
+            title: "Medium / Blue"
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-test-product": { product: productWithUnavailable }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+      const options = Array.from(select.querySelectorAll("option"))
+
+      expect(options[1].textContent).not.toContain("(Sold Out)")
+      expect(options[2].textContent).toContain("(Sold Out)")
+    })
+
+    it("should disable unavailable options in compact mode", async () => {
+      const productWithUnavailable: ShopifyProduct = {
+        ...mockProductWithVariants,
+        variants: [
+          {
+            ...mockProductWithVariants.variants[0],
+            availableForSale: true
+          },
+          {
+            ...mockProductWithVariants.variants[1],
+            availableForSale: false,
+            title: "Medium / Blue"
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-test-product": { product: productWithUnavailable }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+      const options = Array.from(select.querySelectorAll("option"))
+
+      expect(options[1].disabled).toBe(false)
+      expect(options[2].disabled).toBe(true)
+    })
+
+    it("should emit variantchange event when selecting from dropdown", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      let eventDetail: Record<string, unknown> | null = null
+      selector.addEventListener("variantchange", (event: Event) => {
+        eventDetail = (event as CustomEvent).detail
+      })
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+
+      // Simulate selecting the second variant (Medium / Blue)
+      select.value = "gid://shopify/ProductVariant/1002"
+      select.dispatchEvent(new Event("change", { bubbles: true }))
+
+      // Wait for async event handler
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(eventDetail).toBeTruthy()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1002")
+    })
+
+    it("should update selectedOptions when variant is selected in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+
+      // Select the third variant (Large / Red)
+      select.value = "gid://shopify/ProductVariant/1003"
+      select.dispatchEvent(new Event("change", { bubbles: true }))
+
+      // Wait for async event handler
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(selector.selectedOptions["Size"]).toBe("Large")
+      expect(selector.selectedOptions["Color"]).toBe("Red")
+    })
+
+    it("should preselect variant in compact mode when preselect is true", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact preselect />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+
+      // Should have first available variant selected
+      expect(select.value).toBe("gid://shopify/ProductVariant/1001")
+    })
+
+    it("should preselect specific variant by variantId in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" compact variantId={1002} />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const select = shadowRoot.querySelector("select.compact-select") as HTMLSelectElement
+
+      // Should have variant 1002 selected
+      expect(select.value).toBe("gid://shopify/ProductVariant/1002")
+    })
+
+    it("should not render compact select for products without variants", async () => {
+      addProductHandlers({
+        "no-variants": { product: mockProductWithoutVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="no-variants" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowContent = getShadowContent(selector)
+      expect(shadowContent).toBe("<slot></slot>")
+    })
+
+    it("should not render compact select when all options are single-value", async () => {
+      addProductHandlers({
+        "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
+      })
+
+      const selector = (<nosto-variant-selector handle="all-single-value-test" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowContent = getShadowContent(selector)
+      expect(shadowContent).toBe("<slot></slot>")
+    })
+  })
 })

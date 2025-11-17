@@ -78,3 +78,27 @@
   pointer-events: none;
 }
 
+.compact-select {
+  width: 100%;
+  padding: var(--value-padding);
+  background: var(--value-bg);
+  border: var(--value-border);
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.compact-select:hover {
+  background: var(--value-hover-bg);
+  border-color: var(--value-hover-border);
+}
+
+.compact-select:focus {
+  outline: 2px solid var(--value-focus-color);
+  outline-offset: 2px;
+}
+
+.compact-select option:disabled {
+  color: #999;
+}

@@ -1,8 +1,8 @@
 import { html } from "@/templating/html"
 import type { VariantSelector } from "./VariantSelector"
-import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
+import { ShopifyOption, ShopifyOptionValue, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 
-export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
+export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options
   if (!product.options || product.options.length === 0) {
     return html`<slot></slot>`
@@ -14,6 +14,11 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
   // If all options are single-value, don't render the selector
   if (!hasMultiValueOptions) {
     return html`<slot></slot>`
+  }
+
+  // Render compact mode with select dropdown
+  if (element.compact) {
+    return html` <div class="selector" part="selector">${generateCompactSelectHTML(product)}<slot></slot></div> `
   }
 
   return html`
@@ -44,5 +49,23 @@ function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {
     <button type="button" class="value" part="value" data-option-name="${name}" data-option-value="${value.name}">
       ${value.name}
     </button>
+  `
+}
+
+function generateCompactSelectHTML(product: ShopifyProduct) {
+  return html`
+    <select class="compact-select" part="compact-select">
+      <option value="" selected="selected" disabled="disabled">Select a variant</option>
+      ${product.variants.map((variant: ShopifyVariant) => generateVariantOptionHTML(variant))}
+    </select>
+  `
+}
+
+function generateVariantOptionHTML(variant: ShopifyVariant) {
+  const availabilityText = variant.availableForSale ? "" : " (Sold Out)"
+  return html`
+    <option value="${variant.id}" data-available="${variant.availableForSale}">
+      ${variant.title}${availabilityText}
+    </option>
   `
 }

@@ -154,3 +154,43 @@ export const WithPlaceholder: Story = {
     }
   }
 }
+
+export const CompactMode: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}" compact></nosto-variant-selector>
+      </nosto-simple-card>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the `compact` attribute is set, the component renders a select dropdown for variant selection instead of the default option-by-option swatch UI. This provides a more compact alternative when space is limited."
+      }
+    }
+  }
+}
+
+export const CompactMode_WithPreselect: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}" compact preselect></nosto-variant-selector>
+      </nosto-simple-card>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Compact mode with `preselect` attribute automatically selects the first available variant in the dropdown."
+      }
+    }
+  }
+}

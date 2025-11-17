@@ -33,6 +33,7 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {string} variantId - (Optional) The ID of the variant to preselect on load.
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
+ * @property {boolean} compact - If true, renders a select dropdown instead of option-by-option swatches for more compact variant selection. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -43,6 +44,7 @@ export class VariantSelector extends NostoElement {
   @property(Number) variantId?: number
   @property(Boolean) preselect?: boolean
   @property(Boolean) placeholder?: boolean
+  @property(Boolean) compact?: boolean
 
   /**
    * Internal state for current selections
@@ -126,16 +128,30 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
 }
 
 function setupOptionListeners(element: VariantSelector) {
-  element.shadowRoot!.addEventListener("click", async e => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains("value")) {
-      e.preventDefault()
-      const { optionName, optionValue } = target.dataset
-      if (optionName && optionValue) {
-        await selectOption(element, optionName, optionValue)
+  if (element.compact) {
+    // Handle change event for select dropdown in compact mode
+    element.shadowRoot!.addEventListener("change", async e => {
+      const target = e.target as HTMLSelectElement
+      if (target.classList.contains("compact-select")) {
+        const variantId = target.value
+        if (variantId) {
+          await selectVariant(element, variantId)
+        }
       }
-    }
-  })
+    })
+  } else {
+    // Handle click events for option buttons in default mode
+    element.shadowRoot!.addEventListener("click", async e => {
+      const target = e.target as HTMLElement
+      if (target.classList.contains("value")) {
+        e.preventDefault()
+        const { optionName, optionValue } = target.dataset
+        if (optionName && optionValue) {
+          await selectOption(element, optionName, optionValue)
+        }
+      }
+    })
+  }
 }
 
 export async function selectOption(element: VariantSelector, optionName: string, value: string) {
@@ -150,30 +166,73 @@ export async function selectOption(element: VariantSelector, optionName: string,
   emitVariantChange(element, productData)
 }
 
+async function selectVariant(element: VariantSelector, variantId: string) {
+  const productData = await fetchProduct(element.handle)
+  const variant = productData.variants.find(v => v.id === variantId)
+
+  if (variant && variant.selectedOptions) {
+    // Update selectedOptions based on the chosen variant
+    variant.selectedOptions.forEach(selectedOption => {
+      element.selectedOptions[selectedOption.name] = selectedOption.value
+    })
+
+    updateActiveStates(element)
+    emitVariantChange(element, productData)
+  }
+}
+
 function updateActiveStates(element: VariantSelector) {
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const active = !!optionName && element.selectedOptions[optionName] === optionValue
-    togglePart(button, "active", active)
-  })
+  if (element.compact) {
+    // Update select dropdown value in compact mode
+    const select = element.shadowRoot!.querySelector<HTMLSelectElement>(".compact-select")
+    if (select) {
+      // Find the variant that matches current selections
+      const productData = fetchProduct(element.handle)
+      productData.then(product => {
+        const variant = getSelectedVariant(element, product)
+        if (variant) {
+          select.value = variant.id
+        }
+      })
+    }
+  } else {
+    // Update button states in default mode
+    element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+      const { optionName, optionValue } = button.dataset
+      const active = !!optionName && element.selectedOptions[optionName] === optionValue
+      togglePart(button, "active", active)
+    })
+  }
 }
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
-  const availableOptions = new Set<string>()
-  product.variants
-    .filter(v => v.availableForSale)
-    .forEach(variant => {
-      if (variant.selectedOptions) {
-        variant.selectedOptions.forEach(selectedOption => {
-          availableOptions.add(`${selectedOption.name}::${selectedOption.value}`)
-        })
-      }
+  if (element.compact) {
+    // Disable unavailable options in select dropdown
+    const select = element.shadowRoot!.querySelector<HTMLSelectElement>(".compact-select")
+    if (select) {
+      select.querySelectorAll<HTMLOptionElement>("option").forEach(option => {
+        const available = option.dataset.available === "true"
+        option.disabled = !available && option.value !== ""
+      })
+    }
+  } else {
+    // Update button states in default mode
+    const availableOptions = new Set<string>()
+    product.variants
+      .filter(v => v.availableForSale)
+      .forEach(variant => {
+        if (variant.selectedOptions) {
+          variant.selectedOptions.forEach(selectedOption => {
+            availableOptions.add(`${selectedOption.name}::${selectedOption.value}`)
+          })
+        }
+      })
+    element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+      const { optionName, optionValue } = button.dataset
+      const available = availableOptions.has(`${optionName}::${optionValue}`)
+      togglePart(button, "unavailable", !available)
     })
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const available = availableOptions.has(`${optionName}::${optionValue}`)
-    togglePart(button, "unavailable", !available)
-  })
+  }
 }
 
 function togglePart(element: HTMLElement, partName: string, enable: boolean) {
