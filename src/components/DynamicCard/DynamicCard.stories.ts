@@ -19,7 +19,7 @@ window.Shopify = {
   }
 }
 
-const meta: Meta = {
+const meta = {
   title: "Components/DynamicCard",
   component: "nosto-dynamic-card",
   decorators: [
@@ -55,7 +55,7 @@ const meta: Meta = {
     mock: false
   },
   tags: ["autodocs"]
-}
+} satisfies Meta
 
 export default meta
 type Story = StoryObj
