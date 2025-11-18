@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { provide, inject } from "../../src/components/inject"
+import { provide, inject, unprovide } from "../../src/components/inject"
 
 describe("inject", () => {
   const createElement = () => document.createElement("div")
@@ -42,5 +42,28 @@ describe("inject", () => {
     provide(host, key, value)
 
     expect(inject<number[]>(child, key)).toBe(value)
+  })
+})
+
+describe("unprovide", () => {
+  const createElement = () => document.createElement("div")
+
+  it("removes entire element mapping", () => {
+    const element = createElement()
+    const key1 = Symbol("value1")
+    const key2 = Symbol("value2")
+    const value1 = "test1"
+    const value2 = "test2"
+
+    provide(element, key1, value1)
+    provide(element, key2, value2)
+
+    expect(inject<string>(element, key1)).toBe(value1)
+    expect(inject<string>(element, key2)).toBe(value2)
+
+    unprovide(element)
+
+    expect(inject<string>(element, key1)).toBeUndefined()
+    expect(inject<string>(element, key2)).toBeUndefined()
   })
 })
