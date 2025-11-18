@@ -9,7 +9,7 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { parseId, toProductId } from "@/shopify/graphql/utils"
+import { parseId, toHandle, toProductId } from "@/shopify/graphql/utils"
 import { handleIndicatorClick, onCarouselScroll } from "./carousel"
 
 const setShadowContent = shadowContentFactory(styles)
@@ -153,7 +153,12 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
   const { variant } = event.detail
   element.productId = parseId(variant.product.id)
   element.variantId = parseId(variant.id)
-  updateSimpleCardContent(element, variant)
+  const handle = toHandle(variant.product.onlineStoreUrl)
+  if (handle && handle !== element.handle) {
+    element.handle = handle
+  } else {
+    updateSimpleCardContent(element, variant)
+  }
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {

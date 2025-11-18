@@ -99,7 +99,7 @@ export const Default: Story = {
       >
         ${handles.map(
           handle => html`
-            <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
+            <nosto-simple-card handle="${handle}" alternate discount>
               <nosto-variant-selector
                 handle="${handle}"
                 mode="${args.mode}"
