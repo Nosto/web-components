@@ -210,30 +210,6 @@ export const WithCarousel: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
 }
 
-export const WithCarouselAndVariantSelector: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    return html`
-      <nosto-simple-card
-        handle="${handles[0]}"
-        carousel
-        ?brand=${args.brand}
-        ?discount=${args.discount}
-        rating=${args.rating || 0}
-      >
-        <nosto-variant-selector handle="${handles[0]}" preselect></nosto-variant-selector>
-        <button n-atc>Add to cart</button>
-      </nosto-simple-card>
-    `
-  },
-  args: {
-    brand: true,
-    discount: true,
-    rating: 4.2
-  }
-}
-
 export const Mocked: Story = {
   render: args => html` <nosto-simple-card handle="mock" mock="${args.mock}"></nosto-simple-card> `,
   args: {

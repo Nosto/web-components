@@ -1,7 +1,8 @@
 import type { SimpleCard } from "./SimpleCard"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 import { html } from "@/templating/html"
-import { generateImgHtml } from "./markup"
+import { generateImgHtml, normalizeUrl } from "./markup"
+import { setImageProps } from "../Image/Image"
 
 export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
   const images = product.images
@@ -83,5 +84,26 @@ export function updateCarouselIndicators(element: SimpleCard) {
 
   indicators.forEach((indicator, index) => {
     indicator.classList.toggle("active", index === closestIndex)
+  })
+}
+
+export function updateCarouselImages(element: SimpleCard, variant: ShopifyVariant) {
+  const carouselImages = element.shadowRoot!.querySelector(".carousel-images")
+  if (!carouselImages || !variant.images) return
+
+  // Get all carousel image elements
+  const carouselImgs = carouselImages.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
+
+  // Update each carousel image with corresponding variant image
+  variant.images.forEach((variantImage, index) => {
+    const img = carouselImgs[index]
+    if (img) {
+      const props = {
+        src: normalizeUrl(variantImage.url),
+        width: 800,
+        sizes: element.sizes
+      }
+      setImageProps(img, props)
+    }
   })
 }

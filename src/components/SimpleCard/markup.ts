@@ -4,7 +4,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
 import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
-import { generateCarouselHTML } from "./carousel"
+import { generateCarouselHTML, updateCarouselImages } from "./carousel"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
@@ -57,7 +57,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-function normalizeUrl(url: string) {
+export function normalizeUrl(url: string) {
   if (!url || url.startsWith("//") || !url.startsWith("/")) {
     return url
   }
@@ -105,18 +105,17 @@ function formatPrice({ amount, currencyCode }: ShopifyMoney) {
 }
 
 export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
-  updateImages(element, variant)
+  // Handle carousel mode - update all carousel images
+  if (element.carousel && variant.images && variant.images.length > 0) {
+    updateCarouselImages(element, variant)
+  } else {
+    // Handle non-carousel mode - update primary/alternate images
+    updateImages(element, variant)
+  }
   updatePrices(element, variant)
 }
 
 function updateImages(element: SimpleCard, variant: ShopifyVariant) {
-  // Handle carousel mode - update all carousel images
-  if (element.carousel && variant.images && variant.images.length > 0) {
-    updateCarouselImages(element, variant)
-    return
-  }
-
-  // Handle non-carousel mode - update primary/alternate images
   if (!variant.image) return
 
   const props = {
@@ -130,27 +129,6 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
   ].filter(Boolean) as HTMLImageElement[]
 
   imagesToUpdate.forEach(img => setImageProps(img, props))
-}
-
-function updateCarouselImages(element: SimpleCard, variant: ShopifyVariant) {
-  const carouselImages = element.shadowRoot!.querySelector(".carousel-images")
-  if (!carouselImages || !variant.images) return
-
-  // Get all carousel image elements
-  const carouselImgs = carouselImages.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
-
-  // Update each carousel image with corresponding variant image
-  variant.images.forEach((variantImage, index) => {
-    const img = carouselImgs[index]
-    if (img) {
-      const props = {
-        src: normalizeUrl(variantImage.url),
-        width: 800,
-        sizes: element.sizes
-      }
-      setImageProps(img, props)
-    }
-  })
 }
 
 function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
