@@ -56,7 +56,7 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
     const variantIdStr = toVariantGid(element.variantId)
     variant = product.variants.find(v => v.id === variantIdStr)
   } else if (element.preselect) {
-    variant = product.variants.find(v => v.availableForSale)
+    variant = product.variants.find(v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl)
   }
   if (variant && variant.selectedOptions) {
     variant.selectedOptions.forEach(selectedOption => {
