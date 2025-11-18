@@ -918,5 +918,59 @@ describe("SimpleCard", () => {
       expect(carouselImgs[0]?.src).toBe("https://example.com/blue-1.jpg")
       expect(carouselImgs[1]?.src).toBe("https://example.com/blue-2.jpg")
     })
+
+    it("should not update carousel when variant has no images array", async () => {
+      const variantProductNoImages: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/3001",
+            title: "Default",
+            availableForSale: true,
+            selectedOptions: [],
+            image: {
+              altText: "Single variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/single.jpg"
+            },
+            price: { currencyCode: "USD", amount: "29.99" },
+            compareAtPrice: null,
+            product: { id: "gid://shopify/Product/890", onlineStoreUrl: "/products/no-variant-images" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "no-variant-images": { product: variantProductNoImages }
+      })
+
+      const card = (<nosto-simple-card handle="no-variant-images" carousel />) as SimpleCard
+      await card.connectedCallback()
+
+      // Get initial carousel images
+      const initialCarouselImgs = card.shadowRoot?.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
+      const initialSrc0 = initialCarouselImgs[0]?.src
+      const initialSrc1 = initialCarouselImgs[1]?.src
+
+      // Simulate variant change event with variant that has no images array
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProductNoImages.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+
+      // Wait for the event to be processed
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Carousel images should remain unchanged
+      const afterCarouselImgs = card.shadowRoot?.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
+      expect(afterCarouselImgs[0]?.src).toBe(initialSrc0)
+      expect(afterCarouselImgs[1]?.src).toBe(initialSrc1)
+    })
   })
 })
