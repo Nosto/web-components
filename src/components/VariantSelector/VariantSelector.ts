@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import { loadAndRenderMarkup } from "./default"
+import { loadAndRenderMarkup } from "./options"
 import { loadAndRenderCompact } from "./compact"
 
 /**
@@ -23,7 +23,7 @@ import { loadAndRenderCompact } from "./compact"
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {number} maxValues - (Optional) Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator.
- * @property {string} mode - (Optional) Display mode: "default" or "compact". Defaults to "default".
+ * @property {string} mode - (Optional) Display mode: "options" or "compact". Defaults to "compact".
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -35,7 +35,7 @@ export class VariantSelector extends NostoElement {
   @property(Boolean) preselect?: boolean
   @property(Boolean) placeholder?: boolean
   @property(Number) maxValues?: number
-  @property(String) mode?: "default" | "compact"
+  @property(String) mode?: "options" | "compact"
 
   /**
    * Internal state for current selections
@@ -60,10 +60,10 @@ export class VariantSelector extends NostoElement {
   }
 
   async #render(initial = false) {
-    if (this.mode === "compact") {
-      await loadAndRenderCompact(this)
-    } else {
+    if (this.mode === "options") {
       await loadAndRenderMarkup(this, initial)
+    } else {
+      await loadAndRenderCompact(this)
     }
   }
 }
