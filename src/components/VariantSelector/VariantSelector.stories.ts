@@ -86,7 +86,7 @@ export const Default: Story = {
   args: {
     columns: 4,
     products: 12,
-    mode: "compact",
+    mode: "options",
     placeholder: false,
     preselect: false,
     maxValues: 5

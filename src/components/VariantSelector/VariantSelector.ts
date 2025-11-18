@@ -23,7 +23,7 @@ import { loadAndRenderCompact } from "./compact"
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {number} maxValues - (Optional) Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator.
- * @property {string} mode - (Optional) Display mode: "options" or "compact". Defaults to "compact".
+ * @property {string} mode - (Optional) Display mode: "options" or "compact". Defaults to "options".
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -60,10 +60,10 @@ export class VariantSelector extends NostoElement {
   }
 
   async #render(initial = false) {
-    if (this.mode === "options") {
-      await loadAndRenderMarkup(this, initial)
-    } else {
+    if (this.mode === "compact") {
       await loadAndRenderCompact(this)
+    } else {
+      await loadAndRenderMarkup(this, initial)
     }
   }
 }
