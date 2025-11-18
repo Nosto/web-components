@@ -1,7 +1,7 @@
 import { html } from "@/templating/html"
-import type { VariantSelector } from "./VariantSelector"
+import type { VariantSelector } from "../VariantSelector"
 import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
-import { generateCompactSelectorHTML } from "./compact/compact"
+import { generateCompactSelectorHTML } from "../compact/compact"
 
 export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options

@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import { generateVariantSelectorHTML } from "./markup"
+import { generateVariantSelectorHTML } from "./normal/markup"
 import normalStyles from "./normal/styles.css?raw"
 import compactStyles from "./compact/compact.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
