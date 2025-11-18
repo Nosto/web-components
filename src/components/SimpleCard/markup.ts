@@ -3,11 +3,14 @@ import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
-import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { ShopifyImage, ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 import { generateCarouselHTML } from "./carousel"
+import { parseId } from "@/shopify/graphql/utils"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
+
+  const prices = (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || product
 
   return html`
     <div class="card" part="card">
@@ -17,9 +20,9 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
           ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
           <h3 class="title" part="title">${product.title}</h3>
           <div class="price" part="price">
-            <span class="price-current" part="price-current"> ${formatPrice(product.price)} </span>
+            <span class="price-current" part="price-current"> ${formatPrice(prices.price)} </span>
             ${hasDiscount
-              ? html`<span class="price-original" part="price-original">${formatPrice(product.compareAtPrice!)}</span>`
+              ? html`<span class="price-original" part="price-original">${formatPrice(prices.compareAtPrice!)}</span>`
               : ""}
           </div>
           ${element.rating ? generateRatingHTML(element.rating) : ""}
@@ -34,7 +37,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
 
 function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
-  const primaryImage = product.images?.[0]?.url
+  const primaryImage = product.images?.[0]
   if (!primaryImage) {
     return html`<div class="image placeholder"></div>`
   }
@@ -45,7 +48,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   }
 
   const hasAlternate = element.alternate && product.images?.length > 1
-  const alternateImage = hasAlternate ? product.images[1].url : undefined
+  const alternateImage = hasAlternate ? product.images[1] : undefined
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
@@ -64,16 +67,19 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
-export function generateImgHtml(src: string, alt: string, className: string, sizes?: string) {
+export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string) {
   const { style, ...props } = transform({
-    src: normalizeUrl(src),
-    width: 800,
+    src: normalizeUrl(image.url),
+    width: image.width,
+    height: image.height,
     sizes
   })
   return html`<img
     alt="${alt}"
     part="${className}"
     class="${className}"
+    width="${image.width}"
+    height="${image.height}"
     ${Object.entries(props)
       .filter(([, value]) => value != null)
       .map(([key, value]) => html`${key}="${value}" `)}

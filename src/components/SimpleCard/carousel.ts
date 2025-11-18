@@ -10,9 +10,7 @@ export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduc
       <div class="carousel-images">
         ${images.map(
           img => html`
-            <div class="carousel-slide">
-              ${generateImgHtml(img.url, product.title, "img carousel-img", element.sizes)}
-            </div>
+            <div class="carousel-slide">${generateImgHtml(img, product.title, "img carousel-img", element.sizes)}</div>
           `
         )}
       </div>
