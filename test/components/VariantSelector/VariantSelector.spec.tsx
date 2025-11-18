@@ -829,9 +829,7 @@ describe("VariantSelector", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (
-        <nosto-variant-selector handle="variant-test-product" compact preselect />
-      ) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact preselect />) as VariantSelector
       await selector.connectedCallback()
 
       const shadowRoot = selector.shadowRoot!

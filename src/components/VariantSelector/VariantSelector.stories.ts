@@ -194,3 +194,73 @@ export const WithMaxValues: Story = {
     }
   }
 }
+
+export const Compact: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html` <nosto-variant-selector handle="${handles[0]}" compact></nosto-variant-selector> `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the `compact` attribute is set, the component renders a single select dropdown containing all product variants instead of the default option-by-option pill interface. Unavailable variants are disabled in the dropdown."
+      }
+    }
+  }
+}
+
+export const CompactWithPreselect: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html` <nosto-variant-selector handle="${handles[0]}" compact preselect></nosto-variant-selector> `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Compact mode with the `preselect` attribute automatically selects the first available variant."
+      }
+    }
+  }
+}
+
+export const CompactInSimpleCard: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}" compact></nosto-variant-selector>
+      </nosto-simple-card>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Compact variant selector integrated inside a SimpleCard component."
+      }
+    }
+  }
+}
+
+export const CompactInSimpleCard_AddToCart: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}" compact></nosto-variant-selector>
+        <button n-atc>Add to cart</button>
+      </nosto-simple-card>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Compact variant selector with an Add to Cart button, demonstrating the complete shopping experience."
+      }
+    }
+  }
+}
