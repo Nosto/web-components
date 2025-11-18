@@ -661,4 +661,51 @@ describe("VariantSelector", () => {
     expect(content).toContain("Size:")
     expect(selector2.hasAttribute("loading")).toBe(false)
   })
+
+  describe("maxValues attribute", () => {
+    it("should cap option values at maxValues limit and show ellipsis", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={2} />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowContent = getShadowContent(selector)
+      // Size should show only first 2 values
+      expect(shadowContent).toContain("Small")
+      expect(shadowContent).toContain("Medium")
+      expect(shadowContent).not.toContain("Large")
+      // Color should show only first 2 values
+      expect(shadowContent).toContain("Red")
+      expect(shadowContent).toContain("Blue")
+      expect(shadowContent).not.toContain("Green")
+      // Ellipsis should be present
+      expect(shadowContent).toContain("ellipsis")
+      expect(shadowContent).toContain("…")
+    })
+
+    it("should render ellipsis with correct aria-label", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={1} />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const ellipsisElements = shadowRoot.querySelectorAll(".ellipsis")
+      // Should have 2 ellipsis elements (one for Size, one for Color)
+      expect(ellipsisElements).toHaveLength(2)
+
+      ellipsisElements.forEach(ellipsis => {
+        const ariaLabel = ellipsis.getAttribute("aria-label")
+        expect(ariaLabel).toContain("more options")
+        // Each option has 3 values, maxValues is 1, so 2 more
+        expect(ariaLabel).toContain("2 more options")
+        expect(ellipsis.getAttribute("role")).toBe("img")
+        expect(ellipsis.textContent).toBe("…")
+      })
+    })
+  })
 })

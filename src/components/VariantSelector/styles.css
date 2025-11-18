@@ -19,6 +19,7 @@
   --value-focus-color: #007bff;
   --value-unavailable-opacity: 0.5;
   --loading-opacity: 0.7;
+  --ellipsis-color: #6c757d;
 }
 
 :host([loading]) {
@@ -76,5 +77,16 @@
   cursor: not-allowed;
   opacity: var(--value-unavailable-opacity);
   pointer-events: none;
+}
+
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--value-padding);
+  color: var(--ellipsis-color);
+  font-size: 1.2em;
+  line-height: 1;
+  user-select: none;
 }
 

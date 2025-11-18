@@ -2,7 +2,7 @@ import { html } from "@/templating/html"
 import type { VariantSelector } from "./VariantSelector"
 import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
 
-export function generateVariantSelectorHTML(_element: VariantSelector, product: ShopifyProduct) {
+export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options
   if (!product.options || product.options.length === 0) {
     return html`<slot></slot>`
@@ -18,24 +18,33 @@ export function generateVariantSelectorHTML(_element: VariantSelector, product: 
 
   return html`
     <div class="selector" part="selector">
-      ${product.options.map(option => generateOptionRowHTML(option))}<slot></slot>
+      ${product.options.map(option => generateOptionRowHTML(option, element.maxValues))}<slot></slot>
     </div>
   `
 }
 
-function generateOptionRowHTML(option: ShopifyOption) {
+function generateOptionRowHTML(option: ShopifyOption, maxValues?: number) {
   if (option.optionValues.length <= 1) {
     return ""
   }
+
+  const valuesToRender = maxValues ? option.optionValues.slice(0, maxValues) : option.optionValues
+  const hasMore = maxValues && option.optionValues.length > maxValues
 
   return html`
     <div class="row" part="row">
       <div class="label" part="label">${option.name}:</div>
       <div class="values" part="values">
-        ${option.optionValues.map(value => generateOptionValueHTML(option.name, value))}
+        ${valuesToRender.map(value => generateOptionValueHTML(option.name, value))}${hasMore
+          ? generateEllipsis(option.optionValues.length - maxValues!)
+          : ""}
       </div>
     </div>
   `
+}
+
+function generateEllipsis(moreCount: number) {
+  return html`<span class="ellipsis" part="ellipsis" role="img" aria-label="${moreCount} more options">…</span>`
 }
 
 function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {

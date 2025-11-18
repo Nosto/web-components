@@ -72,13 +72,18 @@ export const Default: Story = {
     preselect: {
       description: "Whether to automatically preselect the options of the first available variant",
       control: { type: "boolean" }
+    },
+    maxValues: {
+      description: "Maximum number of option values to display per option",
+      control: { type: "number", min: 1, max: 10, step: 1 }
     }
   },
   args: {
     columns: 4,
     products: 12,
     placeholder: false,
-    preselect: false
+    preselect: false,
+    maxValues: 5
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
@@ -93,6 +98,7 @@ export const Default: Story = {
                 handle="${handle}"
                 ?placeholder=${args.placeholder}
                 ?preselect=${args.preselect}
+                max-values="${args.maxValues}"
               ></nosto-variant-selector>
             </nosto-simple-card>
           `
@@ -150,6 +156,40 @@ export const WithPlaceholder: Story = {
       description: {
         story:
           "When the `placeholder` attribute is set, the component will display cached content from a previous render while loading new data. This is useful for preventing layout shifts and providing a better user experience."
+      }
+    }
+  }
+}
+
+export const WithMaxValues: Story = {
+  argTypes: {
+    maxValues: {
+      description: "Maximum number of option values to display per option",
+      control: { type: "number", min: 1, max: 10, step: 1 }
+    }
+  },
+  args: {
+    maxValues: 3
+  },
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0.1rem; max-width: 1200px;">
+        ${handles.slice(0, 6).map(
+          handle => html`
+            <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
+              <nosto-variant-selector handle="${handle}" max-values="${args.maxValues}"></nosto-variant-selector>
+            </nosto-simple-card>
+          `
+        )}
+      </div>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the `maxValues` attribute is set, the component limits the number of option values displayed per option. An ellipsis (…) is shown when there are more values available than the specified limit. This is useful for products with many option values to keep the UI compact."
       }
     }
   }
