@@ -19,14 +19,7 @@ export async function loadAndRenderCompact(element: VariantSelector) {
     const selectorHTML = generateCompactSelectorHTML(element, productData)
     setShadowContent(element, selectorHTML.html)
 
-    // Setup event listeners for dropdown
     setupDropdownListener(element)
-
-    // Emit initial variant change if there's a selection
-    const dropdown = element.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
-    if (dropdown && dropdown.value) {
-      await emitVariantChange(element, dropdown.value)
-    }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   } finally {
