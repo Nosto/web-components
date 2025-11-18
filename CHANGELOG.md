@@ -1,3 +1,10 @@
+# [9.26.0](https://github.com/Nosto/web-components/compare/v9.25.0...v9.26.0) (2025-11-18)
+
+
+### Features
+
+* **SimpleCard:** add carousel mode with navigation arrows ([a8c0996](https://github.com/Nosto/web-components/commit/a8c099613c70e83c9b221b48739ebd982da68418))
+
 # [9.25.0](https://github.com/Nosto/web-components/compare/v9.24.0...v9.25.0) (2025-11-18)
 
 
