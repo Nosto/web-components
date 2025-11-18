@@ -708,4 +708,217 @@ describe("VariantSelector", () => {
       })
     })
   })
+
+  describe("Compact mode", () => {
+    it("should render a select element when compact attribute is set", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const selectElement = shadowRoot.querySelector(".variant-select")
+      expect(selectElement).toBeTruthy()
+      expect(selectElement?.tagName.toLowerCase()).toBe("select")
+
+      // Should not render option pills
+      const pills = shadowRoot.querySelectorAll(".value")
+      expect(pills).toHaveLength(0)
+    })
+
+    it("should generate option text from variant selectedOptions", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const options = shadowRoot.querySelectorAll("option")
+
+      // First option is "Choose a variant"
+      expect(options[0].textContent).toBe("Choose a variant")
+
+      // Check variant options are formatted correctly (e.g., "Small / Red")
+      const variantOptions = Array.from(options).slice(1)
+      expect(variantOptions[0].textContent).toBe("Small / Red")
+      expect(variantOptions[1].textContent).toBe("Medium / Blue")
+      expect(variantOptions[2].textContent).toBe("Large / Red")
+    })
+
+    it("should disable options for unavailable variants", async () => {
+      const productWithUnavailableVariant: ShopifyProduct = {
+        ...mockProductWithVariants,
+        variants: [
+          ...mockProductWithVariants.variants,
+          {
+            id: "gid://shopify/ProductVariant/1004",
+            title: "Small / Green",
+            availableForSale: false,
+            selectedOptions: [
+              { name: "Size", value: "Small" },
+              { name: "Color", value: "Green" }
+            ],
+            price: { currencyCode: "USD", amount: "19.99" },
+            compareAtPrice: null,
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-test-product": { product: productWithUnavailableVariant }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const options = shadowRoot.querySelectorAll("option")
+
+      // Find the unavailable variant option
+      const unavailableOption = Array.from(options).find(opt => opt.textContent === "Small / Green")
+      expect(unavailableOption).toBeTruthy()
+      expect(unavailableOption?.hasAttribute("disabled")).toBe(true)
+
+      // Available variants should not be disabled
+      const availableOption = Array.from(options).find(opt => opt.textContent === "Small / Red")
+      expect(availableOption).toBeTruthy()
+      expect(availableOption?.hasAttribute("disabled")).toBe(false)
+    })
+
+    it("should emit variantchange event when select option changes", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      let eventDetail: Record<string, unknown> | null = null
+      selector.addEventListener("variantchange", (event: Event) => {
+        eventDetail = (event as CustomEvent).detail
+      })
+
+      const shadowRoot = selector.shadowRoot!
+      const selectElement = shadowRoot.querySelector(".variant-select") as HTMLSelectElement
+      expect(selectElement).toBeTruthy()
+
+      // Change the select value
+      selectElement.value = "gid://shopify/ProductVariant/1002"
+      selectElement.dispatchEvent(new Event("change", { bubbles: true }))
+
+      // Wait for async event handler
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(eventDetail).toBeTruthy()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1002")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((eventDetail as any)?.variant?.selectedOptions).toEqual([
+        { name: "Size", value: "Medium" },
+        { name: "Color", value: "Blue" }
+      ])
+    })
+
+    it("should preselect variant when preselect attribute is set in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" compact preselect />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const selectElement = shadowRoot.querySelector(".variant-select") as HTMLSelectElement
+
+      // Wait for state to update
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(selectElement.value).toBe("gid://shopify/ProductVariant/1001") // First available variant
+      expect(selector.selectedOptions["Size"]).toBe("Small")
+      expect(selector.selectedOptions["Color"]).toBe("Red")
+    })
+
+    it("should preselect variant based on variantId in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (
+        <nosto-variant-selector handle="variant-test-product" compact variantId={1002} />
+      ) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const selectElement = shadowRoot.querySelector(".variant-select") as HTMLSelectElement
+
+      // Wait for state to update
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(selectElement.value).toBe("gid://shopify/ProductVariant/1002")
+      expect(selector.selectedOptions["Size"]).toBe("Medium")
+      expect(selector.selectedOptions["Color"]).toBe("Blue")
+    })
+
+    it("should not preselect by default in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const selectElement = shadowRoot.querySelector(".variant-select") as HTMLSelectElement
+
+      expect(selectElement.value).toBe("")
+      expect(Object.keys(selector.selectedOptions)).toHaveLength(0)
+    })
+
+    it("should work with products that have multiple options", async () => {
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
+      })
+
+      const selector = (<nosto-variant-selector handle="single-value-test" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const options = shadowRoot.querySelectorAll("option")
+
+      // Check that variants are rendered with both option values
+      const variantOptions = Array.from(options).slice(1)
+      expect(variantOptions[0].textContent).toBe("Small / Cotton")
+      expect(variantOptions[1].textContent).toBe("Medium / Cotton")
+      expect(variantOptions[2].textContent).toBe("Large / Cotton")
+    })
+
+    it("should update selectedOptions when variant is selected in compact mode", async () => {
+      addProductHandlers({
+        "variant-test-product": { product: mockProductWithVariants }
+      })
+
+      const selector = (<nosto-variant-selector handle="variant-test-product" compact />) as VariantSelector
+      await selector.connectedCallback()
+
+      const shadowRoot = selector.shadowRoot!
+      const selectElement = shadowRoot.querySelector(".variant-select") as HTMLSelectElement
+
+      // Select a variant
+      selectElement.value = "gid://shopify/ProductVariant/1003"
+      selectElement.dispatchEvent(new Event("change", { bubbles: true }))
+
+      // Wait for async update
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(selector.selectedOptions["Size"]).toBe("Large")
+      expect(selector.selectedOptions["Color"]).toBe("Red")
+    })
+  })
 })

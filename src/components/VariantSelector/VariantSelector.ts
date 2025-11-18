@@ -34,6 +34,7 @@ const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {number} maxValues - (Optional) Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator.
+ * @property {boolean} compact - If true, renders variants in a single select dropdown instead of option pills. Defaults to false.
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -45,6 +46,7 @@ export class VariantSelector extends NostoElement {
   @property(Boolean) preselect?: boolean
   @property(Boolean) placeholder?: boolean
   @property(Number) maxValues?: number
+  @property(Boolean) compact?: boolean
 
   /**
    * Internal state for current selections
@@ -118,7 +120,8 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
     variant.selectedOptions.forEach(selectedOption => {
       element.selectedOptions[selectedOption.name] = selectedOption.value
     })
-  } else {
+  } else if (!element.compact) {
+    // Only auto-select single-value options in non-compact mode
     product.options.forEach(option => {
       if (option.optionValues.length === 1) {
         element.selectedOptions[option.name] = option.optionValues[0].name
@@ -128,16 +131,30 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
 }
 
 function setupOptionListeners(element: VariantSelector) {
-  element.shadowRoot!.addEventListener("click", async e => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains("value")) {
-      e.preventDefault()
-      const { optionName, optionValue } = target.dataset
-      if (optionName && optionValue) {
-        await selectOption(element, optionName, optionValue)
+  if (element.compact) {
+    // Handle change events for select element in compact mode
+    element.shadowRoot!.addEventListener("change", async e => {
+      const target = e.target as HTMLSelectElement
+      if (target.classList.contains("variant-select")) {
+        const variantId = target.value
+        if (variantId) {
+          await selectVariantById(element, variantId)
+        }
       }
-    }
-  })
+    })
+  } else {
+    // Handle click events for option buttons in default mode
+    element.shadowRoot!.addEventListener("click", async e => {
+      const target = e.target as HTMLElement
+      if (target.classList.contains("value")) {
+        e.preventDefault()
+        const { optionName, optionValue } = target.dataset
+        if (optionName && optionValue) {
+          await selectOption(element, optionName, optionValue)
+        }
+      }
+    })
+  }
 }
 
 export async function selectOption(element: VariantSelector, optionName: string, value: string) {
@@ -152,12 +169,44 @@ export async function selectOption(element: VariantSelector, optionName: string,
   emitVariantChange(element, productData)
 }
 
+async function selectVariantById(element: VariantSelector, variantId: string) {
+  // Fetch product data to get the variant details
+  const productData = await fetchProduct(element.handle)
+  const variant = productData.variants.find(v => v.id === variantId)
+
+  if (variant && variant.selectedOptions) {
+    // Update selected options based on variant
+    element.selectedOptions = {}
+    variant.selectedOptions.forEach(selectedOption => {
+      element.selectedOptions[selectedOption.name] = selectedOption.value
+    })
+
+    updateActiveStates(element)
+    emitVariantChange(element, productData)
+  }
+}
+
 function updateActiveStates(element: VariantSelector) {
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const active = !!optionName && element.selectedOptions[optionName] === optionValue
-    togglePart(button, "active", active)
-  })
+  if (element.compact) {
+    // Update select element to show the currently selected variant
+    const selectElement = element.shadowRoot!.querySelector<HTMLSelectElement>(".variant-select")
+    if (selectElement && Object.keys(element.selectedOptions).length > 0) {
+      // Find the variant that matches current selections
+      fetchProduct(element.handle).then(product => {
+        const variant = getSelectedVariant(element, product)
+        if (variant && selectElement) {
+          selectElement.value = variant.id
+        }
+      })
+    }
+  } else {
+    // Update pill buttons in default mode
+    element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+      const { optionName, optionValue } = button.dataset
+      const active = !!optionName && element.selectedOptions[optionName] === optionValue
+      togglePart(button, "active", active)
+    })
+  }
 }
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
