@@ -39,19 +39,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
   }
 
   // Determine which variant should be selected
-  let selectedVariantId = ""
-  if (element.variantId) {
-    const variantIdStr = toVariantGid(element.variantId)
-    const variant = product.variants.find(v => v.id === variantIdStr)
-    if (variant) {
-      selectedVariantId = variant.id
-    }
-  } else if (element.preselect) {
-    const variant = product.variants.find(v => v.availableForSale)
-    if (variant) {
-      selectedVariantId = variant.id
-    }
-  }
+  const selectedVariantGid = getSelectedVariantId(element, product)
 
   // Find option names that have only one value across all variants
   const fixedOptions = product.options.filter(option => option.optionValues.length === 1).map(option => option.name)
@@ -59,17 +47,29 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
   return html`
     <div class="compact-selector" part="compact-selector">
       <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
-        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantId, fixedOptions))}
+        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
       </select>
       <slot></slot>
     </div>
   `
 }
 
-function generateVariantOption(variant: ShopifyVariant, selectedVariantId: string, fixedOptions: string[]) {
+function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct) {
+  if (element.variantId) {
+    const variantIdStr = toVariantGid(element.variantId)
+    const variant = product.variants.find(v => v.id === variantIdStr)
+    if (variant) {
+      return variant.id
+    }
+  }
+  const variant = product.variants.find(v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl)
+  return variant ? variant.id : product.variants[0].id
+}
+
+function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: string, fixedOptions: string[]) {
   const parts: string[] = []
 
-  if (selectedVariantId === variant.id) {
+  if (selectedVariantGid === variant.id) {
     parts.push("selected")
   }
 
