@@ -881,11 +881,11 @@ describe("VariantSelector", () => {
       expect(options.length).toBe(3) // Small, Medium, Large
 
       // Material is fixed to "Cotton" across all variants, so it should not appear in option text
-      expect(options[0].textContent).toBe("Small")
+      expect(options[0].textContent).toBe("Size: Small")
       expect(options[0].textContent).not.toContain("Cotton")
-      expect(options[1].textContent).toBe("Medium")
+      expect(options[1].textContent).toBe("Size: Medium")
       expect(options[1].textContent).not.toContain("Cotton")
-      expect(options[2].textContent).toBe("Large")
+      expect(options[2].textContent).toBe("Size: Large")
       expect(options[2].textContent).not.toContain("Cotton")
     })
   })
