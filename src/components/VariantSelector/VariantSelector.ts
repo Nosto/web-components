@@ -14,7 +14,8 @@ import { setupDefaultListeners, updateDefaultActiveStates, updateUnavailableStat
 // Re-export selectOption for tests and external use
 export { selectOption } from "./normal/normal"
 
-const setShadowContent = shadowContentFactory(normalStyles + compactStyles)
+const setShadowNormal = shadowContentFactory(normalStyles)
+const setShadowCompact = shadowContentFactory(compactStyles)
 
 let placeholder = ""
 
@@ -75,7 +76,8 @@ export class VariantSelector extends NostoElement {
     assertRequired(this, "handle")
     if (this.placeholder && placeholder) {
       this.toggleAttribute("loading", true)
-      setShadowContent(this, placeholder)
+      setShadowNormal(this, placeholder)
+      setShadowCompact(this, placeholder)
     }
     await loadAndRenderMarkup(this)
   }
@@ -90,7 +92,8 @@ async function loadAndRenderMarkup(element: VariantSelector) {
     initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+    setShadowNormal(element, selectorHTML.html)
+    setShadowCompact(element, selectorHTML.html)
 
     // Cache the rendered HTML for placeholder use
     placeholder = selectorHTML.html
