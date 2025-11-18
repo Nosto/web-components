@@ -1,0 +1,25 @@
+.variant-select {
+  width: 100%;
+  padding: var(--value-padding);
+  background: var(--value-bg);
+  border: var(--value-border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition: all 0.2s ease;
+}
+
+.variant-select:hover {
+  background: var(--value-hover-bg);
+  border-color: var(--value-hover-border);
+}
+
+.variant-select:focus {
+  outline: 2px solid var(--value-focus-color);
+  outline-offset: 2px;
+}
+
+.variant-select option:disabled {
+  opacity: var(--value-unavailable-opacity);
+}

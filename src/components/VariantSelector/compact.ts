@@ -6,10 +6,13 @@ import { getSelectedVariant } from "./VariantSelector"
 
 export function generateCompactSelectorHTML(product: ShopifyProduct) {
   return html`
-    <select class="variant-select" part="variant-select">
-      <option value="">Choose a variant</option>
-      ${product.variants.map(variant => generateVariantOptionHTML(variant))}
-    </select>
+    <div class="selector compact" part="selector compact">
+      <select class="variant-select" part="variant-select">
+        <option value="">Choose a variant</option>
+        ${product.variants.map(variant => generateVariantOptionHTML(variant))}
+      </select>
+      <slot></slot>
+    </div>
   `
 }
 
@@ -17,9 +20,8 @@ function generateVariantOptionHTML(variant: ShopifyVariant) {
   // Generate option text from variant's selectedOptions (e.g., "Red / Large / Cotton")
   const optionText = variant.selectedOptions?.map(opt => opt.value).join(" / ") || variant.title
   const disabled = !variant.availableForSale ? " disabled" : ""
-  const variantId = variant.id
 
-  return html`<option value="${variantId}" ${disabled}>${optionText}</option>`
+  return html`<option value="${variant.id}" ${disabled}>${optionText}</option>`
 }
 
 export function setupCompactListeners(element: VariantSelector) {

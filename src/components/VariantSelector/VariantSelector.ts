@@ -3,13 +3,14 @@ import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { generateVariantSelectorHTML } from "./markup"
 import styles from "./styles.css?raw"
+import compactStyles from "./compact.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 import { setupCompactListeners, updateCompactActiveStates } from "./compact"
 
-const setShadowContent = shadowContentFactory(styles)
+const setShadowContent = shadowContentFactory(styles + compactStyles)
 
 let placeholder = ""
 

@@ -19,9 +19,7 @@ export function generateVariantSelectorHTML(element: VariantSelector, product: S
 
   // Render compact mode with a single select dropdown
   if (element.compact) {
-    return html`
-      <div class="selector compact" part="selector compact">${generateCompactSelectorHTML(product)}<slot></slot></div>
-    `
+    return generateCompactSelectorHTML(product)
   }
 
   return html`
