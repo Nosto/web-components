@@ -664,4 +664,124 @@ describe("SimpleCard", () => {
       expect(fetchCalled).toBe(false)
     })
   })
+
+  describe("Carousel Mode", () => {
+    it("should render carousel when carousel attribute is enabled", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("carousel")
+      expect(shadowContent).toContain("carousel-images")
+      expect(shadowContent).toContain("carousel-indicators")
+    })
+
+    it("should not render carousel when product has only one image", async () => {
+      const productWithOneImage = {
+        ...mockProduct,
+        images: [mockProduct.images[0]]
+      }
+
+      addProductHandlers({
+        "test-product": { product: productWithOneImage }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).not.toContain("carousel-images")
+    })
+
+    it("should render carousel indicators for each image", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
+      expect(indicators?.length).toBe(2) // mockProduct has 2 images
+    })
+
+    it("should support horizontal scroll for navigation", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+
+      const carouselImages = card.shadowRoot?.querySelector(".carousel-images") as HTMLElement
+
+      expect(carouselImages).toBeTruthy()
+      // Check that scroll container exists for horizontal scrolling
+      expect(carouselImages.classList.contains("carousel-images")).toBe(true)
+
+      document.body.removeChild(card)
+    })
+
+    it("should navigate to specific image when indicator is clicked", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      document.body.appendChild(card)
+
+      await card.connectedCallback()
+
+      const indicators = card.shadowRoot?.querySelectorAll(".carousel-indicator")
+      const slides = card.shadowRoot?.querySelectorAll(".carousel-slide")
+
+      expect(indicators?.[0]?.classList.contains("active")).toBe(true)
+      expect(indicators?.[1]?.classList.contains("active")).toBe(false)
+
+      // Mock scrollIntoView for the second slide
+      const scrollIntoViewMock = vi.fn()
+      slides?.forEach(slide => {
+        slide.scrollIntoView = scrollIntoViewMock
+      })
+
+      // Click on second indicator
+      const secondIndicator = indicators?.[1] as HTMLButtonElement
+      secondIndicator.click()
+
+      // Verify scrollIntoView was called
+      expect(scrollIntoViewMock).toHaveBeenCalledWith({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start"
+      })
+
+      document.body.removeChild(card)
+    })
+
+    it("should prefer carousel mode over alternate mode when both are enabled", async () => {
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" carousel alternate />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // Should have carousel elements
+      expect(shadowContent).toContain("carousel")
+      expect(shadowContent).toContain("carousel-images")
+      // Should NOT have alternate image class
+      expect(shadowContent).not.toContain("img alternate")
+    })
+  })
 })

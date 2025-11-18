@@ -41,6 +41,10 @@ const meta: Meta = {
       control: "boolean",
       description: "Show alternate product image on hover"
     },
+    carousel: {
+      control: "boolean",
+      description: "Show image carousel with arrow navigation"
+    },
     brand: {
       control: "boolean",
       description: "Show brand/vendor data"
@@ -61,6 +65,7 @@ const meta: Meta = {
   args: {
     root,
     alternate: false,
+    carousel: false,
     brand: false,
     discount: false,
     rating: 0,
@@ -104,6 +109,7 @@ export const Default: Story = {
             <nosto-simple-card
               handle="${handle}"
               ?alternate=${args.alternate}
+              ?carousel=${args.carousel}
               ?brand=${args.brand}
               ?discount=${args.discount}
               rating=${args.rating || 0}
@@ -125,6 +131,7 @@ export const SingleCard: Story = {
       <nosto-simple-card
         handle="${handles[0]}"
         ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -144,6 +151,7 @@ export const WithVariantSelector: Story = {
       <nosto-simple-card
         handle="${handles[0]}"
         ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -162,6 +170,7 @@ export const WithAllFeatures: Story = {
       <nosto-simple-card
         handle="${handles[0]}"
         ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -171,6 +180,29 @@ export const WithAllFeatures: Story = {
   },
   args: {
     alternate: true,
+    brand: true,
+    discount: true,
+    rating: 4.2
+  },
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`]
+}
+
+export const WithCarousel: Story = {
+  render: (args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?carousel=${args.carousel}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+        sizes="${args.sizes || ""}"
+      ></nosto-simple-card>
+    `
+  },
+  args: {
+    carousel: true,
     brand: true,
     discount: true,
     rating: 4.2

@@ -4,6 +4,7 @@ import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
 import { ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { generateCarouselHTML } from "./carousel"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
@@ -36,6 +37,11 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   const primaryImage = product.images?.[0]?.url
   if (!primaryImage) {
     return html`<div class="image placeholder"></div>`
+  }
+
+  // Carousel mode takes precedence over alternate mode
+  if (element.carousel && product.images?.length > 1) {
+    return generateCarouselHTML(element, product)
   }
 
   const hasAlternate = element.alternate && product.images?.length > 1
