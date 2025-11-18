@@ -1,3 +1,20 @@
+# [9.25.0](https://github.com/Nosto/web-components/compare/v9.24.0...v9.25.0) (2025-11-18)
+
+
+### Bug Fixes
+
+* **VariantSelector:** add default maxValues of 5 to Default story ([69b06a9](https://github.com/Nosto/web-components/commit/69b06a965380970d3d78202c475356ad27d856f1))
+* **VariantSelector:** improve accessibility and add maxValues to Default story ([41141f3](https://github.com/Nosto/web-components/commit/41141f314d9389b3c9dbdd1b2fc0cd42ea474b7d))
+* **VariantSelector:** make component reactive with observe option ([caea9ce](https://github.com/Nosto/web-components/commit/caea9cef55bbfb4762a8e0d7498d3ef1125c4cc5))
+* **VariantSelector:** remove redundant tests and fix property binding ([1b5d72f](https://github.com/Nosto/web-components/commit/1b5d72f2b219534bce758290fe2d19cc85e1be32))
+* **VariantSelector:** use kebab-case attribute name in stories ([2937a0e](https://github.com/Nosto/web-components/commit/2937a0ea50601ba83b8574c78ef909d8bae36d52))
+
+
+### Features
+
+* **inject:** add unprovide function to remove element from mapping ([0857a4c](https://github.com/Nosto/web-components/commit/0857a4ce26fc914153c38287f8417f0dddc6b44d))
+* **VariantSelector:** add maxValues attribute with tests and stories ([240d0f1](https://github.com/Nosto/web-components/commit/240d0f17f9d5bc6d0fb85f5be3b6a0cb6ea31492))
+
 # [9.24.0](https://github.com/Nosto/web-components/compare/v9.23.0...v9.24.0) (2025-11-17)
 
 
