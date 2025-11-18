@@ -60,17 +60,46 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
     }
   }
 
+  // Find option names that have only one value across all variants
+  const fixedOptions = getFixedOptionNames(product)
+
   return html`
     <div class="compact-selector" part="compact-selector">
       <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
-        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantId))}
+        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantId, fixedOptions))}
       </select>
       <slot></slot>
     </div>
   `
 }
 
-function generateVariantOption(variant: ShopifyVariant, selectedVariantId: string) {
+function getFixedOptionNames(product: ShopifyProduct): Set<string> {
+  const fixedOptions = new Set<string>()
+
+  // Check each option to see if it has only one unique value across all variants
+  if (product.variants && product.variants.length > 0) {
+    const optionValues = new Map<string, Set<string>>()
+
+    product.variants.forEach(variant => {
+      variant.selectedOptions?.forEach(option => {
+        if (!optionValues.has(option.name)) {
+          optionValues.set(option.name, new Set())
+        }
+        optionValues.get(option.name)!.add(option.value)
+      })
+    })
+
+    optionValues.forEach((values, name) => {
+      if (values.size === 1) {
+        fixedOptions.add(name)
+      }
+    })
+  }
+
+  return fixedOptions
+}
+
+function generateVariantOption(variant: ShopifyVariant, selectedVariantId: string, fixedOptions: Set<string>) {
   const parts: string[] = []
 
   if (selectedVariantId === variant.id) {
@@ -81,8 +110,14 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantId: strin
     parts.push("disabled")
   }
 
-  // TODO skip options that have only one fixed value across all variants
-  const title = variant.selectedOptions?.map(o => o.value).join(" / ") || variant.title
+  // Skip options that have only one fixed value across all variants
+  const variableOptions = variant.selectedOptions?.filter(o => !fixedOptions.has(o.name)) || []
+  let title = variableOptions.map(o => o.value).join(" / ") || variant.title
+  
+  if (!variant.availableForSale) {
+    title += " (Unavailable)"
+  }
+  
   const additionalAttrs = parts.join(" ").trim()
 
   return html`<option value="${variant.id}" ${additionalAttrs}>${title}</option>`
