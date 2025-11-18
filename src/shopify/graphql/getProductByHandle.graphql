@@ -49,6 +49,14 @@ fragment VariantFragment on ProductVariant {
   image {
     url
   }
+  images(first: 10) {
+    nodes {
+      url
+      altText
+      width
+      height
+    }
+  }
   price {
     currencyCode
     amount

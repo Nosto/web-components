@@ -110,6 +110,13 @@ export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVar
 }
 
 function updateImages(element: SimpleCard, variant: ShopifyVariant) {
+  // Handle carousel mode - update all carousel images
+  if (element.carousel && variant.images && variant.images.length > 0) {
+    updateCarouselImages(element, variant)
+    return
+  }
+
+  // Handle non-carousel mode - update primary/alternate images
   if (!variant.image) return
 
   const props = {
@@ -123,6 +130,27 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
   ].filter(Boolean) as HTMLImageElement[]
 
   imagesToUpdate.forEach(img => setImageProps(img, props))
+}
+
+function updateCarouselImages(element: SimpleCard, variant: ShopifyVariant) {
+  const carouselImages = element.shadowRoot!.querySelector(".carousel-images")
+  if (!carouselImages || !variant.images) return
+
+  // Get all carousel image elements
+  const carouselImgs = carouselImages.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
+
+  // Update each carousel image with corresponding variant image
+  variant.images.forEach((variantImage, index) => {
+    const img = carouselImgs[index]
+    if (img) {
+      const props = {
+        src: normalizeUrl(variantImage.url),
+        width: 800,
+        sizes: element.sizes
+      }
+      setImageProps(img, props)
+    }
+  })
 }
 
 function updatePrices(element: SimpleCard, variant: ShopifyVariant) {

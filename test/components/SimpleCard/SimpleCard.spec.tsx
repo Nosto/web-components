@@ -783,5 +783,140 @@ describe("SimpleCard", () => {
       // Should NOT have alternate image class
       expect(shadowContent).not.toContain("img alternate")
     })
+
+    it("should update all carousel images when variant changes", async () => {
+      const variantProductWithCarousel: ShopifyProduct = {
+        ...mockProduct,
+        options: [
+          {
+            name: "Color",
+            optionValues: [
+              {
+                name: "Red",
+                swatch: null,
+                firstSelectableVariant: {
+                  id: "gid://shopify/ProductVariant/2001",
+                  title: "Red",
+                  availableForSale: true,
+                  price: { currencyCode: "USD", amount: "29.99" },
+                  compareAtPrice: null,
+                  product: { id: "gid://shopify/Product/789", onlineStoreUrl: "/products/carousel-variant-product" }
+                }
+              },
+              {
+                name: "Blue",
+                swatch: null,
+                firstSelectableVariant: {
+                  id: "gid://shopify/ProductVariant/2002",
+                  title: "Blue",
+                  availableForSale: true,
+                  price: { currencyCode: "USD", amount: "24.99" },
+                  compareAtPrice: null,
+                  product: { id: "gid://shopify/Product/789", onlineStoreUrl: "/products/carousel-variant-product" }
+                }
+              }
+            ]
+          }
+        ],
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/2001",
+            title: "Red",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Red" }],
+            image: {
+              altText: "Red variant image 1",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/red-1.jpg"
+            },
+            images: [
+              {
+                altText: "Red variant image 1",
+                height: 800,
+                width: 800,
+                thumbhash: null,
+                url: "https://example.com/red-1.jpg"
+              },
+              {
+                altText: "Red variant image 2",
+                height: 800,
+                width: 800,
+                thumbhash: null,
+                url: "https://example.com/red-2.jpg"
+              }
+            ],
+            price: { currencyCode: "USD", amount: "29.99" },
+            compareAtPrice: null,
+            product: { id: "gid://shopify/Product/789", onlineStoreUrl: "/products/carousel-variant-product" }
+          },
+          {
+            id: "gid://shopify/ProductVariant/2002",
+            title: "Blue",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Blue" }],
+            image: {
+              altText: "Blue variant image 1",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/blue-1.jpg"
+            },
+            images: [
+              {
+                altText: "Blue variant image 1",
+                height: 800,
+                width: 800,
+                thumbhash: null,
+                url: "https://example.com/blue-1.jpg"
+              },
+              {
+                altText: "Blue variant image 2",
+                height: 800,
+                width: 800,
+                thumbhash: null,
+                url: "https://example.com/blue-2.jpg"
+              }
+            ],
+            price: { currencyCode: "USD", amount: "24.99" },
+            compareAtPrice: null,
+            product: { id: "gid://shopify/Product/789", onlineStoreUrl: "/products/carousel-variant-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "carousel-variant-product": { product: variantProductWithCarousel }
+      })
+
+      const card = (<nosto-simple-card handle="carousel-variant-product" carousel />) as SimpleCard
+      await card.connectedCallback()
+
+      // Initial carousel should show product images
+      let carouselImgs = card.shadowRoot?.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
+      expect(carouselImgs.length).toBe(2)
+      expect(carouselImgs[0]?.src).toBe("https://example.com/image1.jpg")
+      expect(carouselImgs[1]?.src).toBe("https://example.com/image2.jpg")
+
+      // Simulate variant change event to Blue variant
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProductWithCarousel.variants[1] // Blue variant
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+
+      // Wait for the event to be processed
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Verify that all carousel images were updated to blue variant images
+      carouselImgs = card.shadowRoot?.querySelectorAll(".carousel-img") as NodeListOf<HTMLImageElement>
+      expect(carouselImgs.length).toBe(2)
+      expect(carouselImgs[0]?.src).toBe("https://example.com/blue-1.jpg")
+      expect(carouselImgs[1]?.src).toBe("https://example.com/blue-2.jpg")
+    })
   })
 })

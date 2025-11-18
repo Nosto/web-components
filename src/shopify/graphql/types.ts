@@ -41,6 +41,7 @@ export type ShopifyVariant = {
   title: string
   id: string
   image?: ShopifyImage
+  images?: ShopifyImage[]
   price: ShopifyMoney
   compareAtPrice: ShopifyMoney | null
   selectedOptions?: ShopifySelectedOption[]
