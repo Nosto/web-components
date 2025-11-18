@@ -67,7 +67,7 @@ export const Default: Story = {
     mode: {
       description: "Display mode for the variant selector",
       control: { type: "select" },
-      options: ["default", "compact"]
+      options: ["options", "compact"]
     },
     placeholder: {
       description:
@@ -86,7 +86,7 @@ export const Default: Story = {
   args: {
     columns: 4,
     products: 12,
-    mode: "default",
+    mode: "compact",
     placeholder: false,
     preselect: false,
     maxValues: 5
