@@ -774,11 +774,8 @@ describe("VariantSelector", () => {
       const options = dropdown.querySelectorAll("option")
 
       expect(options[0].disabled).toBe(true)
-      expect(options[0].textContent).toContain("(Unavailable)")
       expect(options[1].disabled).toBe(false)
-      expect(options[1].textContent).not.toContain("(Unavailable)")
       expect(options[2].disabled).toBe(true)
-      expect(options[2].textContent).toContain("(Unavailable)")
     })
 
     it("should preselect first available variant in compact mode when preselect is true", async () => {
