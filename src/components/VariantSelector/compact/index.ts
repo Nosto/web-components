@@ -86,7 +86,13 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantId: strin
 
   // Skip options that have only one fixed value across all variants
   const variableOptions = variant.selectedOptions?.filter(o => !fixedOptions.includes(o.name)) || []
-  const title = variableOptions.map(o => o.value).join(" / ") || variant.title
+  let title = variant.title
+  if (variableOptions.length === 1) {
+    const { name, value } = variableOptions[0]
+    title = `${name}: ${value}`
+  } else if (variableOptions.length > 1) {
+    title = variableOptions.map(o => o.value).join(" / ")
+  }
   const additionalAttrs = parts.join(" ").trim()
 
   return html`<option value="${variant.id}" ${additionalAttrs}>${title}</option>`
