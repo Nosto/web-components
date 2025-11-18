@@ -43,6 +43,7 @@ export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {
 
   if (slide) {
     slide.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" })
+    setTimeout(() => updateCarouselIndicators(element), 300)
   }
 }
 
