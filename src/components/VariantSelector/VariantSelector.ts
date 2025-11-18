@@ -2,6 +2,7 @@ import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { loadAndRenderMarkup } from "./default"
+import { loadAndRenderCompact } from "./compact"
 
 /**
  * A custom element that displays product variant options as clickable pills.
@@ -22,6 +23,7 @@ import { loadAndRenderMarkup } from "./default"
  * @property {boolean} preselect - Whether to automatically preselect the options of the first available variant. Defaults to false.
  * @property {boolean} placeholder - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {number} maxValues - (Optional) Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator.
+ * @property {string} mode - (Optional) Display mode: "default" or "compact". Defaults to "default".
  *
  * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
@@ -33,6 +35,7 @@ export class VariantSelector extends NostoElement {
   @property(Boolean) preselect?: boolean
   @property(Boolean) placeholder?: boolean
   @property(Number) maxValues?: number
+  @property(String) mode?: "default" | "compact"
 
   /**
    * Internal state for current selections
@@ -47,13 +50,21 @@ export class VariantSelector extends NostoElement {
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
+      await this.render()
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this, true)
+    await this.render(true)
+  }
+
+  private async render(initial = false) {
+    if (this.mode === "compact") {
+      await loadAndRenderCompact(this, initial)
+    } else {
+      await loadAndRenderMarkup(this, initial)
+    }
   }
 }
 
