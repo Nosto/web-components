@@ -60,17 +60,20 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
     }
   }
 
+  // Find option names that have only one value across all variants
+  const fixedOptions = product.options.filter(option => option.optionValues.length === 1).map(option => option.name)
+
   return html`
     <div class="compact-selector" part="compact-selector">
       <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
-        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantId))}
+        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantId, fixedOptions))}
       </select>
       <slot></slot>
     </div>
   `
 }
 
-function generateVariantOption(variant: ShopifyVariant, selectedVariantId: string) {
+function generateVariantOption(variant: ShopifyVariant, selectedVariantId: string, fixedOptions: string[]) {
   const parts: string[] = []
 
   if (selectedVariantId === variant.id) {
@@ -81,8 +84,9 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantId: strin
     parts.push("disabled")
   }
 
-  // TODO skip options that have only one fixed value across all variants
-  const title = variant.selectedOptions?.map(o => o.value).join(" / ") || variant.title
+  // Skip options that have only one fixed value across all variants
+  const variableOptions = variant.selectedOptions?.filter(o => !fixedOptions.includes(o.name)) || []
+  const title = variableOptions.map(o => o.value).join(" / ") || variant.title
   const additionalAttrs = parts.join(" ").trim()
 
   return html`<option value="${variant.id}" ${additionalAttrs}>${title}</option>`

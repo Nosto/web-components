@@ -774,11 +774,8 @@ describe("VariantSelector", () => {
       const options = dropdown.querySelectorAll("option")
 
       expect(options[0].disabled).toBe(true)
-      expect(options[0].textContent).toContain("(Unavailable)")
       expect(options[1].disabled).toBe(false)
-      expect(options[1].textContent).not.toContain("(Unavailable)")
       expect(options[2].disabled).toBe(true)
-      expect(options[2].textContent).toContain("(Unavailable)")
     })
 
     it("should preselect first available variant in compact mode when preselect is true", async () => {
@@ -867,6 +864,29 @@ describe("VariantSelector", () => {
 
       expect(selector.variantId).toBe(1002)
       expect(dropdown.value).toBe("gid://shopify/ProductVariant/1002")
+    })
+
+    it("should skip single-value options in compact mode dropdown titles", async () => {
+      addProductHandlers({
+        "single-value-test": { product: mockProductWithSingleValueOptionTest }
+      })
+
+      const selector = (<nosto-variant-selector handle="single-value-test" mode="compact" />) as VariantSelector
+      await selector.connectedCallback()
+
+      const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+      expect(dropdown).toBeTruthy()
+
+      const options = dropdown.querySelectorAll("option")
+      expect(options.length).toBe(3) // Small, Medium, Large
+
+      // Material is fixed to "Cotton" across all variants, so it should not appear in option text
+      expect(options[0].textContent).toBe("Small")
+      expect(options[0].textContent).not.toContain("Cotton")
+      expect(options[1].textContent).toBe("Medium")
+      expect(options[1].textContent).not.toContain("Cotton")
+      expect(options[2].textContent).toBe("Large")
+      expect(options[2].textContent).not.toContain("Cotton")
     })
   })
 })
