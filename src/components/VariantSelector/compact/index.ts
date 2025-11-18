@@ -81,8 +81,9 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantId: strin
     parts.push("disabled")
   }
 
-  const title = variant.title + (!variant.availableForSale ? " (Unavailable)" : "")
-  const additionalAttrs = parts.length > 0 ? ` ${parts.join(" ")}` : ""
+  // TODO skip options that have only one fixed value across all variants
+  const title = variant.selectedOptions?.map(o => o.value).join(" / ") || variant.title
+  const additionalAttrs = parts.join(" ").trim()
 
   return html`<option value="${variant.id}" ${additionalAttrs}>${title}</option>`
 }
