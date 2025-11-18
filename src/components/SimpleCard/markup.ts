@@ -67,13 +67,13 @@ function normalizeUrl(url: string) {
   return createShopifyUrl(url).toString()
 }
 
+const defaultImageSizes = `(min-width: 1024px) 25vw,
+    (min-width: 768px) 33.33vw,
+    (min-width: 375px) 50vw,
+    100vw`
+
 export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string) {
-  const { style, ...props } = transform({
-    src: normalizeUrl(image.url),
-    width: image.width,
-    height: image.height,
-    sizes
-  })
+  const { style, ...props } = transform(getImageProps(image, sizes))
   return html`<img
     alt="${alt}"
     part="${className}"
@@ -85,6 +85,15 @@ export function generateImgHtml(image: ShopifyImage, alt: string, className: str
       .map(([key, value]) => html`${key}="${value}" `)}
     style="${styleText(style as object)}"
   />`
+}
+
+function getImageProps(image: ShopifyImage, sizes?: string) {
+  return {
+    src: normalizeUrl(image.url),
+    width: image.width,
+    height: image.height,
+    sizes: sizes || defaultImageSizes
+  }
 }
 
 function styleText(style: object) {
@@ -118,11 +127,7 @@ export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVar
 function updateImages(element: SimpleCard, variant: ShopifyVariant) {
   if (!variant.image) return
 
-  const props = {
-    src: normalizeUrl(variant.image.url),
-    width: 800,
-    sizes: element.sizes
-  }
+  const props = getImageProps(variant.image, element.sizes)
   const imagesToUpdate = [
     element.shadowRoot!.querySelector(".img.primary"),
     element.alternate && element.shadowRoot!.querySelector(".img.alternate")
