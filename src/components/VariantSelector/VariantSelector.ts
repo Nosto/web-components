@@ -50,16 +50,16 @@ export class VariantSelector extends NostoElement {
 
   async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
     if (this.isConnected && oldValue !== newValue) {
-      await this.render()
+      await this.#render()
     }
   }
 
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.render(true)
+    await this.#render(true)
   }
 
-  private async render(initial = false) {
+  async #render(initial = false) {
     if (this.mode === "compact") {
       await loadAndRenderCompact(this)
     } else {
