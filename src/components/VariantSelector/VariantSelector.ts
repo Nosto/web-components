@@ -7,6 +7,7 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
+import { setupCompactListeners, updateCompactActiveStates } from "./compact"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -132,29 +133,24 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
 
 function setupOptionListeners(element: VariantSelector) {
   if (element.compact) {
-    // Handle change events for select element in compact mode
-    element.shadowRoot!.addEventListener("change", async e => {
-      const target = e.target as HTMLSelectElement
-      if (target.classList.contains("variant-select")) {
-        const variantId = target.value
-        if (variantId) {
-          await selectVariantById(element, variantId)
-        }
-      }
-    })
+    setupCompactListeners(element)
   } else {
-    // Handle click events for option buttons in default mode
-    element.shadowRoot!.addEventListener("click", async e => {
-      const target = e.target as HTMLElement
-      if (target.classList.contains("value")) {
-        e.preventDefault()
-        const { optionName, optionValue } = target.dataset
-        if (optionName && optionValue) {
-          await selectOption(element, optionName, optionValue)
-        }
-      }
-    })
+    setupDefaultListeners(element)
   }
+}
+
+function setupDefaultListeners(element: VariantSelector) {
+  // Handle click events for option buttons in default mode
+  element.shadowRoot!.addEventListener("click", async e => {
+    const target = e.target as HTMLElement
+    if (target.classList.contains("value")) {
+      e.preventDefault()
+      const { optionName, optionValue } = target.dataset
+      if (optionName && optionValue) {
+        await selectOption(element, optionName, optionValue)
+      }
+    }
+  })
 }
 
 export async function selectOption(element: VariantSelector, optionName: string, value: string) {
@@ -169,44 +165,21 @@ export async function selectOption(element: VariantSelector, optionName: string,
   emitVariantChange(element, productData)
 }
 
-async function selectVariantById(element: VariantSelector, variantId: string) {
-  // Fetch product data to get the variant details
-  const productData = await fetchProduct(element.handle)
-  const variant = productData.variants.find(v => v.id === variantId)
-
-  if (variant && variant.selectedOptions) {
-    // Update selected options based on variant
-    element.selectedOptions = {}
-    variant.selectedOptions.forEach(selectedOption => {
-      element.selectedOptions[selectedOption.name] = selectedOption.value
-    })
-
-    updateActiveStates(element)
-    emitVariantChange(element, productData)
+function updateActiveStates(element: VariantSelector) {
+  if (element.compact) {
+    updateCompactActiveStates(element)
+  } else {
+    updateDefaultActiveStates(element)
   }
 }
 
-function updateActiveStates(element: VariantSelector) {
-  if (element.compact) {
-    // Update select element to show the currently selected variant
-    const selectElement = element.shadowRoot!.querySelector<HTMLSelectElement>(".variant-select")
-    if (selectElement && Object.keys(element.selectedOptions).length > 0) {
-      // Find the variant that matches current selections
-      fetchProduct(element.handle).then(product => {
-        const variant = getSelectedVariant(element, product)
-        if (variant && selectElement) {
-          selectElement.value = variant.id
-        }
-      })
-    }
-  } else {
-    // Update pill buttons in default mode
-    element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-      const { optionName, optionValue } = button.dataset
-      const active = !!optionName && element.selectedOptions[optionName] === optionValue
-      togglePart(button, "active", active)
-    })
-  }
+function updateDefaultActiveStates(element: VariantSelector) {
+  // Update pill buttons in default mode
+  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
+    const { optionName, optionValue } = button.dataset
+    const active = !!optionName && element.selectedOptions[optionName] === optionValue
+    togglePart(button, "active", active)
+  })
 }
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
@@ -237,7 +210,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
   element.setAttribute("part", Array.from(parts).join(" "))
 }
 
-function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
+export function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   const variant = getSelectedVariant(element, product)
   if (variant) {
     element.variantId = parseId(variant.id)

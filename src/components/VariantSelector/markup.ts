@@ -1,6 +1,7 @@
 import { html } from "@/templating/html"
 import type { VariantSelector } from "./VariantSelector"
-import { ShopifyOption, ShopifyOptionValue, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
+import { generateCompactSelectorHTML } from "./compact"
 
 export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options
@@ -61,22 +62,4 @@ function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {
       ${value.name}
     </button>
   `
-}
-
-function generateCompactSelectorHTML(product: ShopifyProduct) {
-  return html`
-    <select class="variant-select" part="variant-select">
-      <option value="">Choose a variant</option>
-      ${product.variants.map(variant => generateVariantOptionHTML(variant))}
-    </select>
-  `
-}
-
-function generateVariantOptionHTML(variant: ShopifyVariant) {
-  // Generate option text from variant's selectedOptions (e.g., "Red / Large / Cotton")
-  const optionText = variant.selectedOptions?.map(opt => opt.value).join(" / ") || variant.title
-  const disabled = !variant.availableForSale ? " disabled" : ""
-  const variantId = variant.id
-
-  return html`<option value="${variantId}" ${disabled}>${optionText}</option>`
 }
