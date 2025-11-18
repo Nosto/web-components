@@ -25,7 +25,7 @@ export async function loadAndRenderCompact(element: VariantSelector) {
     // Emit initial variant change if there's a selection
     const dropdown = element.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
     if (dropdown && dropdown.value) {
-      await emitVariantChangeFromDropdown(element, dropdown.value)
+      await emitVariantChange(element, dropdown.value)
     }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
@@ -92,12 +92,12 @@ function setupDropdownListener(element: VariantSelector) {
     const target = e.target as HTMLSelectElement
     if (target.classList.contains("variant-dropdown")) {
       const variantId = target.value
-      await emitVariantChangeFromDropdown(element, variantId)
+      await emitVariantChange(element, variantId)
     }
   })
 }
 
-async function emitVariantChangeFromDropdown(element: VariantSelector, variantId: string) {
+async function emitVariantChange(element: VariantSelector, variantId: string) {
   const productData = await fetchProduct(element.handle)
   const variant = productData.variants.find(v => v.id === variantId)
 

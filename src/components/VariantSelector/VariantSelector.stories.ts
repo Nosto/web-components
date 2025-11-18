@@ -64,6 +64,11 @@ export const Default: Story = {
         category: "Layout options"
       }
     },
+    mode: {
+      description: "Display mode for the variant selector",
+      control: { type: "select" },
+      options: ["default", "compact"]
+    },
     placeholder: {
       description:
         "If true, the component will display cached content from a previous render while loading new data. Useful for preventing layout shifts",
@@ -81,6 +86,7 @@ export const Default: Story = {
   args: {
     columns: 4,
     products: 12,
+    mode: "default",
     placeholder: false,
     preselect: false,
     maxValues: 5
@@ -96,6 +102,7 @@ export const Default: Story = {
             <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
               <nosto-variant-selector
                 handle="${handle}"
+                mode="${args.mode}"
                 ?placeholder=${args.placeholder}
                 ?preselect=${args.preselect}
                 max-values="${args.maxValues}"
@@ -210,46 +217,6 @@ export const CompactMode: Story = {
       description: {
         story:
           "When the `mode` attribute is set to `compact`, the component renders a single dropdown for all variants with unavailable variants disabled. This provides a more compact UI for products with many variants."
-      }
-    }
-  }
-}
-
-export const CompactMode_Grid: Story = {
-  args: {
-    columns: 4,
-    products: 12
-  },
-  argTypes: {
-    columns: {
-      description: "Number of columns to display in the grid",
-      control: { type: "range", min: 1, max: 8, step: 1 }
-    },
-    products: {
-      description: "Number of products to display in the grid",
-      control: { type: "range", min: 1, max: 20, step: 1 }
-    }
-  },
-  render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    return html`
-      <div
-        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 0.1rem; max-width: 1200px;"
-      >
-        ${handles.map(
-          handle => html`
-            <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
-              <nosto-variant-selector handle="${handle}" mode="compact"></nosto-variant-selector>
-            </nosto-simple-card>
-          `
-        )}
-      </div>
-    `
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "A grid of products using the compact mode for variant selection."
       }
     }
   }
