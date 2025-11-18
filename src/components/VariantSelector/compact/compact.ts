@@ -1,8 +1,8 @@
 import { html } from "@/templating/html"
 import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import type { VariantSelector } from "./VariantSelector"
-import { getSelectedVariant } from "./VariantSelector"
+import type { VariantSelector } from "../VariantSelector"
+import { getSelectedVariant } from "../VariantSelector"
 
 export function generateCompactSelectorHTML(product: ShopifyProduct) {
   return html`
@@ -50,7 +50,7 @@ async function selectVariantById(element: VariantSelector, variantId: string) {
     })
 
     updateCompactActiveStates(element)
-    const { emitVariantChange } = await import("./VariantSelector")
+    const { emitVariantChange } = await import("../VariantSelector")
     emitVariantChange(element, productData)
   }
 }

@@ -2,15 +2,19 @@ import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { generateVariantSelectorHTML } from "./markup"
-import styles from "./styles.css?raw"
-import compactStyles from "./compact.css?raw"
+import normalStyles from "./normal/styles.css?raw"
+import compactStyles from "./compact/compact.css?raw"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
-import { setupCompactListeners, updateCompactActiveStates } from "./compact"
+import { setupCompactListeners, updateCompactActiveStates } from "./compact/compact"
+import { setupDefaultListeners, updateDefaultActiveStates, updateUnavailableStates } from "./normal/normal"
 
-const setShadowContent = shadowContentFactory(styles + compactStyles)
+// Re-export selectOption for tests and external use
+export { selectOption } from "./normal/normal"
+
+const setShadowContent = shadowContentFactory(normalStyles + compactStyles)
 
 let placeholder = ""
 
@@ -140,75 +144,12 @@ function setupOptionListeners(element: VariantSelector) {
   }
 }
 
-function setupDefaultListeners(element: VariantSelector) {
-  // Handle click events for option buttons in default mode
-  element.shadowRoot!.addEventListener("click", async e => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains("value")) {
-      e.preventDefault()
-      const { optionName, optionValue } = target.dataset
-      if (optionName && optionValue) {
-        await selectOption(element, optionName, optionValue)
-      }
-    }
-  })
-}
-
-export async function selectOption(element: VariantSelector, optionName: string, value: string) {
-  if (element.selectedOptions[optionName] === value) {
-    return
-  }
-  element.selectedOptions[optionName] = value
-  updateActiveStates(element)
-
-  // Fetch product data and emit variant change
-  const productData = await fetchProduct(element.handle)
-  emitVariantChange(element, productData)
-}
-
 function updateActiveStates(element: VariantSelector) {
   if (element.compact) {
     updateCompactActiveStates(element)
   } else {
     updateDefaultActiveStates(element)
   }
-}
-
-function updateDefaultActiveStates(element: VariantSelector) {
-  // Update pill buttons in default mode
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const active = !!optionName && element.selectedOptions[optionName] === optionValue
-    togglePart(button, "active", active)
-  })
-}
-
-function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
-  const availableOptions = new Set<string>()
-  product.variants
-    .filter(v => v.availableForSale)
-    .forEach(variant => {
-      if (variant.selectedOptions) {
-        variant.selectedOptions.forEach(selectedOption => {
-          availableOptions.add(`${selectedOption.name}::${selectedOption.value}`)
-        })
-      }
-    })
-  element.shadowRoot!.querySelectorAll<HTMLElement>(".value").forEach(button => {
-    const { optionName, optionValue } = button.dataset
-    const available = availableOptions.has(`${optionName}::${optionValue}`)
-    togglePart(button, "unavailable", !available)
-  })
-}
-
-function togglePart(element: HTMLElement, partName: string, enable: boolean) {
-  const parts = new Set(element.getAttribute("part")?.split(" ").filter(Boolean) || [])
-  if (enable) {
-    parts.add(partName)
-  } else {
-    parts.delete(partName)
-  }
-  element.setAttribute("part", Array.from(parts).join(" "))
 }
 
 export function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
