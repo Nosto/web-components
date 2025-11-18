@@ -8,60 +8,29 @@ import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
-let placeholder = ""
-
 /** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
 
-export async function loadAndRenderCompact(element: VariantSelector, initial = false) {
-  if (initial && element.placeholder && placeholder) {
-    element.toggleAttribute("loading", true)
-    setShadowContent(element, placeholder)
-  }
+export async function loadAndRenderCompact(element: VariantSelector) {
   element.toggleAttribute("loading", true)
   try {
     const productData = await fetchProduct(element.handle)
 
-    // Initialize selections with first available variant or specified variant
-    initializeDefaultSelections(element, productData)
-
     const selectorHTML = generateCompactSelectorHTML(element, productData)
     setShadowContent(element, selectorHTML.html)
-
-    // Cache the rendered HTML for placeholder use
-    placeholder = selectorHTML.html
 
     // Setup event listeners for dropdown
     setupDropdownListener(element)
 
-    if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+    // Emit initial variant change if there's a selection
+    const dropdown = element.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    if (dropdown && dropdown.value) {
+      await emitVariantChangeFromDropdown(element, dropdown.value)
     }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   } finally {
     element.toggleAttribute("loading", false)
-  }
-}
-
-function initializeDefaultSelections(element: VariantSelector, product: ShopifyProduct) {
-  let variant: ShopifyVariant | undefined
-  if (element.variantId) {
-    const variantIdStr = toVariantGid(element.variantId)
-    variant = product.variants.find(v => v.id === variantIdStr)
-  } else if (element.preselect) {
-    variant = product.variants.find(v => v.availableForSale)
-  }
-  if (variant && variant.selectedOptions) {
-    variant.selectedOptions.forEach(selectedOption => {
-      element.selectedOptions[selectedOption.name] = selectedOption.value
-    })
-  } else {
-    product.options.forEach(option => {
-      if (option.optionValues.length === 1) {
-        element.selectedOptions[option.name] = option.optionValues[0].name
-      }
-    })
   }
 }
 
@@ -76,8 +45,20 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
     return html`<slot></slot>`
   }
 
-  const selectedVariant = getSelectedVariant(element, product)
-  const selectedVariantId = selectedVariant ? selectedVariant.id : ""
+  // Determine which variant should be selected
+  let selectedVariantId = ""
+  if (element.variantId) {
+    const variantIdStr = toVariantGid(element.variantId)
+    const variant = product.variants.find(v => v.id === variantIdStr)
+    if (variant) {
+      selectedVariantId = variant.id
+    }
+  } else if (element.preselect) {
+    const variant = product.variants.find(v => v.availableForSale)
+    if (variant) {
+      selectedVariantId = variant.id
+    }
+  }
 
   return html`
     <div class="compact-selector" part="compact-selector">
@@ -90,19 +71,20 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
 }
 
 function generateVariantOption(variant: ShopifyVariant, selectedVariantId: string) {
-  const attrs = [`value="${variant.id}"`]
+  const parts: string[] = []
 
   if (selectedVariantId === variant.id) {
-    attrs.push("selected")
+    parts.push("selected")
   }
 
   if (!variant.availableForSale) {
-    attrs.push("disabled")
+    parts.push("disabled")
   }
 
   const title = variant.title + (!variant.availableForSale ? " (Unavailable)" : "")
+  const additionalAttrs = parts.length > 0 ? ` ${parts.join(" ")}` : ""
 
-  return html`<option ${{ html: attrs.join(" ") }}>${title}</option>`
+  return html`<option value="${variant.id}" ${additionalAttrs}>${title}</option>`
 }
 
 function setupDropdownListener(element: VariantSelector) {
@@ -110,27 +92,15 @@ function setupDropdownListener(element: VariantSelector) {
     const target = e.target as HTMLSelectElement
     if (target.classList.contains("variant-dropdown")) {
       const variantId = target.value
-      await selectVariant(element, variantId)
+      await emitVariantChangeFromDropdown(element, variantId)
     }
   })
 }
 
-async function selectVariant(element: VariantSelector, variantId: string) {
+async function emitVariantChangeFromDropdown(element: VariantSelector, variantId: string) {
   const productData = await fetchProduct(element.handle)
   const variant = productData.variants.find(v => v.id === variantId)
 
-  if (variant && variant.selectedOptions) {
-    // Update selected options based on the chosen variant
-    variant.selectedOptions.forEach(selectedOption => {
-      element.selectedOptions[selectedOption.name] = selectedOption.value
-    })
-
-    emitVariantChange(element, productData)
-  }
-}
-
-function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
-  const variant = getSelectedVariant(element, product)
   if (variant) {
     element.variantId = parseId(variant.id)
     const detail: VariantChangeDetail = { variant }
@@ -141,17 +111,4 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
       })
     )
   }
-}
-
-export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
-  return (
-    product.variants?.find(variant => {
-      if (!variant.selectedOptions) return false
-      return product.options.every(option => {
-        const selectedValue = element.selectedOptions[option.name]
-        const variantOption = variant.selectedOptions!.find(so => so.name === option.name)
-        return variantOption && selectedValue === variantOption.value
-      })
-    }) || null
-  )
 }

@@ -851,7 +851,7 @@ describe("VariantSelector", () => {
       expect(shadowContent).toContain("<slot")
     })
 
-    it("should update selectedOptions when variant is selected in compact mode", async () => {
+    it("should update variantId when variant is selected in compact mode", async () => {
       addProductHandlers({
         "variant-test-product": { product: mockProductWithVariants }
       })
@@ -865,8 +865,8 @@ describe("VariantSelector", () => {
 
       await new Promise(resolve => setTimeout(resolve, 100))
 
-      expect(selector.selectedOptions.Size).toBe("Medium")
-      expect(selector.selectedOptions.Color).toBe("Blue")
+      expect(selector.variantId).toBe(1002)
+      expect(dropdown.value).toBe("gid://shopify/ProductVariant/1002")
     })
   })
 })

@@ -61,7 +61,7 @@ export class VariantSelector extends NostoElement {
 
   private async render(initial = false) {
     if (this.mode === "compact") {
-      await loadAndRenderCompact(this, initial)
+      await loadAndRenderCompact(this)
     } else {
       await loadAndRenderMarkup(this, initial)
     }
