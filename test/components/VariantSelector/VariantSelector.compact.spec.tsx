@@ -376,4 +376,21 @@ describe("VariantSelector - Compact Mode", () => {
     expect(options[2].textContent).toBe("Large")
     expect(options[2].textContent).not.toContain("Cotton")
   })
+
+  it("should sort variants by first option value order", async () => {
+    addProductHandlers({
+      "unordered-variant-product": { product: mockProductWithVariants }
+    })
+
+    const selector = (<nosto-variant-selector handle="unordered-variant-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const options = dropdown.querySelectorAll("option")
+
+    // Expect options to be sorted as Small, Medium, Large based on first option value order
+    expect(options[0].textContent).toContain("Small / Red")
+    expect(options[1].textContent).toContain("Medium / Blue")
+    expect(options[2].textContent).toContain("Large / Red")
+  })
 })
