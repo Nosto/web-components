@@ -221,12 +221,12 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("★★★★☆ (4.2)")
   })
 
-  it("should render alternate image when alternate attribute is enabled", async () => {
+  it('should render alternate image when image-mode="alternate"', async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" image-mode="alternate" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -236,7 +236,7 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("https://example.com/image2.jpg")
   })
 
-  it("should not render alternate image when product has only one image", async () => {
+  it('should not render alternate image when product has only one image with image-mode="alternate"', async () => {
     const productWithOneImage = {
       ...mockProduct,
       images: [mockProduct.images[0]] // only one image
@@ -246,7 +246,7 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithOneImage }
     })
 
-    const card = (<nosto-simple-card handle="test-product" alternate />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" image-mode="alternate" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -263,7 +263,9 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" brand discount rating={3.5} alternate />) as SimpleCard
+    const card = (
+      <nosto-simple-card handle="test-product" brand discount rating={3.5} image-mode="alternate" />
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -441,7 +443,7 @@ describe("SimpleCard", () => {
     })
 
     const sizesValue = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-    const card = (<nosto-simple-card handle="test-product" alternate sizes={sizesValue} />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" image-mode="alternate" sizes={sizesValue} />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -666,12 +668,12 @@ describe("SimpleCard", () => {
   })
 
   describe("Carousel Mode", () => {
-    it("should render carousel when carousel attribute is enabled", async () => {
+    it('should render carousel when image-mode="carousel"', async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -681,7 +683,7 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("carousel-indicators")
     })
 
-    it("should not render carousel when product has only one image", async () => {
+    it('should not render carousel when product has only one image with image-mode="carousel"', async () => {
       const productWithOneImage = {
         ...mockProduct,
         images: [mockProduct.images[0]]
@@ -691,7 +693,7 @@ describe("SimpleCard", () => {
         "test-product": { product: productWithOneImage }
       })
 
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -704,7 +706,7 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -717,7 +719,7 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
       document.body.appendChild(card)
 
       await card.connectedCallback()
@@ -736,7 +738,7 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" carousel />) as SimpleCard
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
       document.body.appendChild(card)
 
       await card.connectedCallback()
@@ -766,22 +768,121 @@ describe("SimpleCard", () => {
 
       document.body.removeChild(card)
     })
+  })
 
-    it("should prefer carousel mode over alternate mode when both are enabled", async () => {
+  describe("Image Mode", () => {
+    it("should render basic image without alternate or carousel when image-mode is not set", async () => {
       addProductHandlers({
         "test-product": { product: mockProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" carousel alternate />) as SimpleCard
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
 
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)
-      // Should have carousel elements
-      expect(shadowContent).toContain("carousel")
-      expect(shadowContent).toContain("carousel-images")
-      // Should NOT have alternate image class
+      expect(shadowContent).toContain("img primary")
       expect(shadowContent).not.toContain("img alternate")
+      expect(shadowContent).not.toContain("carousel")
+    })
+
+    it('should skip image updates during variant change when image-mode="alternate"', async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Variant 1",
+            availableForSale: true,
+            selectedOptions: [],
+            image: {
+              altText: "Variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/variant.jpg"
+            },
+            price: { currencyCode: "USD", amount: "24.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/test-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "test-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" image-mode="alternate" />) as SimpleCard
+      await card.connectedCallback()
+
+      const initialImage = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+      const initialSrc = initialImage?.src
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Image should not change because alternate mode is enabled
+      const updatedImage = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+      expect(updatedImage?.src).toBe(initialSrc)
+    })
+
+    it('should skip image updates during variant change when image-mode="carousel"', async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Variant 1",
+            availableForSale: true,
+            selectedOptions: [],
+            image: {
+              altText: "Variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/variant.jpg"
+            },
+            price: { currencyCode: "USD", amount: "24.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/test-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "test-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+      await card.connectedCallback()
+
+      // In carousel mode, images are in carousel-slide containers
+      const initialImage = card.shadowRoot?.querySelector(".img.carousel-img") as HTMLImageElement
+      const initialSrc = initialImage?.src
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Image should not change because carousel mode is enabled
+      const updatedImage = card.shadowRoot?.querySelector(".img.carousel-img") as HTMLImageElement
+      expect(updatedImage?.src).toBe(initialSrc)
     })
   })
 })

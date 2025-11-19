@@ -32,8 +32,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @category Campaign level templating
  *
  * @property {string} handle - The Shopify product handle to fetch data for. Required.
- * @property {boolean} [alternate] - Show alternate product image on hover. Defaults to false.
- * @property {boolean} [carousel] - Show image carousel with arrow navigation. Defaults to false.
+ * @property {string} [imageMode] - Image display mode. Use "alternate" for hover image swap or "carousel" for image carousel with navigation. Defaults to undefined.
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
@@ -45,8 +44,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends NostoElement {
   @property(String) handle!: string
-  @property(Boolean) alternate?: boolean
-  @property(Boolean) carousel?: boolean
+  @property(String) imageMode?: "alternate" | "carousel"
   @property(Boolean) brand?: boolean
   @property(Boolean) discount?: boolean
   @property(Number) rating?: number
@@ -79,7 +77,7 @@ export class SimpleCard extends NostoElement {
     this.addEventListener("variantchange", this)
 
     // Add scroll listener for carousel to update indicators
-    if (this.carousel) {
+    if (this.imageMode === "carousel") {
       this.shadowRoot?.addEventListener("scroll", this, { capture: true })
     }
   }
