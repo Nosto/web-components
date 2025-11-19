@@ -24,9 +24,20 @@ const meta: Meta = {
   component: "nosto-simple-card",
   decorators: [
     (story, context) => {
-      // Update Shopify root if provided via args
+      // Validate and update Shopify root if provided via args
       if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
+        try {
+          const url = new URL(context.args.root)
+          if (url.protocol !== "http:" && url.protocol !== "https:") {
+            throw new Error("URL must use http:// or https:// protocol")
+          }
+          updateShopifyRoot(context.args.root)
+        } catch (error) {
+          console.error(
+            `Invalid root URL: ${context.args.root}. Must be a valid http:// or https:// URL. Error: ${error instanceof Error ? error.message : String(error)}`
+          )
+          // Don't update the root if invalid
+        }
       }
       return story()
     }
@@ -34,8 +45,15 @@ const meta: Meta = {
   loaders: [exampleHandlesLoader],
   argTypes: {
     root: {
-      control: "text",
-      description: "The Shopify store root URL"
+      control: {
+        type: "text"
+      },
+      description: "The Shopify store root URL (must be a valid http:// or https:// URL)",
+      table: {
+        type: {
+          summary: "string"
+        }
+      }
     },
     alternate: {
       control: "boolean",
