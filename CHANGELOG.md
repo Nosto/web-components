@@ -1,3 +1,10 @@
+## [9.27.1](https://github.com/Nosto/web-components/compare/v9.27.0...v9.27.1) (2025-11-19)
+
+
+### Bug Fixes
+
+* **SimpleCard:** skip image updates on variant change when carousel or alternate mode enabled ([92ba896](https://github.com/Nosto/web-components/commit/92ba8968fe659cd6a90fd478e229ce3112381dc4))
+
 # [9.27.0](https://github.com/Nosto/web-components/compare/v9.26.0...v9.27.0) (2025-11-19)
 
 
