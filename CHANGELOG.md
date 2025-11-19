@@ -1,3 +1,10 @@
+# [9.28.0](https://github.com/Nosto/web-components/compare/v9.27.2...v9.28.0) (2025-11-19)
+
+
+### Features
+
+* **story:** align SimpleCard and VariantSelector controls ([1ef7dbd](https://github.com/Nosto/web-components/commit/1ef7dbd86bf949624e5c9217ce852a1647ee35ea))
+
 ## [9.27.2](https://github.com/Nosto/web-components/compare/v9.27.1...v9.27.2) (2025-11-19)
 
 
