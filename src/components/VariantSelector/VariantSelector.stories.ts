@@ -37,10 +37,40 @@ const meta: Meta = {
     root: {
       control: "text",
       description: "The Shopify store root URL"
+    },
+    alternate: {
+      control: "boolean",
+      description: "Show alternate product image on hover"
+    },
+    carousel: {
+      control: "boolean",
+      description: "Show image carousel with arrow navigation"
+    },
+    brand: {
+      control: "boolean",
+      description: "Show brand/vendor data"
+    },
+    discount: {
+      control: "boolean",
+      description: "Show discount data"
+    },
+    rating: {
+      control: "number",
+      description: "Product rating (0-5 stars)"
+    },
+    sizes: {
+      control: "text",
+      description: "The sizes attribute for responsive images"
     }
   },
   args: {
-    root
+    root,
+    alternate: false,
+    carousel: false,
+    brand: false,
+    discount: false,
+    rating: 0,
+    sizes: ""
   },
   tags: ["autodocs"]
 }
@@ -99,7 +129,15 @@ export const Default: Story = {
       >
         ${handles.map(
           handle => html`
-            <nosto-simple-card handle="${handle}" alternate discount>
+            <nosto-simple-card
+              handle="${handle}"
+              ?alternate=${args.alternate}
+              ?carousel=${args.carousel}
+              ?brand=${args.brand}
+              ?discount=${args.discount}
+              rating=${args.rating || 0}
+              sizes="${args.sizes || ""}"
+            >
               <nosto-variant-selector
                 handle="${handle}"
                 mode="${args.mode}"
