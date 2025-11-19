@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
+import { ifDefined } from "lit/directives/if-defined.js"
 import { updateShopifyRoot } from "../../utils/storybook"
 import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 import "./VariantSelector"
@@ -128,7 +129,7 @@ export const Default: Story = {
           handle => html`
             <nosto-simple-card
               handle="${handle}"
-              image-mode="${args.imageMode || ""}"
+              image-mode=${ifDefined(args.imageMode)}
               ?brand=${args.brand}
               ?discount=${args.discount}
               rating=${args.rating || 0}
@@ -164,7 +165,7 @@ export const InSimpleCard: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        image-mode="${args.imageMode || ""}"
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -183,7 +184,7 @@ export const InSimpleCard_AddToCart: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        image-mode="${args.imageMode || ""}"
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -203,7 +204,7 @@ export const WithPlaceholder: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        image-mode="${args.imageMode || ""}"
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -241,9 +242,9 @@ export const WithMaxValues: Story = {
           handle => html`
             <nosto-simple-card
               handle="${handle}"
-              image-mode="${args.imageMode || ""}"
+              image-mode=${ifDefined(args.imageMode)}
               ?brand=${args.brand}
-              ?discount=${args.discount}
+              ?discount=${args.brand}
               rating=${args.rating || 0}
               sizes="${args.sizes || ""}"
             >
@@ -271,7 +272,7 @@ export const CompactMode: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        image-mode="${args.imageMode || ""}"
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
