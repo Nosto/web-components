@@ -37,10 +37,40 @@ const meta: Meta = {
     root: {
       control: "text",
       description: "The Shopify store root URL"
+    },
+    alternate: {
+      control: "boolean",
+      description: "Show alternate product image on hover"
+    },
+    carousel: {
+      control: "boolean",
+      description: "Show image carousel with arrow navigation"
+    },
+    brand: {
+      control: "boolean",
+      description: "Show brand/vendor data"
+    },
+    discount: {
+      control: "boolean",
+      description: "Show discount data"
+    },
+    rating: {
+      control: "number",
+      description: "Product rating (0-5 stars)"
+    },
+    sizes: {
+      control: "text",
+      description: "The sizes attribute for responsive images"
     }
   },
   args: {
-    root
+    root,
+    alternate: false,
+    carousel: false,
+    brand: false,
+    discount: false,
+    rating: 0,
+    sizes: ""
   },
   tags: ["autodocs"]
 }
@@ -99,7 +129,15 @@ export const Default: Story = {
       >
         ${handles.map(
           handle => html`
-            <nosto-simple-card handle="${handle}" alternate discount>
+            <nosto-simple-card
+              handle="${handle}"
+              ?alternate=${args.alternate}
+              ?carousel=${args.carousel}
+              ?brand=${args.brand}
+              ?discount=${args.discount}
+              rating=${args.rating || 0}
+              sizes="${args.sizes || ""}"
+            >
               <nosto-variant-selector
                 handle="${handle}"
                 mode="${args.mode}"
@@ -125,10 +163,18 @@ export const SingleProduct: Story = {
 
 export const InSimpleCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: (_args, { loaded }) => {
+  render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
-      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+        sizes="${args.sizes || ""}"
+      >
         <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
       </nosto-simple-card>
     `
@@ -137,10 +183,18 @@ export const InSimpleCard: Story = {
 
 export const InSimpleCard_AddToCart: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: (_args, { loaded }) => {
+  render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
-      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+        sizes="${args.sizes || ""}"
+      >
         <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
@@ -150,10 +204,18 @@ export const InSimpleCard_AddToCart: Story = {
 
 export const WithPlaceholder: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: (_args, { loaded }) => {
+  render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
-      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+        sizes="${args.sizes || ""}"
+      >
         <nosto-variant-selector handle="${handles[0]}" placeholder></nosto-variant-selector>
       </nosto-simple-card>
     `
@@ -184,7 +246,15 @@ export const WithMaxValues: Story = {
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0.1rem; max-width: 1200px;">
         ${handles.slice(0, 6).map(
           handle => html`
-            <nosto-simple-card handle="${handle}" alternate brand discount rating="4.2">
+            <nosto-simple-card
+              handle="${handle}"
+              ?alternate=${args.alternate}
+              ?carousel=${args.carousel}
+              ?brand=${args.brand}
+              ?discount=${args.discount}
+              rating=${args.rating || 0}
+              sizes="${args.sizes || ""}"
+            >
               <nosto-variant-selector handle="${handle}" max-values="${args.maxValues}"></nosto-variant-selector>
             </nosto-simple-card>
           `
@@ -204,10 +274,18 @@ export const WithMaxValues: Story = {
 
 export const CompactMode: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
-  render: (_args, { loaded }) => {
+  render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     return html`
-      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+      <nosto-simple-card
+        handle="${handles[0]}"
+        ?alternate=${args.alternate}
+        ?carousel=${args.carousel}
+        ?brand=${args.brand}
+        ?discount=${args.discount}
+        rating=${args.rating || 0}
+        sizes="${args.sizes || ""}"
+      >
         <nosto-variant-selector handle="${handles[0]}" mode="compact"></nosto-variant-selector>
       </nosto-simple-card>
     `
