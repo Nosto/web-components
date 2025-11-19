@@ -46,7 +46,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
 
   return html`
     <div class="compact-selector" part="compact-selector">
-      <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
+      <select name="variant" class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
         ${product.variants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
       </select>
       <slot></slot>
