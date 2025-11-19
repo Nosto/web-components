@@ -3,44 +3,20 @@ import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
-import type { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
+import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { parseId, toHandle, toProductId } from "@/shopify/graphql/utils"
+import { parseId, toHandle } from "@/shopify/graphql/utils"
 import { handleIndicatorClick, onCarouselScroll } from "./carousel"
+import { mockProduct } from "./mockProduct"
 
 const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
-
-export const mockProduct = {
-  id: toProductId(7001),
-  availableForSale: true,
-  title: "Mock Product",
-  vendor: "Mock Brand",
-  onlineStoreUrl: "/products/mock-product",
-  images: [
-    {
-      url: "https://cdn.nosto.com/nosto/7/mock",
-      altText: "Mock Product Image",
-      width: 800,
-      height: 800,
-      thumbhash: null
-    }
-  ],
-  price: {
-    amount: "10",
-    currencyCode: "USD"
-  },
-  compareAtPrice: {
-    amount: "12",
-    currencyCode: "USD"
-  }
-} as ShopifyProduct
 
 /**
  * A custom element that displays a product card using Shopify product data.
