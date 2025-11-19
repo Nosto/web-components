@@ -1,4 +1,5 @@
 import { assertRequired } from "@/utils/assertRequired"
+import { mergeDom } from "@/utils/mergeDom"
 import { createStore, injectKey, Store } from "./store"
 import { customElement, property } from "../decorators"
 import { syncSkuData } from "../common"
@@ -55,10 +56,10 @@ function addListeners(element: Product, { listen }: Store) {
       element.querySelector("img[n-alt-img]:not([data-tracked])")?.setAttribute("src", altImage)
     }
     if (price) {
-      element.querySelectorAll<HTMLElement>("[n-price]:not([data-tracked])").forEach(e => (e.innerHTML = price))
+      element.querySelectorAll<HTMLElement>("[n-price]:not([data-tracked])").forEach(e => mergeDom(e, price))
     }
     if (listPrice) {
-      element.querySelectorAll("[n-list-price]:not([data-tracked])").forEach(e => (e.innerHTML = listPrice))
+      element.querySelectorAll("[n-list-price]:not([data-tracked])").forEach(e => mergeDom(e as HTMLElement, listPrice))
     }
   })
 }

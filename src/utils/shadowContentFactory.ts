@@ -1,3 +1,5 @@
+import { mergeDom } from "./mergeDom"
+
 export function shadowContentFactory(styles: string) {
   let cachedStyleSheet: CSSStyleSheet | null = null
 
@@ -8,12 +10,15 @@ export function shadowContentFactory(styles: string) {
         await cachedStyleSheet.replace(styles)
       }
       element.shadowRoot!.adoptedStyleSheets = [cachedStyleSheet]
-      element.shadowRoot!.innerHTML = content
+      mergeDom(element.shadowRoot as unknown as HTMLElement, content)
     } else {
-      element.shadowRoot!.innerHTML = `
+      mergeDom(
+        element.shadowRoot as unknown as HTMLElement,
+        `
         <style>${styles}</style>
         ${content}
       `
+      )
     }
   }
 }

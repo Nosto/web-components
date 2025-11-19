@@ -1,6 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
 import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { mergeDom } from "@/utils/mergeDom"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
@@ -41,7 +42,7 @@ export class SectionCampaign extends NostoElement {
       return
     }
     const markup = await getSectionMarkup(this, rec)
-    this.innerHTML = markup
+    mergeDom(this, markup)
     api.attributeProductClicksInCampaign(this, rec)
   }
 }

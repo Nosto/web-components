@@ -1,3 +1,5 @@
+import { mergeDom } from "@/utils/mergeDom"
+
 /**
  * A minimal Vue-like template compiler for HTML elements.
  *
@@ -182,7 +184,7 @@ export function processElement(el: Element, context: object) {
     }
     // v-html: set innerHTML to evaluated expression.
     if (attr.name === VHTML) {
-      el.innerHTML = String(evaluate(attr.value, context))
+      mergeDom(el as HTMLElement, String(evaluate(attr.value, context)))
       el.removeAttribute(VHTML)
     }
     // v-text: set textContent to evaluated expression.

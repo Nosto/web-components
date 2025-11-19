@@ -1,6 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
+import { mergeDom } from "@/utils/mergeDom"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
@@ -61,7 +62,7 @@ export class DynamicCard extends NostoElement {
     const key = this.template || this.section || ""
     if (this.placeholder && placeholders.has(key)) {
       this.toggleAttribute("loading", true)
-      this.innerHTML = placeholders.get(key) || ""
+      mergeDom(this, placeholders.get(key) || "")
     }
     if (this.lazy) {
       const observer = new IntersectionObserver(async entries => {
@@ -82,7 +83,7 @@ const placeholders = new Map<string, string>()
 async function loadAndRenderMarkup(element: DynamicCard) {
   element.toggleAttribute("loading", true)
   try {
-    element.innerHTML = await getMarkup(element)
+    mergeDom(element, await getMarkup(element))
     element.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
   } finally {
     element.toggleAttribute("loading", false)
