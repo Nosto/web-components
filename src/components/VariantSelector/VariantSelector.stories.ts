@@ -64,6 +64,11 @@ export const Default: Story = {
         category: "Layout options"
       }
     },
+    mode: {
+      description: "Display mode for the variant selector",
+      control: { type: "select" },
+      options: ["options", "compact"]
+    },
     placeholder: {
       description:
         "If true, the component will display cached content from a previous render while loading new data. Useful for preventing layout shifts",
@@ -81,6 +86,7 @@ export const Default: Story = {
   args: {
     columns: 4,
     products: 12,
+    mode: "compact",
     placeholder: false,
     preselect: false,
     maxValues: 5
@@ -93,9 +99,10 @@ export const Default: Story = {
       >
         ${handles.map(
           handle => html`
-            <nosto-simple-card handle="${handle}" alternate brand discount rating="3.8">
+            <nosto-simple-card handle="${handle}" alternate discount>
               <nosto-variant-selector
                 handle="${handle}"
+                mode="${args.mode}"
                 ?placeholder=${args.placeholder}
                 ?preselect=${args.preselect}
                 max-values="${args.maxValues}"
@@ -190,6 +197,26 @@ export const WithMaxValues: Story = {
       description: {
         story:
           "When the `maxValues` attribute is set, the component limits the number of option values displayed per option. An ellipsis (…) is shown when there are more values available than the specified limit. This is useful for products with many option values to keep the UI compact."
+      }
+    }
+  }
+}
+
+export const CompactMode: Story = {
+  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  render: (_args, { loaded }) => {
+    const handles = loaded?.handles as string[]
+    return html`
+      <nosto-simple-card handle="${handles[0]}" alternate brand discount rating="4.5">
+        <nosto-variant-selector handle="${handles[0]}" mode="compact"></nosto-variant-selector>
+      </nosto-simple-card>
+    `
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When the `mode` attribute is set to `compact`, the component renders a single dropdown for all variants with unavailable variants disabled. This provides a more compact UI for products with many variants."
       }
     }
   }

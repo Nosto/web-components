@@ -1,5 +1,5 @@
 import { html } from "@/templating/html"
-import type { VariantSelector } from "./VariantSelector"
+import type { VariantSelector } from "../VariantSelector"
 import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
 
 export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct) {

@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeEach } from "vitest"
-import { VariantSelector, selectOption, getSelectedVariant } from "@/components/VariantSelector/VariantSelector"
+import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -8,8 +8,9 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithAllSingleValueOptionsTest } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/constants"
+import { getSelectedVariant, selectOption } from "@/components/VariantSelector/options"
 
-describe("VariantSelector", () => {
+describe("VariantSelector - Options Mode", () => {
   beforeEach(() => {
     clearProductCache()
   })

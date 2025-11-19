@@ -11,10 +11,14 @@ query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle:
     images(first: 10) {
       nodes {
         url
+        width
+        height
       }
     }
     featuredImage {
       url
+      width
+      height
     }
     adjacentVariants {
       ...VariantFragment
@@ -48,6 +52,8 @@ fragment VariantFragment on ProductVariant {
   id
   image {
     url
+    width
+    height
   }
   price {
     currencyCode
