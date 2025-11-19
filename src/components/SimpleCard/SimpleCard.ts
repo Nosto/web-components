@@ -21,7 +21,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 /**
  * A custom element that displays a product card using Shopify product data.
  *
- * Fetches product data from `/products/<handle>.js` and renders a card with
+ * Fetches product data from the Shopify Storefront GraphQL API and renders a card with
  * product image, title, price, and optional brand, discount, and rating information.
  *
  * The component renders inside a shadow DOM with encapsulated styles. Styling can be

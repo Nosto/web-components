@@ -7,7 +7,7 @@ import { loadAndRenderCompact } from "./compact"
 /**
  * A custom element that displays product variant options as clickable pills.
  *
- * Fetches product data from `/products/<handle>.js` and renders option rows with
+ * Fetches product data from the Shopify Storefront GraphQL API and renders option rows with
  * clickable value pills. Optionally preselects the first value for each option and highlights
  * the currently selected choices. Emits a custom event when variant selections change.
  *
