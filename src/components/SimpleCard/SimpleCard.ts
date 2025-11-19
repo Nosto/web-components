@@ -157,7 +157,8 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
   if (handle && handle !== element.handle) {
     element.handle = handle
   } else {
-    updateSimpleCardContent(element, variant)
+    const skipImageUpdate = element.carousel || element.alternate
+    updateSimpleCardContent(element, variant, skipImageUpdate)
   }
 }
 

@@ -665,6 +665,247 @@ describe("SimpleCard", () => {
     })
   })
 
+  describe("Variant Change Behavior", () => {
+    it("should skip image updates when carousel is enabled during variant change", async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Red",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Red" }],
+            image: {
+              altText: "Red variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/red.jpg"
+            },
+            price: { currencyCode: "USD", amount: "24.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="variant-product" carousel />) as SimpleCard
+      await card.connectedCallback()
+
+      const primaryImg = card.shadowRoot?.querySelector(".img.carousel-img") as HTMLImageElement
+      const initialSrc = primaryImg?.src
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Image should NOT change when carousel is enabled
+      const updatedImg = card.shadowRoot?.querySelector(".img.carousel-img") as HTMLImageElement
+      expect(updatedImg?.src).toBe(initialSrc)
+    })
+
+    it("should skip image updates when alternate is enabled during variant change", async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Red",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Red" }],
+            image: {
+              altText: "Red variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/red.jpg"
+            },
+            price: { currencyCode: "USD", amount: "24.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="variant-product" alternate />) as SimpleCard
+      await card.connectedCallback()
+
+      const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+      const initialSrc = primaryImg?.src
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Image should NOT change when alternate is enabled
+      const updatedImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+      expect(updatedImg?.src).toBe(initialSrc)
+    })
+
+    it("should update images normally when neither carousel nor alternate is enabled", async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Red",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Red" }],
+            image: {
+              altText: "Red variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/red.jpg"
+            },
+            price: { currencyCode: "USD", amount: "24.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="variant-product" />) as SimpleCard
+      await card.connectedCallback()
+
+      const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+      expect(primaryImg?.src).toBe("https://example.com/image1.jpg")
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Image SHOULD change when neither carousel nor alternate is enabled
+      const updatedImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
+      expect(updatedImg?.src).toBe("https://example.com/red.jpg")
+    })
+
+    it("should update price correctly when carousel is enabled during variant change", async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Red",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Red" }],
+            image: {
+              altText: "Red variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/red.jpg"
+            },
+            price: { currencyCode: "USD", amount: "99.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "129.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="variant-product" carousel discount />) as SimpleCard
+      await card.connectedCallback()
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Price SHOULD update even when carousel is enabled
+      const priceElement = card.shadowRoot?.querySelector(".price-current")
+      expect(priceElement?.textContent?.trim()).toBe("$99.99")
+    })
+
+    it("should update price correctly when alternate is enabled during variant change", async () => {
+      const variantProduct: ShopifyProduct = {
+        ...mockProduct,
+        variants: [
+          {
+            id: "gid://shopify/ProductVariant/1001",
+            title: "Red",
+            availableForSale: true,
+            selectedOptions: [{ name: "Color", value: "Red" }],
+            image: {
+              altText: "Red variant image",
+              height: 800,
+              width: 800,
+              thumbhash: null,
+              url: "https://example.com/red.jpg"
+            },
+            price: { currencyCode: "USD", amount: "89.99" },
+            compareAtPrice: { currencyCode: "USD", amount: "119.99" },
+            product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+          }
+        ]
+      }
+
+      addProductHandlers({
+        "variant-product": { product: variantProduct }
+      })
+
+      const card = (<nosto-simple-card handle="variant-product" alternate discount />) as SimpleCard
+      await card.connectedCallback()
+
+      // Simulate variant change event
+      const variantChangeEvent = new CustomEvent("variantchange", {
+        detail: {
+          variant: variantProduct.variants[0]
+        },
+        bubbles: true
+      })
+
+      card.dispatchEvent(variantChangeEvent)
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      // Price SHOULD update even when alternate is enabled
+      const priceElement = card.shadowRoot?.querySelector(".price-current")
+      expect(priceElement?.textContent?.trim()).toBe("$89.99")
+    })
+  })
+
   describe("Carousel Mode", () => {
     it("should render carousel when carousel attribute is enabled", async () => {
       addProductHandlers({

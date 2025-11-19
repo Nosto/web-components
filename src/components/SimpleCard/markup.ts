@@ -119,8 +119,10 @@ function formatPrice({ amount, currencyCode }: ShopifyMoney) {
   }).format(+amount)
 }
 
-export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
-  updateImages(element, variant)
+export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant, skipImageUpdate = false) {
+  if (!skipImageUpdate) {
+    updateImages(element, variant)
+  }
   updatePrices(element, variant)
 }
 
