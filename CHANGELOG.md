@@ -1,3 +1,10 @@
+# [9.29.0](https://github.com/Nosto/web-components/compare/v9.28.0...v9.29.0) (2025-11-19)
+
+
+### Features
+
+* **VariantSelector:** disable dropdown when all variants are unavailable ([b86679a](https://github.com/Nosto/web-components/commit/b86679a587c1a8f7105c7fc572b67568962a2408))
+
 # [9.28.0](https://github.com/Nosto/web-components/compare/v9.27.2...v9.28.0) (2025-11-19)
 
 
