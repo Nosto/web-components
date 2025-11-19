@@ -46,7 +46,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
 
   function getOptionIndex({ name, value }: ShopifySelectedOption) {
     const option = product.options.find(o => o.name === name)
-    return option?.optionValues.findIndex(ov => ov.name === value) || -1
+    return option?.optionValues.findIndex(ov => ov.name === value) ?? -1
   }
 
   const sortedVariants = [...product.variants].sort((a, b) => {
