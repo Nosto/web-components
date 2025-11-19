@@ -1,3 +1,10 @@
+# [9.30.0](https://github.com/Nosto/web-components/compare/v9.29.0...v9.30.0) (2025-11-19)
+
+
+### Features
+
+* **test:** extend test coverage for shadowContentFactory.ts ([f553b29](https://github.com/Nosto/web-components/commit/f553b29c93877f738bc298e8eea7afbd105c2e65))
+
 # [9.29.0](https://github.com/Nosto/web-components/compare/v9.28.0...v9.29.0) (2025-11-19)
 
 
