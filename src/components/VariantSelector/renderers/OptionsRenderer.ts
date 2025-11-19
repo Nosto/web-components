@@ -1,52 +1,65 @@
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { VariantSelector } from "../VariantSelector"
-import { generateVariantSelectorHTML } from "./markup"
+import type { VariantSelector } from "../VariantSelector"
+import { generateVariantSelectorHTML } from "../options/markup"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
-import styles from "./styles.css?raw"
+import styles from "../options/styles.css?raw"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
+import type { VariantSelectorRenderer } from "./types"
 
 const setShadowContent = shadowContentFactory(styles)
 
 let placeholder = ""
 
-/** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
 
-export async function loadAndRenderMarkup(element: VariantSelector, initial = false) {
-  if (initial && element.placeholder && placeholder) {
-    element.toggleAttribute("loading", true)
-    setShadowContent(element, placeholder)
-  }
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProduct(element.handle)
-
-    // Initialize selections with first value of each option
-    initializeDefaultSelections(element, productData)
-
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
-
-    // Cache the rendered HTML for placeholder use
-    placeholder = selectorHTML.html
-
-    // Setup event listeners for option buttons
-    setupOptionListeners(element)
-
-    // active state for selected options
-    updateActiveStates(element)
-    // unavailable state for options without available variants
-    updateUnavailableStates(element, productData)
-    // TODO disabled state
-
-    if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+export class OptionsRenderer implements VariantSelectorRenderer {
+  async render(element: VariantSelector, initial = false) {
+    if (initial && element.placeholder && placeholder) {
+      element.toggleAttribute("loading", true)
+      setShadowContent(element, placeholder)
     }
+    element.toggleAttribute("loading", true)
+    try {
+      const productData = await fetchProduct(element.handle)
 
-    element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  } finally {
-    element.toggleAttribute("loading", false)
+      initializeDefaultSelections(element, productData)
+
+      const selectorHTML = generateVariantSelectorHTML(element, productData)
+      setShadowContent(element, selectorHTML.html)
+
+      placeholder = selectorHTML.html
+
+      this.setupEventListeners(element)
+
+      updateActiveStates(element)
+      updateUnavailableStates(element, productData)
+
+      if (Object.keys(element.selectedOptions).length > 0) {
+        emitVariantChange(element, productData)
+      }
+
+      element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    } finally {
+      element.toggleAttribute("loading", false)
+    }
+  }
+
+  setupEventListeners(element: VariantSelector) {
+    element.shadowRoot!.addEventListener("click", async e => {
+      const target = e.target as HTMLElement
+      if (target.classList.contains("value")) {
+        e.preventDefault()
+        const { optionName, optionValue } = target.dataset
+        if (optionName && optionValue) {
+          await selectOption(element, optionName, optionValue)
+        }
+      }
+    })
+  }
+
+  updateSelection(element: VariantSelector) {
+    updateActiveStates(element)
   }
 }
 
@@ -71,35 +84,13 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
   }
 }
 
-function setupOptionListeners(element: VariantSelector) {
-  element.shadowRoot!.addEventListener("click", async e => {
-    const target = e.target as HTMLElement
-    if (target.classList.contains("value")) {
-      e.preventDefault()
-      const { optionName, optionValue } = target.dataset
-      if (optionName && optionValue) {
-        await selectOption(element, optionName, optionValue)
-      }
-    }
-  })
-}
-
-export async function selectOption(element: VariantSelector, optionName: string, value: string) {
+async function selectOption(element: VariantSelector, optionName: string, value: string) {
   if (element.selectedOptions[optionName] === value) {
     return
   }
   element.selectedOptions[optionName] = value
+  updateActiveStates(element)
 
-  // Use the renderer's updateSelection method if available
-  const renderer = (element as { renderer?: { updateSelection?: (el: VariantSelector) => void } }).renderer
-  if (renderer && renderer.updateSelection) {
-    renderer.updateSelection(element)
-  } else {
-    // Fallback to direct update if renderer not available (shouldn't happen in normal usage)
-    updateActiveStates(element)
-  }
-
-  // Fetch product data and emit variant change
   const productData = await fetchProduct(element.handle)
   emitVariantChange(element, productData)
 }
@@ -154,7 +145,7 @@ function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
   }
 }
 
-export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
+function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
     product.variants?.find(variant => {
       if (!variant.selectedOptions) return false

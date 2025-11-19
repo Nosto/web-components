@@ -1,8 +1,8 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import { loadAndRenderMarkup } from "./options"
-import { loadAndRenderCompact } from "./compact"
+import { getRenderer } from "./renderers"
+import type { VariantSelectorRenderer } from "./renderers"
 
 /**
  * A custom element that displays product variant options as clickable pills.
@@ -43,6 +43,12 @@ export class VariantSelector extends NostoElement {
    */
   selectedOptions: Record<string, string> = {}
 
+  /**
+   * Current renderer instance
+   * @hidden
+   */
+  #renderer: VariantSelectorRenderer | null = null
+
   constructor() {
     super()
     this.attachShadow({ mode: "open" })
@@ -60,11 +66,16 @@ export class VariantSelector extends NostoElement {
   }
 
   async #render(initial = false) {
-    if (this.mode === "compact") {
-      await loadAndRenderCompact(this)
-    } else {
-      await loadAndRenderMarkup(this, initial)
-    }
+    this.#renderer = getRenderer(this)
+    await this.#renderer.render(this, initial)
+  }
+
+  /**
+   * Get the current renderer instance (for testing purposes)
+   * @hidden
+   */
+  get renderer(): VariantSelectorRenderer | null {
+    return this.#renderer
   }
 }
 
