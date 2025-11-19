@@ -120,7 +120,10 @@ function formatPrice({ amount, currencyCode }: ShopifyMoney) {
 }
 
 export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
-  updateImages(element, variant)
+  const skipImageUpdate = element.carousel || element.alternate
+  if (!skipImageUpdate) {
+    updateImages(element, variant)
+  }
   updatePrices(element, variant)
 }
 
