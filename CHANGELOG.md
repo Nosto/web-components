@@ -1,3 +1,10 @@
+## [9.27.2](https://github.com/Nosto/web-components/compare/v9.27.1...v9.27.2) (2025-11-19)
+
+
+### Bug Fixes
+
+* skip option name prefix ([b841211](https://github.com/Nosto/web-components/commit/b841211f5a159eaecc4885824958eb93db6920c1))
+
 ## [9.27.1](https://github.com/Nosto/web-components/compare/v9.27.0...v9.27.1) (2025-11-19)
 
 
