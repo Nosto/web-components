@@ -81,8 +81,7 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: stri
   const variableOptions = variant.selectedOptions?.filter(o => !fixedOptions.includes(o.name)) || []
   let title = variant.title
   if (variableOptions.length === 1) {
-    const { name, value } = variableOptions[0]
-    title = `${name}: ${value}`
+    title = variableOptions[0].value
   } else if (variableOptions.length > 1) {
     title = variableOptions.map(o => o.value).join(" / ")
   }
