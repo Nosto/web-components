@@ -44,9 +44,13 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
   // Find option names that have only one value across all variants
   const fixedOptions = product.options.filter(option => option.optionValues.length === 1).map(option => option.name)
 
+  // Check if all variants are unavailable
+  const allVariantsUnavailable = product.variants.every(variant => !variant.availableForSale)
+  const disabledAttr = allVariantsUnavailable ? "disabled" : ""
+
   return html`
     <div class="compact-selector" part="compact-selector">
-      <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
+      <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant" ${disabledAttr}>
         ${product.variants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
       </select>
       <slot></slot>
@@ -93,7 +97,7 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: stri
 function setupDropdownListener(element: VariantSelector) {
   element.shadowRoot!.addEventListener("change", async e => {
     const target = e.target as HTMLSelectElement
-    if (target.classList.contains("variant-dropdown")) {
+    if (target.classList.contains("variant-dropdown") && !target.disabled) {
       const variantId = target.value
       await emitVariantChange(element, variantId)
     }

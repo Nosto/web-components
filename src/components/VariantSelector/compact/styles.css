@@ -51,6 +51,12 @@
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
+.variant-dropdown:disabled {
+  opacity: var(--dropdown-disabled-opacity);
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
 .variant-dropdown option:disabled {
   opacity: var(--dropdown-disabled-opacity);
 }

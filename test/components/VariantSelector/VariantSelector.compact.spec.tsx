@@ -376,4 +376,106 @@ describe("VariantSelector - Compact Mode", () => {
     expect(options[2].textContent).toBe("Large")
     expect(options[2].textContent).not.toContain("Cotton")
   })
+
+  it("should disable dropdown when all variants are unavailable", async () => {
+    const productWithAllUnavailable = {
+      ...mockProductWithVariants,
+      variants: mockProductWithVariants.variants.map(v => ({
+        ...v,
+        availableForSale: false
+      }))
+    }
+
+    addProductHandlers({
+      "all-unavailable-product": { product: productWithAllUnavailable }
+    })
+
+    const selector = (<nosto-variant-selector handle="all-unavailable-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    expect(dropdown).toBeTruthy()
+    expect(dropdown.disabled).toBe(true)
+  })
+
+  it("should enable dropdown when at least one variant is available", async () => {
+    const productWithOneAvailable = {
+      ...mockProductWithVariants,
+      variants: mockProductWithVariants.variants.map((v, idx) => ({
+        ...v,
+        availableForSale: idx === 1 // Only second variant is available
+      }))
+    }
+
+    addProductHandlers({
+      "one-available-product": { product: productWithOneAvailable }
+    })
+
+    const selector = (<nosto-variant-selector handle="one-available-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    expect(dropdown).toBeTruthy()
+    expect(dropdown.disabled).toBe(false)
+  })
+
+  it("should not emit variantchange event when disabled dropdown is changed", async () => {
+    const productWithAllUnavailable = {
+      ...mockProductWithVariants,
+      variants: mockProductWithVariants.variants.map(v => ({
+        ...v,
+        availableForSale: false
+      }))
+    }
+
+    addProductHandlers({
+      "all-unavailable-product": { product: productWithAllUnavailable }
+    })
+
+    const selector = (<nosto-variant-selector handle="all-unavailable-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    let eventFired = false
+
+    selector.addEventListener("variantchange", () => {
+      eventFired = true
+    })
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    expect(dropdown.disabled).toBe(true)
+
+    // Try to change the value (this should not trigger the event on disabled dropdown)
+    dropdown.value = "gid://shopify/ProductVariant/1002"
+    dropdown.dispatchEvent(new Event("change", { bubbles: true }))
+
+    await new Promise(resolve => setTimeout(resolve, 100))
+
+    // Event should not fire because dropdown is disabled
+    expect(eventFired).toBe(false)
+  })
+
+  it("should apply disabled styling when dropdown is disabled", async () => {
+    const productWithAllUnavailable = {
+      ...mockProductWithVariants,
+      variants: mockProductWithVariants.variants.map(v => ({
+        ...v,
+        availableForSale: false
+      }))
+    }
+
+    addProductHandlers({
+      "all-unavailable-product": { product: productWithAllUnavailable }
+    })
+
+    const selector = (<nosto-variant-selector handle="all-unavailable-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    expect(dropdown).toBeTruthy()
+    expect(dropdown.disabled).toBe(true)
+
+    // Check that the element can be queried with :disabled selector
+    const disabledDropdown = selector.shadowRoot!.querySelector(".variant-dropdown:disabled")
+    expect(disabledDropdown).toBeTruthy()
+  })
 })
