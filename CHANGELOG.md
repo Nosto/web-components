@@ -1,3 +1,18 @@
+# [9.27.0](https://github.com/Nosto/web-components/compare/v9.26.0...v9.27.0) (2025-11-19)
+
+
+### Bug Fixes
+
+* extract default mode ([a5145cd](https://github.com/Nosto/web-components/commit/a5145cd9d4a8c65a4749536f95dbda07ed4dc861))
+* update handle in case variant points to different handle ([7d9b8d6](https://github.com/Nosto/web-components/commit/7d9b8d62b36a8df074d78bdecfac0ef19f8c5087))
+
+
+### Features
+
+* **VariantSelector:** add compact mode with dropdown selector ([17eab87](https://github.com/Nosto/web-components/commit/17eab8740fccf4796d314c61eb403849f9c5c503))
+* **VariantSelector:** make compact default mode and rename default to options ([122ad5a](https://github.com/Nosto/web-components/commit/122ad5aeb6d49d858be74e95525f95f9a7793a5a))
+* **VariantSelector:** skip single-value options in compact mode dropdown ([d3509b6](https://github.com/Nosto/web-components/commit/d3509b63ef814006530a8c2613230466ce7e055b))
+
 # [9.26.0](https://github.com/Nosto/web-components/compare/v9.25.0...v9.26.0) (2025-11-18)
 
 
