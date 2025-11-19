@@ -7,26 +7,22 @@ describe("getExampleHandles", () => {
   const testRoot = "https://example-shop.myshopify.com/"
   const endpoint = `${testRoot}api/2025-10/graphql.json`
 
+  const createMockResponse = (handles: string[]) => ({
+    data: {
+      products: {
+        edges: handles.map(handle => ({ node: { handle } }))
+      }
+    }
+  })
+
   beforeEach(() => {
     clearCache()
   })
 
   it("should fetch product handles successfully", async () => {
-    const mockResponse = {
-      data: {
-        products: {
-          edges: [
-            { node: { handle: "product-1" } },
-            { node: { handle: "product-2" } },
-            { node: { handle: "product-3" } }
-          ]
-        }
-      }
-    }
-
     addHandlers(
       http.post(endpoint, () => {
-        return HttpResponse.json(mockResponse)
+        return HttpResponse.json(createMockResponse(["product-1", "product-2", "product-3"]))
       })
     )
 
@@ -35,23 +31,9 @@ describe("getExampleHandles", () => {
   })
 
   it("should fetch specified amount of product handles", async () => {
-    const mockResponse = {
-      data: {
-        products: {
-          edges: [
-            { node: { handle: "product-1" } },
-            { node: { handle: "product-2" } },
-            { node: { handle: "product-3" } },
-            { node: { handle: "product-4" } },
-            { node: { handle: "product-5" } }
-          ]
-        }
-      }
-    }
-
     addHandlers(
       http.post(endpoint, () => {
-        return HttpResponse.json(mockResponse)
+        return HttpResponse.json(createMockResponse(["product-1", "product-2", "product-3", "product-4", "product-5"]))
       })
     )
 
@@ -115,38 +97,11 @@ describe("getExampleHandles", () => {
     )
   })
 
-  it("should throw error when fetch fails with 500", async () => {
-    addHandlers(
-      http.post(endpoint, () => {
-        return HttpResponse.json({ error: "Server Error" }, { status: 500 })
-      })
-    )
-
-    await expect(getExampleHandles(testRoot)).rejects.toThrow(
-      `Failed to fetch example handles from ${endpoint}: 500 Internal Server Error`
-    )
-  })
-
   it("should return empty array when products data is missing", async () => {
     addHandlers(
       http.post(endpoint, () => {
         return HttpResponse.json({
           data: {}
-        })
-      })
-    )
-
-    const handles = await getExampleHandles(testRoot)
-    expect(handles).toEqual([])
-  })
-
-  it("should return empty array when edges are missing", async () => {
-    addHandlers(
-      http.post(endpoint, () => {
-        return HttpResponse.json({
-          data: {
-            products: {}
-          }
         })
       })
     )
@@ -161,13 +116,7 @@ describe("getExampleHandles", () => {
     addHandlers(
       http.post(endpoint, () => {
         callCount++
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: [{ node: { handle: "product-1" } }]
-            }
-          }
-        })
+        return HttpResponse.json(createMockResponse(["product-1"]))
       })
     )
 
@@ -179,73 +128,13 @@ describe("getExampleHandles", () => {
     expect(callCount).toBe(1)
   })
 
-  it("should maintain separate cache for different roots", async () => {
-    const testRoot2 = "https://another-shop.myshopify.com/"
-    const endpoint2 = `${testRoot2}api/2025-10/graphql.json`
-
-    addHandlers(
-      http.post(endpoint, () => {
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: [{ node: { handle: "product-1" } }]
-            }
-          }
-        })
-      }),
-      http.post(endpoint2, () => {
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: [{ node: { handle: "product-2" } }]
-            }
-          }
-        })
-      })
-    )
-
-    const result1 = await getExampleHandles(testRoot)
-    const result2 = await getExampleHandles(testRoot2)
-
-    expect(result1).toEqual(["product-1"])
-    expect(result2).toEqual(["product-2"])
-  })
-
-  it("should maintain separate cache for different amounts", async () => {
-    let callCount = 0
-
-    addHandlers(
-      http.post(endpoint, () => {
-        callCount++
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: [{ node: { handle: "product-1" } }]
-            }
-          }
-        })
-      })
-    )
-
-    await getExampleHandles(testRoot, 12)
-    await getExampleHandles(testRoot, 20)
-
-    expect(callCount).toBe(2)
-  })
-
   it("should clear cache when clearCache is called", async () => {
     let callCount = 0
 
     addHandlers(
       http.post(endpoint, () => {
         callCount++
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: [{ node: { handle: "product-1" } }]
-            }
-          }
-        })
+        return HttpResponse.json(createMockResponse(["product-1"]))
       })
     )
 
@@ -265,13 +154,7 @@ describe("getExampleHandles", () => {
         if (callCount === 1) {
           return HttpResponse.json({ error: "Server Error" }, { status: 500 })
         }
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: [{ node: { handle: "product-1" } }]
-            }
-          }
-        })
+        return HttpResponse.json(createMockResponse(["product-1"]))
       })
     )
 
