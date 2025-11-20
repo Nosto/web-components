@@ -40,3 +40,17 @@ applyTo: "test/*"
 
 - Use parentheses for multi-line JSX expressions
 - Always preserve custom element imports as they trigger `@customElement` decorator registration
+
+## Mock Products
+
+**Centralize all mock Shopify products in `src/mock/products.ts`:**
+
+- Import mock products from `@/mock/products` instead of defining them inline in test files
+- Available mock products include:
+  - `mockProductWithVariants` - Product with multiple variants (Size, Color options)
+  - `mockProductWithoutVariants` - Product with no options
+  - `mockSimpleCardProduct` - Basic product for SimpleCard tests
+  - `mockProductWithSingleValueOption` - Product with one single-value option
+  - `mockProductAllSingleValue` - Product where all options have single values
+  - Additional specialized test products as needed
+- When adding new mock products, add them to `src/mock/products.ts` for reusability
