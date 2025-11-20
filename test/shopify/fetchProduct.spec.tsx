@@ -50,8 +50,8 @@ describe("fetchProduct", () => {
         }
 
         if (body.query.includes("ProductsByHandles") && body.variables.query) {
-          const handleMatches = body.variables.query.match(/handle:([^\s)]+)/g)
-          const requestedHandles = handleMatches ? handleMatches.map(m => m.replace("handle:", "")) : []
+          const handleMatches = body.variables.query.match(/handle:"([^"]+)"/g)
+          const requestedHandles = handleMatches ? handleMatches.map(m => m.replace(/handle:"([^"]+)"/, "$1")) : []
 
           const nodes = requestedHandles
             .map(handle => (products[handle] ? wrapProduct(products[handle], handle) : null))

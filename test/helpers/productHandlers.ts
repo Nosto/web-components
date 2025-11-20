@@ -44,8 +44,8 @@ export function addProductHandlers(products: (ShopifyProduct & { handle: string 
       }
 
       if (url.pathname === graphqlPath && body.variables.query) {
-        const handleMatches = body.variables.query.match(/handle:([^\s)]+)/g)
-        const requestedHandles = handleMatches ? handleMatches.map(m => m.replace("handle:", "")) : []
+        const handleMatches = body.variables.query.match(/handle:"([^"]+)"/g)
+        const requestedHandles = handleMatches ? handleMatches.map(m => m.replace(/handle:"([^"]+)"/, "$1")) : []
 
         const nodes = requestedHandles
           .map(handle => {

@@ -46,7 +46,7 @@ async function fetchSingle(handle: string): Promise<ShopifyProduct> {
 }
 
 async function fetchBatch(handles: string[], requestsMap: Map<string, PendingRequest[]>) {
-  const queryString = handles.map(h => `handle:${h}`).join(" OR ")
+  const queryString = handles.map(h => `handle:"${h}"`).join(" OR ")
 
   const response = await fetch(getApiUrl().href, {
     headers: {
