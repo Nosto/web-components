@@ -2,7 +2,7 @@ import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { VariantSelector } from "../VariantSelector"
 import { generateVariantSelectorHTML } from "./markup"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
-import styles from "./styles.css?raw"
+import styles from "./styles.css"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 

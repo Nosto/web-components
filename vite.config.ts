@@ -1,8 +1,10 @@
 import { resolve } from "path"
 import { defineConfig } from "vitest/config"
+import { cssPlugin } from "./plugins/vite.css.mjs"
+import { graphqlPlugin } from "./plugins/vite.graphql.mjs"
 
 export default defineConfig(() => ({
-  plugins: [],
+  plugins: [cssPlugin(), graphqlPlugin()],
   resolve: {
     alias: {
       "@": resolve(import.meta.dirname, "./src")

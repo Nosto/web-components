@@ -1,5 +1,7 @@
 import esbuild from "esbuild"
 import fs from "fs"
+import { cssPlugin } from "./plugins/esbuild.css.mjs"
+import { graphqlPlugin } from "./plugins/esbuild.graphql.mjs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -8,7 +10,7 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2018",
   sourcemap: true,
-  loader: { ".css": "text", ".graphql": "text" }
+  plugins: [cssPlugin(), graphqlPlugin()]
 }
 
 async function build() {
