@@ -31,7 +31,7 @@ declare module "*.css?raw" {
   export default content
 }
 
-declare module "*.graphql?raw" {
+declare module "*.graphql" {
   const content: string
   export default content
 }

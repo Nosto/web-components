@@ -1,5 +1,25 @@
 import esbuild from "esbuild"
 import fs from "fs"
+import { parse, print } from "graphql"
+
+// Custom plugin that minifies GraphQL files to strings
+const graphqlMinifierPlugin = {
+  name: "graphql-minifier",
+  setup(build) {
+    build.onLoad({ filter: /\.graphql$/ }, async args => {
+      const contents = await fs.promises.readFile(args.path, "utf8")
+
+      // Parse the GraphQL to validate it and then print it back minified
+      const document = parse(contents)
+      const minified = print(document).replace(/\s+/g, " ").trim()
+
+      return {
+        contents: `export default ${JSON.stringify(minified)}`,
+        loader: "js"
+      }
+    })
+  }
+}
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -8,7 +28,8 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2018",
   sourcemap: true,
-  loader: { ".css": "text", ".graphql": "text" }
+  loader: { ".css": "text" },
+  plugins: [graphqlMinifierPlugin]
 }
 
 async function build() {

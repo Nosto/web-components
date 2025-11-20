@@ -1,8 +1,23 @@
 import { resolve } from "path"
 import { defineConfig } from "vitest/config"
+import { parse, print } from "graphql"
+
+const graphqlPlugin = () => ({
+  name: "vite-plugin-graphql",
+  transform(src, id) {
+    if (id.endsWith(".graphql")) {
+      const document = parse(src)
+      const minified = print(document).replace(/\s+/g, " ").trim()
+      return {
+        code: `export default ${JSON.stringify(minified)}`,
+        map: null
+      }
+    }
+  }
+})
 
 export default defineConfig(() => ({
-  plugins: [],
+  plugins: [graphqlPlugin()],
   resolve: {
     alias: {
       "@": resolve(import.meta.dirname, "./src")
