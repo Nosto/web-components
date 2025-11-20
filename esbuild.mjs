@@ -1,5 +1,6 @@
 import esbuild from "esbuild"
 import fs from "fs"
+import { minifyHtmlTemplatesPlugin } from "./esbuild-plugins/minify-html-templates.mjs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -8,7 +9,8 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2018",
   sourcemap: true,
-  loader: { ".css": "text", ".graphql": "text" }
+  loader: { ".css": "text", ".graphql": "text" },
+  plugins: [minifyHtmlTemplatesPlugin()]
 }
 
 async function build() {
