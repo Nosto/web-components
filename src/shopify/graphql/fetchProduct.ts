@@ -46,7 +46,6 @@ async function fetchSingle(handle: string): Promise<ShopifyProduct> {
 }
 
 async function fetchBatch(handles: string[], requestsMap: Map<string, PendingRequest[]>) {
-  // Build query string to match products by handle
   const queryString = handles.map(h => `handle:${h}`).join(" OR ")
 
   const response = await fetch(getApiUrl().href, {
@@ -75,16 +74,14 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
 
   const responseData = await response.json()
 
-  // Create a map of handle to product
   const productsByHandle = new Map<string, ShopifyProduct>()
   if (responseData.data?.products?.nodes) {
-    responseData.data.products.nodes.forEach((productNode: ShopifyProduct) => {
+    responseData.data.products.nodes.forEach((productNode: ShopifyProduct & { handle: string }) => {
       const product = flattenResponse({ data: { product: productNode } })
       productsByHandle.set(productNode.handle, product)
     })
   }
 
-  // Resolve or reject each request
   for (const handle of handles) {
     const requests = requestsMap.get(handle)
     if (!requests) continue
@@ -102,7 +99,6 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
 async function flush() {
   state.scheduledFlush = null
 
-  // Get unique handles from pending requests
   const handles = Array.from(state.pendingRequests.keys())
   const requestsMap = new Map(state.pendingRequests)
   state.pendingRequests.clear()
@@ -112,7 +108,6 @@ async function flush() {
   }
 
   try {
-    // Use fetchSingle for single product requests
     if (handles.length === 1) {
       const handle = handles[0]
       const requests = requestsMap.get(handle)
@@ -124,7 +119,6 @@ async function flush() {
       await fetchBatch(handles, requestsMap)
     }
   } catch (error) {
-    // Reject all pending requests with the error
     Array.from(requestsMap.values())
       .flatMap(requests => requests)
       .forEach(request => request.reject(error instanceof Error ? error : new Error(String(error))))
@@ -133,12 +127,10 @@ async function flush() {
 
 function requestProduct(handle: string): Promise<ShopifyProduct> {
   return new Promise((resolve, reject) => {
-    // Get or create array for this handle
     const requests = state.pendingRequests.get(handle) || []
     requests.push({ handle, resolve, reject })
     state.pendingRequests.set(handle, requests)
 
-    // Schedule flush if not already scheduled
     if (state.scheduledFlush === null) {
       state.scheduledFlush = requestAnimationFrame(() => flush())
     }

@@ -3,8 +3,6 @@ import { http, HttpResponse } from "msw"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { getApiUrl } from "@/shopify/graphql/constants"
 
-
-
 export function addProductHandlers(products: (ShopifyProduct & { handle: string })[]) {
   const graphqlPath = getApiUrl().pathname
   const productsByHandle = products.reduce(
@@ -26,7 +24,6 @@ export function addProductHandlers(products: (ShopifyProduct & { handle: string 
         variables: { query?: string; handle?: string; first?: number; language?: string; country?: string }
       }
 
-      // Check if this is a single product query
       if (url.pathname === graphqlPath && body.variables.handle && !body.variables.query) {
         const handle = body.variables.handle
         const product = productsByHandle[handle]
@@ -46,9 +43,7 @@ export function addProductHandlers(products: (ShopifyProduct & { handle: string 
         })
       }
 
-      // Check if this is a batch query with products query
       if (url.pathname === graphqlPath && body.variables.query) {
-        // Parse the query string to extract handles
         const handleMatches = body.variables.query.match(/handle:([^\s)]+)/g)
         const requestedHandles = handleMatches ? handleMatches.map(m => m.replace("handle:", "")) : []
 

@@ -34,7 +34,6 @@ describe("fetchProduct", () => {
           variables: { query?: string; handle?: string; first?: number }
         }
 
-        // Check if this is a single product query
         if (body.query.includes("ProductByHandle") && body.variables.handle) {
           const handle = body.variables.handle
           const product = products[handle]
@@ -50,9 +49,7 @@ describe("fetchProduct", () => {
           })
         }
 
-        // Check if this is a batch query with products query
         if (body.query.includes("ProductsByHandles") && body.variables.query) {
-          // Parse the query string to extract handles
           const handleMatches = body.variables.query.match(/handle:([^\s)]+)/g)
           const requestedHandles = handleMatches ? handleMatches.map(m => m.replace("handle:", "")) : []
 
