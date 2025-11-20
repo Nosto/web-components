@@ -18,9 +18,7 @@ export const exampleHandlesLoader = async (context: { args: { root?: string; pro
     return { handles: [] }
   }
   try {
-    // make sure argRoot is a valid URL
     new URL(argRoot)
-    // fetch handles
     const handles = await getExampleHandles(argRoot, products)
     return { handles }
   } catch (error) {
