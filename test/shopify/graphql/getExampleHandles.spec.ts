@@ -60,7 +60,9 @@ describe("getExampleHandles", () => {
     await getExampleHandles(testRoot)
 
     expect(requestBody).not.toBeNull()
-    expect((requestBody as { query: string }).query).toContain("products(first: 12)")
+    const body = requestBody as { query: string; variables: { first: number } }
+    expect(body.variables).toEqual({ first: 12 })
+    expect(body.query).toContain("$first: Int!")
   })
 
   it("should use custom amount when specified", async () => {
@@ -82,7 +84,9 @@ describe("getExampleHandles", () => {
     await getExampleHandles(testRoot, 20)
 
     expect(requestBody).not.toBeNull()
-    expect((requestBody as { query: string }).query).toContain("products(first: 20)")
+    const body = requestBody as { query: string; variables: { first: number } }
+    expect(body.variables).toEqual({ first: 20 })
+    expect(body.query).toContain("$first: Int!")
   })
 
   it("should throw error when fetch fails with 404", async () => {
@@ -184,10 +188,13 @@ describe("getExampleHandles", () => {
     await getExampleHandles(testRoot)
 
     expect(requestBody).not.toBeNull()
-    expect((requestBody as { query: string }).query).toContain("products(first:")
-    expect((requestBody as { query: string }).query).toContain("edges")
-    expect((requestBody as { query: string }).query).toContain("node")
-    expect((requestBody as { query: string }).query).toContain("handle")
+    const body = requestBody as { query: string; variables: { first: number } }
+    expect(body.query).toContain("query ExampleHandles($first: Int!)")
+    expect(body.query).toContain("products(first: $first)")
+    expect(body.query).toContain("edges")
+    expect(body.query).toContain("node")
+    expect(body.query).toContain("handle")
+    expect(body.variables).toEqual({ first: 12 })
   })
 
   it("should send correct Content-Type header", async () => {
