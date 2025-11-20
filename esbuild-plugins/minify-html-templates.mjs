@@ -212,13 +212,19 @@ export function minifyHtmlTemplatesPlugin() {
           return null
         }
 
-        const source = await fs.promises.readFile(args.path, "utf8")
-
-        // Only process files that contain html template literals
-        if (!source.includes("html`")) {
+        // Read only the first 4096 bytes to check for html` before reading the whole file
+        const CHUNK_SIZE = 4096
+        const fileHandle = await fs.promises.open(args.path, "r")
+        const buffer = Buffer.alloc(CHUNK_SIZE)
+        const { bytesRead } = await fileHandle.read(buffer, 0, CHUNK_SIZE, 0)
+        const chunk = buffer.toString("utf8", 0, bytesRead)
+        if (!chunk.includes("html`")) {
+          await fileHandle.close()
           return null
         }
+        await fileHandle.close()
 
+        const source = await fs.promises.readFile(args.path, "utf8")
         const processedContents = processCode(source)
 
         return {
