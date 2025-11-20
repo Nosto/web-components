@@ -1,9 +1,9 @@
 import fs from "fs"
-import type { Plugin } from "esbuild"
+import esbuild, { type Plugin } from "esbuild"
 
 /**
  * esbuild plugin that loads CSS files as minified text strings
- * Removes whitespace and comments to reduce bundle size
+ * Uses esbuild's built-in CSS minifier for optimal compression
  */
 export function cssPlugin(): Plugin {
   return {
@@ -12,16 +12,14 @@ export function cssPlugin(): Plugin {
       build.onLoad({ filter: /\.css$/ }, async args => {
         const css = await fs.promises.readFile(args.path, "utf8")
 
-        // Minify CSS by removing comments and unnecessary whitespace
-        const minified = css
-          .replace(/\/\*[\s\S]*?\*\//g, "") // Remove comments
-          .replace(/\s+/g, " ") // Collapse multiple spaces
-          .replace(/\s*([{}:;,])\s*/g, "$1") // Remove spaces around CSS syntax
-          .replace(/;\}/g, "}") // Remove last semicolon before closing brace
-          .trim()
+        // Minify CSS using esbuild's transform API
+        const result = await esbuild.transform(css, {
+          loader: "css",
+          minify: true
+        })
 
         return {
-          contents: `export default ${JSON.stringify(minified)}`,
+          contents: `export default ${JSON.stringify(result.code)}`,
           loader: "js"
         }
       })
