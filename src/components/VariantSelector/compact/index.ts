@@ -64,9 +64,19 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
     return 0
   })
 
+  // Check if all variants are unavailable
+  const allVariantsUnavailable = product.variants.every(variant => !variant.availableForSale)
+  const disabledAttr = allVariantsUnavailable ? "disabled" : ""
+
   return html`
     <div class="compact-selector" part="compact-selector">
-      <select class="variant-dropdown" part="variant-dropdown" aria-label="Select variant">
+      <select
+        name="variant"
+        class="variant-dropdown"
+        part="variant-dropdown"
+        aria-label="Select variant"
+        ${disabledAttr}
+      >
         ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
       </select>
       <slot></slot>
@@ -113,7 +123,7 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: stri
 function setupDropdownListener(element: VariantSelector) {
   element.shadowRoot!.addEventListener("change", async e => {
     const target = e.target as HTMLSelectElement
-    if (target.classList.contains("variant-dropdown")) {
+    if (target.classList.contains("variant-dropdown") && !target.disabled) {
       const variantId = target.value
       await emitVariantChange(element, variantId)
     }

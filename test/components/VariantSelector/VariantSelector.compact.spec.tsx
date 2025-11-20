@@ -377,6 +377,48 @@ describe("VariantSelector - Compact Mode", () => {
     expect(options[2].textContent).not.toContain("Cotton")
   })
 
+  it("should disable dropdown when all variants are unavailable", async () => {
+    const productWithAllUnavailable = {
+      ...mockProductWithVariants,
+      variants: mockProductWithVariants.variants.map(v => ({
+        ...v,
+        availableForSale: false
+      }))
+    }
+
+    addProductHandlers({
+      "all-unavailable-product": { product: productWithAllUnavailable }
+    })
+
+    const selector = (<nosto-variant-selector handle="all-unavailable-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    expect(dropdown).toBeTruthy()
+    expect(dropdown.disabled).toBe(true)
+  })
+
+  it("should enable dropdown when at least one variant is available", async () => {
+    const productWithOneAvailable = {
+      ...mockProductWithVariants,
+      variants: mockProductWithVariants.variants.map((v, idx) => ({
+        ...v,
+        availableForSale: idx === 1 // Only second variant is available
+      }))
+    }
+
+    addProductHandlers({
+      "one-available-product": { product: productWithOneAvailable }
+    })
+
+    const selector = (<nosto-variant-selector handle="one-available-product" mode="compact" />) as VariantSelector
+    await selector.connectedCallback()
+
+    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    expect(dropdown).toBeTruthy()
+    expect(dropdown.disabled).toBe(false)
+  })
+
   it("should sort variants by first option value order", async () => {
     addProductHandlers({
       "unordered-variant-product": { product: mockProductWithVariants }
