@@ -1,5 +1,6 @@
 import esbuild from "esbuild"
 import fs from "fs"
+import { cssRawPlugin } from "./esbuild-css-raw-plugin.mjs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -8,7 +9,8 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2018",
   sourcemap: true,
-  loader: { ".css": "text", ".graphql": "text" }
+  loader: { ".graphql": "text" },
+  plugins: [cssRawPlugin]
 }
 
 async function build() {
