@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getExampleHandles, clearCache } from "@/shopify/graphql/getExampleHandles"
+import { getExampleHandles, clearExampleHandlesCache } from "@/shopify/graphql/getExampleHandles"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 
@@ -16,7 +16,7 @@ describe("getExampleHandles", () => {
   })
 
   beforeEach(() => {
-    clearCache()
+    clearExampleHandlesCache()
   })
 
   it("should fetch product handles successfully", async () => {
@@ -128,7 +128,7 @@ describe("getExampleHandles", () => {
     expect(callCount).toBe(1)
   })
 
-  it("should clear cache when clearCache is called", async () => {
+  it("should clear cache when clearExampleHandlesCache is called", async () => {
     let callCount = 0
 
     addHandlers(
@@ -139,7 +139,7 @@ describe("getExampleHandles", () => {
     )
 
     await getExampleHandles(testRoot)
-    clearCache()
+    clearExampleHandlesCache()
     await getExampleHandles(testRoot)
 
     expect(callCount).toBe(2)

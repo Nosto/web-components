@@ -1,6 +1,6 @@
 import { cached } from "@/utils/cached"
 
-export const [getExampleHandles, clearCache] = cached(async (root: string, amount = 12) => {
+export const [getExampleHandles, clearExampleHandlesCache] = cached(async (root: string, amount = 12) => {
   const endpoint = `${root}api/2025-10/graphql.json`
   const query = `
     {
