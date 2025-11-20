@@ -1,7 +1,6 @@
 import { resolve } from "path"
 import { defineConfig } from "vitest/config"
-import { cssPlugin } from "./plugins/vite.css.mjs"
-import { graphqlPlugin } from "./plugins/vite.graphql.mjs"
+import { cssPlugin, graphqlPlugin } from "./plugins/vite"
 
 export default defineConfig(() => ({
   plugins: [cssPlugin(), graphqlPlugin()],
