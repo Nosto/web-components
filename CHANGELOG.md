@@ -1,3 +1,11 @@
+## [10.0.1](https://github.com/Nosto/web-components/compare/v10.0.0...v10.0.1) (2025-11-20)
+
+
+### Bug Fixes
+
+* review comment ([6d8609b](https://github.com/Nosto/web-components/commit/6d8609b1a9c1cf2b67c747d560a2200ca52ffac2))
+* sort variants in compact mode ([a0cb074](https://github.com/Nosto/web-components/commit/a0cb0745dbcb802052410970abdaab7f53556fce))
+
 # [10.0.0](https://github.com/Nosto/web-components/compare/v9.30.0...v10.0.0) (2025-11-20)
 
 
