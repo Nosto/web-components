@@ -1,4 +1,4 @@
-import { getExampleHandles } from "./shopify/graphql/getExampleHandles";
+import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
 
 /**
  * Updates the global Shopify configuration for Storybook stories
