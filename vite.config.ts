@@ -1,22 +1,9 @@
 import { resolve } from "path"
 import { defineConfig } from "vitest/config"
-
-const graphqlPlugin = () => ({
-  name: "vite-plugin-graphql",
-  transform(src, id) {
-    if (id.endsWith(".graphql")) {
-      // Directly minify by removing extra whitespace
-      const minified = src.replace(/\s+/g, " ").trim()
-      return {
-        code: `export default ${JSON.stringify(minified)}`,
-        map: null
-      }
-    }
-  }
-})
+import { viteGraphQLPlugin } from "./graphql-minifier.mjs"
 
 export default defineConfig(() => ({
-  plugins: [graphqlPlugin()],
+  plugins: [viteGraphQLPlugin()],
   resolve: {
     alias: {
       "@": resolve(import.meta.dirname, "./src")
