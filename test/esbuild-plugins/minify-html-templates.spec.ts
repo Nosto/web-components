@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest"
 
 // Import the helper functions we'll test directly
-// Since we can't easily test the full esbuild plugin in vitest, we'll test the core logic
 
 describe("minifyHtmlTemplatesPlugin", () => {
   // Test the minification logic by simulating what the plugin does
