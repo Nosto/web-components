@@ -1,25 +1,16 @@
-import esbuild from "esbuild"
-
 /**
- * Vite plugin that loads CSS files as minified text strings
- * Uses esbuild's built-in CSS minifier for optimal compression
+ * Vite plugin that loads CSS files as text strings
  */
 export function cssPlugin() {
   return {
     name: "vite-css-loader",
-    async transform(code, id) {
+    transform(code, id) {
       if (!id.endsWith(".css")) {
         return null
       }
 
-      // Minify CSS using esbuild's transform API
-      const result = await esbuild.transform(code, {
-        loader: "css",
-        minify: true
-      })
-
       return {
-        code: `export default ${JSON.stringify(result.code)}`,
+        code: `export default ${JSON.stringify(code)}`,
         map: null
       }
     }
@@ -27,8 +18,7 @@ export function cssPlugin() {
 }
 
 /**
- * Vite plugin that loads GraphQL files as minified text strings
- * Removes whitespace and comments to reduce bundle size
+ * Vite plugin that loads GraphQL files as text strings
  */
 export function graphqlPlugin() {
   return {
@@ -38,15 +28,8 @@ export function graphqlPlugin() {
         return null
       }
 
-      // Minify GraphQL by removing comments and unnecessary whitespace
-      const minified = code
-        .replace(/#[^\n]*/g, "") // Remove comments
-        .replace(/\s+/g, " ") // Collapse multiple spaces
-        .replace(/\s*([{}():,@])\s*/g, "$1") // Remove spaces around GraphQL syntax
-        .trim()
-
       return {
-        code: `export default ${JSON.stringify(minified)}`,
+        code: `export default ${JSON.stringify(code)}`,
         map: null
       }
     }
