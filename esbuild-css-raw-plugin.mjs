@@ -12,7 +12,7 @@ export const cssRawPlugin = {
     // Handle CSS files with ?raw suffix
     build.onResolve({ filter: /\.css\?raw$/ }, args => {
       return {
-        path: path.resolve(args.resolveDir, args.path.replace("?raw", "")),
+        path: path.resolve(args.resolveDir, args.path.replace(/\?raw$/, "")),
         namespace: "css-raw"
       }
     })
