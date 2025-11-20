@@ -1,7 +1,12 @@
-query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle: String!)
+query ProductByHandle(
+  $country: CountryCode!
+  $language: LanguageCode!
+  $handle: String!
+)
 @inContext(country: $country, language: $language) {
   product(handle: $handle) {
     id
+    handle
     title
     vendor
     description
@@ -11,14 +16,18 @@ query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle:
     images(first: 10) {
       nodes {
         url
-        width
+        altText
         height
+        width
+        thumbhash
       }
     }
     featuredImage {
       url
-      width
+      altText
       height
+      width
+      thumbhash
     }
     adjacentVariants {
       ...VariantFragment
@@ -52,8 +61,10 @@ fragment VariantFragment on ProductVariant {
   id
   image {
     url
-    width
+    altText
     height
+    width
+    thumbhash
   }
   price {
     currencyCode
