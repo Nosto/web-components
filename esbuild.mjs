@@ -7,7 +7,7 @@ const sharedConfig = {
   bundle: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  target: "es2018",
+  target: "es2020",
   sourcemap: true,
   plugins: [cssPlugin(), graphqlPlugin()]
 }
