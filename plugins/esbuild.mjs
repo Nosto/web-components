@@ -1,11 +1,11 @@
 import fs from "fs"
-import esbuild, { type Plugin } from "esbuild"
+import esbuild from "esbuild"
 
 /**
  * esbuild plugin that loads CSS files as minified text strings
  * Uses esbuild's built-in CSS minifier for optimal compression
  */
-export function cssPlugin(): Plugin {
+export function cssPlugin() {
   return {
     name: "css-loader",
     setup(build) {
@@ -31,7 +31,7 @@ export function cssPlugin(): Plugin {
  * esbuild plugin that loads GraphQL files as minified text strings
  * Removes whitespace and comments to reduce bundle size
  */
-export function graphqlPlugin(): Plugin {
+export function graphqlPlugin() {
   return {
     name: "graphql-loader",
     setup(build) {

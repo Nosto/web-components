@@ -1,11 +1,10 @@
 import esbuild from "esbuild"
-import type { Plugin } from "vite"
 
 /**
  * Vite plugin that loads CSS files as minified text strings
  * Uses esbuild's built-in CSS minifier for optimal compression
  */
-export function cssPlugin(): Plugin {
+export function cssPlugin() {
   return {
     name: "vite-css-loader",
     async transform(code, id) {
@@ -31,7 +30,7 @@ export function cssPlugin(): Plugin {
  * Vite plugin that loads GraphQL files as minified text strings
  * Removes whitespace and comments to reduce bundle size
  */
-export function graphqlPlugin(): Plugin {
+export function graphqlPlugin() {
   return {
     name: "vite-graphql-loader",
     transform(code, id) {

@@ -1,6 +1,6 @@
 import esbuild from "esbuild"
 import fs from "fs"
-import { cssPlugin, graphqlPlugin } from "./plugins/esbuild.ts"
+import { cssPlugin, graphqlPlugin } from "./plugins/esbuild.mjs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
