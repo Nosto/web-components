@@ -43,11 +43,11 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   }
 
   // Carousel mode takes precedence over alternate mode
-  if (element.carousel && product.images?.length > 1) {
+  if (element.imageMode === "carousel" && product.images?.length > 1) {
     return generateCarouselHTML(element, product)
   }
 
-  const hasAlternate = element.alternate && product.images?.length > 1
+  const hasAlternate = element.imageMode === "alternate" && product.images?.length > 1
   const alternateImage = hasAlternate ? product.images[1] : undefined
 
   return html`
@@ -120,7 +120,7 @@ function formatPrice({ amount, currencyCode }: ShopifyMoney) {
 }
 
 export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
-  const skipImageUpdate = element.carousel || element.alternate
+  const skipImageUpdate = element.imageMode === "carousel" || element.imageMode === "alternate"
   if (!skipImageUpdate) {
     updateImages(element, variant)
   }
@@ -133,7 +133,7 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
   const props = getImageProps(variant.image, element.sizes)
   const imagesToUpdate = [
     element.shadowRoot!.querySelector(".img.primary"),
-    element.alternate && element.shadowRoot!.querySelector(".img.alternate")
+    element.imageMode === "alternate" && element.shadowRoot!.querySelector(".img.alternate")
   ].filter(Boolean) as HTMLImageElement[]
 
   imagesToUpdate.forEach(img => setImageProps(img, props))

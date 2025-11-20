@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
+import { ifDefined } from "lit/directives/if-defined.js"
 import { updateShopifyRoot } from "../../utils/storybook"
 import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
 
@@ -37,13 +38,11 @@ const meta: Meta = {
       control: "text",
       description: "The Shopify store root URL"
     },
-    alternate: {
-      control: "boolean",
-      description: "Show alternate product image on hover"
-    },
-    carousel: {
-      control: "boolean",
-      description: "Show image carousel with arrow navigation"
+    imageMode: {
+      control: "select",
+      options: ["", "alternate", "carousel"],
+      description:
+        'Image display mode. Use "alternate" for hover image swap or "carousel" for image carousel with navigation'
     },
     brand: {
       control: "boolean",
@@ -64,8 +63,7 @@ const meta: Meta = {
   },
   args: {
     root,
-    alternate: false,
-    carousel: false,
+    imageMode: "",
     brand: false,
     discount: false,
     rating: 0,
@@ -108,8 +106,7 @@ export const Default: Story = {
           handle => html`
             <nosto-simple-card
               handle="${handle}"
-              ?alternate=${args.alternate}
-              ?carousel=${args.carousel}
+              image-mode=${ifDefined(args.imageMode)}
               ?brand=${args.brand}
               ?discount=${args.discount}
               rating=${args.rating || 0}
@@ -130,8 +127,7 @@ export const SingleCard: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        ?alternate=${args.alternate}
-        ?carousel=${args.carousel}
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -150,8 +146,7 @@ export const WithVariantSelector: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        ?alternate=${args.alternate}
-        ?carousel=${args.carousel}
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -169,8 +164,7 @@ export const WithAllFeatures: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        ?alternate=${args.alternate}
-        ?carousel=${args.carousel}
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -179,7 +173,7 @@ export const WithAllFeatures: Story = {
     `
   },
   args: {
-    alternate: true,
+    imageMode: "alternate",
     brand: true,
     discount: true,
     rating: 4.2
@@ -193,7 +187,7 @@ export const WithCarousel: Story = {
     return html`
       <nosto-simple-card
         handle="${handles[0]}"
-        ?carousel=${args.carousel}
+        image-mode=${ifDefined(args.imageMode)}
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
@@ -202,7 +196,7 @@ export const WithCarousel: Story = {
     `
   },
   args: {
-    carousel: true,
+    imageMode: "carousel",
     brand: true,
     discount: true,
     rating: 4.2
