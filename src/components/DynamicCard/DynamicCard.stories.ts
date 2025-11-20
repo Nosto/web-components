@@ -1,17 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
-import { updateShopifyRoot } from "../../utils/storybook"
-import { getExampleHandles } from "../../shopify/graphql/getExampleHandles"
+import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
 
 const root = "https://nosto-shopify1.myshopify.com/"
-
-// Shared loader for fetching example handles
-const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
-  const { products, root: argRoot } = context.args
-  return {
-    handles: await getExampleHandles(argRoot || root, products)
-  }
-}
 
 window.Shopify = {
   routes: {
