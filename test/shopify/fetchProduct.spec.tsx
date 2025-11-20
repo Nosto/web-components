@@ -5,6 +5,7 @@ import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 import { getApiUrl } from "@/shopify/graphql/constants"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
+import { mockFetchProduct1, mockFetchProduct2, mockFetchProduct3 } from "@/mock/products"
 
 describe("fetchProduct", () => {
   beforeEach(() => {
@@ -14,99 +15,6 @@ describe("fetchProduct", () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
-
-  const mockProduct1: ShopifyProduct = {
-    id: "gid://shopify/Product/1",
-    title: "Product 1",
-    vendor: "Vendor 1",
-    description: "Description 1",
-    encodedVariantExistence: "",
-    onlineStoreUrl: "/products/product-1",
-    availableForSale: true,
-    adjacentVariants: [],
-    images: [
-      {
-        altText: "Image 1",
-        height: 400,
-        width: 400,
-        thumbhash: null,
-        url: "https://example.com/image1.jpg"
-      }
-    ],
-    featuredImage: {
-      altText: "Image 1",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://example.com/image1.jpg"
-    },
-    options: [],
-    price: { currencyCode: "USD", amount: "10.00" },
-    compareAtPrice: null,
-    variants: []
-  }
-
-  const mockProduct2: ShopifyProduct = {
-    id: "gid://shopify/Product/2",
-    title: "Product 2",
-    vendor: "Vendor 2",
-    description: "Description 2",
-    encodedVariantExistence: "",
-    onlineStoreUrl: "/products/product-2",
-    availableForSale: true,
-    adjacentVariants: [],
-    images: [
-      {
-        altText: "Image 2",
-        height: 400,
-        width: 400,
-        thumbhash: null,
-        url: "https://example.com/image2.jpg"
-      }
-    ],
-    featuredImage: {
-      altText: "Image 2",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://example.com/image2.jpg"
-    },
-    options: [],
-    price: { currencyCode: "USD", amount: "20.00" },
-    compareAtPrice: null,
-    variants: []
-  }
-
-  const mockProduct3: ShopifyProduct = {
-    id: "gid://shopify/Product/3",
-    title: "Product 3",
-    vendor: "Vendor 3",
-    description: "Description 3",
-    encodedVariantExistence: "",
-    onlineStoreUrl: "/products/product-3",
-    availableForSale: true,
-    adjacentVariants: [],
-    images: [
-      {
-        altText: "Image 3",
-        height: 400,
-        width: 400,
-        thumbhash: null,
-        url: "https://example.com/image3.jpg"
-      }
-    ],
-    featuredImage: {
-      altText: "Image 3",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://example.com/image3.jpg"
-    },
-    options: [],
-    price: { currencyCode: "USD", amount: "30.00" },
-    compareAtPrice: null,
-    variants: []
-  }
 
   function wrapProduct(product: ShopifyProduct, handle: string) {
     return {
@@ -162,7 +70,7 @@ describe("fetchProduct", () => {
 
   it("should fetch a single product", async () => {
     setupBatchProductHandler({
-      "product-1": mockProduct1
+      "product-1": mockFetchProduct1
     })
 
     const product = await fetchProduct("product-1")
@@ -175,9 +83,9 @@ describe("fetchProduct", () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
-      "product-1": mockProduct1,
-      "product-2": mockProduct2,
-      "product-3": mockProduct3
+      "product-1": mockFetchProduct1,
+      "product-2": mockFetchProduct2,
+      "product-3": mockFetchProduct3
     })
 
     // Request multiple products at the same time
@@ -206,7 +114,7 @@ describe("fetchProduct", () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
-      "product-1": mockProduct1
+      "product-1": mockFetchProduct1
     })
 
     // Request the same product multiple times
@@ -230,7 +138,7 @@ describe("fetchProduct", () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
-      "product-1": mockProduct1
+      "product-1": mockFetchProduct1
     })
 
     const product = await fetchProduct("product-1")
@@ -251,7 +159,7 @@ describe("fetchProduct", () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
-      "product-1": mockProduct1
+      "product-1": mockFetchProduct1
     })
 
     // First request
@@ -271,8 +179,8 @@ describe("fetchProduct", () => {
 
   it("should handle errors for individual products in batch", async () => {
     setupBatchProductHandler({
-      "product-1": mockProduct1,
-      "product-2": mockProduct2
+      "product-1": mockFetchProduct1,
+      "product-2": mockFetchProduct2
       // product-3 missing - will return null from server
     })
 
@@ -307,8 +215,8 @@ describe("fetchProduct", () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
-      "product-1": mockProduct1,
-      "product-2": mockProduct2
+      "product-1": mockFetchProduct1,
+      "product-2": mockFetchProduct2
     })
 
     // First batch
@@ -332,7 +240,7 @@ describe("fetchProduct", () => {
     const products: Record<string, ShopifyProduct> = {}
     for (let i = 1; i <= 10; i++) {
       products[`product-${i}`] = {
-        ...mockProduct1,
+        ...mockFetchProduct1,
         id: `gid://shopify/Product/${i}`,
         title: `Product ${i}`
       }
@@ -363,7 +271,7 @@ describe("fetchProduct", () => {
     const fetchSpy = vi.spyOn(global, "fetch")
 
     setupBatchProductHandler({
-      "product-1": mockProduct1
+      "product-1": mockFetchProduct1
     })
 
     // First request

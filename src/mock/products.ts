@@ -722,3 +722,96 @@ export const mockSimpleCardProduct: ShopifyProduct = {
     }
   ]
 }
+
+export const mockFetchProduct1: ShopifyProduct = {
+  id: "gid://shopify/Product/1",
+  title: "Product 1",
+  vendor: "Vendor 1",
+  description: "Description 1",
+  encodedVariantExistence: "",
+  onlineStoreUrl: "/products/product-1",
+  availableForSale: true,
+  adjacentVariants: [],
+  images: [
+    {
+      altText: "Image 1",
+      height: 400,
+      width: 400,
+      thumbhash: null,
+      url: "https://example.com/image1.jpg"
+    }
+  ],
+  featuredImage: {
+    altText: "Image 1",
+    height: 400,
+    width: 400,
+    thumbhash: null,
+    url: "https://example.com/image1.jpg"
+  },
+  options: [],
+  price: { currencyCode: "USD", amount: "10.00" },
+  compareAtPrice: null,
+  variants: []
+}
+
+export const mockFetchProduct2: ShopifyProduct = {
+  id: "gid://shopify/Product/2",
+  title: "Product 2",
+  vendor: "Vendor 2",
+  description: "Description 2",
+  encodedVariantExistence: "",
+  onlineStoreUrl: "/products/product-2",
+  availableForSale: true,
+  adjacentVariants: [],
+  images: [
+    {
+      altText: "Image 2",
+      height: 400,
+      width: 400,
+      thumbhash: null,
+      url: "https://example.com/image2.jpg"
+    }
+  ],
+  featuredImage: {
+    altText: "Image 2",
+    height: 400,
+    width: 400,
+    thumbhash: null,
+    url: "https://example.com/image2.jpg"
+  },
+  options: [],
+  price: { currencyCode: "USD", amount: "20.00" },
+  compareAtPrice: null,
+  variants: []
+}
+
+export const mockFetchProduct3: ShopifyProduct = {
+  id: "gid://shopify/Product/3",
+  title: "Product 3",
+  vendor: "Vendor 3",
+  description: "Description 3",
+  encodedVariantExistence: "",
+  onlineStoreUrl: "/products/product-3",
+  availableForSale: true,
+  adjacentVariants: [],
+  images: [
+    {
+      altText: "Image 3",
+      height: 400,
+      width: 400,
+      thumbhash: null,
+      url: "https://example.com/image3.jpg"
+    }
+  ],
+  featuredImage: {
+    altText: "Image 3",
+    height: 400,
+    width: 400,
+    thumbhash: null,
+    url: "https://example.com/image3.jpg"
+  },
+  options: [],
+  price: { currencyCode: "USD", amount: "30.00" },
+  compareAtPrice: null,
+  variants: []
+}
