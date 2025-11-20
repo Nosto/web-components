@@ -7,7 +7,7 @@ import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithVariants } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { getApiUrl } from "@/shopify/graphql/constants"
+import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 
 describe("VariantSelector - Compact Mode", () => {
   beforeEach(() => {
