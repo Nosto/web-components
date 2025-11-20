@@ -1,3 +1,10 @@
+## [10.0.2](https://github.com/Nosto/web-components/compare/v10.0.1...v10.0.2) (2025-11-20)
+
+
+### Bug Fixes
+
+* add error handling to exampleHandlesLoader ([bd2e91f](https://github.com/Nosto/web-components/commit/bd2e91f55c90d2a074c7ab60014375fddc9dc762))
+
 ## [10.0.1](https://github.com/Nosto/web-components/compare/v10.0.0...v10.0.1) (2025-11-20)
 
 
