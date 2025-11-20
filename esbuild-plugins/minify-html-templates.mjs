@@ -1,5 +1,4 @@
 import fs from "fs"
-import path from "path"
 
 /**
  * Minifies HTML content by removing unnecessary whitespace while preserving structure
