@@ -3,7 +3,7 @@ import { VariantSelector } from "../VariantSelector"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { html } from "@/templating/html"
 import styles from "./styles.css?raw"
-import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { ShopifyProduct, ShopifyVariant, VariantChangeDetail, ShopifySelectedOption } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
@@ -44,6 +44,26 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
   // Find option names that have only one value across all variants
   const fixedOptions = product.options.filter(option => option.optionValues.length === 1).map(option => option.name)
 
+  function getOptionIndex({ name, value }: ShopifySelectedOption) {
+    const option = product.options.find(o => o.name === name)
+    return option?.optionValues.findIndex(ov => ov.name === value) ?? -1
+  }
+
+  const sortedVariants = [...product.variants].sort((a, b) => {
+    const optsA = a.selectedOptions ?? []
+    const optsB = b.selectedOptions ?? []
+    const len = Math.min(optsA.length, optsB.length)
+    for (let i = 0; i < len; i++) {
+      const optionA = optsA[i]
+      const optionB = optsB[i]
+
+      if (optionA.value !== optionB.value) {
+        return getOptionIndex(optionA) - getOptionIndex(optionB)
+      }
+    }
+    return 0
+  })
+
   // Check if all variants are unavailable
   const allVariantsUnavailable = product.variants.every(variant => !variant.availableForSale)
   const disabledAttr = allVariantsUnavailable ? "disabled" : ""
@@ -57,7 +77,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
         aria-label="Select variant"
         ${disabledAttr}
       >
-        ${product.variants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
+        ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
       </select>
       <slot></slot>
     </div>
