@@ -78,7 +78,7 @@ async function fetchBatch(handles: string[], requestsMap: Map<string, PendingReq
   // Create a map of handle to product
   const productsByHandle = new Map<string, ShopifyProduct>()
   if (responseData.data?.products?.nodes) {
-    responseData.data.products.nodes.forEach((productNode: { handle: string }) => {
+    responseData.data.products.nodes.forEach((productNode: ShopifyProduct) => {
       const product = flattenResponse({ data: { product: productNode } })
       productsByHandle.set(productNode.handle, product)
     })
