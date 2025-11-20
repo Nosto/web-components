@@ -3,13 +3,13 @@ import { http, HttpResponse } from "msw"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { getApiUrl } from "@/shopify/graphql/constants"
 
-type ProductWithHandle = ShopifyProduct & { handle: string }
+
 
 export function addProductHandlers(products: (ShopifyProduct & { handle: string })[]) {
   const graphqlPath = getApiUrl().pathname
   const productsByHandle = products.reduce(
     (acc, product) => {
-      const handle = (product as ProductWithHandle).handle
+      const handle = product.handle
       if (handle) {
         acc[handle] = product
       }
