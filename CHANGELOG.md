@@ -1,3 +1,25 @@
+# [10.0.0](https://github.com/Nosto/web-components/compare/v9.30.0...v10.0.0) (2025-11-20)
+
+
+* refactor(SimpleCard)!: replace alternate/carousel with image-mode ([fd21efb](https://github.com/Nosto/web-components/commit/fd21efb7c5644439c9fdf8cf5b3ec1095b2e1866))
+
+
+### Features
+
+* **mock:** centralize mock Shopify products to src/mock/products.ts ([bc24c28](https://github.com/Nosto/web-components/commit/bc24c289de824217762048454cbd9a3028928561))
+* **SimpleCard:** update Storybook stories for image-mode ([58675b8](https://github.com/Nosto/web-components/commit/58675b8ae601519306452bf40156af65bdcdf807))
+
+
+### BREAKING CHANGES
+
+* The `alternate` and `carousel` boolean properties have been removed from
+SimpleCard component. Use the new `image-mode` attribute instead.
+
+Migration guide:
+- Replace `<nosto-simple-card alternate>` with `<nosto-simple-card image-mode="alternate">`
+- Replace `<nosto-simple-card carousel>` with `<nosto-simple-card image-mode="carousel">`
+- The `imageMode` TypeScript property accepts "alternate" | "carousel" | undefined
+
 # [9.30.0](https://github.com/Nosto/web-components/compare/v9.29.0...v9.30.0) (2025-11-19)
 
 
