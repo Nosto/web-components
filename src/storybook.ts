@@ -14,10 +14,10 @@ export function updateShopifyRoot(rootUrl: string) {
 
 export const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
   const { products, root: argRoot } = context.args
-  if (!argRoot || !argRoot.match(/^https?:\/\//)) {
-    return { handles: [] }
-  }
   try {
+    if (!argRoot) {
+      return { handles: [] }
+    }
     // make sure argRoot is a valid URL
     new URL(argRoot)
     // fetch handles
