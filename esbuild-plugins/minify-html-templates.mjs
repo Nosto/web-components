@@ -42,30 +42,52 @@ function processTemplateLiteral(content) {
   let inExpression = false
   let expressionStart = -1
 
-  for (let i = 0; i < content.length - 1; i++) {
-    if (!inExpression && content[i] === "$" && content[i + 1] === "{") {
-      // Found start of expression
+  let i = 0
+  let inString = null // null, or one of "'", '"', '`'
+  let stringEscape = false
+  for (; i < content.length - 1; i++) {
+    const char = content[i]
+    const nextChar = content[i + 1]
+
+    if (!inExpression && char === "$" && nextChar === "{") {
       if (currentIndex < i) {
-        // Push static part before this expression
         parts.push({ type: "static", content: content.substring(currentIndex, i) })
       }
       expressionStart = i
       inExpression = true
       braceDepth = 1
       i++ // Skip the '{'
+      inString = null
+      stringEscape = false
       continue
     }
 
     if (inExpression) {
-      if (content[i] === "{") {
-        braceDepth++
-      } else if (content[i] === "}") {
-        braceDepth--
-        if (braceDepth === 0) {
-          // Found end of expression
-          parts.push({ type: "dynamic", content: content.substring(expressionStart, i + 1) })
-          currentIndex = i + 1
-          inExpression = false
+      const c = char
+      if (inString) {
+        if (stringEscape) {
+          stringEscape = false
+        } else if (c === "\\") {
+          stringEscape = true
+        } else if (c === inString) {
+          inString = null
+        } else if (inString === "`" && c === "$" && nextChar === "{") {
+          // Nested template literal expression
+          // Do nothing, let braceDepth handle it
+        }
+      } else {
+        if (c === "'" || c === '"' || c === "`") {
+          inString = c
+          stringEscape = false
+        } else if (c === "{") {
+          braceDepth++
+        } else if (c === "}") {
+          braceDepth--
+          if (braceDepth === 0) {
+            parts.push({ type: "dynamic", content: content.substring(expressionStart, i + 1) })
+            currentIndex = i + 1
+            inExpression = false
+          }
         }
       }
     }
