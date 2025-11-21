@@ -72,7 +72,7 @@ export function htmlMinifierPlugin() {
         if (!contents.includes("html`")) {
           return null
         }
-      build.onLoad({ filter: /[/\\]src[/\\]components[/\\].*\.ts$/ }, async args => {
+
         // Only minify when minification is enabled
         const shouldMinify = build.initialOptions.minify || build.initialOptions.minifyWhitespace
         if (!shouldMinify) {
@@ -122,33 +122,61 @@ async function minifyHtmlTemplates(contents) {
     }
   }
 
-  // Process matches in reverse order to maintain correct string positions
-  let result = contents
-  for (let i = matches.length - 1; i >= 0; i--) {
-    const match = matches[i]
+  // Build result incrementally by processing matches in order
+  let result = ""
+  let lastEnd = 0
+
+  for (const match of matches) {
+    // Append content before this match
+    result += contents.slice(lastEnd, match.start)
 
     try {
       const minifiedTemplate = await minifyTemplateContent(match.templateContent)
-      const replacement = `html\`${minifiedTemplate}\``
-      result = result.slice(0, match.start) + replacement + result.slice(match.end)
+      result += `html\`${minifiedTemplate}\``
     } catch (error) {
       console.warn(`Failed to minify template:`, error.message)
+      // Fall back to original template
+      result += contents.slice(match.start, match.end)
     }
+
+    lastEnd = match.end
   }
+
+  // Append remaining content after last match
+  result += contents.slice(lastEnd)
 
   return result
 }
 
 /**
- * Finds the end of a template literal, handling nested expressions and backticks
+ * Finds the end of a template literal, handling nested expressions, backticks, and string literals
  */
 function findTemplateEnd(contents, start) {
   let depth = 0
   let inExpression = false
+  let inString = null // Tracks if we're in a string (' or ")
 
   for (let i = start; i < contents.length; i++) {
     const char = contents[i]
     const nextChar = contents[i + 1]
+    const prevChar = i > 0 ? contents[i - 1] : null
+
+    // Handle string literals inside expressions
+    if (inExpression && (char === '"' || char === "'")) {
+      // Check if it's escaped
+      if (prevChar !== "\\") {
+        if (inString === char) {
+          inString = null
+        } else if (inString === null) {
+          inString = char
+        }
+      }
+    }
+
+    // Skip processing if we're inside a string literal
+    if (inString) {
+      continue
+    }
 
     if (!inExpression) {
       if (char === "`") {
@@ -183,10 +211,32 @@ async function minifyTemplateContent(templateContent) {
   let currentPos = 0
   let depth = 0
   let inExpression = false
+  let inString = null // Tracks if we're in a string (' or ")
   let expressionStart = 0
 
   for (let i = 0; i < templateContent.length; i++) {
-    if (!inExpression && templateContent[i] === "$" && templateContent[i + 1] === "{") {
+    const char = templateContent[i]
+    const nextChar = templateContent[i + 1]
+    const prevChar = i > 0 ? templateContent[i - 1] : null
+
+    // Handle string literals inside expressions
+    if (inExpression && (char === '"' || char === "'")) {
+      // Check if it's escaped
+      if (prevChar !== "\\") {
+        if (inString === char) {
+          inString = null
+        } else if (inString === null) {
+          inString = char
+        }
+      }
+    }
+
+    // Skip processing if we're inside a string literal
+    if (inString) {
+      continue
+    }
+
+    if (!inExpression && char === "$" && nextChar === "{") {
       // Save static part before expression
       if (i > currentPos) {
         parts.push({ type: "static", content: templateContent.slice(currentPos, i) })
@@ -196,9 +246,9 @@ async function minifyTemplateContent(templateContent) {
       depth = 1
       i++ // Skip the '{'
     } else if (inExpression) {
-      if (templateContent[i] === "{") {
+      if (char === "{") {
         depth++
-      } else if (templateContent[i] === "}") {
+      } else if (char === "}") {
         depth--
         if (depth === 0) {
           // Save expression
@@ -245,8 +295,7 @@ async function minifyTemplateContent(templateContent) {
         return part.content
       }
     })
-        // If minification fails for this part, log a warning and return original
-        console.warn(`Failed to minify HTML part:`, error && error.message ? error.message : error, '\nContent:', part.content.slice(0, 200));
+  )
 
   return minifiedParts.join("")
 }
