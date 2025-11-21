@@ -155,9 +155,7 @@ describe("DynamicCard", () => {
 
     const card = (<nosto-dynamic-card handle="handle-error" template="default" />) as DynamicCard
 
-    await expect(card.connectedCallback()).rejects.toThrow(
-      "Failed to fetch http://localhost:3000/products/handle-error"
-    )
+    await expect(card.connectedCallback()).rejects.toThrow("Request failed with status code 500")
   })
 
   it("throws error when markup is invalid", async () => {

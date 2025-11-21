@@ -1,6 +1,6 @@
+import ky from "ky"
 import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
-import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
@@ -77,6 +77,7 @@ export class DynamicCard extends NostoElement {
   }
 }
 
+const httpClient = ky.create()
 const placeholders = new Map<string, string>()
 
 async function loadAndRenderMarkup(element: DynamicCard) {
@@ -103,7 +104,7 @@ async function getMarkup(element: DynamicCard) {
     target.searchParams.set("variant", element.variantId)
   }
 
-  let markup = await getText(target.href, { cached: true })
+  let markup = await httpClient.get(target.href).text()
 
   if (element.section) {
     const parser = new DOMParser()

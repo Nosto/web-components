@@ -1,5 +1,5 @@
+import ky from "ky"
 import { nostojs } from "@nosto/nosto-js"
-import { getText } from "@/utils/fetch"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
@@ -46,12 +46,14 @@ export class SectionCampaign extends NostoElement {
   }
 }
 
+const httpClient = ky.create()
+
 async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
   const target = createShopifyUrl("/search")
   target.searchParams.set("section_id", element.section)
   target.searchParams.set("q", handles)
-  const sectionHtml = await getText(target.href)
+  const sectionHtml = await httpClient.get(target.href).text()
   const parser = new DOMParser()
   const doc = parser.parseFromString(sectionHtml, "text/html")
   if (rec.title) {
