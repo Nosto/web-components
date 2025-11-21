@@ -1,5 +1,6 @@
 import fs from "fs"
 import esbuild from "esbuild"
+import { minify } from "html-minifier-terser"
 
 /**
  * esbuild plugin that loads CSS files as minified text strings
@@ -52,4 +53,203 @@ export function graphqlPlugin() {
       })
     }
   }
+}
+
+/**
+ * esbuild plugin that minifies HTML in template literals
+ * Processes html`` tagged template literals in TypeScript files
+ * Only runs when minify is enabled in esbuild config
+ */
+export function htmlMinifierPlugin() {
+  return {
+    name: "html-minifier",
+    setup(build) {
+      const shouldMinify = build.initialOptions.minify || build.initialOptions.minifyWhitespace
+
+      // Only process files when minification is enabled
+      if (!shouldMinify) {
+        return
+      }
+
+      // Process TypeScript files in components directory
+      build.onLoad({ filter: /src\/components\/.*\.ts$/ }, async args => {
+        const contents = await fs.promises.readFile(args.path, "utf8")
+
+        // Skip files that don't use html template literals
+        if (!contents.includes("html`")) {
+          return null
+        }
+
+        try {
+          const minifiedContents = await minifyHtmlTemplates(contents)
+          return {
+            contents: minifiedContents,
+            loader: "ts"
+          }
+        } catch (error) {
+          // Fall back to original content if minification fails
+          console.warn(`Failed to minify HTML templates in ${args.path}:`, error.message)
+          return null
+        }
+      })
+    }
+  }
+}
+
+/**
+ * Minifies HTML content in template literals while preserving dynamic expressions
+ */
+async function minifyHtmlTemplates(contents) {
+  let result = contents
+  const matches = []
+
+  // Find all html` occurrences
+  let searchIndex = 0
+  while (searchIndex < contents.length) {
+    const htmlIndex = contents.indexOf("html`", searchIndex)
+    if (htmlIndex === -1) break
+
+    // Find the matching closing backtick
+    const templateStart = htmlIndex + 5 // After "html`"
+    const templateEnd = findTemplateEnd(contents, templateStart)
+
+    if (templateEnd !== -1) {
+      matches.push({
+        start: htmlIndex,
+        end: templateEnd + 1, // Include the closing backtick
+        templateContent: contents.slice(templateStart, templateEnd)
+      })
+      searchIndex = templateEnd + 1
+    } else {
+      searchIndex = templateStart
+    }
+  }
+
+  // Process matches in reverse order to maintain correct string positions
+  for (let i = matches.length - 1; i >= 0; i--) {
+    const match = matches[i]
+
+    try {
+      const minifiedTemplate = await minifyTemplateContent(match.templateContent)
+      const replacement = `html\`${minifiedTemplate}\``
+
+      result = result.slice(0, match.start) + replacement + result.slice(match.end)
+    } catch (error) {
+      // If minification fails for this template, keep the original
+      console.warn(`Failed to minify template:`, error.message)
+    }
+  }
+
+  return result
+}
+
+/**
+ * Finds the end of a template literal, handling nested expressions and backticks
+ */
+function findTemplateEnd(contents, start) {
+  let depth = 0
+  let inExpression = false
+
+  for (let i = start; i < contents.length; i++) {
+    const char = contents[i]
+    const nextChar = contents[i + 1]
+
+    if (!inExpression) {
+      if (char === "`") {
+        return i
+      }
+      if (char === "$" && nextChar === "{") {
+        inExpression = true
+        depth = 1
+        i++ // Skip the '{'
+      }
+    } else {
+      if (char === "{") {
+        depth++
+      } else if (char === "}") {
+        depth--
+        if (depth === 0) {
+          inExpression = false
+        }
+      }
+    }
+  }
+
+  return -1
+}
+
+/**
+ * Minifies template content by splitting into static and dynamic parts
+ */
+async function minifyTemplateContent(templateContent) {
+  // Split template into static HTML parts and dynamic expressions
+  const parts = []
+  let currentPos = 0
+  let depth = 0
+  let inExpression = false
+  let expressionStart = 0
+
+  for (let i = 0; i < templateContent.length; i++) {
+    if (!inExpression && templateContent[i] === "$" && templateContent[i + 1] === "{") {
+      // Save static part before expression
+      if (i > currentPos) {
+        parts.push({ type: "static", content: templateContent.slice(currentPos, i) })
+      }
+      inExpression = true
+      expressionStart = i
+      depth = 1
+      i++ // Skip the '{'
+    } else if (inExpression) {
+      if (templateContent[i] === "{") {
+        depth++
+      } else if (templateContent[i] === "}") {
+        depth--
+        if (depth === 0) {
+          // Save expression
+          parts.push({ type: "expression", content: templateContent.slice(expressionStart, i + 1) })
+          inExpression = false
+          currentPos = i + 1
+        }
+      }
+    }
+  }
+
+  // Add remaining static content
+  if (currentPos < templateContent.length) {
+    parts.push({ type: "static", content: templateContent.slice(currentPos) })
+  }
+
+  // Minify static parts and reconstruct
+  const minifiedParts = await Promise.all(
+    parts.map(async part => {
+      if (part.type === "expression") {
+        return part.content
+      }
+
+      // Only minify if there's actual HTML content
+      const trimmed = part.content.trim()
+      if (!trimmed || !trimmed.includes("<")) {
+        return part.content
+      }
+
+      try {
+        const minified = await minify(part.content, {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeEmptyAttributes: true,
+          minifyCSS: false, // Preserve CSS custom properties
+          minifyJS: false, // Preserve JavaScript expressions
+          keepClosingSlash: true,
+          caseSensitive: true
+        })
+        return minified
+      } catch (error) {
+        // If minification fails for this part, return original
+        return part.content
+      }
+    })
+  )
+
+  return minifiedParts.join("")
 }

@@ -1,6 +1,6 @@
 import esbuild from "esbuild"
 import fs from "fs"
-import { cssPlugin, graphqlPlugin } from "./plugins/esbuild.mjs"
+import { cssPlugin, graphqlPlugin, htmlMinifierPlugin } from "./plugins/esbuild.mjs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
@@ -9,7 +9,7 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2020",
   sourcemap: true,
-  plugins: [cssPlugin(), graphqlPlugin()]
+  plugins: [cssPlugin(), graphqlPlugin(), htmlMinifierPlugin()]
 }
 
 async function build() {
