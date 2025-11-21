@@ -4,7 +4,7 @@ import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
-import styles from "./styles.css?raw"
+import styles from "./styles.css"
 import { generateMockMarkup } from "./markup"
 
 const setShadowContent = shadowContentFactory(styles)

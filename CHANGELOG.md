@@ -1,3 +1,10 @@
+# [10.1.0](https://github.com/Nosto/web-components/compare/v10.0.2...v10.1.0) (2025-11-21)
+
+
+### Features
+
+* implement resource minification plugins ([bc97927](https://github.com/Nosto/web-components/commit/bc97927f7890d50c9e3839774f48469852c8c65e))
+
 ## [10.0.2](https://github.com/Nosto/web-components/compare/v10.0.1...v10.0.2) (2025-11-20)
 
 
