@@ -12,7 +12,7 @@ import {
   mockProductWithoutVariants
 } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { getApiUrl } from "@/shopify/graphql/constants"
+import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { getSelectedVariant, selectOption } from "@/components/VariantSelector/options"
 
 describe("VariantSelector - Options Mode", () => {

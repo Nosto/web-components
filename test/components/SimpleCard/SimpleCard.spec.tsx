@@ -8,7 +8,7 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { getApiUrl } from "@/shopify/graphql/constants"
+import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { mockSimpleCardProduct } from "@/mock/products"
 
 describe("SimpleCard", () => {
