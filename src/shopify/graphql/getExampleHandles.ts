@@ -1,24 +1,17 @@
 import { cached } from "@/utils/cached"
+import getExampleHandlesQuery from "@/shopify/graphql/getExampleHandles.graphql?raw"
 
 export const [getExampleHandles, clearCache] = cached(async (root: string, amount = 12) => {
   const endpoint = `${root}api/2025-10/graphql.json`
-  const query = `
-    {
-      products(first: ${amount}) {
-        edges {
-          node {
-            handle
-          }
-        }
-      }
-    }
-  `
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ query })
+    body: JSON.stringify({
+      query: getExampleHandlesQuery,
+      variables: { first: amount }
+    })
   })
   if (!response.ok) {
     throw new Error(`Failed to fetch example handles from ${endpoint}: ${response.status} ${response.statusText}`)
