@@ -24,7 +24,7 @@
   margin-bottom: var(--dropdown-margin-bottom);
 }
 
-.variant-dropdown {
+select {
   width: 100%;
   appearance: none;
   background-color: var(--dropdown-bg);
@@ -43,22 +43,22 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.variant-dropdown:hover {
+select:hover {
   border-color: var(--dropdown-focus-border);
 }
 
-.variant-dropdown:focus {
+select:focus {
   border-color: var(--dropdown-focus-border);
   outline: 0;
   box-shadow: var(--dropdown-focus-shadow);
 }
 
-.variant-dropdown:disabled {
+select:disabled {
   opacity: var(--dropdown-disabled-opacity);
   cursor: not-allowed;
   background-color: var(--dropdown-disabled-bg);
 }
 
-.variant-dropdown option:disabled {
+select option:disabled {
   opacity: var(--dropdown-disabled-opacity);
 }
