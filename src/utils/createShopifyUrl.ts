@@ -8,5 +8,5 @@ export function createShopifyUrl(url: string) {
 
 // Resolves the root URL of the Shopify store and excludes any query parameters.
 function resolveRootUrl() {
-  return new URL(window.Shopify?.routes?.root ?? "/", window.location.origin).href
+  return `${window.location.origin}${window.Shopify?.routes?.root ?? "/"}`
 }

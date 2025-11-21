@@ -4,6 +4,7 @@ interface Window {
     migrateToShopifyMarket?: import("./shopify").MigrateToShopifyMarket
   }
   Shopify?: {
+    designMode?: boolean
     routes?: {
       root?: string
     }
