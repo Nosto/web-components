@@ -18,7 +18,6 @@ async function fetchWithErrorHandling(url: string) {
 
 const textCache = new Map<string, string>()
 const jsonCache = new Map<string, unknown>()
-const postCache = new Map<string, unknown>()
 
 /**
  * Clears all cached responses
@@ -26,7 +25,6 @@ const postCache = new Map<string, unknown>()
 export function clearCache() {
   textCache.clear()
   jsonCache.clear()
-  postCache.clear()
 }
 
 /**
@@ -76,16 +74,6 @@ export async function getJSON<T = unknown>(url: string, options?: FetchOptions):
 }
 
 /**
- * Creates a cache key for POST requests by combining URL and body
- * @param url - The URL being fetched
- * @param body - The request body
- * @returns A unique cache key string
- */
-function createPostCacheKey(url: string, body: unknown): string {
-  return `${url}::${JSON.stringify(body)}`
-}
-
-/**
  * Sends a POST request with JSON body and returns the response as a JSON object.
  *
  * @example
@@ -93,27 +81,19 @@ function createPostCacheKey(url: string, body: unknown): string {
  * // Simple POST request
  * const result = await postJSON('/api/data', { name: 'John' })
  *
- * // POST request with caching (useful for GraphQL queries)
+ * // GraphQL request
  * const product = await postJSON('/graphql', {
  *   query: '{ product(handle: "test") { title } }',
  *   variables: { handle: 'test' }
- * }, { cached: true })
+ * })
  * ```
  *
  * @param url - The URL to POST to
  * @param body - The request body to be JSON-serialized
- * @param options - Optional configuration object
- * @param options.cached - If true, uses in-memory cache for the response (based on URL + body)
  * @returns Promise that resolves to the parsed JSON response
  * @throws Error if the fetch request fails or JSON parsing fails
  */
-export async function postJSON<T = unknown>(url: string, body: unknown, options?: FetchOptions): Promise<T> {
-  const cacheKey = createPostCacheKey(url, body)
-
-  if (options?.cached && postCache.has(cacheKey)) {
-    return postCache.get(cacheKey) as T
-  }
-
+export async function postJSON<T = unknown>(url: string, body: unknown): Promise<T> {
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -127,10 +107,6 @@ export async function postJSON<T = unknown>(url: string, body: unknown, options?
   }
 
   const json = await response.json()
-
-  if (options?.cached) {
-    postCache.set(cacheKey, json)
-  }
 
   return json
 }

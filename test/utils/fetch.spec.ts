@@ -206,68 +206,6 @@ describe("fetch facade", () => {
       )
     })
 
-    it("should cache POST responses when cached option is true", async () => {
-      let callCount = 0
-      const requestBody = { query: "test" }
-
-      addHandlers(
-        http.post("https://api.example.com/graphql", () => {
-          callCount++
-          return HttpResponse.json({ count: callCount, data: "response" })
-        })
-      )
-
-      const result1 = await postJSON("https://api.example.com/graphql", requestBody, { cached: true })
-      const result2 = await postJSON("https://api.example.com/graphql", requestBody, { cached: true })
-
-      expect(result1).toEqual({ count: 1, data: "response" })
-      expect(result2).toEqual({ count: 1, data: "response" })
-      expect(callCount).toBe(1)
-    })
-
-    it("should not cache POST responses when cached option is false or not provided", async () => {
-      let callCount = 0
-      const requestBody = { query: "test" }
-
-      addHandlers(
-        http.post("https://api.example.com/graphql", () => {
-          callCount++
-          return HttpResponse.json({ count: callCount, data: "response" })
-        })
-      )
-
-      const result1 = await postJSON("https://api.example.com/graphql", requestBody)
-      const result2 = await postJSON("https://api.example.com/graphql", requestBody, { cached: false })
-
-      expect(result1).toEqual({ count: 1, data: "response" })
-      expect(result2).toEqual({ count: 2, data: "response" })
-      expect(callCount).toBe(2)
-    })
-
-    it("should cache based on both URL and body content", async () => {
-      let callCount = 0
-
-      addHandlers(
-        http.post("https://api.example.com/graphql", () => {
-          callCount++
-          return HttpResponse.json({ count: callCount })
-        })
-      )
-
-      // Same URL, different body - should not use cache
-      const result1 = await postJSON("https://api.example.com/graphql", { query: "first" }, { cached: true })
-      const result2 = await postJSON("https://api.example.com/graphql", { query: "second" }, { cached: true })
-
-      expect(result1).toEqual({ count: 1 })
-      expect(result2).toEqual({ count: 2 })
-      expect(callCount).toBe(2)
-
-      // Same URL and body - should use cache
-      const result3 = await postJSON("https://api.example.com/graphql", { query: "first" }, { cached: true })
-      expect(result3).toEqual({ count: 1 })
-      expect(callCount).toBe(2)
-    })
-
     it("should handle complex nested body structures", async () => {
       const complexBody = {
         query: "{ product { title } }",
@@ -288,25 +226,6 @@ describe("fetch facade", () => {
 
       const result = await postJSON("https://api.example.com/graphql", complexBody)
       expect(result).toEqual({ success: true })
-    })
-
-    it("should maintain separate caches for GET and POST requests", async () => {
-      const url = "https://api.example.com/data"
-
-      addHandlers(
-        http.get(url, () => {
-          return HttpResponse.json({ method: "GET" })
-        }),
-        http.post(url, () => {
-          return HttpResponse.json({ method: "POST" })
-        })
-      )
-
-      const getResult = await getJSON(url, { cached: true })
-      const postResult = await postJSON(url, { test: "data" }, { cached: true })
-
-      expect(getResult).toEqual({ method: "GET" })
-      expect(postResult).toEqual({ method: "POST" })
     })
 
     it("should support TypeScript generic types", async () => {
