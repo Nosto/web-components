@@ -7,3 +7,4 @@ export const graphqlClient = ky.create({
   retry: 2,
   timeout: 10000
 })
+
