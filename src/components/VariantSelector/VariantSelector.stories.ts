@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { ifDefined } from "lit/directives/if-defined.js"
-import { shopifyRootDecorator, shopifyProductArgTypes, gridLayoutArgTypes, shopifyLoaders } from "../../storybookUtils"
+import {
+  shopifyRootDecorator,
+  shopifyProductArgTypes,
+  gridLayoutArgTypes,
+  shopifyLoaders,
+  createShopifyProductArgs
+} from "../../storybookUtils"
 import "./VariantSelector"
 
 const root = "https://nosto-shopify1.myshopify.com/"
@@ -18,14 +24,7 @@ const meta: Meta = {
   decorators: [shopifyRootDecorator],
   loaders: shopifyLoaders,
   argTypes: shopifyProductArgTypes,
-  args: {
-    root,
-    imageMode: "",
-    brand: false,
-    discount: false,
-    rating: 0,
-    sizes: ""
-  },
+  args: createShopifyProductArgs(root),
   tags: ["autodocs"]
 }
 

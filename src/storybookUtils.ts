@@ -44,6 +44,18 @@ export const shopifyProductArgTypes: ArgTypes = {
 }
 
 /**
+ * Default args for Shopify product stories
+ */
+export const createShopifyProductArgs = (root: string) => ({
+  root,
+  imageMode: "",
+  brand: false,
+  discount: false,
+  rating: 0,
+  sizes: ""
+})
+
+/**
  * Common argTypes for grid layout in stories
  */
 export const gridLayoutArgTypes: ArgTypes = {
