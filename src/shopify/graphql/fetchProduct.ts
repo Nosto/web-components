@@ -1,5 +1,5 @@
 import { flattenResponse } from "./utils"
-import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw"
+import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql"
 import { getApiUrl } from "./getApiUrl"
 import { cached } from "@/utils/cached"
 

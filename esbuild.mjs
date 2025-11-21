@@ -1,14 +1,15 @@
 import esbuild from "esbuild"
 import fs from "fs"
+import { cssPlugin, graphqlPlugin } from "./plugins/esbuild.mjs"
 
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
   bundle: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  target: "es2018",
+  target: "es2020",
   sourcemap: true,
-  loader: { ".css": "text", ".graphql": "text" }
+  plugins: [cssPlugin(), graphqlPlugin()]
 }
 
 async function build() {
