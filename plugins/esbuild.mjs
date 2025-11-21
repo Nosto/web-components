@@ -245,7 +245,8 @@ async function minifyTemplateContent(templateContent) {
         return part.content
       }
     })
-  )
+        // If minification fails for this part, log a warning and return original
+        console.warn(`Failed to minify HTML part:`, error && error.message ? error.message : error, '\nContent:', part.content.slice(0, 200));
 
   return minifiedParts.join("")
 }
