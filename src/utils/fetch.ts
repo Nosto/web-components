@@ -103,7 +103,5 @@ export async function postJSON<T = unknown>(url: string, body: unknown): Promise
     body: JSON.stringify(body)
   })
 
-  const json = await response.json()
-
-  return json
+  return await response.json()
 }
