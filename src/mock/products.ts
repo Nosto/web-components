@@ -1,4 +1,18 @@
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyProduct, ShopifyImage, ShopifyMoney } from "@/shopify/graphql/types"
+
+// Helper functions to reduce code duplication
+const createMockImage = (url: string, altText = "Product image", size = 400): ShopifyImage => ({
+  altText,
+  height: size,
+  width: size,
+  thumbhash: null,
+  url
+})
+
+const createMockMoney = (amount: string, currencyCode = "USD"): ShopifyMoney => ({
+  currencyCode,
+  amount
+})
 
 export const mockProductWithSingleValueOption: ShopifyProduct = {
   id: "gid://shopify/Product/123456",
@@ -9,21 +23,9 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
   onlineStoreUrl: "/products/single-value-demo-tshirt",
   availableForSale: true,
   images: [
-    {
-      altText: "Product image",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://picsum.photos/400/400?random=1"
-    }
+    createMockImage("https://picsum.photos/400/400?random=1")
   ],
-  featuredImage: {
-    altText: "Product image",
-    height: 400,
-    width: 400,
-    thumbhash: null,
-    url: "https://picsum.photos/400/400?random=1"
-  },
+  featuredImage: createMockImage("https://picsum.photos/400/400?random=1"),
   adjacentVariants: [],
   options: [
     {
@@ -36,8 +38,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("24.99"),
+            compareAtPrice: createMockMoney("29.99"),
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
           }
         },
@@ -48,8 +50,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("24.99"),
+            compareAtPrice: createMockMoney("29.99"),
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
           }
         },
@@ -60,8 +62,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1003",
             title: "Large / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "29.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("29.99"),
+            compareAtPrice: createMockMoney("29.99"),
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
           }
         }
@@ -77,16 +79,16 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("24.99"),
+            compareAtPrice: createMockMoney("29.99"),
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
           }
         }
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "24.99" },
-  compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+  price: createMockMoney("24.99"),
+  compareAtPrice: createMockMoney("29.99"),
   variants: [
     {
       id: "gid://shopify/ProductVariant/1001",
@@ -96,8 +98,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
         { name: "Size", value: "Small" },
         { name: "Material", value: "Cotton" }
       ],
-      price: { currencyCode: "USD", amount: "24.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+      price: createMockMoney("24.99"),
+      compareAtPrice: createMockMoney("29.99"),
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
     },
     {
@@ -108,8 +110,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
         { name: "Size", value: "Medium" },
         { name: "Material", value: "Cotton" }
       ],
-      price: { currencyCode: "USD", amount: "24.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+      price: createMockMoney("24.99"),
+      compareAtPrice: createMockMoney("29.99"),
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
     },
     {
@@ -120,8 +122,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
         { name: "Size", value: "Large" },
         { name: "Material", value: "Cotton" }
       ],
-      price: { currencyCode: "USD", amount: "29.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+      price: createMockMoney("29.99"),
+      compareAtPrice: createMockMoney("29.99"),
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
     }
   ]
@@ -137,21 +139,9 @@ export const mockProductAllSingleValue: ShopifyProduct = {
   availableForSale: true,
   adjacentVariants: [],
   images: [
-    {
-      altText: "Product image",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://picsum.photos/400/400?random=1"
-    }
+    createMockImage("https://picsum.photos/400/400?random=1")
   ],
-  featuredImage: {
-    altText: "Product image",
-    height: 400,
-    width: 400,
-    thumbhash: null,
-    url: "https://picsum.photos/400/400?random=1"
-  },
+  featuredImage: createMockImage("https://picsum.photos/400/400?random=1"),
   options: [
     {
       name: "Size",
@@ -163,8 +153,8 @@ export const mockProductAllSingleValue: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/2001",
             title: "One Size / Natural",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("24.99"),
+            compareAtPrice: createMockMoney("29.99"),
             product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" }
           }
         }
@@ -180,16 +170,16 @@ export const mockProductAllSingleValue: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/2001",
             title: "One Size / Natural",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("24.99"),
+            compareAtPrice: createMockMoney("29.99"),
             product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" }
           }
         }
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "24.99" },
-  compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+  price: createMockMoney("24.99"),
+  compareAtPrice: createMockMoney("29.99"),
   variants: [
     {
       id: "gid://shopify/ProductVariant/2001",
@@ -199,8 +189,8 @@ export const mockProductAllSingleValue: ShopifyProduct = {
         { name: "Size", value: "One Size" },
         { name: "Color", value: "Natural" }
       ],
-      price: { currencyCode: "USD", amount: "24.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "29.99" },
+      price: createMockMoney("24.99"),
+      compareAtPrice: createMockMoney("29.99"),
       product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" }
     }
   ]
@@ -250,7 +240,7 @@ const baseTestProduct: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -262,7 +252,7 @@ const baseTestProduct: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Blue",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
+            price: createMockMoney("24.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -274,7 +264,7 @@ const baseTestProduct: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1003",
             title: "Large / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("29.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -291,7 +281,7 @@ const baseTestProduct: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -303,7 +293,7 @@ const baseTestProduct: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Blue",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
+            price: createMockMoney("24.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -315,7 +305,7 @@ const baseTestProduct: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1004",
             title: "Small / Green",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -323,7 +313,7 @@ const baseTestProduct: ShopifyProduct = {
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "19.99" },
+  price: createMockMoney("19.99"),
   compareAtPrice: null,
   variants: [
     {
@@ -334,7 +324,7 @@ const baseTestProduct: ShopifyProduct = {
         { name: "Size", value: "Small" },
         { name: "Color", value: "Red" }
       ],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
@@ -355,7 +345,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/3001",
             title: "Small / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -367,7 +357,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/3002",
             title: "Medium / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -379,7 +369,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/3003",
             title: "Large / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -396,7 +386,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/3001",
             title: "Small / Cotton",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -413,7 +403,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
         { name: "Size", value: "Small" },
         { name: "Material", value: "Cotton" }
       ],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     },
@@ -425,7 +415,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
         { name: "Size", value: "Medium" },
         { name: "Material", value: "Cotton" }
       ],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     },
@@ -437,7 +427,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
         { name: "Size", value: "Large" },
         { name: "Material", value: "Cotton" }
       ],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
@@ -457,7 +447,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/4001",
             title: "Medium / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -474,7 +464,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/4001",
             title: "Medium / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -491,7 +481,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
         { name: "Size", value: "Medium" },
         { name: "Color", value: "Red" }
       ],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
@@ -542,7 +532,7 @@ export const mockProductWithVariants: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -554,7 +544,7 @@ export const mockProductWithVariants: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Blue",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
+            price: createMockMoney("24.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -566,7 +556,7 @@ export const mockProductWithVariants: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1003",
             title: "Large / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "29.99" },
+            price: createMockMoney("29.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -583,7 +573,7 @@ export const mockProductWithVariants: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Red",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -595,7 +585,7 @@ export const mockProductWithVariants: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Blue",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "24.99" },
+            price: createMockMoney("24.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -607,7 +597,7 @@ export const mockProductWithVariants: ShopifyProduct = {
             id: "gid://shopify/ProductVariant/1004",
             title: "Small / Green",
             availableForSale: true,
-            price: { currencyCode: "USD", amount: "19.99" },
+            price: createMockMoney("19.99"),
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
           }
@@ -615,7 +605,7 @@ export const mockProductWithVariants: ShopifyProduct = {
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "19.99" },
+  price: createMockMoney("19.99"),
   compareAtPrice: null,
   variants: [
     {
@@ -626,7 +616,7 @@ export const mockProductWithVariants: ShopifyProduct = {
         { name: "Size", value: "Small" },
         { name: "Color", value: "Red" }
       ],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     },
@@ -638,7 +628,7 @@ export const mockProductWithVariants: ShopifyProduct = {
         { name: "Size", value: "Medium" },
         { name: "Color", value: "Blue" }
       ],
-      price: { currencyCode: "USD", amount: "24.99" },
+      price: createMockMoney("24.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     },
@@ -650,7 +640,7 @@ export const mockProductWithVariants: ShopifyProduct = {
         { name: "Size", value: "Large" },
         { name: "Color", value: "Red" }
       ],
-      price: { currencyCode: "USD", amount: "29.99" },
+      price: createMockMoney("29.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
@@ -667,7 +657,7 @@ export const mockProductWithoutVariants: ShopifyProduct = {
       title: "Default",
       availableForSale: true,
       selectedOptions: [],
-      price: { currencyCode: "USD", amount: "19.99" },
+      price: createMockMoney("19.99"),
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
@@ -708,16 +698,16 @@ export const mockSimpleCardProduct: ShopifyProduct = {
     url: "https://example.com/image1.jpg"
   },
   options: [],
-  price: { currencyCode: "USD", amount: "19.99" },
-  compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+  price: createMockMoney("19.99"),
+  compareAtPrice: createMockMoney("24.99"),
   variants: [
     {
       id: "gid://shopify/ProductVariant/789",
       title: "Default Title",
       availableForSale: true,
       selectedOptions: [],
-      price: { currencyCode: "USD", amount: "19.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "24.99" },
+      price: createMockMoney("19.99"),
+      compareAtPrice: createMockMoney("24.99"),
       product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
     }
   ]
