@@ -1,20 +1,14 @@
+import ky, { HTTPError } from "ky"
+
 interface FetchOptions {
   cached?: boolean
 }
 
-/**
- * Internal function to handle common fetch logic with error checking.
- * @param url - The URL to fetch
- * @returns Promise that resolves to the Response object
- * @throws Error if the fetch request fails
- */
-async function fetchWithErrorHandling(url: string) {
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
-  }
-  return response
-}
+// Create a base HTTP client with ky
+const httpClient = ky.create({
+  throwHttpErrors: true,
+  retry: 0
+})
 
 const textCache = new Map<string, string>()
 const jsonCache = new Map<string, unknown>()
@@ -40,14 +34,21 @@ export async function getText(url: string, options?: FetchOptions): Promise<stri
     return textCache.get(url)!
   }
 
-  const response = await fetchWithErrorHandling(url)
-  const text = await response.text()
+  try {
+    const text = await httpClient.get(url).text()
 
-  if (options?.cached) {
-    textCache.set(url, text)
+    if (options?.cached) {
+      textCache.set(url, text)
+    }
+
+    return text
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const response = error.response
+      throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
+    }
+    throw error
   }
-
-  return text
 }
 
 /**
@@ -63,12 +64,19 @@ export async function getJSON<T = unknown>(url: string, options?: FetchOptions):
     return jsonCache.get(url) as T
   }
 
-  const response = await fetchWithErrorHandling(url)
-  const json = await response.json()
+  try {
+    const json = await httpClient.get(url).json<T>()
 
-  if (options?.cached) {
-    jsonCache.set(url, json)
+    if (options?.cached) {
+      jsonCache.set(url, json)
+    }
+
+    return json
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const response = error.response
+      throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
+    }
+    throw error
   }
-
-  return json
 }
