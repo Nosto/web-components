@@ -98,9 +98,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await expect(getExampleHandles(testRoot)).rejects.toThrow(
-      `Failed to fetch example handles from ${endpoint}: 404 Not Found`
-    )
+    await expect(getExampleHandles(testRoot)).rejects.toThrow(`Failed to fetch ${endpoint}: 404 Not Found`)
   })
 
   it("should return empty array when products data is missing", async () => {
