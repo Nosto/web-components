@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
-import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
+import { shopifyRootDecorator, gridLayoutArgTypes } from "../../storybookUtils"
+import { exampleHandlesLoader } from "../../storybook"
 
 const root = "https://nosto-shopify1.myshopify.com/"
 
@@ -13,15 +14,7 @@ window.Shopify = {
 const meta = {
   title: "Components/DynamicCard",
   component: "nosto-dynamic-card",
-  decorators: [
-    (story, context) => {
-      // Update Shopify root if provided via args
-      if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
-      }
-      return story()
-    }
-  ],
+  decorators: [shopifyRootDecorator],
   argTypes: {
     root: {
       control: "text",
@@ -53,22 +46,7 @@ type Story = StoryObj
 
 export const Default: Story = {
   loaders: [exampleHandlesLoader],
-  argTypes: {
-    columns: {
-      description: "Number of columns to display in the grid",
-      control: { type: "range", min: 1, max: 8, step: 1 },
-      table: {
-        category: "Layout options"
-      }
-    },
-    products: {
-      description: "Number of products to display in the grid",
-      control: { type: "range", min: 1, max: 20, step: 1 },
-      table: {
-        category: "Layout options"
-      }
-    }
-  },
+  argTypes: gridLayoutArgTypes,
   args: {
     columns: 4,
     products: 12

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
+import { setupMockNostoCart } from "../../storybookUtils"
 import "./Product.stories.css"
 
 function generateSampleProducts() {
@@ -88,19 +89,7 @@ export default meta
 type Story = StoryObj
 
 // Mock Nosto cart function for stories
-if (typeof window !== "undefined") {
-  interface NostoWindow extends Window {
-    Nosto?: {
-      addSkuToCart: (skuId: string, productId: string, recoId: string) => void
-    }
-  }
-  ;(window as NostoWindow).Nosto = {
-    addSkuToCart: (skuId: string, productId: string, recoId: string) => {
-      console.log("Add to cart clicked:", { skuId, productId, recoId })
-      alert(`Added SKU ${skuId} of product ${productId} to cart (Recommendation: ${recoId})`)
-    }
-  }
-}
+setupMockNostoCart(true)
 
 export const DualSkuSelection: Story = {
   render: () => {

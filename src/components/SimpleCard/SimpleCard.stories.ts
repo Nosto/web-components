@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { ifDefined } from "lit/directives/if-defined.js"
-import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
+import { shopifyRootDecorator, shopifyProductArgTypes, gridLayoutArgTypes, shopifyLoaders } from "../../storybookUtils"
 
 const root = "https://nosto-shopify1.myshopify.com/"
 
@@ -14,44 +14,9 @@ window.Shopify = {
 const meta: Meta = {
   title: "Components/SimpleCard",
   component: "nosto-simple-card",
-  decorators: [
-    (story, context) => {
-      // Update Shopify root if provided via args
-      if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
-      }
-      return story()
-    }
-  ],
-  loaders: [exampleHandlesLoader],
-  argTypes: {
-    root: {
-      control: "text",
-      description: "The Shopify store root URL"
-    },
-    imageMode: {
-      control: "select",
-      options: ["", "alternate", "carousel"],
-      description:
-        'Image display mode. Use "alternate" for hover image swap or "carousel" for image carousel with navigation'
-    },
-    brand: {
-      control: "boolean",
-      description: "Show brand/vendor data"
-    },
-    discount: {
-      control: "boolean",
-      description: "Show discount data"
-    },
-    rating: {
-      control: "number",
-      description: "Product rating (0-5 stars)"
-    },
-    sizes: {
-      control: "text",
-      description: "The sizes attribute for responsive images"
-    }
-  },
+  decorators: [shopifyRootDecorator],
+  loaders: shopifyLoaders,
+  argTypes: shopifyProductArgTypes,
   args: {
     root,
     imageMode: "",
@@ -67,22 +32,7 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
-  argTypes: {
-    columns: {
-      description: "Number of columns to display in the grid",
-      control: { type: "range", min: 1, max: 8, step: 1 },
-      table: {
-        category: "Layout options"
-      }
-    },
-    products: {
-      description: "Number of products to display in the grid",
-      control: { type: "range", min: 1, max: 20, step: 1 },
-      table: {
-        category: "Layout options"
-      }
-    }
-  },
+  argTypes: gridLayoutArgTypes,
   args: {
     columns: 4,
     products: 12

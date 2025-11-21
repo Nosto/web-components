@@ -22,9 +22,7 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/single-value-demo-tshirt",
   availableForSale: true,
-  images: [
-    createMockImage("https://picsum.photos/400/400?random=1")
-  ],
+  images: [createMockImage("https://picsum.photos/400/400?random=1")],
   featuredImage: createMockImage("https://picsum.photos/400/400?random=1"),
   adjacentVariants: [],
   options: [
@@ -138,9 +136,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
   onlineStoreUrl: "/products/all-single-value-product",
   availableForSale: true,
   adjacentVariants: [],
-  images: [
-    createMockImage("https://picsum.photos/400/400?random=1")
-  ],
+  images: [createMockImage("https://picsum.photos/400/400?random=1")],
   featuredImage: createMockImage("https://picsum.photos/400/400?random=1"),
   options: [
     {
