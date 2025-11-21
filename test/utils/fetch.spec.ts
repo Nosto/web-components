@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { getText, getJSON } from "@/utils/fetch"
+import { getText, getJSON, postJSON } from "@/utils/fetch"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 
@@ -160,6 +160,170 @@ describe("fetch facade", () => {
 
       expect(textResult).toBe('{"message": "Hello"}')
       expect(jsonResult).toEqual({ message: "Hello" })
+    })
+  })
+
+  describe("postJSON", () => {
+    it("should POST JSON body and return JSON response", async () => {
+      const requestBody = { name: "Test", value: 42 }
+      const responseBody = { success: true, id: 123 }
+
+      addHandlers(
+        http.post("https://api.example.com/data", async ({ request }) => {
+          const body = await request.json()
+          expect(body).toEqual(requestBody)
+          return HttpResponse.json(responseBody)
+        })
+      )
+
+      const result = await postJSON("https://api.example.com/data", requestBody)
+      expect(result).toEqual(responseBody)
+    })
+
+    it("should send Content-Type header as application/json", async () => {
+      let contentType: string | null = null
+
+      addHandlers(
+        http.post("https://api.example.com/test", async ({ request }) => {
+          contentType = request.headers.get("Content-Type")
+          return HttpResponse.json({ ok: true })
+        })
+      )
+
+      await postJSON("https://api.example.com/test", { test: "data" })
+      expect(contentType).toBe("application/json")
+    })
+
+    it("should throw error when POST response is not ok", async () => {
+      addHandlers(
+        http.post("https://api.example.com/error", () => {
+          return HttpResponse.json({ error: "Bad Request" }, { status: 400 })
+        })
+      )
+
+      await expect(postJSON("https://api.example.com/error", { data: "test" })).rejects.toThrow(
+        "Failed to fetch https://api.example.com/error: 400 Bad Request"
+      )
+    })
+
+    it("should cache POST responses when cached option is true", async () => {
+      let callCount = 0
+      const requestBody = { query: "test" }
+
+      addHandlers(
+        http.post("https://api.example.com/graphql", () => {
+          callCount++
+          return HttpResponse.json({ count: callCount, data: "response" })
+        })
+      )
+
+      const result1 = await postJSON("https://api.example.com/graphql", requestBody, { cached: true })
+      const result2 = await postJSON("https://api.example.com/graphql", requestBody, { cached: true })
+
+      expect(result1).toEqual({ count: 1, data: "response" })
+      expect(result2).toEqual({ count: 1, data: "response" })
+      expect(callCount).toBe(1)
+    })
+
+    it("should not cache POST responses when cached option is false or not provided", async () => {
+      let callCount = 0
+      const requestBody = { query: "test" }
+
+      addHandlers(
+        http.post("https://api.example.com/graphql", () => {
+          callCount++
+          return HttpResponse.json({ count: callCount, data: "response" })
+        })
+      )
+
+      const result1 = await postJSON("https://api.example.com/graphql", requestBody)
+      const result2 = await postJSON("https://api.example.com/graphql", requestBody, { cached: false })
+
+      expect(result1).toEqual({ count: 1, data: "response" })
+      expect(result2).toEqual({ count: 2, data: "response" })
+      expect(callCount).toBe(2)
+    })
+
+    it("should cache based on both URL and body content", async () => {
+      let callCount = 0
+
+      addHandlers(
+        http.post("https://api.example.com/graphql", () => {
+          callCount++
+          return HttpResponse.json({ count: callCount })
+        })
+      )
+
+      // Same URL, different body - should not use cache
+      const result1 = await postJSON("https://api.example.com/graphql", { query: "first" }, { cached: true })
+      const result2 = await postJSON("https://api.example.com/graphql", { query: "second" }, { cached: true })
+
+      expect(result1).toEqual({ count: 1 })
+      expect(result2).toEqual({ count: 2 })
+      expect(callCount).toBe(2)
+
+      // Same URL and body - should use cache
+      const result3 = await postJSON("https://api.example.com/graphql", { query: "first" }, { cached: true })
+      expect(result3).toEqual({ count: 1 })
+      expect(callCount).toBe(2)
+    })
+
+    it("should handle complex nested body structures", async () => {
+      const complexBody = {
+        query: "{ product { title } }",
+        variables: {
+          handle: "test-product",
+          options: ["size", "color"],
+          metadata: { nested: { value: 123 } }
+        }
+      }
+
+      addHandlers(
+        http.post("https://api.example.com/graphql", async ({ request }) => {
+          const body = await request.json()
+          expect(body).toEqual(complexBody)
+          return HttpResponse.json({ success: true })
+        })
+      )
+
+      const result = await postJSON("https://api.example.com/graphql", complexBody)
+      expect(result).toEqual({ success: true })
+    })
+
+    it("should maintain separate caches for GET and POST requests", async () => {
+      const url = "https://api.example.com/data"
+
+      addHandlers(
+        http.get(url, () => {
+          return HttpResponse.json({ method: "GET" })
+        }),
+        http.post(url, () => {
+          return HttpResponse.json({ method: "POST" })
+        })
+      )
+
+      const getResult = await getJSON(url, { cached: true })
+      const postResult = await postJSON(url, { test: "data" }, { cached: true })
+
+      expect(getResult).toEqual({ method: "GET" })
+      expect(postResult).toEqual({ method: "POST" })
+    })
+
+    it("should support TypeScript generic types", async () => {
+      interface TestResponse {
+        id: number
+        name: string
+      }
+
+      addHandlers(
+        http.post("https://api.example.com/typed", () => {
+          return HttpResponse.json({ id: 1, name: "Test" })
+        })
+      )
+
+      const result = await postJSON<TestResponse>("https://api.example.com/typed", { query: "test" })
+      expect(result.id).toBe(1)
+      expect(result.name).toBe("Test")
     })
   })
 })
