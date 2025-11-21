@@ -64,19 +64,18 @@ export function htmlMinifierPlugin() {
   return {
     name: "html-minifier",
     setup(build) {
-      const shouldMinify = build.initialOptions.minify || build.initialOptions.minifyWhitespace
-
-      // Only process files when minification is enabled
-      if (!shouldMinify) {
-        return
-      }
-
       // Process TypeScript files in components directory
       build.onLoad({ filter: /src\/components\/.*\.ts$/ }, async args => {
         const contents = await fs.promises.readFile(args.path, "utf8")
 
         // Skip files that don't use html template literals
         if (!contents.includes("html`")) {
+          return null
+        }
+
+        // Only minify when minification is enabled
+        const shouldMinify = build.initialOptions.minify || build.initialOptions.minifyWhitespace
+        if (!shouldMinify) {
           return null
         }
 
@@ -100,23 +99,21 @@ export function htmlMinifierPlugin() {
  * Minifies HTML content in template literals while preserving dynamic expressions
  */
 async function minifyHtmlTemplates(contents) {
-  let result = contents
   const matches = []
-
-  // Find all html` occurrences
   let searchIndex = 0
-  while (searchIndex < contents.length) {
+
+  // Find all html` template literals
+  while (true) {
     const htmlIndex = contents.indexOf("html`", searchIndex)
     if (htmlIndex === -1) break
 
-    // Find the matching closing backtick
-    const templateStart = htmlIndex + 5 // After "html`"
+    const templateStart = htmlIndex + 5
     const templateEnd = findTemplateEnd(contents, templateStart)
 
     if (templateEnd !== -1) {
       matches.push({
         start: htmlIndex,
-        end: templateEnd + 1, // Include the closing backtick
+        end: templateEnd + 1,
         templateContent: contents.slice(templateStart, templateEnd)
       })
       searchIndex = templateEnd + 1
@@ -126,16 +123,15 @@ async function minifyHtmlTemplates(contents) {
   }
 
   // Process matches in reverse order to maintain correct string positions
+  let result = contents
   for (let i = matches.length - 1; i >= 0; i--) {
     const match = matches[i]
 
     try {
       const minifiedTemplate = await minifyTemplateContent(match.templateContent)
       const replacement = `html\`${minifiedTemplate}\``
-
       result = result.slice(0, match.start) + replacement + result.slice(match.end)
     } catch (error) {
-      // If minification fails for this template, keep the original
       console.warn(`Failed to minify template:`, error.message)
     }
   }
