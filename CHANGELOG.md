@@ -1,3 +1,10 @@
+## [10.1.3](https://github.com/Nosto/web-components/compare/v10.1.2...v10.1.3) (2025-11-21)
+
+
+### Bug Fixes
+
+* fix root override ([f5e7866](https://github.com/Nosto/web-components/commit/f5e786672f781e131603568f0cdf77717f9dd86b))
+
 ## [10.1.2](https://github.com/Nosto/web-components/compare/v10.1.1...v10.1.2) (2025-11-21)
 
 
