@@ -1,16 +1,5 @@
 import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
-
-/**
- * Updates the global Shopify configuration for Storybook stories
- * @param rootUrl - The Shopify store root URL
- */
-export function updateShopifyRoot(rootUrl: string) {
-  window.Shopify = {
-    routes: {
-      root: rootUrl
-    }
-  }
-}
+export { setRootOverride as updateShopifyRoot } from "./utils/createShopifyUrl"
 
 export const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
   const { products, root: argRoot } = context.args
