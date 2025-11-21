@@ -5,11 +5,12 @@ interface FetchOptions {
 /**
  * Internal function to handle common fetch logic with error checking.
  * @param url - The URL to fetch
+ * @param options - Optional fetch options
  * @returns Promise that resolves to the Response object
  * @throws Error if the fetch request fails
  */
-async function fetchWithErrorHandling(url: string) {
-  const response = await fetch(url)
+async function fetchWithErrorHandling(url: string, options?: RequestInit) {
+  const response = await fetch(url, options)
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
   }
@@ -94,17 +95,13 @@ export async function getJSON<T = unknown>(url: string, options?: FetchOptions):
  * @throws Error if the fetch request fails or JSON parsing fails
  */
 export async function postJSON<T = unknown>(url: string, body: unknown): Promise<T> {
-  const response = await fetch(url, {
+  const response = await fetchWithErrorHandling(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(body)
   })
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
-  }
 
   const json = await response.json()
 
