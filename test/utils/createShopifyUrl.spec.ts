@@ -1,15 +1,23 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 
+function mockLocation(mockValue: Partial<Location> = {}) {
+  Object.defineProperty(window, "location", {
+    value: {
+      href: "https://example.com",
+      origin: "https://example.com",
+      ...mockValue
+    },
+    writable: true
+  })
+}
+
 describe("createShopifyUrl", () => {
   beforeEach(() => {
     // Reset window.Shopify before each test
     delete (window as unknown as { Shopify?: unknown }).Shopify
     // Mock window.location.href
-    Object.defineProperty(window, "location", {
-      value: { href: "https://example.com" },
-      writable: true
-    })
+    mockLocation()
   })
 
   it("creates URL with default root when Shopify not available", () => {
@@ -33,5 +41,16 @@ describe("createShopifyUrl", () => {
     ;(window as unknown as { Shopify: { routes: { root: null } } }).Shopify = { routes: { root: null } }
     const result = createShopifyUrl("/products/test")
     expect(result.toString()).toBe("https://example.com/products/test")
+  })
+
+  it("creates URL correctly when root has query parameters", () => {
+    ;(window as unknown as { Shopify: { routes: { root: string } } }).Shopify = {
+      routes: { root: "/en-us/" }
+    }
+    mockLocation({
+      href: "https://example.com?ref=test"
+    })
+    const result = createShopifyUrl("/products/test")
+    expect(result.toString()).toBe("https://example.com/en-us/products/test")
   })
 })
