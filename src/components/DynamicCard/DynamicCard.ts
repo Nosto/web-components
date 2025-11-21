@@ -82,7 +82,7 @@ const httpClient = ky.create()
 const placeholders = new Map<string, string>()
 
 const [fetchMarkup] = cached(async (url: string) => {
-  return await httpClient.get(url).text()
+  return httpClient.get(url).text()
 })
 
 async function loadAndRenderMarkup(element: DynamicCard) {
