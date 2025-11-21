@@ -63,7 +63,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     expect(dropdown).toBeTruthy()
 
     const options = dropdown.querySelectorAll("option")
@@ -100,7 +100,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     const options = dropdown.querySelectorAll("option")
 
     expect(options[0].disabled).toBe(true)
@@ -128,7 +128,7 @@ describe("VariantSelector - Compact Mode", () => {
     ) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     expect(dropdown.value).toBe("gid://shopify/ProductVariant/1002") // Should select Medium/Blue
   })
 
@@ -148,7 +148,7 @@ describe("VariantSelector - Compact Mode", () => {
       eventDetail = (e as CustomEvent).detail
     })
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     dropdown.value = "gid://shopify/ProductVariant/1002"
     dropdown.dispatchEvent(new Event("change", { bubbles: true }))
 
@@ -186,7 +186,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     dropdown.value = "gid://shopify/ProductVariant/1002"
     dropdown.dispatchEvent(new Event("change", { bubbles: true }))
 
@@ -204,7 +204,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="single-value-test" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     expect(dropdown).toBeTruthy()
 
     const options = dropdown.querySelectorAll("option")
@@ -235,7 +235,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="all-unavailable-product" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     expect(dropdown).toBeTruthy()
     expect(dropdown.disabled).toBe(true)
   })
@@ -256,7 +256,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="one-available-product" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     expect(dropdown).toBeTruthy()
     expect(dropdown.disabled).toBe(false)
   })
@@ -269,7 +269,7 @@ describe("VariantSelector - Compact Mode", () => {
     const selector = (<nosto-variant-selector handle="unordered-variant-product" mode="compact" />) as VariantSelector
     await selector.connectedCallback()
 
-    const dropdown = selector.shadowRoot!.querySelector(".variant-dropdown") as HTMLSelectElement
+    const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
     const options = dropdown.querySelectorAll("option")
 
     // Expect options to be sorted as Small, Medium, Large based on first option value order
