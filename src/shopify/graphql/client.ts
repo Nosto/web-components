@@ -5,6 +5,6 @@ export const graphqlClient = ky.create({
     "Content-Type": "application/json"
   },
   retry: 2,
-  timeout: 10000
+  timeout: 10000,
+  throwHttpErrors: true
 })
-
