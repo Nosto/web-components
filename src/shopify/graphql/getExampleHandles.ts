@@ -1,17 +1,7 @@
 import ky, { HTTPError } from "ky"
 import { cached } from "@/utils/cached"
 import getExampleHandlesQuery from "@/shopify/graphql/getExampleHandles.graphql?raw"
-
-// Create a GraphQL client with ky
-const graphqlClient = ky.create({
-  headers: {
-    "Content-Type": "application/json"
-  },
-  retry: 2,
-  timeout: 10000,
-  throwHttpErrors: true
-})
-
+import { graphqlClient } from "@/shopify/graphql/client"
 export const [getExampleHandles, clearCache] = cached(async (root: string, amount = 12) => {
   const endpoint = `${root}api/2025-10/graphql.json`
   try {
