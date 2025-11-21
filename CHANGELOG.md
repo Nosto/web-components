@@ -1,3 +1,12 @@
+## [10.1.2](https://github.com/Nosto/web-components/compare/v10.1.1...v10.1.2) (2025-11-21)
+
+
+### Bug Fixes
+
+* handle case where  routes.root could be empty ([d0cef17](https://github.com/Nosto/web-components/commit/d0cef17ae4a4dc11eaeada4eaa6c8ca2f60e82a2))
+* handle shopify design mode (theme editor) ([2261400](https://github.com/Nosto/web-components/commit/22614000a8d290e5708a54498e424f2286e35258))
+* simplify resolveUrl ([22514a0](https://github.com/Nosto/web-components/commit/22514a06317462365f080114104782f34085986c))
+
 ## [10.1.1](https://github.com/Nosto/web-components/compare/v10.1.0...v10.1.1) (2025-11-21)
 
 
