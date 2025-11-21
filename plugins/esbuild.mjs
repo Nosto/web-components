@@ -72,7 +72,7 @@ export function htmlMinifierPlugin() {
         if (!contents.includes("html`")) {
           return null
         }
-
+      build.onLoad({ filter: /[/\\]src[/\\]components[/\\].*\.ts$/ }, async args => {
         // Only minify when minification is enabled
         const shouldMinify = build.initialOptions.minify || build.initialOptions.minifyWhitespace
         if (!shouldMinify) {
