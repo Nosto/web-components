@@ -1,7 +1,7 @@
 import { nostojs } from "@nosto/nosto-js"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
-import styles from "./styles.css"
+import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
