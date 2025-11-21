@@ -1,3 +1,10 @@
+## [10.1.1](https://github.com/Nosto/web-components/compare/v10.1.0...v10.1.1) (2025-11-21)
+
+
+### Bug Fixes
+
+* update createShopifyUrl to handle query params in URL ([cf2eb43](https://github.com/Nosto/web-components/commit/cf2eb435e7d184d156fd94afe119d7aed5578a09))
+
 # [10.1.0](https://github.com/Nosto/web-components/compare/v10.0.2...v10.1.0) (2025-11-21)
 
 
