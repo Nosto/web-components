@@ -53,4 +53,14 @@ describe("createShopifyUrl", () => {
     const result = createShopifyUrl("/products/test")
     expect(result.toString()).toBe("https://example.com/en-us/products/test")
   })
+
+  it("handles design mode by using location origin and Shopify root", () => {
+    ;(window as unknown as { Shopify: { routes: { root: string }; designMode: boolean } }).Shopify = {
+      routes: { root: "/dev-store/" },
+      designMode: true
+    }
+
+    const result = createShopifyUrl("/products/test")
+    expect(result.toString()).toBe("https://example.com/dev-store/products/test")
+  })
 })
