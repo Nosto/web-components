@@ -84,23 +84,18 @@ const defaultImageSizes = `(min-width: 1024px) 25vw,
 export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string): HTMLElement {
   const { style, ...props } = transform(getImageProps(image, sizes))
 
-  // Create img element
-  const img = document.createElement("img")
-  img.alt = alt
-  img.setAttribute("part", className)
-  img.className = className
-  img.width = image.width
-  img.height = image.height
-
-  // Apply transformed props (srcset, sizes, etc.)
-  Object.entries(props).forEach(([key, value]) => {
-    if (value != null) {
-      img.setAttribute(key, String(value))
-    }
-  })
-
-  // Apply styles
-  Object.assign(img.style, style as Record<string, string>)
+  // Use JSX to create img element
+  const img = (
+    <img
+      alt={alt}
+      part={className}
+      class={className}
+      width={image.width}
+      height={image.height}
+      {...props}
+      style={style as Record<string, string>}
+    />
+  ) as HTMLImageElement
 
   return img
 }
