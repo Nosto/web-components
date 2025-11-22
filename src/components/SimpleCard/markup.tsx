@@ -7,7 +7,7 @@ import { ShopifyImage, ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/sh
 import { generateCarouselHTML } from "./carousel"
 import { parseId } from "@/shopify/graphql/utils"
 
-export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
+export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
 
   const prices = (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || product
@@ -46,7 +46,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
   )
 }
 
-function generateImageHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
+function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   // Use media objects first, fallback to images array
   const primaryImage = product.images?.[0]
   if (!primaryImage) {
@@ -81,7 +81,7 @@ const defaultImageSizes = `(min-width: 1024px) 25vw,
     (min-width: 375px) 50vw,
     100vw`
 
-export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string): HTMLElement {
+export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string) {
   const { style, ...props } = transform(getImageProps(image, sizes))
 
   // Use JSX to create img element
@@ -109,7 +109,7 @@ function getImageProps(image: ShopifyImage, sizes?: string) {
   }
 }
 
-function generateRatingHTML(rating: number): HTMLElement {
+function generateRatingHTML(rating: number) {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5

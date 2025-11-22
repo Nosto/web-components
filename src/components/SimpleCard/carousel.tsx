@@ -3,7 +3,7 @@ import type { SimpleCard } from "./SimpleCard"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { generateImgHtml } from "./markup"
 
-export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
+export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
   const images = product.images
   return (
     <div class="image carousel" part="image">

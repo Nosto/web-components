@@ -1,6 +1,6 @@
 import { createElement } from "@/templating/jsx"
 
-export function generateMockMarkup(): HTMLElement {
+export function generateMockMarkup() {
   return (
     <div class="card">
       <div class="image">

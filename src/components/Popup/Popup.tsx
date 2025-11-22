@@ -84,7 +84,7 @@ function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open
         <slot name="ribbon">Open</slot>
       </div>
     </div>
-  ) as HTMLElement
+  )
 
   setShadowContent(element, container)
   if (mode === "open") {

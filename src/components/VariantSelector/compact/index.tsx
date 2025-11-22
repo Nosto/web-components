@@ -27,7 +27,7 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   }
 }
 
-function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct): HTMLElement {
+function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no variants
   if (!product.variants || product.variants.length === 0) {
     return <slot></slot>
@@ -94,11 +94,7 @@ function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct)
   return variant ? variant.id : product.variants[0].id
 }
 
-function generateVariantOption(
-  variant: ShopifyVariant,
-  selectedVariantGid: string,
-  fixedOptions: string[]
-): HTMLElement {
+function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: string, fixedOptions: string[]) {
   const isSelected = selectedVariantGid === variant.id
   const isDisabled = !variant.availableForSale
 

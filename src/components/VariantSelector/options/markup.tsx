@@ -2,7 +2,7 @@ import { createElement } from "@/templating/jsx"
 import type { VariantSelector } from "../VariantSelector"
 import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
 
-export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct): HTMLElement {
+export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no options
   if (!product.options || product.options.length === 0) {
     return <slot></slot>
@@ -24,7 +24,7 @@ export function generateVariantSelectorHTML(element: VariantSelector, product: S
   )
 }
 
-function generateOptionRowHTML(option: ShopifyOption, maxValues?: number): HTMLElement | string {
+function generateOptionRowHTML(option: ShopifyOption, maxValues?: number) {
   if (option.optionValues.length <= 1) {
     return ""
   }
@@ -45,7 +45,7 @@ function generateOptionRowHTML(option: ShopifyOption, maxValues?: number): HTMLE
   )
 }
 
-function generateEllipsis(moreCount: number): HTMLElement {
+function generateEllipsis(moreCount: number) {
   return (
     <span class="ellipsis" part="ellipsis" role="img" aria-label={`${moreCount} more options`}>
       …
@@ -53,7 +53,7 @@ function generateEllipsis(moreCount: number): HTMLElement {
   )
 }
 
-function generateOptionValueHTML(name: string, value: ShopifyOptionValue): HTMLElement {
+function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {
   // TODO expand to actual swatch rendering
   return (
     <button type="button" class="value" part="value" data-option-name={name} data-option-value={value.name}>
