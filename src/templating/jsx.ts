@@ -93,6 +93,10 @@ function toKebabCase(str: string) {
 
 function applyProperties(element: HTMLElement, props: ElementProps) {
   Object.entries(props).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === false) {
+      // Skip undefined, null, and false values - don't set attributes
+      return
+    }
     if (isEventListener(key, value)) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
     } else if (key === "style") {
