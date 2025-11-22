@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { createElement } from "../../utils/jsx"
+import { createElement } from "@/templating/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import {
   mockProductWithSingleValueOptionTest,

@@ -3,7 +3,7 @@ import { describe, it, expect, vi, afterEach } from "vitest"
 import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { createElement } from "../../utils/jsx"
+import { createElement } from "@/templating/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 

@@ -1,9 +1,9 @@
 /** @jsx jsx */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx/jsx-runtime"
+import { jsx } from "@/templating/jsx"
 import type { SimpleCard } from "./SimpleCard"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
-import type { TemplateExpression } from "@/templating/jsx/jsx-runtime"
+import type { TemplateExpression } from "@/templating/jsx"
 import { generateImgHtml } from "./markup"
 
 export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct): TemplateExpression {

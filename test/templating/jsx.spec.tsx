@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { jsx, jsxs, Fragment, type TemplateExpression } from "@/templating/jsx/jsx-runtime"
+import { jsx, jsxs, Fragment, type TemplateExpression } from "@/templating/jsx"
 
 describe("JSX runtime", () => {
   it("creates simple elements", () => {

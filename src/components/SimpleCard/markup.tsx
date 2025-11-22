@@ -1,8 +1,8 @@
 /** @jsx jsx */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx/jsx-runtime"
+import { jsx } from "@/templating/jsx"
 import type { SimpleCard } from "./SimpleCard"
-import type { TemplateExpression } from "@/templating/jsx/jsx-runtime"
+import type { TemplateExpression } from "@/templating/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"

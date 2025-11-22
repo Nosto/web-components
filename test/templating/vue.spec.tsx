@@ -1,7 +1,7 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { processElement } from "@/templating/vue"
-import { createElement } from "../utils/jsx"
+import { createElement } from "@/templating/jsx"
 
 describe("vue:compile", () => {
   let container: HTMLElement

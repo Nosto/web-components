@@ -1,7 +1,7 @@
 /** @jsx jsx */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx/jsx-runtime"
-import type { TemplateExpression } from "@/templating/jsx/jsx-runtime"
+import { jsx } from "@/templating/jsx"
+import type { TemplateExpression } from "@/templating/jsx"
 
 export function generateMockMarkup(): TemplateExpression {
   return (

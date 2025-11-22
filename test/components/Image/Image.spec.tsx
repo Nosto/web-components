@@ -1,7 +1,7 @@
 /** @jsx createElement */
 import { describe, it, expect } from "vitest"
 import { Image } from "@/components/Image/Image"
-import { createElement } from "../../utils/jsx"
+import { createElement } from "@/templating/jsx"
 
 // TODO: extend this to check the presence of width and height attributes in resulting URL
 describe("Image", () => {
