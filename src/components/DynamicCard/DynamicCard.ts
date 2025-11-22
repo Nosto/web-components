@@ -50,7 +50,7 @@ export class DynamicCard extends NostoElement {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
       }
-      setShadowContent(this, generateMockMarkup().html)
+      setShadowContent(this, generateMockMarkup())
       this.dispatchEvent(
         new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
       )

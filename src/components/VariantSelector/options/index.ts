@@ -25,11 +25,11 @@ export async function loadAndRenderMarkup(element: VariantSelector, initial = fa
     // Initialize selections with first value of each option
     initializeDefaultSelections(element, productData)
 
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+    const selectorElement = generateVariantSelectorHTML(element, productData)
+    setShadowContent(element, selectorElement)
 
     // Cache the rendered HTML for placeholder use
-    placeholder = selectorHTML.html
+    placeholder = selectorElement.outerHTML
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)

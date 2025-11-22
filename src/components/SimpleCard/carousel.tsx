@@ -1,10 +1,9 @@
 import { createElement } from "@/templating/jsx"
 import type { SimpleCard } from "./SimpleCard"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
-import type { TemplateExpression } from "@/templating/jsx"
 import { generateImgHtml } from "./markup"
 
-export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct): TemplateExpression {
+export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
   const images = product.images
   return (
     <div class="image carousel" part="image">

@@ -1,10 +1,9 @@
-/** @jsx createDOMElement */
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createDOMElement } from "@/templating/jsx"
+
+import { createElement } from "@/templating/jsx"
 import type { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithVariants } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"

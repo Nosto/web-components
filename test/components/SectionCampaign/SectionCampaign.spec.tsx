@@ -1,12 +1,11 @@
-/** @jsx createDOMElement */
 import { describe, it, expect, Mock } from "vitest"
 import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../../mockNostoRecs"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createDOMElement } from "@/templating/jsx"
+
+import { createElement } from "@/templating/jsx"
 
 describe("SectionCampaign", () => {
   it("should be defined as a custom element", () => {

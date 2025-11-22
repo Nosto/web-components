@@ -1,15 +1,13 @@
 import { createElement } from "@/templating/jsx"
 import type { SimpleCard } from "./SimpleCard"
-import type { TemplateExpression } from "@/templating/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
 import { ShopifyImage, ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 import { generateCarouselHTML } from "./carousel"
 import { parseId } from "@/shopify/graphql/utils"
-import { escapeHtml } from "@/utils/escapeHtml"
 
-export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): TemplateExpression {
+export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
   const hasDiscount = element.discount && isDiscounted(product)
 
   const prices = (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || product
@@ -48,7 +46,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
   )
 }
 
-function generateImageHTML(element: SimpleCard, product: ShopifyProduct): TemplateExpression {
+function generateImageHTML(element: SimpleCard, product: ShopifyProduct): HTMLElement {
   // Use media objects first, fallback to images array
   const primaryImage = product.images?.[0]
   if (!primaryImage) {
@@ -83,25 +81,28 @@ const defaultImageSizes = `(min-width: 1024px) 25vw,
     (min-width: 375px) 50vw,
     100vw`
 
-export function generateImgHtml(
-  image: ShopifyImage,
-  alt: string,
-  className: string,
-  sizes?: string
-): TemplateExpression {
+export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string): HTMLElement {
   const { style, ...props } = transform(getImageProps(image, sizes))
 
-  // Manual HTML construction is necessary here because the transform() function
-  // returns a dynamic set of attributes (srcset, sizes, etc.) that can't be
-  // statically expressed in JSX. This approach ensures all values are properly escaped.
-  const additionalAttrs = Object.entries(props)
-    .filter(([, value]) => value != null)
-    .map(([key, value]) => `${key}="${escapeHtml(String(value))}"`)
-    .join(" ")
+  // Create img element
+  const img = document.createElement("img")
+  img.alt = alt
+  img.setAttribute("part", className)
+  img.className = className
+  img.width = image.width
+  img.height = image.height
 
-  return {
-    html: `<img alt="${escapeHtml(alt)}" part="${escapeHtml(className)}" class="${escapeHtml(className)}" width="${image.width}" height="${image.height}" ${additionalAttrs} style="${escapeHtml(styleText(style as object))}" />`
-  }
+  // Apply transformed props (srcset, sizes, etc.)
+  Object.entries(props).forEach(([key, value]) => {
+    if (value != null) {
+      img.setAttribute(key, String(value))
+    }
+  })
+
+  // Apply styles
+  Object.assign(img.style, style as Record<string, string>)
+
+  return img
 }
 
 function getImageProps(image: ShopifyImage, sizes?: string) {
@@ -113,13 +114,7 @@ function getImageProps(image: ShopifyImage, sizes?: string) {
   }
 }
 
-function styleText(style: object) {
-  return Object.entries(style)
-    .map(([key, value]) => `${key}: ${value};`)
-    .join(" ")
-}
-
-function generateRatingHTML(rating: number): TemplateExpression {
+function generateRatingHTML(rating: number): HTMLElement {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5

@@ -11,39 +11,39 @@ describe("generateImgHtml", () => {
     } as ShopifyImage
   }
 
-  it("should generate img HTML with required attributes for non-Shopify image", () => {
-    const result = generateImgHtml(createImage("image.jpg"), "Test Alt", "test-class").html
+  it("should generate img element with required attributes for non-Shopify image", () => {
+    const result = generateImgHtml(createImage("image.jpg"), "Test Alt", "test-class") as HTMLImageElement
 
-    expect(result).toContain('alt="Test Alt"')
-    expect(result).toContain('class="test-class"')
-    expect(result).toContain('sizes="(min-width: 1024px) 25vw')
-    expect(result).toContain('loading="lazy"')
-    expect(result).toContain('decoding="async"')
-    expect(result).toContain('src="image.jpg"')
-    expect(result).toContain('width="800"')
-    expect(result).toContain('height="800"')
-    expect(result).toContain("object-fit: cover;")
-    expect(result).toContain("max-width: 800px;")
-    expect(result).toContain("max-height: 800px;")
-    expect(result).toContain("aspect-ratio: 1;")
-    expect(result).toContain("width: 100%;")
+    expect(result.alt).toBe("Test Alt")
+    expect(result.className).toBe("test-class")
+    expect(result.getAttribute("sizes")).toContain("(min-width: 1024px) 25vw")
+    expect(result.getAttribute("loading")).toBe("lazy")
+    expect(result.getAttribute("decoding")).toBe("async")
+    expect(result.src).toContain("image.jpg")
+    expect(result.width).toBe(800)
+    expect(result.height).toBe(800)
+    expect(result.style.objectFit).toBe("cover")
+    expect(result.style.maxWidth).toBe("800px")
+    expect(result.style.maxHeight).toBe("800px")
+    expect(result.style.aspectRatio).toBe("1")
+    expect(result.style.width).toBe("100%")
   })
 
-  it("should generate img HTML with required attributes for Shopify image", () => {
+  it("should generate img element with required attributes for Shopify image", () => {
     const src = "https://cdn.shopify.com/s/files/1/1183/1048/products/img.jpg"
-    const result = generateImgHtml(createImage(src), "Test Alt", "test-class").html
+    const result = generateImgHtml(createImage(src), "Test Alt", "test-class") as HTMLImageElement
 
-    expect(result).toContain('alt="Test Alt"')
-    expect(result).toContain('class="test-class"')
-    expect(result).toContain('sizes="(min-width: 1024px) 25vw')
-    expect(result).toContain('loading="lazy"')
-    expect(result).toContain('decoding="async"')
-    expect(result).toContain('src="https://cdn.shopify.com/s/files/1/1183/1048/products/img.jpg?width=800')
-    expect(result).toContain("srcset=")
-    expect(result).toContain("object-fit: cover;")
-    expect(result).toContain("max-width: 800px;")
-    expect(result).toContain("max-height: 800px;")
-    expect(result).toContain("aspect-ratio: 1;")
-    expect(result).toContain("width: 100%;")
+    expect(result.alt).toBe("Test Alt")
+    expect(result.className).toBe("test-class")
+    expect(result.getAttribute("sizes")).toContain("(min-width: 1024px) 25vw")
+    expect(result.getAttribute("loading")).toBe("lazy")
+    expect(result.getAttribute("decoding")).toBe("async")
+    expect(result.src).toContain("https://cdn.shopify.com/s/files/1/1183/1048/products/img.jpg?width=800")
+    expect(result.getAttribute("srcset")).toBeTruthy()
+    expect(result.style.objectFit).toBe("cover")
+    expect(result.style.maxWidth).toBe("800px")
+    expect(result.style.maxHeight).toBe("800px")
+    expect(result.style.aspectRatio).toBe("1")
+    expect(result.style.width).toBe("100%")
   })
 })

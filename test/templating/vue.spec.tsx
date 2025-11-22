@@ -1,8 +1,7 @@
-/** @jsx createDOMElement */
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { processElement } from "@/templating/vue"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createDOMElement } from "@/templating/jsx"
+
+import { createElement } from "@/templating/jsx"
 
 describe("vue:compile", () => {
   let container: HTMLElement

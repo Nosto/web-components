@@ -138,8 +138,8 @@ function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDe
 async function loadAndRenderMarkup(element: SimpleCard) {
   if (element.product) {
     const normalized = convertProduct(element.product)
-    const cardHTML = generateCardHTML(element, normalized)
-    setShadowContent(element, cardHTML.html)
+    const cardElement = generateCardHTML(element, normalized)
+    setShadowContent(element, cardElement)
     element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   }
   element.toggleAttribute("loading", true)
@@ -147,8 +147,8 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     const productData = element.mock ? mockProduct : await fetchProduct(element.handle)
     element.productId = parseId(productData.id)
 
-    const cardHTML = generateCardHTML(element, productData)
-    setShadowContent(element, cardHTML.html)
+    const cardElement = generateCardHTML(element, productData)
+    setShadowContent(element, cardElement)
     if (!element.product) {
       element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
     }

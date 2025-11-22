@@ -1,8 +1,7 @@
-/** @jsx createDOMElement */
 import { describe, it, expect } from "vitest"
 import { Image } from "@/components/Image/Image"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createDOMElement } from "@/templating/jsx"
+
+import { createElement } from "@/templating/jsx"
 
 // TODO: extend this to check the presence of width and height attributes in resulting URL
 describe("Image", () => {

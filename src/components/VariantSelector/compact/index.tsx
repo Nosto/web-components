@@ -1,5 +1,4 @@
 import { createElement } from "@/templating/jsx"
-import type { TemplateExpression } from "@/templating/jsx"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { VariantSelector } from "../VariantSelector"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
@@ -17,8 +16,8 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   try {
     const productData = await fetchProduct(element.handle)
 
-    const selectorHTML = generateCompactSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+    const selectorElement = generateCompactSelectorHTML(element, productData)
+    setShadowContent(element, selectorElement)
 
     setupDropdownListener(element)
 
@@ -28,7 +27,7 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   }
 }
 
-function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct): TemplateExpression {
+function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct): HTMLElement {
   // Don't render if there are no variants
   if (!product.variants || product.variants.length === 0) {
     return <slot></slot>
@@ -99,7 +98,7 @@ function generateVariantOption(
   variant: ShopifyVariant,
   selectedVariantGid: string,
   fixedOptions: string[]
-): TemplateExpression {
+): HTMLElement {
   const isSelected = selectedVariantGid === variant.id
   const isDisabled = !variant.availableForSale
 

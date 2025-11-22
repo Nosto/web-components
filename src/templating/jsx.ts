@@ -1,4 +1,3 @@
-import { escapeHtml } from "@/utils/escapeHtml"
 import type { Campaign } from "@/components/Campaign/Campaign"
 import type { Control } from "@/components/Control/Control"
 import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
@@ -9,158 +8,8 @@ import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampai
 import type { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
 
-/**
- * TemplateExpression interface for HTML string results
- */
-export interface TemplateExpression {
-  html: string
-}
-
-/**
- * Valid types that can be rendered in JSX
- */
-type JSXChild = string | number | boolean | undefined | null | TemplateExpression | JSXChild[]
-
-type Props = Record<string, unknown> & { children?: JSXChild }
-
-/**
- * Function component type for HTML string generation
- */
-type FunctionComponent = (props: Props | null) => TemplateExpression
-
 // =============================================================================
-// JSX Runtime for HTML String Generation (used in component files)
-// =============================================================================
-
-/**
- * Processes a JSX child value into an HTML string
- */
-function processChild(child: JSXChild): string {
-  if (Array.isArray(child)) {
-    return child.map(processChild).join("")
-  }
-
-  if (child && typeof child === "object" && "html" in child) {
-    return (child as TemplateExpression).html
-  }
-
-  if (child === undefined || child === null || child === false) {
-    return ""
-  }
-
-  if (child === true) {
-    return "true"
-  }
-
-  return escapeHtml(String(child))
-}
-
-/**
- * Processes JSX props into HTML attribute strings
- */
-function processProps(props: Props | null): string {
-  if (!props) return ""
-
-  return Object.entries(props)
-    .filter(([key]) => key !== "children")
-    .map(([key, value]) => {
-      // Handle boolean attributes
-      if (typeof value === "boolean") {
-        return value ? key : ""
-      }
-
-      // Skip null/undefined attributes
-      if (value === null || value === undefined) {
-        return ""
-      }
-
-      // Handle style object
-      if (key === "style" && typeof value === "object") {
-        const styleString = Object.entries(value as Record<string, string>)
-          .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
-          .join("; ")
-        return `style="${styleString}"`
-      }
-
-      // Regular attributes
-      return `${key}="${escapeHtml(String(value))}"`
-    })
-    .filter(Boolean)
-    .join(" ")
-}
-
-/**
- * Self-closing HTML tags
- */
-const SELF_CLOSING_TAGS = [
-  "area",
-  "base",
-  "br",
-  "col",
-  "embed",
-  "hr",
-  "img",
-  "input",
-  "link",
-  "meta",
-  "param",
-  "source",
-  "track",
-  "wbr"
-]
-
-/**
- * JSX factory function that creates HTML strings
- * This is called by the TypeScript compiler for JSX elements
- * When using jsx: "react", children are passed as rest parameters
- */
-export function createElement(
-  tag: string | FunctionComponent,
-  props: Props | null,
-  ...children: JSXChild[]
-): TemplateExpression {
-  // Handle function components
-  if (typeof tag === "function") {
-    return (tag as FunctionComponent)(children?.length ? { ...props, children } : props)
-  }
-
-  const attributes = processProps(props)
-  const attributeString = attributes ? ` ${attributes}` : ""
-
-  // Self-closing tags
-  if (SELF_CLOSING_TAGS.includes(tag)) {
-    return { html: `<${tag}${attributeString} />` }
-  }
-
-  // Regular tags with children
-  const childrenString = children?.length ? children.map(processChild).join("") : ""
-  return { html: `<${tag}${attributeString}>${childrenString}</${tag}>` }
-}
-
-/**
- * JSX function for elements with static children
- * With jsx: "react" mode, this is used for elements with multiple static children
- */
-export function jsxs(
-  tag: string | FunctionComponent,
-  props: Props | null,
-  ...children: JSXChild[]
-): TemplateExpression {
-  return createElement(tag, props, ...children)
-}
-
-/**
- * Fragment component for JSX fragments (<>...</>)
- */
-export function Fragment(_props: Props | null, ...children: JSXChild[]): TemplateExpression {
-  return { html: children?.length ? children.map(processChild).join("") : "" }
-}
-
-// Export for development mode
-export { createElement as jsx, createElement as jsxDEV }
-
-// =============================================================================
-// createElement for DOM Element Generation (used in test files)
+// JSX Factory for DOM Element Generation (used in src and test files)
 // =============================================================================
 
 type MaybeArray<T> = T | T[]
@@ -179,17 +28,17 @@ type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMap
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
-    type Element = TemplateExpression
+    type Element = HTMLElement
     type IntrinsicElements = {
-      "nosto-campaign": ElementMapping<Campaign> & Props
-      "nosto-control": ElementMapping<Control> & Props
-      "nosto-dynamic-card": ElementMapping<DynamicCard> & Props
-      "nosto-image": ElementMapping<Image> & Props
-      "nosto-popup": ElementMapping<Popup> & Props
-      "nosto-product": ElementMapping<Product> & Props
-      "nosto-section-campaign": ElementMapping<SectionCampaign> & Props
-      "nosto-simple-card": ElementMapping<SimpleCard> & Props
-      "nosto-sku-options": ElementMapping<SkuOptions> & Props
+      "nosto-campaign": ElementMapping<Campaign>
+      "nosto-control": ElementMapping<Control>
+      "nosto-dynamic-card": ElementMapping<DynamicCard>
+      "nosto-image": ElementMapping<Image>
+      "nosto-popup": ElementMapping<Popup>
+      "nosto-product": ElementMapping<Product>
+      "nosto-section-campaign": ElementMapping<SectionCampaign>
+      "nosto-simple-card": ElementMapping<SimpleCard>
+      "nosto-sku-options": ElementMapping<SkuOptions>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
@@ -202,12 +51,14 @@ const aliases: Record<string, string> = {
 }
 
 /**
- * Create a DOM element based on the given JSX type, props and children
- * This is used in test files with the @jsx createDOMElement pragma
+ * JSX factory function that creates DOM elements
+ * This is called by the TypeScript compiler for JSX elements
+ * Used in both src and test files
  */
-export function createDOMElement(type: ElementType, props: ElementProps, ...children: Children): HTMLElement {
+export function createElement(type: ElementType, props: ElementProps | null, ...children: Children): HTMLElement {
   if (typeof type === "function") {
-    return children?.length ? type({ ...props, children }) : type(props)
+    const combinedProps = props ? { ...props, children } : { children }
+    return children?.length ? type(combinedProps) : type(props || {})
   }
 
   const element = document.createElement(type)
@@ -216,14 +67,19 @@ export function createDOMElement(type: ElementType, props: ElementProps, ...chil
   return element
 }
 
+// Export aliases for JSX transform compatibility
+export { createElement as jsx, createElement as jsxs, createElement as jsxDEV }
+
 /**
- * Create a HTML fragment based on the given JSX children
+ * Fragment component for JSX fragments (<>...</>)
+ * Creates a document fragment containing the children
  */
-export function createFragment(arg: { children: Children } | null): DocumentFragment {
-  const { children, ...props } = arg ?? { children: [] }
+export function Fragment(arg: { children?: Children } | null, ...children: Children): DocumentFragment {
   const fragment = document.createDocumentFragment()
-  Object.assign(fragment, props)
-  children?.forEach(child => appendChild(fragment, child))
+  const allChildren = arg?.children || children
+  if (Array.isArray(allChildren)) {
+    allChildren.forEach(child => appendChild(fragment, child))
+  }
   return fragment
 }
 
