@@ -1,8 +1,9 @@
-/** @jsx createElement */
+/** @jsx createDOMElement */
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest"
 import { Popup } from "@/components/Popup/Popup"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { createElement } from "@/templating/jsx"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createDOMElement } from "@/templating/jsx"
 
 describe("Popup", () => {
   const popupKey = "nosto:web-components:popup"

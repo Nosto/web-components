@@ -1,9 +1,10 @@
-/** @jsx createElement */
+/** @jsx createDOMElement */
 import { describe, it, beforeEach, expect, vi } from "vitest"
 import "@/components/Product/Product"
 import "@/components/SkuOptions/SkuOptions"
 import { Product } from "@/components/Product/Product"
-import { createElement } from "@/templating/jsx"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createDOMElement } from "@/templating/jsx"
 
 const values = ["black", "white", "blue", "l", "m", "s", "cotton", "silk", "wool"] as const
 type SkuOptionValue = (typeof values)[number]

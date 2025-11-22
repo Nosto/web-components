@@ -1,8 +1,9 @@
-/** @jsx createElement */
+/** @jsx createDOMElement */
 import { describe, it, expect } from "vitest"
 import { Product } from "@/components/Product/Product"
 import "@/components/SkuOptions/SkuOptions"
-import { createElement } from "@/templating/jsx"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createDOMElement } from "@/templating/jsx"
 
 describe("sku options integration", () => {
   const element = (selector: string) => document.querySelector<HTMLElement>(selector)!

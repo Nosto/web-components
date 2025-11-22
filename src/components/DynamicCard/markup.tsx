@@ -1,6 +1,4 @@
-/** @jsx jsx */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx"
+import { createElement } from "@/templating/jsx"
 import type { TemplateExpression } from "@/templating/jsx"
 
 export function generateMockMarkup(): TemplateExpression {
@@ -16,5 +14,5 @@ export function generateMockMarkup(): TemplateExpression {
         <span class="price-original">XX.XX</span>
       </div>
     </div>
-  ) as unknown as TemplateExpression
+  )
 }

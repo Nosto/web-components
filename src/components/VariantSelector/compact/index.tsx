@@ -1,6 +1,4 @@
-/** @jsx jsx */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx"
+import { createElement } from "@/templating/jsx"
 import type { TemplateExpression } from "@/templating/jsx"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { VariantSelector } from "../VariantSelector"
@@ -33,12 +31,12 @@ export async function loadAndRenderCompact(element: VariantSelector) {
 function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct): TemplateExpression {
   // Don't render if there are no variants
   if (!product.variants || product.variants.length === 0) {
-    return (<slot></slot>) as unknown as TemplateExpression
+    return <slot></slot>
   }
 
   // If all variants have only one option combination, don't render the selector
   if (product.variants.length === 1) {
-    return (<slot></slot>) as unknown as TemplateExpression
+    return <slot></slot>
   }
 
   // Determine which variant should be selected
@@ -82,7 +80,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
       </select>
       <slot></slot>
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct) {
@@ -118,7 +116,7 @@ function generateVariantOption(
     <option value={variant.id} selected={isSelected ? true : undefined} disabled={isDisabled ? true : undefined}>
       {title}
     </option>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function setupDropdownListener(element: VariantSelector) {

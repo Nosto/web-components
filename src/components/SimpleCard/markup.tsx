@@ -1,6 +1,4 @@
-/** @jsx jsx */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx"
+import { createElement } from "@/templating/jsx"
 import type { SimpleCard } from "./SimpleCard"
 import type { TemplateExpression } from "@/templating/jsx"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
@@ -47,14 +45,14 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct): 
         <slot></slot>
       </div>
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function generateImageHTML(element: SimpleCard, product: ShopifyProduct): TemplateExpression {
   // Use media objects first, fallback to images array
   const primaryImage = product.images?.[0]
   if (!primaryImage) {
-    return (<div class="image placeholder"></div>) as unknown as TemplateExpression
+    return <div class="image placeholder"></div>
   }
 
   // Carousel mode takes precedence over alternate mode
@@ -70,7 +68,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct): Templa
       {generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
       {hasAlternate && alternateImage && generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)}
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function normalizeUrl(url: string) {
@@ -131,7 +129,7 @@ function generateRatingHTML(rating: number): TemplateExpression {
     <div class="rating" part="rating">
       {starDisplay} ({rating.toFixed(1)})
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function formatPrice({ amount, currencyCode }: ShopifyMoney) {

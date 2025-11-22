@@ -1,6 +1,4 @@
-/** @jsx jsx */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx"
+import { createElement } from "@/templating/jsx"
 import type { SimpleCard } from "./SimpleCard"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import type { TemplateExpression } from "@/templating/jsx"
@@ -25,7 +23,7 @@ export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduc
         ))}
       </div>
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {

@@ -1,9 +1,10 @@
-/** @jsx createElement */
+/** @jsx createDOMElement */
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { createElement } from "@/templating/jsx"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createDOMElement } from "@/templating/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"

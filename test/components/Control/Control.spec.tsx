@@ -1,8 +1,9 @@
-/** @jsx createElement */
+/** @jsx createDOMElement */
 import { describe, beforeEach, it, expect } from "vitest"
 import { Control } from "@/components/Control/Control"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { createElement } from "@/templating/jsx"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createDOMElement } from "@/templating/jsx"
 
 describe("Control", () => {
   beforeEach(() => {

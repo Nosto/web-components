@@ -110,11 +110,15 @@ const SELF_CLOSING_TAGS = [
 ]
 
 /**
- * JSX runtime function that creates HTML strings
- * This is called by the TypeScript compiler for JSX elements in component files
+ * JSX factory function that creates HTML strings
+ * This is called by the TypeScript compiler for JSX elements
  * When using jsx: "react", children are passed as rest parameters
  */
-export function jsx(tag: string | FunctionComponent, props: Props | null, ...children: JSXChild[]): TemplateExpression {
+export function createElement(
+  tag: string | FunctionComponent,
+  props: Props | null,
+  ...children: JSXChild[]
+): TemplateExpression {
   // Handle function components
   if (typeof tag === "function") {
     return (tag as FunctionComponent)(children?.length ? { ...props, children } : props)
@@ -142,7 +146,7 @@ export function jsxs(
   props: Props | null,
   ...children: JSXChild[]
 ): TemplateExpression {
-  return jsx(tag, props, ...children)
+  return createElement(tag, props, ...children)
 }
 
 /**
@@ -153,7 +157,7 @@ export function Fragment(_props: Props | null, ...children: JSXChild[]): Templat
 }
 
 // Export for development mode
-export { jsx as jsxDEV }
+export { createElement as jsx, createElement as jsxDEV }
 
 // =============================================================================
 // createElement for DOM Element Generation (used in test files)
@@ -175,17 +179,17 @@ type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMap
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
-    type Element = HTMLElement
+    type Element = TemplateExpression
     type IntrinsicElements = {
-      "nosto-campaign": ElementMapping<Campaign>
-      "nosto-control": ElementMapping<Control>
-      "nosto-dynamic-card": ElementMapping<DynamicCard>
-      "nosto-image": ElementMapping<Image>
-      "nosto-popup": ElementMapping<Popup>
-      "nosto-product": ElementMapping<Product>
-      "nosto-section-campaign": ElementMapping<SectionCampaign>
-      "nosto-simple-card": ElementMapping<SimpleCard>
-      "nosto-sku-options": ElementMapping<SkuOptions>
+      "nosto-campaign": ElementMapping<Campaign> & Props
+      "nosto-control": ElementMapping<Control> & Props
+      "nosto-dynamic-card": ElementMapping<DynamicCard> & Props
+      "nosto-image": ElementMapping<Image> & Props
+      "nosto-popup": ElementMapping<Popup> & Props
+      "nosto-product": ElementMapping<Product> & Props
+      "nosto-section-campaign": ElementMapping<SectionCampaign> & Props
+      "nosto-simple-card": ElementMapping<SimpleCard> & Props
+      "nosto-sku-options": ElementMapping<SkuOptions> & Props
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
@@ -198,10 +202,10 @@ const aliases: Record<string, string> = {
 }
 
 /**
- * Create an HTML element based on the given JSX type, props and children
- * This is used in test files with the @jsx createElement pragma
+ * Create a DOM element based on the given JSX type, props and children
+ * This is used in test files with the @jsx createDOMElement pragma
  */
-export function createElement(type: ElementType, props: ElementProps, ...children: Children): HTMLElement {
+export function createDOMElement(type: ElementType, props: ElementProps, ...children: Children): HTMLElement {
   if (typeof type === "function") {
     return children?.length ? type({ ...props, children }) : type(props)
   }

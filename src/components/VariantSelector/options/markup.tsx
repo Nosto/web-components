@@ -1,6 +1,4 @@
-/** @jsx jsx */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { jsx } from "@/templating/jsx"
+import { createElement } from "@/templating/jsx"
 import type { TemplateExpression } from "@/templating/jsx"
 import type { VariantSelector } from "../VariantSelector"
 import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/graphql/types"
@@ -8,7 +6,7 @@ import { ShopifyOption, ShopifyOptionValue, ShopifyProduct } from "@/shopify/gra
 export function generateVariantSelectorHTML(element: VariantSelector, product: ShopifyProduct): TemplateExpression {
   // Don't render if there are no options
   if (!product.options || product.options.length === 0) {
-    return (<slot></slot>) as unknown as TemplateExpression
+    return <slot></slot>
   }
 
   // Check if there are any multi-value options (options with more than one value)
@@ -16,7 +14,7 @@ export function generateVariantSelectorHTML(element: VariantSelector, product: S
 
   // If all options are single-value, don't render the selector
   if (!hasMultiValueOptions) {
-    return (<slot></slot>) as unknown as TemplateExpression
+    return <slot></slot>
   }
 
   return (
@@ -24,7 +22,7 @@ export function generateVariantSelectorHTML(element: VariantSelector, product: S
       {product.options.map(option => generateOptionRowHTML(option, element.maxValues))}
       <slot></slot>
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function generateOptionRowHTML(option: ShopifyOption, maxValues?: number): TemplateExpression | string {
@@ -45,7 +43,7 @@ function generateOptionRowHTML(option: ShopifyOption, maxValues?: number): Templ
         {hasMore && generateEllipsis(option.optionValues.length - maxValues!)}
       </div>
     </div>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function generateEllipsis(moreCount: number): TemplateExpression {
@@ -53,7 +51,7 @@ function generateEllipsis(moreCount: number): TemplateExpression {
     <span class="ellipsis" part="ellipsis" role="img" aria-label={`${moreCount} more options`}>
       …
     </span>
-  ) as unknown as TemplateExpression
+  )
 }
 
 function generateOptionValueHTML(name: string, value: ShopifyOptionValue): TemplateExpression {
@@ -62,5 +60,5 @@ function generateOptionValueHTML(name: string, value: ShopifyOptionValue): Templ
     <button type="button" class="value" part="value" data-option-name={name} data-option-value={value.name}>
       {value.name}
     </button>
-  ) as unknown as TemplateExpression
+  )
 }

@@ -1,8 +1,9 @@
-/** @jsx createElement */
+/** @jsx createDOMElement */
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { Product } from "@/components/Product/Product"
 import { EventName } from "@/components/Product/events"
-import { createElement } from "@/templating/jsx"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createDOMElement } from "@/templating/jsx"
 
 describe("Product", () => {
   let element: Product
