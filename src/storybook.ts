@@ -1,5 +1,5 @@
 import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
-export { setRootOverride as updateShopifyRoot } from "./utils/createShopifyUrl"
+export { setRootOverride as updateShopifyRoot } from "./shopify/createShopifyUrl"
 
 export const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
   const { products, root: argRoot } = context.args

@@ -1,6 +1,6 @@
 import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { createShopifyUrl } from "@/shopify/createShopifyUrl"
 import { transform } from "../Image/transform"
 import { setImageProps } from "../Image/Image"
 import { ShopifyImage, ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"

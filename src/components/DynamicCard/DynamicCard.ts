@@ -1,5 +1,5 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { createShopifyUrl } from "@/shopify/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"

@@ -4,7 +4,7 @@ import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { createShopifyUrl } from "@/shopify/createShopifyUrl"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("DynamicCard", () => {

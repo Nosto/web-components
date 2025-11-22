@@ -1,6 +1,6 @@
 import { nostojs } from "@nosto/nosto-js"
 import { getText } from "@/utils/fetch"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { createShopifyUrl } from "@/shopify/createShopifyUrl"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
