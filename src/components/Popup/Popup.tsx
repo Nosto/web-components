@@ -4,6 +4,7 @@ import { NostoElement } from "../Element"
 import styles from "./styles.css?raw"
 import { assertRequired } from "@/utils/assertRequired"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { createElement } from "@/templating/jsx"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -74,24 +75,16 @@ type PopupData = {
 }
 
 function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  const container = document.createElement("div")
-
-  const dialog = document.createElement("dialog")
-  dialog.setAttribute("part", "dialog")
-  const defaultSlot = document.createElement("slot")
-  defaultSlot.setAttribute("name", "default")
-  dialog.appendChild(defaultSlot)
-
-  const ribbon = document.createElement("div")
-  ribbon.className = `ribbon ${mode === "open" ? "hidden" : ""}`
-  ribbon.setAttribute("part", "ribbon")
-  const ribbonSlot = document.createElement("slot")
-  ribbonSlot.setAttribute("name", "ribbon")
-  ribbonSlot.textContent = "Open"
-  ribbon.appendChild(ribbonSlot)
-
-  container.appendChild(dialog)
-  container.appendChild(ribbon)
+  const container = (
+    <div>
+      <dialog part="dialog">
+        <slot name="default"></slot>
+      </dialog>
+      <div class={`ribbon ${mode === "open" ? "hidden" : ""}`} part="ribbon">
+        <slot name="ribbon">Open</slot>
+      </div>
+    </div>
+  ) as HTMLElement
 
   setShadowContent(element, container)
   if (mode === "open") {
