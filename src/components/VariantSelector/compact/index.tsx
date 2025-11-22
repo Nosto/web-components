@@ -1,7 +1,10 @@
+/** @jsx jsx */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { jsx } from "@/templating/jsx/jsx-runtime"
+import type { TemplateExpression } from "@/templating/jsx/jsx-runtime"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { VariantSelector } from "../VariantSelector"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
-import { html } from "@/templating/html"
 import styles from "./styles.css?raw"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail, ShopifySelectedOption } from "@/shopify/graphql/types"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
@@ -27,15 +30,15 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   }
 }
 
-function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
+function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct): TemplateExpression {
   // Don't render if there are no variants
   if (!product.variants || product.variants.length === 0) {
-    return html`<slot></slot>`
+    return (<slot></slot>) as unknown as TemplateExpression
   }
 
   // If all variants have only one option combination, don't render the selector
   if (product.variants.length === 1) {
-    return html`<slot></slot>`
+    return (<slot></slot>) as unknown as TemplateExpression
   }
 
   // Determine which variant should be selected
@@ -66,16 +69,20 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
 
   // Check if all variants are unavailable
   const allVariantsUnavailable = product.variants.every(variant => !variant.availableForSale)
-  const disabledAttr = allVariantsUnavailable ? "disabled" : ""
 
-  return html`
+  return (
     <div class="compact-selector" part="compact-selector">
-      <select name="variant" part="variant-dropdown" aria-label="Select variant" ${disabledAttr}>
-        ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
+      <select
+        name="variant"
+        part="variant-dropdown"
+        aria-label="Select variant"
+        disabled={allVariantsUnavailable ? true : undefined}
+      >
+        {sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
       </select>
       <slot></slot>
     </div>
-  `
+  ) as unknown as TemplateExpression
 }
 
 function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct) {
@@ -90,16 +97,13 @@ function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct)
   return variant ? variant.id : product.variants[0].id
 }
 
-function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: string, fixedOptions: string[]) {
-  const parts: string[] = []
-
-  if (selectedVariantGid === variant.id) {
-    parts.push("selected")
-  }
-
-  if (!variant.availableForSale) {
-    parts.push("disabled")
-  }
+function generateVariantOption(
+  variant: ShopifyVariant,
+  selectedVariantGid: string,
+  fixedOptions: string[]
+): TemplateExpression {
+  const isSelected = selectedVariantGid === variant.id
+  const isDisabled = !variant.availableForSale
 
   // Skip options that have only one fixed value across all variants
   const variableOptions = variant.selectedOptions?.filter(o => !fixedOptions.includes(o.name)) || []
@@ -109,9 +113,12 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: stri
   } else if (variableOptions.length > 1) {
     title = variableOptions.map(o => o.value).join(" / ")
   }
-  const additionalAttrs = parts.join(" ").trim()
 
-  return html`<option value="${variant.id}" ${additionalAttrs}>${title}</option>`
+  return (
+    <option value={variant.id} selected={isSelected ? true : undefined} disabled={isDisabled ? true : undefined}>
+      {title}
+    </option>
+  ) as unknown as TemplateExpression
 }
 
 function setupDropdownListener(element: VariantSelector) {

@@ -1,7 +1,10 @@
-import { html } from "@/templating/html"
+/** @jsx jsx */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { jsx } from "@/templating/jsx/jsx-runtime"
+import type { TemplateExpression } from "@/templating/jsx/jsx-runtime"
 
-export function generateMockMarkup() {
-  return html`
+export function generateMockMarkup(): TemplateExpression {
+  return (
     <div class="card">
       <div class="image">
         <img src="https://cdn.nosto.com/nosto/7/mock" alt="Mock Product Image" />
@@ -13,5 +16,5 @@ export function generateMockMarkup() {
         <span class="price-original">XX.XX</span>
       </div>
     </div>
-  `
+  ) as unknown as TemplateExpression
 }
