@@ -1,3 +1,4 @@
+/** @jsx createElement */
 import { describe, it, expect } from "vitest"
 import { Image } from "@/components/Image/Image"
 import { createElement } from "../../utils/jsx"

@@ -1,3 +1,4 @@
+/** @jsx createElement */
 import { describe, it, expect } from "vitest"
 import { convertProduct } from "@/components/SimpleCard/convertProduct"
 import type { JSONProduct } from "@nosto/nosto-js/client"

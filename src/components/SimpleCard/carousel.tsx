@@ -1,32 +1,31 @@
+/** @jsx jsx */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { jsx } from "@/templating/jsx/jsx-runtime"
 import type { SimpleCard } from "./SimpleCard"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
-import { html } from "@/templating/html"
+import type { TemplateExpression } from "@/templating/jsx/jsx-runtime"
 import { generateImgHtml } from "./markup"
 
-export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
+export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct): TemplateExpression {
   const images = product.images
-  return html`
+  return (
     <div class="image carousel" part="image">
       <div class="carousel-images">
-        ${images.map(
-          img => html`
-            <div class="carousel-slide">${generateImgHtml(img, product.title, "img carousel-img", element.sizes)}</div>
-          `
-        )}
+        {images.map(img => (
+          <div class="carousel-slide">{generateImgHtml(img, product.title, "img carousel-img", element.sizes)}</div>
+        ))}
       </div>
       <div class="carousel-indicators" part="carousel-indicators">
-        ${images.map(
-          (_, index) => html`
-            <button
-              class="carousel-indicator ${index === 0 ? "active" : ""}"
-              part="carousel-indicator"
-              aria-label="Go to image ${index + 1}"
-            ></button>
-          `
-        )}
+        {images.map((_, index) => (
+          <button
+            class={`carousel-indicator ${index === 0 ? "active" : ""}`}
+            part="carousel-indicator"
+            aria-label={`Go to image ${index + 1}`}
+          ></button>
+        ))}
       </div>
     </div>
-  `
+  ) as unknown as TemplateExpression
 }
 
 export function handleIndicatorClick(element: SimpleCard, event: MouseEvent) {

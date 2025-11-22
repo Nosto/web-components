@@ -21,8 +21,9 @@
     "noUncheckedSideEffectImports": true,
 
     /* JSX */
-    "jsx": "react-jsx",
-    "jsxImportSource": "@/templating/jsx",
+    "jsx": "react",
+    "jsxFactory": "jsx",
+    "jsxFragmentFactory": "Fragment",
 
     "paths": {
       "@/*": ["./src/*"]

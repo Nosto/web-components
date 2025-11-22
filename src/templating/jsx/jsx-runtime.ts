@@ -12,6 +12,11 @@ type JSXChild = string | number | boolean | undefined | null | TemplateExpressio
 type Props = Record<string, unknown> & { children?: JSXChild }
 
 /**
+ * Function component type
+ */
+type FunctionComponent = (props: Props | null) => TemplateExpression
+
+/**
  * Processes a JSX child value into an HTML string
  */
 function processChild(child: JSXChild): string {
@@ -71,14 +76,14 @@ function processProps(props: Props | null): string {
 /**
  * JSX runtime function that creates HTML strings
  * This is called by the TypeScript compiler for JSX elements
+ * When using jsx: "react", children are passed as rest parameters
  */
-export function jsx(tag: string | Function, props: Props | null): TemplateExpression {
+export function jsx(tag: string | FunctionComponent, props: Props | null, ...children: JSXChild[]): TemplateExpression {
   // Handle function components
   if (typeof tag === "function") {
-    return tag(props)
+    return (tag as FunctionComponent)(children?.length ? { ...props, children } : props)
   }
 
-  const children = props?.children
   const attributes = processProps(props)
   const attributeString = attributes ? ` ${attributes}` : ""
 
@@ -105,22 +110,26 @@ export function jsx(tag: string | Function, props: Props | null): TemplateExpres
   }
 
   // Regular tags with children
-  const childrenString = children ? processChild(children) : ""
+  const childrenString = children?.length ? children.map(processChild).join("") : ""
   return { html: `<${tag}${attributeString}>${childrenString}</${tag}>` }
 }
 
 /**
- * JSX Fragment function
+ * JSX Fragment function (not used with jsx: "react" mode)
  */
-export function jsxs(tag: string | Function, props: Props | null): TemplateExpression {
-  return jsx(tag, props)
+export function jsxs(
+  tag: string | FunctionComponent,
+  props: Props | null,
+  ...children: JSXChild[]
+): TemplateExpression {
+  return jsx(tag, props, ...children)
 }
 
 /**
  * Fragment component for JSX fragments (<>...</>)
  */
-export function Fragment(props: { children?: JSXChild }): TemplateExpression {
-  return { html: processChild(props.children) }
+export function Fragment(_props: Props | null, ...children: JSXChild[]): TemplateExpression {
+  return { html: children?.length ? children.map(processChild).join("") : "" }
 }
 
 // Export for convenience

@@ -3,84 +3,78 @@ import { jsx, jsxs, Fragment, type TemplateExpression } from "@/templating/jsx/j
 
 describe("JSX runtime", () => {
   it("creates simple elements", () => {
-    const result = jsx("div", { children: "Hello World" })
+    const result = jsx("div", null, "Hello World")
     expect(result).toHaveProperty("html")
     expect(result.html).toBe("<div>Hello World</div>")
   })
 
   it("creates elements with attributes", () => {
-    const result = jsx("div", { class: "container", id: "main", children: "Content" })
+    const result = jsx("div", { class: "container", id: "main" }, "Content")
     expect(result.html).toBe('<div class="container" id="main">Content</div>')
   })
 
   it("handles string children with HTML escaping", () => {
-    const result = jsx("h1", { children: "<script>alert('xss')</script>" })
+    const result = jsx("h1", null, "<script>alert('xss')</script>")
     expect(result.html).toBe("<h1>&lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;</h1>")
   })
 
   it("escapes dangerous HTML characters in children", () => {
-    const result = jsx("div", { children: `<>&"'` })
+    const result = jsx("div", null, `<>&"'`)
     expect(result.html).toBe("<div>&lt;&gt;&amp;&quot;&#039;</div>")
   })
 
   it("escapes attribute values", () => {
-    const result = jsx("div", { title: '<script>alert("xss")</script>', children: "Content" })
+    const result = jsx("div", { title: '<script>alert("xss")</script>' }, "Content")
     expect(result.html).toBe('<div title="&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;">Content</div>')
   })
 
   it("handles primitive value children", () => {
-    const result1 = jsx("div", { children: undefined })
+    const result1 = jsx("div", null, undefined)
     expect(result1.html).toBe("<div></div>")
 
-    const result2 = jsx("div", { children: null })
+    const result2 = jsx("div", null, null)
     expect(result2.html).toBe("<div></div>")
 
-    const result3 = jsx("div", { children: 42 })
+    const result3 = jsx("div", null, 42)
     expect(result3.html).toBe("<div>42</div>")
 
-    const result4 = jsx("div", { children: true })
+    const result4 = jsx("div", null, true)
     expect(result4.html).toBe("<div>true</div>")
 
-    const result5 = jsx("div", { children: false })
+    const result5 = jsx("div", null, false)
     expect(result5.html).toBe("<div></div>")
   })
 
-  it("handles array children", () => {
-    const items = ["apple", "banana", "cherry"]
-    const result = jsx("ul", { children: items })
+  it("handles multiple children", () => {
+    const result = jsx("ul", null, "apple", "banana", "cherry")
     expect(result.html).toBe("<ul>applebananacherry</ul>")
   })
 
-  it("processes array elements with HTML escaping", () => {
-    const items = ["<b>apple</b>", "<i>banana</i>"]
-    const result = jsx("ul", { children: items })
+  it("processes children with HTML escaping", () => {
+    const result = jsx("ul", null, "<b>apple</b>", "<i>banana</i>")
     expect(result.html).toBe("<ul>&lt;b&gt;apple&lt;/b&gt;&lt;i&gt;banana&lt;/i&gt;</ul>")
   })
 
-  it("handles nested arrays", () => {
-    const nested = [
-      ["a", "b"],
-      ["c", "d"]
-    ]
-    const result = jsx("div", { children: nested })
+  it("handles array children", () => {
+    const items = ["a", "b", "c", "d"]
+    const result = jsx("div", null, items)
     expect(result.html).toBe("<div>abcd</div>")
   })
 
   it("injects TemplateExpression objects as raw HTML", () => {
     const rawHtml: TemplateExpression = { html: "<em>emphasized</em>" }
-    const result = jsx("p", { children: ["This is ", rawHtml, " text"] })
+    const result = jsx("p", null, "This is ", rawHtml, " text")
     expect(result.html).toBe("<p>This is <em>emphasized</em> text</p>")
   })
 
   it("handles arrays of TemplateExpression objects", () => {
     const items: TemplateExpression[] = [{ html: "<li>Item 1</li>" }, { html: "<li>Item 2</li>" }]
-    const result = jsx("ul", { children: items })
+    const result = jsx("ul", null, items)
     expect(result.html).toBe("<ul><li>Item 1</li><li>Item 2</li></ul>")
   })
 
-  it("handles mixed array of strings and TemplateExpression objects", () => {
-    const mixed = ["plain text", { html: "<strong>bold</strong>" }, "more text"]
-    const result = jsx("div", { children: mixed })
+  it("handles mixed children of strings and TemplateExpression objects", () => {
+    const result = jsx("div", null, "plain text", { html: "<strong>bold</strong>" }, "more text")
     expect(result.html).toBe("<div>plain text<strong>bold</strong>more text</div>")
   })
 
@@ -98,22 +92,22 @@ describe("JSX runtime", () => {
   })
 
   it("handles null and undefined attributes", () => {
-    const result = jsx("div", { title: null, "data-value": undefined, class: "test", children: "Content" })
+    const result = jsx("div", { title: null, "data-value": undefined, class: "test" }, "Content")
     expect(result.html).toBe('<div class="test">Content</div>')
   })
 
   it("handles style objects", () => {
-    const result = jsx("div", { style: { color: "red", "font-size": "14px" }, children: "Styled" })
+    const result = jsx("div", { style: { color: "red", "font-size": "14px" } }, "Styled")
     expect(result.html).toBe('<div style="color: red; font-size: 14px">Styled</div>')
   })
 
   it("handles Fragment component", () => {
-    const result = Fragment({ children: ["Hello", " ", "World"] })
+    const result = Fragment(null, "Hello", " ", "World")
     expect(result.html).toBe("Hello World")
   })
 
   it("jsxs delegates to jsx", () => {
-    const result = jsxs("div", { children: ["a", "b", "c"] })
+    const result = jsxs("div", null, "a", "b", "c")
     expect(result.html).toBe("<div>abc</div>")
   })
 
@@ -123,15 +117,15 @@ describe("JSX runtime", () => {
   })
 
   it("handles nested elements with TemplateExpression", () => {
-    const inner = jsx("span", { children: "nested" })
-    const result = jsx("div", { children: ["Outer ", inner, " content"] })
+    const inner = jsx("span", null, "nested")
+    const result = jsx("div", null, "Outer ", inner, " content")
     expect(result.html).toBe("<div>Outer <span>nested</span> content</div>")
   })
 
   it("handles complex nested structures", () => {
     const items = ["apple", "banana", "cherry"]
-    const listItems = items.map(item => jsx("li", { children: item }))
-    const result = jsx("ul", { children: listItems })
+    const listItems = items.map(item => jsx("li", null, item))
+    const result = jsx("ul", null, ...listItems)
     expect(result.html).toBe("<ul><li>apple</li><li>banana</li><li>cherry</li></ul>")
   })
 })

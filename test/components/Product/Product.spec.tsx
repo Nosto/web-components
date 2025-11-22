@@ -1,3 +1,4 @@
+/** @jsx createElement */
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { Product } from "@/components/Product/Product"
 import { EventName } from "@/components/Product/events"
