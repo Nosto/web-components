@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { createShopifyUrl } from "@/shopify/createShopifyUrl"
 
 function mockLocation(mockValue: Partial<Location> = {}) {
   Object.defineProperty(window, "location", {
