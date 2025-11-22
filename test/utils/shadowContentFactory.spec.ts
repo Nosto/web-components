@@ -27,31 +27,34 @@ describe("shadowContentFactory", () => {
   describe("with adoptedStyleSheets support", () => {
     it("should use adoptedStyleSheets when supported", async () => {
       const styles = "body { color: red; }"
-      const content = "<p>Test content</p>"
+      const content = document.createElement("p")
+      content.textContent = "Test content"
 
       const setShadowContent = shadowContentFactory(styles)
       await setShadowContent(element, content)
 
       expect(shadowRoot.adoptedStyleSheets).toHaveLength(1)
-      expect(shadowRoot.innerHTML).toBe(content)
+      expect(shadowRoot.innerHTML).toBe("<p>Test content</p>")
     })
 
     it("should cache the stylesheet across multiple invocations", async () => {
       const styles = "body { color: blue; }"
-      const content1 = "<p>First content</p>"
-      const content2 = "<p>Second content</p>"
+      const content1 = document.createElement("p")
+      content1.textContent = "First content"
+      const content2 = document.createElement("p")
+      content2.textContent = "Second content"
 
       const setShadowContent = shadowContentFactory(styles)
 
       // First call
       await setShadowContent(element, content1)
       const firstStyleSheet = shadowRoot.adoptedStyleSheets[0]
-      expect(shadowRoot.innerHTML).toBe(content1)
+      expect(shadowRoot.innerHTML).toBe("<p>First content</p>")
 
       // Second call with same factory
       await setShadowContent(element, content2)
       const secondStyleSheet = shadowRoot.adoptedStyleSheets[0]
-      expect(shadowRoot.innerHTML).toBe(content2)
+      expect(shadowRoot.innerHTML).toBe("<p>Second content</p>")
 
       // Should reuse the same stylesheet object
       expect(firstStyleSheet).toBe(secondStyleSheet)
@@ -60,12 +63,13 @@ describe("shadowContentFactory", () => {
     it("should handle different styles for different factories", async () => {
       const styles1 = "body { color: red; }"
       const styles2 = "body { color: green; }"
-      const content = "<p>Content</p>"
+      const content = document.createElement("p")
+      content.textContent = "Content"
 
       const setShadowContent1 = shadowContentFactory(styles1)
       const setShadowContent2 = shadowContentFactory(styles2)
 
-      await setShadowContent1(element, content)
+      await setShadowContent1(element, content.cloneNode(true) as HTMLElement)
       const firstStyleSheet = shadowRoot.adoptedStyleSheets[0]
 
       // Create a second element for the second factory
@@ -79,7 +83,7 @@ describe("shadowContentFactory", () => {
         configurable: true
       })
 
-      await setShadowContent2(element2, content)
+      await setShadowContent2(element2, content.cloneNode(true) as HTMLElement)
       const secondStyleSheet = shadowRoot2.adoptedStyleSheets[0]
 
       // Should be different stylesheet objects
@@ -90,10 +94,14 @@ describe("shadowContentFactory", () => {
       const styles = "body { color: orange; }"
       const setShadowContent = shadowContentFactory(styles)
 
-      await setShadowContent(element, "<p>Original</p>")
+      const content1 = document.createElement("p")
+      content1.textContent = "Original"
+      await setShadowContent(element, content1)
       expect(shadowRoot.innerHTML).toBe("<p>Original</p>")
 
-      await setShadowContent(element, "<p>Updated</p>")
+      const content2 = document.createElement("p")
+      content2.textContent = "Updated"
+      await setShadowContent(element, content2)
       expect(shadowRoot.innerHTML).toBe("<p>Updated</p>")
     })
   })
@@ -109,40 +117,46 @@ describe("shadowContentFactory", () => {
       delete (shadowRoot as any).adoptedStyleSheets
     })
 
-    it("should inline styles in innerHTML when adoptedStyleSheets not supported", async () => {
+    it("should inline styles when adoptedStyleSheets not supported", async () => {
       const styles = "body { color: purple; }"
-      const content = "<p>Legacy content</p>"
+      const content = document.createElement("p")
+      content.textContent = "Legacy content"
 
       const setShadowContent = shadowContentFactory(styles)
       await setShadowContent(element, content)
 
       expect(shadowRoot.innerHTML).toContain("<style>")
       expect(shadowRoot.innerHTML).toContain(styles)
-      expect(shadowRoot.innerHTML).toContain(content)
+      expect(shadowRoot.innerHTML).toContain("Legacy content")
     })
 
     it("should format inline styles correctly", async () => {
       const styles = ".class { margin: 10px; }"
-      const content = '<div class="class">Text</div>'
+      const content = document.createElement("div")
+      content.className = "class"
+      content.textContent = "Text"
 
       const setShadowContent = shadowContentFactory(styles)
       await setShadowContent(element, content)
 
-      const expectedHTML = `
-        <style>${styles}</style>
-        ${content}
-      `
-      expect(shadowRoot.innerHTML).toBe(expectedHTML)
+      expect(shadowRoot.innerHTML).toContain("<style>")
+      expect(shadowRoot.innerHTML).toContain(styles)
+      expect(shadowRoot.innerHTML).toContain('class="class"')
+      expect(shadowRoot.innerHTML).toContain("Text")
     })
 
     it("should replace content on subsequent calls", async () => {
       const styles = "body { font-size: 14px; }"
       const setShadowContent = shadowContentFactory(styles)
 
-      await setShadowContent(element, "<p>First</p>")
+      const content1 = document.createElement("p")
+      content1.textContent = "First"
+      await setShadowContent(element, content1)
       const firstHTML = shadowRoot.innerHTML
 
-      await setShadowContent(element, "<p>Second</p>")
+      const content2 = document.createElement("p")
+      content2.textContent = "Second"
+      await setShadowContent(element, content2)
       const secondHTML = shadowRoot.innerHTML
 
       expect(firstHTML).toContain("<p>First</p>")

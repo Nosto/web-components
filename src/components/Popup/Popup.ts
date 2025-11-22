@@ -74,16 +74,26 @@ type PopupData = {
 }
 
 function initializeShadowContent(element: Popup, mode: "open" | "ribbon" = "open") {
-  setShadowContent(
-    element,
-    `
-    <dialog part="dialog">
-      <slot name="default"></slot>
-    </dialog>
-    <div class="ribbon ${mode === "open" ? "hidden" : ""}" part="ribbon">
-      <slot name="ribbon">Open</slot>
-    </div>`
-  )
+  const container = document.createElement("div")
+
+  const dialog = document.createElement("dialog")
+  dialog.setAttribute("part", "dialog")
+  const defaultSlot = document.createElement("slot")
+  defaultSlot.setAttribute("name", "default")
+  dialog.appendChild(defaultSlot)
+
+  const ribbon = document.createElement("div")
+  ribbon.className = `ribbon ${mode === "open" ? "hidden" : ""}`
+  ribbon.setAttribute("part", "ribbon")
+  const ribbonSlot = document.createElement("slot")
+  ribbonSlot.setAttribute("name", "ribbon")
+  ribbonSlot.textContent = "Open"
+  ribbon.appendChild(ribbonSlot)
+
+  container.appendChild(dialog)
+  container.appendChild(ribbon)
+
+  setShadowContent(element, container)
   if (mode === "open") {
     element.shadowRoot?.querySelector("dialog")?.showModal()
   }

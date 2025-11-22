@@ -8,15 +8,15 @@ import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 
 const setShadowContent = shadowContentFactory(styles)
 
-let placeholder = ""
+let placeholderElement: HTMLElement | null = null
 
 /** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
 
 export async function loadAndRenderMarkup(element: VariantSelector, initial = false) {
-  if (initial && element.placeholder && placeholder) {
+  if (initial && element.placeholder && placeholderElement) {
     element.toggleAttribute("loading", true)
-    setShadowContent(element, placeholder)
+    setShadowContent(element, placeholderElement.cloneNode(true) as HTMLElement)
   }
   element.toggleAttribute("loading", true)
   try {
@@ -28,8 +28,8 @@ export async function loadAndRenderMarkup(element: VariantSelector, initial = fa
     const selectorElement = generateVariantSelectorHTML(element, productData)
     setShadowContent(element, selectorElement)
 
-    // Cache the rendered HTML for placeholder use
-    placeholder = selectorElement.outerHTML
+    // Cache the rendered element for placeholder use
+    placeholderElement = selectorElement.cloneNode(true) as HTMLElement
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)
