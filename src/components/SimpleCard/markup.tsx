@@ -93,13 +93,14 @@ export function generateImgHtml(
 ): TemplateExpression {
   const { style, ...props } = transform(getImageProps(image, sizes))
 
-  // Build attributes string manually for dynamic props with proper escaping
+  // Manual HTML construction is necessary here because the transform() function
+  // returns a dynamic set of attributes (srcset, sizes, etc.) that can't be
+  // statically expressed in JSX. This approach ensures all values are properly escaped.
   const additionalAttrs = Object.entries(props)
     .filter(([, value]) => value != null)
     .map(([key, value]) => `${key}="${escapeHtml(String(value))}"`)
     .join(" ")
 
-  // Return raw HTML with dynamic attributes
   return {
     html: `<img alt="${escapeHtml(alt)}" part="${escapeHtml(className)}" class="${escapeHtml(className)}" width="${image.width}" height="${image.height}" ${additionalAttrs} style="${escapeHtml(styleText(style as object))}" />`
   }

@@ -61,9 +61,9 @@ function processProps(props: Props | null): string {
       // Handle style object
       if (key === "style" && typeof value === "object") {
         const styleString = Object.entries(value as Record<string, string>)
-          .map(([k, v]) => `${k}: ${v}`)
+          .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
           .join("; ")
-        return `style="${escapeHtml(styleString)}"`
+        return `style="${styleString}"`
       }
 
       // Regular attributes
@@ -72,6 +72,26 @@ function processProps(props: Props | null): string {
     .filter(Boolean)
     .join(" ")
 }
+
+/**
+ * Self-closing HTML tags
+ */
+const SELF_CLOSING_TAGS = [
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr"
+]
 
 /**
  * JSX runtime function that creates HTML strings
@@ -88,24 +108,7 @@ export function jsx(tag: string | FunctionComponent, props: Props | null, ...chi
   const attributeString = attributes ? ` ${attributes}` : ""
 
   // Self-closing tags
-  const selfClosingTags = [
-    "area",
-    "base",
-    "br",
-    "col",
-    "embed",
-    "hr",
-    "img",
-    "input",
-    "link",
-    "meta",
-    "param",
-    "source",
-    "track",
-    "wbr"
-  ]
-
-  if (selfClosingTags.includes(tag)) {
+  if (SELF_CLOSING_TAGS.includes(tag)) {
     return { html: `<${tag}${attributeString} />` }
   }
 
@@ -115,7 +118,8 @@ export function jsx(tag: string | FunctionComponent, props: Props | null, ...chi
 }
 
 /**
- * JSX Fragment function (not used with jsx: "react" mode)
+ * JSX function for elements with static children
+ * With jsx: "react" mode, this is used for elements with multiple static children
  */
 export function jsxs(
   tag: string | FunctionComponent,
