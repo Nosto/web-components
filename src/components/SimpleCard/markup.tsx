@@ -15,7 +15,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   return (
     <div class="card" part="card">
       <a href={normalizeUrl(product.onlineStoreUrl)} class="link" part="link">
-        {generateImageHTML(element, product)}
+        <ImageHTML element={element} product={product} />
         <div class="content" part="content">
           {element.brand && product.vendor && (
             <div class="brand" part="brand">
@@ -36,7 +36,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
               </span>
             )}
           </div>
-          {element.rating && generateRatingHTML(element.rating)}
+          {element.rating && <RatingHTML rating={element.rating} />}
         </div>
       </a>
       <div class="slot">
@@ -46,7 +46,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   )
 }
 
-function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+function ImageHTML({ element, product }: { element: SimpleCard; product: ShopifyProduct }) {
   // Use media objects first, fallback to images array
   const primaryImage = product.images?.[0]
   if (!primaryImage) {
@@ -63,8 +63,10 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
 
   return (
     <div class={`image ${hasAlternate ? "alternate" : ""}`} part="image">
-      {generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
-      {hasAlternate && alternateImage && generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)}
+      <ImgHtml image={primaryImage} alt={product.title} className="img primary" sizes={element.sizes} />
+      {hasAlternate && alternateImage && (
+        <ImgHtml image={alternateImage} alt={product.title} className="img alternate" sizes={element.sizes} />
+      )}
     </div>
   )
 }
@@ -81,11 +83,21 @@ const defaultImageSizes = `(min-width: 1024px) 25vw,
     (min-width: 375px) 50vw,
     100vw`
 
-export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string) {
+export function ImgHtml({
+  image,
+  alt,
+  className,
+  sizes
+}: {
+  image: ShopifyImage
+  alt: string
+  className: string
+  sizes?: string
+}) {
   const { style, ...props } = transform(getImageProps(image, sizes))
 
   // Use JSX to create img element
-  const img = (
+  return (
     <img
       alt={alt}
       part={className}
@@ -95,9 +107,12 @@ export function generateImgHtml(image: ShopifyImage, alt: string, className: str
       {...props}
       style={style as Record<string, string>}
     />
-  ) as HTMLImageElement
+  )
+}
 
-  return img
+// Legacy function export for backward compatibility
+export function generateImgHtml(image: ShopifyImage, alt: string, className: string, sizes?: string) {
+  return <ImgHtml image={image} alt={alt} className={className} sizes={sizes} />
 }
 
 function getImageProps(image: ShopifyImage, sizes?: string) {
@@ -109,7 +124,7 @@ function getImageProps(image: ShopifyImage, sizes?: string) {
   }
 }
 
-function generateRatingHTML(rating: number) {
+function RatingHTML({ rating }: { rating: number }) {
   // Generate star display based on numeric rating
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 >= 0.5

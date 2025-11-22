@@ -75,7 +75,9 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
         aria-label="Select variant"
         disabled={allVariantsUnavailable ? true : undefined}
       >
-        {sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
+        {sortedVariants.map(variant => (
+          <VariantOption variant={variant} selectedVariantGid={selectedVariantGid} fixedOptions={fixedOptions} />
+        ))}
       </select>
       <slot></slot>
     </div>
@@ -94,7 +96,15 @@ function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct)
   return variant ? variant.id : product.variants[0].id
 }
 
-function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: string, fixedOptions: string[]) {
+function VariantOption({
+  variant,
+  selectedVariantGid,
+  fixedOptions
+}: {
+  variant: ShopifyVariant
+  selectedVariantGid: string
+  fixedOptions: string[]
+}) {
   const isSelected = selectedVariantGid === variant.id
   const isDisabled = !variant.availableForSale
 

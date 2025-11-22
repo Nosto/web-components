@@ -18,15 +18,17 @@ export function generateVariantSelectorHTML(element: VariantSelector, product: S
 
   return (
     <div class="selector" part="selector">
-      {product.options.map(option => generateOptionRowHTML(option, element.maxValues))}
+      {product.options.map(option => (
+        <OptionRowHTML option={option} maxValues={element.maxValues} />
+      ))}
       <slot></slot>
     </div>
   )
 }
 
-function generateOptionRowHTML(option: ShopifyOption, maxValues?: number) {
+function OptionRowHTML({ option, maxValues }: { option: ShopifyOption; maxValues?: number }) {
   if (option.optionValues.length <= 1) {
-    return ""
+    return null
   }
 
   const valuesToRender = maxValues ? option.optionValues.slice(0, maxValues) : option.optionValues
@@ -38,14 +40,16 @@ function generateOptionRowHTML(option: ShopifyOption, maxValues?: number) {
         {option.name}:
       </div>
       <div class="values" part="values">
-        {valuesToRender.map(value => generateOptionValueHTML(option.name, value))}
-        {hasMore && generateEllipsis(option.optionValues.length - maxValues!)}
+        {valuesToRender.map(value => (
+          <OptionValueHTML name={option.name} value={value} />
+        ))}
+        {hasMore && <Ellipsis moreCount={option.optionValues.length - maxValues!} />}
       </div>
     </div>
   )
 }
 
-function generateEllipsis(moreCount: number) {
+function Ellipsis({ moreCount }: { moreCount: number }) {
   return (
     <span class="ellipsis" part="ellipsis" role="img" aria-label={`${moreCount} more options`}>
       …
@@ -53,7 +57,7 @@ function generateEllipsis(moreCount: number) {
   )
 }
 
-function generateOptionValueHTML(name: string, value: ShopifyOptionValue) {
+function OptionValueHTML({ name, value }: { name: string; value: ShopifyOptionValue }) {
   // TODO expand to actual swatch rendering
   return (
     <button type="button" class="value" part="value" data-option-name={name} data-option-value={value.name}>
