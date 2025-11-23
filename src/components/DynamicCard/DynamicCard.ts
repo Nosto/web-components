@@ -2,7 +2,7 @@ import { assertRequired } from "@/utils/assertRequired"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import styles from "./styles.css?raw"
 import { generateMockMarkup } from "./markup"
@@ -30,7 +30,7 @@ const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
  * @property {boolean} [mock] - If true, the component will render mock markup instead of fetching real data. Defaults to false.
  */
 @customElement("nosto-dynamic-card", { observe: true })
-export class DynamicCard extends NostoElement {
+export class DynamicCard extends ReactiveElement {
   @property(String) handle!: string
   @property(String) section?: string
   @property(String) template?: string
@@ -38,12 +38,6 @@ export class DynamicCard extends NostoElement {
   @property(Boolean) placeholder?: boolean
   @property(Boolean) lazy?: boolean
   @property(Boolean) mock?: boolean
-
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
-  }
 
   async connectedCallback() {
     if (this.mock) {
@@ -67,13 +61,17 @@ export class DynamicCard extends NostoElement {
       const observer = new IntersectionObserver(async entries => {
         if (entries[0].isIntersecting) {
           observer.disconnect()
-          await loadAndRenderMarkup(this)
+          await this.render()
         }
       })
       observer.observe(this)
     } else {
-      await loadAndRenderMarkup(this)
+      await this.render()
     }
+  }
+
+  async render() {
+    await loadAndRenderMarkup(this)
   }
 }
 

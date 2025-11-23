@@ -74,11 +74,13 @@ describe("Image", () => {
     expect(nostoImage.breakpoints).toEqual([100, 300, 500])
   })
 
-  it("rerenders when attributes are updated", () => {
+  it("rerenders when attributes are updated", async () => {
     nostoImage = (<nosto-image src={shopifyUrl} width={300} height={200} />) as Image
     document.body.appendChild(nostoImage)
     const oldSrcSet = nostoImage.shadowRoot?.querySelector("img")?.getAttribute("srcset")
     nostoImage.width = 400
+    await new Promise(requestAnimationFrame)
+
     const newSrcSet = nostoImage.shadowRoot?.querySelector("img")?.getAttribute("srcset")
     expect(newSrcSet).not.toBe(oldSrcSet)
   })

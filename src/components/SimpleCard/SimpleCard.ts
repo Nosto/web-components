@@ -1,6 +1,6 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
@@ -42,7 +42,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-simple-card", { observe: true })
-export class SimpleCard extends NostoElement {
+export class SimpleCard extends ReactiveElement {
   @property(String) handle!: string
   @property(String) imageMode?: "alternate" | "carousel"
   @property(Boolean) brand?: boolean
@@ -63,15 +63,9 @@ export class SimpleCard extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
-  }
-
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.render()
     this.addEventListener("click", this)
     this.shadowRoot?.addEventListener("click", this)
     this.addEventListener("variantchange", this)
@@ -80,6 +74,10 @@ export class SimpleCard extends NostoElement {
     if (this.imageMode === "carousel") {
       this.shadowRoot?.addEventListener("scroll", this, { capture: true })
     }
+  }
+
+  async render() {
+    await loadAndRenderMarkup(this)
   }
 
   handleEvent(event: Event) {

@@ -1,6 +1,6 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 import { loadAndRenderMarkup } from "./options"
 import { loadAndRenderCompact } from "./compact"
 
@@ -29,7 +29,7 @@ import { loadAndRenderCompact } from "./compact"
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-variant-selector", { observe: true })
-export class VariantSelector extends NostoElement {
+export class VariantSelector extends ReactiveElement {
   @property(String) handle!: string
   @property(Number) variantId?: number
   @property(Boolean) preselect?: boolean
@@ -48,18 +48,12 @@ export class VariantSelector extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await this.#render()
-    }
-  }
-
   async connectedCallback() {
     assertRequired(this, "handle")
-    await this.#render(true)
+    await this.render(true)
   }
 
-  async #render(initial = false) {
+  async render(initial = false) {
     if (this.mode === "compact") {
       await loadAndRenderCompact(this)
     } else {
