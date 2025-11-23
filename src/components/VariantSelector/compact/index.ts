@@ -3,8 +3,9 @@ import { VariantSelector } from "../VariantSelector"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { html } from "@/templating/html"
 import styles from "./styles.css?raw"
-import { ShopifyProduct, ShopifyVariant, VariantChangeDetail, ShopifySelectedOption } from "@/shopify/graphql/types"
-import { parseId, toVariantGid } from "@/shopify/graphql/utils"
+import { ShopifyProduct, ShopifyVariant, ShopifySelectedOption } from "@/shopify/graphql/types"
+import { toVariantGid } from "@/shopify/graphql/utils"
+import { emitVariantChange } from "../common"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -118,24 +119,11 @@ function setupDropdownListener(element: VariantSelector) {
   element.shadowRoot!.addEventListener("change", async e => {
     const target = e.target as HTMLSelectElement
     if (target.matches("select") && !target.disabled) {
-      const variantId = target.value
-      await emitVariantChange(element, variantId)
+      const productData = await fetchProduct(element.handle)
+      const variant = productData.variants.find(v => v.id === target.value)
+      if (variant) {
+        emitVariantChange(element, variant)
+      }
     }
   })
-}
-
-async function emitVariantChange(element: VariantSelector, variantId: string) {
-  const productData = await fetchProduct(element.handle)
-  const variant = productData.variants.find(v => v.id === variantId)
-
-  if (variant) {
-    element.variantId = parseId(variant.id)
-    const detail: VariantChangeDetail = { variant }
-    element.dispatchEvent(
-      new CustomEvent("variantchange", {
-        detail,
-        bubbles: true
-      })
-    )
-  }
 }
