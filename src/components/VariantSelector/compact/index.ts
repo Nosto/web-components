@@ -4,7 +4,7 @@ import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { html } from "@/templating/html"
 import styles from "./styles.css?raw"
 import { ShopifyProduct, ShopifyVariant, VariantChangeDetail, ShopifySelectedOption } from "@/shopify/graphql/types"
-import { parseId, toVariantGid } from "@/shopify/graphql/utils"
+import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../common"
 
 const setShadowContent = shadowContentFactory(styles)
