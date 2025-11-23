@@ -3,7 +3,7 @@ import { VariantSelector } from "../VariantSelector"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { html } from "@/templating/html"
 import styles from "./styles.css?raw"
-import { ShopifyProduct, ShopifyVariant, VariantChangeDetail, ShopifySelectedOption } from "@/shopify/graphql/types"
+import { ShopifyProduct, ShopifyVariant, ShopifySelectedOption } from "@/shopify/graphql/types"
 import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../common"
 
