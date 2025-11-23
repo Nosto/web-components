@@ -3,8 +3,9 @@ import { VariantSelector } from "../VariantSelector"
 import { generateVariantSelectorHTML } from "./markup"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import styles from "./styles.css?raw"
-import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
-import { parseId, toVariantGid } from "@/shopify/graphql/utils"
+import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { toVariantGid } from "@/shopify/graphql/utils"
+import { emitVariantChange } from "../common"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -41,7 +42,10 @@ export async function loadAndRenderMarkup(element: VariantSelector, initial = fa
     // TODO disabled state
 
     if (Object.keys(element.selectedOptions).length > 0) {
-      emitVariantChange(element, productData)
+      const variant = getSelectedVariant(element, productData)
+      if (variant) {
+        emitVariantChange(element, variant)
+      }
     }
 
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
@@ -93,7 +97,10 @@ export async function selectOption(element: VariantSelector, optionName: string,
 
   // Fetch product data and emit variant change
   const productData = await fetchProduct(element.handle)
-  emitVariantChange(element, productData)
+  const variant = getSelectedVariant(element, productData)
+  if (variant) {
+    emitVariantChange(element, variant)
+  }
 }
 
 function updateActiveStates(element: VariantSelector) {
@@ -130,20 +137,6 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
     parts.delete(partName)
   }
   element.setAttribute("part", Array.from(parts).join(" "))
-}
-
-function emitVariantChange(element: VariantSelector, product: ShopifyProduct) {
-  const variant = getSelectedVariant(element, product)
-  if (variant) {
-    element.variantId = parseId(variant.id)
-    const detail: VariantChangeDetail = { variant }
-    element.dispatchEvent(
-      new CustomEvent("variantchange", {
-        detail,
-        bubbles: true
-      })
-    )
-  }
 }
 
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
