@@ -57,7 +57,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   }
   // default mode
   return html`
-    <div class="image  part="image">
+    <div class="image" part="image">
       ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
     </div>
   `
