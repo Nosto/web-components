@@ -37,15 +37,15 @@ const bundleMockData = {
   "frontpage-nosto-bundle": {
     title: "Complete the Look",
     products: [
-      { id: 1, handle: "awesome-sneakers", title: "Awesome Sneakers 1x", price: "$120.00", price_currency_code: "USD" },
-      { id: 2, handle: "good-ol-shoes", title: "Good Ol Shoes", price: "$110.00", price_currency_code: "USD" },
-      { id: 3, handle: "insane-shoes", title: "Insane Shoes", price: "$120.00", price_currency_code: "USD" },
-      { id: 4, handle: "old-school-kicks", title: "Old School Kicks", price: "$110.00", price_currency_code: "USD" },
+      { id: 1, handle: "awesome-sneakers", title: "Awesome Sneakers 1x", price: 120.0, price_currency_code: "USD" },
+      { id: 2, handle: "good-ol-shoes", title: "Good Ol Shoes", price: 110.0, price_currency_code: "USD" },
+      { id: 3, handle: "insane-shoes", title: "Insane Shoes", price: 120.0, price_currency_code: "USD" },
+      { id: 4, handle: "old-school-kicks", title: "Old School Kicks", price: 110.0, price_currency_code: "USD" },
       {
         id: 5,
         handle: "copy-of-awesome-sneakers-1",
         title: "Copy of Awesome Sneakers",
-        price: "$120.00",
+        price: 120.0,
         price_currency_code: "USD"
       }
     ]

@@ -49,8 +49,7 @@ export class Bundle extends NostoElement {
 function setSummaryPrice(bundle: Bundle) {
   const currencyCode = bundle.selectedProducts[0]?.price_currency_code || "USD"
   const totalAmount = bundle.selectedProducts.reduce((sum, product) => {
-    const priceString = String(product.price)?.replace(/[^0-9.-]+/g, "") || "0"
-    return sum + parseFloat(priceString)
+    return sum + product.price
   }, 0)
   const formatted = new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
     style: "currency",
