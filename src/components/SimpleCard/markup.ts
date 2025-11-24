@@ -49,7 +49,7 @@ function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
   if (element.imageMode === "alternate" && product.images?.length > 1) {
     const alternateImage = product.images[1]
     return html`
-      <div class="image alternate part="image">
+      <div class="image alternate" part="image">
         ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
         ${generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)}
       </div>
