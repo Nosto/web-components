@@ -5,13 +5,8 @@ import type { RequestBuilder } from "@nosto/nosto-js/client"
 import { updateShopifyShop } from "@/storybook"
 import "./Bundle.stories.css"
 
-const root = "https://nosto-shopify1.myshopify.com/"
-
-window.Shopify = {
-  routes: {
-    root
-  }
-}
+const shopifyShop = "nosto-shopify1.myshopify.com"
+updateShopifyShop(shopifyShop)
 
 const meta: Meta = {
   title: "Components/Bundle",
@@ -33,7 +28,7 @@ const meta: Meta = {
     }
   },
   args: {
-    root
+    root: shopifyShop
   }
 }
 
