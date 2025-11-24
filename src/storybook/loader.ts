@@ -1,4 +1,4 @@
-import { getExampleHandles } from "./shopify/graphql/storybook/getExampleHandles"
+import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
 
 function isValidUrl(url: string): boolean {
   try {

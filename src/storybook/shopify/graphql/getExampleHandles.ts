@@ -1,5 +1,5 @@
 import { cached } from "@/utils/cached"
-import getExampleHandlesQuery from "@/shopify/graphql/getExampleHandles.graphql?raw"
+import getExampleHandlesQuery from "./getExampleHandles.graphql?raw"
 
 export const [getExampleHandles, clearCache] = cached(async (shopBaseUrl: string) => {
   const endpoint = `${shopBaseUrl}api/2025-10/graphql.json`

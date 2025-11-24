@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { ifDefined } from "lit/directives/if-defined.js"
-import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
+import { exampleHandlesLoader, updateShopifyShop } from "@/storybook/loader"
 import "./VariantSelector"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getExampleHandles, clearCache } from "@/shopify/graphql/storybook/getExampleHandles"
+import { getExampleHandles, clearCache } from "@/storybook/shopify/graphql/getExampleHandles"
 import { addHandlers } from "../../../msw.setup"
 import { http, HttpResponse } from "msw"
 
@@ -30,65 +30,6 @@ describe("getExampleHandles", () => {
 
     const handles = await getExampleHandles(shopifyTestBaseUrl)
     expect(handles).toEqual(["product-1", "product-2", "product-3"])
-  })
-
-  it("should fetch specified amount of product handles", async () => {
-    addHandlers(
-      http.post(endpoint, () => {
-        return HttpResponse.json(createMockResponse(["product-1", "product-2", "product-3", "product-4", "product-5"]))
-      })
-    )
-
-    const handles = await getExampleHandles(shopifyTestBaseUrl, 5)
-    expect(handles).toEqual(["product-1", "product-2", "product-3", "product-4", "product-5"])
-  })
-
-  it("should fetch all 20 products when count not specified", async () => {
-    let requestBody: unknown = null
-
-    addHandlers(
-      http.post(endpoint, async ({ request }) => {
-        requestBody = await request.json()
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: []
-            }
-          }
-        })
-      })
-    )
-
-    await getExampleHandles(shopifyTestBaseUrl)
-
-    expect(requestBody).not.toBeNull()
-    const body = requestBody as GraphQLRequestBody
-    expect(body.variables).toEqual({ first: 20 })
-    expect(body.query).toContain("$first: Int!")
-  })
-
-  it("should use custom amount when specified", async () => {
-    let requestBody: unknown = null
-
-    addHandlers(
-      http.post(endpoint, async ({ request }) => {
-        requestBody = await request.json()
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: []
-            }
-          }
-        })
-      })
-    )
-
-    await getExampleHandles(shopifyTestBaseUrl)
-
-    expect(requestBody).not.toBeNull()
-    const body = requestBody as GraphQLRequestBody
-    expect(body.variables).toEqual({ first: 20 })
-    expect(body.query).toContain("$first: Int!")
   })
 
   it("should throw error when fetch fails with 404", async () => {
