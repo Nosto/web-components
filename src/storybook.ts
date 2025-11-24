@@ -1,4 +1,5 @@
 import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
+export { setRootOverride as updateShopifyRoot } from "./utils/createShopifyUrl"
 
 function isValidUrl(url: string): boolean {
   try {

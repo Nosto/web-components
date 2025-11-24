@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { ifDefined } from "lit/directives/if-defined.js"
-import { exampleHandlesLoader } from "../../storybook"
+import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
 import "./VariantSelector"
 
 const root = "https://nosto-shopify1.myshopify.com/"
 
-window.Storybook = {
-  shop: root
+window.Shopify = {
+  routes: {
+    root
+  }
 }
 
 const meta: Meta = {
@@ -17,7 +19,7 @@ const meta: Meta = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        window.Storybook = { shop: context.args.root }
+        updateShopifyRoot(context.args.root)
       }
       return story()
     }
