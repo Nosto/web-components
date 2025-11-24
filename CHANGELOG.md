@@ -1,3 +1,12 @@
+## [10.1.6](https://github.com/Nosto/web-components/compare/v10.1.5...v10.1.6) (2025-11-24)
+
+
+### Bug Fixes
+
+* adjust getExampleHandles to use only base url while fetching data from GraphQL ([52ab266](https://github.com/Nosto/web-components/commit/52ab266ed24a92a80b0768624c5e3ff6525bf1fc))
+* move shop url normalization our of cache logic ([131c66f](https://github.com/Nosto/web-components/commit/131c66fb9dcf5ec2b3e93ac8c39cf60239c6b76d))
+* refactor getExampleHandles ([b132b54](https://github.com/Nosto/web-components/commit/b132b5491fe5f41af4eba3a88bafdeac725a52b2))
+
 ## [10.1.5](https://github.com/Nosto/web-components/compare/v10.1.4...v10.1.5) (2025-11-24)
 
 
