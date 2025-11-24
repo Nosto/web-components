@@ -10,6 +10,7 @@ import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { mockSimpleCardProduct } from "@/mock/products"
+import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 
 describe("SimpleCard", () => {
   beforeEach(() => {
@@ -318,7 +319,8 @@ describe("SimpleCard", () => {
     expect(getShadowContent(card)).toContain("https://example.com/image1.jpg")
 
     card.handle = "product-2"
-    await card.attributeChangedCallback("handle", "product-1", "product-2")
+    await new Promise(resolve => setTimeout(resolve, 30)) // wait for re-render
+
     expect(getShadowContent(card)).toContain("Product 2")
     expect(getShadowContent(card)).toContain("https://example.com/image3.jpg")
   })
@@ -499,7 +501,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     // Simulate variant change event
-    const variantChangeEvent = new CustomEvent("variantchange", {
+    const variantChangeEvent = new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail: {
         variant: variantProduct.variants[1] // Blue variant
       },
