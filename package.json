@@ -71,7 +71,7 @@
     "unpic": "^4.2.2",
     "vite": "^6.3.4",
     "vitest": "^4.0.8",
-    "eslint-plugin-storybook": "^10.0.7"
+    "eslint-plugin-storybook": "^10.0.8"
   },
   "engines": {
     "node": ">= 22.12.0",
