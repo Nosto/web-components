@@ -1,5 +1,4 @@
 import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
-export { setRootOverride as updateShopifyRoot } from "./utils/createShopifyUrl"
 
 function isValidUrl(url: string): boolean {
   try {
@@ -7,6 +6,12 @@ function isValidUrl(url: string): boolean {
     return true
   } catch {
     return false
+  }
+}
+
+export function updateShopifyShop(shop: string) {
+  window.Shopify = {
+    shop
   }
 }
 

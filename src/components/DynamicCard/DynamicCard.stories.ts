@@ -1,14 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
-import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
+import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
 
-const root = "https://nosto-shopify1.myshopify.com/"
-
-window.Shopify = {
-  routes: {
-    root
-  }
-}
+const root = "nosto-shopify1.myshopify.com"
+updateShopifyShop(root)
 
 const meta = {
   title: "Components/DynamicCard",
@@ -17,7 +12,7 @@ const meta = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
+        updateShopifyShop(context.args.root)
       }
       return story()
     }
