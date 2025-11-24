@@ -1,16 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { ifDefined } from "lit/directives/if-defined.js"
-import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
+import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
 import "./VariantSelector"
 
-const root = "https://nosto-shopify1.myshopify.com/"
-
-window.Shopify = {
-  routes: {
-    root
-  }
-}
+const shopifyShop = "nosto-shopify1.myshopify.com"
+updateShopifyShop(shopifyShop)
 
 const meta: Meta = {
   title: "Components/VariantSelector",
@@ -19,7 +14,7 @@ const meta: Meta = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
+        updateShopifyShop(context.args.root)
       }
       return story()
     }
@@ -54,7 +49,7 @@ const meta: Meta = {
     }
   },
   args: {
-    root,
+    root: shopifyShop,
     imageMode: "",
     brand: false,
     discount: false,
