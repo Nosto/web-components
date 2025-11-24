@@ -136,6 +136,15 @@ The POC stories are organized under "POC" in the Storybook sidebar:
 
 Each story demonstrates different layouts and use cases.
 
+### POC Limitations
+
+This is a proof-of-concept implementation intended for evaluation purposes:
+
+1. **Script Loading**: Each story loads the Shopify web components script independently. In production, this would be loaded once at the application level.
+2. **Error Handling**: Minimal error handling is implemented. Production code would need proper loading states, error boundaries, and fallback UI.
+3. **Fallback Values**: Stories use 'default' as a fallback product handle, which may not exist. Production code would need proper validation.
+4. **Data Fetching**: Relies on Storybook's example handles loader. Production would integrate with actual Shopify API or store configuration.
+
 ## Recommendations
 
 ### When to Use Shopify Web Components
