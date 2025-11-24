@@ -80,18 +80,16 @@ export const Default: Story = {
     }
     return html`
       <div style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;">
-        ${handles
-          .slice(0, args.products)
-          .map(
-            handle => html`
-              <nosto-dynamic-card
-                handle="${handle}"
-                template="${args.template}"
-                section="${args.section}"
-                ?mock=${args.mock}
-              ></nosto-dynamic-card>
-            `
-          )}
+        ${handles.map(
+          handle => html`
+            <nosto-dynamic-card
+              handle="${handle}"
+              template="${args.template}"
+              section="${args.section}"
+              ?mock=${args.mock}
+            ></nosto-dynamic-card>
+          `
+        )}
       </div>
     `
   },
