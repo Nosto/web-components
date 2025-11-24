@@ -12,6 +12,7 @@ import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { parseId, toHandle } from "@/shopify/graphql/utils"
 import { handleIndicatorClick, onCarouselScroll } from "./carousel"
 import { mockProduct } from "./mockProduct"
+import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -68,7 +69,7 @@ export class SimpleCard extends ReactiveElement {
     await this.render()
     this.addEventListener("click", this)
     this.shadowRoot?.addEventListener("click", this)
-    this.addEventListener("variantchange", this)
+    this.addEventListener(EVENT_NAME_VARIANT_CHANGE, this)
 
     // Add scroll listener for carousel to update indicators
     if (this.imageMode === "carousel") {
@@ -85,7 +86,7 @@ export class SimpleCard extends ReactiveElement {
       case "click":
         onClick(this, event as MouseEvent)
         break
-      case "variantchange":
+      case EVENT_NAME_VARIANT_CHANGE:
         onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
         break
       case "scroll":

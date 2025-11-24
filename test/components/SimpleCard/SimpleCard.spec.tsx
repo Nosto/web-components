@@ -10,6 +10,7 @@ import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { mockSimpleCardProduct } from "@/mock/products"
+import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 
 describe("SimpleCard", () => {
   beforeEach(() => {
@@ -500,7 +501,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     // Simulate variant change event
-    const variantChangeEvent = new CustomEvent("variantchange", {
+    const variantChangeEvent = new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail: {
         variant: variantProduct.variants[1] // Blue variant
       },

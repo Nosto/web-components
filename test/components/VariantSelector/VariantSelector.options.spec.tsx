@@ -14,6 +14,7 @@ import {
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { getSelectedVariant, selectOption } from "@/components/VariantSelector/options"
+import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 
 describe("VariantSelector - Options Mode", () => {
   beforeEach(() => {
@@ -112,7 +113,7 @@ describe("VariantSelector - Options Mode", () => {
     await selector.connectedCallback()
 
     let eventDetail: Record<string, unknown> | null = null
-    selector.addEventListener("variantchange", (event: Event) => {
+    selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
       eventDetail = (event as CustomEvent).detail
     })
 
@@ -164,7 +165,7 @@ describe("VariantSelector - Options Mode", () => {
     expect(blueButton).toBeTruthy()
 
     let eventFired = false
-    selector.addEventListener("variantchange", () => {
+    selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, () => {
       eventFired = true
     })
 
@@ -367,7 +368,7 @@ describe("VariantSelector - Options Mode", () => {
       const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
 
       let eventDetail: Record<string, unknown> | null = null
-      selector.addEventListener("variantchange", (event: Event) => {
+      selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
         eventDetail = (event as CustomEvent).detail
       })
 
