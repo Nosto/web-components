@@ -1,5 +1,5 @@
 import { JSONProduct } from "@nosto/nosto-js/client"
-import { customElement, property } from "../decorators"
+import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 
 /**
@@ -18,8 +18,8 @@ import { NostoElement } from "../Element"
 
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
-  @property(Array) products!: JSONProduct[]
-  @property(Array) selectedProducts!: JSONProduct[]
+  products!: JSONProduct[]
+  selectedProducts!: JSONProduct[]
 
   connectedCallback() {
     // TODO Sum product prices and render and attach currency code
@@ -74,7 +74,7 @@ function onChange(bundle: Bundle, event: Event) {
   const target = event.target as HTMLInputElement
   if (target.type === "checkbox" && target.value) {
     const handle = target.value
-    const card = bundle.querySelector(`nosto-simple-card[handle="${handle}"]`) as HTMLElement | null
+    const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
     if (target.hasAttribute("checked")) {
       // Remove product from selection
       target.removeAttribute("checked")

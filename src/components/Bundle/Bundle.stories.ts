@@ -92,13 +92,7 @@ export const Default: Story = {
               <h4>{{ title }}</h4>
               <ul>
                 <li v-for="product in products" :key="product.productId">
-                  <input
-                    type="checkbox"
-                    :id="'bundle-' + product.handle"
-                    :name="'bundle-' + product.handle"
-                    :value="product.handle"
-                    checked
-                  />
+                  <input type="checkbox" :value="product.handle" checked />
                   <label :for="'bundle-' + product.handle">Include {{ product.title }}</label>
                 </li>
               </ul>
