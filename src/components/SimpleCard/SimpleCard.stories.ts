@@ -3,8 +3,8 @@ import { html } from "lit"
 import { ifDefined } from "lit/directives/if-defined.js"
 import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
 
-const root = "nosto-shopify1.myshopify.com"
-updateShopifyShop(root)
+const shopifyShop = "nosto-shopify1.myshopify.com"
+updateShopifyShop(shopifyShop)
 
 const meta: Meta = {
   title: "Components/SimpleCard",
@@ -48,7 +48,7 @@ const meta: Meta = {
     }
   },
   args: {
-    root,
+    root: shopifyShop,
     imageMode: "",
     brand: false,
     discount: false,

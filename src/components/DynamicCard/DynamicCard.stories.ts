@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
 
-const root = "nosto-shopify1.myshopify.com"
-updateShopifyShop(root)
+const shopifyShop = "nosto-shopify1.myshopify.com"
+updateShopifyShop(shopifyShop)
 
 const meta = {
   title: "Components/DynamicCard",
@@ -37,7 +37,7 @@ const meta = {
     }
   },
   args: {
-    root,
+    root: shopifyShop,
     template: "",
     section: "",
     mock: false

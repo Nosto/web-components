@@ -4,8 +4,8 @@ import { ifDefined } from "lit/directives/if-defined.js"
 import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
 import "./VariantSelector"
 
-const root = "nosto-shopify1.myshopify.com"
-updateShopifyShop(root)
+const shopifyShop = "nosto-shopify1.myshopify.com"
+updateShopifyShop(shopifyShop)
 
 const meta: Meta = {
   title: "Components/VariantSelector",
@@ -49,7 +49,7 @@ const meta: Meta = {
     }
   },
   args: {
-    root,
+    root: shopifyShop,
     imageMode: "",
     brand: false,
     discount: false,
