@@ -3,9 +3,6 @@ interface Window {
     addSkuToCart?: import("@nosto/nosto-js").addSkuToCart
     migrateToShopifyMarket?: import("./shopify").MigrateToShopifyMarket
   }
-  Storybook?: {
-    shop?: string
-  }
   Shopify?: {
     routes?: {
       root?: string
