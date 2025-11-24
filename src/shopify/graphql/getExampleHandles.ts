@@ -1,8 +1,9 @@
 import { cached } from "@/utils/cached"
 import getExampleHandlesQuery from "@/shopify/graphql/getExampleHandles.graphql?raw"
 
-export const [getExampleHandles, clearCache] = cached(async (root: string, amount = 12) => {
-  const endpoint = `${root}api/2025-10/graphql.json`
+const [getExampleHandlesCached, clearCacheInternal] = cached(async (shopBaseUrl: string) => {
+  const normalizedRoot = shopBaseUrl.endsWith("/") ? shopBaseUrl : shopBaseUrl + "/"
+  const endpoint = `${normalizedRoot}api/2025-10/graphql.json`
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
@@ -10,7 +11,7 @@ export const [getExampleHandles, clearCache] = cached(async (root: string, amoun
     },
     body: JSON.stringify({
       query: getExampleHandlesQuery,
-      variables: { first: amount }
+      variables: { first: 20 }
     })
   })
   if (!response.ok) {
@@ -19,3 +20,10 @@ export const [getExampleHandles, clearCache] = cached(async (root: string, amoun
   const data = await response.json()
   return data?.data?.products?.edges?.map((edge: { node: { handle: string } }) => edge.node.handle) ?? []
 })
+
+export const getExampleHandles = async (root: string, count = 12) => {
+  const results = await getExampleHandlesCached(root)
+  return results.slice(0, count)
+}
+
+export const clearCache = clearCacheInternal
