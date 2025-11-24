@@ -29,11 +29,13 @@ const meta = {
     },
     template: {
       control: "text",
-      description: "The template to use for rendering the product"
+      description: "The template to use for rendering the product",
+      if: { arg: "section", truthy: false }
     },
     section: {
       control: "text",
-      description: "The section to use for rendering the product"
+      description: "The section to use for rendering the product",
+      if: { arg: "template", truthy: false }
     },
     mock: {
       control: "boolean"
@@ -75,6 +77,9 @@ export const Default: Story = {
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
+    if (!args.template && !args.section) {
+      return html`<p>Please provide either a template or section id.</p>`
+    }
     return html`
       <div style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;">
         ${handles.map(
