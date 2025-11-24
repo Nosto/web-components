@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
 import "./VariantSelector"
+import "../SimpleCard/SimpleCard"
 
 /**
  * This story demonstrates how to use Nosto's VariantSelector component
