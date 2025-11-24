@@ -2,7 +2,7 @@ import { cached } from "@/utils/cached"
 import getExampleHandlesQuery from "@/shopify/graphql/getExampleHandles.graphql?raw"
 
 export const [getExampleHandles, clearCache] = cached(async (root: string, amount = 12) => {
-  const endpoint = `${root}api/2025-10/graphql.json`
+  const endpoint = `https://${root}/api/2025-10/graphql.json`
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {

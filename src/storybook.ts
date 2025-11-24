@@ -1,14 +1,5 @@
 import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
 
-function isValidUrl(url: string): boolean {
-  try {
-    new URL(url)
-    return true
-  } catch {
-    return false
-  }
-}
-
 export function updateShopifyShop(shop: string) {
   window.Shopify = {
     shop
@@ -18,12 +9,9 @@ export function updateShopifyShop(shop: string) {
 export const exampleHandlesLoader = async (context: { args: { root?: string; products?: number } }) => {
   const { products, root: argRoot } = context.args
   try {
-    if (!argRoot || !isValidUrl(argRoot)) {
+    if (!argRoot) {
       return { handles: [] }
     }
-    // make sure argRoot is a valid URL
-    new URL(argRoot)
-    // fetch handles
     const handles = await getExampleHandles(argRoot, products)
     return { handles }
   } catch (error) {

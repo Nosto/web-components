@@ -6,8 +6,8 @@ import { http, HttpResponse } from "msw"
 type GraphQLRequestBody = { query: string; variables: { first: number } }
 
 describe("getExampleHandles", () => {
-  const testRoot = "https://example-shop.myshopify.com/"
-  const endpoint = `${testRoot}api/2025-10/graphql.json`
+  const testRoot = "example-shop.myshopify.com"
+  const endpoint = `https://${testRoot}/api/2025-10/graphql.json`
 
   const createMockResponse = (handles: string[]) => ({
     data: {
