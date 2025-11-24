@@ -20,7 +20,6 @@ const meta: Meta = {
   decorators: [
     (story, context) => {
       // Update Shopify root if provided via args
-      console.log("Bundle story decorator", context.args)
       if (context.args?.root) {
         updateShopifyRoot(context.args.root)
       }
@@ -43,11 +42,17 @@ const bundleMockData = {
   "frontpage-nosto-bundle": {
     title: "Complete the Look",
     products: [
-      { id: "awesome-sneakers", title: "Awesome Sneakers 1x", price: "$120.00" },
-      { id: "good-ol-shoes", title: "Good Ol Shoes", price: "$110.00" },
-      { id: "insane-shoes", title: "Insane Shoes", price: "$120.00" },
-      { id: "old-school-kicks", title: "Old School Kicks", price: "$110.00" },
-      { id: "copy-of-awesome-sneakers-1", title: "Copy of Awesome Sneakers", price: "$120.00" }
+      { id: 1, handle: "awesome-sneakers", title: "Awesome Sneakers 1x", price: "$120.00", price_currency_code: "USD" },
+      { id: 2, handle: "good-ol-shoes", title: "Good Ol Shoes", price: "$110.00", price_currency_code: "USD" },
+      { id: 3, handle: "insane-shoes", title: "Insane Shoes", price: "$120.00", price_currency_code: "USD" },
+      { id: 4, handle: "old-school-kicks", title: "Old School Kicks", price: "$110.00", price_currency_code: "USD" },
+      {
+        id: 5,
+        handle: "copy-of-awesome-sneakers-1",
+        title: "Copy of Awesome Sneakers",
+        price: "$120.00",
+        price_currency_code: "USD"
+      }
     ]
   }
 }
@@ -85,21 +90,21 @@ export const Default: Story = {
         <template>
           <nosto-bundle .products="products">
             <div class="bundle-grid">
-              <nosto-simple-card v-for="product in products" :key="product.id" :handle="product.id">
+              <nosto-simple-card v-for="product in products" :key="product.productId" :handle="product.handle">
               </nosto-simple-card>
             </div>
             <div class="bundle-controls">
               <h4>{{ title }}</h4>
               <ul>
-                <li v-for="product in products" :key="product.id">
+                <li v-for="product in products" :key="product.productId">
                   <input
                     type="checkbox"
-                    :id="'bundle-' + product.id"
-                    :name="'bundle-' + product.id"
-                    :value="product.id"
+                    :id="'bundle-' + product.handle"
+                    :name="'bundle-' + product.handle"
+                    :value="product.handle"
                     checked
                   />
-                  <label :for="'bundle-' + product.id">Include {{ product.title }}</label>
+                  <label :for="'bundle-' + product.handle">Include {{ product.title }}</label>
                 </li>
               </ul>
               <button n-atc>Add Bundle to Cart</button>

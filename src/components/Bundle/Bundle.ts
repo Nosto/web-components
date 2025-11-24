@@ -1,18 +1,37 @@
 import { JSONProduct } from "@nosto/nosto-js/client"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
+
+/**
+ * This component allows users to select multiple products from a bundle and displays
+ * the total price. Products can be toggled on/off via checkboxes, and the component
+ * automatically updates the summary price and product visibility. The selected products can
+ * be added to the cart as a group.
+ *
+ * {@include ./examples.md}
+ *
+ * @category Campaign level templating
+ *
+ * @property {JSONProduct[]} products - Array of products in the bundle
+ * @property {JSONProduct[]} selectedProducts - Currently selected products in the bundle
+ */
 
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
-  products!: JSONProduct[]
-  selectedProducts!: JSONProduct[]
+  @property(Array) products!: JSONProduct[]
+  @property(Array) selectedProducts!: JSONProduct[]
 
-  async connectedCallback() {
+  connectedCallback() {
     // TODO Sum product prices and render and attach currency code
     this.selectedProducts = this.products
     setSummaryPrice(this)
     this.addEventListener("click", this)
     this.addEventListener("input", this)
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("click", this)
+    this.removeEventListener("input", this)
   }
 
   handleEvent(event: Event) {
@@ -28,19 +47,24 @@ export class Bundle extends NostoElement {
 }
 
 function setSummaryPrice(bundle: Bundle) {
-  console.log("Setting initial bundle summary price")
-  const initialPrice = bundle.selectedProducts.reduce((sum, product) => {
+  const currencyCode = bundle.selectedProducts[0]?.price_currency_code || "USD"
+  const totalAmount = bundle.selectedProducts.reduce((sum, product) => {
     const priceString = String(product.price)?.replace(/[^0-9.-]+/g, "") || "0"
     return sum + parseFloat(priceString)
   }, 0)
-  document.querySelector("[n-summary-price]")!.textContent = `Total: ${initialPrice.toFixed(2)}`
+  const formatted = new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
+    style: "currency",
+    currency: currencyCode
+  }).format(totalAmount)
+  const summaryElement = bundle.querySelector("[n-summary-price]")
+  summaryElement!.textContent = `Total: ${formatted}`
 }
 
 function isAddToCartClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.hasAttribute("n-atc")
 }
 
-async function onClick(bundle: Bundle, event: MouseEvent) {
+function onClick(bundle: Bundle, event: MouseEvent) {
   // ATC click inside the bundle
   if (isAddToCartClick(event)) {
     console.log("Bundle Add to Cart clicked", bundle.selectedProducts)
@@ -50,21 +74,20 @@ async function onClick(bundle: Bundle, event: MouseEvent) {
 function onChange(bundle: Bundle, event: Event) {
   const target = event.target as HTMLInputElement
   if (target.type === "checkbox" && target.value) {
-    const productId = target.value
-
-    const card = bundle.querySelector(`nosto-simple-card[handle="${productId}"]`) as HTMLElement | null
-    if (!target.checked) {
+    const handle = target.value
+    const card = bundle.querySelector(`nosto-simple-card[handle="${handle}"]`) as HTMLElement | null
+    if (target.hasAttribute("checked")) {
       // Remove product from selection
       target.removeAttribute("checked")
-      bundle.selectedProducts = bundle.selectedProducts.filter(p => p.id !== productId)
+      bundle.selectedProducts = bundle.selectedProducts.filter(p => p.handle !== handle)
       card?.style.setProperty("display", "none")
-      target.setAttribute("checked", "")
     } else {
       // Add product to selection
-      const product = bundle.products.find(p => p.id === productId)
-      if (product && !bundle.selectedProducts.find(p => p.id === productId)) {
+      const product = bundle.products.find(p => p.handle === handle)
+      if (product && !bundle.selectedProducts.find(p => p.handle === handle)) {
         bundle.selectedProducts = [...bundle.selectedProducts, product]
         card?.style.setProperty("display", "block")
+        target.setAttribute("checked", "")
       }
     }
     setSummaryPrice(bundle)
