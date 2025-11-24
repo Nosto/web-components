@@ -5,7 +5,7 @@ import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 export const [getExampleHandles, clearCache] = cached(
   async (
     /** @internal Used for cache key generation only */
-    _shopifyShopBaseUrl: string
+    _shopDomain: string
   ) => {
     const endpoint = getApiUrl()
     const response = await fetch(endpoint, {
