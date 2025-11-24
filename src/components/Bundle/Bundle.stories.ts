@@ -2,7 +2,7 @@ import { html } from "lit"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
-import { updateShopifyShop } from "../../storybook"
+import { updateShopifyShop } from "@/storybook/loader"
 import "./Bundle.stories.css"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
