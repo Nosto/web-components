@@ -54,7 +54,7 @@ export const Default: Story = {
     products: 12
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
@@ -89,12 +89,12 @@ export const Default: Story = {
 export const SingleCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div class="product-card" style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-media query="product.featuredImage" style="width: 100%; height: auto;"></shopify-media>
@@ -123,12 +123,12 @@ export const SingleCard: Story = {
 export const WithVariantSelector: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div class="product-card" style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-media
@@ -157,12 +157,12 @@ export const WithVariantSelector: Story = {
 
 export const WithAllFeatures: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div class="product-card" style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-media query="product.featuredImage" style="width: 100%; height: auto;"></shopify-media>

@@ -54,7 +54,7 @@ export const Default: Story = {
     products: 12
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
@@ -94,12 +94,12 @@ export const Default: Story = {
 export const SingleProduct: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-variant-selector></shopify-variant-selector>
@@ -113,12 +113,12 @@ export const SingleProduct: Story = {
 export const InProductCard: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div class="product-card" style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-media
@@ -143,12 +143,12 @@ export const InProductCard: Story = {
 export const InProductCard_AddToCart: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div class="product-card" style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-media
@@ -186,7 +186,7 @@ export const MultipleProducts: Story = {
     columns: 3
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
@@ -234,7 +234,7 @@ export const MultipleProducts: Story = {
 export const WithShopPayButton: Story = {
   decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const handles = (loaded?.handles as string[]) || []
     return html`
       <script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
       <script
@@ -243,7 +243,7 @@ export const WithShopPayButton: Story = {
       ></script>
       <shopify-store store-domain="${args.root}"></shopify-store>
 
-      <shopify-context type="product" handle="${handles[0]}">
+      <shopify-context type="product" handle="${handles[0] || "default"}">
         <template>
           <div class="product-card" style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px;">
             <shopify-media
