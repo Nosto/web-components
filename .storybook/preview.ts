@@ -7,7 +7,8 @@ export default {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i
-      }
+      },
+      expanded: true
     },
     docs: {
       description: {

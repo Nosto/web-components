@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
-import { exampleHandlesLoader, updateShopifyRoot } from "../../storybook"
+import { exampleHandlesLoader } from "../../storybook"
 
 const root = "https://nosto-shopify1.myshopify.com/"
 
-window.Shopify = {
-  routes: {
-    root
-  }
+window.Storybook = {
+  shop: root
 }
 
 const meta = {
@@ -17,7 +15,7 @@ const meta = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
+        window.Storybook = { shop: context.args.root }
       }
       return story()
     }
@@ -29,11 +27,13 @@ const meta = {
     },
     template: {
       control: "text",
-      description: "The template to use for rendering the product"
+      description: "The template to use for rendering the product",
+      if: { arg: "section", truthy: false }
     },
     section: {
       control: "text",
-      description: "The section to use for rendering the product"
+      description: "The section to use for rendering the product",
+      if: { arg: "template", truthy: false }
     },
     mock: {
       control: "boolean"
@@ -75,18 +75,23 @@ export const Default: Story = {
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
+    if (!args.template && !args.section) {
+      return html`<p>Please provide either a template or section id.</p>`
+    }
     return html`
       <div style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;">
-        ${handles.map(
-          handle => html`
-            <nosto-dynamic-card
-              handle="${handle}"
-              template="${args.template}"
-              section="${args.section}"
-              ?mock=${args.mock}
-            ></nosto-dynamic-card>
-          `
-        )}
+        ${handles
+          .slice(0, args.products)
+          .map(
+            handle => html`
+              <nosto-dynamic-card
+                handle="${handle}"
+                template="${args.template}"
+                section="${args.section}"
+                ?mock=${args.mock}
+              ></nosto-dynamic-card>
+            `
+          )}
       </div>
     `
   },
