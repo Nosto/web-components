@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@nosto/nosto-js": "^2.9.3",
     "@storybook/addon-docs": "^10.0.7",
     "@storybook/react-vite": "^10.0.7",
