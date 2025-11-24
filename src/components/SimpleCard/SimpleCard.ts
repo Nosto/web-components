@@ -1,6 +1,6 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
-import { NostoElement } from "../Element"
+import { ReactiveElement } from "../Element"
 import { generateCardHTML, updateSimpleCardContent } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
@@ -12,6 +12,7 @@ import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { parseId, toHandle } from "@/shopify/graphql/utils"
 import { handleIndicatorClick, onCarouselScroll } from "./carousel"
 import { mockProduct } from "./mockProduct"
+import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -42,7 +43,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-simple-card", { observe: true })
-export class SimpleCard extends NostoElement {
+export class SimpleCard extends ReactiveElement {
   @property(String) handle!: string
   @property(String) imageMode?: "alternate" | "carousel"
   @property(Boolean) brand?: boolean
@@ -63,18 +64,12 @@ export class SimpleCard extends NostoElement {
     this.attachShadow({ mode: "open" })
   }
 
-  async attributeChangedCallback(_: string, oldValue: string | null, newValue: string | null) {
-    if (this.isConnected && oldValue !== newValue) {
-      await loadAndRenderMarkup(this)
-    }
-  }
-
   async connectedCallback() {
     assertRequired(this, "handle")
-    await loadAndRenderMarkup(this)
+    await this.render()
     this.addEventListener("click", this)
     this.shadowRoot?.addEventListener("click", this)
-    this.addEventListener("variantchange", this)
+    this.addEventListener(EVENT_NAME_VARIANT_CHANGE, this)
 
     // Add scroll listener for carousel to update indicators
     if (this.imageMode === "carousel") {
@@ -82,12 +77,16 @@ export class SimpleCard extends NostoElement {
     }
   }
 
+  async render() {
+    await loadAndRenderMarkup(this)
+  }
+
   handleEvent(event: Event) {
     switch (event.type) {
       case "click":
         onClick(this, event as MouseEvent)
         break
-      case "variantchange":
+      case EVENT_NAME_VARIANT_CHANGE:
         onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
         break
       case "scroll":

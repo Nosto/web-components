@@ -8,6 +8,7 @@ import type { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/type
 import { mockProductWithSingleValueOptionTest, mockProductWithVariants } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
+import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 
 describe("VariantSelector - Compact Mode", () => {
   beforeEach(() => {
@@ -143,7 +144,7 @@ describe("VariantSelector - Compact Mode", () => {
     let eventFired = false
     let eventDetail: VariantChangeDetail | undefined
 
-    selector.addEventListener("variantchange", e => {
+    selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, e => {
       eventFired = true
       eventDetail = (e as CustomEvent).detail
     })

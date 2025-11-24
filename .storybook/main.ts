@@ -1,6 +1,6 @@
 import type { StorybookConfig } from "@storybook/web-components-vite"
 
-export default {
+const config: StorybookConfig = {
   stories: ["./*.stories.ts", "../src/**/*.stories.ts"],
   addons: ["@storybook/addon-docs"],
   framework: {
@@ -8,6 +8,8 @@ export default {
     options: {}
   },
   typescript: {
-    reactDocgen: false
+    check: true
   }
-} satisfies StorybookConfig
+}
+
+export default config

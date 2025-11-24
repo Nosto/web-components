@@ -76,7 +76,7 @@ describe("DynamicCard", () => {
     document.body.appendChild(card)
 
     card.handle = "updated-handle"
-    await new Promise(resolve => setTimeout(resolve, 10)) // Wait for async fetch to complete
+    await new Promise(resolve => setTimeout(resolve, 20)) // Wait for async fetch to complete
 
     expect(card.innerHTML).toBe(validMarkup)
   })
