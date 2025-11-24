@@ -1,3 +1,11 @@
+## [10.1.4](https://github.com/Nosto/web-components/compare/v10.1.3...v10.1.4) (2025-11-24)
+
+
+### Bug Fixes
+
+* attempt at simplifying createShopifyUrl in storybook ([e113919](https://github.com/Nosto/web-components/commit/e113919bc36775215f2837ce78b2bf9f9cafe311))
+* revert window.Storybook usage ([d6ab7d6](https://github.com/Nosto/web-components/commit/d6ab7d65a9b639a12ab056f00f1bd2fe8dc82dfb))
+
 ## [10.1.3](https://github.com/Nosto/web-components/compare/v10.1.2...v10.1.3) (2025-11-21)
 
 
