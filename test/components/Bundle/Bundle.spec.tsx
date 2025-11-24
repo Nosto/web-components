@@ -64,7 +64,7 @@ describe("Bundle", () => {
     // dispatch input event
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
-    expect(bundle.selectedProducts.find((p: any) => p.handle === "a")).toBeUndefined()
+    expect(bundle.selectedProducts.find((p: JSONProduct) => p.handle === "a")).toBeUndefined()
     expect(cardA.style.display).toBe("none")
     expect(summary.textContent).toBe("Total: $5.00")
   })
