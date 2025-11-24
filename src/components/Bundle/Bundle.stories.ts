@@ -2,7 +2,7 @@ import { html } from "lit"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
-import { updateShopifyRoot } from "@/storybook"
+import { updateShopifyShop } from "@/storybook"
 import "./Bundle.stories.css"
 
 const root = "https://nosto-shopify1.myshopify.com/"
@@ -21,7 +21,7 @@ const meta: Meta = {
     (story, context) => {
       // Update Shopify root if provided via args
       if (context.args?.root) {
-        updateShopifyRoot(context.args.root)
+        updateShopifyShop(context.args.root)
       }
       return story()
     }
