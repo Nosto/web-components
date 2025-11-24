@@ -2,7 +2,7 @@ import { html } from "lit"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
-import { updateShopifyShop } from "@/storybook"
+import { updateShopifyShop } from "../../storybook"
 import "./Bundle.stories.css"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
@@ -26,9 +26,6 @@ const meta: Meta = {
       control: "text",
       description: "The Shopify store root URL"
     }
-  },
-  args: {
-    root: shopifyShop
   }
 }
 
@@ -40,14 +37,7 @@ const bundleMockData = {
       { id: 1, handle: "awesome-sneakers", title: "Awesome Sneakers 1x", price: 120.0, price_currency_code: "USD" },
       { id: 2, handle: "good-ol-shoes", title: "Good Ol Shoes", price: 110.0, price_currency_code: "USD" },
       { id: 3, handle: "insane-shoes", title: "Insane Shoes", price: 120.0, price_currency_code: "USD" },
-      { id: 4, handle: "old-school-kicks", title: "Old School Kicks", price: 110.0, price_currency_code: "USD" },
-      {
-        id: 5,
-        handle: "copy-of-awesome-sneakers-1",
-        title: "Copy of Awesome Sneakers",
-        price: 120.0,
-        price_currency_code: "USD"
-      }
+      { id: 4, handle: "old-school-kicks", title: "Old School Kicks", price: 110.0, price_currency_code: "USD" }
     ]
   }
 }
@@ -92,7 +82,7 @@ export const Default: Story = {
               <ul>
                 <li v-for="product in products">
                   <input type="checkbox" :value="product.handle" checked />
-                  <label :for="bundle-' + product.handle">Include {{ product.title }}</label>
+                  <label :for="'bundle-' + product.handle">Include {{ product.title }}</label>
                 </li>
               </ul>
               <button n-atc>Add Bundle to Cart</button>
