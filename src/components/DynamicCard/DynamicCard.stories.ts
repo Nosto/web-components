@@ -41,8 +41,8 @@ const meta = {
   },
   args: {
     root,
-    template: "",
-    section: "",
+    template: null,
+    section: null,
     mock: false
   },
   tags: ["autodocs"]
