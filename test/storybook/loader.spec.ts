@@ -7,8 +7,8 @@ import { http, HttpResponse } from "msw"
 type GraphQLRequestBody = { query: string; variables: { first: number } }
 
 describe("exampleHandlesLoader", () => {
-  const shopifyTestBaseUrl = "https://example-shop.myshopify.com/"
-  const endpoint = `${shopifyTestBaseUrl}api/2025-10/graphql.json`
+  const shopifyDomain = "example-shop.myshopify.com"
+  const endpoint = `https://${shopifyDomain}/api/2025-10/graphql.json`
 
   const createMockResponse = (handles: string[]) => ({
     data: {
@@ -29,7 +29,7 @@ describe("exampleHandlesLoader", () => {
       })
     )
 
-    const result = await exampleHandlesLoader({ args: { shopifyShop: shopifyTestBaseUrl } })
+    const result = await exampleHandlesLoader({ args: { shopifyShop: shopifyDomain } })
     expect(result.handles).toHaveLength(12) // default count from loader
   })
 
@@ -40,7 +40,7 @@ describe("exampleHandlesLoader", () => {
       })
     )
 
-    const result = await exampleHandlesLoader({ args: { shopifyShop: shopifyTestBaseUrl, count: 10 } })
+    const result = await exampleHandlesLoader({ args: { shopifyShop: shopifyDomain, count: 10 } })
     expect(result.handles).toHaveLength(10)
   })
 
@@ -56,7 +56,7 @@ describe("exampleHandlesLoader", () => {
 
     const result = await exampleHandlesLoader({
       args: {
-        shopifyShop: shopifyTestBaseUrl,
+        shopifyShop: shopifyDomain,
         count: 15
       }
     })

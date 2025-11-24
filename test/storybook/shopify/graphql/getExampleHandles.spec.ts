@@ -6,8 +6,8 @@ import { http, HttpResponse } from "msw"
 type GraphQLRequestBody = { query: string; variables: { first: number } }
 
 describe("getExampleHandles", () => {
-  const shopifyTestBaseUrl = "https://example-shop.myshopify.com/"
-  const endpoint = `${shopifyTestBaseUrl}api/2025-10/graphql.json`
+  const shopifyDomain = "example-shop.myshopify.com"
+  const endpoint = `https://${shopifyDomain}/api/2025-10/graphql.json`
 
   const createMockResponse = (handles: string[]) => ({
     data: {
@@ -28,7 +28,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const handles = await getExampleHandles(shopifyTestBaseUrl)
+    const handles = await getExampleHandles(shopifyDomain)
     expect(handles).toEqual(["product-1", "product-2", "product-3"])
   })
 
@@ -39,7 +39,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await expect(getExampleHandles(shopifyTestBaseUrl)).rejects.toThrow(
+    await expect(getExampleHandles(shopifyDomain)).rejects.toThrow(
       `Failed to fetch example handles from ${endpoint}: 404 Not Found`
     )
   })
@@ -53,7 +53,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const handles = await getExampleHandles(shopifyTestBaseUrl)
+    const handles = await getExampleHandles(shopifyDomain)
     expect(handles).toEqual([])
   })
 
@@ -67,8 +67,8 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const result1 = await getExampleHandles(shopifyTestBaseUrl)
-    const result2 = await getExampleHandles(shopifyTestBaseUrl)
+    const result1 = await getExampleHandles(shopifyDomain)
+    const result2 = await getExampleHandles(shopifyDomain)
 
     expect(result1).toEqual(["product-1"])
     expect(result2).toEqual(["product-1"])
@@ -85,9 +85,9 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(shopifyTestBaseUrl)
+    await getExampleHandles(shopifyDomain)
     clearCache()
-    await getExampleHandles(shopifyTestBaseUrl)
+    await getExampleHandles(shopifyDomain)
 
     expect(callCount).toBe(2)
   })
@@ -105,8 +105,8 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await expect(getExampleHandles(shopifyTestBaseUrl)).rejects.toThrow()
-    const result = await getExampleHandles(shopifyTestBaseUrl)
+    await expect(getExampleHandles(shopifyDomain)).rejects.toThrow()
+    const result = await getExampleHandles(shopifyDomain)
 
     expect(result).toEqual(["product-1"])
     expect(callCount).toBe(2)
@@ -128,7 +128,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(shopifyTestBaseUrl)
+    await getExampleHandles(shopifyDomain)
 
     expect(requestBody).not.toBeNull()
     const body = requestBody as GraphQLRequestBody
@@ -156,7 +156,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(shopifyTestBaseUrl)
+    await getExampleHandles(shopifyDomain)
 
     expect(contentType).toBe("application/json")
   })
