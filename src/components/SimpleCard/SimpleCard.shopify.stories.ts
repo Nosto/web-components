@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
+import "./SimpleCard"
 
 /**
  * This story demonstrates how to use Nosto's SimpleCard component
