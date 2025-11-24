@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { html } from "lit"
-import { exampleHandlesLoader, updateShopifyShop } from "../../storybook"
+import { exampleHandlesLoader, updateShopifyShop } from "@/storybook/loader"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
 updateShopifyShop(shopifyShop)

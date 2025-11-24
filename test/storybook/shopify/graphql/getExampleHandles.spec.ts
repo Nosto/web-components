@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getExampleHandles, clearCache } from "@/shopify/graphql/getExampleHandles"
-import { addHandlers } from "../../msw.setup"
+import { getExampleHandles, clearCache } from "@/storybook/shopify/graphql/getExampleHandles"
+import { addHandlers } from "../../../msw.setup"
 import { http, HttpResponse } from "msw"
 
 type GraphQLRequestBody = { query: string; variables: { first: number } }
 
 describe("getExampleHandles", () => {
-  const testRoot = "https://example-shop.myshopify.com/"
-  const endpoint = `${testRoot}api/2025-10/graphql.json`
+  const shopifyTestBaseUrl = "https://example-shop.myshopify.com/"
+  const endpoint = `${shopifyTestBaseUrl}api/2025-10/graphql.json`
 
   const createMockResponse = (handles: string[]) => ({
     data: {
@@ -28,67 +28,8 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const handles = await getExampleHandles(testRoot)
+    const handles = await getExampleHandles(shopifyTestBaseUrl)
     expect(handles).toEqual(["product-1", "product-2", "product-3"])
-  })
-
-  it("should fetch specified amount of product handles", async () => {
-    addHandlers(
-      http.post(endpoint, () => {
-        return HttpResponse.json(createMockResponse(["product-1", "product-2", "product-3", "product-4", "product-5"]))
-      })
-    )
-
-    const handles = await getExampleHandles(testRoot, 5)
-    expect(handles).toEqual(["product-1", "product-2", "product-3", "product-4", "product-5"])
-  })
-
-  it("should use default amount of 12 when not specified", async () => {
-    let requestBody: unknown = null
-
-    addHandlers(
-      http.post(endpoint, async ({ request }) => {
-        requestBody = await request.json()
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: []
-            }
-          }
-        })
-      })
-    )
-
-    await getExampleHandles(testRoot)
-
-    expect(requestBody).not.toBeNull()
-    const body = requestBody as GraphQLRequestBody
-    expect(body.variables).toEqual({ first: 12 })
-    expect(body.query).toContain("$first: Int!")
-  })
-
-  it("should use custom amount when specified", async () => {
-    let requestBody: unknown = null
-
-    addHandlers(
-      http.post(endpoint, async ({ request }) => {
-        requestBody = await request.json()
-        return HttpResponse.json({
-          data: {
-            products: {
-              edges: []
-            }
-          }
-        })
-      })
-    )
-
-    await getExampleHandles(testRoot, 20)
-
-    expect(requestBody).not.toBeNull()
-    const body = requestBody as GraphQLRequestBody
-    expect(body.variables).toEqual({ first: 20 })
-    expect(body.query).toContain("$first: Int!")
   })
 
   it("should throw error when fetch fails with 404", async () => {
@@ -98,7 +39,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await expect(getExampleHandles(testRoot)).rejects.toThrow(
+    await expect(getExampleHandles(shopifyTestBaseUrl)).rejects.toThrow(
       `Failed to fetch example handles from ${endpoint}: 404 Not Found`
     )
   })
@@ -112,7 +53,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const handles = await getExampleHandles(testRoot)
+    const handles = await getExampleHandles(shopifyTestBaseUrl)
     expect(handles).toEqual([])
   })
 
@@ -126,8 +67,8 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const result1 = await getExampleHandles(testRoot)
-    const result2 = await getExampleHandles(testRoot)
+    const result1 = await getExampleHandles(shopifyTestBaseUrl)
+    const result2 = await getExampleHandles(shopifyTestBaseUrl)
 
     expect(result1).toEqual(["product-1"])
     expect(result2).toEqual(["product-1"])
@@ -144,9 +85,9 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(testRoot)
+    await getExampleHandles(shopifyTestBaseUrl)
     clearCache()
-    await getExampleHandles(testRoot)
+    await getExampleHandles(shopifyTestBaseUrl)
 
     expect(callCount).toBe(2)
   })
@@ -164,8 +105,8 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await expect(getExampleHandles(testRoot)).rejects.toThrow()
-    const result = await getExampleHandles(testRoot)
+    await expect(getExampleHandles(shopifyTestBaseUrl)).rejects.toThrow()
+    const result = await getExampleHandles(shopifyTestBaseUrl)
 
     expect(result).toEqual(["product-1"])
     expect(callCount).toBe(2)
@@ -187,7 +128,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(testRoot)
+    await getExampleHandles(shopifyTestBaseUrl)
 
     expect(requestBody).not.toBeNull()
     const body = requestBody as GraphQLRequestBody
@@ -196,7 +137,7 @@ describe("getExampleHandles", () => {
     expect(body.query).toContain("edges")
     expect(body.query).toContain("node")
     expect(body.query).toContain("handle")
-    expect(body.variables).toEqual({ first: 12 })
+    expect(body.variables).toEqual({ first: 20 })
   })
 
   it("should send correct Content-Type header", async () => {
@@ -215,7 +156,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(testRoot)
+    await getExampleHandles(shopifyTestBaseUrl)
 
     expect(contentType).toBe("application/json")
   })
