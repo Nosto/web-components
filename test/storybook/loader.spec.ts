@@ -29,7 +29,7 @@ describe("exampleHandlesLoader", () => {
       })
     )
 
-    const result = await exampleHandlesLoader({ args: { shopBaseUrl: shopifyTestBaseUrl } })
+    const result = await exampleHandlesLoader({ args: { shopifyShop: shopifyTestBaseUrl } })
     expect(result.handles).toHaveLength(12) // default count from loader
   })
 
@@ -40,7 +40,7 @@ describe("exampleHandlesLoader", () => {
       })
     )
 
-    const result = await exampleHandlesLoader({ args: { shopBaseUrl: shopifyTestBaseUrl, count: 10 } })
+    const result = await exampleHandlesLoader({ args: { shopifyShop: shopifyTestBaseUrl, count: 10 } })
     expect(result.handles).toHaveLength(10)
   })
 
@@ -56,7 +56,7 @@ describe("exampleHandlesLoader", () => {
 
     const result = await exampleHandlesLoader({
       args: {
-        shopBaseUrl: shopifyTestBaseUrl,
+        shopifyShop: shopifyTestBaseUrl,
         count: 15
       }
     })

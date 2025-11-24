@@ -15,17 +15,15 @@ export function updateShopifyShop(shop: string) {
   }
 }
 
-export const exampleHandlesLoader = async (context: { args: { shopBaseUrl?: string; count?: number } }) => {
-  const { shopBaseUrl, count = 12 } = context.args
+export const exampleHandlesLoader = async (context: { args: { shopifyShop?: string; count?: number } }) => {
+  const { shopifyShop, count = 12 } = context.args
   try {
-    if (!shopBaseUrl || !isValidUrl(shopBaseUrl)) {
+    const shopifyShopUrl = `https://${shopifyShop}/`
+    if (!shopifyShop || !isValidUrl(shopifyShopUrl)) {
       return { handles: [] }
     }
-    // make sure argRoot is a valid URL
-    new URL(shopBaseUrl)
     // fetch handles
-    const normalizedUrl = shopBaseUrl.endsWith("/") ? shopBaseUrl : shopBaseUrl + "/"
-    const handles = await getExampleHandles(normalizedUrl)
+    const handles = await getExampleHandles(shopifyShopUrl)
     return { handles: handles.slice(0, count) }
   } catch (error) {
     console.warn("Error fetching example handles:", error)

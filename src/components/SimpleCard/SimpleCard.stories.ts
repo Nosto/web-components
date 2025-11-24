@@ -11,18 +11,18 @@ const meta: Meta = {
   component: "nosto-simple-card",
   decorators: [
     (story, context) => {
-      // Update Shopify root if provided via args
-      if (context.args?.root) {
-        updateShopifyShop(context.args.root)
+      // Update Shopify shop hostname if provided via args
+      if (context.args?.shopifyShop) {
+        updateShopifyShop(context.args.shopifyShop)
       }
       return story()
     }
   ],
   loaders: [exampleHandlesLoader],
   argTypes: {
-    root: {
+    shopifyShop: {
       control: "text",
-      description: "The Shopify store root URL"
+      description: "The Shopify store hostname"
     },
     imageMode: {
       control: "select",
@@ -48,7 +48,7 @@ const meta: Meta = {
     }
   },
   args: {
-    root: shopifyShop,
+    shopifyShop,
     imageMode: "",
     brand: false,
     discount: false,
