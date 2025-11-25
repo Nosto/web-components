@@ -1,3 +1,15 @@
+# [10.3.0](https://github.com/Nosto/web-components/compare/v10.2.0...v10.3.0) (2025-11-25)
+
+
+### Bug Fixes
+
+* **test:** improve error message in addProductHandlers for better debugging ([7fb5e28](https://github.com/Nosto/web-components/commit/7fb5e28b49781111bef046f3002248cc65eefd1f))
+
+
+### Features
+
+* **test:** extract addProductHandlers utility for reusable mock setup ([b0c79c5](https://github.com/Nosto/web-components/commit/b0c79c5fbf71f5c5b762d469a8154b2f33f840e4))
+
 # [10.2.0](https://github.com/Nosto/web-components/compare/v10.1.8...v10.2.0) (2025-11-25)
 
 
