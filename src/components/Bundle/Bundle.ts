@@ -48,7 +48,6 @@ export class Bundle extends NostoElement {
         onClick(this, event as MouseEvent)
         break
       case "input":
-        console.log(event)
         onChange(this, event as Event)
         break
     }
@@ -90,28 +89,34 @@ function onClick(bundle: Bundle, event: MouseEvent) {
   }
 }
 
+function setCardVisibility(card: HTMLElement | null, visible: boolean) {
+  if (card) {
+    card.style.display = visible ? "block" : "none"
+  }
+}
+
 function onChange(bundle: Bundle, event: Event) {
   const target = event.target as HTMLInputElement
   if (target.type !== "checkbox") {
     return
   }
+
+  const handle = target.value
+  const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
   if (target.value) {
-    const handle = target.value
-    const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
     if (!target.checked) {
       // Remove product from selection
       target.removeAttribute("checked")
       bundle.selectedProducts = bundle.selectedProducts?.filter(p => p.handle !== handle)
-      card?.style.setProperty("display", "none")
     } else {
       // Add product to selection
       const product = bundle.products.find(p => p.handle === handle)
       if (product && !bundle.selectedProducts?.find(p => p.handle === handle)) {
         bundle.selectedProducts = [...(bundle.selectedProducts ?? []), product]
-        card?.style.setProperty("display", "block")
         target.setAttribute("checked", "")
       }
     }
+    setCardVisibility(card, target.checked)
     setSummaryPrice(bundle)
   }
 }
