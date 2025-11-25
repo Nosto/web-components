@@ -36,27 +36,28 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
 }
 
 function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
-  // Use media objects first, fallback to images array
   const primaryImage = product.images?.[0]
   if (!primaryImage) {
     return html`<div class="image placeholder"></div>`
   }
 
-  // Carousel mode takes precedence over alternate mode
+  // carousel mode
   if (element.imageMode === "carousel" && product.images?.length > 1) {
     return generateCarouselHTML(element, product)
   }
-
-  const hasAlternate = element.imageMode === "alternate" && product.images?.length > 1
-  const alternateImage = hasAlternate ? product.images[1] : undefined
-
+  // alternate mode
+  if (element.imageMode === "alternate" && product.images?.length > 1) {
+    const alternateImage = product.images[1]
+    return html`
+      <div class="image alternate" part="image">
+        ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
+        ${generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)}
+      </div>
+    `
+  }
+  // default mode
   return html`
-    <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
-      ${hasAlternate && alternateImage
-        ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
-        : ""}
-    </div>
+    <div class="image" part="image">${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}</div>
   `
 }
 
@@ -131,12 +132,8 @@ function updateImages(element: SimpleCard, variant: ShopifyVariant) {
   if (!variant.image) return
 
   const props = getImageProps(variant.image, element.sizes)
-  const imagesToUpdate = [
-    element.shadowRoot!.querySelector(".img.primary"),
-    element.imageMode === "alternate" && element.shadowRoot!.querySelector(".img.alternate")
-  ].filter(Boolean) as HTMLImageElement[]
-
-  imagesToUpdate.forEach(img => setImageProps(img, props))
+  const img = element.shadowRoot!.querySelector(".img.primary") as HTMLImageElement
+  setImageProps(img, props)
 }
 
 function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
