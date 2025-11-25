@@ -1,22 +1,31 @@
+// @ts-check
+
+import eslint from "@eslint/js"
+import { defineConfig } from "eslint/config"
+import tseslint from "typescript-eslint"
 import storybook from "eslint-plugin-storybook"
 import globals from "globals"
-import tseslint from "typescript-eslint"
-import eslintConfigPrettier from "eslint-config-prettier"
+import eslintConfigPrettier from "eslint-config-prettier/flat"
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import barrelFiles from "eslint-plugin-barrel-files"
 
-export default tseslint.config(
-  { ignores: ["dist", "docs"] },
+export default defineConfig(
+  { ignores: ["*", "!src", "!test"] },
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
   {
-    extends: [...tseslint.configs.recommended],
     files: ["**/*.{js,ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser
+      globals: globals.browser,
+      parserOptions: {
+        jsx: true
+      }
     }
   },
   {
     plugins: {
+      // @ts-expect-error incompatible type for rules
       "barrel-files": barrelFiles
     },
     files: ["src/**/*.{js,ts,tsx}"],
