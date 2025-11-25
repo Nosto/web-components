@@ -38,10 +38,6 @@ export class Bundle extends NostoElement {
     addListeners(this)
   }
 
-  disconnectedCallback() {
-    removeListeners(this)
-  }
-
   handleEvent(event: Event) {
     switch (event.type) {
       case "click":
@@ -52,11 +48,6 @@ export class Bundle extends NostoElement {
         break
     }
   }
-}
-
-function removeListeners(bundle: Bundle) {
-  bundle.removeEventListener("click", bundle)
-  bundle.removeEventListener("input", bundle)
 }
 
 function addListeners(bundle: Bundle) {
