@@ -6,13 +6,14 @@ export function updateShopifyShop(shop: string) {
   }
 }
 
-export const exampleHandlesLoader = async (context: { args: { root?: string; count?: number } }) => {
-  const { root, count = 12 } = context.args
+export const exampleHandlesLoader = async (context: { args: { shopifyShop?: string; count?: number } }) => {
+  const { shopifyShop, count = 12 } = context.args
   try {
-    if (!root) {
+    if (!shopifyShop) {
       return { handles: [] }
     }
-    const handles = await getExampleHandles(root)
+    // fetch handles
+    const handles = await getExampleHandles(shopifyShop)
     return { handles: handles.slice(0, count) }
   } catch (error) {
     console.warn("Error fetching example handles:", error)

@@ -29,7 +29,7 @@ describe("exampleHandlesLoader", () => {
       })
     )
 
-    const result = await exampleHandlesLoader({ args: { root: shopifyShop } })
+    const result = await exampleHandlesLoader({ args: { shopifyShop } })
     expect(result.handles).toHaveLength(12) // default count from loader
   })
 
@@ -40,7 +40,7 @@ describe("exampleHandlesLoader", () => {
       })
     )
 
-    const result = await exampleHandlesLoader({ args: { root: shopifyShop, count: 10 } })
+    const result = await exampleHandlesLoader({ args: { shopifyShop, count: 10 } })
     expect(result.handles).toHaveLength(10)
   })
 
@@ -56,7 +56,7 @@ describe("exampleHandlesLoader", () => {
 
     const result = await exampleHandlesLoader({
       args: {
-        root: shopifyShop,
+        shopifyShop,
         count: 15
       }
     })
