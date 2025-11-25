@@ -1,3 +1,11 @@
+## [10.1.8](https://github.com/Nosto/web-components/compare/v10.1.7...v10.1.8) (2025-11-25)
+
+
+### Bug Fixes
+
+* address warning on [@fires](https://github.com/fires) tag usage ([6326384](https://github.com/Nosto/web-components/commit/63263846e0a214b43aed1ed4c25f4a94c7bf1423))
+* update deprecated eslint config and scope it to src and test folders ([5b2e862](https://github.com/Nosto/web-components/commit/5b2e8627d03e00c26d8c70694fd5db276a6b03df))
+
 ## [10.1.7](https://github.com/Nosto/web-components/compare/v10.1.6...v10.1.7) (2025-11-25)
 
 
