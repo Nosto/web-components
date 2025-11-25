@@ -2,20 +2,22 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
-import { setImageProps } from "../Image/Image"
-import { ShopifyImage, ShopifyMoney, ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { ShopifyImage, ShopifyMoney, ShopifyProduct } from "@/shopify/graphql/types"
 import { generateCarouselHTML } from "./carousel"
 import { parseId } from "@/shopify/graphql/utils"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
 
-  const prices = (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || product
+  const selectedVariant =
+    (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || undefined
+  const prices = selectedVariant ?? product
+  const images = selectedVariant?.image && !element.imageMode ? [selectedVariant.image] : product.images
 
   return html`
     <div class="card" part="card">
       <a href="${normalizeUrl(product.onlineStoreUrl)}" class="link" part="link">
-        ${generateImageHTML(element, product)}
+        ${generateImageHTML(element, product.title, images)}
         <div class="content" part="content">
           ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
           <h3 class="title" part="title">${product.title}</h3>
@@ -35,27 +37,25 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+function generateImageHTML(element: SimpleCard, title: string, images: ShopifyImage[]) {
   // Use media objects first, fallback to images array
-  const primaryImage = product.images?.[0]
+  const primaryImage = images[0]
   if (!primaryImage) {
     return html`<div class="image placeholder"></div>`
   }
 
   // Carousel mode takes precedence over alternate mode
-  if (element.imageMode === "carousel" && product.images?.length > 1) {
-    return generateCarouselHTML(element, product)
+  if (element.imageMode === "carousel" && images?.length > 1) {
+    return generateCarouselHTML(element, title, images)
   }
 
-  const hasAlternate = element.imageMode === "alternate" && product.images?.length > 1
-  const alternateImage = hasAlternate ? product.images[1] : undefined
+  const hasAlternate = element.imageMode === "alternate" && images?.length > 1
+  const alternateImage = hasAlternate ? images[1] : undefined
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
-      ${hasAlternate && alternateImage
-        ? generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)
-        : ""}
+      ${generateImgHtml(primaryImage, title, "img primary", element.sizes)}
+      ${hasAlternate && alternateImage ? generateImgHtml(alternateImage, title, "img alternate", element.sizes) : ""}
     </div>
   `
 }
@@ -117,40 +117,6 @@ function formatPrice({ amount, currencyCode }: ShopifyMoney) {
     style: "currency",
     currency: currencyCode
   }).format(+amount)
-}
-
-export function updateSimpleCardContent(element: SimpleCard, variant: ShopifyVariant) {
-  const skipImageUpdate = element.imageMode === "carousel" || element.imageMode === "alternate"
-  if (!skipImageUpdate) {
-    updateImages(element, variant)
-  }
-  updatePrices(element, variant)
-}
-
-function updateImages(element: SimpleCard, variant: ShopifyVariant) {
-  if (!variant.image) return
-
-  const props = getImageProps(variant.image, element.sizes)
-  const imagesToUpdate = [
-    element.shadowRoot!.querySelector(".img.primary"),
-    element.imageMode === "alternate" && element.shadowRoot!.querySelector(".img.alternate")
-  ].filter(Boolean) as HTMLImageElement[]
-
-  imagesToUpdate.forEach(img => setImageProps(img, props))
-}
-
-function updatePrices(element: SimpleCard, variant: ShopifyVariant) {
-  const hasDiscount = element.discount && isDiscounted(variant)
-
-  const currentPriceElement = element.shadowRoot!.querySelector(".price-current")
-  if (currentPriceElement) {
-    currentPriceElement.textContent = formatPrice(variant.price)
-  }
-
-  const originalPriceElement = element.shadowRoot!.querySelector(".price-original")
-  if (hasDiscount && originalPriceElement) {
-    originalPriceElement.textContent = formatPrice(variant.compareAtPrice!)
-  }
 }
 
 function isDiscounted(prices: { compareAtPrice: ShopifyMoney | null; price: ShopifyMoney }) {
