@@ -38,6 +38,7 @@ export class Bundle extends NostoElement {
         onClick(this, event as MouseEvent)
         break
       case "input":
+        console.log(event)
         onChange(this, event as Event)
         break
     }
@@ -81,10 +82,11 @@ function onClick(bundle: Bundle, event: MouseEvent) {
 
 function onChange(bundle: Bundle, event: Event) {
   const target = event.target as HTMLInputElement
+  console.log("Bundle input changed", target)
   if (target.type === "checkbox" && target.value) {
     const handle = target.value
     const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
-    if (target.hasAttribute("checked")) {
+    if (!target.checked) {
       // Remove product from selection
       target.removeAttribute("checked")
       bundle.selectedProducts = bundle.selectedProducts?.filter(p => p.handle !== handle)

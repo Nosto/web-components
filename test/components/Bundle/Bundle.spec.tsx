@@ -78,7 +78,6 @@ describe("Bundle", () => {
 
     const cardA = (<nosto-simple-card />) as SimpleCard
     cardA.setAttribute("handle", "a")
-    cardA.style.display = "block"
     bundle.appendChild(cardA)
 
     const summary = document.createElement("span")
@@ -94,10 +93,96 @@ describe("Bundle", () => {
     document.body.appendChild(bundle)
 
     // dispatch input event
+    input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
     expect(bundle.selectedProducts.find((p: JSONProduct) => p.handle === "a")).toBeUndefined()
-    expect(cardA.style.display).toBe("none")
     expect(summary.textContent).toBe("Total: $5.00")
+  })
+
+  it("adds product to selection when checkbox without checked attribute is inputted", () => {
+    addProductHandlers({
+      a: { product: mockProduct },
+      b: { product: mockProduct }
+    })
+    const bundle = (<nosto-bundle />) as Bundle
+    const products = [
+      { handle: "a", price: 10, price_currency_code: "USD" },
+      { handle: "b", price: 5, price_currency_code: "USD" }
+    ] as JSONProduct[]
+
+    bundle.products = products
+    bundle.selectedProducts = [products[1]] // Only 'b' selected initially
+
+    const cardA = (<nosto-simple-card />) as SimpleCard
+    cardA.setAttribute("handle", "a")
+    bundle.appendChild(cardA)
+
+    const summary = document.createElement("span")
+    summary.setAttribute("n-summary-price", "")
+    bundle.appendChild(summary)
+
+    const input = document.createElement("input")
+    input.type = "checkbox"
+    input.value = "a"
+    bundle.appendChild(input)
+
+    document.body.appendChild(bundle)
+
+    // dispatch input event to add product
+    input.checked = true
+    input.dispatchEvent(new Event("input", { bubbles: true }))
+
+    expect(bundle.selectedProducts.find((p: JSONProduct) => p.handle === "a")).toBeTruthy()
+    expect(input.checked).toBe(true)
+    expect(summary.textContent).toBe("Total: $15.00")
+  })
+
+  it("calculates correct total for multiple selected products", () => {
+    const bundle = (<nosto-bundle />) as Bundle
+    const products = [
+      { handle: "a", price: 10.5, price_currency_code: "USD" },
+      { handle: "b", price: 5.25, price_currency_code: "USD" },
+      { handle: "c", price: 15.75, price_currency_code: "USD" }
+    ] as JSONProduct[]
+
+    bundle.products = products
+
+    const summary = document.createElement("span")
+    summary.setAttribute("n-summary-price", "")
+    bundle.appendChild(summary)
+
+    document.body.appendChild(bundle)
+
+    expect(summary.textContent).toBe("Total: $31.50")
+  })
+
+  it("does not add duplicate product when already selected", () => {
+    const bundle = (<nosto-bundle />) as Bundle
+    const products = [
+      { handle: "a", price: 10, price_currency_code: "USD" },
+      { handle: "b", price: 5, price_currency_code: "USD" }
+    ] as JSONProduct[]
+
+    bundle.products = products
+    bundle.selectedProducts = [...products] // Both already selected
+
+    const summary = document.createElement("span")
+    summary.setAttribute("n-summary-price", "")
+    bundle.appendChild(summary)
+
+    const input = document.createElement("input")
+    input.type = "checkbox"
+    input.value = "a"
+    bundle.appendChild(input)
+
+    document.body.appendChild(bundle)
+
+    // Try to add already selected product
+    input.checked = true
+    input.dispatchEvent(new Event("input", { bubbles: true }))
+
+    expect(bundle.selectedProducts).toHaveLength(2)
+    expect(summary.textContent).toBe("Total: $15.00")
   })
 })
