@@ -12,7 +12,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const selectedVariant =
     (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || undefined
   const prices = selectedVariant ?? product
-  const images = selectedVariant && !element.imageMode ? [selectedVariant.image!] : product.images
+  const images = selectedVariant?.image && !element.imageMode ? [selectedVariant.image] : product.images
 
   return html`
     <div class="card" part="card">

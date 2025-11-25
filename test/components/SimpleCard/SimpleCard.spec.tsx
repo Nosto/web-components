@@ -11,7 +11,6 @@ import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { mockSimpleCardProduct } from "@/mock/products"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
-import { request } from "http"
 
 describe("SimpleCard", () => {
   beforeEach(() => {
