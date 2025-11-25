@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import { describe, it, expect } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "../../utils/jsx"
@@ -8,16 +8,6 @@ import { http, HttpResponse } from "msw"
 import { mockSimpleCardProduct } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
-
-beforeEach(() => {
-  // clean DOM before each test
-  document.body.innerHTML = ""
-})
-
-afterEach(() => {
-  vi.restoreAllMocks()
-  document.body.innerHTML = ""
-})
 
 describe("Bundle", () => {
   const mockProduct = mockSimpleCardProduct

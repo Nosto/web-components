@@ -8,21 +8,31 @@ import { NostoElement } from "../Element"
  * automatically updates the summary price and product visibility. The selected products can
  * be added to the cart as a group.
  *
+ *
+ *
  * {@include ./examples.md}
  *
  * @category Campaign level templating
  *
  * @property {JSONProduct[]} products - Array of products in the bundle
- * @property {JSONProduct[]} selectedProducts - Currently selected products in the bundle
+ *
+ * @remarks
+ *
+ * ## Required elements
+ *
+ * The component requires the following attribute within a child element to function correctly:
+ *
+ * - `n-summary-price`: An element (e.g., `<span>`, `<div>`) where the total price of selected products will be displayed.
+ * Example: `<span n-summary-price></span>`
  */
 
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
   products!: JSONProduct[]
+  /** @hidden */
   selectedProducts?: JSONProduct[]
 
   connectedCallback() {
-    // TODO Sum product prices and render and attach currency code
     this.selectedProducts = this.products
     setSummaryPrice(this)
     addListeners(this)
@@ -82,8 +92,10 @@ function onClick(bundle: Bundle, event: MouseEvent) {
 
 function onChange(bundle: Bundle, event: Event) {
   const target = event.target as HTMLInputElement
-  console.log("Bundle input changed", target)
-  if (target.type === "checkbox" && target.value) {
+  if (target.type !== "checkbox") {
+    return
+  }
+  if (target.value) {
     const handle = target.value
     const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
     if (!target.checked) {
