@@ -36,7 +36,7 @@ export function addProductHandlers(responses: Record<string, ProductHandlerRespo
         return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
       }
       if (!response.product && response.status) {
-        return HttpResponse.json({ errors: [{ message: "Error" }] }, { status: response.status })
+        return HttpResponse.json({ errors: [{ message: "Failed to fetch product" }] }, { status: response.status })
       }
       const product = (response.product || response) as ShopifyProduct
       // Wrap images in nodes structure for GraphQL response
