@@ -39,7 +39,7 @@ export function addProductHandlers(responses: Record<string, ProductHandlerRespo
       // Wrap images and variants in nodes structure for GraphQL response
       const graphqlProduct = {
         ...product,
-        images: { nodes: product.images }
+        images: { nodes: product.images || [] }
       }
       return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
     })

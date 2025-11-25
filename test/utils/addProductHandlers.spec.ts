@@ -53,9 +53,11 @@ describe("addProductHandlers", () => {
     await expect(fetchProduct("error-product")).rejects.toThrow()
   })
 
-  it("should support product without explicit product key", async () => {
+  it("should support product as ProductHandlerResponse", async () => {
+    // Test that the function handles a ShopifyProduct treated as ProductHandlerResponse
+    const response = mockSimpleCardProduct as ProductHandlerResponse
     addProductHandlers({
-      "test-product": mockSimpleCardProduct as unknown as { product?: ShopifyProduct; status?: number }
+      "test-product": response
     })
 
     const result = await fetchProduct("test-product")
