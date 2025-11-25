@@ -11,6 +11,7 @@ import "@/components/SectionCampaign/SectionCampaign"
 import "@/components/SimpleCard/SimpleCard"
 import "@/components/SkuOptions/SkuOptions"
 import "@/components/VariantSelector/VariantSelector"
+import "@/components/Bundle/Bundle"
 
 HTMLDialogElement.prototype.showModal = function () {
   this.toggleAttribute("open", true)
