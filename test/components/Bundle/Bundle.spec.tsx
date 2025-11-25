@@ -1,6 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
+import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
+import { createElement } from "../../utils/jsx"
+import { getApiUrl } from "@/shopify/graphql/getApiUrl"
+import { addHandlers } from "../../msw.setup"
+import { http, HttpResponse } from "msw"
+import { mockSimpleCardProduct } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
+import type { ShopifyProduct } from "@/shopify/graphql/types"
 
 beforeEach(() => {
   // clean DOM before each test
@@ -13,11 +20,33 @@ afterEach(() => {
 })
 
 describe("Bundle", () => {
+  const mockProduct = mockSimpleCardProduct
+  function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
+    const graphqlPath = getApiUrl().pathname
+
+    addHandlers(
+      http.post(graphqlPath, async ({ request }) => {
+        const body = (await request.json()) as { variables: { handle: string } }
+        const handle = body.variables.handle
+        const response = responses[handle]
+        if (!response) {
+          return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
+        }
+        const product = (response.product || response) as ShopifyProduct
+        // Wrap images and variants in nodes structure for GraphQL response
+        const graphqlProduct = {
+          ...product,
+          images: { nodes: product.images }
+        }
+        return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
+      })
+    )
+  }
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-bundle")).toBeDefined()
   })
   it("initializes selectedProducts and updates summary on connectedCallback", () => {
-    const bundle = document.createElement("nosto-bundle") as unknown as Bundle
+    const bundle = (<nosto-bundle />) as Bundle
     const products = [
       { handle: "a", price: 10, price_currency_code: "USD" },
       { handle: "b", price: 5, price_currency_code: "USD" }
@@ -35,7 +64,10 @@ describe("Bundle", () => {
   })
 
   it("removes product from selection when checkbox with checked attribute is inputted", () => {
-    const bundle = document.createElement("nosto-bundle") as unknown as Bundle
+    addProductHandlers({
+      a: { product: mockProduct }
+    })
+    const bundle = (<nosto-bundle />) as Bundle
     const products = [
       { handle: "a", price: 10, price_currency_code: "USD" },
       { handle: "b", price: 5, price_currency_code: "USD" }
@@ -44,7 +76,7 @@ describe("Bundle", () => {
     bundle.products = products
     bundle.selectedProducts = [...products]
 
-    const cardA = document.createElement("nosto-simple-card")
+    const cardA = (<nosto-simple-card />) as SimpleCard
     cardA.setAttribute("handle", "a")
     cardA.style.display = "block"
     bundle.appendChild(cardA)
@@ -59,7 +91,7 @@ describe("Bundle", () => {
     input.setAttribute("checked", "")
     bundle.appendChild(input)
 
-    document.body.appendChild(bundle) // attach to run connectedCallback listeners
+    document.body.appendChild(bundle)
 
     // dispatch input event
     input.dispatchEvent(new Event("input", { bubbles: true }))
