@@ -13,6 +13,8 @@ import { parseId, toHandle } from "@/shopify/graphql/utils"
 import { handleIndicatorClick, onCarouselScroll } from "./carousel"
 import { mockProduct } from "./mockProduct"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
+import { provide } from "../inject"
+import { handleKey, variantIdKey } from "./keys"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -65,6 +67,8 @@ export class SimpleCard extends ReactiveElement {
 
   async connectedCallback() {
     assertRequired(this, "handle")
+    provide(this, handleKey, this.handle)
+    provide(this, variantIdKey, this.variantId)
     await this.render()
     this.addEventListener("click", this)
     this.shadowRoot?.addEventListener("click", this)

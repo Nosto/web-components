@@ -122,7 +122,6 @@ export const Default: Story = {
               sizes="${args.sizes || ""}"
             >
               <nosto-variant-selector
-                handle="${handle}"
                 mode="${args.mode}"
                 ?placeholder=${args.placeholder}
                 ?preselect=${args.preselect}

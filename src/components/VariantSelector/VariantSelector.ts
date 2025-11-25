@@ -3,6 +3,8 @@ import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
 import { loadAndRenderMarkup } from "./options"
 import { loadAndRenderCompact } from "./compact"
+import { inject } from "../inject"
+import { handleKey, variantIdKey } from "../SimpleCard/keys"
 
 /**
  * A custom element that displays product variant options as clickable pills.
@@ -49,6 +51,12 @@ export class VariantSelector extends ReactiveElement {
   }
 
   async connectedCallback() {
+    if (!this.handle) {
+      this.handle = inject<string>(this, handleKey) || ""
+    }
+    if (!this.variantId) {
+      this.variantId = inject<number>(this, variantIdKey)
+    }
     assertRequired(this, "handle")
     await this.render(true)
   }
