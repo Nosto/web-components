@@ -413,6 +413,13 @@ describe("SimpleCard", () => {
                 id: "gid://shopify/ProductVariant/1001",
                 title: "Red",
                 availableForSale: true,
+                image: {
+                  altText: "Red variant image",
+                  height: 800,
+                  width: 800,
+                  thumbhash: null,
+                  url: "https://example.com/red.jpg"
+                },
                 price: { currencyCode: "USD", amount: "24.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "29.99" },
                 product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
@@ -425,6 +432,13 @@ describe("SimpleCard", () => {
                 id: "gid://shopify/ProductVariant/1002",
                 title: "Blue",
                 availableForSale: true,
+                image: {
+                  altText: "Blue variant image",
+                  height: 800,
+                  width: 800,
+                  thumbhash: null,
+                  url: "https://example.com/blue.jpg"
+                },
                 price: { currencyCode: "USD", amount: "19.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "24.99" },
                 product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
@@ -474,6 +488,7 @@ describe("SimpleCard", () => {
     })
 
     const card = (<nosto-simple-card handle="variant-product" />) as SimpleCard
+    document.body.appendChild(card)
     await card.connectedCallback()
 
     // Simulate variant change event
@@ -487,7 +502,9 @@ describe("SimpleCard", () => {
     card.dispatchEvent(variantChangeEvent)
 
     // Wait for the event to be processed
-    await new Promise(resolve => setTimeout(resolve, 0))
+    await new Promise(resolve => setTimeout(resolve, 40))
+
+    expect(card.variantId).toBe(1002)
 
     // Verify that the image was updated to the blue variant
     const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement
