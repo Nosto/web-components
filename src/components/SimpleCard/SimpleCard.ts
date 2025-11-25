@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
-import { generateCardHTML, updateSimpleCardContent } from "./markup"
+import { generateCardHTML } from "./markup"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
@@ -45,6 +45,7 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends ReactiveElement {
   @property(String) handle!: string
+  @property(Number) variantId?: number
   @property(String) imageMode?: "alternate" | "carousel"
   @property(Boolean) brand?: boolean
   @property(Boolean) discount?: boolean
@@ -56,8 +57,6 @@ export class SimpleCard extends ReactiveElement {
 
   /** @hidden */
   productId?: number
-  /** @hidden */
-  variantId?: number
 
   constructor() {
     super()
@@ -124,14 +123,12 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
-  element.productId = parseId(variant.product.id)
-  element.variantId = parseId(variant.id)
   const handle = toHandle(variant.product.onlineStoreUrl)
   if (handle && handle !== element.handle) {
     element.handle = handle
-  } else {
-    updateSimpleCardContent(element, variant)
   }
+  element.productId = parseId(variant.product.id)
+  element.variantId = parseId(variant.id)
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {

@@ -1,16 +1,15 @@
 import type { SimpleCard } from "./SimpleCard"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyImage } from "@/shopify/graphql/types"
 import { html } from "@/templating/html"
 import { generateImgHtml } from "./markup"
 
-export function generateCarouselHTML(element: SimpleCard, product: ShopifyProduct) {
-  const images = product.images
+export function generateCarouselHTML(element: SimpleCard, title: string, images: ShopifyImage[]) {
   return html`
     <div class="image carousel" part="image">
       <div class="carousel-images">
         ${images.map(
           img => html`
-            <div class="carousel-slide">${generateImgHtml(img, product.title, "img carousel-img", element.sizes)}</div>
+            <div class="carousel-slide">${generateImgHtml(img, title, "img carousel-img", element.sizes)}</div>
           `
         )}
       </div>
