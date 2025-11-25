@@ -12,12 +12,15 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const selectedVariant =
     (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || undefined
   const prices = selectedVariant ?? product
-  const images = selectedVariant?.image && !element.imageMode ? [selectedVariant.image] : product.images
+
+  // Create a product with variant-specific images if needed
+  const productForImages =
+    selectedVariant?.image && !element.imageMode ? { ...product, images: [selectedVariant.image] } : product
 
   return html`
     <div class="card" part="card">
       <a href="${normalizeUrl(product.onlineStoreUrl)}" class="link" part="link">
-        ${generateImageHTML(element, product.title, images)}
+        ${generateImageHTML(element, productForImages)}
         <div class="content" part="content">
           ${element.brand && product.vendor ? html`<div class="brand" part="brand">${product.vendor}</div>` : ""}
           <h3 class="title" part="title">${product.title}</h3>
@@ -37,26 +40,29 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   `
 }
 
-function generateImageHTML(element: SimpleCard, title: string, images: ShopifyImage[]) {
-  // Use media objects first, fallback to images array
-  const primaryImage = images[0]
+function generateImageHTML(element: SimpleCard, product: ShopifyProduct) {
+  const primaryImage = product.images?.[0]
   if (!primaryImage) {
     return html`<div class="image placeholder"></div>`
   }
 
-  // Carousel mode takes precedence over alternate mode
-  if (element.imageMode === "carousel" && images?.length > 1) {
-    return generateCarouselHTML(element, title, images)
+  // carousel mode
+  if (element.imageMode === "carousel" && product.images?.length > 1) {
+    return generateCarouselHTML(element, product)
   }
-
-  const hasAlternate = element.imageMode === "alternate" && images?.length > 1
-  const alternateImage = hasAlternate ? images[1] : undefined
-
+  // alternate mode
+  if (element.imageMode === "alternate" && product.images?.length > 1) {
+    const alternateImage = product.images[1]
+    return html`
+      <div class="image alternate" part="image">
+        ${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}
+        ${generateImgHtml(alternateImage, product.title, "img alternate", element.sizes)}
+      </div>
+    `
+  }
+  // default mode
   return html`
-    <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateImgHtml(primaryImage, title, "img primary", element.sizes)}
-      ${hasAlternate && alternateImage ? generateImgHtml(alternateImage, title, "img alternate", element.sizes) : ""}
-    </div>
+    <div class="image" part="image">${generateImgHtml(primaryImage, product.title, "img primary", element.sizes)}</div>
   `
 }
 
