@@ -512,6 +512,7 @@ describe("SimpleCard", () => {
     })
 
     const card = (<nosto-simple-card handle="variant-product" />) as SimpleCard
+    document.body.appendChild(card)
     await card.connectedCallback()
 
     // Simulate variant change event
@@ -526,6 +527,8 @@ describe("SimpleCard", () => {
 
     // Wait for the event to be processed
     await new Promise(resolve => setTimeout(resolve, 40))
+
+    expect(card.variantId).toBe(1002)
 
     // Verify that the image was updated to the blue variant
     const primaryImg = card.shadowRoot?.querySelector(".img.primary") as HTMLImageElement

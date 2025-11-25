@@ -123,12 +123,12 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
+  element.productId = parseId(variant.product.id)
+  element.variantId = parseId(variant.id)
   const handle = toHandle(variant.product.onlineStoreUrl)
   if (handle && handle !== element.handle) {
     element.handle = handle
   }
-  element.productId = parseId(variant.product.id)
-  element.variantId = parseId(variant.id)
 }
 
 async function loadAndRenderMarkup(element: SimpleCard) {
