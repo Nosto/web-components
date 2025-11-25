@@ -1,3 +1,27 @@
+# [10.2.0](https://github.com/Nosto/web-components/compare/v10.1.8...v10.2.0) (2025-11-25)
+
+
+### Bug Fixes
+
+* add more test cases ([028813c](https://github.com/Nosto/web-components/commit/028813c5497a8f655aff1171bd30d65088ac9d67))
+* change story level root references ([5fac7ea](https://github.com/Nosto/web-components/commit/5fac7eac4ce219f99543ab6918dbe038890ad279))
+* import correct shopify funcition ([aa5d9a9](https://github.com/Nosto/web-components/commit/aa5d9a9849872252318633f22a0a1bbdeb1b45f0))
+* mock simple card product in test ([e9ce7e0](https://github.com/Nosto/web-components/commit/e9ce7e0fd9e10ae807288632cd1d345e240b2839))
+* replace any usage ([8ece18b](https://github.com/Nosto/web-components/commit/8ece18bae9463ee36e453b63214db1f02e0e0aa1))
+* review comments ([fc76f2a](https://github.com/Nosto/web-components/commit/fc76f2a5c35ea1a9de848a0e6d95cee2b1595dc4))
+* review comments ([e505dd0](https://github.com/Nosto/web-components/commit/e505dd03cca6d34b6d7dd55ad450e3c1d88639c8))
+* review comments ([fabe731](https://github.com/Nosto/web-components/commit/fabe73150e8845e45e57ed9d1a231bcacf325b7c))
+* review comments ([623a721](https://github.com/Nosto/web-components/commit/623a721c68a7c6def7ce8acddea6c95bd942391b))
+* review comments ([c2e6303](https://github.com/Nosto/web-components/commit/c2e6303838cb87f39749410df6832b86044c9fdc))
+* review comments ([647b675](https://github.com/Nosto/web-components/commit/647b6752cb251492e6675ade0a2c4495f07839e8))
+* review comments, initial test file ([4597f14](https://github.com/Nosto/web-components/commit/4597f14e94877863fba3373e6ae384aebc742178))
+* use price as number ([d509dcd](https://github.com/Nosto/web-components/commit/d509dcd49209c5838977853ec473dd0a05fd25e8))
+
+
+### Features
+
+* initial Bundle component ([cb84b5d](https://github.com/Nosto/web-components/commit/cb84b5d4115f7e7117b9137e774da0693e980fe6))
+
 ## [10.1.8](https://github.com/Nosto/web-components/compare/v10.1.7...v10.1.8) (2025-11-25)
 
 
