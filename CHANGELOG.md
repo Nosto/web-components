@@ -1,3 +1,12 @@
+## [10.1.7](https://github.com/Nosto/web-components/compare/v10.1.6...v10.1.7) (2025-11-25)
+
+
+### Bug Fixes
+
+* issues with storybook ([7347b71](https://github.com/Nosto/web-components/commit/7347b712d82c3335acd5cfcfe2a3da9ffd873c12))
+* lint errors ([0a20231](https://github.com/Nosto/web-components/commit/0a2023115bb5c9a5c4d0e5c472574d7e79616a97))
+* use shop domain ([d210045](https://github.com/Nosto/web-components/commit/d21004532da7169f4a821da4b28f803f86af72c1))
+
 ## [10.1.6](https://github.com/Nosto/web-components/compare/v10.1.5...v10.1.6) (2025-11-24)
 
 
