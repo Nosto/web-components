@@ -1,10 +1,7 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
-import { addHandlers } from "../../msw.setup"
-import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
 import {
   mockProductWithSingleValueOptionTest,
   mockProductWithAllSingleValueOptionsTest,
@@ -12,36 +9,14 @@ import {
   mockProductWithoutVariants
 } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { getApiUrl } from "@/shopify/graphql/getApiUrl"
 import { getSelectedVariant, selectOption } from "@/components/VariantSelector/options"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
+import { addProductHandlers } from "../../utils/addProductHandlers"
 
 describe("VariantSelector - Options Mode", () => {
   beforeEach(() => {
     clearProductCache()
   })
-
-  function addProductHandlers(responses: Record<string, { product?: ShopifyProduct; status?: number }>) {
-    const graphqlPath = getApiUrl().pathname
-
-    addHandlers(
-      http.post(graphqlPath, async ({ request }) => {
-        const body = (await request.json()) as { variables: { handle: string } }
-        const handle = body.variables.handle
-        const response = responses[handle]
-        if (!response) {
-          return HttpResponse.json({ errors: [{ message: "Not Found" }] }, { status: 404 })
-        }
-        const product = (response.product || response) as ShopifyProduct
-        // Wrap images and variants in nodes structure for GraphQL response
-        const graphqlProduct = {
-          ...product,
-          images: { nodes: product.images }
-        }
-        return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
-      })
-    )
-  }
 
   function getShadowContent(selector: VariantSelector) {
     const shadowContent = selector.shadowRoot?.innerHTML || ""
