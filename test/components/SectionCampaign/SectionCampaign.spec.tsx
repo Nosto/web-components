@@ -16,7 +16,7 @@ describe("SectionCampaign", () => {
     const products = [{ handle: "product-a" }, { handle: "product-b" }]
     const { attributeProductClicksInCampaign, load, mockBuilder } = mockNostoRecs({ placement1: { products } })
 
-    const sectionHTML = `<div class=\"wrapper\"><div class=\"inner\">Rendered Section</div></div>`
+    const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
     addHandlers(
       http.get("/search", () => {
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
@@ -33,7 +33,7 @@ describe("SectionCampaign", () => {
     const callArg = (mockBuilder.setElements as Mock<RequestBuilder["setElements"]>).mock.calls[0][0]
     expect(callArg).toContain("placement1")
 
-    expect(el.innerHTML).toBe(`<div class=\"wrapper\"><div class=\"inner\">Rendered Section</div></div>`)
+    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
     expect(el.hasAttribute("loading")).toBe(false)
   })

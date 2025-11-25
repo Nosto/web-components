@@ -7,7 +7,7 @@ export function transform(src: string | URL, { width, height, crop }: Operations
 
   // Extract path and extension
   const pathMatch = u.pathname.match(
-    /^(.*\/[^\/]+?)(?:_(?:pico|icon|thumb|small|compact|medium|large|grande|original|master))?(?:_([0-9]*)x([0-9]*)(?:_(?:crop_)?([a-zA-Z0-9]+))?)?(\.[a-z0-9]+)$/i
+    /^(.*\/[^/]+?)(?:_(?:pico|icon|thumb|small|compact|medium|large|grande|original|master))?(?:_([0-9]*)x([0-9]*)(?:_(?:crop_)?([a-zA-Z0-9]+))?)?(\.[a-z0-9]+)$/i
   )
   if (!pathMatch) return src.toString()
   const [, base, wStr, hStr, cropStr, ext] = pathMatch
