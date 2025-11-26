@@ -28,7 +28,7 @@ describe("VariantSelector - Options Mode", () => {
   })
 
   it("should throw an error if handle attribute is not provided", async () => {
-    const selector = (<nosto-variant-selector />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector></nosto-variant-selector>`) as VariantSelector
     await expect(selector.connectedCallback()).rejects.toThrow("Property handle is required.")
   })
 
@@ -37,7 +37,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowContent = getShadowContent(selector)
@@ -57,7 +57,7 @@ describe("VariantSelector - Options Mode", () => {
       "no-variants": { product: mockProductWithoutVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="no-variants"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowContent = getShadowContent(selector)
@@ -69,7 +69,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     expect(selector.selectedOptions["Size"]).toBeUndefined()
@@ -84,7 +84,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     let eventDetail: Record<string, unknown> | null = null
@@ -107,7 +107,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" preselect></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     // Initial selection should be first variant (Small/Red)
@@ -125,7 +125,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
@@ -161,7 +161,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" preselect></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
@@ -189,7 +189,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" preselect />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" preselect></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     expect(selector.selectedOptions["Size"]).toBe("Small")
@@ -203,7 +203,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     expect(selector.selectedOptions["Size"]).toBeUndefined()
@@ -217,7 +217,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
@@ -231,7 +231,7 @@ describe("VariantSelector - Options Mode", () => {
       "no-variants": { product: mockProductWithoutVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="no-variants"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowRoot = selector.shadowRoot!
@@ -245,7 +245,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
 
     // Add some content to be slotted
     const slottedContent = document.createElement("div")
@@ -276,7 +276,7 @@ describe("VariantSelector - Options Mode", () => {
         "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
-      const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="single-value-test"></nosto-variant-selector>`) as VariantSelector
       await selector.connectedCallback()
 
       // Material should be auto-selected even without preselect
@@ -290,7 +290,7 @@ describe("VariantSelector - Options Mode", () => {
         "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
-      const selector = (<nosto-variant-selector handle="single-value-test" preselect />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="single-value-test" preselect></nosto-variant-selector>`) as VariantSelector
       await selector.connectedCallback()
 
       // Both should be selected - Material auto-selected, Size preselected
@@ -303,7 +303,7 @@ describe("VariantSelector - Options Mode", () => {
         "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
-      const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="single-value-test"></nosto-variant-selector>`) as VariantSelector
       await selector.connectedCallback()
 
       const shadowContent = getShadowContent(selector)
@@ -324,7 +324,7 @@ describe("VariantSelector - Options Mode", () => {
         "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
       })
 
-      const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="all-single-value-test"></nosto-variant-selector>`) as VariantSelector
       await selector.connectedCallback()
 
       const shadowContent = getShadowContent(selector)
@@ -340,7 +340,7 @@ describe("VariantSelector - Options Mode", () => {
         "all-single-value-test": { product: mockProductWithAllSingleValueOptionsTest }
       })
 
-      const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="all-single-value-test"></nosto-variant-selector>`) as VariantSelector
 
       let eventDetail: Record<string, unknown> | null = null
       selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
@@ -359,7 +359,7 @@ describe("VariantSelector - Options Mode", () => {
         "single-value-test": { product: mockProductWithSingleValueOptionTest }
       })
 
-      const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="single-value-test"></nosto-variant-selector>`) as VariantSelector
       await selector.connectedCallback()
 
       // Select a size option (Material is auto-selected)
@@ -379,7 +379,8 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" variantId={1002} />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
+    selector.variantId = 1002
     await selector.connectedCallback()
 
     expect(selector.selectedOptions["Size"]).toBe("Medium")
@@ -391,7 +392,7 @@ describe("VariantSelector - Options Mode", () => {
       "event-test-handle": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="event-test-handle" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="event-test-handle"></nosto-variant-selector>`) as VariantSelector
 
     // Set up event listener to capture the event
     let eventEmitted = false
@@ -413,7 +414,7 @@ describe("VariantSelector - Options Mode", () => {
       "no-variants": { product: mockProductWithoutVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="no-variants"></nosto-variant-selector>`) as VariantSelector
 
     // Set up event listener to capture the event
     let eventEmitted = false
@@ -436,14 +437,14 @@ describe("VariantSelector - Options Mode", () => {
     })
 
     // First, render without placeholder to populate cache
-    const selector1 = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector1 = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector1.connectedCallback()
 
     const initialContent = getShadowContent(selector1)
     expect(initialContent).toContain("Size:")
 
     // Second, render with placeholder enabled - should use cached content immediately
-    const selector2 = (<nosto-variant-selector handle="variant-test-product" placeholder={true} />) as VariantSelector
+    const selector2 = createElement(html`<nosto-variant-selector handle="variant-test-product" placeholder></nosto-variant-selector>`) as VariantSelector
     await selector2.connectedCallback()
 
     const placeholderContent = getShadowContent(selector2)
@@ -458,11 +459,11 @@ describe("VariantSelector - Options Mode", () => {
     })
 
     // First, render without placeholder to populate cache for variant-test-product
-    const selector1 = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
+    const selector1 = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
     await selector1.connectedCallback()
 
     // Second, render with placeholder enabled with different handle - should use cached content
-    const selector2 = (<nosto-variant-selector handle="different-handle" placeholder={true} />) as VariantSelector
+    const selector2 = createElement(html`<nosto-variant-selector handle="different-handle" placeholder></nosto-variant-selector>`) as VariantSelector
     await selector2.connectedCallback()
 
     const content = getShadowContent(selector2)
@@ -476,7 +477,8 @@ describe("VariantSelector - Options Mode", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={2} />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
+      selector.maxValues = 2
       await selector.connectedCallback()
 
       const shadowContent = getShadowContent(selector)
@@ -498,7 +500,8 @@ describe("VariantSelector - Options Mode", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={1} />) as VariantSelector
+      const selector = createElement(html`<nosto-variant-selector handle="variant-test-product"></nosto-variant-selector>`) as VariantSelector
+      selector.maxValues = 1
       await selector.connectedCallback()
 
       const shadowRoot = selector.shadowRoot!

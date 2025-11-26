@@ -97,18 +97,16 @@ describe("Product", () => {
     })
 
     it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
-      element.appendChild(
-        <div n-sku-id="456">
-          <div n-atc>Add to Cart</div>
-        </div>
-      )
+      element.appendChild(createElement(html`<div n-sku-id="456">
+          <div n-atc="">Add to Cart</div>
+        </div>`))
       element.connectedCallback()
 
       checkSkuAddToCart("456")
     })
 
     it("should emit nosto:atc:no-sku event when no sku is selected", async () => {
-      element.appendChild(<div n-atc>Add to Cart</div>)
+      element.appendChild(createElement(html`<div n-atc="">Add to Cart</div>`))
 
       const placementElement = document.createElement("div")
       placementElement.classList.add("nosto_element")
@@ -122,11 +120,9 @@ describe("Product", () => {
     })
 
     it("should toggle sku-selected attribute when selectedSkuId changes", () => {
-      element.appendChild(
-        <div n-sku-id="456">
-          <div n-atc>Add to Cart</div>
-        </div>
-      )
+      element.appendChild(createElement(html`<div n-sku-id="456">
+          <div n-atc="">Add to Cart</div>
+        </div>`))
       element.connectedCallback()
 
       expect(element.hasAttribute("sku-selected")).toBe(false)
@@ -135,14 +131,11 @@ describe("Product", () => {
     })
 
     it("should handle [n-atc] on every individual sku option", () => {
-      element.append(
-        <div n-sku-id="456">
-          <span n-atc>Blue</span>
-        </div>,
-        <div n-sku-id="101">
-          <span n-atc>Black</span>
-        </div>
-      )
+      element.append(createElement(html`<div n-sku-id="456">
+          <span n-atc="">Blue</span>
+        </div>`), createElement(html`<div n-sku-id="101">
+          <span n-atc="">Black</span>
+        </div>`))
       element.connectedCallback()
 
       checkSkuAddToCart("456")
@@ -150,15 +143,12 @@ describe("Product", () => {
     })
 
     it("should pick n-sku-selector change events", () => {
-      element.append(
-        <select n-sku-selector>
+      element.append(createElement(html`<select n-sku-selector>
           <option value="456">SKU 1</option>
           <option value="457" selected>
             SKU 2
           </option>
-        </select>,
-        <div n-atc>Add to cart</div>
-      )
+        </select>`), createElement(html`<div n-atc="">Add to cart</div>`))
       element.connectedCallback()
 
       element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
@@ -166,7 +156,7 @@ describe("Product", () => {
     })
 
     it("should pick up [n-sku-id] clicks", () => {
-      element.append(<div n-sku-id="234">1st sku</div>, <div n-sku-id="345">end sku</div>, <div n-atc>Add to cart</div>)
+      element.append(createElement(html`<div n-sku-id="234">1st sku</div>`), createElement(html`<div n-sku-id="345">end sku</div>`), createElement(html`<div n-atc="">Add to cart</div>`))
       element.connectedCallback()
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
@@ -174,13 +164,9 @@ describe("Product", () => {
     })
 
     it("should update images on [n-sku-id] clicks", () => {
-      element.append(
-        <div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">
+      element.append(createElement(html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">
           1st sku
-        </div>,
-        <div n-sku-id="345">end sku</div>,
-        <div n-atc>Add to cart</div>
-      )
+        </div>`), createElement(html`<div n-sku-id="345">end sku</div>`), createElement(html`<div n-atc="">Add to cart</div>`))
       element.connectedCallback()
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
@@ -193,13 +179,12 @@ describe("Product", () => {
     })
 
     it("should update images based on sku data", () => {
+      const skuData = JSON.stringify([{ id: "234", image: "blue.jpg", altImage: "green.jpg" }, { id: "345" }])
       element.append(
-        <div n-sku-id="234">1st sku</div>,
-        <div n-sku-id="345">end sku</div>,
-        <script type="application/json" n-sku-data>
-          {JSON.stringify([{ id: "234", image: "blue.jpg", altImage: "green.jpg" }, { id: "345" }])}
-        </script>,
-        <div n-atc>Add to cart</div>
+        createElement(html`<div n-sku-id="234">1st sku</div>`),
+        createElement(html`<div n-sku-id="345">end sku</div>`),
+        createElement(html`<script type="application/json" n-sku-data>${{ html: skuData }}</script>`),
+        createElement(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
 
@@ -213,14 +198,13 @@ describe("Product", () => {
     })
 
     it("should update prices based on sku data", () => {
+      const skuData = JSON.stringify([{ id: "234", price: "10€", listPrice: "15€" }, { id: "345" }])
       element.append(
-        <div n-sku-id="234">1st sku</div>,
-        <span n-price>20€</span>,
-        <span n-list-price>30€</span>,
-        <script type="application/json" n-sku-data>
-          {JSON.stringify([{ id: "234", price: "10€", listPrice: "15€" }, { id: "345" }])}
-        </script>,
-        <div n-atc>Add to cart</div>
+        createElement(html`<div n-sku-id="234">1st sku</div>`),
+        createElement(html`<span n-price="">20€</span>`),
+        createElement(html`<span n-list-price="">30€</span>`),
+        createElement(html`<script type="application/json" n-sku-data>${{ html: skuData }}</script>`),
+        createElement(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
 
@@ -230,15 +214,9 @@ describe("Product", () => {
     })
 
     it("should update images elements on [n-sku-id] clicks", () => {
-      element.append(
-        <div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">
+      element.append(createElement(html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">
           1st sku
-        </div>,
-        <img n-img />,
-        <img n-alt-img />,
-        <div n-sku-id="345">end sku</div>,
-        <div n-atc>Add to cart</div>
-      )
+        </div>`), createElement(html`<img n-img="">`), createElement(html`<img n-alt-img="">`), createElement(html`<div n-sku-id="345">end sku</div>`), createElement(html`<div n-atc="">Add to cart</div>`))
       element.connectedCallback()
 
       element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
@@ -252,15 +230,11 @@ describe("Product", () => {
 
     it("should update prices on [n-sku-id] clicks", () => {
       element.append(
-        <div n-sku-id="234" n-price="10€" n-list-price="15€">
-          1st sku
-        </div>,
-        <span n-price>20€</span>,
-        <span n-list-price>30€</span>,
-        <div n-sku-id="345" n-price="12€" n-list-price="17€">
-          2nd sku
-        </div>,
-        <div n-atc>Add to cart</div>
+        createElement(html`<div n-sku-id="234" n-price="10€" n-list-price="15€">1st sku</div>`),
+        createElement(html`<span n-price="">20€</span>`),
+        createElement(html`<span n-list-price="">30€</span>`),
+        createElement(html`<div n-sku-id="345" n-price="12€" n-list-price="17€">2nd sku</div>`),
+        createElement(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
 
@@ -282,7 +256,7 @@ describe("Product", () => {
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
 
-      element.append(<div n-sku-id="234">1st sku</div>, <div n-sku-id="345">end sku</div>, <div n-atc>Add to cart</div>)
+      element.append(createElement(html`<div n-sku-id="234">1st sku</div>`), createElement(html`<div n-sku-id="345">end sku</div>`), createElement(html`<div n-atc="">Add to cart</div>`))
       placementElement.appendChild(element)
       document.body.replaceChildren(placementElement)
 
@@ -295,14 +269,11 @@ describe("Product", () => {
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
 
-      element.append(
-        <div n-sku-id="456">
-          <span n-atc>Blue</span>
-        </div>,
-        <div n-sku-id="101">
-          <span n-atc>Black</span>
-        </div>
-      )
+      element.append(createElement(html`<div n-sku-id="456">
+          <span n-atc="">Blue</span>
+        </div>`), createElement(html`<div n-sku-id="101">
+          <span n-atc="">Black</span>
+        </div>`))
       placementElement.appendChild(element)
       document.body.replaceChildren(placementElement)
 

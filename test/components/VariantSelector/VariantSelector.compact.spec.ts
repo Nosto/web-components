@@ -23,7 +23,7 @@ describe("VariantSelector - Compact Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowContent = getShadowContent(selector)
@@ -37,7 +37,7 @@ describe("VariantSelector - Compact Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -74,7 +74,7 @@ describe("VariantSelector - Compact Mode", () => {
       "variant-test-product": { product: productWithUnavailableVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -100,9 +100,7 @@ describe("VariantSelector - Compact Mode", () => {
       "variant-test-product": { product: productWithUnavailableVariants }
     })
 
-    const selector = (
-      <nosto-variant-selector handle="variant-test-product" mode="compact" preselect />
-    ) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" mode="compact" preselect></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -114,7 +112,7 @@ describe("VariantSelector - Compact Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     let eventFired = false
@@ -147,7 +145,7 @@ describe("VariantSelector - Compact Mode", () => {
       "single-variant-product": { product: productWithSingleVariant }
     })
 
-    const selector = (<nosto-variant-selector handle="single-variant-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="single-variant-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const shadowContent = getShadowContent(selector)
@@ -160,7 +158,7 @@ describe("VariantSelector - Compact Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="variant-test-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -178,7 +176,7 @@ describe("VariantSelector - Compact Mode", () => {
       "single-value-test": { product: mockProductWithSingleValueOptionTest }
     })
 
-    const selector = (<nosto-variant-selector handle="single-value-test" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="single-value-test" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -209,7 +207,7 @@ describe("VariantSelector - Compact Mode", () => {
       "all-unavailable-product": { product: productWithAllUnavailable }
     })
 
-    const selector = (<nosto-variant-selector handle="all-unavailable-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="all-unavailable-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -230,7 +228,7 @@ describe("VariantSelector - Compact Mode", () => {
       "one-available-product": { product: productWithOneAvailable }
     })
 
-    const selector = (<nosto-variant-selector handle="one-available-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="one-available-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -243,7 +241,7 @@ describe("VariantSelector - Compact Mode", () => {
       "unordered-variant-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="unordered-variant-product" mode="compact" />) as VariantSelector
+    const selector = createElement(html`<nosto-variant-selector handle="unordered-variant-product" mode="compact"></nosto-variant-selector>`) as VariantSelector
     await selector.connectedCallback()
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
