@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest"
 import { Product } from "@/components/Product/Product"
 import { EventName } from "@/components/Product/events"
 import { html } from "lit-html"
-import { createElement } from "../../utils/createElement"
+import { createElement, createElements } from "../../utils/createElement"
 
 describe("Product", () => {
   let element: Product
@@ -140,12 +140,10 @@ describe("Product", () => {
 
     it("should handle [n-atc] on every individual sku option", () => {
       element.append(
-        createElement(
+        ...createElements(
           html`<div n-sku-id="456">
             <span n-atc="">Blue</span>
-          </div>`
-        ),
-        createElement(
+          </div>`,
           html`<div n-sku-id="101">
             <span n-atc="">Black</span>
           </div>`
@@ -159,13 +157,13 @@ describe("Product", () => {
 
     it("should pick n-sku-selector change events", () => {
       element.append(
-        createElement(
+        ...createElements(
           html`<select n-sku-selector>
             <option value="456">SKU 1</option>
             <option value="457" selected>SKU 2</option>
-          </select>`
-        ),
-        createElement(html`<div n-atc="">Add to cart</div>`)
+          </select>`,
+          html`<div n-atc="">Add to cart</div>`
+        )
       )
       element.connectedCallback()
 
@@ -175,9 +173,11 @@ describe("Product", () => {
 
     it("should pick up [n-sku-id] clicks", () => {
       element.append(
-        createElement(html`<div n-sku-id="234">1st sku</div>`),
-        createElement(html`<div n-sku-id="345">end sku</div>`),
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(
+          html`<div n-sku-id="234">1st sku</div>`,
+          html`<div n-sku-id="345">end sku</div>`,
+          html`<div n-atc="">Add to cart</div>`
+        )
       )
       element.connectedCallback()
 
@@ -187,9 +187,11 @@ describe("Product", () => {
 
     it("should update images on [n-sku-id] clicks", () => {
       element.append(
-        createElement(html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div>`),
-        createElement(html`<div n-sku-id="345">end sku</div>`),
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(
+          html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div>`,
+          html`<div n-sku-id="345">end sku</div>`,
+          html`<div n-atc="">Add to cart</div>`
+        )
       )
       element.connectedCallback()
 
@@ -209,10 +211,9 @@ describe("Product", () => {
       scriptEl.setAttribute("n-sku-data", "")
       scriptEl.textContent = skuData
       element.append(
-        createElement(html`<div n-sku-id="234">1st sku</div>`),
-        createElement(html`<div n-sku-id="345">end sku</div>`),
+        ...createElements(html`<div n-sku-id="234">1st sku</div>`, html`<div n-sku-id="345">end sku</div>`),
         scriptEl,
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
 
@@ -232,11 +233,13 @@ describe("Product", () => {
       scriptEl.setAttribute("n-sku-data", "")
       scriptEl.textContent = skuData
       element.append(
-        createElement(html`<div n-sku-id="234">1st sku</div>`),
-        createElement(html`<span n-price="">20€</span>`),
-        createElement(html`<span n-list-price="">30€</span>`),
+        ...createElements(
+          html`<div n-sku-id="234">1st sku</div>`,
+          html`<span n-price="">20€</span>`,
+          html`<span n-list-price="">30€</span>`
+        ),
         scriptEl,
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
 
@@ -247,11 +250,13 @@ describe("Product", () => {
 
     it("should update images elements on [n-sku-id] clicks", () => {
       element.append(
-        createElement(html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div>`),
-        createElement(html`<img n-img="" />`),
-        createElement(html`<img n-alt-img="" />`),
-        createElement(html`<div n-sku-id="345">end sku</div>`),
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(
+          html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div>`,
+          html`<img n-img="" />`,
+          html`<img n-alt-img="" />`,
+          html`<div n-sku-id="345">end sku</div>`,
+          html`<div n-atc="">Add to cart</div>`
+        )
       )
       element.connectedCallback()
 
@@ -266,11 +271,13 @@ describe("Product", () => {
 
     it("should update prices on [n-sku-id] clicks", () => {
       element.append(
-        createElement(html`<div n-sku-id="234" n-price="10€" n-list-price="15€">1st sku</div>`),
-        createElement(html`<span n-price="">20€</span>`),
-        createElement(html`<span n-list-price="">30€</span>`),
-        createElement(html`<div n-sku-id="345" n-price="12€" n-list-price="17€">2nd sku</div>`),
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(
+          html`<div n-sku-id="234" n-price="10€" n-list-price="15€">1st sku</div>`,
+          html`<span n-price="">20€</span>`,
+          html`<span n-list-price="">30€</span>`,
+          html`<div n-sku-id="345" n-price="12€" n-list-price="17€">2nd sku</div>`,
+          html`<div n-atc="">Add to cart</div>`
+        )
       )
       element.connectedCallback()
 
@@ -293,9 +300,11 @@ describe("Product", () => {
       placementElement.setAttribute("id", DIV_ID)
 
       element.append(
-        createElement(html`<div n-sku-id="234">1st sku</div>`),
-        createElement(html`<div n-sku-id="345">end sku</div>`),
-        createElement(html`<div n-atc="">Add to cart</div>`)
+        ...createElements(
+          html`<div n-sku-id="234">1st sku</div>`,
+          html`<div n-sku-id="345">end sku</div>`,
+          html`<div n-atc="">Add to cart</div>`
+        )
       )
       placementElement.appendChild(element)
       document.body.replaceChildren(placementElement)
@@ -310,12 +319,10 @@ describe("Product", () => {
       placementElement.setAttribute("id", DIV_ID)
 
       element.append(
-        createElement(
+        ...createElements(
           html`<div n-sku-id="456">
             <span n-atc="">Blue</span>
-          </div>`
-        ),
-        createElement(
+          </div>`,
           html`<div n-sku-id="101">
             <span n-atc="">Black</span>
           </div>`

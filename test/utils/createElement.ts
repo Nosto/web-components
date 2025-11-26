@@ -17,14 +17,10 @@ export function createElement(template: TemplateResult): HTMLElement {
 }
 
 /**
- * Converts a lit-html template result into a DocumentFragment containing multiple elements
- * @param template - The template result from lit-html's html function
- * @returns A DocumentFragment containing the parsed elements
+ * Converts multiple lit-html template results into an array of DOM elements
+ * @param templates - Variable number of template results from lit-html's html function
+ * @returns Array of parsed DOM elements
  */
-export function createFragment(template: TemplateResult): DocumentFragment {
-  const container = document.createElement("div")
-  render(template, container)
-  const fragment = document.createDocumentFragment()
-  fragment.append(...container.childNodes)
-  return fragment
+export function createElements(...templates: TemplateResult[]): HTMLElement[] {
+  return templates.map(template => createElement(template))
 }
