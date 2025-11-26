@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
-import { createElement } from "../../utils/jsx"
+import { html } from "lit-html"
+import { createElement } from "../../utils/createElement"
 import { mockSimpleCardProduct } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { addProductHandlers } from "../../utils/addProductHandlers"
@@ -17,12 +18,13 @@ describe("Bundle", () => {
       { handle: "a", price: 10, price_currency_code: "USD" },
       { handle: "b", price: 5, price_currency_code: "USD" }
     ] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" checked />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
 
@@ -40,13 +42,14 @@ describe("Bundle", () => {
       { handle: "a", price: 10, price_currency_code: "USD" },
       { handle: "b", price: 5, price_currency_code: "USD" }
     ] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="a" />
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <nosto-simple-card handle="a"></nosto-simple-card>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" checked />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     bundle.selectedProducts = [...products]
 
@@ -73,13 +76,14 @@ describe("Bundle", () => {
       { handle: "a", price: 10, price_currency_code: "USD" },
       { handle: "b", price: 5, price_currency_code: "USD" }
     ] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="a" />
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <nosto-simple-card handle="a"></nosto-simple-card>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     bundle.selectedProducts = [products[1]] // Only 'b' selected initially
 
@@ -103,11 +107,12 @@ describe("Bundle", () => {
       { handle: "b", price: 5.25, price_currency_code: "USD" },
       { handle: "c", price: 15.75, price_currency_code: "USD" }
     ] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <span n-summary-price=""></span>
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     document.body.appendChild(bundle)
 
@@ -120,13 +125,14 @@ describe("Bundle", () => {
       { handle: "a", price: 10, price_currency_code: "USD" },
       { handle: "b", price: 5, price_currency_code: "USD" }
     ] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="a" />
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <nosto-simple-card handle="a"></nosto-simple-card>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" checked />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
     const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
@@ -143,12 +149,13 @@ describe("Bundle", () => {
 
   it("handles empty selectedProducts array", () => {
     const products = [{ handle: "a", price: 10, price_currency_code: "USD" }] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     document.body.appendChild(bundle)
 
@@ -163,13 +170,14 @@ describe("Bundle", () => {
 
   it("shows card when product is added to selection", async () => {
     const products = [{ handle: "a", price: 10, price_currency_code: "USD" }] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="a" />
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <nosto-simple-card handle="a"></nosto-simple-card>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     document.body.appendChild(bundle)
 
@@ -184,13 +192,14 @@ describe("Bundle", () => {
 
   it("hides card when product is removed from selection", async () => {
     const products = [{ handle: "a", price: 10, price_currency_code: "USD" }] as JSONProduct[]
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="a" />
-        <span n-summary-price></span>
+    const bundle = createElement<Bundle>(html`
+      <nosto-bundle>
+        <nosto-simple-card handle="a"></nosto-simple-card>
+        <span n-summary-price=""></span>
         <input type="checkbox" value="a" checked />
       </nosto-bundle>
-    ) as Bundle
+    `)
+    bundle.products = products
 
     document.body.appendChild(bundle)
 
