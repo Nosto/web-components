@@ -1,7 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest"
 import { Popup } from "@/components/Popup/Popup"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { html } from "@/templating/html"
+import { html } from "lit-html"
 import { createElement } from "../../utils/createElement"
 
 describe("Popup", () => {

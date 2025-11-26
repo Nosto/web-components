@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
-import { html } from "@/templating/html"
+import { html } from "lit-html"
 import { createElement } from "../../utils/createElement"
 import {
   mockProductWithSingleValueOptionTest,

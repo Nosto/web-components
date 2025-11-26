@@ -2,7 +2,7 @@ import { describe, it, expect, vi, Mock, beforeEach, afterEach } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { mockNostoRecs } from "../../mockNostoRecs"
-import { html } from "@/templating/html"
+import { html } from "lit-html"
 import { createElement } from "../../utils/createElement"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 

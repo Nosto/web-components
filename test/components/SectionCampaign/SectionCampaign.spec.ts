@@ -4,7 +4,7 @@ import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../../mockNostoRecs"
-import { html } from "@/templating/html"
+import { html } from "lit-html"
 import { createElement } from "../../utils/createElement"
 
 describe("SectionCampaign", () => {

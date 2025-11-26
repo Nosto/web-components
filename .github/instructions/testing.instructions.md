@@ -13,13 +13,13 @@ applyTo: "test/*"
 
 ## HTML Template Testing Patterns
 
-**Use lit-html style templates for component creation in tests:**
+**Use lit-html templates for component creation in tests:**
 
-- Import `html` from `@/templating/html` and `createElement` from test utils
+- Import `html` from `lit-html` and `createElement` from test utils
 - Create components using html template literals with `createElement` wrapper:
 
   ```typescript
-  import { html } from "@/templating/html"
+  import { html } from "lit-html"
   import { createElement } from "../../utils/createElement"
 
   // Create a custom element
@@ -40,10 +40,13 @@ applyTo: "test/*"
   const element = createElement(html`<div attr="${value}">Content</div>`)
   ```
 
-- For raw HTML (like JSON in script tags):
+- For raw text content (like JSON in script tags), create elements directly:
   ```typescript
   const jsonData = JSON.stringify({key: "value"})
-  const element = createElement(html`<script type="application/json">${{ html: jsonData }}</script>`)
+  const scriptEl = document.createElement("script")
+  scriptEl.type = "application/json"
+  scriptEl.textContent = jsonData
+  // Then append scriptEl to parent element
   ```
 
 - Always preserve custom element imports as they trigger `@customElement` decorator registration

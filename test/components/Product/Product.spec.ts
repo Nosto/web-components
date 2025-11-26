@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { Product } from "@/components/Product/Product"
 import { EventName } from "@/components/Product/events"
-import { html } from "@/templating/html"
+import { html } from "lit-html"
 import { createElement } from "../../utils/createElement"
 
 describe("Product", () => {
@@ -204,14 +204,14 @@ describe("Product", () => {
 
     it("should update images based on sku data", () => {
       const skuData = JSON.stringify([{ id: "234", image: "blue.jpg", altImage: "green.jpg" }, { id: "345" }])
+      const scriptEl = document.createElement("script")
+      scriptEl.type = "application/json"
+      scriptEl.setAttribute("n-sku-data", "")
+      scriptEl.textContent = skuData
       element.append(
         createElement(html`<div n-sku-id="234">1st sku</div>`),
         createElement(html`<div n-sku-id="345">end sku</div>`),
-        createElement(
-          html`<script type="application/json" n-sku-data>
-            ${{ html: skuData }}
-          </script>`
-        ),
+        scriptEl,
         createElement(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
@@ -227,15 +227,15 @@ describe("Product", () => {
 
     it("should update prices based on sku data", () => {
       const skuData = JSON.stringify([{ id: "234", price: "10€", listPrice: "15€" }, { id: "345" }])
+      const scriptEl = document.createElement("script")
+      scriptEl.type = "application/json"
+      scriptEl.setAttribute("n-sku-data", "")
+      scriptEl.textContent = skuData
       element.append(
         createElement(html`<div n-sku-id="234">1st sku</div>`),
         createElement(html`<span n-price="">20€</span>`),
         createElement(html`<span n-list-price="">30€</span>`),
-        createElement(
-          html`<script type="application/json" n-sku-data>
-            ${{ html: skuData }}
-          </script>`
-        ),
+        scriptEl,
         createElement(html`<div n-atc="">Add to cart</div>`)
       )
       element.connectedCallback()
