@@ -7,9 +7,9 @@ import { html as litHtml, render } from "lit-html"
  * @returns The parsed DOM element
  * @throws Error if the template does not produce a valid element
  * @example
- * const div = element<HTMLDivElement>`<div>Hello</div>`
+ * const div = element`<div>Hello</div>` as HTMLDivElement
  */
-export function element<E extends HTMLElement = HTMLElement>(strings: TemplateStringsArray, ...values: unknown[]): E {
+export function element(strings: TemplateStringsArray, ...values: unknown[]): HTMLElement {
   const template = litHtml(strings, ...values)
   const container = document.createElement("div")
   render(template, container)
@@ -17,7 +17,7 @@ export function element<E extends HTMLElement = HTMLElement>(strings: TemplateSt
   if (!(el instanceof HTMLElement)) {
     throw new Error("Template did not produce a valid HTMLElement")
   }
-  return el as E
+  return el
 }
 
 /**
@@ -27,14 +27,11 @@ export function element<E extends HTMLElement = HTMLElement>(strings: TemplateSt
  * @param values - Interpolated values
  * @returns Array of parsed DOM elements
  * @example
- * const [div1, div2] = elements<HTMLDivElement>`<div>One</div><div>Two</div>`
+ * const [div1, div2] = elements`<div>One</div><div>Two</div>` as HTMLDivElement[]
  */
-export function elements<E extends HTMLElement = HTMLElement>(
-  strings: TemplateStringsArray,
-  ...values: unknown[]
-): E[] {
+export function elements(strings: TemplateStringsArray, ...values: unknown[]): HTMLElement[] {
   const template = litHtml(strings, ...values)
   const container = document.createElement("div")
   render(template, container)
-  return Array.from(container.children) as E[]
+  return Array.from(container.children) as HTMLElement[]
 }

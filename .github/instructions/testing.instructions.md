@@ -16,19 +16,19 @@ applyTo: "test/*"
 **Use lit-html templates for component creation in tests:**
 
 - Import `element` and `elements` from test utils
-- Create components using tagged template literals:
+- Create components using tagged template literals with type assertions:
 
   ```typescript
   import { element } from "../../utils/element"
 
-  // Create a custom element using tagged template
-  const card = element<SimpleCard>`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`
+  // Create a custom element using tagged template with type assertion
+  const card = element`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>` as SimpleCard
   ```
 
 - For boolean attributes: use attribute presence (e.g., `<element attr>`) instead of `attr="true"`
 - For number/object properties: set them after element creation:
   ```typescript
-  const selector = element<VariantSelector>`<nosto-variant-selector handle="product"></nosto-variant-selector>`
+  const selector = element`<nosto-variant-selector handle="product"></nosto-variant-selector>` as VariantSelector
   selector.variantId = 1002
   selector.maxValues = 5
   ```
@@ -36,13 +36,13 @@ applyTo: "test/*"
 - For template literal interpolation in HTML content:
   ```typescript
   const value = "dynamic"
-  const div = element<HTMLDivElement>`<div attr="${value}">Content</div>`
+  const div = element`<div attr="${value}">Content</div>` as HTMLDivElement
   ```
 
 - For multiple elements:
   ```typescript
   import { elements } from "../../utils/element"
-  const [div1, div2] = elements<HTMLDivElement>`<div>One</div><div>Two</div>`
+  const [div1, div2] = elements`<div>One</div><div>Two</div>` as HTMLDivElement[]
   ```
 
 - For raw text content (like JSON in script tags), create elements directly:

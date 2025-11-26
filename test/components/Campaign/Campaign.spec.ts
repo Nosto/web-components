@@ -13,21 +13,21 @@ describe("Campaign", () => {
   })
 
   it("should throw in connectedCallback if placement is missing", async () => {
-    campaign = element<Campaign>`<nosto-campaign></nosto-campaign>`
+    campaign = element`<nosto-campaign></nosto-campaign>` as Campaign
     await expect(campaign.connectedCallback()).rejects.toThrow("placement or id attribute is required for Campaign")
   })
 
   it("should throw in connectedCallback if template is missing", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = element<Campaign>`<nosto-campaign placement="123" template="my-template"></nosto-campaign>`
+    campaign = element`<nosto-campaign placement="123" template="my-template"></nosto-campaign>` as Campaign
     await expect(campaign.connectedCallback()).rejects.toThrow('Template with id "my-template" not found.')
   })
 
   it("should remove loading attribute even when error occurs", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = element<Campaign>`<nosto-campaign placement="123" template="missing-template"></nosto-campaign>`
+    campaign = element`<nosto-campaign placement="123" template="missing-template"></nosto-campaign>` as Campaign
 
     // The component should throw on error, but loading state should be cleaned up
     await expect(campaign.connectedCallback()).rejects.toThrow()
@@ -38,7 +38,7 @@ describe("Campaign", () => {
     const htmlContent = "recommended content"
     const { mockBuilder } = mockNostoRecs({ "789": { html: htmlContent } })
 
-    campaign = element<Campaign>`<nosto-campaign placement="789" productId="123" variantId="var1"></nosto-campaign>`
+    campaign = element`<nosto-campaign placement="789" productId="123" variantId="var1"></nosto-campaign>` as Campaign
 
     const template = document.createElement("template")
     template.innerHTML = "<span>{{ html }}</span>"
@@ -71,7 +71,8 @@ describe("Campaign", () => {
       }
     })
 
-    const campaign = element<Campaign>`<nosto-campaign placement="789" productId="123" template="${templateId}"></nosto-campaign>`
+    const campaign =
+      element`<nosto-campaign placement="789" productId="123" template="${templateId}"></nosto-campaign>` as Campaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -89,12 +90,12 @@ describe("Campaign", () => {
   it('should not auto-load campaign if init="false"', async () => {
     const { mockBuilder, injectCampaigns } = mockNostoRecs({ "789": {} })
 
-    campaign = element<Campaign>`<nosto-campaign
+    campaign = element`<nosto-campaign
         placement="789"
         productId="123"
         variantId="var1"
         template="inline-template"
-      ></nosto-campaign>`
+      ></nosto-campaign>` as Campaign
 
     campaign.setAttribute("init", "false")
     document.body.appendChild(campaign)
@@ -119,7 +120,7 @@ describe("Campaign", () => {
       }
     })
 
-    campaign = element<Campaign>`<nosto-campaign placement="456" productId="123" lazy></nosto-campaign>`
+    campaign = element`<nosto-campaign placement="456" productId="123" lazy></nosto-campaign>` as Campaign
 
     await campaign.connectedCallback()
 
@@ -147,7 +148,7 @@ describe("Campaign", () => {
       }
     })
 
-    campaign = element<Campaign>`<nosto-campaign placement="456" productId="123" lazy></nosto-campaign>`
+    campaign = element`<nosto-campaign placement="456" productId="123" lazy></nosto-campaign>` as Campaign
 
     await campaign.connectedCallback()
 
@@ -164,7 +165,7 @@ describe("Campaign", () => {
     // Mock IntersectionObserver
     const { observe } = mockIntersectionObserver()
 
-    campaign = element<Campaign>`<nosto-campaign placement="456" productId="123" init="false" lazy></nosto-campaign>`
+    campaign = element`<nosto-campaign placement="456" productId="123" init="false" lazy></nosto-campaign>` as Campaign
 
     await campaign.connectedCallback()
 
@@ -201,7 +202,7 @@ describe("Campaign", () => {
         }
       })
 
-      campaign = element<Campaign>`<nosto-campaign placement="789" cart-synced></nosto-campaign>`
+      campaign = element`<nosto-campaign placement="789" cart-synced></nosto-campaign>` as Campaign
 
       await campaign.connectedCallback()
 
@@ -225,7 +226,7 @@ describe("Campaign", () => {
       Campaign.prototype.load = vi.fn().mockResolvedValue(undefined)
 
       // Create campaign with cart-synced
-      campaign = element<Campaign>`<nosto-campaign placement="789" cart-synced></nosto-campaign>`
+      campaign = element`<nosto-campaign placement="789" cart-synced></nosto-campaign>` as Campaign
 
       await campaign.connectedCallback()
 
@@ -274,7 +275,7 @@ describe("Campaign", () => {
     it("should register navigation listener when nav-synced is true", async () => {
       mockNostoRecs({ "789": "content" })
 
-      campaign = element<Campaign>`<nosto-campaign placement="789" nav-synced></nosto-campaign>`
+      campaign = element`<nosto-campaign placement="789" nav-synced></nosto-campaign>` as Campaign
 
       await campaign.connectedCallback()
 
@@ -289,7 +290,7 @@ describe("Campaign", () => {
 
       mockNostoRecs({ "789": "content" })
 
-      campaign = element<Campaign>`<nosto-campaign placement="789" nav-synced></nosto-campaign>`
+      campaign = element`<nosto-campaign placement="789" nav-synced></nosto-campaign>` as Campaign
 
       await campaign.connectedCallback()
 
@@ -305,7 +306,7 @@ describe("Campaign", () => {
 
       Campaign.prototype.load = vi.fn().mockResolvedValue(undefined)
 
-      campaign = element<Campaign>`<nosto-campaign placement="789" nav-synced></nosto-campaign>`
+      campaign = element`<nosto-campaign placement="789" nav-synced></nosto-campaign>` as Campaign
 
       await campaign.connectedCallback()
 

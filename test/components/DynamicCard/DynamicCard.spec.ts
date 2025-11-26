@@ -36,7 +36,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>` as DynamicCard
 
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
@@ -52,7 +53,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" section="product-card"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="test-handle" section="product-card"></nosto-dynamic-card>` as DynamicCard
 
     // Call connectedCallback manually since it's not automatically triggered in tests.
     await card.connectedCallback()
@@ -71,7 +73,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>` as DynamicCard
     document.body.appendChild(card)
 
     card.handle = "updated-handle"
@@ -96,16 +99,19 @@ describe("DynamicCard", () => {
     // Mock IntersectionObserver
     mockIntersectionObserver()
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>` as DynamicCard
     await card.connectedCallback()
 
     // placeholder is used, since template is the same
-    const card2 = element<DynamicCard>`<nosto-dynamic-card handle="test-handle2" template="default" placeholder lazy></nosto-dynamic-card>`
+    const card2 =
+      element`<nosto-dynamic-card handle="test-handle2" template="default" placeholder lazy></nosto-dynamic-card>` as DynamicCard
     await card2.connectedCallback()
     expect(card2.innerHTML).toBe(validMarkup)
 
     // placeholder is not used, since template is different
-    const card3 = element<DynamicCard>`<nosto-dynamic-card handle="test-handle3" template="custom" placeholder lazy></nosto-dynamic-card>`
+    const card3 =
+      element`<nosto-dynamic-card handle="test-handle3" template="custom" placeholder lazy></nosto-dynamic-card>` as DynamicCard
     await card3.connectedCallback()
     expect(card3.innerHTML).toBe("")
   })
@@ -118,7 +124,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="lazy-handle" template="default" lazy></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="lazy-handle" template="default" lazy></nosto-dynamic-card>` as DynamicCard
 
     // Mock IntersectionObserver
     let observerCallback: IntersectionObserverCallback | null = null
@@ -148,7 +155,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="handle-error" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="handle-error" template="default"></nosto-dynamic-card>` as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow(
       "Failed to fetch http://localhost:3000/products/handle-error"
@@ -163,7 +171,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="handle-invalid" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="handle-invalid" template="default"></nosto-dynamic-card>` as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow("Invalid markup for template default")
   })
@@ -176,7 +185,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="error-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="error-handle" template="default"></nosto-dynamic-card>` as DynamicCard
 
     // The component should throw on error, but loading state should be cleaned up
     await expect(card.connectedCallback()).rejects.toThrow()
@@ -196,7 +206,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>` as DynamicCard
 
     await card.connectedCallback()
 
@@ -211,7 +222,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="event-test-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="event-test-handle" template="default"></nosto-dynamic-card>` as DynamicCard
 
     // Set up event listener to capture the event
     let eventEmitted = false
@@ -238,7 +250,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="test-handle" template="default"></nosto-dynamic-card>` as DynamicCard
 
     await card.connectedCallback()
 
@@ -253,7 +266,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="invalid-handle" template="invalid"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="invalid-handle" template="invalid"></nosto-dynamic-card>` as DynamicCard
 
     await expect(card.connectedCallback()).rejects.toThrow(
       "Invalid markup for template invalid, make sure that no <body> or <html> tags are included."
@@ -278,7 +292,8 @@ describe("DynamicCard", () => {
       }
     })
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="lazy-handle" template="lazy-template" lazy></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="lazy-handle" template="lazy-template" lazy></nosto-dynamic-card>` as DynamicCard
 
     await card.connectedCallback()
 
@@ -304,11 +319,11 @@ describe("DynamicCard", () => {
       })
     )
 
-    const card = element<DynamicCard>`<nosto-dynamic-card
+    const card = element`<nosto-dynamic-card
         handle="variant-handle"
         template="variant-template"
         variant-id="12345"
-      ></nosto-dynamic-card>`
+      ></nosto-dynamic-card>` as DynamicCard
 
     await card.connectedCallback()
 
@@ -325,7 +340,8 @@ describe("DynamicCard", () => {
       })
     )
 
-    const card = element<DynamicCard>`<nosto-dynamic-card handle="section-handle" section="test-section"></nosto-dynamic-card>`
+    const card =
+      element`<nosto-dynamic-card handle="section-handle" section="test-section"></nosto-dynamic-card>` as DynamicCard
 
     await card.connectedCallback()
 
@@ -341,7 +357,8 @@ describe("DynamicCard", () => {
       expect(shadowRoot?.innerHTML).toContain("https://cdn.nosto.com/nosto/7/mock")
     }
     it("renders mock markup when mock attribute is true", async () => {
-      const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default" mock></nosto-dynamic-card>`
+      const card =
+        element`<nosto-dynamic-card handle="test-handle" template="default" mock></nosto-dynamic-card>` as DynamicCard
 
       await card.connectedCallback()
       checkStructure(card.shadowRoot)
@@ -356,7 +373,8 @@ describe("DynamicCard", () => {
         })
       )
 
-      const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default" mock></nosto-dynamic-card>`
+      const card =
+        element`<nosto-dynamic-card handle="test-handle" template="default" mock></nosto-dynamic-card>` as DynamicCard
 
       await card.connectedCallback()
 
@@ -365,7 +383,8 @@ describe("DynamicCard", () => {
     })
 
     it("emits DynamicCard/loaded event when mock attribute is true", async () => {
-      const card = element<DynamicCard>`<nosto-dynamic-card handle="test-handle" template="default" mock></nosto-dynamic-card>`
+      const card =
+        element`<nosto-dynamic-card handle="test-handle" template="default" mock></nosto-dynamic-card>` as DynamicCard
 
       let eventEmitted = false
       card.addEventListener("@nosto/DynamicCard/loaded", () => {
@@ -380,7 +399,7 @@ describe("DynamicCard", () => {
 
     it("does not require handle when mock attribute is true", async () => {
       // When mock is true, handle should not be required
-      const card = element<DynamicCard>`<nosto-dynamic-card mock></nosto-dynamic-card>`
+      const card = element`<nosto-dynamic-card mock></nosto-dynamic-card>` as DynamicCard
 
       // Should not throw an error
       await expect(card.connectedCallback()).resolves.not.toThrow()
@@ -388,7 +407,7 @@ describe("DynamicCard", () => {
     })
 
     it("renders mock markup with expected structure", async () => {
-      const card = element<DynamicCard>`<nosto-dynamic-card mock></nosto-dynamic-card>`
+      const card = element`<nosto-dynamic-card mock></nosto-dynamic-card>` as DynamicCard
 
       await card.connectedCallback()
 
