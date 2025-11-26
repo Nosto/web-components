@@ -94,6 +94,7 @@ function onChange(bundle: Bundle, event: Event) {
 
   const handle = target.value
   const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
+  const isCheckboxInsideCard = card?.contains(target)
   if (target.value) {
     if (!target.checked) {
       // Remove product from selection
@@ -107,7 +108,9 @@ function onChange(bundle: Bundle, event: Event) {
         target.setAttribute("checked", "")
       }
     }
-    setCardVisibility(card, target.checked)
+    if (!isCheckboxInsideCard) {
+      setCardVisibility(card, target.checked)
+    }
     setSummaryPrice(bundle)
   }
 }
