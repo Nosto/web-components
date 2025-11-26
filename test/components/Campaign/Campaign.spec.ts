@@ -14,23 +14,23 @@ describe("Campaign", () => {
   })
 
   it("should throw in connectedCallback if placement is missing", async () => {
-    campaign = createElement(html`<nosto-campaign></nosto-campaign>`) as Campaign
+    campaign = createElement<Campaign>(html`<nosto-campaign></nosto-campaign>`)
     await expect(campaign.connectedCallback()).rejects.toThrow("placement or id attribute is required for Campaign")
   })
 
   it("should throw in connectedCallback if template is missing", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = createElement(html`<nosto-campaign placement="123" template="my-template"></nosto-campaign>`) as Campaign
+    campaign = createElement<Campaign>(html`<nosto-campaign placement="123" template="my-template"></nosto-campaign>`)
     await expect(campaign.connectedCallback()).rejects.toThrow('Template with id "my-template" not found.')
   })
 
   it("should remove loading attribute even when error occurs", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = createElement(
+    campaign = createElement<Campaign>(
       html`<nosto-campaign placement="123" template="missing-template"></nosto-campaign>`
-    ) as Campaign
+    )
 
     // The component should throw on error, but loading state should be cleaned up
     await expect(campaign.connectedCallback()).rejects.toThrow()
