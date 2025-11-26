@@ -15,21 +15,25 @@ applyTo: "test/*"
 
 **Use lit-html templates for component creation in tests:**
 
-- Import `html` from `lit-html` and `createElement` from test utils
-- Create components using html template literals with `createElement` wrapper:
+- Import `element` (or legacy `createElement` and `html`) from test utils
+- Create components using tagged template literals:
 
   ```typescript
+  import { element } from "../../utils/createElement"
+
+  // Create a custom element using tagged template (recommended)
+  const card = element<SimpleCard>`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`
+  
+  // Legacy: using html from lit-html with createElement
   import { html } from "lit-html"
   import { createElement } from "../../utils/createElement"
-
-  // Create a custom element
-  const card = createElement(html`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`) as SimpleCard
+  const card = createElement<SimpleCard>(html`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`)
   ```
 
 - For boolean attributes: use attribute presence (e.g., `<element attr>`) instead of `attr="true"`
 - For number/object properties: set them after element creation:
   ```typescript
-  const selector = createElement(html`<nosto-variant-selector handle="product"></nosto-variant-selector>`) as VariantSelector
+  const selector = element<VariantSelector>`<nosto-variant-selector handle="product"></nosto-variant-selector>`
   selector.variantId = 1002
   selector.maxValues = 5
   ```
@@ -37,7 +41,13 @@ applyTo: "test/*"
 - For template literal interpolation in HTML content:
   ```typescript
   const value = "dynamic"
-  const element = createElement(html`<div attr="${value}">Content</div>`)
+  const div = element<HTMLDivElement>`<div attr="${value}">Content</div>`
+  ```
+
+- For multiple elements:
+  ```typescript
+  import { elements } from "../../utils/createElement"
+  const [div1, div2] = elements<HTMLDivElement>`<div>One</div><div>Two</div>`
   ```
 
 - For raw text content (like JSON in script tags), create elements directly:
