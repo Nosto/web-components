@@ -1,17 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { Product } from "@/components/Product/Product"
 import { EventName } from "@/components/Product/events"
-import { html } from "lit-html"
-import { createElement, createElements } from "../../utils/createElement"
+import { element, elements } from "../../utils/createElement"
 
 describe("Product", () => {
-  let element: Product
+  let testElement: Product
   const PROD_ID = "123"
   const RECO_ID = "789"
   const DIV_ID = "testpage-nosto-1"
 
   beforeEach(() => {
-    element = new Product()
+    testElement = new Product()
   })
 
   describe("verify setup & validation", () => {
@@ -20,41 +19,41 @@ describe("Product", () => {
     })
 
     it("should throw an error if no attribute is provided", () => {
-      expect(() => element.connectedCallback()).toThrow("Property productId is required.")
+      expect(() => testElement.connectedCallback()).toThrow("Property productId is required.")
     })
 
     it("should throw an error if product-id is not provided", () => {
-      element.setAttribute("reco-id", RECO_ID)
-      expect(() => element.connectedCallback()).toThrow("Property productId is required.")
+      testElement.setAttribute("reco-id", RECO_ID)
+      expect(() => testElement.connectedCallback()).toThrow("Property productId is required.")
     })
 
     it("should throw an error if reco-id is not provided", () => {
-      element.setAttribute("product-id", PROD_ID)
-      expect(() => element.connectedCallback()).toThrow("Property recoId is required.")
+      testElement.setAttribute("product-id", PROD_ID)
+      expect(() => testElement.connectedCallback()).toThrow("Property recoId is required.")
     })
   })
 
   describe("verify Add to cart", () => {
     beforeEach(() => {
-      element.setAttribute("product-id", PROD_ID)
-      element.setAttribute("reco-id", RECO_ID)
+      testElement.setAttribute("product-id", PROD_ID)
+      testElement.setAttribute("reco-id", RECO_ID)
       window.Nosto = { addSkuToCart: vi.fn(() => Promise.resolve()) }
     })
 
     function checkSkuAddToCart(skuId: string) {
-      const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
+      const atc = testElement.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
       checkAddToCart(atc!)
     }
 
     function checkProductAddToCart() {
-      const atc = element.querySelector<HTMLElement>("[n-atc]")
+      const atc = testElement.querySelector<HTMLElement>("[n-atc]")
       checkAddToCart(atc!)
     }
 
     function checkAddToCart(atcElement: HTMLElement) {
       atcElement.click()
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
-        { productId: PROD_ID, skuId: element.selectedSkuId },
+        { productId: PROD_ID, skuId: testElement.selectedSkuId },
         RECO_ID,
         1
       )
@@ -68,12 +67,12 @@ describe("Product", () => {
     }
 
     async function checkProductAddToCartCompleteEvent() {
-      const atc = element.querySelector<HTMLElement>("[n-atc]")
+      const atc = testElement.querySelector<HTMLElement>("[n-atc]")
       await checkAddToCartCompleteEvent(atc!)
     }
 
     async function checkSkuAddToCartCompleteEvent(skuId: string) {
-      const atc = element.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
+      const atc = testElement.querySelector<HTMLElement>(`[n-sku-id="${skuId}"] > [n-atc]`)
       await checkAddToCartCompleteEvent(atc!)
     }
 
@@ -82,126 +81,108 @@ describe("Product", () => {
       const detail = await waitForPlacementEvent("atc:complete")
 
       expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith(
-        { productId: PROD_ID, skuId: element.selectedSkuId },
+        { productId: PROD_ID, skuId: testElement.selectedSkuId },
         RECO_ID,
         1
       )
       expect(detail).toEqual({
         productId: PROD_ID,
-        skuId: element.selectedSkuId
+        skuId: testElement.selectedSkuId
       })
     }
 
     it("should not throw an error if all required attributes are provided", () => {
-      expect(() => element.connectedCallback()).not.toThrow()
+      expect(() => testElement.connectedCallback()).not.toThrow()
     })
 
     it("should call addSkuToCart when clicked on an element with [n-atc]", () => {
-      element.appendChild(
-        createElement(
-          html`<div n-sku-id="456">
+      testElement.appendChild(
+        element`<div n-sku-id="456">
             <div n-atc="">Add to Cart</div>
           </div>`
-        )
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
       checkSkuAddToCart("456")
     })
 
     it("should emit nosto:atc:no-sku event when no sku is selected", async () => {
-      element.appendChild(createElement(html`<div n-atc="">Add to Cart</div>`))
+      testElement.appendChild(element`<div n-atc="">Add to Cart</div>`)
 
       const placementElement = document.createElement("div")
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
-      placementElement.appendChild(element)
+      placementElement.appendChild(testElement)
       document.body.replaceChildren(placementElement)
 
       const detail = waitForPlacementEvent("atc:no-sku-selected")
-      element.querySelector<HTMLElement>("[n-atc]")!.click()
+      testElement.querySelector<HTMLElement>("[n-atc]")!.click()
       expect(await detail).toEqual({ productId: PROD_ID })
     })
 
     it("should toggle sku-selected attribute when selectedSkuId changes", () => {
-      element.appendChild(
-        createElement(
-          html`<div n-sku-id="456">
+      testElement.appendChild(
+        element`<div n-sku-id="456">
             <div n-atc="">Add to Cart</div>
           </div>`
-        )
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      expect(element.hasAttribute("sku-selected")).toBe(false)
-      element.querySelector<HTMLElement>("[n-atc]")!.click()
-      expect(element.hasAttribute("sku-selected")).toBe(true)
+      expect(testElement.hasAttribute("sku-selected")).toBe(false)
+      testElement.querySelector<HTMLElement>("[n-atc]")!.click()
+      expect(testElement.hasAttribute("sku-selected")).toBe(true)
     })
 
     it("should handle [n-atc] on every individual sku option", () => {
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="456">
+      testElement.append(
+        ...elements`<div n-sku-id="456">
             <span n-atc="">Blue</span>
-          </div>`,
-          html`<div n-sku-id="101">
+          </div><div n-sku-id="101">
             <span n-atc="">Black</span>
           </div>`
-        )
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
       checkSkuAddToCart("456")
       checkSkuAddToCart("101")
     })
 
     it("should pick n-sku-selector change events", () => {
-      element.append(
-        ...createElements(
-          html`<select n-sku-selector>
+      testElement.append(
+        ...elements`<select n-sku-selector>
             <option value="456">SKU 1</option>
             <option value="457" selected>SKU 2</option>
-          </select>`,
-          html`<div n-atc="">Add to cart</div>`
-        )
+          </select><div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
+      testElement.querySelector("[n-sku-selector]")!.dispatchEvent(new InputEvent("change", { bubbles: true }))
       checkProductAddToCart()
     })
 
     it("should pick up [n-sku-id] clicks", () => {
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="234">1st sku</div>`,
-          html`<div n-sku-id="345">end sku</div>`,
-          html`<div n-atc="">Add to cart</div>`
-        )
+      testElement.append(
+        ...elements`<div n-sku-id="234">1st sku</div><div n-sku-id="345">end sku</div><div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      testElement.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
       checkProductAddToCart()
     })
 
     it("should update images on [n-sku-id] clicks", () => {
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div>`,
-          html`<div n-sku-id="345">end sku</div>`,
-          html`<div n-atc="">Add to cart</div>`
-        )
+      testElement.append(
+        ...elements`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div><div n-sku-id="345">end sku</div><div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      expect(element.style.getPropertyValue("--n-img")).toBe("")
-      expect(element.style.getPropertyValue("--n-alt-img")).toBe("")
+      testElement.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(testElement.style.getPropertyValue("--n-img")).toBe("")
+      expect(testElement.style.getPropertyValue("--n-alt-img")).toBe("")
 
-      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
-      expect(element.style.getPropertyValue("--n-img")).toBe("url(blue.jpg)")
-      expect(element.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
+      testElement.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(testElement.style.getPropertyValue("--n-img")).toBe("url(blue.jpg)")
+      expect(testElement.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
     })
 
     it("should update images based on sku data", () => {
@@ -210,20 +191,20 @@ describe("Product", () => {
       scriptEl.type = "application/json"
       scriptEl.setAttribute("n-sku-data", "")
       scriptEl.textContent = skuData
-      element.append(
-        ...createElements(html`<div n-sku-id="234">1st sku</div>`, html`<div n-sku-id="345">end sku</div>`),
+      testElement.append(
+        ...elements`<div n-sku-id="234">1st sku</div><div n-sku-id="345">end sku</div>`,
         scriptEl,
-        ...createElements(html`<div n-atc="">Add to cart</div>`)
+        ...elements`<div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      expect(element.style.getPropertyValue("--n-img")).toBe("")
-      expect(element.style.getPropertyValue("--n-alt-img")).toBe("")
+      testElement.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(testElement.style.getPropertyValue("--n-img")).toBe("")
+      expect(testElement.style.getPropertyValue("--n-alt-img")).toBe("")
 
-      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
-      expect(element.style.getPropertyValue("--n-img")).toBe("url(blue.jpg)")
-      expect(element.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
+      testElement.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(testElement.style.getPropertyValue("--n-img")).toBe("url(blue.jpg)")
+      expect(testElement.style.getPropertyValue("--n-alt-img")).toBe("url(green.jpg)")
     })
 
     it("should update prices based on sku data", () => {
@@ -232,66 +213,50 @@ describe("Product", () => {
       scriptEl.type = "application/json"
       scriptEl.setAttribute("n-sku-data", "")
       scriptEl.textContent = skuData
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="234">1st sku</div>`,
-          html`<span n-price="">20€</span>`,
-          html`<span n-list-price="">30€</span>`
-        ),
+      testElement.append(
+        ...elements`<div n-sku-id="234">1st sku</div><span n-price="">20€</span><span n-list-price="">30€</span>`,
         scriptEl,
-        ...createElements(html`<div n-atc="">Add to cart</div>`)
+        ...elements`<div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
-      expect(element.querySelector("[n-price]")?.innerHTML).toBe("10€")
-      expect(element.querySelector("[n-list-price]")?.innerHTML).toBe("15€")
+      testElement.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(testElement.querySelector("[n-price]")?.innerHTML).toBe("10€")
+      expect(testElement.querySelector("[n-list-price]")?.innerHTML).toBe("15€")
     })
 
     it("should update images elements on [n-sku-id] clicks", () => {
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div>`,
-          html`<img n-img="" />`,
-          html`<img n-alt-img="" />`,
-          html`<div n-sku-id="345">end sku</div>`,
-          html`<div n-atc="">Add to cart</div>`
-        )
+      testElement.append(
+        ...elements`<div n-sku-id="234" n-img="blue.jpg" n-alt-img="green.jpg">1st sku</div><img n-img="" /><img n-alt-img="" /><div n-sku-id="345">end sku</div><div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      expect(element.querySelector<HTMLImageElement>("img[n-img]")?.src).toBe("")
-      expect(element.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("")
+      testElement.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(testElement.querySelector<HTMLImageElement>("img[n-img]")?.src).toBe("")
+      expect(testElement.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("")
 
-      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
-      expect(element.querySelector<HTMLImageElement>("img[n-img]")?.src).toBe("http://localhost:3000/blue.jpg")
-      expect(element.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("http://localhost:3000/green.jpg")
+      testElement.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(testElement.querySelector<HTMLImageElement>("img[n-img]")?.src).toBe("http://localhost:3000/blue.jpg")
+      expect(testElement.querySelector<HTMLImageElement>("img[n-alt-img]")?.src).toBe("http://localhost:3000/green.jpg")
     })
 
     it("should update prices on [n-sku-id] clicks", () => {
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="234" n-price="10€" n-list-price="15€">1st sku</div>`,
-          html`<span n-price="">20€</span>`,
-          html`<span n-list-price="">30€</span>`,
-          html`<div n-sku-id="345" n-price="12€" n-list-price="17€">2nd sku</div>`,
-          html`<div n-atc="">Add to cart</div>`
-        )
+      testElement.append(
+        ...elements`<div n-sku-id="234" n-price="10€" n-list-price="15€">1st sku</div><span n-price="">20€</span><span n-list-price="">30€</span><div n-sku-id="345" n-price="12€" n-list-price="17€">2nd sku</div><div n-atc="">Add to cart</div>`
       )
-      element.connectedCallback()
+      testElement.connectedCallback()
 
-      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
-      expect(element.querySelector<HTMLImageElement>("span[n-price]")?.innerHTML).toBe("12€")
-      expect(element.querySelector<HTMLImageElement>("span[n-list-price]")?.innerHTML).toBe("17€")
+      testElement.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      expect(testElement.querySelector<HTMLImageElement>("span[n-price]")?.innerHTML).toBe("12€")
+      expect(testElement.querySelector<HTMLImageElement>("span[n-list-price]")?.innerHTML).toBe("17€")
 
       // assert that SKU element contents are not affected
-      expect(element.querySelector<HTMLElement>("[n-sku-id='234']")?.innerHTML).toBe("1st sku")
-      expect(element.querySelector<HTMLElement>("[n-sku-id='345']")?.innerHTML).toBe("2nd sku")
+      expect(testElement.querySelector<HTMLElement>("[n-sku-id='234']")?.innerHTML).toBe("1st sku")
+      expect(testElement.querySelector<HTMLElement>("[n-sku-id='345']")?.innerHTML).toBe("2nd sku")
 
-      element.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
-      expect(element.querySelector<HTMLImageElement>("span[n-price]")?.innerHTML).toBe("10€")
-      expect(element.querySelector<HTMLImageElement>("span[n-list-price]")?.innerHTML).toBe("15€")
+      testElement.querySelector<HTMLElement>("[n-sku-id='234']")!.click()
+      expect(testElement.querySelector<HTMLImageElement>("span[n-price]")?.innerHTML).toBe("10€")
+      expect(testElement.querySelector<HTMLImageElement>("span[n-list-price]")?.innerHTML).toBe("15€")
     })
 
     it("should trigger nosto:atc:complete after product add to cart", async () => {
@@ -299,17 +264,13 @@ describe("Product", () => {
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
 
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="234">1st sku</div>`,
-          html`<div n-sku-id="345">end sku</div>`,
-          html`<div n-atc="">Add to cart</div>`
-        )
+      testElement.append(
+        ...elements`<div n-sku-id="234">1st sku</div><div n-sku-id="345">end sku</div><div n-atc="">Add to cart</div>`
       )
-      placementElement.appendChild(element)
+      placementElement.appendChild(testElement)
       document.body.replaceChildren(placementElement)
 
-      element.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
+      testElement.querySelector<HTMLElement>("[n-sku-id='345']")!.click()
       await checkProductAddToCartCompleteEvent()
     })
 
@@ -318,17 +279,14 @@ describe("Product", () => {
       placementElement.classList.add("nosto_element")
       placementElement.setAttribute("id", DIV_ID)
 
-      element.append(
-        ...createElements(
-          html`<div n-sku-id="456">
+      testElement.append(
+        ...elements`<div n-sku-id="456">
             <span n-atc="">Blue</span>
-          </div>`,
-          html`<div n-sku-id="101">
+          </div><div n-sku-id="101">
             <span n-atc="">Black</span>
           </div>`
-        )
       )
-      placementElement.appendChild(element)
+      placementElement.appendChild(testElement)
       document.body.replaceChildren(placementElement)
 
       await checkSkuAddToCartCompleteEvent("456")

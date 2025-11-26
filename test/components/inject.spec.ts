@@ -5,11 +5,11 @@ describe("inject", () => {
   const createElement = () => document.createElement("div")
 
   it("returns a value provided on the same element", () => {
-    const element = createElement()
+    const testElement = createElement()
     const key = Symbol("value")
     const value = { foo: "bar" }
-    provide(element, key, value)
-    expect(inject<typeof value>(element, key)).toBe(value)
+    provide(testElement, key, value)
+    expect(inject<typeof value>(testElement, key)).toBe(value)
   })
 
   it("resolves a value from the closest ancestor", () => {
@@ -26,10 +26,10 @@ describe("inject", () => {
   })
 
   it("returns undefined when no value is provided for the key", () => {
-    const element = createElement()
+    const testElement = createElement()
     const key = Symbol("missing")
 
-    expect(inject(element, key)).toBeUndefined()
+    expect(inject(testElement, key)).toBeUndefined()
   })
 
   it("provide across shadow DOM boundaries", () => {
@@ -49,21 +49,21 @@ describe("unprovide", () => {
   const createElement = () => document.createElement("div")
 
   it("removes entire element mapping", () => {
-    const element = createElement()
+    const testElement = createElement()
     const key1 = Symbol("value1")
     const key2 = Symbol("value2")
     const value1 = "test1"
     const value2 = "test2"
 
-    provide(element, key1, value1)
-    provide(element, key2, value2)
+    provide(testElement, key1, value1)
+    provide(testElement, key2, value2)
 
-    expect(inject<string>(element, key1)).toBe(value1)
-    expect(inject<string>(element, key2)).toBe(value2)
+    expect(inject<string>(testElement, key1)).toBe(value1)
+    expect(inject<string>(testElement, key2)).toBe(value2)
 
-    unprovide(element)
+    unprovide(testElement)
 
-    expect(inject<string>(element, key1)).toBeUndefined()
-    expect(inject<string>(element, key2)).toBeUndefined()
+    expect(inject<string>(testElement, key1)).toBeUndefined()
+    expect(inject<string>(testElement, key2)).toBeUndefined()
   })
 })

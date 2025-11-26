@@ -2,12 +2,12 @@ import { describe, it, expect, beforeEach, vi } from "vitest"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 
 describe("shadowContentFactory", () => {
-  let element: HTMLElement
+  let testElement: HTMLElement
   let shadowRoot: ShadowRoot
 
   beforeEach(() => {
-    element = document.createElement("div")
-    shadowRoot = element.attachShadow({ mode: "open" })
+    testElement = document.createElement("div")
+    shadowRoot = testElement.attachShadow({ mode: "open" })
 
     // Mock CSSStyleSheet.replace since jsdom doesn't support it
     if (typeof CSSStyleSheet !== "undefined" && !CSSStyleSheet.prototype.replace) {
@@ -30,7 +30,7 @@ describe("shadowContentFactory", () => {
       const content = "<p>Test content</p>"
 
       const setShadowContent = shadowContentFactory(styles)
-      await setShadowContent(element, content)
+      await setShadowContent(testElement, content)
 
       expect(shadowRoot.adoptedStyleSheets).toHaveLength(1)
       expect(shadowRoot.innerHTML).toBe(content)
@@ -44,12 +44,12 @@ describe("shadowContentFactory", () => {
       const setShadowContent = shadowContentFactory(styles)
 
       // First call
-      await setShadowContent(element, content1)
+      await setShadowContent(testElement, content1)
       const firstStyleSheet = shadowRoot.adoptedStyleSheets[0]
       expect(shadowRoot.innerHTML).toBe(content1)
 
       // Second call with same factory
-      await setShadowContent(element, content2)
+      await setShadowContent(testElement, content2)
       const secondStyleSheet = shadowRoot.adoptedStyleSheets[0]
       expect(shadowRoot.innerHTML).toBe(content2)
 
@@ -65,7 +65,7 @@ describe("shadowContentFactory", () => {
       const setShadowContent1 = shadowContentFactory(styles1)
       const setShadowContent2 = shadowContentFactory(styles2)
 
-      await setShadowContent1(element, content)
+      await setShadowContent1(testElement, content)
       const firstStyleSheet = shadowRoot.adoptedStyleSheets[0]
 
       // Create a second element for the second factory
@@ -90,10 +90,10 @@ describe("shadowContentFactory", () => {
       const styles = "body { color: orange; }"
       const setShadowContent = shadowContentFactory(styles)
 
-      await setShadowContent(element, "<p>Original</p>")
+      await setShadowContent(testElement, "<p>Original</p>")
       expect(shadowRoot.innerHTML).toBe("<p>Original</p>")
 
-      await setShadowContent(element, "<p>Updated</p>")
+      await setShadowContent(testElement, "<p>Updated</p>")
       expect(shadowRoot.innerHTML).toBe("<p>Updated</p>")
     })
   })
@@ -101,8 +101,8 @@ describe("shadowContentFactory", () => {
   describe("without adoptedStyleSheets support", () => {
     beforeEach(() => {
       // Create new element and remove adoptedStyleSheets to simulate legacy browser
-      element = document.createElement("div")
-      shadowRoot = element.attachShadow({ mode: "open" })
+      testElement = document.createElement("div")
+      shadowRoot = testElement.attachShadow({ mode: "open" })
 
       // Delete the adoptedStyleSheets property to simulate legacy browser
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,7 +114,7 @@ describe("shadowContentFactory", () => {
       const content = "<p>Legacy content</p>"
 
       const setShadowContent = shadowContentFactory(styles)
-      await setShadowContent(element, content)
+      await setShadowContent(testElement, content)
 
       expect(shadowRoot.innerHTML).toContain("<style>")
       expect(shadowRoot.innerHTML).toContain(styles)
@@ -126,7 +126,7 @@ describe("shadowContentFactory", () => {
       const content = '<div class="class">Text</div>'
 
       const setShadowContent = shadowContentFactory(styles)
-      await setShadowContent(element, content)
+      await setShadowContent(testElement, content)
 
       const expectedHTML = `
         <style>${styles}</style>
@@ -139,10 +139,10 @@ describe("shadowContentFactory", () => {
       const styles = "body { font-size: 14px; }"
       const setShadowContent = shadowContentFactory(styles)
 
-      await setShadowContent(element, "<p>First</p>")
+      await setShadowContent(testElement, "<p>First</p>")
       const firstHTML = shadowRoot.innerHTML
 
-      await setShadowContent(element, "<p>Second</p>")
+      await setShadowContent(testElement, "<p>Second</p>")
       const secondHTML = shadowRoot.innerHTML
 
       expect(firstHTML).toContain("<p>First</p>")

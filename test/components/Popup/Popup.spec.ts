@@ -1,8 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest"
 import { Popup } from "@/components/Popup/Popup"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { html } from "lit-html"
-import { createElement } from "../../utils/createElement"
+import { element } from "../../utils/createElement"
 
 describe("Popup", () => {
   const popupKey = "nosto:web-components:popup"
@@ -34,12 +33,10 @@ describe("Popup", () => {
 
   describe("Basic functionality", () => {
     it("should render shadow content with dialog and ribbon slots", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="test-popup"
+      const popup = element<Popup>`<nosto-popup name="test-popup"
           ><div slot="default">Dialog content</div>
           <div slot="ribbon">Ribbon content</div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -52,9 +49,7 @@ describe("Popup", () => {
     })
 
     it("should be visible by default", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="test-popup"><div slot="default">Content</div></nosto-popup>`
-      ) as Popup
+      const popup = element<Popup>`<nosto-popup name="test-popup"><div slot="default">Content</div></nosto-popup>`
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -68,9 +63,7 @@ describe("Popup", () => {
       const popupName = "test-popup"
       setPopupData({ name: popupName, state: "closed" })
 
-      const popup = createElement(
-        html`<nosto-popup name="${popupName}"><div slot="default">Content</div></nosto-popup>`
-      ) as Popup
+      const popup = element<Popup>`<nosto-popup name="${popupName}"><div slot="default">Content</div></nosto-popup>`
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -79,9 +72,7 @@ describe("Popup", () => {
     })
 
     it("should show popup if name is set but not previously closed", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="new-popup"><div slot="default">Content</div></nosto-popup>`
-      ) as Popup
+      const popup = element<Popup>`<nosto-popup name="new-popup"><div slot="default">Content</div></nosto-popup>`
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -90,7 +81,7 @@ describe("Popup", () => {
     })
 
     it("should throw error when name attribute is missing", async () => {
-      const popup = createElement(html`<nosto-popup><div slot="default">Content</div></nosto-popup>`) as Popup
+      const popup = element<Popup>`<nosto-popup><div slot="default">Content</div></nosto-popup>`
 
       // Don't append to DOM to avoid automatic connectedCallback call
       // that would cause unhandled error
@@ -106,9 +97,7 @@ describe("Popup", () => {
         }
       })
 
-      const popup = createElement(
-        html`<nosto-popup name="test-popup" segment="target-segment"><div slot="default">Content</div></nosto-popup>`
-      ) as Popup
+      const popup = element<Popup>`<nosto-popup name="test-popup" segment="target-segment"><div slot="default">Content</div></nosto-popup>`
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -123,11 +112,9 @@ describe("Popup", () => {
         }
       })
 
-      const popup = createElement(
-        html`<nosto-popup name="test-popup" segment="non-matching-segment"
+      const popup = element<Popup>`<nosto-popup name="test-popup" segment="non-matching-segment"
           ><div slot="default">Content</div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -136,9 +123,7 @@ describe("Popup", () => {
     })
 
     it("should show popup when no segment attribute is specified", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="test-popup"><div slot="default">Content</div></nosto-popup>`
-      ) as Popup
+      const popup = element<Popup>`<nosto-popup name="test-popup"><div slot="default">Content</div></nosto-popup>`
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -153,9 +138,7 @@ describe("Popup", () => {
         }
       })
 
-      const popup = createElement(
-        html`<nosto-popup name="test-popup" segment="any-segment"><div slot="default">Content</div></nosto-popup>`
-      ) as Popup
+      const popup = element<Popup>`<nosto-popup name="test-popup" segment="any-segment"><div slot="default">Content</div></nosto-popup>`
 
       // Don't append to DOM to avoid automatic connectedCallback call
       // that would cause unhandled error
@@ -165,13 +148,11 @@ describe("Popup", () => {
 
   describe("Click handling and closing", () => {
     it("should close popup when element with n-close attribute is clicked", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="closeable-popup"
+      const popup = element<Popup>`<nosto-popup name="closeable-popup"
           ><div slot="default">
             <button n-close>Close</button>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -188,13 +169,11 @@ describe("Popup", () => {
 
     it("should store closed state in localStorage when popup has name", async () => {
       const popupName = "persistent-popup"
-      const popup = createElement(
-        html`<nosto-popup name="${popupName}"
+      const popup = element<Popup>`<nosto-popup name="${popupName}"
           ><div slot="default">
             <button n-close>Close</button>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -206,13 +185,11 @@ describe("Popup", () => {
     })
 
     it("should always store closed state in localStorage since name is required", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="always-stores-popup"
+      const popup = element<Popup>`<nosto-popup name="always-stores-popup"
           ><div slot="default">
             <button n-close>Close</button>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -224,15 +201,13 @@ describe("Popup", () => {
     })
 
     it("should handle click events on ribbon content with n-close", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="ribbon-popup"
+      const popup = element<Popup>`<nosto-popup name="ribbon-popup"
           ><div slot="default">Dialog content</div>
           <div slot="ribbon">
             <span>Limited time!</span>
             <button n-close>×</button>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -247,14 +222,12 @@ describe("Popup", () => {
     })
 
     it("should not close popup when clicking elements without n-close attribute", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="test-popup"
+      const popup = element<Popup>`<nosto-popup name="test-popup"
           ><div slot="default">
             <p>Some content</p>
             <button>Regular button</button>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -268,13 +241,11 @@ describe("Popup", () => {
     })
 
     it("should prevent default and stop propagation on n-close click", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="test-popup"
+      const popup = element<Popup>`<nosto-popup name="test-popup"
           ><div slot="default">
             <a href="http://example.com" n-close> Close link </a>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -293,8 +264,7 @@ describe("Popup", () => {
     })
 
     it("should close popup when clicking inside element with n-close attribute (ancestor support)", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="test-popup"
+      const popup = element<Popup>`<nosto-popup name="test-popup"
           ><div slot="default">
             <div n-close>
               <span>Click anywhere inside this div</span>
@@ -302,7 +272,6 @@ describe("Popup", () => {
             </div>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -333,11 +302,9 @@ describe("Popup", () => {
         }
       })
 
-      const popup = createElement(
-        html`<nosto-popup name="${popupName}" segment="matching-segment"
+      const popup = element<Popup>`<nosto-popup name="${popupName}" segment="matching-segment"
           ><div slot="default">Content</div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -353,11 +320,9 @@ describe("Popup", () => {
         }
       })
 
-      const popup = createElement(
-        html`<nosto-popup name="new-segment-popup" segment="required-segment"
+      const popup = element<Popup>`<nosto-popup name="new-segment-popup" segment="required-segment"
           ><div slot="default">Content</div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -368,8 +333,7 @@ describe("Popup", () => {
 
   describe("Ribbon mode functionality", () => {
     it("should switch to ribbon mode when n-ribbon element is clicked", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="ribbon-test-popup"
+      const popup = element<Popup>`<nosto-popup name="ribbon-test-popup"
           ><div slot="default">
             <button n-ribbon>Switch to Ribbon</button>
           </div>
@@ -377,7 +341,6 @@ describe("Popup", () => {
             <span>Ribbon content</span>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -401,12 +364,10 @@ describe("Popup", () => {
       const popupName = "persistent-ribbon-popup"
       setPopupData({ name: popupName, state: "ribbon" })
 
-      const popup = createElement(
-        html`<nosto-popup name="${popupName}"
+      const popup = element<Popup>`<nosto-popup name="${popupName}"
           ><div slot="default">Dialog content</div>
           <div slot="ribbon">Ribbon content</div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()
@@ -418,13 +379,11 @@ describe("Popup", () => {
     })
 
     it("should prevent default and stop propagation on n-ribbon click", async () => {
-      const popup = createElement(
-        html`<nosto-popup name="ribbon-events-popup"
+      const popup = element<Popup>`<nosto-popup name="ribbon-events-popup"
           ><div slot="default">
             <a href="#" n-ribbon> Switch to Ribbon </a>
           </div></nosto-popup
         >`
-      ) as Popup
 
       document.body.appendChild(popup)
       await popup.connectedCallback()

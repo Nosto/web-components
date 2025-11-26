@@ -15,19 +15,14 @@ applyTo: "test/*"
 
 **Use lit-html templates for component creation in tests:**
 
-- Import `element` (or legacy `createElement` and `html`) from test utils
+- Import `element` and `elements` from test utils
 - Create components using tagged template literals:
 
   ```typescript
   import { element } from "../../utils/createElement"
 
-  // Create a custom element using tagged template (recommended)
+  // Create a custom element using tagged template
   const card = element<SimpleCard>`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`
-  
-  // Legacy: using html from lit-html with createElement
-  import { html } from "lit-html"
-  import { createElement } from "../../utils/createElement"
-  const card = createElement<SimpleCard>(html`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`)
   ```
 
 - For boolean attributes: use attribute presence (e.g., `<element attr>`) instead of `attr="true"`
