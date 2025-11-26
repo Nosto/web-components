@@ -80,12 +80,36 @@ function toKebabCase(str: string) {
   return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
 }
 
+function shouldSetAsProperty(element: HTMLElement, key: string, value: unknown): boolean {
+  // Get the actual property name (considering aliases)
+  const propName = aliases[key] ?? key
+
+  // Objects/arrays should always be properties (can't be serialized to attributes)
+  if (typeof value === "object" && value !== null) return true
+
+  // Check if property exists on element
+  const propertyExists = propName in element
+
+  // If property doesn't exist, set as attribute
+  if (!propertyExists) return false
+
+  // If property exists, prefer property for booleans
+  if (typeof value === "boolean") return true
+
+  // For other types (strings, numbers), set as property if it exists
+  return true
+}
+
 function applyProperties(element: HTMLElement, props: Props) {
   Object.entries(props).forEach(([key, value]) => {
     if (isEventListener(key, value)) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
     } else if (key === "style") {
       Object.assign(element.style, value)
+    } else if (shouldSetAsProperty(element, key, value)) {
+      const propName = aliases[key] ?? key
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(element as any)[propName] = value
     } else {
       const normKey = aliases[key] ?? toKebabCase(key)
       element.setAttribute(normKey, String(value))
