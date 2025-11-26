@@ -9,7 +9,7 @@ export function generateCarouselHTML(element: SimpleCard, title: string, images:
       <div class="carousel-images">
         ${images.map(
           img => html`
-            <div class="carousel-slide">${generateImgHtml(img, title, "img carousel-img", element.sizes)}</div>
+            <div class="carousel-slide">${generateImgHtml(img, title, "img carousel-img", element.imageSizes)}</div>
           `
         )}
       </div>

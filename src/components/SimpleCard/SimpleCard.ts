@@ -37,7 +37,8 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
  * @property {boolean} [rating] - Show product rating. Defaults to false.
- * @property {string} [sizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ * @property {string} [imageSizes] - The sizes attribute for responsive images to help the browser choose the right image size.
+ * @property {number} [variantId] - The specific variant ID to display. When set, shows this variant's data instead of the default variant.
  * @property {boolean} [mock] - If true, uses mock data instead of fetching from Shopify. Defaults to false.
  *
  * @fires @nosto/SimpleCard/rendered - Emitted when the component has finished rendering
@@ -45,12 +46,15 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends ReactiveElement {
   @property(String) handle!: string
+  /**
+   * @property {number} [variantId] - The specific variant ID to display. When set, the component will show this variant's data instead of the default variant.
+   */
   @property(Number) variantId?: number
   @property(String) imageMode?: "alternate" | "carousel"
   @property(Boolean) brand?: boolean
   @property(Boolean) discount?: boolean
   @property(Number) rating?: number
-  @property(String) sizes?: string
+  @property(String) imageSizes?: string
   @property(Boolean) mock?: boolean
 
   product?: JSONProduct
