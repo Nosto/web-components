@@ -1,3 +1,10 @@
+# [10.4.0](https://github.com/Nosto/web-components/compare/v10.3.0...v10.4.0) (2025-11-26)
+
+
+### Features
+
+* **jsx:** add support for property binding in applyProperties ([c98b9a9](https://github.com/Nosto/web-components/commit/c98b9a9028dcf764854f93587c516fe97b8b8414))
+
 # [10.3.0](https://github.com/Nosto/web-components/compare/v10.2.0...v10.3.0) (2025-11-25)
 
 
