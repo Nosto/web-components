@@ -46,9 +46,6 @@ const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 @customElement("nosto-simple-card", { observe: true })
 export class SimpleCard extends ReactiveElement {
   @property(String) handle!: string
-  /**
-   * @property {number} [variantId] - The specific variant ID to display. When set, the component will show this variant's data instead of the default variant.
-   */
   @property(Number) variantId?: number
   @property(String) imageMode?: "alternate" | "carousel"
   @property(Boolean) brand?: boolean
