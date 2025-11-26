@@ -1,7 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest"
 import { Popup } from "@/components/Popup/Popup"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { element } from "../../utils/createElement"
+import { element } from "../../utils/element"
 
 describe("Popup", () => {
   const popupKey = "nosto:web-components:popup"

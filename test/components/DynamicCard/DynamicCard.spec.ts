@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest"
 import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { element } from "../../utils/createElement"
+import { element } from "../../utils/element"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 

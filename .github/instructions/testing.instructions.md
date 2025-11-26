@@ -19,7 +19,7 @@ applyTo: "test/*"
 - Create components using tagged template literals:
 
   ```typescript
-  import { element } from "../../utils/createElement"
+  import { element } from "../../utils/element"
 
   // Create a custom element using tagged template
   const card = element<SimpleCard>`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`
@@ -41,7 +41,7 @@ applyTo: "test/*"
 
 - For multiple elements:
   ```typescript
-  import { elements } from "../../utils/createElement"
+  import { elements } from "../../utils/element"
   const [div1, div2] = elements<HTMLDivElement>`<div>One</div><div>Two</div>`
   ```
 

@@ -1,7 +1,7 @@
 import { describe, beforeEach, it, expect } from "vitest"
 import { Control } from "@/components/Control/Control"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { element } from "../../utils/createElement"
+import { element } from "../../utils/element"
 
 describe("Control", () => {
   beforeEach(() => {

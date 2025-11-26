@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
-import { element } from "../../utils/createElement"
+import { element } from "../../utils/element"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithVariants } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
