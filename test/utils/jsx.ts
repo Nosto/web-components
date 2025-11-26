@@ -96,8 +96,7 @@ function applyProperties(element: HTMLElement, props: Props) {
     } else if (key.startsWith(".")) {
       // Property binding syntax: .property
       const propName = key.slice(1)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(element as any)[propName] = value
+      ;(element as unknown as Record<string, unknown>)[propName] = value
     } else {
       const normKey = aliases[key] ?? toKebabCase(key)
       element.setAttribute(normKey, String(value))
