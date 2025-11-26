@@ -28,7 +28,9 @@ describe("Campaign", () => {
   it("should remove loading attribute even when error occurs", async () => {
     mockNostoRecs({ "123": {} })
 
-    campaign = createElement(html`<nosto-campaign placement="123" template="missing-template"></nosto-campaign>`) as Campaign
+    campaign = createElement(
+      html`<nosto-campaign placement="123" template="missing-template"></nosto-campaign>`
+    ) as Campaign
 
     // The component should throw on error, but loading state should be cleaned up
     await expect(campaign.connectedCallback()).rejects.toThrow()
@@ -39,7 +41,9 @@ describe("Campaign", () => {
     const htmlContent = "recommended content"
     const { mockBuilder } = mockNostoRecs({ "789": { html: htmlContent } })
 
-    campaign = createElement(html`<nosto-campaign placement="789" productId="123" variantId="var1"></nosto-campaign>`) as Campaign
+    campaign = createElement(
+      html`<nosto-campaign placement="789" productId="123" variantId="var1"></nosto-campaign>`
+    ) as Campaign
 
     const template = document.createElement("template")
     template.innerHTML = "<span>{{ html }}</span>"
@@ -72,7 +76,9 @@ describe("Campaign", () => {
       }
     })
 
-    const campaign = createElement(html`<nosto-campaign placement="789" productId="123" template="${templateId}"></nosto-campaign>`) as Campaign
+    const campaign = createElement(
+      html`<nosto-campaign placement="789" productId="123" template="${templateId}"></nosto-campaign>`
+    ) as Campaign
     document.body.appendChild(campaign)
 
     await campaign.connectedCallback()
@@ -90,7 +96,14 @@ describe("Campaign", () => {
   it('should not auto-load campaign if init="false"', async () => {
     const { mockBuilder, injectCampaigns } = mockNostoRecs({ "789": {} })
 
-    campaign = createElement(html`<nosto-campaign placement="789" productId="123" variantId="var1" template="inline-template"></nosto-campaign>`) as Campaign
+    campaign = createElement(
+      html`<nosto-campaign
+        placement="789"
+        productId="123"
+        variantId="var1"
+        template="inline-template"
+      ></nosto-campaign>`
+    ) as Campaign
 
     campaign.setAttribute("init", "false")
     document.body.appendChild(campaign)
@@ -160,7 +173,9 @@ describe("Campaign", () => {
     // Mock IntersectionObserver
     const { observe } = mockIntersectionObserver()
 
-    campaign = createElement(html`<nosto-campaign placement="456" productId="123" init="false" lazy></nosto-campaign>`) as Campaign
+    campaign = createElement(
+      html`<nosto-campaign placement="456" productId="123" init="false" lazy></nosto-campaign>`
+    ) as Campaign
 
     await campaign.connectedCallback()
 

@@ -11,34 +11,41 @@ applyTo: "test/*"
 - Maintain 90%+ coverage on statements, branches, lines, and functions
 - Tests run in jsdom environment
 
-## JSX/TSX Testing Patterns
+## HTML Template Testing Patterns
 
-**Prefer JSX/TSX syntax for component creation in tests:**
+**Use lit-html style templates for component creation in tests:**
 
-- Use `.tsx` file extension for test files that create custom elements
-- Add `/** @jsx createElement */` pragma at the top of TSX test files
-- Import `createElement` from `../utils/jsx` and the custom element classes
-- Use explicit custom element registration in `beforeAll()` blocks:
-  ```typescript
-  beforeAll(() => {
-    if (!customElements.get("custom-element")) {
-      customElements.define("custom-element", CustomElement)
-    }
-  })
-  ```
-- Create components using JSX syntax with proper TypeScript typing:
+- Import `html` from `@/templating/html` and `createElement` from test utils
+- Create components using html template literals with `createElement` wrapper:
 
   ```typescript
-  // Preferred JSX/TSX pattern
-  const card = <custom-element handle="test-handle" template="default" />
+  import { html } from "@/templating/html"
+  import { createElement } from "../../utils/createElement"
 
-  // Instead of imperative pattern
-  const card = new CustomElement()
-  card.handle = "test-handle"
-  card.template = "default"
+  // Create a custom element
+  const card = createElement(html`<nosto-simple-card handle="test-handle" template="default"></nosto-simple-card>`) as SimpleCard
   ```
 
-- Use parentheses for multi-line JSX expressions
+- For boolean attributes: use attribute presence (e.g., `<element attr>`) instead of `attr="true"`
+- For number/object properties: set them after element creation:
+  ```typescript
+  const selector = createElement(html`<nosto-variant-selector handle="product"></nosto-variant-selector>`) as VariantSelector
+  selector.variantId = 1002
+  selector.maxValues = 5
+  ```
+
+- For template literal interpolation in HTML content:
+  ```typescript
+  const value = "dynamic"
+  const element = createElement(html`<div attr="${value}">Content</div>`)
+  ```
+
+- For raw HTML (like JSON in script tags):
+  ```typescript
+  const jsonData = JSON.stringify({key: "value"})
+  const element = createElement(html`<script type="application/json">${{ html: jsonData }}</script>`)
+  ```
+
 - Always preserve custom element imports as they trigger `@customElement` decorator registration
 
 ## Mock Products

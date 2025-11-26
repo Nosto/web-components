@@ -23,7 +23,9 @@ describe("SectionCampaign", () => {
       })
     )
 
-    const el = createElement(html`<nosto-section-campaign placement="placement1" section="featured-section"></nosto-section-campaign>`) as SectionCampaign
+    const el = createElement(
+      html`<nosto-section-campaign placement="placement1" section="featured-section"></nosto-section-campaign>`
+    ) as SectionCampaign
     document.body.appendChild(el)
 
     await el.connectedCallback()
@@ -43,7 +45,9 @@ describe("SectionCampaign", () => {
 
     addHandlers(http.get("/search", () => HttpResponse.text("Error", { status: 500 })))
 
-    const el = createElement(html`<nosto-section-campaign placement="placement1" section="missing-section"></nosto-section-campaign>`) as SectionCampaign
+    const el = createElement(
+      html`<nosto-section-campaign placement="placement1" section="missing-section"></nosto-section-campaign>`
+    ) as SectionCampaign
 
     await expect(el.connectedCallback()).rejects.toThrow("Failed to fetch http://localhost:3000/search")
     expect(el.hasAttribute("loading")).toBe(false)
@@ -62,7 +66,9 @@ describe("SectionCampaign", () => {
       })
     )
 
-    const el = createElement(html`<nosto-section-campaign placement="placement1" section="featured-section"></nosto-section-campaign>`) as SectionCampaign
+    const el = createElement(
+      html`<nosto-section-campaign placement="placement1" section="featured-section"></nosto-section-campaign>`
+    ) as SectionCampaign
     document.body.appendChild(el)
 
     await el.connectedCallback()
@@ -87,7 +93,9 @@ describe("SectionCampaign", () => {
       })
     )
 
-    const el = createElement(html`<nosto-section-campaign placement="placement1" section="featured-section"></nosto-section-campaign>`) as SectionCampaign
+    const el = createElement(
+      html`<nosto-section-campaign placement="placement1" section="featured-section"></nosto-section-campaign>`
+    ) as SectionCampaign
     document.body.appendChild(el)
 
     await el.connectedCallback()

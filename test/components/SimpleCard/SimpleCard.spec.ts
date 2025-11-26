@@ -64,7 +64,9 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" brand><button n-atc>Add to Cart</button></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" brand><button n-atc>Add to Cart</button></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
     card.variantId = 789
@@ -96,7 +98,9 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" discount></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" discount></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -127,7 +131,9 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithoutDiscount }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" discount></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" discount></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -140,7 +146,9 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" rating="4.2"></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" rating="4.2"></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -154,7 +162,9 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="alternate"></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" image-mode="alternate"></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -174,7 +184,9 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithOneImage }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="alternate"></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" image-mode="alternate"></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -191,7 +203,9 @@ describe("SimpleCard", () => {
       "test-product": { product: mockProduct }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" brand discount image-mode="alternate"></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" brand discount image-mode="alternate"></nosto-simple-card>`
+    ) as SimpleCard
     card.rating = 3.5
 
     await card.connectedCallback()
@@ -342,7 +356,9 @@ describe("SimpleCard", () => {
       "test-product": { product: productWithDifferentPrice }
     })
 
-    const card = createElement(html`<nosto-simple-card handle="test-product" discount></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" discount></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -357,7 +373,9 @@ describe("SimpleCard", () => {
     })
 
     const sizesValue = "(max-width: 768px) 100vw, 50vw"
-    const card = createElement(html`<nosto-simple-card handle="test-product" sizes="${sizesValue}"></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" sizes="${sizesValue}"></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -371,7 +389,9 @@ describe("SimpleCard", () => {
     })
 
     const sizesValue = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-    const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="alternate" sizes="${sizesValue}"></nosto-simple-card>`) as SimpleCard
+    const card = createElement(
+      html`<nosto-simple-card handle="test-product" image-mode="alternate" sizes="${sizesValue}"></nosto-simple-card>`
+    ) as SimpleCard
 
     await card.connectedCallback()
 
@@ -565,7 +585,9 @@ describe("SimpleCard", () => {
 
   describe("Mock Mode", () => {
     it("should render all mock features when all attributes are enabled", async () => {
-      const card = createElement(html`<nosto-simple-card handle="test-handle" mock brand discount rating="3.5"></nosto-simple-card>`) as SimpleCard
+      const card = createElement(
+        html`<nosto-simple-card handle="test-handle" mock brand discount rating="3.5"></nosto-simple-card>`
+      ) as SimpleCard
 
       await card.connectedCallback()
 
@@ -618,7 +640,9 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`) as SimpleCard
+      const card = createElement(
+        html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`
+      ) as SimpleCard
 
       await card.connectedCallback()
 
@@ -638,7 +662,9 @@ describe("SimpleCard", () => {
         "test-product": { product: productWithOneImage }
       })
 
-      const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`) as SimpleCard
+      const card = createElement(
+        html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`
+      ) as SimpleCard
 
       await card.connectedCallback()
 
@@ -651,7 +677,9 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`) as SimpleCard
+      const card = createElement(
+        html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`
+      ) as SimpleCard
 
       await card.connectedCallback()
 
@@ -664,7 +692,9 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`) as SimpleCard
+      const card = createElement(
+        html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`
+      ) as SimpleCard
       document.body.appendChild(card)
 
       await card.connectedCallback()
@@ -683,7 +713,9 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      const card = createElement(html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`) as SimpleCard
+      const card = createElement(
+        html`<nosto-simple-card handle="test-product" image-mode="carousel"></nosto-simple-card>`
+      ) as SimpleCard
       document.body.appendChild(card)
 
       await card.connectedCallback()
