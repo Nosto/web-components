@@ -1,3 +1,4 @@
+import type { Bundle } from "@/components/Bundle/Bundle"
 import type { Campaign } from "@/components/Campaign/Campaign"
 import type { Control } from "@/components/Control/Control"
 import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
@@ -15,13 +16,19 @@ type GlobalEventHandlersMapping = {
   [K in keyof GlobalEventHandlersEventMap as `on${Capitalize<K>}`]?: (event: GlobalEventHandlersEventMap[K]) => void
 }
 
-type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping
+// remaps properties to their property binding syntax (.property)
+type PropertyBindingMapping<T> = {
+  [K in keyof T as `.${string & K}`]?: T[K]
+}
+
+type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping & PropertyBindingMapping<T>
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
+      "nosto-bundle": ElementMapping<Bundle>
       "nosto-campaign": ElementMapping<Campaign>
       "nosto-control": ElementMapping<Control>
       "nosto-dynamic-card": ElementMapping<DynamicCard>
@@ -86,6 +93,11 @@ function applyProperties(element: HTMLElement, props: Props) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
     } else if (key === "style") {
       Object.assign(element.style, value)
+    } else if (key.startsWith(".")) {
+      // Property binding syntax: .property
+      const propName = key.slice(1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(element as any)[propName] = value
     } else {
       const normKey = aliases[key] ?? toKebabCase(key)
       element.setAttribute(normKey, String(value))
