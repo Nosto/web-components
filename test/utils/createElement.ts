@@ -4,11 +4,16 @@ import type { TemplateExpression } from "@/templating/html"
  * Converts an html template expression into a DOM element
  * @param template - The template expression from the html function
  * @returns The parsed DOM element
+ * @throws Error if the template does not produce a valid element
  */
 export function createElement(template: TemplateExpression): HTMLElement {
   const div = document.createElement("div")
   div.innerHTML = template.html.trim()
-  return div.firstElementChild as HTMLElement
+  const element = div.firstElementChild
+  if (!(element instanceof HTMLElement)) {
+    throw new Error(`Template did not produce a valid HTMLElement: ${template.html}`)
+  }
+  return element
 }
 
 /**
@@ -20,8 +25,6 @@ export function createFragment(template: TemplateExpression): DocumentFragment {
   const div = document.createElement("div")
   div.innerHTML = template.html.trim()
   const fragment = document.createDocumentFragment()
-  while (div.firstChild) {
-    fragment.appendChild(div.firstChild)
-  }
+  fragment.append(...div.childNodes)
   return fragment
 }
