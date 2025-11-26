@@ -172,7 +172,7 @@ describe("Bundle", () => {
     expect(card.style.display).toBe("block")
   })
 
-  it("hides card when product is removed from selection", async () => {
+  it("hides card when product is removed from selection", () => {
     const bundle = (
       <nosto-bundle>
         <nosto-simple-card handle="a" />
@@ -195,7 +195,7 @@ describe("Bundle", () => {
     expect(card.style.display).toBe("none")
   })
 
-  it("should not hide bundle card if checkbox is inside the card", async () => {
+  it("should not hide bundle card if checkbox is inside the card", () => {
     const bundle = (
       <nosto-bundle>
         <nosto-simple-card handle="a">
@@ -232,7 +232,7 @@ describe("Bundle", () => {
 
     const button = bundle.querySelector("button[n-atc]") as HTMLButtonElement
     button.click()
-
+    // TODO: Replace with proper add to cart logic verification
     expect(consoleSpy).toHaveBeenCalledWith("Bundle Add to Cart clicked", expect.any(Array))
   })
 })
