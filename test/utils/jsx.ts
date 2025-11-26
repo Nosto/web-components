@@ -81,23 +81,11 @@ function toKebabCase(str: string) {
 }
 
 function shouldSetAsProperty(element: HTMLElement, key: string, value: unknown): boolean {
-  // Get the actual property name (considering aliases)
-  const propName = aliases[key] ?? key
-
   // Objects/arrays should always be properties (can't be serialized to attributes)
   if (typeof value === "object" && value !== null) return true
 
-  // Check if property exists on element
-  const propertyExists = propName in element
-
-  // If property doesn't exist, set as attribute
-  if (!propertyExists) return false
-
-  // If property exists, prefer property for booleans
-  if (typeof value === "boolean") return true
-
-  // For other types (strings, numbers), set as property if it exists
-  return true
+  // For aliased keys, use attribute; otherwise check if property exists
+  return !aliases[key] && key in element
 }
 
 function applyProperties(element: HTMLElement, props: Props) {

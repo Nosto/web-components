@@ -1,18 +1,14 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeAll } from "vitest"
 import { createElement } from "./jsx"
+import { property } from "@/components/decorators"
 
 // Define a test custom element for property binding tests
 class TestElement extends HTMLElement {
-  static attributes = {
-    stringProp: String,
-    booleanProp: Boolean,
-    numberProp: Number
-  }
+  @property(String) stringProp?: string | null
+  @property(Boolean) booleanProp?: boolean
+  @property(Number) numberProp?: number
 
-  stringProp?: string | null
-  booleanProp?: boolean
-  numberProp?: number
   objectProp?: Record<string, unknown>
   arrayProp?: unknown[]
 
@@ -20,49 +16,6 @@ class TestElement extends HTMLElement {
     super()
   }
 }
-
-// Manually define properties similar to the @property decorator
-Object.defineProperty(TestElement.prototype, "stringProp", {
-  get(this: HTMLElement) {
-    return this.getAttribute("string-prop")!
-  },
-  set(this: HTMLElement, value?: string) {
-    if (value === null || value === undefined) {
-      this.removeAttribute("string-prop")
-    } else {
-      this.setAttribute("string-prop", value)
-    }
-  },
-  configurable: true,
-  enumerable: true
-})
-
-Object.defineProperty(TestElement.prototype, "booleanProp", {
-  get(this: HTMLElement) {
-    return this.hasAttribute("boolean-prop")
-  },
-  set(this: HTMLElement, value: boolean) {
-    this.toggleAttribute("boolean-prop", value)
-  },
-  configurable: true,
-  enumerable: true
-})
-
-Object.defineProperty(TestElement.prototype, "numberProp", {
-  get(this: HTMLElement) {
-    const value = this.getAttribute("number-prop")
-    return value ? Number(value) : undefined
-  },
-  set(this: HTMLElement, value?: number) {
-    if (value === null || value === undefined) {
-      this.removeAttribute("number-prop")
-    } else {
-      this.setAttribute("number-prop", value.toString())
-    }
-  },
-  configurable: true,
-  enumerable: true
-})
 
 declare global {
   interface HTMLElementTagNameMap {
