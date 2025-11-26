@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest"
 import { Product } from "@/components/Product/Product"
 import "@/components/SkuOptions/SkuOptions"
-import { createElement } from "../../utils/jsx"
+import { html } from "lit-html"
+import { createElements } from "../../utils/createElement"
 
 describe("sku options integration", () => {
   const element = (selector: string) => document.querySelector<HTMLElement>(selector)!
@@ -12,16 +13,18 @@ describe("sku options integration", () => {
     nostoProduct.setAttribute("reco-id", "789")
 
     nostoProduct.append(
-      <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145"></span>
-        <span white n-option n-skus="223,234,245"></span>
-        <span blue n-option n-skus="334,345"></span>
-      </nosto-sku-options>,
-      <nosto-sku-options name="sizes">
-        <span l n-option n-skus="123,223"></span>
-        <span m n-option n-skus="234,334"></span>
-        <span s n-option n-skus="145,245,345"></span>
-      </nosto-sku-options>
+      ...createElements(
+        html`<nosto-sku-options name="colors">
+          <span black="" n-option="" n-skus="123,145"></span>
+          <span white="" n-option="" n-skus="223,234,245"></span>
+          <span blue="" n-option="" n-skus="334,345"></span>
+        </nosto-sku-options>`,
+        html`<nosto-sku-options name="sizes">
+          <span l="" n-option="" n-skus="123,223"></span>
+          <span m="" n-option="" n-skus="234,334"></span>
+          <span s="" n-option="" n-skus="145,245,345"></span>
+        </nosto-sku-options>`
+      )
     )
     document.body.replaceChildren(nostoProduct)
 
@@ -76,16 +79,18 @@ describe("sku options integration", () => {
     nostoProduct.setAttribute("reco-id", "789")
 
     nostoProduct.append(
-      <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145" selected></span>
-        <span white n-option n-skus="223,234,245"></span>
-        <span blue n-option n-skus="334,345"></span>
-      </nosto-sku-options>,
-      <nosto-sku-options name="sizes">
-        <span l n-option n-skus="123,223"></span>
-        <span m n-option n-skus="234,334"></span>
-        <span s n-option n-skus="145,245,345"></span>
-      </nosto-sku-options>
+      ...createElements(
+        html`<nosto-sku-options name="colors">
+          <span black="" n-option="" n-skus="123,145" selected=""></span>
+          <span white="" n-option="" n-skus="223,234,245"></span>
+          <span blue="" n-option="" n-skus="334,345"></span>
+        </nosto-sku-options>`,
+        html`<nosto-sku-options name="sizes">
+          <span l="" n-option="" n-skus="123,223"></span>
+          <span m="" n-option="" n-skus="234,334"></span>
+          <span s="" n-option="" n-skus="145,245,345"></span>
+        </nosto-sku-options>`
+      )
     )
     document.body.replaceChildren(nostoProduct)
 
@@ -106,16 +111,18 @@ describe("sku options integration", () => {
     nostoProduct.setAttribute("reco-id", "789")
 
     nostoProduct.append(
-      <nosto-sku-options name="colors">
-        <span black n-option n-skus="123,145" selected></span>
-        <span white n-option n-skus="223,234,245"></span>
-        <span blue n-option n-skus="334,345"></span>
-      </nosto-sku-options>,
-      <nosto-sku-options name="sizes">
-        <span l n-option n-skus="123,223"></span>
-        <span m n-option n-skus="234,334"></span>
-        <span s n-option n-skus="145,245,345" selected></span>
-      </nosto-sku-options>
+      ...createElements(
+        html`<nosto-sku-options name="colors">
+          <span black="" n-option="" n-skus="123,145" selected=""></span>
+          <span white="" n-option="" n-skus="223,234,245"></span>
+          <span blue="" n-option="" n-skus="334,345"></span>
+        </nosto-sku-options>`,
+        html`<nosto-sku-options name="sizes">
+          <span l="" n-option="" n-skus="123,223"></span>
+          <span m="" n-option="" n-skus="234,334"></span>
+          <span s="" n-option="" n-skus="145,245,345" selected=""></span>
+        </nosto-sku-options>`
+      )
     )
     document.body.replaceChildren(nostoProduct)
 
