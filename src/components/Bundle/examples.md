@@ -8,20 +8,17 @@ This example demonstrates a product bundle inside a campaign context.
 <nosto-campaign placement="frontpage-nosto-bundle">
   <template>
     <nosto-bundle .products="products">
-      <!-- Products slot: displays product cards in a grid -->
-      <div slot="products" class="bundle-grid">
+      <div class="bundle-grid">
         <nosto-simple-card
           v-for="product in products"
-          :key="product.productId"
           :handle="product.handle"
         ></nosto-simple-card>
       </div>
 
-      <!-- Controls slot: checkboxes, add to cart button, and price summary -->
-      <div slot="controls" class="bundle-controls">
+      <div class="bundle-controls">
         <h4>{{ title }}</h4>
         <ul>
-          <li v-for="product in products" :key="product.productId">
+          <li v-for="product in products">
             <label>
               <input type="checkbox" :value="product.productId" checked />
               Include {{ product.name }} - ${{ product.price }}
