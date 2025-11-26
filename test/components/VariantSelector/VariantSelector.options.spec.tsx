@@ -1,7 +1,7 @@
-/** @jsx createElement */
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
-import { createElement } from "../../utils/jsx"
+import { html } from "@/templating/html"
+import { createElement } from "../../utils/createElement"
 import {
   mockProductWithSingleValueOptionTest,
   mockProductWithAllSingleValueOptionsTest,

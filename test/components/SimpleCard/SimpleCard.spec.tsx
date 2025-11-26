@@ -1,7 +1,7 @@
-/** @jsx createElement */
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
-import { createElement } from "../../utils/jsx"
+import { html } from "@/templating/html"
+import { createElement } from "../../utils/createElement"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"

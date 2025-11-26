@@ -1,8 +1,8 @@
-/** @jsx createElement */
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest"
 import { Popup } from "@/components/Popup/Popup"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { createElement } from "../../utils/jsx"
+import { html } from "@/templating/html"
+import { createElement } from "../../utils/createElement"
 
 describe("Popup", () => {
   const popupKey = "nosto:web-components:popup"
