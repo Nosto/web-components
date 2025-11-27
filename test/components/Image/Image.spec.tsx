@@ -66,10 +66,9 @@ describe("Image", () => {
   })
 
   it("handles breakpoints set via attribute", () => {
-    nostoImage = (
-      // @ts-expect-error Testing with string attribute that gets parsed to array
-      <nosto-image src="https://example.com/image.jpg" width={300} height={200} breakpoints="[100, 300, 500]" />
-    ) as Image
+    nostoImage = (<nosto-image src="https://example.com/image.jpg" width={300} height={200} />) as Image
+    // Set as attribute directly to test attribute parsing (not via JSX)
+    nostoImage.setAttribute("breakpoints", "[100, 300, 500]")
     expect(() => nostoImage.connectedCallback()).not.toThrow()
     expect(nostoImage.breakpoints).toEqual([100, 300, 500])
   })
