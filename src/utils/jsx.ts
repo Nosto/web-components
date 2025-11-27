@@ -95,7 +95,11 @@ function applyProperties(element: HTMLElement, props: Props) {
     if (isEventListener(key, value)) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
     } else if (key === "style") {
-      Object.assign(element.style, value)
+      if (typeof value === "string") {
+        element.setAttribute("style", value)
+      } else {
+        Object.assign(element.style, value)
+      }
     } else if (shouldSetAsProperty(element, key, value)) {
       const propName = aliases[key] ?? key
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
