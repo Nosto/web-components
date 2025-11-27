@@ -1,4 +1,5 @@
-import { html } from "lit"
+/** @jsx createElement */
+import { createElement } from "@/utils/jsx"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
@@ -71,9 +72,7 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: () => {
-    return html`
-      <nosto-campaign placement="frontpage-nosto-bundle">
-        <template>
+    const templateContent = `
           <nosto-bundle .products="products">
             <div class="bundle-grid">
               <nosto-simple-card v-for="product in products" :handle="product.handle"> </nosto-simple-card>
@@ -90,17 +89,21 @@ export const Default: Story = {
               <span n-summary-price></span>
             </div>
           </nosto-bundle>
-        </template>
+        `
+    const template = document.createElement("template")
+    template.innerHTML = templateContent
+
+    return (
+      <nosto-campaign placement="frontpage-nosto-bundle">
+        {template}
       </nosto-campaign>
-    `
+    )
   }
 }
 
 export const CheckboxCard: Story = {
   render: () => {
-    return html`
-      <nosto-campaign placement="frontpage-nosto-bundle">
-        <template>
+    const templateContent = `
           <nosto-bundle .products="products">
             <div class="bundle-grid">
               <nosto-simple-card v-for="product in products" :handle="product.handle">
@@ -112,8 +115,14 @@ export const CheckboxCard: Story = {
               <span n-summary-price></span>
             </div>
           </nosto-bundle>
-        </template>
+        `
+    const template = document.createElement("template")
+    template.innerHTML = templateContent
+
+    return (
+      <nosto-campaign placement="frontpage-nosto-bundle">
+        {template}
       </nosto-campaign>
-    `
+    )
   }
 }
