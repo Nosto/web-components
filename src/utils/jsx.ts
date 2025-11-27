@@ -94,6 +94,9 @@ function applyProperties(element: HTMLElement, props: Props) {
   Object.entries(props).forEach(([key, value]) => {
     if (isEventListener(key, value)) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
+    } else if (key === "dangerouslySetInnerHTML" && typeof value === "object" && value !== null) {
+      const html = (value as { __html: string }).__html
+      element.innerHTML = html
     } else if (key === "style") {
       if (typeof value === "string") {
         element.setAttribute("style", value)

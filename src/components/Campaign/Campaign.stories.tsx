@@ -1,7 +1,6 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used by JSX pragma
 import { createElement, createFragment } from "@/utils/jsx"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
@@ -135,7 +134,11 @@ export const BasicCampaign: Story = {
 
 export const ProductRecommendations: Story = {
   render: () => {
-    const templateContent = `
+    return (
+      <nosto-campaign placement="product-recommendations" product-id="current-product">
+        <template
+          dangerouslySetInnerHTML={{
+            __html: `
           <div class="recommendations-section">
             <h3>{{ title }}</h3>
             <div class="products-grid">
@@ -154,12 +157,8 @@ export const ProductRecommendations: Story = {
             </div>
           </div>
         `
-    const template = document.createElement("template")
-    template.innerHTML = templateContent
-
-    return (
-      <nosto-campaign placement="product-recommendations" product-id="current-product">
-        {template}
+          }}
+        />
       </nosto-campaign>
     )
   },

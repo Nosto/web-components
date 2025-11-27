@@ -1,7 +1,6 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used by JSX pragma
 import { createElement, createFragment } from "@/utils/jsx"
 import "./SkuOptions.stories.css"
 

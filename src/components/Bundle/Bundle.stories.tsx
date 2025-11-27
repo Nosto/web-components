@@ -72,7 +72,11 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: () => {
-    const templateContent = `
+    return (
+      <nosto-campaign placement="frontpage-nosto-bundle">
+        <template
+          dangerouslySetInnerHTML={{
+            __html: `
           <nosto-bundle .products="products">
             <div class="bundle-grid">
               <nosto-simple-card v-for="product in products" :handle="product.handle"> </nosto-simple-card>
@@ -90,16 +94,20 @@ export const Default: Story = {
             </div>
           </nosto-bundle>
         `
-    const template = document.createElement("template")
-    template.innerHTML = templateContent
-
-    return <nosto-campaign placement="frontpage-nosto-bundle">{template}</nosto-campaign>
+          }}
+        />
+      </nosto-campaign>
+    )
   }
 }
 
 export const CheckboxCard: Story = {
   render: () => {
-    const templateContent = `
+    return (
+      <nosto-campaign placement="frontpage-nosto-bundle">
+        <template
+          dangerouslySetInnerHTML={{
+            __html: `
           <nosto-bundle .products="products">
             <div class="bundle-grid">
               <nosto-simple-card v-for="product in products" :handle="product.handle">
@@ -112,9 +120,9 @@ export const CheckboxCard: Story = {
             </div>
           </nosto-bundle>
         `
-    const template = document.createElement("template")
-    template.innerHTML = templateContent
-
-    return <nosto-campaign placement="frontpage-nosto-bundle">{template}</nosto-campaign>
+          }}
+        />
+      </nosto-campaign>
+    )
   }
 }

@@ -40,7 +40,7 @@ export default defineConfig(
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          varsIgnorePattern: "createElement"
+          varsIgnorePattern: "createElement|createFragment"
         }
       ]
     }
