@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, vi } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "../../utils/jsx"
@@ -8,15 +8,15 @@ import { addProductHandlers } from "../../utils/addProductHandlers"
 
 describe("Bundle", () => {
   const mockProduct = mockSimpleCardProduct
+  const products = [
+    { handle: "a", price: 10, price_currency_code: "USD" },
+    { handle: "b", price: 5, price_currency_code: "USD" }
+  ] as JSONProduct[]
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-bundle")).toBeDefined()
   })
 
   it("initializes selectedProducts and updates summary on connectedCallback", () => {
-    const products = [
-      { handle: "a", price: 10, price_currency_code: "USD" },
-      { handle: "b", price: 5, price_currency_code: "USD" }
-    ] as JSONProduct[]
     const bundle = (
       <nosto-bundle products={products}>
         <span n-summary-price></span>
@@ -24,7 +24,7 @@ describe("Bundle", () => {
       </nosto-bundle>
     ) as Bundle
 
-    const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
 
     document.body.appendChild(bundle) // triggers connectedCallback
 
@@ -36,10 +36,6 @@ describe("Bundle", () => {
     addProductHandlers({
       a: { product: mockProduct }
     })
-    const products = [
-      { handle: "a", price: 10, price_currency_code: "USD" },
-      { handle: "b", price: 5, price_currency_code: "USD" }
-    ] as JSONProduct[]
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="a" />
@@ -50,9 +46,8 @@ describe("Bundle", () => {
 
     bundle.selectedProducts = [...products]
 
-    const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
-
-    const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
 
     document.body.appendChild(bundle)
 
@@ -60,7 +55,7 @@ describe("Bundle", () => {
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
-    expect(bundle.selectedProducts.find((p: JSONProduct) => p.handle === "a")).toBeUndefined()
+    expect(bundle.selectedProducts?.find((p: JSONProduct) => p.handle === "a")).toBeUndefined()
     expect(summary.textContent).toBe("Total: $5.00")
   })
 
@@ -69,10 +64,6 @@ describe("Bundle", () => {
       a: { product: mockProduct },
       b: { product: mockProduct }
     })
-    const products = [
-      { handle: "a", price: 10, price_currency_code: "USD" },
-      { handle: "b", price: 5, price_currency_code: "USD" }
-    ] as JSONProduct[]
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="a" />
@@ -83,8 +74,8 @@ describe("Bundle", () => {
 
     bundle.selectedProducts = [products[1]] // Only 'b' selected initially
 
-    const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
-    const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
 
     document.body.appendChild(bundle)
 
@@ -98,11 +89,6 @@ describe("Bundle", () => {
   })
 
   it("calculates correct total for multiple selected products", () => {
-    const products = [
-      { handle: "a", price: 10.5, price_currency_code: "USD" },
-      { handle: "b", price: 5.25, price_currency_code: "USD" },
-      { handle: "c", price: 15.75, price_currency_code: "USD" }
-    ] as JSONProduct[]
     const bundle = (
       <nosto-bundle products={products}>
         <span n-summary-price></span>
@@ -111,15 +97,11 @@ describe("Bundle", () => {
 
     document.body.appendChild(bundle)
 
-    const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
-    expect(summary.textContent).toBe("Total: $31.50")
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    expect(summary.textContent).toBe("Total: $15.00")
   })
 
   it("does not add duplicate product when already selected", () => {
-    const products = [
-      { handle: "a", price: 10, price_currency_code: "USD" },
-      { handle: "b", price: 5, price_currency_code: "USD" }
-    ] as JSONProduct[]
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="a" />
@@ -128,8 +110,8 @@ describe("Bundle", () => {
       </nosto-bundle>
     ) as Bundle
 
-    const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
-    const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
 
     document.body.appendChild(bundle)
 
@@ -142,9 +124,8 @@ describe("Bundle", () => {
   })
 
   it("handles empty selectedProducts array", () => {
-    const products = [{ handle: "a", price: 10, price_currency_code: "USD" }] as JSONProduct[]
     const bundle = (
-      <nosto-bundle products={products}>
+      <nosto-bundle>
         <span n-summary-price></span>
         <input type="checkbox" value="a" />
       </nosto-bundle>
@@ -153,16 +134,15 @@ describe("Bundle", () => {
     document.body.appendChild(bundle)
 
     // Manually trigger summary update
-    const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
 
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
-    const summary = bundle.querySelector("span[n-summary-price]") as HTMLSpanElement
     expect(summary.textContent).toBe("Total: $0.00")
   })
 
   it("shows card when product is added to selection", async () => {
-    const products = [{ handle: "a", price: 10, price_currency_code: "USD" }] as JSONProduct[]
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="a" />
@@ -173,17 +153,16 @@ describe("Bundle", () => {
 
     document.body.appendChild(bundle)
 
-    const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
-    const cardA = bundle.querySelector('nosto-simple-card[handle="a"]') as SimpleCard
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
+    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="a"]')
 
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
-    expect(cardA.style.display).toBe("block")
+    expect(card?.style.display).toBe("block")
   })
 
-  it("hides card when product is removed from selection", async () => {
-    const products = [{ handle: "a", price: 10, price_currency_code: "USD" }] as JSONProduct[]
+  it("hides card when product is removed from selection", () => {
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="a" />
@@ -194,13 +173,52 @@ describe("Bundle", () => {
 
     document.body.appendChild(bundle)
 
-    const input = bundle.querySelector('input[type="checkbox"]') as HTMLInputElement
-    const cardA = bundle.querySelector('nosto-simple-card[handle="a"]') as SimpleCard
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
+    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="a"]')
 
     // Remove product from selection
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
-    expect(cardA.style.display).toBe("none")
+    expect(card?.style.display).toBe("none")
+  })
+
+  it("should not hide bundle card if checkbox is inside the card", () => {
+    const bundle = (
+      <nosto-bundle products={products}>
+        <nosto-simple-card handle="a">
+          <input type="checkbox" value="a" checked />
+        </nosto-simple-card>
+        <span n-summary-price></span>
+      </nosto-bundle>
+    ) as Bundle
+
+    document.body.appendChild(bundle)
+
+    const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
+    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="a"]')
+
+    // Remove product from selection
+    input.checked = false
+    input.dispatchEvent(new Event("input", { bubbles: true }))
+
+    expect(card?.style.display).not.toBe("none")
+  })
+
+  it("triggers add to cart logic when clicking element with n-atc attribute", () => {
+    const consoleSpy = vi.spyOn(console, "log")
+    const bundle = (
+      <nosto-bundle>
+        <button n-atc>Add to Cart</button>
+        <span n-summary-price></span>
+      </nosto-bundle>
+    ) as Bundle
+    bundle.products = products
+    document.body.appendChild(bundle)
+
+    const button = bundle.querySelector<HTMLButtonElement>("button[n-atc]")!
+    button.click()
+    // TODO: Replace with proper add to cart logic verification
+    expect(consoleSpy).toHaveBeenCalledWith("Bundle Add to Cart clicked", expect.any(Array))
   })
 })

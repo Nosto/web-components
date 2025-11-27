@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
 import { updateShopifyShop } from "@/storybook/loader"
+import "./Bundle"
 import "./Bundle.stories.css"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
@@ -85,6 +86,28 @@ export const Default: Story = {
                   <label :for="'bundle-' + product.handle">Include {{ product.title }}</label>
                 </li>
               </ul>
+              <button n-atc>Add Bundle to Cart</button>
+              <span n-summary-price></span>
+            </div>
+          </nosto-bundle>
+        </template>
+      </nosto-campaign>
+    `
+  }
+}
+
+export const CheckboxCard: Story = {
+  render: () => {
+    return html`
+      <nosto-campaign placement="frontpage-nosto-bundle">
+        <template>
+          <nosto-bundle .products="products">
+            <div class="bundle-grid">
+              <nosto-simple-card v-for="product in products" :handle="product.handle">
+                <input type="checkbox" :value="product.handle" checked />
+              </nosto-simple-card>
+            </div>
+            <div class="bundle-summary">
               <button n-atc>Add Bundle to Cart</button>
               <span n-summary-price></span>
             </div>
