@@ -1,6 +1,7 @@
 /** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement } from "@/utils/jsx"
+import { createElement, createFragment } from "@/utils/jsx"
 
 const meta: Meta = {
   title: "Overview",

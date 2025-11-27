@@ -1,6 +1,7 @@
 /** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement } from "@/utils/jsx"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./Image.stories.css"
 
 const sampleImages = [
@@ -21,7 +22,7 @@ const sampleImages = [
 
 function createImageGrid(
   images: typeof sampleImages,
-  layout?: string,
+  layout?: "constrained" | "fullWidth" | "fixed",
   width?: number,
   height?: number,
   aspectRatio?: number
@@ -36,8 +37,7 @@ function createImageGrid(
             width={width}
             height={height}
             aspect-ratio={aspectRatio}
-          >
-          </nosto-image>
+          ></nosto-image>
           <div class="image-caption">{product.name}</div>
         </div>
       ))}
@@ -46,7 +46,7 @@ function createImageGrid(
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => HTMLElement) => (
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
     <div class="image-demo-section">{story()}</div>
   </div>

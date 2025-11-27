@@ -1,6 +1,7 @@
 /** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement } from "@/utils/jsx"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./Product.stories.css"
 
 function generateSampleProducts() {
@@ -20,7 +21,7 @@ function generateSampleProducts() {
 
 function createProductCard(
   product: ReturnType<typeof generateSampleProducts>[0],
-  skuContent: HTMLElement,
+  skuContent: HTMLElement | DocumentFragment,
   skuData?: unknown[]
 ) {
   const script = skuData
@@ -64,7 +65,7 @@ function createRecommendationSection(products: HTMLElement[]) {
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => HTMLElement) => (
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
     <div class="block__recommendation">{story()}</div>
   </div>
@@ -129,32 +130,30 @@ export const DualSkuSelection: Story = {
     const productCards = products.map(product =>
       createProductCard(
         product,
-        (
-          <>
-            <nosto-sku-options name="colors">
-              <span n-option n-skus="123,145" selected>
-                Black
-              </span>
-              <span n-option n-skus="223,234,245">
-                White
-              </span>
-              <span n-option n-skus="334,345">
-                Blue
-              </span>
-            </nosto-sku-options>
-            <nosto-sku-options name="sizes">
-              <span n-option n-skus="123,223">
-                L
-              </span>
-              <span n-option n-skus="234,334">
-                M
-              </span>
-              <span n-option n-skus="145,245,345">
-                S
-              </span>
-            </nosto-sku-options>
-          </>
-        ) as any,
+        <>
+          <nosto-sku-options name="colors">
+            <span n-option n-skus="123,145" selected>
+              Black
+            </span>
+            <span n-option n-skus="223,234,245">
+              White
+            </span>
+            <span n-option n-skus="334,345">
+              Blue
+            </span>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span n-option n-skus="123,223">
+              L
+            </span>
+            <span n-option n-skus="234,334">
+              M
+            </span>
+            <span n-option n-skus="145,245,345">
+              S
+            </span>
+          </nosto-sku-options>
+        </>,
         skuData
       )
     )
@@ -178,51 +177,49 @@ export const TripleSkuSelection: Story = {
     const productCards = products.map(product =>
       createProductCard(
         product,
-        (
-          <>
-            {/* OOS = 145, 234 */}
-            <nosto-sku-options name="colors">
-              <span black n-option n-skus="123" n-skus-oos="145" title="L,S,Cotton,Silk,Wool">
-                Black
-              </span>
-              <span white n-option n-skus="223,245" n-skus-oos="234" title="L,M,S,Cotton,Silk,Wool">
-                White
-              </span>
-              <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">
-                Blue
-              </span>
-            </nosto-sku-options>
-            <nosto-sku-options name="sizes">
-              <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="EUR 20">
-                L
-              </span>
-              <span m n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk" n-price="EUR 15">
-                M
-              </span>
-              <span
-                s
-                n-option
-                n-skus="245,345"
-                n-skus-oos="145"
-                title="Black,White,Blue,Cotton,Silk,Wool"
-                n-price="EUR 10"
-              >
-                S
-              </span>
-            </nosto-sku-options>
-            <nosto-sku-options name="materials">
-              <span cotton n-option n-skus="123,345" n-skus-oos="234" title="Black,White,Blue,L,M,S">
-                Cotton
-              </span>
-              <span silk n-option n-skus="223,334" n-skus-oos="145" title="Black,White,Blue,L,M,S">
-                Silk
-              </span>
-              <span wool n-option n-skus="245" title="White,S">
-                Wool
-              </span>
-            </nosto-sku-options>
-          </>
-        ) as any
+        <>
+          {/* OOS = 145, 234 */}
+          <nosto-sku-options name="colors">
+            <span black n-option n-skus="123" n-skus-oos="145" title="L,S,Cotton,Silk,Wool">
+              Black
+            </span>
+            <span white n-option n-skus="223,245" n-skus-oos="234" title="L,M,S,Cotton,Silk,Wool">
+              White
+            </span>
+            <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">
+              Blue
+            </span>
+          </nosto-sku-options>
+          <nosto-sku-options name="sizes">
+            <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="EUR 20">
+              L
+            </span>
+            <span m n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk" n-price="EUR 15">
+              M
+            </span>
+            <span
+              s
+              n-option
+              n-skus="245,345"
+              n-skus-oos="145"
+              title="Black,White,Blue,Cotton,Silk,Wool"
+              n-price="EUR 10"
+            >
+              S
+            </span>
+          </nosto-sku-options>
+          <nosto-sku-options name="materials">
+            <span cotton n-option n-skus="123,345" n-skus-oos="234" title="Black,White,Blue,L,M,S">
+              Cotton
+            </span>
+            <span silk n-option n-skus="223,334" n-skus-oos="145" title="Black,White,Blue,L,M,S">
+              Silk
+            </span>
+            <span wool n-option n-skus="245" title="White,S">
+              Wool
+            </span>
+          </nosto-sku-options>
+        </>
       )
     )
 
@@ -245,14 +242,12 @@ export const DropdownSkuSelection: Story = {
     const productCards = products.map(product =>
       createProductCard(
         product,
-        (
-          <select n-sku-selector id={`select__product-${product.productId}`} class="select__product">
-            <option value="sku1">XS</option>
-            <option value="sku2">S</option>
-            <option value="sku3">M</option>
-            <option value="sku4">L</option>
-          </select>
-        ) as any
+        <select n-sku-selector id={`select__product-${product.productId}`} class="select__product">
+          <option value="sku1">XS</option>
+          <option value="sku2">S</option>
+          <option value="sku3">M</option>
+          <option value="sku4">L</option>
+        </select>
       )
     )
 
@@ -287,19 +282,17 @@ export const SingleProduct: Story = {
       <div class="story-container">
         {createProductCard(
           singleProduct,
-          (
-            <nosto-sku-options name="colors">
-              <span n-option n-skus="abc123" selected>
-                Red
-              </span>
-              <span n-option n-skus="def456">
-                Blue
-              </span>
-              <span n-option n-skus="ghi789">
-                Green
-              </span>
-            </nosto-sku-options>
-          ) as any,
+          <nosto-sku-options name="colors">
+            <span n-option n-skus="abc123" selected>
+              Red
+            </span>
+            <span n-option n-skus="def456">
+              Blue
+            </span>
+            <span n-option n-skus="ghi789">
+              Green
+            </span>
+          </nosto-sku-options>,
           skuData
         )}
       </div>

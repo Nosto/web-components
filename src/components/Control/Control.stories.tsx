@@ -12,7 +12,7 @@ mockNostojs({
 })
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => HTMLElement) => (
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
     <div class="demo-section">{story()}</div>
   </div>

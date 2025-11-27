@@ -118,7 +118,7 @@ export const Default: Story = {
             brand={args.brand}
             discount={args.discount}
             rating={args.rating || 0}
-            sizes={args.sizes || ""}
+            image-sizes={args.sizes || ""}
           >
             <nosto-variant-selector
               handle={handle}
@@ -153,7 +153,7 @@ export const InSimpleCard: Story = {
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
-        sizes={args.sizes || ""}
+        image-sizes={args.sizes || ""}
       >
         <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
       </nosto-simple-card>
@@ -172,7 +172,7 @@ export const InSimpleCard_AddToCart: Story = {
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
-        sizes={args.sizes || ""}
+        image-sizes={args.sizes || ""}
       >
         <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
         <button n-atc>Add to cart</button>
@@ -192,7 +192,7 @@ export const WithPlaceholder: Story = {
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
-        sizes={args.sizes || ""}
+        image-sizes={args.sizes || ""}
       >
         <nosto-variant-selector handle={handles[0]} placeholder></nosto-variant-selector>
       </nosto-simple-card>
@@ -229,7 +229,7 @@ export const WithMaxValues: Story = {
             brand={args.brand}
             discount={args.brand}
             rating={args.rating || 0}
-            sizes={args.sizes || ""}
+            image-sizes={args.sizes || ""}
           >
             <nosto-variant-selector handle={handle} max-values={args.maxValues}></nosto-variant-selector>
           </nosto-simple-card>
@@ -258,7 +258,7 @@ export const CompactMode: Story = {
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
-        sizes={args.sizes || ""}
+        image-sizes={args.sizes || ""}
       >
         <nosto-variant-selector handle={handles[0]} mode="compact"></nosto-variant-selector>
       </nosto-simple-card>

@@ -1,13 +1,14 @@
 /** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement } from "@/utils/jsx"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./SkuOptions.stories.css"
 
 function createDemoProduct(
   productId: string,
   productName: string,
   price: string,
-  skuContent: HTMLElement,
+  skuContent: HTMLElement | DocumentFragment,
   skuData?: unknown[]
 ) {
   const script = skuData
@@ -37,7 +38,7 @@ function createDemoProduct(
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => HTMLElement) => (
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
     <div class="demo-section">{story()}</div>
   </div>
@@ -158,7 +159,7 @@ export const ColorAndSizeOptions: Story = {
       </>
     )
 
-    return createDemoProduct("demo-product-2", "Designer Jeans", "$89.99", skuContent as any)
+    return createDemoProduct("demo-product-2", "Designer Jeans", "$89.99", skuContent)
   },
   parameters: {
     docs: {
@@ -234,7 +235,7 @@ export const OutOfStockHandling: Story = {
       </>
     )
 
-    return createDemoProduct("demo-product-3", "Premium Hoodie", "$69.99", skuContent as any)
+    return createDemoProduct("demo-product-3", "Premium Hoodie", "$69.99", skuContent)
   },
   parameters: {
     docs: {
@@ -307,14 +308,18 @@ export const PricingChanges: Story = {
             <span n-option n-skus="watch-38,watch-42,watch-46" selected>
               Sport Band
             </span>
-            <span n-option n-skus="watch-38-leather,watch-42-leather,watch-46-leather">Leather</span>
-            <span n-option n-skus="watch-38-metal,watch-42-metal,watch-46-metal">Metal</span>
+            <span n-option n-skus="watch-38-leather,watch-42-leather,watch-46-leather">
+              Leather
+            </span>
+            <span n-option n-skus="watch-38-metal,watch-42-metal,watch-46-metal">
+              Metal
+            </span>
           </nosto-sku-options>
         </div>
       </>
     )
 
-    return createDemoProduct("demo-product-5", "Premium Watch", "$199.99", skuContent as any)
+    return createDemoProduct("demo-product-5", "Premium Watch", "$199.99", skuContent)
   },
   parameters: {
     docs: {

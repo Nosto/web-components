@@ -1,6 +1,7 @@
 /** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement } from "@/utils/jsx"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
@@ -72,7 +73,7 @@ mockNostojs({
 })
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => HTMLElement) => (
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
     <div class="demo-section">{story()}</div>
   </div>
@@ -202,7 +203,9 @@ export const ManualInitialization: Story = {
           <button
             class="load-button"
             onclick={() => {
-              const campaign = document.querySelector("nosto-campaign[placement=manual-campaign]") as any
+              const campaign = document.querySelector("nosto-campaign[placement=manual-campaign]") as {
+                load: () => void
+              } | null
               campaign?.load()
             }}
           >

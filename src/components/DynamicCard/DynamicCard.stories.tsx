@@ -89,10 +89,7 @@ export const Default: Story = {
       </div>
     )
   },
-  decorators: [
-    ...(meta.decorators ?? []),
-    story => <div style="max-width: 1200px; margin: 0 auto;">{story()}</div>
-  ]
+  decorators: [...(meta.decorators ?? []), story => <div style="max-width: 1200px; margin: 0 auto;">{story()}</div>]
 }
 
 export const Mock: Story = {

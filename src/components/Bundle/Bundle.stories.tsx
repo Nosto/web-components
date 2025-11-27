@@ -93,11 +93,7 @@ export const Default: Story = {
     const template = document.createElement("template")
     template.innerHTML = templateContent
 
-    return (
-      <nosto-campaign placement="frontpage-nosto-bundle">
-        {template}
-      </nosto-campaign>
-    )
+    return <nosto-campaign placement="frontpage-nosto-bundle">{template}</nosto-campaign>
   }
 }
 
@@ -119,10 +115,6 @@ export const CheckboxCard: Story = {
     const template = document.createElement("template")
     template.innerHTML = templateContent
 
-    return (
-      <nosto-campaign placement="frontpage-nosto-bundle">
-        {template}
-      </nosto-campaign>
-    )
+    return <nosto-campaign placement="frontpage-nosto-bundle">{template}</nosto-campaign>
   }
 }
