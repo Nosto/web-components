@@ -1,3 +1,15 @@
+# [10.5.0](https://github.com/Nosto/web-components/compare/v10.4.0...v10.5.0) (2025-11-27)
+
+
+### Bug Fixes
+
+* import component in story instead ([352fda7](https://github.com/Nosto/web-components/commit/352fda70211a2dbaeae9abf530ea6bf976a26c0c))
+
+
+### Features
+
+* support checkbox inside bundle nested product card, tests ([436c735](https://github.com/Nosto/web-components/commit/436c7355f5737519df244091508b492718193637))
+
 # [10.4.0](https://github.com/Nosto/web-components/compare/v10.3.0...v10.4.0) (2025-11-26)
 
 
