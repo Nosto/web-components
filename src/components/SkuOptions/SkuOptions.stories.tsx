@@ -11,16 +11,6 @@ function createDemoProduct(
   skuContent: HTMLElement | DocumentFragment,
   skuData?: unknown[]
 ) {
-  const script = skuData
-    ? (() => {
-        const s = document.createElement("script")
-        s.type = "application/json"
-        s.setAttribute("n-sku-data", "")
-        s.textContent = JSON.stringify(skuData)
-        return s
-      })()
-    : null
-
   return (
     <nosto-product product-id={productId} reco-id="storybook-demo">
       <div class="product-image">Product Image</div>
@@ -32,7 +22,11 @@ function createDemoProduct(
       <button class="btn__atc" n-atc>
         Add to cart
       </button>
-      {script}
+      {skuData && (
+        <script type="application/json" n-sku-data>
+          {JSON.stringify(skuData)}
+        </script>
+      )}
     </nosto-product>
   )
 }

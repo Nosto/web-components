@@ -134,31 +134,28 @@ export const BasicCampaign: Story = {
 
 export const ProductRecommendations: Story = {
   render: () => {
-    return (
-      <nosto-campaign placement="product-recommendations" product-id="current-product">
-        <template
-          dangerouslySetInnerHTML={{
-            __html: `
-          <div class="recommendations-section">
-            <h3>{{ title }}</h3>
-            <div class="products-grid">
-              <div class="product-card" v-for="product in products">
-                <img
-                  :src="'https://picsum.photos/200/200?random=' + product.id"
-                  :alt="product.title"
-                  class="product-image"
-                />
-                <div class="product-info">
-                  <h4 class="product-title">{{ product.title }}</h4>
-                  <div class="product-price">{{ product.price || '$99.99' }}</div>
-                  <button class="add-to-cart">Add to Cart</button>
-                </div>
-              </div>
+    const templateContent = `
+      <div class="recommendations-section">
+        <h3>{{ title }}</h3>
+        <div class="products-grid">
+          <div class="product-card" v-for="product in products">
+            <img
+              :src="'https://picsum.photos/200/200?random=' + product.id"
+              :alt="product.title"
+              class="product-image"
+            />
+            <div class="product-info">
+              <h4 class="product-title">{{ product.title }}</h4>
+              <div class="product-price">{{ product.price || '$99.99' }}</div>
+              <button class="add-to-cart">Add to Cart</button>
             </div>
           </div>
-        `
-          }}
-        />
+        </div>
+      </div>
+    `
+    return (
+      <nosto-campaign placement="product-recommendations" product-id="current-product">
+        <template dangerouslySetInnerHTML={{ __html: templateContent }} />
       </nosto-campaign>
     )
   },
