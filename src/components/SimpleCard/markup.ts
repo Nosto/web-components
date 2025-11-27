@@ -54,8 +54,10 @@ function generateImageHTML(element: SimpleCard, title: string, images: ShopifyIm
 
   return html`
     <div class="image ${hasAlternate ? "alternate" : ""}" part="image">
-      ${generateImgHtml(primaryImage, title, "img primary", element.sizes)}
-      ${hasAlternate && alternateImage ? generateImgHtml(alternateImage, title, "img alternate", element.sizes) : ""}
+      ${generateImgHtml(primaryImage, title, "img primary", element.imageSizes)}
+      ${hasAlternate && alternateImage
+        ? generateImgHtml(alternateImage, title, "img alternate", element.imageSizes)
+        : ""}
     </div>
   `
 }

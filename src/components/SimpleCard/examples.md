@@ -25,3 +25,16 @@ This demonstrates how to embed a variant selector within a product card for prod
   <nosto-variant-selector handle="configurable-product" preselect></nosto-variant-selector>
 </nosto-simple-card>
 ```
+
+### Product card with custom image sizes for responsive images
+
+This example shows how to use the `image-sizes` attribute to specify responsive image sizes. The sizes attribute helps the browser choose the right image size based on the viewport.
+
+```html
+<nosto-simple-card
+  handle="awesome-product"
+  image-sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  brand
+  discount
+></nosto-simple-card>
+```

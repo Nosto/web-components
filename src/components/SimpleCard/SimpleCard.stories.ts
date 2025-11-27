@@ -42,7 +42,7 @@ const meta: Meta = {
       control: "number",
       description: "Product rating (0-5 stars)"
     },
-    sizes: {
+    imageSizes: {
       control: "text",
       description: "The sizes attribute for responsive images"
     }
@@ -53,7 +53,7 @@ const meta: Meta = {
     brand: false,
     discount: false,
     rating: 0,
-    sizes: ""
+    imageSizes: ""
   },
   tags: ["autodocs"]
 }
@@ -96,7 +96,7 @@ export const Default: Story = {
               ?brand=${args.brand}
               ?discount=${args.discount}
               rating=${args.rating || 0}
-              sizes="${args.sizes || ""}"
+              image-sizes="${args.imageSizes || ""}"
             ></nosto-simple-card>
           `
         )}
@@ -117,7 +117,7 @@ export const SingleCard: Story = {
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        image-sizes="${args.imageSizes || ""}"
       >
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
@@ -154,7 +154,7 @@ export const WithAllFeatures: Story = {
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        image-sizes="${args.imageSizes || ""}"
       ></nosto-simple-card>
     `
   },
@@ -177,7 +177,7 @@ export const WithCarousel: Story = {
         ?brand=${args.brand}
         ?discount=${args.discount}
         rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        image-sizes="${args.imageSizes || ""}"
       ></nosto-simple-card>
     `
   },

@@ -356,13 +356,13 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("$12.99")
   })
 
-  it("should forward sizes attribute to nosto-image elements", async () => {
+  it("should forward imageSizes attribute to nosto-image elements", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
     })
 
     const sizesValue = "(max-width: 768px) 100vw, 50vw"
-    const card = (<nosto-simple-card handle="test-product" sizes={sizesValue} />) as SimpleCard
+    const card = (<nosto-simple-card handle="test-product" image-sizes={sizesValue} />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -370,13 +370,15 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain(`sizes="${sizesValue}"`)
   })
 
-  it("should forward sizes attribute to both primary and alternate images", async () => {
+  it("should forward imageSizes attribute to both primary and alternate images", async () => {
     addProductHandlers({
       "test-product": { product: mockProduct }
     })
 
     const sizesValue = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-    const card = (<nosto-simple-card handle="test-product" image-mode="alternate" sizes={sizesValue} />) as SimpleCard
+    const card = (
+      <nosto-simple-card handle="test-product" image-mode="alternate" image-sizes={sizesValue} />
+    ) as SimpleCard
 
     await card.connectedCallback()
 
