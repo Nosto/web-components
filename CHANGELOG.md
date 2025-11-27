@@ -1,3 +1,10 @@
+# [10.6.0](https://github.com/Nosto/web-components/compare/v10.5.0...v10.6.0) (2025-11-27)
+
+
+### Features
+
+* **fetch:** add postJSON utility for POST requests ([0e5a0e8](https://github.com/Nosto/web-components/commit/0e5a0e8ab66196ec8b0bdb9383f5a34e97d6d3f8))
+
 # [10.5.0](https://github.com/Nosto/web-components/compare/v10.4.0...v10.5.0) (2025-11-27)
 
 
