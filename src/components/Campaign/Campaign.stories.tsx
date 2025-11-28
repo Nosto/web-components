@@ -1,7 +1,7 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement, createFragment } from "@/utils/jsx"
+import { createElement, createFragment, Template } from "@/utils/jsx"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
@@ -134,28 +134,29 @@ export const BasicCampaign: Story = {
 
 export const ProductRecommendations: Story = {
   render: () => {
-    const templateContent = `
-      <div class="recommendations-section">
-        <h3>{{ title }}</h3>
-        <div class="products-grid">
-          <div class="product-card" v-for="product in products">
-            <img
-              :src="'https://picsum.photos/200/200?random=' + product.id"
-              :alt="product.title"
-              class="product-image"
-            />
-            <div class="product-info">
-              <h4 class="product-title">{{ product.title }}</h4>
-              <div class="product-price">{{ product.price || '$99.99' }}</div>
-              <button class="add-to-cart">Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
     return (
       <nosto-campaign placement="product-recommendations" product-id="current-product">
-        <template dangerouslySetInnerHTML={{ __html: templateContent }} />
+        <Template>
+          {`
+          <div class="recommendations-section">
+            <h3>{{ title }}</h3>
+            <div class="products-grid">
+              <div class="product-card" v-for="product in products">
+                <img
+                  :src="'https://picsum.photos/200/200?random=' + product.id"
+                  :alt="product.title"
+                  class="product-image"
+                />
+                <div class="product-info">
+                  <h4 class="product-title">{{ product.title }}</h4>
+                  <div class="product-price">{{ product.price || '$99.99' }}</div>
+                  <button class="add-to-cart">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `}
+        </Template>
       </nosto-campaign>
     )
   },
