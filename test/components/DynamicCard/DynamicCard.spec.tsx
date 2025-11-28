@@ -1,6 +1,6 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, afterEach } from "vitest"
-import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest"
+import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -398,6 +398,215 @@ describe("DynamicCard", () => {
       const shadowRoot = card.shadowRoot
       expect(shadowRoot).not.toBeNull()
       checkStructure(card.shadowRoot)
+    })
+  })
+
+  describe("setDynamicCardDefaults", () => {
+    // Store the original defaults object reference to reset between tests
+    let originalDefaults: Partial<DynamicCard>
+
+    beforeEach(() => {
+      // Reset defaults before each test by creating a new instance and capturing its state
+      const tempCard = new DynamicCard()
+      originalDefaults = { ...tempCard }
+      // Clear any previously set defaults
+      setDynamicCardDefaults({})
+    })
+
+    afterEach(() => {
+      // Reset to original state
+      setDynamicCardDefaults(originalDefaults)
+    })
+
+    it("applies defaults to new instances", () => {
+      setDynamicCardDefaults({ lazy: true, placeholder: true })
+
+      const card = new DynamicCard()
+
+      expect(card.lazy).toBe(true)
+      expect(card.placeholder).toBe(true)
+    })
+
+    it("merges multiple calls to setDynamicCardDefaults correctly", () => {
+      setDynamicCardDefaults({ lazy: true })
+      setDynamicCardDefaults({ placeholder: true })
+
+      const card = new DynamicCard()
+
+      expect(card.lazy).toBe(true)
+      expect(card.placeholder).toBe(true)
+    })
+
+    it("overwrites previous defaults when the same property is set again", () => {
+      setDynamicCardDefaults({ lazy: true })
+      setDynamicCardDefaults({ lazy: false })
+
+      const card = new DynamicCard()
+
+      expect(card.lazy).toBe(false)
+    })
+
+    it("does not affect already-instantiated components", () => {
+      const existingCard = new DynamicCard()
+      existingCard.lazy = false
+      existingCard.placeholder = false
+
+      setDynamicCardDefaults({ lazy: true, placeholder: true })
+
+      expect(existingCard.lazy).toBe(false)
+      expect(existingCard.placeholder).toBe(false)
+    })
+
+    it("allows attribute values to override defaults", () => {
+      setDynamicCardDefaults({ lazy: true, placeholder: true })
+
+      const card = new DynamicCard()
+      // At this point, defaults are applied
+      expect(card.lazy).toBe(true)
+      expect(card.placeholder).toBe(true)
+
+      // Now explicitly set to false to override
+      card.lazy = false
+      card.placeholder = false
+
+      expect(card.lazy).toBe(false)
+      expect(card.placeholder).toBe(false)
+    })
+
+    it("supports setting lazy as a default", async () => {
+      const validMarkup = "<div>Lazy loaded via default</div>"
+      addProductHandlers({
+        "lazy-default-handle": {
+          markup: validMarkup
+        }
+      })
+
+      setDynamicCardDefaults({ lazy: true })
+
+      const card = new DynamicCard()
+      card.handle = "lazy-default-handle"
+      card.template = "default"
+
+      // Verify defaults are applied
+      expect(card.lazy).toBe(true)
+
+      // Mock IntersectionObserver
+      let observerCallback: IntersectionObserverCallback | null = null
+
+      const { observe } = mockIntersectionObserver({
+        onCallback: callback => {
+          observerCallback = callback
+        }
+      })
+
+      await card.connectedCallback()
+
+      // Should use lazy loading because of default
+      expect(observe).toHaveBeenCalledWith(card)
+
+      // Simulate intersection
+      await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
+
+      await new Promise(resolve => setTimeout(resolve, 10))
+      expect(card.innerHTML).toBe(validMarkup)
+    })
+
+    it("supports setting placeholder as a default", async () => {
+      const validMarkup = "<div>Product with placeholder</div>"
+      addProductHandlers({
+        "placeholder-handle-1": {
+          markup: validMarkup
+        },
+        "placeholder-handle-2": {
+          markup: validMarkup
+        }
+      })
+
+      setDynamicCardDefaults({ placeholder: true, lazy: true })
+
+      // Mock IntersectionObserver
+      let observerCallback1: IntersectionObserverCallback | null = null
+      let callCount = 0
+
+      mockIntersectionObserver({
+        onCallback: callback => {
+          callCount++
+          if (callCount === 1) {
+            observerCallback1 = callback
+          }
+        }
+      })
+
+      // First card loads and caches markup
+      const card1 = new DynamicCard()
+      card1.handle = "placeholder-handle-1"
+      card1.template = "placeholder-test"
+      expect(card1.placeholder).toBe(true)
+      await card1.connectedCallback()
+
+      // Trigger intersection for card1
+      await observerCallback1!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
+      await new Promise(resolve => setTimeout(resolve, 10))
+
+      // Second card should use placeholder from cached markup
+      const card2 = new DynamicCard()
+      card2.handle = "placeholder-handle-2"
+      card2.template = "placeholder-test"
+      expect(card2.placeholder).toBe(true)
+      await card2.connectedCallback()
+
+      // Verify placeholder content is shown (which is the cached markup)
+      expect(card2.innerHTML).toBe(validMarkup)
+    })
+
+    it("supports setting mock as a default", async () => {
+      setDynamicCardDefaults({ mock: true })
+
+      const card = new DynamicCard()
+      card.handle = "test-handle"
+      card.template = "default"
+
+      expect(card.mock).toBe(true)
+
+      await card.connectedCallback()
+
+      expect(card.shadowRoot).not.toBeNull()
+      expect(card.shadowRoot?.innerHTML).toContain("Mock Product Title")
+    })
+
+    it("supports setting multiple properties as defaults", () => {
+      setDynamicCardDefaults({
+        lazy: true,
+        placeholder: true,
+        mock: false
+      })
+
+      const card = new DynamicCard()
+
+      expect(card.lazy).toBe(true)
+      expect(card.placeholder).toBe(true)
+      expect(card.mock).toBe(false)
+    })
+
+    it("allows partial override of defaults via attributes", () => {
+      setDynamicCardDefaults({ lazy: true, placeholder: true, mock: false })
+
+      const card = new DynamicCard()
+
+      // Check defaults are applied
+      expect(card.lazy).toBe(true)
+      expect(card.placeholder).toBe(true)
+      expect(card.mock).toBe(false)
+
+      // Override lazy to false
+      card.lazy = false
+
+      // lazy is overridden to false
+      expect(card.lazy).toBe(false)
+      // placeholder remains true from defaults
+      expect(card.placeholder).toBe(true)
+      // mock remains false from defaults
+      expect(card.mock).toBe(false)
     })
   })
 })
