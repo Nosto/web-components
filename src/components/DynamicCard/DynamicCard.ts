@@ -140,6 +140,18 @@ export function setDynamicCardDefaults(newDefaults: Partial<DynamicCard>) {
   Object.assign(defaults, newDefaults)
 }
 
+/**
+ * Resets all default property values to their initial state.
+ * This is primarily intended for testing purposes.
+ *
+ * @internal
+ */
+export function resetDynamicCardDefaults() {
+  Object.keys(defaults).forEach(key => {
+    delete defaults[key as keyof typeof defaults]
+  })
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     "nosto-dynamic-card": DynamicCard

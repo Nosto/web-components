@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest"
-import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
+import { DynamicCard, setDynamicCardDefaults, resetDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -402,20 +402,14 @@ describe("DynamicCard", () => {
   })
 
   describe("setDynamicCardDefaults", () => {
-    // Store the original defaults object reference to reset between tests
-    let originalDefaults: Partial<DynamicCard>
-
     beforeEach(() => {
-      // Reset defaults before each test by creating a new instance and capturing its state
-      const tempCard = new DynamicCard()
-      originalDefaults = { ...tempCard }
-      // Clear any previously set defaults
-      setDynamicCardDefaults({})
+      // Reset defaults before each test to ensure test isolation
+      resetDynamicCardDefaults()
     })
 
     afterEach(() => {
-      // Reset to original state
-      setDynamicCardDefaults(originalDefaults)
+      // Clean up after each test
+      resetDynamicCardDefaults()
     })
 
     it("applies defaults to new instances", () => {
