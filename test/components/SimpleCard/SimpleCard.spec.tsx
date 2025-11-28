@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
+import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
@@ -736,6 +736,250 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("img primary")
       expect(shadowContent).not.toContain("img alternate")
       expect(shadowContent).not.toContain("carousel")
+    })
+  })
+
+  describe("setSimpleCardDefaults", () => {
+    it("should apply defaults to new instances", async () => {
+      setSimpleCardDefaults({ brand: true, discount: true, mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // Should show brand because default is true
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+      // Should show original price because discount default is true
+      expect(shadowContent).toContain("$24.99") // original price
+      expect(shadowContent).toContain("$19.99") // current price
+    })
+
+    it("should merge defaults correctly on multiple calls", async () => {
+      // First call sets brand and mock: false
+      setSimpleCardDefaults({ brand: true, mock: false })
+      // Second call sets discount (should keep brand: true and mock: false)
+      setSimpleCardDefaults({ discount: true })
+      // Third call sets rating (should keep brand, discount, and mock: false)
+      setSimpleCardDefaults({ rating: 4.5 })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // All three defaults should be applied
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+      expect(shadowContent).toContain("$24.99") // original price from discount
+      expect(shadowContent).toContain("rating")
+      expect(shadowContent).toContain("★★★★☆ (4.5)")
+    })
+
+    it("should not affect already-instantiated components", async () => {
+      // First, clear any existing defaults from previous tests
+      setSimpleCardDefaults({ brand: false, discount: false, rating: undefined, mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      // Create card before setting defaults
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      let shadowContent = getShadowContent(card)
+      // Should not show brand initially
+      expect(shadowContent).not.toContain("brand")
+      expect(shadowContent).not.toContain("rating")
+
+      // Set defaults after card is created
+      setSimpleCardDefaults({ brand: true, discount: true, rating: 3.5 })
+
+      // Create a NEW card - this one should get the defaults
+      const newCard = new SimpleCard()
+      newCard.handle = "test-product"
+      await newCard.connectedCallback()
+
+      const newShadowContent = getShadowContent(newCard)
+      // New card should have the defaults applied
+      expect(newShadowContent).toContain("brand")
+      expect(newShadowContent).toContain("Test Brand")
+      expect(newShadowContent).toContain("rating")
+
+      // Original card should still not show brand or rating
+      shadowContent = getShadowContent(card)
+      expect(shadowContent).not.toContain("brand")
+      expect(shadowContent).not.toContain("rating")
+    })
+
+    it("should allow attribute values to override defaults", async () => {
+      // Set defaults
+      setSimpleCardDefaults({ brand: true, discount: true, rating: 4.0, mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      // Create card with explicit attribute that overrides default
+      const card = new SimpleCard()
+      card.handle = "test-product"
+      card.brand = false
+      card.rating = 5.0
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // brand should be false (attribute overrides default)
+      expect(shadowContent).not.toContain("brand")
+      // discount should be true (from default, no override)
+      expect(shadowContent).toContain("$24.99")
+      // rating should be 5.0 (attribute overrides default)
+      expect(shadowContent).toContain("★★★★★ (5")
+      expect(shadowContent).not.toContain("★★★★☆ (4")
+    })
+
+    it("should support setting brand: true as default", async () => {
+      setSimpleCardDefaults({ brand: true, mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+    })
+
+    it("should support setting discount: true as default", async () => {
+      setSimpleCardDefaults({ discount: true, mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("$24.99") // original price
+      expect(shadowContent).toContain("$19.99") // current price
+    })
+
+    it("should support setting imageMode as default", async () => {
+      setSimpleCardDefaults({ imageMode: "alternate", mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("img primary")
+      expect(shadowContent).toContain("img alternate")
+    })
+
+    it("should support setting imageSizes as default", async () => {
+      const defaultSizes = "(max-width: 768px) 100vw, 50vw"
+      setSimpleCardDefaults({ imageSizes: defaultSizes, mock: false })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain(`sizes="${defaultSizes}"`)
+    })
+
+    it("should support setting multiple defaults at once", async () => {
+      setSimpleCardDefaults({
+        brand: true,
+        discount: true,
+        rating: 3.5,
+        imageMode: "carousel",
+        imageSizes: "(max-width: 768px) 100vw, 33vw",
+        mock: false
+      })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = new SimpleCard()
+      card.handle = "test-product"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // All defaults should be applied
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+      expect(shadowContent).toContain("$24.99") // discount
+      expect(shadowContent).toContain("★★★☆☆ (3.5)") // rating
+      expect(shadowContent).toContain("carousel") // imageMode
+      expect(shadowContent).toContain('sizes="(max-width: 768px) 100vw, 33vw"') // imageSizes
+    })
+
+    it("should support setting mock: true as default", async () => {
+      setSimpleCardDefaults({ mock: true })
+
+      // No need to add product handlers since mock mode uses mock data
+      const card = new SimpleCard()
+      card.handle = "test-handle"
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("Mock Product")
+    })
+
+    it("should allow overriding mock default with attribute", async () => {
+      setSimpleCardDefaults({ mock: true })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      // Override mock default with explicit false
+      const card = new SimpleCard()
+      card.handle = "test-product"
+      card.mock = false
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // Should fetch real product data, not mock
+      expect(shadowContent).toContain("Awesome Test Product")
+      expect(shadowContent).not.toContain("Mock Product")
     })
   })
 })

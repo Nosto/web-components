@@ -128,7 +128,7 @@ const defaults: Partial<DynamicCard> = {}
 /**
  * Sets default property values for all future DynamicCard instances.
  * These defaults are applied in the constructor before any attributes are processed.
- * 
+ *
  * This affects all future instances globally.
  *
  * @param newDefaults - Partial object containing default property values
