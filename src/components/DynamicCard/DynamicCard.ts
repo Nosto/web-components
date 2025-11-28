@@ -39,6 +39,11 @@ export class DynamicCard extends ReactiveElement {
   @property(Boolean) lazy?: boolean
   @property(Boolean) mock?: boolean
 
+  constructor() {
+    super()
+    Object.assign(this, defaults)
+  }
+
   async connectedCallback() {
     if (this.mock) {
       if (!this.shadowRoot) {
@@ -116,6 +121,12 @@ async function getMarkup(element: DynamicCard) {
     )
   }
   return markup
+}
+
+const defaults: Partial<DynamicCard> = {}
+
+export function setDynamicCardDefaults(newDefaults: Partial<DynamicCard>) {
+  Object.assign(defaults, newDefaults)
 }
 
 declare global {

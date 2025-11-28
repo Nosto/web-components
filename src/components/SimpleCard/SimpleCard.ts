@@ -61,6 +61,7 @@ export class SimpleCard extends ReactiveElement {
 
   constructor() {
     super()
+    Object.assign(this, defaults)
     this.attachShadow({ mode: "open" })
   }
 
@@ -152,6 +153,12 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   } finally {
     element.toggleAttribute("loading", false)
   }
+}
+
+const defaults: Partial<SimpleCard> = {}
+
+export function setSimpleCardDefaults(newDefaults: Partial<SimpleCard>) {
+  Object.assign(defaults, newDefaults)
 }
 
 declare global {
