@@ -157,6 +157,16 @@ async function loadAndRenderMarkup(element: SimpleCard) {
 
 const defaults: Partial<SimpleCard> = {}
 
+/**
+ * Sets default property values for all future SimpleCard instances.
+ * These defaults are applied in the constructor before any attributes are processed.
+ * This affects all future instances globally.
+ *
+ * @param newDefaults - Partial object containing default property values
+ *
+ * @example
+ * setSimpleCardDefaults({ brand: true, discount: true })
+ */
 export function setSimpleCardDefaults(newDefaults: Partial<SimpleCard>) {
   Object.assign(defaults, newDefaults)
 }
