@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
+import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -398,6 +398,17 @@ describe("DynamicCard", () => {
       const shadowRoot = card.shadowRoot
       expect(shadowRoot).not.toBeNull()
       checkStructure(card.shadowRoot)
+    })
+  })
+
+  describe("setDynamicCardDefaults", () => {
+    it("should set default properties for DynamicCard instances", async () => {
+      const overrides = { template: "custom-template", mock: true }
+      setDynamicCardDefaults(overrides)
+
+      const card = (<nosto-dynamic-card handle="test-product" />) as DynamicCard
+      expect(card.template).toBe("custom-template")
+      expect(card.mock).toBe(true)
     })
   })
 })

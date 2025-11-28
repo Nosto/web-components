@@ -1,10 +1,10 @@
 /* eslint-disable barrel-files/avoid-barrel-files */
 export { Campaign } from "./components/Campaign/Campaign"
 export { Control } from "./components/Control/Control"
-export { DynamicCard } from "./components/DynamicCard/DynamicCard"
+export { DynamicCard, setDynamicCardDefaults } from "./components/DynamicCard/DynamicCard"
 export { Image } from "./components/Image/Image"
 export { Product } from "./components/Product/Product"
 export { SectionCampaign } from "./components/SectionCampaign/SectionCampaign"
-export { SimpleCard } from "./components/SimpleCard/SimpleCard"
+export { SimpleCard, setSimpleCardDefaults } from "./components/SimpleCard/SimpleCard"
 export { SkuOptions } from "./components/SkuOptions/SkuOptions"
 export { VariantSelector } from "./components/VariantSelector/VariantSelector"

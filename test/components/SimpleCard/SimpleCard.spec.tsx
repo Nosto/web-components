@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
+import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
@@ -736,6 +736,18 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("img primary")
       expect(shadowContent).not.toContain("img alternate")
       expect(shadowContent).not.toContain("carousel")
+    })
+  })
+
+  describe("setSimpleCardDefaults", () => {
+    it("should set default properties for SimpleCard instances", async () => {
+      const overrides = { brand: true, discount: true, rating: 4.0 }
+      setSimpleCardDefaults(overrides)
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+      expect(card.brand).toBe(true)
+      expect(card.discount).toBe(true)
+      expect(card.rating).toBe(4.0)
     })
   })
 })
