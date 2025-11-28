@@ -16,10 +16,6 @@ type GlobalEventHandlersMapping = {
   [K in keyof GlobalEventHandlersEventMap as `on${Capitalize<K>}`]?: (event: GlobalEventHandlersEventMap[K]) => void
 }
 
-interface DangerouslySetInnerHTML {
-  __html: string
-}
-
 type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping
 
 declare global {
@@ -98,13 +94,6 @@ function applyProperties(element: HTMLElement, props: Props) {
   Object.entries(props).forEach(([key, value]) => {
     if (isEventListener(key, value)) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
-    } else if (key === "dangerouslySetInnerHTML") {
-      if (typeof value === "object" && value !== null && "__html" in value) {
-        const dangerousHTML = value as DangerouslySetInnerHTML
-        if (typeof dangerousHTML.__html === "string") {
-          element.innerHTML = dangerousHTML.__html
-        }
-      }
     } else if (key === "style") {
       if (typeof value === "string") {
         element.setAttribute("style", value)
