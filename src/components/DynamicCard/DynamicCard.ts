@@ -42,10 +42,6 @@ export class DynamicCard extends ReactiveElement {
   @property(Boolean) lazy?: boolean
   @property(Boolean) mock?: boolean
 
-  constructor() {
-    super()
-  }
-
   async connectedCallback() {
     // Apply default values before rendering
     applyDynamicCardDefaults(this)
@@ -151,11 +147,11 @@ export function setDynamicCardDefaults(
 }
 
 function applyDynamicCardDefaults(element: DynamicCard) {
-  // For string attributes, only apply default if not already set (check for both undefined and null)
-  if (dynamicCardDefaults.section !== undefined && !element.section) {
+  // For string attributes, only apply default if attribute is not present in HTML
+  if (dynamicCardDefaults.section !== undefined && !element.hasAttribute("section")) {
     element.section = dynamicCardDefaults.section
   }
-  if (dynamicCardDefaults.template !== undefined && !element.template) {
+  if (dynamicCardDefaults.template !== undefined && !element.hasAttribute("template")) {
     element.template = dynamicCardDefaults.template
   }
   // For boolean attributes, only apply default if attribute is not present in HTML

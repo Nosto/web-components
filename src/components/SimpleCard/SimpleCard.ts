@@ -190,14 +190,14 @@ function applySimpleCardDefaults(element: SimpleCard) {
   if (simpleCardDefaults.discount !== undefined && !element.hasAttribute("discount")) {
     element.discount = simpleCardDefaults.discount
   }
-  // For other attributes, only apply default if not already set (check for both undefined and null)
-  if (simpleCardDefaults.rating !== undefined && element.rating === undefined) {
+  // For number and string attributes, only apply default if attribute is not present in HTML
+  if (simpleCardDefaults.rating !== undefined && !element.hasAttribute("rating")) {
     element.rating = simpleCardDefaults.rating
   }
-  if (simpleCardDefaults.imageMode !== undefined && !element.imageMode) {
+  if (simpleCardDefaults.imageMode !== undefined && !element.hasAttribute("image-mode")) {
     element.imageMode = simpleCardDefaults.imageMode
   }
-  if (simpleCardDefaults.imageSizes !== undefined && !element.imageSizes) {
+  if (simpleCardDefaults.imageSizes !== undefined && !element.hasAttribute("image-sizes")) {
     element.imageSizes = simpleCardDefaults.imageSizes
   }
 }
