@@ -6,7 +6,7 @@ import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
-import { toKebabCase } from "@/utils/toKebabCase"
+import { applyDefaults } from "@/utils/applyDefaults"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
@@ -70,7 +70,7 @@ export class SimpleCard extends ReactiveElement {
 
   async connectedCallback() {
     // Apply default values before rendering
-    applySimpleCardDefaults(this)
+    applyDefaults(this, simpleCardDefaults)
     assertRequired(this, "handle")
     await this.render()
     this.addEventListener("click", this)
@@ -179,17 +179,6 @@ async function loadAndRenderMarkup(element: SimpleCard) {
  */
 export function setSimpleCardDefaults(defaults: Partial<SimpleCard>) {
   simpleCardDefaults = { ...defaults }
-}
-
-function applySimpleCardDefaults(element: SimpleCard) {
-  // Only apply defaults if the corresponding attribute is not present in HTML
-  Object.entries(simpleCardDefaults).forEach(([key, value]) => {
-    const attributeName = toKebabCase(key)
-    if (!element.hasAttribute(attributeName)) {
-      // @ts-expect-error - Dynamic property access
-      element[key] = value
-    }
-  })
 }
 
 declare global {

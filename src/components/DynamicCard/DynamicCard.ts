@@ -4,7 +4,7 @@ import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
-import { toKebabCase } from "@/utils/toKebabCase"
+import { applyDefaults } from "@/utils/applyDefaults"
 import styles from "./styles.css?raw"
 import { generateMockMarkup } from "./markup"
 
@@ -45,7 +45,7 @@ export class DynamicCard extends ReactiveElement {
 
   async connectedCallback() {
     // Apply default values before rendering
-    applyDynamicCardDefaults(this)
+    applyDefaults(this, dynamicCardDefaults)
     if (this.mock) {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
@@ -143,17 +143,6 @@ async function getMarkup(element: DynamicCard) {
  */
 export function setDynamicCardDefaults(defaults: Partial<DynamicCard>) {
   dynamicCardDefaults = { ...defaults }
-}
-
-function applyDynamicCardDefaults(element: DynamicCard) {
-  // Only apply defaults if the corresponding attribute is not present in HTML
-  Object.entries(dynamicCardDefaults).forEach(([key, value]) => {
-    const attributeName = toKebabCase(key)
-    if (!element.hasAttribute(attributeName)) {
-      // @ts-expect-error - Dynamic property access
-      element[key] = value
-    }
-  })
 }
 
 declare global {
