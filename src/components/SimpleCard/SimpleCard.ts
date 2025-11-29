@@ -20,7 +20,7 @@ const setShadowContent = shadowContentFactory(styles)
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 
 /** Default values for SimpleCard attributes */
-let simpleCardDefaults: Partial<Pick<SimpleCard, "brand" | "discount" | "rating" | "imageMode" | "imageSizes">> = {}
+let simpleCardDefaults: Partial<SimpleCard> = {}
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -176,29 +176,19 @@ async function loadAndRenderMarkup(element: SimpleCard) {
  * })
  * ```
  */
-export function setSimpleCardDefaults(
-  defaults: Partial<Pick<SimpleCard, "brand" | "discount" | "rating" | "imageMode" | "imageSizes">>
-) {
+export function setSimpleCardDefaults(defaults: Partial<SimpleCard>) {
   simpleCardDefaults = { ...defaults }
 }
 
 function applySimpleCardDefaults(element: SimpleCard) {
   // Only apply defaults if the corresponding attribute is not present in HTML
-  if (simpleCardDefaults.brand !== undefined && !element.hasAttribute("brand")) {
-    element.brand = simpleCardDefaults.brand
-  }
-  if (simpleCardDefaults.discount !== undefined && !element.hasAttribute("discount")) {
-    element.discount = simpleCardDefaults.discount
-  }
-  if (simpleCardDefaults.rating !== undefined && !element.hasAttribute("rating")) {
-    element.rating = simpleCardDefaults.rating
-  }
-  if (simpleCardDefaults.imageMode !== undefined && !element.hasAttribute("image-mode")) {
-    element.imageMode = simpleCardDefaults.imageMode
-  }
-  if (simpleCardDefaults.imageSizes !== undefined && !element.hasAttribute("image-sizes")) {
-    element.imageSizes = simpleCardDefaults.imageSizes
-  }
+  Object.entries(simpleCardDefaults).forEach(([key, value]) => {
+    const attributeName = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
+    if (value !== undefined && !element.hasAttribute(attributeName)) {
+      // @ts-expect-error - Dynamic property access
+      element[key] = value
+    }
+  })
 }
 
 declare global {

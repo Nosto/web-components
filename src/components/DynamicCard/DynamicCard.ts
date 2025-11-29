@@ -13,7 +13,7 @@ const setShadowContent = shadowContentFactory(styles)
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 
 /** Default values for DynamicCard attributes */
-let dynamicCardDefaults: Partial<Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy">> = {}
+let dynamicCardDefaults: Partial<DynamicCard> = {}
 
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
@@ -140,26 +140,19 @@ async function getMarkup(element: DynamicCard) {
  * })
  * ```
  */
-export function setDynamicCardDefaults(
-  defaults: Partial<Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy">>
-) {
+export function setDynamicCardDefaults(defaults: Partial<DynamicCard>) {
   dynamicCardDefaults = { ...defaults }
 }
 
 function applyDynamicCardDefaults(element: DynamicCard) {
   // Only apply defaults if the corresponding attribute is not present in HTML
-  if (dynamicCardDefaults.section !== undefined && !element.hasAttribute("section")) {
-    element.section = dynamicCardDefaults.section
-  }
-  if (dynamicCardDefaults.template !== undefined && !element.hasAttribute("template")) {
-    element.template = dynamicCardDefaults.template
-  }
-  if (dynamicCardDefaults.placeholder !== undefined && !element.hasAttribute("placeholder")) {
-    element.placeholder = dynamicCardDefaults.placeholder
-  }
-  if (dynamicCardDefaults.lazy !== undefined && !element.hasAttribute("lazy")) {
-    element.lazy = dynamicCardDefaults.lazy
-  }
+  Object.entries(dynamicCardDefaults).forEach(([key, value]) => {
+    const attributeName = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
+    if (value !== undefined && !element.hasAttribute(attributeName)) {
+      // @ts-expect-error - Dynamic property access
+      element[key] = value
+    }
+  })
 }
 
 declare global {
