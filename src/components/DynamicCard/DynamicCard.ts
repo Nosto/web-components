@@ -4,6 +4,7 @@ import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { toKebabCase } from "@/utils/toKebabCase"
 import styles from "./styles.css?raw"
 import { generateMockMarkup } from "./markup"
 
@@ -147,8 +148,8 @@ export function setDynamicCardDefaults(defaults: Partial<DynamicCard>) {
 function applyDynamicCardDefaults(element: DynamicCard) {
   // Only apply defaults if the corresponding attribute is not present in HTML
   Object.entries(dynamicCardDefaults).forEach(([key, value]) => {
-    const attributeName = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
-    if (value !== undefined && !element.hasAttribute(attributeName)) {
+    const attributeName = toKebabCase(key)
+    if (!element.hasAttribute(attributeName)) {
       // @ts-expect-error - Dynamic property access
       element[key] = value
     }

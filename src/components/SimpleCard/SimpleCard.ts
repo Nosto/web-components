@@ -6,6 +6,7 @@ import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { toKebabCase } from "@/utils/toKebabCase"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
@@ -183,8 +184,8 @@ export function setSimpleCardDefaults(defaults: Partial<SimpleCard>) {
 function applySimpleCardDefaults(element: SimpleCard) {
   // Only apply defaults if the corresponding attribute is not present in HTML
   Object.entries(simpleCardDefaults).forEach(([key, value]) => {
-    const attributeName = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
-    if (value !== undefined && !element.hasAttribute(attributeName)) {
+    const attributeName = toKebabCase(key)
+    if (!element.hasAttribute(attributeName)) {
       // @ts-expect-error - Dynamic property access
       element[key] = value
     }

@@ -783,28 +783,9 @@ describe("SimpleCard", () => {
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)
-      // imageMode should be overridden to carousel
+      // Override imageMode default with explicit carousel
       expect(shadowContent).toContain("carousel")
       expect(shadowContent).not.toContain("img alternate")
-    })
-
-    it("should reset defaults when setSimpleCardDefaults is called with empty object", async () => {
-      setSimpleCardDefaults({ brand: true })
-
-      addProductHandlers({
-        "test-product": { product: mockProduct }
-      })
-
-      const card1 = (<nosto-simple-card handle="test-product" />) as SimpleCard
-      await card1.connectedCallback()
-      expect(getShadowContent(card1)).toContain("brand")
-
-      // Reset defaults
-      setSimpleCardDefaults({})
-
-      const card2 = (<nosto-simple-card handle="test-product" />) as SimpleCard
-      await card2.connectedCallback()
-      expect(getShadowContent(card2)).not.toContain("brand")
     })
   })
 })

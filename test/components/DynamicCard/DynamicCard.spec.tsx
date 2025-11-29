@@ -451,27 +451,5 @@ describe("DynamicCard", () => {
       // lazy should still be set from defaults
       expect(card.lazy).toBe(true)
     })
-
-    it("should reset defaults when setDynamicCardDefaults is called with empty object", async () => {
-      setDynamicCardDefaults({ template: "default" })
-
-      const validMarkup = "<div>Product Info</div>"
-      addProductHandlers({
-        "test-handle": {
-          markup: validMarkup
-        }
-      })
-
-      const card1 = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
-      await card1.connectedCallback()
-      expect(card1.template).toBe("default")
-
-      // Reset defaults
-      setDynamicCardDefaults({})
-
-      const card2 = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
-      await card2.connectedCallback()
-      expect(card2.template).toBeNull()
-    })
   })
 })

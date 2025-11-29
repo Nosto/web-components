@@ -1,3 +1,5 @@
+import { toKebabCase } from "@/utils/toKebabCase"
+
 type FieldType = StringConstructor | NumberConstructor | BooleanConstructor | ArrayConstructor
 
 type ConstructorMetadata<T extends HTMLElement> = {
@@ -40,10 +42,6 @@ function getPropertyDescriptor(propertyName: string, type: FieldType) {
     return arrayAttribute(attributeName)
   }
   return stringAttribute(attributeName)
-}
-
-function toKebabCase(str: string) {
-  return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
 }
 
 function stringAttribute(attributeName: string) {
