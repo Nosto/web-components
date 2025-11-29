@@ -1,6 +1,6 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, beforeEach } from "vitest"
-import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
@@ -13,6 +13,11 @@ import { addProductHandlers } from "../../utils/addProductHandlers"
 describe("SimpleCard", () => {
   beforeEach(() => {
     clearProductCache()
+  })
+
+  afterEach(() => {
+    // Reset defaults after each test
+    setSimpleCardDefaults({})
   })
 
   function getShadowContent(card: SimpleCard) {
@@ -736,6 +741,150 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("img primary")
       expect(shadowContent).not.toContain("img alternate")
       expect(shadowContent).not.toContain("carousel")
+    })
+  })
+
+  describe("Default Props", () => {
+    it("should apply default brand value when setSimpleCardDefaults is called", async () => {
+      setSimpleCardDefaults({ brand: true })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+    })
+
+    it("should apply default discount value when setSimpleCardDefaults is called", async () => {
+      setSimpleCardDefaults({ discount: true })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("$24.99") // original price
+      expect(shadowContent).toContain("$19.99") // current price
+    })
+
+    it("should apply default imageMode value when setSimpleCardDefaults is called", async () => {
+      setSimpleCardDefaults({ imageMode: "alternate" })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("img primary")
+      expect(shadowContent).toContain("img alternate")
+    })
+
+    it("should apply default rating value when setSimpleCardDefaults is called", async () => {
+      setSimpleCardDefaults({ rating: 4.5 })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("rating")
+      expect(shadowContent).toContain("★★★★☆ (4.5)")
+    })
+
+    it("should apply default imageSizes value when setSimpleCardDefaults is called", async () => {
+      const sizesValue = "(max-width: 768px) 100vw, 50vw"
+      setSimpleCardDefaults({ imageSizes: sizesValue })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain(`sizes="${sizesValue}"`)
+    })
+
+    it("should apply multiple defaults at once", async () => {
+      setSimpleCardDefaults({
+        brand: true,
+        discount: true,
+        imageMode: "alternate",
+        rating: 3.8
+      })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+      expect(shadowContent).toContain("$24.99") // original price
+      expect(shadowContent).toContain("img alternate")
+      expect(shadowContent).toContain("rating")
+      expect(shadowContent).toContain("★★★☆☆ (3.8)")
+    })
+
+    it("should allow HTML attributes to override defaults", async () => {
+      setSimpleCardDefaults({ brand: true, imageMode: "alternate" })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      // Override brand default with explicit false
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // imageMode should be overridden to carousel
+      expect(shadowContent).toContain("carousel")
+      expect(shadowContent).not.toContain("img alternate")
+    })
+
+    it("should reset defaults when setSimpleCardDefaults is called with empty object", async () => {
+      setSimpleCardDefaults({ brand: true })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card1 = (<nosto-simple-card handle="test-product" />) as SimpleCard
+      await card1.connectedCallback()
+      expect(getShadowContent(card1)).toContain("brand")
+
+      // Reset defaults
+      setSimpleCardDefaults({})
+
+      const card2 = (<nosto-simple-card handle="test-product" />) as SimpleCard
+      await card2.connectedCallback()
+      expect(getShadowContent(card2)).not.toContain("brand")
     })
   })
 })

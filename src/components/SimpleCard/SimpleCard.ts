@@ -19,6 +19,9 @@ const setShadowContent = shadowContentFactory(styles)
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 
+/** Default values for SimpleCard attributes */
+let simpleCardDefaults: Partial<Pick<SimpleCard, "brand" | "discount" | "rating" | "imageMode" | "imageSizes">> = {}
+
 /**
  * A custom element that displays a product card using Shopify product data.
  *
@@ -65,6 +68,8 @@ export class SimpleCard extends ReactiveElement {
   }
 
   async connectedCallback() {
+    // Apply default values before rendering
+    applySimpleCardDefaults(this)
     assertRequired(this, "handle")
     await this.render()
     this.addEventListener("click", this)
@@ -151,6 +156,49 @@ async function loadAndRenderMarkup(element: SimpleCard) {
     }
   } finally {
     element.toggleAttribute("loading", false)
+  }
+}
+
+/**
+ * Sets default values for SimpleCard attributes.
+ * These defaults will be applied to all SimpleCard instances created after this function is called.
+ *
+ * @param defaults - An object containing default values for SimpleCard attributes
+ *
+ * @example
+ * ```typescript
+ * import { setSimpleCardDefaults } from '@nosto/web-components'
+ *
+ * setSimpleCardDefaults({
+ *   brand: true,
+ *   discount: true,
+ *   imageMode: 'alternate'
+ * })
+ * ```
+ */
+export function setSimpleCardDefaults(
+  defaults: Partial<Pick<SimpleCard, "brand" | "discount" | "rating" | "imageMode" | "imageSizes">>
+) {
+  simpleCardDefaults = { ...defaults }
+}
+
+function applySimpleCardDefaults(element: SimpleCard) {
+  // For boolean attributes, only apply default if attribute is not present in HTML
+  if (simpleCardDefaults.brand !== undefined && !element.hasAttribute("brand")) {
+    element.brand = simpleCardDefaults.brand
+  }
+  if (simpleCardDefaults.discount !== undefined && !element.hasAttribute("discount")) {
+    element.discount = simpleCardDefaults.discount
+  }
+  // For other attributes, only apply default if not already set (check for both undefined and null)
+  if (simpleCardDefaults.rating !== undefined && element.rating === undefined) {
+    element.rating = simpleCardDefaults.rating
+  }
+  if (simpleCardDefaults.imageMode !== undefined && !element.imageMode) {
+    element.imageMode = simpleCardDefaults.imageMode
+  }
+  if (simpleCardDefaults.imageSizes !== undefined && !element.imageSizes) {
+    element.imageSizes = simpleCardDefaults.imageSizes
   }
 }
 

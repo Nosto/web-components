@@ -12,6 +12,9 @@ const setShadowContent = shadowContentFactory(styles)
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 
+/** Default values for DynamicCard attributes */
+let dynamicCardDefaults: Partial<Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy">> = {}
+
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
  *
@@ -39,7 +42,13 @@ export class DynamicCard extends ReactiveElement {
   @property(Boolean) lazy?: boolean
   @property(Boolean) mock?: boolean
 
+  constructor() {
+    super()
+  }
+
   async connectedCallback() {
+    // Apply default values before rendering
+    applyDynamicCardDefaults(this)
     if (this.mock) {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
@@ -116,6 +125,46 @@ async function getMarkup(element: DynamicCard) {
     )
   }
   return markup
+}
+
+/**
+ * Sets default values for DynamicCard attributes.
+ * These defaults will be applied to all DynamicCard instances created after this function is called.
+ *
+ * @param defaults - An object containing default values for DynamicCard attributes
+ *
+ * @example
+ * ```typescript
+ * import { setDynamicCardDefaults } from '@nosto/web-components'
+ *
+ * setDynamicCardDefaults({
+ *   placeholder: true,
+ *   lazy: true,
+ *   template: 'product-card'
+ * })
+ * ```
+ */
+export function setDynamicCardDefaults(
+  defaults: Partial<Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy">>
+) {
+  dynamicCardDefaults = { ...defaults }
+}
+
+function applyDynamicCardDefaults(element: DynamicCard) {
+  // For string attributes, only apply default if not already set (check for both undefined and null)
+  if (dynamicCardDefaults.section !== undefined && !element.section) {
+    element.section = dynamicCardDefaults.section
+  }
+  if (dynamicCardDefaults.template !== undefined && !element.template) {
+    element.template = dynamicCardDefaults.template
+  }
+  // For boolean attributes, only apply default if attribute is not present in HTML
+  if (dynamicCardDefaults.placeholder !== undefined && !element.hasAttribute("placeholder")) {
+    element.placeholder = dynamicCardDefaults.placeholder
+  }
+  if (dynamicCardDefaults.lazy !== undefined && !element.hasAttribute("lazy")) {
+    element.lazy = dynamicCardDefaults.lazy
+  }
 }
 
 declare global {

@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
+import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "../../utils/jsx"
@@ -10,6 +10,8 @@ import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 describe("DynamicCard", () => {
   afterEach(() => {
     vi.clearAllMocks()
+    // Reset defaults after each test
+    setDynamicCardDefaults({})
   })
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
@@ -398,6 +400,171 @@ describe("DynamicCard", () => {
       const shadowRoot = card.shadowRoot
       expect(shadowRoot).not.toBeNull()
       checkStructure(card.shadowRoot)
+    })
+  })
+
+  describe("Default Props", () => {
+    it("should apply default template value when setDynamicCardDefaults is called", async () => {
+      setDynamicCardDefaults({ template: "default" })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      const card = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.innerHTML).toBe(validMarkup)
+      expect(card.template).toBe("default")
+    })
+
+    it("should apply default section value when setDynamicCardDefaults is called", async () => {
+      setDynamicCardDefaults({ section: "product-card" })
+
+      const sectionMarkup = "<section><div>Section content</div></section>"
+      addProductHandlers({
+        "test-handle": {
+          markup: sectionMarkup
+        }
+      })
+
+      const card = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.section).toBe("product-card")
+      expect(card.innerHTML).toBe("<div>Section content</div>")
+    })
+
+    it("should apply default placeholder value when setDynamicCardDefaults is called", async () => {
+      setDynamicCardDefaults({ placeholder: true, template: "default" })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        },
+        "test-handle2": {
+          markup: validMarkup
+        }
+      })
+
+      // Mock IntersectionObserver
+      mockIntersectionObserver()
+
+      const card1 = (<nosto-dynamic-card handle="test-handle" template="default" lazy={true} />) as DynamicCard
+      await card1.connectedCallback()
+
+      const card2 = (<nosto-dynamic-card handle="test-handle2" lazy={true} />) as DynamicCard
+      await card2.connectedCallback()
+
+      expect(card2.placeholder).toBe(true)
+      expect(card2.innerHTML).toBe(validMarkup)
+    })
+
+    it("should apply default lazy value when setDynamicCardDefaults is called", async () => {
+      setDynamicCardDefaults({ lazy: true, template: "default" })
+
+      const validMarkup = "<div>Lazy Loaded Product Info</div>"
+      addProductHandlers({
+        "lazy-handle": {
+          markup: validMarkup
+        }
+      })
+
+      let observerCallback: IntersectionObserverCallback | null = null
+
+      const { observe } = mockIntersectionObserver({
+        onCallback: callback => {
+          observerCallback = callback
+        }
+      })
+
+      const card = (<nosto-dynamic-card handle="lazy-handle" />) as DynamicCard
+
+      await card.connectedCallback()
+      expect(observe).toHaveBeenCalledWith(card)
+      expect(card.lazy).toBe(true)
+
+      // Simulate intersection
+      await observerCallback!([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
+
+      await new Promise(resolve => setTimeout(resolve, 10))
+      expect(card.innerHTML).toBe(validMarkup)
+    })
+
+    it("should apply multiple defaults at once", async () => {
+      setDynamicCardDefaults({
+        template: "default",
+        placeholder: true,
+        lazy: true
+      })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      const { observe } = mockIntersectionObserver()
+
+      const card = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.template).toBe("default")
+      expect(card.placeholder).toBe(true)
+      expect(card.lazy).toBe(true)
+      expect(observe).toHaveBeenCalledWith(card)
+    })
+
+    it("should allow HTML attributes to override defaults", async () => {
+      setDynamicCardDefaults({ template: "default", lazy: true })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      mockIntersectionObserver()
+
+      // Override template default with explicit value
+      const card = (<nosto-dynamic-card handle="test-handle" template="custom" />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.template).toBe("custom")
+      // lazy should still be set from defaults
+      expect(card.lazy).toBe(true)
+    })
+
+    it("should reset defaults when setDynamicCardDefaults is called with empty object", async () => {
+      setDynamicCardDefaults({ template: "default" })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      const card1 = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
+      await card1.connectedCallback()
+      expect(card1.template).toBe("default")
+
+      // Reset defaults
+      setDynamicCardDefaults({})
+
+      const card2 = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
+      await card2.connectedCallback()
+      expect(card2.template).toBeNull()
     })
   })
 })
