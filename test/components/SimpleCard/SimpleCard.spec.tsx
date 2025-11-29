@@ -777,7 +777,7 @@ describe("SimpleCard", () => {
         "test-product": { product: mockProduct }
       })
 
-      // Override brand default with explicit false
+      // Override imageMode default with explicit carousel
       const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
