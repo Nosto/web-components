@@ -147,14 +147,13 @@ export function setDynamicCardDefaults(
 }
 
 function applyDynamicCardDefaults(element: DynamicCard) {
-  // For string attributes, only apply default if attribute is not present in HTML
+  // Only apply defaults if the corresponding attribute is not present in HTML
   if (dynamicCardDefaults.section !== undefined && !element.hasAttribute("section")) {
     element.section = dynamicCardDefaults.section
   }
   if (dynamicCardDefaults.template !== undefined && !element.hasAttribute("template")) {
     element.template = dynamicCardDefaults.template
   }
-  // For boolean attributes, only apply default if attribute is not present in HTML
   if (dynamicCardDefaults.placeholder !== undefined && !element.hasAttribute("placeholder")) {
     element.placeholder = dynamicCardDefaults.placeholder
   }

@@ -183,14 +183,13 @@ export function setSimpleCardDefaults(
 }
 
 function applySimpleCardDefaults(element: SimpleCard) {
-  // For boolean attributes, only apply default if attribute is not present in HTML
+  // Only apply defaults if the corresponding attribute is not present in HTML
   if (simpleCardDefaults.brand !== undefined && !element.hasAttribute("brand")) {
     element.brand = simpleCardDefaults.brand
   }
   if (simpleCardDefaults.discount !== undefined && !element.hasAttribute("discount")) {
     element.discount = simpleCardDefaults.discount
   }
-  // For number and string attributes, only apply default if attribute is not present in HTML
   if (simpleCardDefaults.rating !== undefined && !element.hasAttribute("rating")) {
     element.rating = simpleCardDefaults.rating
   }
