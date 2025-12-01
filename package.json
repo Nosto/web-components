@@ -64,7 +64,7 @@
     "lit": "^3.3.1",
     "msw": "^2.12.3",
     "prettier": "^3.6.2",
-    "serve-favicon": "^2.5.0",
+    "serve-favicon": "^2.5.1",
     "storybook": "^10.0.6",
     "swiper": "^12.0.3",
     "typedoc": "^0.27.9",
