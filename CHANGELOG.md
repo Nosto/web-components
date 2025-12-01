@@ -1,3 +1,11 @@
+## [10.7.1](https://github.com/Nosto/web-components/compare/v10.7.0...v10.7.1) (2025-12-01)
+
+
+### Bug Fixes
+
+* handle style strings in JSX and update storybook config for tsx files ([74dcf43](https://github.com/Nosto/web-components/commit/74dcf43884233f1433574ba09db6715327123b3f))
+* resolve typescript errors and update imports ([c36c6c4](https://github.com/Nosto/web-components/commit/c36c6c4faf6a6363b5656696e1a5169cb456b52a))
+
 # [10.7.0](https://github.com/Nosto/web-components/compare/v10.6.0...v10.7.0) (2025-12-01)
 
 
