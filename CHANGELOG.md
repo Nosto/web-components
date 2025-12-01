@@ -1,3 +1,10 @@
+# [10.7.0](https://github.com/Nosto/web-components/compare/v10.6.0...v10.7.0) (2025-12-01)
+
+
+### Features
+
+* add default props mechanism for SimpleCard & DynamicCard ([792ddd2](https://github.com/Nosto/web-components/commit/792ddd25958d070696f70eaaf93f8433a6c0a833))
+
 # [10.6.0](https://github.com/Nosto/web-components/compare/v10.5.0...v10.6.0) (2025-11-27)
 
 

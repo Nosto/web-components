@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, vi, afterEach } from "vitest"
-import { DynamicCard } from "@/components/DynamicCard/DynamicCard"
+import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "@/utils/jsx"
@@ -10,6 +10,8 @@ import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 describe("DynamicCard", () => {
   afterEach(() => {
     vi.clearAllMocks()
+    // Reset defaults after each test
+    setDynamicCardDefaults({})
   })
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
@@ -398,6 +400,56 @@ describe("DynamicCard", () => {
       const shadowRoot = card.shadowRoot
       expect(shadowRoot).not.toBeNull()
       checkStructure(card.shadowRoot)
+    })
+  })
+
+  describe("Default Props", () => {
+    it("should apply multiple defaults at once", async () => {
+      setDynamicCardDefaults({
+        template: "default",
+        placeholder: true,
+        lazy: true
+      })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      const { observe } = mockIntersectionObserver()
+
+      const card = (<nosto-dynamic-card handle="test-handle" />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.template).toBe("default")
+      expect(card.placeholder).toBe(true)
+      expect(card.lazy).toBe(true)
+      expect(observe).toHaveBeenCalledWith(card)
+    })
+
+    it("should allow HTML attributes to override defaults", async () => {
+      setDynamicCardDefaults({ template: "default", lazy: true })
+
+      const validMarkup = "<div>Product Info</div>"
+      addProductHandlers({
+        "test-handle": {
+          markup: validMarkup
+        }
+      })
+
+      mockIntersectionObserver()
+
+      // Override template default with explicit value
+      const card = (<nosto-dynamic-card handle="test-handle" template="custom" />) as DynamicCard
+
+      await card.connectedCallback()
+
+      expect(card.template).toBe("custom")
+      // lazy should still be set from defaults
+      expect(card.lazy).toBe(true)
     })
   })
 })
