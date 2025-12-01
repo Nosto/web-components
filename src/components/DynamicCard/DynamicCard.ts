@@ -13,8 +13,10 @@ const setShadowContent = shadowContentFactory(styles)
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 
+type DefaultProps = Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy" | "mock">
+
 /** Default values for DynamicCard attributes */
-let dynamicCardDefaults: Partial<DynamicCard> = {}
+let dynamicCardDefaults: DefaultProps = {}
 
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
@@ -45,7 +47,7 @@ export class DynamicCard extends ReactiveElement {
 
   async connectedCallback() {
     // Apply default values before rendering
-    applyDefaults(this, dynamicCardDefaults)
+    applyDefaults(this, dynamicCardDefaults as this)
     if (this.mock) {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
@@ -141,7 +143,7 @@ async function getMarkup(element: DynamicCard) {
  * })
  * ```
  */
-export function setDynamicCardDefaults(defaults: Partial<DynamicCard>) {
+export function setDynamicCardDefaults(defaults: DefaultProps) {
   dynamicCardDefaults = { ...defaults }
 }
 

@@ -20,8 +20,10 @@ const setShadowContent = shadowContentFactory(styles)
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
 
+type DefaultProps = Pick<SimpleCard, "imageMode" | "brand" | "discount" | "rating" | "imageSizes" | "mock">
+
 /** Default values for SimpleCard attributes */
-let simpleCardDefaults: Partial<SimpleCard> = {}
+let simpleCardDefaults: DefaultProps = {}
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -70,7 +72,7 @@ export class SimpleCard extends ReactiveElement {
 
   async connectedCallback() {
     // Apply default values before rendering
-    applyDefaults(this, simpleCardDefaults)
+    applyDefaults(this, simpleCardDefaults as this)
     assertRequired(this, "handle")
     await this.render()
     this.addEventListener("click", this)
@@ -177,7 +179,7 @@ async function loadAndRenderMarkup(element: SimpleCard) {
  * })
  * ```
  */
-export function setSimpleCardDefaults(defaults: Partial<SimpleCard>) {
+export function setSimpleCardDefaults(defaults: DefaultProps) {
   simpleCardDefaults = { ...defaults }
 }
 
