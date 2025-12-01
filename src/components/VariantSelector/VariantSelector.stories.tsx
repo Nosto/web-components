@@ -1,6 +1,6 @@
+/** @jsx createElement */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { html } from "lit"
-import { ifDefined } from "lit/directives/if-defined.js"
+import { createElement } from "@/utils/jsx"
 import { exampleHandlesLoader, updateShopifyShop } from "@/storybook/loader"
 import "./VariantSelector"
 
@@ -107,98 +107,96 @@ export const Default: Story = {
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html`
+    return (
       <div
-        style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 0.1rem; max-width: 1200px;"
+        style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 0.1rem; max-width: 1200px;`}
       >
-        ${handles.map(
-          handle => html`
-            <nosto-simple-card
-              handle="${handle}"
-              image-mode=${ifDefined(args.imageMode)}
-              ?brand=${args.brand}
-              ?discount=${args.discount}
-              rating=${args.rating || 0}
-              sizes="${args.sizes || ""}"
-            >
-              <nosto-variant-selector
-                handle="${handle}"
-                mode="${args.mode}"
-                ?placeholder=${args.placeholder}
-                ?preselect=${args.preselect}
-                max-values="${args.maxValues}"
-              ></nosto-variant-selector>
-            </nosto-simple-card>
-          `
-        )}
+        {handles.map(handle => (
+          <nosto-simple-card
+            handle={handle}
+            image-mode={args.imageMode || undefined}
+            brand={args.brand}
+            discount={args.discount}
+            rating={args.rating || 0}
+            image-sizes={args.sizes || ""}
+          >
+            <nosto-variant-selector
+              handle={handle}
+              mode={args.mode}
+              placeholder={args.placeholder}
+              preselect={args.preselect}
+              max-values={args.maxValues}
+            ></nosto-variant-selector>
+          </nosto-simple-card>
+        ))}
       </div>
-    `
+    )
   }
 }
 
 export const SingleProduct: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (_args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html` <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector> `
+    return <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
   }
 }
 
 export const InSimpleCard: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html`
+    return (
       <nosto-simple-card
-        handle="${handles[0]}"
-        image-mode=${ifDefined(args.imageMode)}
-        ?brand=${args.brand}
-        ?discount=${args.discount}
-        rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        handle={handles[0]}
+        image-mode={args.imageMode || undefined}
+        brand={args.brand}
+        discount={args.discount}
+        rating={args.rating || 0}
+        image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
+        <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
       </nosto-simple-card>
-    `
+    )
   }
 }
 
 export const InSimpleCard_AddToCart: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html`
+    return (
       <nosto-simple-card
-        handle="${handles[0]}"
-        image-mode=${ifDefined(args.imageMode)}
-        ?brand=${args.brand}
-        ?discount=${args.discount}
-        rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        handle={handles[0]}
+        image-mode={args.imageMode || undefined}
+        brand={args.brand}
+        discount={args.discount}
+        rating={args.rating || 0}
+        image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle="${handles[0]}"></nosto-variant-selector>
+        <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
-    `
+    )
   }
 }
 
 export const WithPlaceholder: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html`
+    return (
       <nosto-simple-card
-        handle="${handles[0]}"
-        image-mode=${ifDefined(args.imageMode)}
-        ?brand=${args.brand}
-        ?discount=${args.discount}
-        rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        handle={handles[0]}
+        image-mode={args.imageMode || undefined}
+        brand={args.brand}
+        discount={args.discount}
+        rating={args.rating || 0}
+        image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle="${handles[0]}" placeholder></nosto-variant-selector>
+        <nosto-variant-selector handle={handles[0]} placeholder></nosto-variant-selector>
       </nosto-simple-card>
-    `
+    )
   },
   parameters: {
     docs: {
@@ -222,24 +220,22 @@ export const WithMaxValues: Story = {
   },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html`
+    return (
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0.1rem; max-width: 1200px;">
-        ${handles.slice(0, 6).map(
-          handle => html`
-            <nosto-simple-card
-              handle="${handle}"
-              image-mode=${ifDefined(args.imageMode)}
-              ?brand=${args.brand}
-              ?discount=${args.brand}
-              rating=${args.rating || 0}
-              sizes="${args.sizes || ""}"
-            >
-              <nosto-variant-selector handle="${handle}" max-values="${args.maxValues}"></nosto-variant-selector>
-            </nosto-simple-card>
-          `
-        )}
+        {handles.slice(0, 6).map(handle => (
+          <nosto-simple-card
+            handle={handle}
+            image-mode={args.imageMode || undefined}
+            brand={args.brand}
+            discount={args.brand}
+            rating={args.rating || 0}
+            image-sizes={args.sizes || ""}
+          >
+            <nosto-variant-selector handle={handle} max-values={args.maxValues}></nosto-variant-selector>
+          </nosto-simple-card>
+        ))}
       </div>
-    `
+    )
   },
   parameters: {
     docs: {
@@ -252,21 +248,21 @@ export const WithMaxValues: Story = {
 }
 
 export const CompactMode: Story = {
-  decorators: [story => html`<div style="max-width: 300px; margin: 0 auto;">${story()}</div>`],
+  decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
-    return html`
+    return (
       <nosto-simple-card
-        handle="${handles[0]}"
-        image-mode=${ifDefined(args.imageMode)}
-        ?brand=${args.brand}
-        ?discount=${args.discount}
-        rating=${args.rating || 0}
-        sizes="${args.sizes || ""}"
+        handle={handles[0]}
+        image-mode={args.imageMode || undefined}
+        brand={args.brand}
+        discount={args.discount}
+        rating={args.rating || 0}
+        image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle="${handles[0]}" mode="compact"></nosto-variant-selector>
+        <nosto-variant-selector handle={handles[0]} mode="compact"></nosto-variant-selector>
       </nosto-simple-card>
-    `
+    )
   },
   parameters: {
     docs: {

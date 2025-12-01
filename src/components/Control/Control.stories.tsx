@@ -1,5 +1,6 @@
+/** @jsx createElement */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { html } from "lit"
+import { createElement } from "@/utils/jsx"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
 
@@ -11,11 +12,11 @@ mockNostojs({
 })
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => unknown) => html`
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
-    <div class="demo-section">${story()}</div>
+    <div class="demo-section">{story()}</div>
   </div>
-`
+)
 
 const meta: Meta = {
   title: "Components/Control",
@@ -37,7 +38,7 @@ type Story = StoryObj
 
 export const BasicSegmentation: Story = {
   render: () => {
-    return html`
+    return (
       <nosto-control>
         <template segment="new-visitor">
           <h3>👋 Welcome, New Visitor!</h3>
@@ -49,7 +50,7 @@ export const BasicSegmentation: Story = {
           <h3>🎉 Welcome Back!</h3>
         </template>
       </nosto-control>
-    `
+    )
   },
   parameters: {
     docs: {
@@ -63,7 +64,7 @@ export const BasicSegmentation: Story = {
 
 export const NewVisitorExperience: Story = {
   render: () => {
-    return html`
+    return (
       <nosto-control>
         <template segment="new-visitor">
           <h3>🎉 Welcome to Our Store!</h3>
@@ -75,7 +76,7 @@ export const NewVisitorExperience: Story = {
           <h3>Premium Dashboard</h3>
         </template>
       </nosto-control>
-    `
+    )
   },
   parameters: {
     docs: {
@@ -88,7 +89,7 @@ export const NewVisitorExperience: Story = {
 
 export const NoMatchingSegment: Story = {
   render: () => {
-    return html`
+    return (
       <nosto-control>
         <div class="default-content">
           <h3>🌐 Default Content</h3>
@@ -97,7 +98,7 @@ export const NoMatchingSegment: Story = {
           <h3>Premium Member</h3>
         </template>
       </nosto-control>
-    `
+    )
   },
   parameters: {
     docs: {
@@ -110,7 +111,7 @@ export const NoMatchingSegment: Story = {
 
 export const VIPCustomerExperience: Story = {
   render: () => {
-    return html`
+    return (
       <nosto-control>
         <template segment="vip-customer">
           <h3>💎 VIP Customer Portal</h3>
@@ -122,7 +123,7 @@ export const VIPCustomerExperience: Story = {
           <h3>Premium Member Content</h3>
         </template>
       </nosto-control>
-    `
+    )
   },
   parameters: {
     docs: {

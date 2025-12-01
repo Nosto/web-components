@@ -1,6 +1,7 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { html } from "lit"
-import { ifDefined } from "lit/directives/if-defined.js"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./Image.stories.css"
 
 const sampleImages = [
@@ -21,37 +22,35 @@ const sampleImages = [
 
 function createImageGrid(
   images: typeof sampleImages,
-  layout?: string,
+  layout?: "constrained" | "fullWidth" | "fixed",
   width?: number,
   height?: number,
   aspectRatio?: number
 ) {
-  return html`
+  return (
     <div class="image-grid">
-      ${images.map(
-        product => html`
-            <nosto-image
-              src=${product.imageUrl}
-              layout=${ifDefined(layout)}
-              width=${ifDefined(width)}
-              height=${ifDefined(height)}
-              aspect-ratio=${ifDefined(aspectRatio)}
-            >
-            </nosto-image>
-            <div class="image-caption">${product.name}</div>
-          </div>
-        `
-      )}
+      {images.map(product => (
+        <div>
+          <nosto-image
+            src={product.imageUrl}
+            layout={layout}
+            width={width}
+            height={height}
+            aspect-ratio={aspectRatio}
+          ></nosto-image>
+          <div class="image-caption">{product.name}</div>
+        </div>
+      ))}
     </div>
-  `
+  )
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => unknown) => html`
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
-    <div class="image-demo-section">${story()}</div>
+    <div class="image-demo-section">{story()}</div>
   </div>
-`
+)
 
 const meta: Meta = {
   title: "Components/Image",
@@ -124,13 +123,9 @@ export const Constrained: Story = {
     height: 300,
     layout: "constrained"
   },
-  render: args =>
-    html`<nosto-image
-      src="${args.src}"
-      width="${args.width}"
-      height="${args.height}"
-      layout="${args.layout}"
-    ></nosto-image>`
+  render: args => (
+    <nosto-image src={args.src} width={args.width} height={args.height} layout={args.layout}></nosto-image>
+  )
 }
 
 export const FullWidth: Story = {
@@ -139,7 +134,7 @@ export const FullWidth: Story = {
     height: 400,
     layout: "fullWidth"
   },
-  render: args => html`<nosto-image src="${args.src}" height="${args.height}" layout="${args.layout}"></nosto-image>`
+  render: args => <nosto-image src={args.src} height={args.height} layout={args.layout}></nosto-image>
 }
 
 export const Fixed: Story = {
@@ -149,13 +144,9 @@ export const Fixed: Story = {
     height: 300,
     layout: "fixed"
   },
-  render: args =>
-    html`<nosto-image
-      src="${args.src}"
-      width="${args.width}"
-      height="${args.height}"
-      layout="${args.layout}"
-    ></nosto-image>`
+  render: args => (
+    <nosto-image src={args.src} width={args.width} height={args.height} layout={args.layout}></nosto-image>
+  )
 }
 
 export const WidthOnly: Story = {
@@ -163,7 +154,7 @@ export const WidthOnly: Story = {
     src: "https://picsum.photos/id/40/800/600",
     width: 320
   },
-  render: args => html`<nosto-image src="${args.src}" width="${args.width}"></nosto-image>`,
+  render: args => <nosto-image src={args.src} width={args.width}></nosto-image>,
   parameters: {
     docs: {
       description: {
@@ -174,26 +165,30 @@ export const WidthOnly: Story = {
 }
 
 export const AspectRatioDemo: Story = {
-  render: () => html`
-    <div class="image-demo-sub-title">Square (1:1 ratio)</div>
-    ${createImageGrid([sampleImages[0]], undefined, 200, undefined, 1)}
+  render: () => (
+    <>
+      <div class="image-demo-sub-title">Square (1:1 ratio)</div>
+      {createImageGrid([sampleImages[0]], undefined, 200, undefined, 1)}
 
-    <div class="image-demo-sub-title">Wide (16:9 ratio)</div>
-    ${createImageGrid([sampleImages[1]], undefined, 400, undefined, 1.77)}
+      <div class="image-demo-sub-title">Wide (16:9 ratio)</div>
+      {createImageGrid([sampleImages[1]], undefined, 400, undefined, 1.77)}
 
-    <div class="image-demo-sub-title">Portrait (3:4 ratio)</div>
-    ${createImageGrid([sampleImages[2]], undefined, 200, undefined, 0.75)}
-  `
+      <div class="image-demo-sub-title">Portrait (3:4 ratio)</div>
+      {createImageGrid([sampleImages[2]], undefined, 200, undefined, 0.75)}
+    </>
+  )
 }
 
 export const ConstrainedLayout: Story = {
-  render: () => html`
-    <div class="image-demo-sub-title">Width (300) and Height (800)</div>
-    ${createImageGrid(sampleImages, undefined, 800, 300)}
+  render: () => (
+    <>
+      <div class="image-demo-sub-title">Width (300) and Height (800)</div>
+      {createImageGrid(sampleImages, undefined, 800, 300)}
 
-    <div class="image-demo-sub-title">Height (300) and AspectRatio (1.33)</div>
-    ${createImageGrid(sampleImages, undefined, undefined, 300, 1.33)}
-  `,
+      <div class="image-demo-sub-title">Height (300) and AspectRatio (1.33)</div>
+      {createImageGrid(sampleImages, undefined, undefined, 300, 1.33)}
+    </>
+  ),
   parameters: {
     docs: {
       description: {
@@ -204,10 +199,12 @@ export const ConstrainedLayout: Story = {
 }
 
 export const FullWidthLayout: Story = {
-  render: () => html`
-    <div class="image-demo-sub-title">Without width and height</div>
-    ${createImageGrid(sampleImages, "fullWidth")}
-  `,
+  render: () => (
+    <>
+      <div class="image-demo-sub-title">Without width and height</div>
+      {createImageGrid(sampleImages, "fullWidth")}
+    </>
+  ),
   parameters: {
     docs: {
       description: {
@@ -218,10 +215,12 @@ export const FullWidthLayout: Story = {
 }
 
 export const FixedLayout: Story = {
-  render: () => html`
-    <div class="image-demo-sub-title">Width (700) and Height (300)</div>
-    ${createImageGrid(sampleImages, "fixed", 700, 300)}
-  `,
+  render: () => (
+    <>
+      <div class="image-demo-sub-title">Width (700) and Height (300)</div>
+      {createImageGrid(sampleImages, "fixed", 700, 300)}
+    </>
+  ),
   parameters: {
     docs: {
       description: {
@@ -247,16 +246,16 @@ export const CustomBreakpoints: Story = {
     // Set custom breakpoints as JSON array
     element.setAttribute("breakpoints", "[480, 768, 1024, 1440]")
 
-    return html`
+    return (
       <div>
         <div class="image-demo-sub-title">Custom Breakpoints: [480, 768, 1024, 1440]</div>
         <p>
           This image uses custom breakpoints for responsive sizing. Inspect the generated srcset to see the custom
           widths.
         </p>
-        ${element}
+        {element}
       </div>
-    `
+    )
   },
   parameters: {
     docs: {

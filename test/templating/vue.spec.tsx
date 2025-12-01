@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { processElement } from "@/templating/vue"
-import { createElement } from "../utils/jsx"
+import { createElement } from "@/utils/jsx"
 
 describe("vue:compile", () => {
   let container: HTMLElement

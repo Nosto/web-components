@@ -1,6 +1,6 @@
 /** @jsx createElement */
 import { describe, it, expect, beforeAll } from "vitest"
-import { createElement } from "./jsx"
+import { createElement } from "@/utils/jsx"
 import { property } from "@/components/decorators"
 
 // Define a test custom element for property binding tests

@@ -1,5 +1,6 @@
+/** @jsx createElement */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { html } from "lit"
+import { createElement } from "@/utils/jsx"
 import { exampleHandlesLoader, updateShopifyShop } from "@/storybook/loader"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
@@ -73,36 +74,31 @@ export const Default: Story = {
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     if (!args.template && !args.section) {
-      return html`<p>Please provide either a template or section id.</p>`
+      return <p>Please provide either a template or section id.</p>
     }
-    return html`
-      <div style="display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;">
-        ${handles.map(
-          handle => html`
-            <nosto-dynamic-card
-              handle="${handle}"
-              template="${args.template}"
-              section="${args.section}"
-              ?mock=${args.mock}
-            ></nosto-dynamic-card>
-          `
-        )}
+    return (
+      <div style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;`}>
+        {handles.map(handle => (
+          <nosto-dynamic-card
+            handle={handle}
+            template={args.template}
+            section={args.section}
+            mock={args.mock}
+          ></nosto-dynamic-card>
+        ))}
       </div>
-    `
+    )
   },
-  decorators: [
-    ...(meta.decorators ?? []),
-    story => html`<div style="max-width: 1200px; margin: 0 auto;">${story()}</div>`
-  ]
+  decorators: [...(meta.decorators ?? []), story => <div style="max-width: 1200px; margin: 0 auto;">{story()}</div>]
 }
 
 export const Mock: Story = {
   args: {
     mock: true
   },
-  render: args => html`
+  render: args => (
     <div style="max-width: 300px">
-      <nosto-dynamic-card handle="mock" mock=${args.mock}></nosto-dynamic-card>
+      <nosto-dynamic-card handle="mock" mock={args.mock}></nosto-dynamic-card>
     </div>
-  `
+  )
 }

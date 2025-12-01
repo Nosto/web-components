@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
-import { createElement } from "../../utils/jsx"
+import { createElement } from "@/utils/jsx"
 import { mockSimpleCardProduct } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { addProductHandlers } from "../../utils/addProductHandlers"

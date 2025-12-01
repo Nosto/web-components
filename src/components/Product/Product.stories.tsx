@@ -1,5 +1,7 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { html } from "lit"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./Product.stories.css"
 
 function generateSampleProducts() {
@@ -19,45 +21,49 @@ function generateSampleProducts() {
 
 function createProductCard(
   product: ReturnType<typeof generateSampleProducts>[0],
-  skuContent: unknown,
+  skuContent: HTMLElement | DocumentFragment,
   skuData?: unknown[]
 ) {
-  return html`
-    <nosto-product product-id="${product.productId}" reco-id="storybook-demo">
+  return (
+    <nosto-product product-id={product.productId} reco-id="storybook-demo">
       <div class="nosto__product-image">
-        <img src="${product.imageUrl}" alt="${product.name}" width="300" height="300" />
+        <img src={product.imageUrl} alt={product.name} width="300" height="300" />
       </div>
       <div class="nosto__product-details--card">
-        <div class="nosto__product-name">${product.name}</div>
-        <div class="nosto__product-price" n-price>EUR ${product.price}</div>
-        <div class="nosto__product-skus">${skuContent}</div>
-        <button class="btn__atc" n-atc>Add to cart</button>
+        <div class="nosto__product-name">{product.name}</div>
+        <div class="nosto__product-price" n-price>
+          EUR {product.price}
+        </div>
+        <div class="nosto__product-skus">{skuContent}</div>
+        <button class="btn__atc" n-atc>
+          Add to cart
+        </button>
       </div>
-      ${skuData
-        ? html`<script type="application/json" n-sku-data>
-            ${JSON.stringify(skuData)}
-          </script>`
-        : ""}
+      {skuData && (
+        <script type="application/json" n-sku-data>
+          {JSON.stringify(skuData)}
+        </script>
+      )}
     </nosto-product>
-  `
+  )
 }
 
-function createRecommendationSection(products: unknown[]) {
-  return html`
+function createRecommendationSection(products: HTMLElement[]) {
+  return (
     <div class="story-container">
       <div class="block__recommendation">
-        <div class="products">${products}</div>
+        <div class="products">{products}</div>
       </div>
     </div>
-  `
+  )
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => unknown) => html`
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
-    <div class="block__recommendation">${story()}</div>
+    <div class="block__recommendation">{story()}</div>
   </div>
-`
+)
 
 const meta: Meta = {
   title: "Components/Product",
@@ -118,18 +124,30 @@ export const DualSkuSelection: Story = {
     const productCards = products.map(product =>
       createProductCard(
         product,
-        html`
+        <>
           <nosto-sku-options name="colors">
-            <span n-option n-skus="123,145" selected>Black</span>
-            <span n-option n-skus="223,234,245">White</span>
-            <span n-option n-skus="334,345">Blue</span>
+            <span n-option n-skus="123,145" selected>
+              Black
+            </span>
+            <span n-option n-skus="223,234,245">
+              White
+            </span>
+            <span n-option n-skus="334,345">
+              Blue
+            </span>
           </nosto-sku-options>
           <nosto-sku-options name="sizes">
-            <span n-option n-skus="123,223">L</span>
-            <span n-option n-skus="234,334">M</span>
-            <span n-option n-skus="145,245,345">S</span>
+            <span n-option n-skus="123,223">
+              L
+            </span>
+            <span n-option n-skus="234,334">
+              M
+            </span>
+            <span n-option n-skus="145,245,345">
+              S
+            </span>
           </nosto-sku-options>
-        `,
+        </>,
         skuData
       )
     )
@@ -153,16 +171,26 @@ export const TripleSkuSelection: Story = {
     const productCards = products.map(product =>
       createProductCard(
         product,
-        html`
-          <!-- OOS = 145, 234 -->
+        <>
+          {/* OOS = 145, 234 */}
           <nosto-sku-options name="colors">
-            <span black n-option n-skus="123" n-skus-oos="145" title="L,S,Cotton,Silk,Wool">Black</span>
-            <span white n-option n-skus="223,245" n-skus-oos="234" title="L,M,S,Cotton,Silk,Wool">White</span>
-            <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">Blue</span>
+            <span black n-option n-skus="123" n-skus-oos="145" title="L,S,Cotton,Silk,Wool">
+              Black
+            </span>
+            <span white n-option n-skus="223,245" n-skus-oos="234" title="L,M,S,Cotton,Silk,Wool">
+              White
+            </span>
+            <span blue n-option n-skus="334,345" title="M,S,Cotton,Silk">
+              Blue
+            </span>
           </nosto-sku-options>
           <nosto-sku-options name="sizes">
-            <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="EUR 20">L</span>
-            <span m n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk" n-price="EUR 15">M</span>
+            <span l n-option n-skus="123,223" title="Black,White,Cotton,Silk" n-price="EUR 20">
+              L
+            </span>
+            <span m n-option n-skus="334" n-skus-oos="234" title="White,Blue,Cotton,Silk" n-price="EUR 15">
+              M
+            </span>
             <span
               s
               n-option
@@ -170,15 +198,22 @@ export const TripleSkuSelection: Story = {
               n-skus-oos="145"
               title="Black,White,Blue,Cotton,Silk,Wool"
               n-price="EUR 10"
-              >S</span
             >
+              S
+            </span>
           </nosto-sku-options>
           <nosto-sku-options name="materials">
-            <span cotton n-option n-skus="123,345" n-skus-oos="234" title="Black,White,Blue,L,M,S">Cotton</span>
-            <span silk n-option n-skus="223,334" n-skus-oos="145" title="Black,White,Blue,L,M,S">Silk</span>
-            <span wool n-option n-skus="245" title="White,S">Wool</span>
+            <span cotton n-option n-skus="123,345" n-skus-oos="234" title="Black,White,Blue,L,M,S">
+              Cotton
+            </span>
+            <span silk n-option n-skus="223,334" n-skus-oos="145" title="Black,White,Blue,L,M,S">
+              Silk
+            </span>
+            <span wool n-option n-skus="245" title="White,S">
+              Wool
+            </span>
           </nosto-sku-options>
-        `
+        </>
       )
     )
 
@@ -201,14 +236,12 @@ export const DropdownSkuSelection: Story = {
     const productCards = products.map(product =>
       createProductCard(
         product,
-        html`
-          <select n-sku-selector id="select__product-${product.productId}" class="select__product">
-            <option value="sku1">XS</option>
-            <option value="sku2">S</option>
-            <option value="sku3">M</option>
-            <option value="sku4">L</option>
-          </select>
-        `
+        <select n-sku-selector id={`select__product-${product.productId}`} class="select__product">
+          <option value="sku1">XS</option>
+          <option value="sku2">S</option>
+          <option value="sku3">M</option>
+          <option value="sku4">L</option>
+        </select>
       )
     )
 
@@ -239,21 +272,25 @@ export const SingleProduct: Story = {
       { id: "ghi789", price: "EUR 44.99" }
     ]
 
-    return html`
+    return (
       <div class="story-container">
-        ${createProductCard(
+        {createProductCard(
           singleProduct,
-          html`
-            <nosto-sku-options name="colors">
-              <span n-option n-skus="abc123" selected>Red</span>
-              <span n-option n-skus="def456">Blue</span>
-              <span n-option n-skus="ghi789">Green</span>
-            </nosto-sku-options>
-          `,
+          <nosto-sku-options name="colors">
+            <span n-option n-skus="abc123" selected>
+              Red
+            </span>
+            <span n-option n-skus="def456">
+              Blue
+            </span>
+            <span n-option n-skus="ghi789">
+              Green
+            </span>
+          </nosto-sku-options>,
           skuData
         )}
       </div>
-    `
+    )
   },
   parameters: {
     docs: {

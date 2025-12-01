@@ -1,5 +1,7 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { html } from "lit"
+import { createElement, createFragment, Template } from "@/utils/jsx"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
@@ -71,11 +73,11 @@ mockNostojs({
 })
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => unknown) => html`
+const withStoryContainer = (story: () => unknown) => (
   <div class="story-container">
-    <div class="demo-section">${story()}</div>
+    <div class="demo-section">{story()}</div>
   </div>
-`
+)
 
 const meta: Meta = {
   title: "Components/Campaign",
@@ -119,7 +121,7 @@ type Story = StoryObj
 
 export const BasicCampaign: Story = {
   render: () => {
-    return html` <nosto-campaign placement="homepage-hero" product-id="demo-product"> </nosto-campaign> `
+    return <nosto-campaign placement="homepage-hero" product-id="demo-product"></nosto-campaign>
   },
   parameters: {
     docs: {
@@ -132,9 +134,10 @@ export const BasicCampaign: Story = {
 
 export const ProductRecommendations: Story = {
   render: () => {
-    return html`
+    return (
       <nosto-campaign placement="product-recommendations" product-id="current-product">
-        <template>
+        <Template>
+          {`
           <div class="recommendations-section">
             <h3>{{ title }}</h3>
             <div class="products-grid">
@@ -152,9 +155,10 @@ export const ProductRecommendations: Story = {
               </div>
             </div>
           </div>
-        </template>
+        `}
+        </Template>
       </nosto-campaign>
-    `
+    )
   },
   parameters: {
     docs: {
@@ -167,15 +171,17 @@ export const ProductRecommendations: Story = {
 
 export const LazyLoadedCampaign: Story = {
   render: () => {
-    return html`
-      <div class="spacer">
-        <p>👆 Scroll up and down to see the lazy loading in action</p>
-      </div>
-      <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy> </nosto-campaign>
-      <div class="spacer">
-        <p>👇 The campaign above should load when scrolled into view</p>
-      </div>
-    `
+    return (
+      <>
+        <div class="spacer">
+          <p>👆 Scroll up and down to see the lazy loading in action</p>
+        </div>
+        <nosto-campaign placement="lazy-campaign" product-id="demo-product" lazy></nosto-campaign>
+        <div class="spacer">
+          <p>👇 The campaign above should load when scrolled into view</p>
+        </div>
+      </>
+    )
   },
   parameters: {
     docs: {
@@ -189,17 +195,24 @@ export const LazyLoadedCampaign: Story = {
 
 export const ManualInitialization: Story = {
   render: () => {
-    return html`
-      <div class="manual-controls">
-        <button
-          class="load-button"
-          onclick="document.querySelector('nosto-campaign[placement=manual-campaign]').load()"
-        >
-          Load Campaign
-        </button>
-      </div>
-      <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false"> </nosto-campaign>
-    `
+    return (
+      <>
+        <div class="manual-controls">
+          <button
+            class="load-button"
+            onclick={() => {
+              const campaign = document.querySelector("nosto-campaign[placement=manual-campaign]") as {
+                load: () => void
+              } | null
+              campaign?.load()
+            }}
+          >
+            Load Campaign
+          </button>
+        </div>
+        <nosto-campaign placement="manual-campaign" product-id="demo-product" init="false"></nosto-campaign>
+      </>
+    )
   },
   parameters: {
     docs: {

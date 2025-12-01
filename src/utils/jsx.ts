@@ -1,3 +1,4 @@
+import type { Bundle } from "@/components/Bundle/Bundle"
 import type { Campaign } from "@/components/Campaign/Campaign"
 import type { Control } from "@/components/Control/Control"
 import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
@@ -6,6 +7,7 @@ import type { Product } from "@/components/Product/Product"
 import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import type { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
+import type { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 
 type MaybeArray<T> = T | T[]
 
@@ -21,6 +23,7 @@ declare global {
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
+      "nosto-bundle": ElementMapping<Bundle>
       "nosto-campaign": ElementMapping<Campaign>
       "nosto-control": ElementMapping<Control>
       "nosto-dynamic-card": ElementMapping<DynamicCard>
@@ -29,6 +32,7 @@ declare global {
       "nosto-section-campaign": ElementMapping<SectionCampaign>
       "nosto-simple-card": ElementMapping<SimpleCard>
       "nosto-sku-options": ElementMapping<SkuOptions>
+      "nosto-variant-selector": ElementMapping<VariantSelector>
       // Keep generic fallback for other HTML elements
       [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
     }
@@ -91,7 +95,11 @@ function applyProperties(element: HTMLElement, props: Props) {
     if (isEventListener(key, value)) {
       element.addEventListener(key.slice(2).toLowerCase(), value)
     } else if (key === "style") {
-      Object.assign(element.style, value)
+      if (typeof value === "string") {
+        element.setAttribute("style", value)
+      } else {
+        Object.assign(element.style, value)
+      }
     } else if (shouldSetAsProperty(element, key, value)) {
       const propName = aliases[key] ?? key
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,4 +123,17 @@ function appendChild(element: ParentNode, child: MaybeArray<Child>) {
   } else if (child !== undefined && child !== null && child !== false) {
     element.appendChild(document.createTextNode(String(child)))
   }
+}
+
+/**
+ * Create a template element with raw HTML content
+ * This is useful for Vue-like template syntax that needs to be processed at runtime
+ */
+export function Template(props: { children?: Children }): HTMLTemplateElement {
+  const template = document.createElement("template")
+  const children = props.children ?? []
+  const childArray = Array.isArray(children) ? children : [children]
+  const htmlContent = childArray.map(child => String(child)).join("")
+  template.innerHTML = htmlContent
+  return template
 }
