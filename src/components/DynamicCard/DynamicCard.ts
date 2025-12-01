@@ -4,6 +4,7 @@ import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { applyDefaults } from "@/utils/applyDefaults"
 import styles from "./styles.css?raw"
 import { generateMockMarkup } from "./markup"
 
@@ -11,6 +12,11 @@ const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
+
+type DefaultProps = Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy" | "mock">
+
+/** Default values for DynamicCard attributes */
+let dynamicCardDefaults: DefaultProps = {}
 
 /**
  * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
@@ -40,6 +46,8 @@ export class DynamicCard extends ReactiveElement {
   @property(Boolean) mock?: boolean
 
   async connectedCallback() {
+    // Apply default values before rendering
+    applyDefaults(this, dynamicCardDefaults as this)
     if (this.mock) {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
@@ -116,6 +124,27 @@ async function getMarkup(element: DynamicCard) {
     )
   }
   return markup
+}
+
+/**
+ * Sets default values for DynamicCard attributes.
+ * These defaults will be applied to all DynamicCard instances created after this function is called.
+ *
+ * @param defaults - An object containing default values for DynamicCard attributes
+ *
+ * @example
+ * ```typescript
+ * import { setDynamicCardDefaults } from '@nosto/web-components'
+ *
+ * setDynamicCardDefaults({
+ *   placeholder: true,
+ *   lazy: true,
+ *   template: 'product-card'
+ * })
+ * ```
+ */
+export function setDynamicCardDefaults(defaults: DefaultProps) {
+  dynamicCardDefaults = { ...defaults }
 }
 
 declare global {

@@ -1,6 +1,6 @@
 /** @jsx createElement */
-import { describe, it, expect, vi, beforeEach } from "vitest"
-import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "../../utils/jsx"
 import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
@@ -13,6 +13,11 @@ import { addProductHandlers } from "../../utils/addProductHandlers"
 describe("SimpleCard", () => {
   beforeEach(() => {
     clearProductCache()
+  })
+
+  afterEach(() => {
+    // Reset defaults after each test
+    setSimpleCardDefaults({})
   })
 
   function getShadowContent(card: SimpleCard) {
@@ -736,6 +741,51 @@ describe("SimpleCard", () => {
       expect(shadowContent).toContain("img primary")
       expect(shadowContent).not.toContain("img alternate")
       expect(shadowContent).not.toContain("carousel")
+    })
+  })
+
+  describe("Default Props", () => {
+    it("should apply multiple defaults at once", async () => {
+      setSimpleCardDefaults({
+        brand: true,
+        discount: true,
+        imageMode: "alternate",
+        rating: 3.8
+      })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      expect(shadowContent).toContain("brand")
+      expect(shadowContent).toContain("Test Brand")
+      expect(shadowContent).toContain("$24.99") // original price
+      expect(shadowContent).toContain("img alternate")
+      expect(shadowContent).toContain("rating")
+      expect(shadowContent).toContain("★★★☆☆ (3.8)")
+    })
+
+    it("should allow HTML attributes to override defaults", async () => {
+      setSimpleCardDefaults({ brand: true, imageMode: "alternate" })
+
+      addProductHandlers({
+        "test-product": { product: mockProduct }
+      })
+
+      // Override imageMode default with explicit carousel
+      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+
+      await card.connectedCallback()
+
+      const shadowContent = getShadowContent(card)
+      // Override imageMode default with explicit carousel
+      expect(shadowContent).toContain("carousel")
+      expect(shadowContent).not.toContain("img alternate")
     })
   })
 })

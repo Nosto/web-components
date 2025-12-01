@@ -6,6 +6,7 @@ import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
+import { applyDefaults } from "@/utils/applyDefaults"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
@@ -18,6 +19,11 @@ const setShadowContent = shadowContentFactory(styles)
 
 /** Event name for the SimpleCard rendered event */
 const SIMPLE_CARD_RENDERED_EVENT = "@nosto/SimpleCard/rendered"
+
+type DefaultProps = Pick<SimpleCard, "imageMode" | "brand" | "discount" | "rating" | "imageSizes" | "mock">
+
+/** Default values for SimpleCard attributes */
+let simpleCardDefaults: DefaultProps = {}
 
 /**
  * A custom element that displays a product card using Shopify product data.
@@ -65,6 +71,8 @@ export class SimpleCard extends ReactiveElement {
   }
 
   async connectedCallback() {
+    // Apply default values before rendering
+    applyDefaults(this, simpleCardDefaults as this)
     assertRequired(this, "handle")
     await this.render()
     this.addEventListener("click", this)
@@ -152,6 +160,27 @@ async function loadAndRenderMarkup(element: SimpleCard) {
   } finally {
     element.toggleAttribute("loading", false)
   }
+}
+
+/**
+ * Sets default values for SimpleCard attributes.
+ * These defaults will be applied to all SimpleCard instances created after this function is called.
+ *
+ * @param defaults - An object containing default values for SimpleCard attributes
+ *
+ * @example
+ * ```typescript
+ * import { setSimpleCardDefaults } from '@nosto/web-components'
+ *
+ * setSimpleCardDefaults({
+ *   brand: true,
+ *   discount: true,
+ *   imageMode: 'alternate'
+ * })
+ * ```
+ */
+export function setSimpleCardDefaults(defaults: DefaultProps) {
+  simpleCardDefaults = { ...defaults }
 }
 
 declare global {
