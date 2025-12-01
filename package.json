@@ -50,7 +50,7 @@
     "@types/jsdom": "^27.0.0",
     "@types/node": "^24.10.1",
     "@types/serve-favicon": "^2.5.7",
-    "@unpic/core": "^1.0.1",
+    "@unpic/core": "^1.0.2",
     "@vitest/coverage-v8": "^4.0.14",
     "esbuild": "^0.27.0",
     "esbuild-visualizer": "^0.7.0",
