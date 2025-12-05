@@ -6,13 +6,13 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { mockSimpleCardProducts } from "@/mock/products"
+import { createSimpleCardProductsMock } from "@/mock/products"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 import { addProductHandlers } from "../../utils/addProductHandlers"
 
 describe("SimpleCard", () => {
   const handle = "test-product"
-  const mockedProduct = mockSimpleCardProducts()[0]
+  const mockedProduct = createSimpleCardProductsMock(1)[0]
 
   beforeEach(() => {
     clearProductCache()
