@@ -38,6 +38,7 @@ export class Bundle extends NostoElement {
 
   async connectedCallback() {
     this.selectedProducts = []
+    this.shopifyProducts = []
     addListeners(this)
     await fetchShopifyProducts(this)
   }
@@ -55,15 +56,14 @@ export class Bundle extends NostoElement {
 }
 
 async function fetchShopifyProducts(bundle: Bundle) {
-  bundle.shopifyProducts = []
-  if (!bundle.products || bundle.products.length === 0) {
+  if (!bundle.products?.length) {
     return
   }
   bundle.toggleAttribute("loading", true)
   const fetchPromises = bundle.products.map(product => getProduct(product.handle))
   const fetchedProducts = await Promise.all(fetchPromises)
   bundle.shopifyProducts = fetchedProducts.filter(p => p !== null)
-  bundle.selectedProducts!.push(...bundle.shopifyProducts)
+  bundle.selectedProducts = bundle.shopifyProducts
   bundle.toggleAttribute("loading", false)
   setSummaryPrice(bundle)
 }

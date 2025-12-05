@@ -2,12 +2,12 @@ import { describe, it, expect, vi } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "@/utils/jsx"
-import { createSimpleCardProductsMock } from "@/mock/products"
+import { createMockShopifyProducts } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { addProductHandlers } from "../../utils/addProductHandlers"
 
 describe("Bundle", () => {
-  const mocks = createSimpleCardProductsMock(2)
+  const mocks = createMockShopifyProducts(2)
   const mockedProducts = {
     "product-1": mocks[0],
     "product-2": mocks[1]
