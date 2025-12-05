@@ -1,9 +1,10 @@
 import { JSONProduct } from "@nosto/nosto-js/client"
-import { customElement } from "../decorators"
+import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
+import { parseId } from "@/shopify/graphql/utils"
 
 /**
  * This component allows users to select multiple products from a bundle and displays
@@ -29,6 +30,8 @@ import { formatPrice } from "@/shopify/formatPrice"
 
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
+  @property(String) resultId?: string
+
   products!: JSONProduct[]
   /** @hidden */
   selectedProducts: ShopifyProduct[] = []
@@ -80,14 +83,18 @@ function addListeners(bundle: Bundle) {
 }
 
 function setSummaryPrice(bundle: Bundle) {
-  const currencyCode = bundle.selectedProducts?.[0]?.price.currencyCode || "USD"
+  const summaryElement = bundle.querySelector("[n-summary-price]")
+  if (!summaryElement) {
+    return
+  }
+  const currencyCode = bundle.shopifyProducts[0]?.price.currencyCode || "USD"
   const totalAmount =
-    bundle.selectedProducts?.reduce((sum, product) => {
+    bundle.selectedProducts.reduce((sum, product) => {
+      // TODO use price of selected variant instead
       return sum + Number(product.price.amount)
     }, 0) || 0
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
-  const summaryElement = bundle.querySelector("[n-summary-price]")
-  summaryElement!.textContent = `Total: ${formatted}`
+  summaryElement.textContent = `Total: ${formatted}`
 }
 
 function isAddToCartClick(event: MouseEvent) {
@@ -97,7 +104,15 @@ function isAddToCartClick(event: MouseEvent) {
 function onClick(bundle: Bundle, event: MouseEvent) {
   // ATC click inside the bundle
   if (isAddToCartClick(event)) {
-    console.log("Bundle Add to Cart clicked", bundle.selectedProducts)
+    const payload = bundle.selectedProducts.map(product => {
+      return {
+        productId: String(parseId(product.id)),
+        // TODO use selected variant id instead
+        skuId: String(parseId(product.variants[0].id)),
+        quantity: 1
+      }
+    })
+    window.Nosto?.addMultipleProductsToCart(payload, bundle.resultId)
   }
 }
 
@@ -120,12 +135,12 @@ function onChange(bundle: Bundle, event: Event) {
     if (!target.checked) {
       // Remove product from selection
       target.removeAttribute("checked")
-      bundle.selectedProducts = bundle.selectedProducts?.filter(p => p.handle !== handle)
+      bundle.selectedProducts = bundle.selectedProducts.filter(p => p.handle !== handle)
     } else {
       // Add product to selection
-      const product = bundle.shopifyProducts?.find(p => p.handle === handle)
-      if (product && !bundle.selectedProducts?.find(p => p.handle === handle)) {
-        bundle.selectedProducts = [...(bundle.selectedProducts ?? []), product]
+      const product = bundle.shopifyProducts.find(p => p.handle === handle)
+      if (product && !bundle.selectedProducts.find(p => p.handle === handle)) {
+        bundle.selectedProducts = [...bundle.selectedProducts, product]
         target.setAttribute("checked", "")
       }
     }

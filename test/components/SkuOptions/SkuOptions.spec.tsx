@@ -56,6 +56,7 @@ describe("NostoSkuOptions", () => {
     beforeEach(() => {
       loadContent()
       nostoProduct = document.querySelector<Product>("nosto-product")!
+      // @ts-expect-error partial mock
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -159,6 +160,7 @@ describe("NostoSkuOptions", () => {
     beforeEach(() => {
       loadContent()
       nostoProduct = document.querySelector<Product>("nosto-product")!
+      // @ts-expect-error partial mock
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -215,6 +217,7 @@ describe("NostoSkuOptions", () => {
     beforeEach(() => {
       loadContent()
       nostoProduct = document.querySelector<Product>("nosto-product")!
+      // @ts-expect-error partial mock
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -313,6 +316,7 @@ describe("NostoSkuOptions", () => {
     beforeEach(() => {
       loadContent()
       nostoProduct = document.querySelector<Product>("nosto-product")!
+      // @ts-expect-error partial mock
       window.Nosto = { addSkuToCart: vi.fn() }
     })
 
@@ -441,6 +445,7 @@ describe("NostoSkuOptions", () => {
       )
 
       nostoProduct = document.querySelector<Product>("nosto-product")!
+      // @ts-expect-error partial mock
       window.Nosto = { addSkuToCart: vi.fn() }
 
       expect(nostoProduct.selectedSkuId).toBeUndefined()
