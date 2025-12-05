@@ -38,8 +38,8 @@ export class Bundle extends NostoElement {
 
   async connectedCallback() {
     this.selectedProducts = []
-    await fetchShopifyProducts(this)
     addListeners(this)
+    await fetchShopifyProducts(this)
   }
 
   handleEvent(event: Event) {
@@ -62,7 +62,7 @@ async function fetchShopifyProducts(bundle: Bundle) {
   bundle.toggleAttribute("loading", true)
   const fetchPromises = bundle.products.map(product => getProduct(product.handle))
   const fetchedProducts = await Promise.all(fetchPromises)
-  bundle.shopifyProducts = fetchedProducts.filter((p): p is ShopifyProduct => p !== null)
+  bundle.shopifyProducts = fetchedProducts.filter(p => p !== null)
   bundle.selectedProducts!.push(...bundle.shopifyProducts)
   bundle.toggleAttribute("loading", false)
   setSummaryPrice(bundle)

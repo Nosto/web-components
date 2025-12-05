@@ -94,6 +94,11 @@ describe("Bundle", () => {
   })
 
   it("handles empty selectedProducts array", async () => {
+    addProductHandlers({
+      "product-1": { product: mockedProducts["product-1"] },
+      "product-2": { product: mockedProducts["product-2"] }
+    })
+
     const bundle = (
       <nosto-bundle>
         <span n-summary-price></span>
@@ -113,6 +118,11 @@ describe("Bundle", () => {
   })
 
   it("shows card when product is added to selection", async () => {
+    addProductHandlers({
+      "product-1": { product: mockedProducts["product-1"] },
+      "product-2": { product: mockedProducts["product-2"] }
+    })
+
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="product-1" />
@@ -133,6 +143,11 @@ describe("Bundle", () => {
   })
 
   it("hides card when product is removed from selection", async () => {
+    addProductHandlers({
+      "product-1": { product: mockedProducts["product-1"] },
+      "product-2": { product: mockedProducts["product-2"] }
+    })
+
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="product-1" />
@@ -154,6 +169,11 @@ describe("Bundle", () => {
   })
 
   it("should not hide bundle card if checkbox is inside the card", async () => {
+    addProductHandlers({
+      "product-1": { product: mockedProducts["product-1"] },
+      "product-2": { product: mockedProducts["product-2"] }
+    })
+
     const bundle = (
       <nosto-bundle products={products}>
         <nosto-simple-card handle="product-1">
