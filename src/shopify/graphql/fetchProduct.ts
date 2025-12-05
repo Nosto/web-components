@@ -12,7 +12,7 @@ type GenericGraphQLType = {
 
 export const [fetchProduct, clearProductCache] = cached(async (handle: string) => {
   const responseData = await postJSON<GenericGraphQLType>(getApiUrl().href, {
-    query: getProductByHandle,
+    query: `#graphql ${getProductByHandle}`,
     variables: {
       language: window.Shopify?.locale?.toUpperCase() || "EN",
       country: window.Shopify?.country || "US",
