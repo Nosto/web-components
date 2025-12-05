@@ -2,7 +2,7 @@ import { JSONProduct } from "@nosto/nosto-js/client"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { ShopifyProduct } from "@/shopify/graphql/types"
+import { ShopifyProduct, ShopifyVariant } from "@/shopify/types"
 
 /**
  * This component allows users to select multiple products from a bundle and displays
@@ -80,11 +80,20 @@ function addListeners(bundle: Bundle) {
   bundle.addEventListener("input", bundle)
 }
 
+function getPrice(variants: ShopifyVariant[]) {
+  // Get price and compareAtPrice from first variant if available
+  const firstAvailableVariant = variants.find(v => v.availableForSale) || variants[0]
+  const price = firstAvailableVariant?.price || { currencyCode: "USD", amount: "0" }
+  const compareAtPrice = firstAvailableVariant?.compareAtPrice || null
+  return { price, compareAtPrice }
+}
+
 function setSummaryPrice(bundle: Bundle) {
-  const currencyCode = bundle.selectedProducts?.[0]?.price.currencyCode || "USD"
+  const currencyCode = window.Shopify?.currency?.active || "USD"
   const totalAmount =
     bundle.selectedProducts?.reduce((sum, product) => {
-      return sum + Number(product.price.amount)
+      const { price } = getPrice(product.adjacentVariants)
+      return sum + Number(price.amount)
     }, 0) || 0
   const formatted = new Intl.NumberFormat("en-US", {
     style: "currency",

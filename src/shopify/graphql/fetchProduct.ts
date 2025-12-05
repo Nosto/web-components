@@ -3,16 +3,12 @@ import getProductByHandle from "@/shopify/graphql/getProductByHandle.graphql?raw
 import { getApiUrl } from "./getApiUrl"
 import { cached } from "@/utils/cached"
 import { postJSON } from "@/utils/fetch"
-
-type GenericGraphQLType = {
-  data: {
-    product: Record<string, unknown>
-  }
-}
+import { ProductByHandleQuery } from "./generated/storefront.generated"
+import { GraphQLResponse } from "../types"
 
 export const [fetchProduct, clearProductCache] = cached(async (handle: string) => {
-  const responseData = await postJSON<GenericGraphQLType>(getApiUrl().href, {
-    query: `#graphql ${getProductByHandle}`,
+  const responseData = await postJSON<GraphQLResponse<ProductByHandleQuery>>(getApiUrl().href, {
+    query: getProductByHandle,
     variables: {
       language: window.Shopify?.locale?.toUpperCase() || "EN",
       country: window.Shopify?.country || "US",

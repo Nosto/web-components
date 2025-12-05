@@ -222,27 +222,28 @@ export type ArticleEdge = {
 };
 
 /** The set of valid sort keys for the Article query. */
-export enum ArticleSortKeys {
+export const ArticleSortKeys = {
   /** Sort by the `author` value. */
-  Author = 'AUTHOR',
+  Author: 'AUTHOR',
   /** Sort by the `blog_title` value. */
-  BlogTitle = 'BLOG_TITLE',
+  BlogTitle: 'BLOG_TITLE',
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `published_at` value. */
-  PublishedAt = 'PUBLISHED_AT',
+  PublishedAt: 'PUBLISHED_AT',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `title` value. */
-  Title = 'TITLE',
+  Title: 'TITLE',
   /** Sort by the `updated_at` value. */
-  UpdatedAt = 'UPDATED_AT'
-}
+  UpdatedAt: 'UPDATED_AT'
+} as const;
 
+export type ArticleSortKeys = typeof ArticleSortKeys[keyof typeof ArticleSortKeys];
 /** Represents a generic custom attribute, such as whether an order is a customer's first. */
 export type Attribute = {
   __typename?: 'Attribute';
@@ -427,21 +428,22 @@ export type BlogEdge = {
 };
 
 /** The set of valid sort keys for the Blog query. */
-export enum BlogSortKeys {
+export const BlogSortKeys = {
   /** Sort by the `handle` value. */
-  Handle = 'HANDLE',
+  Handle: 'HANDLE',
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `title` value. */
-  Title = 'TITLE'
-}
+  Title: 'TITLE'
+} as const;
 
+export type BlogSortKeys = typeof BlogSortKeys[keyof typeof BlogSortKeys];
 /**
  * The store's [branding configuration](https://help.shopify.com/en/manual/promoting-marketing/managing-brand-assets).
  *
@@ -498,21 +500,22 @@ export type BuyerInput = {
 };
 
 /** Card brand, such as Visa or Mastercard, which can be used for payments. */
-export enum CardBrand {
+export const CardBrand = {
   /** American Express. */
-  AmericanExpress = 'AMERICAN_EXPRESS',
+  AmericanExpress: 'AMERICAN_EXPRESS',
   /** Diners Club. */
-  DinersClub = 'DINERS_CLUB',
+  DinersClub: 'DINERS_CLUB',
   /** Discover. */
-  Discover = 'DISCOVER',
+  Discover: 'DISCOVER',
   /** JCB. */
-  Jcb = 'JCB',
+  Jcb: 'JCB',
   /** Mastercard. */
-  Mastercard = 'MASTERCARD',
+  Mastercard: 'MASTERCARD',
   /** Visa. */
-  Visa = 'VISA'
-}
+  Visa: 'VISA'
+} as const;
 
+export type CardBrand = typeof CardBrand[keyof typeof CardBrand];
 /**
  * A cart represents the merchandise that a buyer intends to purchase,
  * and the estimated cost associated with the cart. Learn how to
@@ -761,15 +764,16 @@ export type CartBuyerIdentityUpdatePayload = {
  * Represents how credit card details are provided for a direct payment.
  *
  */
-export enum CartCardSource {
+export const CartCardSource = {
   /**
    * The credit card was provided by a third party and vaulted on their system.
    * Using this value requires a separate permission from Shopify.
    *
    */
-  SavedCreditCard = 'SAVED_CREDIT_CARD'
-}
+  SavedCreditCard: 'SAVED_CREDIT_CARD'
+} as const;
 
+export type CartCardSource = typeof CartCardSource[keyof typeof CartCardSource];
 /** Return type for `cartClone` mutation. */
 export type CartClonePayload = {
   __typename?: 'CartClonePayload';
@@ -1168,17 +1172,18 @@ export type CartDeliveryGroupEdge = {
  * Defines what type of merchandise is in the delivery group.
  *
  */
-export enum CartDeliveryGroupType {
+export const CartDeliveryGroupType = {
   /**
    * The delivery group only contains merchandise that is either a one time purchase or a first delivery of
    * subscription merchandise.
    *
    */
-  OneTimePurchase = 'ONE_TIME_PURCHASE',
+  OneTimePurchase: 'ONE_TIME_PURCHASE',
   /** The delivery group only contains subscription merchandise. */
-  Subscription = 'SUBSCRIPTION'
-}
+  Subscription: 'SUBSCRIPTION'
+} as const;
 
+export type CartDeliveryGroupType = typeof CartDeliveryGroupType[keyof typeof CartDeliveryGroupType];
 /** The input fields for the cart's delivery properties. */
 export type CartDeliveryInput = {
   /**
@@ -1306,119 +1311,120 @@ export type CartDiscountCodesUpdatePayload = {
 };
 
 /** Possible error codes that can be returned by `CartUserError`. */
-export enum CartErrorCode {
+export const CartErrorCode = {
   /** The specified address field contains emojis. */
-  AddressFieldContainsEmojis = 'ADDRESS_FIELD_CONTAINS_EMOJIS',
+  AddressFieldContainsEmojis: 'ADDRESS_FIELD_CONTAINS_EMOJIS',
   /** The specified address field contains HTML tags. */
-  AddressFieldContainsHtmlTags = 'ADDRESS_FIELD_CONTAINS_HTML_TAGS',
+  AddressFieldContainsHtmlTags: 'ADDRESS_FIELD_CONTAINS_HTML_TAGS',
   /** The specified address field contains a URL. */
-  AddressFieldContainsUrl = 'ADDRESS_FIELD_CONTAINS_URL',
+  AddressFieldContainsUrl: 'ADDRESS_FIELD_CONTAINS_URL',
   /** The specified address field does not match the expected pattern. */
-  AddressFieldDoesNotMatchExpectedPattern = 'ADDRESS_FIELD_DOES_NOT_MATCH_EXPECTED_PATTERN',
+  AddressFieldDoesNotMatchExpectedPattern: 'ADDRESS_FIELD_DOES_NOT_MATCH_EXPECTED_PATTERN',
   /** The specified address field is required. */
-  AddressFieldIsRequired = 'ADDRESS_FIELD_IS_REQUIRED',
+  AddressFieldIsRequired: 'ADDRESS_FIELD_IS_REQUIRED',
   /** The specified address field is too long. */
-  AddressFieldIsTooLong = 'ADDRESS_FIELD_IS_TOO_LONG',
+  AddressFieldIsTooLong: 'ADDRESS_FIELD_IS_TOO_LONG',
   /** Bundles and addons cannot be mixed. */
-  BundlesAndAddonsCannotBeMixed = 'BUNDLES_AND_ADDONS_CANNOT_BE_MIXED',
+  BundlesAndAddonsCannotBeMixed: 'BUNDLES_AND_ADDONS_CANNOT_BE_MIXED',
   /** Buyer cannot purchase for company location. */
-  BuyerCannotPurchaseForCompanyLocation = 'BUYER_CANNOT_PURCHASE_FOR_COMPANY_LOCATION',
+  BuyerCannotPurchaseForCompanyLocation: 'BUYER_CANNOT_PURCHASE_FOR_COMPANY_LOCATION',
   /** The cart is too large to save. */
-  CartTooLarge = 'CART_TOO_LARGE',
+  CartTooLarge: 'CART_TOO_LARGE',
   /** The input value is invalid. */
-  Invalid = 'INVALID',
+  Invalid: 'INVALID',
   /** Company location not found or not allowed. */
-  InvalidCompanyLocation = 'INVALID_COMPANY_LOCATION',
+  InvalidCompanyLocation: 'INVALID_COMPANY_LOCATION',
   /** The delivery address was not found. */
-  InvalidDeliveryAddressId = 'INVALID_DELIVERY_ADDRESS_ID',
+  InvalidDeliveryAddressId: 'INVALID_DELIVERY_ADDRESS_ID',
   /** Delivery group was not found in cart. */
-  InvalidDeliveryGroup = 'INVALID_DELIVERY_GROUP',
+  InvalidDeliveryGroup: 'INVALID_DELIVERY_GROUP',
   /** Delivery option was not valid. */
-  InvalidDeliveryOption = 'INVALID_DELIVERY_OPTION',
+  InvalidDeliveryOption: 'INVALID_DELIVERY_OPTION',
   /** The quantity must be a multiple of the specified increment. */
-  InvalidIncrement = 'INVALID_INCREMENT',
+  InvalidIncrement: 'INVALID_INCREMENT',
   /** Merchandise line was not found in cart. */
-  InvalidMerchandiseLine = 'INVALID_MERCHANDISE_LINE',
+  InvalidMerchandiseLine: 'INVALID_MERCHANDISE_LINE',
   /** The metafields were not valid. */
-  InvalidMetafields = 'INVALID_METAFIELDS',
+  InvalidMetafields: 'INVALID_METAFIELDS',
   /** The payment wasn't valid. */
-  InvalidPayment = 'INVALID_PAYMENT',
+  InvalidPayment: 'INVALID_PAYMENT',
   /** The payment is invalid. Deferred payment is required. */
-  InvalidPaymentDeferredPaymentRequired = 'INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED',
+  InvalidPaymentDeferredPaymentRequired: 'INVALID_PAYMENT_DEFERRED_PAYMENT_REQUIRED',
   /** Cannot update payment on an empty cart */
-  InvalidPaymentEmptyCart = 'INVALID_PAYMENT_EMPTY_CART',
+  InvalidPaymentEmptyCart: 'INVALID_PAYMENT_EMPTY_CART',
   /** The given zip code is invalid for the provided country. */
-  InvalidZipCodeForCountry = 'INVALID_ZIP_CODE_FOR_COUNTRY',
+  InvalidZipCodeForCountry: 'INVALID_ZIP_CODE_FOR_COUNTRY',
   /** The given zip code is invalid for the provided province. */
-  InvalidZipCodeForProvince = 'INVALID_ZIP_CODE_FOR_PROVINCE',
+  InvalidZipCodeForProvince: 'INVALID_ZIP_CODE_FOR_PROVINCE',
   /** The input value should be less than the maximum value allowed. */
-  LessThan = 'LESS_THAN',
+  LessThan: 'LESS_THAN',
   /** The quantity must be below the specified maximum for the item. */
-  MaximumExceeded = 'MAXIMUM_EXCEEDED',
+  MaximumExceeded: 'MAXIMUM_EXCEEDED',
   /** Item cannot be purchased as configured. */
-  MerchandiseNotApplicable = 'MERCHANDISE_NOT_APPLICABLE',
+  MerchandiseNotApplicable: 'MERCHANDISE_NOT_APPLICABLE',
   /** The quantity must be above the specified minimum for the item. */
-  MinimumNotMet = 'MINIMUM_NOT_MET',
+  MinimumNotMet: 'MINIMUM_NOT_MET',
   /** The customer access token is required when setting a company location. */
-  MissingCustomerAccessToken = 'MISSING_CUSTOMER_ACCESS_TOKEN',
+  MissingCustomerAccessToken: 'MISSING_CUSTOMER_ACCESS_TOKEN',
   /** Missing discount code. */
-  MissingDiscountCode = 'MISSING_DISCOUNT_CODE',
+  MissingDiscountCode: 'MISSING_DISCOUNT_CODE',
   /** Missing note. */
-  MissingNote = 'MISSING_NOTE',
+  MissingNote: 'MISSING_NOTE',
   /** The note length must be below the specified maximum. */
-  NoteTooLong = 'NOTE_TOO_LONG',
+  NoteTooLong: 'NOTE_TOO_LONG',
   /** Only one delivery address can be selected. */
-  OnlyOneDeliveryAddressCanBeSelected = 'ONLY_ONE_DELIVERY_ADDRESS_CAN_BE_SELECTED',
+  OnlyOneDeliveryAddressCanBeSelected: 'ONLY_ONE_DELIVERY_ADDRESS_CAN_BE_SELECTED',
   /** Parent line nesting is too deep or circular. */
-  ParentLineNestingTooDeep = 'PARENT_LINE_NESTING_TOO_DEEP',
+  ParentLineNestingTooDeep: 'PARENT_LINE_NESTING_TOO_DEEP',
   /** Parent line not found. */
-  ParentLineNotFound = 'PARENT_LINE_NOT_FOUND',
+  ParentLineNotFound: 'PARENT_LINE_NOT_FOUND',
   /** Nested cartlines are blocked due to an incompatibility. */
-  ParentLineOperationBlocked = 'PARENT_LINE_OPERATION_BLOCKED',
+  ParentLineOperationBlocked: 'PARENT_LINE_OPERATION_BLOCKED',
   /** Credit card has expired. */
-  PaymentsCreditCardBaseExpired = 'PAYMENTS_CREDIT_CARD_BASE_EXPIRED',
+  PaymentsCreditCardBaseExpired: 'PAYMENTS_CREDIT_CARD_BASE_EXPIRED',
   /** Credit card gateway is not supported. */
-  PaymentsCreditCardBaseGatewayNotSupported = 'PAYMENTS_CREDIT_CARD_BASE_GATEWAY_NOT_SUPPORTED',
+  PaymentsCreditCardBaseGatewayNotSupported: 'PAYMENTS_CREDIT_CARD_BASE_GATEWAY_NOT_SUPPORTED',
   /** Credit card error. */
-  PaymentsCreditCardGeneric = 'PAYMENTS_CREDIT_CARD_GENERIC',
+  PaymentsCreditCardGeneric: 'PAYMENTS_CREDIT_CARD_GENERIC',
   /** Credit card month is invalid. */
-  PaymentsCreditCardMonthInclusion = 'PAYMENTS_CREDIT_CARD_MONTH_INCLUSION',
+  PaymentsCreditCardMonthInclusion: 'PAYMENTS_CREDIT_CARD_MONTH_INCLUSION',
   /** Credit card number is invalid. */
-  PaymentsCreditCardNumberInvalid = 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID',
+  PaymentsCreditCardNumberInvalid: 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID',
   /** Credit card number format is invalid. */
-  PaymentsCreditCardNumberInvalidFormat = 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID_FORMAT',
+  PaymentsCreditCardNumberInvalidFormat: 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID_FORMAT',
   /** Credit card verification value is blank. */
-  PaymentsCreditCardVerificationValueBlank = 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_BLANK',
+  PaymentsCreditCardVerificationValueBlank: 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_BLANK',
   /** Credit card verification value is invalid for card type. */
-  PaymentsCreditCardVerificationValueInvalidForCardType = 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_INVALID_FOR_CARD_TYPE',
+  PaymentsCreditCardVerificationValueInvalidForCardType: 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_INVALID_FOR_CARD_TYPE',
   /** Credit card has expired. */
-  PaymentsCreditCardYearExpired = 'PAYMENTS_CREDIT_CARD_YEAR_EXPIRED',
+  PaymentsCreditCardYearExpired: 'PAYMENTS_CREDIT_CARD_YEAR_EXPIRED',
   /** Credit card expiry year is invalid. */
-  PaymentsCreditCardYearInvalidExpiryYear = 'PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR',
+  PaymentsCreditCardYearInvalidExpiryYear: 'PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR',
   /** The payment method is not applicable. */
-  PaymentMethodNotApplicable = 'PAYMENT_METHOD_NOT_APPLICABLE',
+  PaymentMethodNotApplicable: 'PAYMENT_METHOD_NOT_APPLICABLE',
   /** The payment method is not supported. */
-  PaymentMethodNotSupported = 'PAYMENT_METHOD_NOT_SUPPORTED',
+  PaymentMethodNotSupported: 'PAYMENT_METHOD_NOT_SUPPORTED',
   /** The delivery group is in a pending state. */
-  PendingDeliveryGroups = 'PENDING_DELIVERY_GROUPS',
+  PendingDeliveryGroups: 'PENDING_DELIVERY_GROUPS',
   /** The given province cannot be found. */
-  ProvinceNotFound = 'PROVINCE_NOT_FOUND',
+  ProvinceNotFound: 'PROVINCE_NOT_FOUND',
   /** Selling plan is not applicable. */
-  SellingPlanNotApplicable = 'SELLING_PLAN_NOT_APPLICABLE',
+  SellingPlanNotApplicable: 'SELLING_PLAN_NOT_APPLICABLE',
   /** An error occurred while saving the cart. */
-  ServiceUnavailable = 'SERVICE_UNAVAILABLE',
+  ServiceUnavailable: 'SERVICE_UNAVAILABLE',
   /** Too many delivery addresses on Cart. */
-  TooManyDeliveryAddresses = 'TOO_MANY_DELIVERY_ADDRESSES',
+  TooManyDeliveryAddresses: 'TOO_MANY_DELIVERY_ADDRESSES',
   /** A general error occurred during address validation. */
-  UnspecifiedAddressError = 'UNSPECIFIED_ADDRESS_ERROR',
+  UnspecifiedAddressError: 'UNSPECIFIED_ADDRESS_ERROR',
   /** Validation failed. */
-  ValidationCustom = 'VALIDATION_CUSTOM',
+  ValidationCustom: 'VALIDATION_CUSTOM',
   /** Variant can only be purchased with a selling plan. */
-  VariantRequiresSellingPlan = 'VARIANT_REQUIRES_SELLING_PLAN',
+  VariantRequiresSellingPlan: 'VARIANT_REQUIRES_SELLING_PLAN',
   /** The given zip code is unsupported. */
-  ZipCodeNotSupported = 'ZIP_CODE_NOT_SUPPORTED'
-}
+  ZipCodeNotSupported: 'ZIP_CODE_NOT_SUPPORTED'
+} as const;
 
+export type CartErrorCode = typeof CartErrorCode[keyof typeof CartErrorCode];
 /** The estimated costs that the buyer will pay at checkout. The estimated cost uses [`CartBuyerIdentity`](https://shopify.dev/api/storefront/reference/cart/cartbuyeridentity) to determine [international pricing](https://shopify.dev/custom-storefronts/internationalization/international-pricing). */
 export type CartEstimatedCost = {
   __typename?: 'CartEstimatedCost';
@@ -2002,43 +2008,44 @@ export type CartWarning = {
 };
 
 /** The code for the cart warning. */
-export enum CartWarningCode {
+export const CartWarningCode = {
   /** The discount code cannot be honored. */
-  DiscountCodeNotHonoured = 'DISCOUNT_CODE_NOT_HONOURED',
+  DiscountCodeNotHonoured: 'DISCOUNT_CODE_NOT_HONOURED',
   /** The discount is currently inactive. */
-  DiscountCurrentlyInactive = 'DISCOUNT_CURRENTLY_INACTIVE',
+  DiscountCurrentlyInactive: 'DISCOUNT_CURRENTLY_INACTIVE',
   /** The customer is not eligible for this discount. */
-  DiscountCustomerNotEligible = 'DISCOUNT_CUSTOMER_NOT_ELIGIBLE',
+  DiscountCustomerNotEligible: 'DISCOUNT_CUSTOMER_NOT_ELIGIBLE',
   /** The customer's discount usage limit has been reached. */
-  DiscountCustomerUsageLimitReached = 'DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED',
+  DiscountCustomerUsageLimitReached: 'DISCOUNT_CUSTOMER_USAGE_LIMIT_REACHED',
   /** An eligible customer is missing for this discount. */
-  DiscountEligibleCustomerMissing = 'DISCOUNT_ELIGIBLE_CUSTOMER_MISSING',
+  DiscountEligibleCustomerMissing: 'DISCOUNT_ELIGIBLE_CUSTOMER_MISSING',
   /** The purchase type is incompatible with this discount. */
-  DiscountIncompatiblePurchaseType = 'DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE',
+  DiscountIncompatiblePurchaseType: 'DISCOUNT_INCOMPATIBLE_PURCHASE_TYPE',
   /** The discount was not found. */
-  DiscountNotFound = 'DISCOUNT_NOT_FOUND',
+  DiscountNotFound: 'DISCOUNT_NOT_FOUND',
   /** There are no entitled line items for this discount. */
-  DiscountNoEntitledLineItems = 'DISCOUNT_NO_ENTITLED_LINE_ITEMS',
+  DiscountNoEntitledLineItems: 'DISCOUNT_NO_ENTITLED_LINE_ITEMS',
   /** There are no entitled shipping lines for this discount. */
-  DiscountNoEntitledShippingLines = 'DISCOUNT_NO_ENTITLED_SHIPPING_LINES',
+  DiscountNoEntitledShippingLines: 'DISCOUNT_NO_ENTITLED_SHIPPING_LINES',
   /** The purchase is not in range for this discount. */
-  DiscountPurchaseNotInRange = 'DISCOUNT_PURCHASE_NOT_IN_RANGE',
+  DiscountPurchaseNotInRange: 'DISCOUNT_PURCHASE_NOT_IN_RANGE',
   /** The quantity is not in range for this discount. */
-  DiscountQuantityNotInRange = 'DISCOUNT_QUANTITY_NOT_IN_RANGE',
+  DiscountQuantityNotInRange: 'DISCOUNT_QUANTITY_NOT_IN_RANGE',
   /** The discount usage limit has been reached. */
-  DiscountUsageLimitReached = 'DISCOUNT_USAGE_LIMIT_REACHED',
+  DiscountUsageLimitReached: 'DISCOUNT_USAGE_LIMIT_REACHED',
   /** A delivery address with the same details already exists on this cart. */
-  DuplicateDeliveryAddress = 'DUPLICATE_DELIVERY_ADDRESS',
+  DuplicateDeliveryAddress: 'DUPLICATE_DELIVERY_ADDRESS',
   /** The merchandise does not have enough stock. */
-  MerchandiseNotEnoughStock = 'MERCHANDISE_NOT_ENOUGH_STOCK',
+  MerchandiseNotEnoughStock: 'MERCHANDISE_NOT_ENOUGH_STOCK',
   /** The merchandise is out of stock. */
-  MerchandiseOutOfStock = 'MERCHANDISE_OUT_OF_STOCK',
+  MerchandiseOutOfStock: 'MERCHANDISE_OUT_OF_STOCK',
   /** Only one-time purchase is available for B2B orders. */
-  MerchandiseSellingPlanNotApplicableOnCompanyLocation = 'MERCHANDISE_SELLING_PLAN_NOT_APPLICABLE_ON_COMPANY_LOCATION',
+  MerchandiseSellingPlanNotApplicableOnCompanyLocation: 'MERCHANDISE_SELLING_PLAN_NOT_APPLICABLE_ON_COMPANY_LOCATION',
   /** Gift cards are not available as a payment method. */
-  PaymentsGiftCardsUnavailable = 'PAYMENTS_GIFT_CARDS_UNAVAILABLE'
-}
+  PaymentsGiftCardsUnavailable: 'PAYMENTS_GIFT_CARDS_UNAVAILABLE'
+} as const;
 
+export type CartWarningCode = typeof CartWarningCode[keyof typeof CartWarningCode];
 /**
  * A filter used to view a subset of products in a collection matching a specific category value.
  *
@@ -2163,21 +2170,22 @@ export type CollectionEdge = {
 };
 
 /** The set of valid sort keys for the Collection query. */
-export enum CollectionSortKeys {
+export const CollectionSortKeys = {
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `title` value. */
-  Title = 'TITLE',
+  Title: 'TITLE',
   /** Sort by the `updated_at` value. */
-  UpdatedAt = 'UPDATED_AT'
-}
+  UpdatedAt: 'UPDATED_AT'
+} as const;
 
+export type CollectionSortKeys = typeof CollectionSortKeys[keyof typeof CollectionSortKeys];
 /** A comment on an article. */
 export type Comment = Node & {
   __typename?: 'Comment';
@@ -2330,22 +2338,23 @@ export type CompletionError = {
 };
 
 /** The code of the error that occurred during a cart completion attempt. */
-export enum CompletionErrorCode {
-  Error = 'ERROR',
-  InventoryReservationError = 'INVENTORY_RESERVATION_ERROR',
-  PaymentAmountTooSmall = 'PAYMENT_AMOUNT_TOO_SMALL',
-  PaymentCallIssuer = 'PAYMENT_CALL_ISSUER',
-  PaymentCardDeclined = 'PAYMENT_CARD_DECLINED',
-  PaymentError = 'PAYMENT_ERROR',
-  PaymentGatewayNotEnabledError = 'PAYMENT_GATEWAY_NOT_ENABLED_ERROR',
-  PaymentInsufficientFunds = 'PAYMENT_INSUFFICIENT_FUNDS',
-  PaymentInvalidBillingAddress = 'PAYMENT_INVALID_BILLING_ADDRESS',
-  PaymentInvalidCreditCard = 'PAYMENT_INVALID_CREDIT_CARD',
-  PaymentInvalidCurrency = 'PAYMENT_INVALID_CURRENCY',
-  PaymentInvalidPaymentMethod = 'PAYMENT_INVALID_PAYMENT_METHOD',
-  PaymentTransientError = 'PAYMENT_TRANSIENT_ERROR'
-}
+export const CompletionErrorCode = {
+  Error: 'ERROR',
+  InventoryReservationError: 'INVENTORY_RESERVATION_ERROR',
+  PaymentAmountTooSmall: 'PAYMENT_AMOUNT_TOO_SMALL',
+  PaymentCallIssuer: 'PAYMENT_CALL_ISSUER',
+  PaymentCardDeclined: 'PAYMENT_CARD_DECLINED',
+  PaymentError: 'PAYMENT_ERROR',
+  PaymentGatewayNotEnabledError: 'PAYMENT_GATEWAY_NOT_ENABLED_ERROR',
+  PaymentInsufficientFunds: 'PAYMENT_INSUFFICIENT_FUNDS',
+  PaymentInvalidBillingAddress: 'PAYMENT_INVALID_BILLING_ADDRESS',
+  PaymentInvalidCreditCard: 'PAYMENT_INVALID_CREDIT_CARD',
+  PaymentInvalidCurrency: 'PAYMENT_INVALID_CURRENCY',
+  PaymentInvalidPaymentMethod: 'PAYMENT_INVALID_PAYMENT_METHOD',
+  PaymentTransientError: 'PAYMENT_TRANSIENT_ERROR'
+} as const;
 
+export type CompletionErrorCode = typeof CompletionErrorCode[keyof typeof CompletionErrorCode];
 /** Represents information about the grouped merchandise in the cart. */
 export type ComponentizableCartLine = BaseCartLine & Node & {
   __typename?: 'ComponentizableCartLine';
@@ -2390,13 +2399,14 @@ export type Count = {
 };
 
 /** The precision of the value returned by a count field. */
-export enum CountPrecision {
+export const CountPrecision = {
   /** The count is at least the value. A limit was reached. */
-  AtLeast = 'AT_LEAST',
+  AtLeast: 'AT_LEAST',
   /** The count is exactly the value. */
-  Exact = 'EXACT'
-}
+  Exact: 'EXACT'
+} as const;
 
+export type CountPrecision = typeof CountPrecision[keyof typeof CountPrecision];
 /** A country. */
 export type Country = {
   __typename?: 'Country';
@@ -2426,513 +2436,515 @@ export type Country = {
  * and the territories associated with the United States of America are represented by the country code `US`.
  *
  */
-export enum CountryCode {
+export const CountryCode = {
   /** Ascension Island. */
-  Ac = 'AC',
+  Ac: 'AC',
   /** Andorra. */
-  Ad = 'AD',
+  Ad: 'AD',
   /** United Arab Emirates. */
-  Ae = 'AE',
+  Ae: 'AE',
   /** Afghanistan. */
-  Af = 'AF',
+  Af: 'AF',
   /** Antigua & Barbuda. */
-  Ag = 'AG',
+  Ag: 'AG',
   /** Anguilla. */
-  Ai = 'AI',
+  Ai: 'AI',
   /** Albania. */
-  Al = 'AL',
+  Al: 'AL',
   /** Armenia. */
-  Am = 'AM',
+  Am: 'AM',
   /** Netherlands Antilles. */
-  An = 'AN',
+  An: 'AN',
   /** Angola. */
-  Ao = 'AO',
+  Ao: 'AO',
   /** Argentina. */
-  Ar = 'AR',
+  Ar: 'AR',
   /** Austria. */
-  At = 'AT',
+  At: 'AT',
   /** Australia. */
-  Au = 'AU',
+  Au: 'AU',
   /** Aruba. */
-  Aw = 'AW',
+  Aw: 'AW',
   /** Åland Islands. */
-  Ax = 'AX',
+  Ax: 'AX',
   /** Azerbaijan. */
-  Az = 'AZ',
+  Az: 'AZ',
   /** Bosnia & Herzegovina. */
-  Ba = 'BA',
+  Ba: 'BA',
   /** Barbados. */
-  Bb = 'BB',
+  Bb: 'BB',
   /** Bangladesh. */
-  Bd = 'BD',
+  Bd: 'BD',
   /** Belgium. */
-  Be = 'BE',
+  Be: 'BE',
   /** Burkina Faso. */
-  Bf = 'BF',
+  Bf: 'BF',
   /** Bulgaria. */
-  Bg = 'BG',
+  Bg: 'BG',
   /** Bahrain. */
-  Bh = 'BH',
+  Bh: 'BH',
   /** Burundi. */
-  Bi = 'BI',
+  Bi: 'BI',
   /** Benin. */
-  Bj = 'BJ',
+  Bj: 'BJ',
   /** St. Barthélemy. */
-  Bl = 'BL',
+  Bl: 'BL',
   /** Bermuda. */
-  Bm = 'BM',
+  Bm: 'BM',
   /** Brunei. */
-  Bn = 'BN',
+  Bn: 'BN',
   /** Bolivia. */
-  Bo = 'BO',
+  Bo: 'BO',
   /** Caribbean Netherlands. */
-  Bq = 'BQ',
+  Bq: 'BQ',
   /** Brazil. */
-  Br = 'BR',
+  Br: 'BR',
   /** Bahamas. */
-  Bs = 'BS',
+  Bs: 'BS',
   /** Bhutan. */
-  Bt = 'BT',
+  Bt: 'BT',
   /** Bouvet Island. */
-  Bv = 'BV',
+  Bv: 'BV',
   /** Botswana. */
-  Bw = 'BW',
+  Bw: 'BW',
   /** Belarus. */
-  By = 'BY',
+  By: 'BY',
   /** Belize. */
-  Bz = 'BZ',
+  Bz: 'BZ',
   /** Canada. */
-  Ca = 'CA',
+  Ca: 'CA',
   /** Cocos (Keeling) Islands. */
-  Cc = 'CC',
+  Cc: 'CC',
   /** Congo - Kinshasa. */
-  Cd = 'CD',
+  Cd: 'CD',
   /** Central African Republic. */
-  Cf = 'CF',
+  Cf: 'CF',
   /** Congo - Brazzaville. */
-  Cg = 'CG',
+  Cg: 'CG',
   /** Switzerland. */
-  Ch = 'CH',
+  Ch: 'CH',
   /** Côte d’Ivoire. */
-  Ci = 'CI',
+  Ci: 'CI',
   /** Cook Islands. */
-  Ck = 'CK',
+  Ck: 'CK',
   /** Chile. */
-  Cl = 'CL',
+  Cl: 'CL',
   /** Cameroon. */
-  Cm = 'CM',
+  Cm: 'CM',
   /** China. */
-  Cn = 'CN',
+  Cn: 'CN',
   /** Colombia. */
-  Co = 'CO',
+  Co: 'CO',
   /** Costa Rica. */
-  Cr = 'CR',
+  Cr: 'CR',
   /** Cuba. */
-  Cu = 'CU',
+  Cu: 'CU',
   /** Cape Verde. */
-  Cv = 'CV',
+  Cv: 'CV',
   /** Curaçao. */
-  Cw = 'CW',
+  Cw: 'CW',
   /** Christmas Island. */
-  Cx = 'CX',
+  Cx: 'CX',
   /** Cyprus. */
-  Cy = 'CY',
+  Cy: 'CY',
   /** Czechia. */
-  Cz = 'CZ',
+  Cz: 'CZ',
   /** Germany. */
-  De = 'DE',
+  De: 'DE',
   /** Djibouti. */
-  Dj = 'DJ',
+  Dj: 'DJ',
   /** Denmark. */
-  Dk = 'DK',
+  Dk: 'DK',
   /** Dominica. */
-  Dm = 'DM',
+  Dm: 'DM',
   /** Dominican Republic. */
-  Do = 'DO',
+  Do: 'DO',
   /** Algeria. */
-  Dz = 'DZ',
+  Dz: 'DZ',
   /** Ecuador. */
-  Ec = 'EC',
+  Ec: 'EC',
   /** Estonia. */
-  Ee = 'EE',
+  Ee: 'EE',
   /** Egypt. */
-  Eg = 'EG',
+  Eg: 'EG',
   /** Western Sahara. */
-  Eh = 'EH',
+  Eh: 'EH',
   /** Eritrea. */
-  Er = 'ER',
+  Er: 'ER',
   /** Spain. */
-  Es = 'ES',
+  Es: 'ES',
   /** Ethiopia. */
-  Et = 'ET',
+  Et: 'ET',
   /** Finland. */
-  Fi = 'FI',
+  Fi: 'FI',
   /** Fiji. */
-  Fj = 'FJ',
+  Fj: 'FJ',
   /** Falkland Islands. */
-  Fk = 'FK',
+  Fk: 'FK',
   /** Faroe Islands. */
-  Fo = 'FO',
+  Fo: 'FO',
   /** France. */
-  Fr = 'FR',
+  Fr: 'FR',
   /** Gabon. */
-  Ga = 'GA',
+  Ga: 'GA',
   /** United Kingdom. */
-  Gb = 'GB',
+  Gb: 'GB',
   /** Grenada. */
-  Gd = 'GD',
+  Gd: 'GD',
   /** Georgia. */
-  Ge = 'GE',
+  Ge: 'GE',
   /** French Guiana. */
-  Gf = 'GF',
+  Gf: 'GF',
   /** Guernsey. */
-  Gg = 'GG',
+  Gg: 'GG',
   /** Ghana. */
-  Gh = 'GH',
+  Gh: 'GH',
   /** Gibraltar. */
-  Gi = 'GI',
+  Gi: 'GI',
   /** Greenland. */
-  Gl = 'GL',
+  Gl: 'GL',
   /** Gambia. */
-  Gm = 'GM',
+  Gm: 'GM',
   /** Guinea. */
-  Gn = 'GN',
+  Gn: 'GN',
   /** Guadeloupe. */
-  Gp = 'GP',
+  Gp: 'GP',
   /** Equatorial Guinea. */
-  Gq = 'GQ',
+  Gq: 'GQ',
   /** Greece. */
-  Gr = 'GR',
+  Gr: 'GR',
   /** South Georgia & South Sandwich Islands. */
-  Gs = 'GS',
+  Gs: 'GS',
   /** Guatemala. */
-  Gt = 'GT',
+  Gt: 'GT',
   /** Guinea-Bissau. */
-  Gw = 'GW',
+  Gw: 'GW',
   /** Guyana. */
-  Gy = 'GY',
+  Gy: 'GY',
   /** Hong Kong SAR. */
-  Hk = 'HK',
+  Hk: 'HK',
   /** Heard & McDonald Islands. */
-  Hm = 'HM',
+  Hm: 'HM',
   /** Honduras. */
-  Hn = 'HN',
+  Hn: 'HN',
   /** Croatia. */
-  Hr = 'HR',
+  Hr: 'HR',
   /** Haiti. */
-  Ht = 'HT',
+  Ht: 'HT',
   /** Hungary. */
-  Hu = 'HU',
+  Hu: 'HU',
   /** Indonesia. */
-  Id = 'ID',
+  Id: 'ID',
   /** Ireland. */
-  Ie = 'IE',
+  Ie: 'IE',
   /** Israel. */
-  Il = 'IL',
+  Il: 'IL',
   /** Isle of Man. */
-  Im = 'IM',
+  Im: 'IM',
   /** India. */
-  In = 'IN',
+  In: 'IN',
   /** British Indian Ocean Territory. */
-  Io = 'IO',
+  Io: 'IO',
   /** Iraq. */
-  Iq = 'IQ',
+  Iq: 'IQ',
   /** Iran. */
-  Ir = 'IR',
+  Ir: 'IR',
   /** Iceland. */
-  Is = 'IS',
+  Is: 'IS',
   /** Italy. */
-  It = 'IT',
+  It: 'IT',
   /** Jersey. */
-  Je = 'JE',
+  Je: 'JE',
   /** Jamaica. */
-  Jm = 'JM',
+  Jm: 'JM',
   /** Jordan. */
-  Jo = 'JO',
+  Jo: 'JO',
   /** Japan. */
-  Jp = 'JP',
+  Jp: 'JP',
   /** Kenya. */
-  Ke = 'KE',
+  Ke: 'KE',
   /** Kyrgyzstan. */
-  Kg = 'KG',
+  Kg: 'KG',
   /** Cambodia. */
-  Kh = 'KH',
+  Kh: 'KH',
   /** Kiribati. */
-  Ki = 'KI',
+  Ki: 'KI',
   /** Comoros. */
-  Km = 'KM',
+  Km: 'KM',
   /** St. Kitts & Nevis. */
-  Kn = 'KN',
+  Kn: 'KN',
   /** North Korea. */
-  Kp = 'KP',
+  Kp: 'KP',
   /** South Korea. */
-  Kr = 'KR',
+  Kr: 'KR',
   /** Kuwait. */
-  Kw = 'KW',
+  Kw: 'KW',
   /** Cayman Islands. */
-  Ky = 'KY',
+  Ky: 'KY',
   /** Kazakhstan. */
-  Kz = 'KZ',
+  Kz: 'KZ',
   /** Laos. */
-  La = 'LA',
+  La: 'LA',
   /** Lebanon. */
-  Lb = 'LB',
+  Lb: 'LB',
   /** St. Lucia. */
-  Lc = 'LC',
+  Lc: 'LC',
   /** Liechtenstein. */
-  Li = 'LI',
+  Li: 'LI',
   /** Sri Lanka. */
-  Lk = 'LK',
+  Lk: 'LK',
   /** Liberia. */
-  Lr = 'LR',
+  Lr: 'LR',
   /** Lesotho. */
-  Ls = 'LS',
+  Ls: 'LS',
   /** Lithuania. */
-  Lt = 'LT',
+  Lt: 'LT',
   /** Luxembourg. */
-  Lu = 'LU',
+  Lu: 'LU',
   /** Latvia. */
-  Lv = 'LV',
+  Lv: 'LV',
   /** Libya. */
-  Ly = 'LY',
+  Ly: 'LY',
   /** Morocco. */
-  Ma = 'MA',
+  Ma: 'MA',
   /** Monaco. */
-  Mc = 'MC',
+  Mc: 'MC',
   /** Moldova. */
-  Md = 'MD',
+  Md: 'MD',
   /** Montenegro. */
-  Me = 'ME',
+  Me: 'ME',
   /** St. Martin. */
-  Mf = 'MF',
+  Mf: 'MF',
   /** Madagascar. */
-  Mg = 'MG',
+  Mg: 'MG',
   /** North Macedonia. */
-  Mk = 'MK',
+  Mk: 'MK',
   /** Mali. */
-  Ml = 'ML',
+  Ml: 'ML',
   /** Myanmar (Burma). */
-  Mm = 'MM',
+  Mm: 'MM',
   /** Mongolia. */
-  Mn = 'MN',
+  Mn: 'MN',
   /** Macao SAR. */
-  Mo = 'MO',
+  Mo: 'MO',
   /** Martinique. */
-  Mq = 'MQ',
+  Mq: 'MQ',
   /** Mauritania. */
-  Mr = 'MR',
+  Mr: 'MR',
   /** Montserrat. */
-  Ms = 'MS',
+  Ms: 'MS',
   /** Malta. */
-  Mt = 'MT',
+  Mt: 'MT',
   /** Mauritius. */
-  Mu = 'MU',
+  Mu: 'MU',
   /** Maldives. */
-  Mv = 'MV',
+  Mv: 'MV',
   /** Malawi. */
-  Mw = 'MW',
+  Mw: 'MW',
   /** Mexico. */
-  Mx = 'MX',
+  Mx: 'MX',
   /** Malaysia. */
-  My = 'MY',
+  My: 'MY',
   /** Mozambique. */
-  Mz = 'MZ',
+  Mz: 'MZ',
   /** Namibia. */
-  Na = 'NA',
+  Na: 'NA',
   /** New Caledonia. */
-  Nc = 'NC',
+  Nc: 'NC',
   /** Niger. */
-  Ne = 'NE',
+  Ne: 'NE',
   /** Norfolk Island. */
-  Nf = 'NF',
+  Nf: 'NF',
   /** Nigeria. */
-  Ng = 'NG',
+  Ng: 'NG',
   /** Nicaragua. */
-  Ni = 'NI',
+  Ni: 'NI',
   /** Netherlands. */
-  Nl = 'NL',
+  Nl: 'NL',
   /** Norway. */
-  No = 'NO',
+  No: 'NO',
   /** Nepal. */
-  Np = 'NP',
+  Np: 'NP',
   /** Nauru. */
-  Nr = 'NR',
+  Nr: 'NR',
   /** Niue. */
-  Nu = 'NU',
+  Nu: 'NU',
   /** New Zealand. */
-  Nz = 'NZ',
+  Nz: 'NZ',
   /** Oman. */
-  Om = 'OM',
+  Om: 'OM',
   /** Panama. */
-  Pa = 'PA',
+  Pa: 'PA',
   /** Peru. */
-  Pe = 'PE',
+  Pe: 'PE',
   /** French Polynesia. */
-  Pf = 'PF',
+  Pf: 'PF',
   /** Papua New Guinea. */
-  Pg = 'PG',
+  Pg: 'PG',
   /** Philippines. */
-  Ph = 'PH',
+  Ph: 'PH',
   /** Pakistan. */
-  Pk = 'PK',
+  Pk: 'PK',
   /** Poland. */
-  Pl = 'PL',
+  Pl: 'PL',
   /** St. Pierre & Miquelon. */
-  Pm = 'PM',
+  Pm: 'PM',
   /** Pitcairn Islands. */
-  Pn = 'PN',
+  Pn: 'PN',
   /** Palestinian Territories. */
-  Ps = 'PS',
+  Ps: 'PS',
   /** Portugal. */
-  Pt = 'PT',
+  Pt: 'PT',
   /** Paraguay. */
-  Py = 'PY',
+  Py: 'PY',
   /** Qatar. */
-  Qa = 'QA',
+  Qa: 'QA',
   /** Réunion. */
-  Re = 'RE',
+  Re: 'RE',
   /** Romania. */
-  Ro = 'RO',
+  Ro: 'RO',
   /** Serbia. */
-  Rs = 'RS',
+  Rs: 'RS',
   /** Russia. */
-  Ru = 'RU',
+  Ru: 'RU',
   /** Rwanda. */
-  Rw = 'RW',
+  Rw: 'RW',
   /** Saudi Arabia. */
-  Sa = 'SA',
+  Sa: 'SA',
   /** Solomon Islands. */
-  Sb = 'SB',
+  Sb: 'SB',
   /** Seychelles. */
-  Sc = 'SC',
+  Sc: 'SC',
   /** Sudan. */
-  Sd = 'SD',
+  Sd: 'SD',
   /** Sweden. */
-  Se = 'SE',
+  Se: 'SE',
   /** Singapore. */
-  Sg = 'SG',
+  Sg: 'SG',
   /** St. Helena. */
-  Sh = 'SH',
+  Sh: 'SH',
   /** Slovenia. */
-  Si = 'SI',
+  Si: 'SI',
   /** Svalbard & Jan Mayen. */
-  Sj = 'SJ',
+  Sj: 'SJ',
   /** Slovakia. */
-  Sk = 'SK',
+  Sk: 'SK',
   /** Sierra Leone. */
-  Sl = 'SL',
+  Sl: 'SL',
   /** San Marino. */
-  Sm = 'SM',
+  Sm: 'SM',
   /** Senegal. */
-  Sn = 'SN',
+  Sn: 'SN',
   /** Somalia. */
-  So = 'SO',
+  So: 'SO',
   /** Suriname. */
-  Sr = 'SR',
+  Sr: 'SR',
   /** South Sudan. */
-  Ss = 'SS',
+  Ss: 'SS',
   /** São Tomé & Príncipe. */
-  St = 'ST',
+  St: 'ST',
   /** El Salvador. */
-  Sv = 'SV',
+  Sv: 'SV',
   /** Sint Maarten. */
-  Sx = 'SX',
+  Sx: 'SX',
   /** Syria. */
-  Sy = 'SY',
+  Sy: 'SY',
   /** Eswatini. */
-  Sz = 'SZ',
+  Sz: 'SZ',
   /** Tristan da Cunha. */
-  Ta = 'TA',
+  Ta: 'TA',
   /** Turks & Caicos Islands. */
-  Tc = 'TC',
+  Tc: 'TC',
   /** Chad. */
-  Td = 'TD',
+  Td: 'TD',
   /** French Southern Territories. */
-  Tf = 'TF',
+  Tf: 'TF',
   /** Togo. */
-  Tg = 'TG',
+  Tg: 'TG',
   /** Thailand. */
-  Th = 'TH',
+  Th: 'TH',
   /** Tajikistan. */
-  Tj = 'TJ',
+  Tj: 'TJ',
   /** Tokelau. */
-  Tk = 'TK',
+  Tk: 'TK',
   /** Timor-Leste. */
-  Tl = 'TL',
+  Tl: 'TL',
   /** Turkmenistan. */
-  Tm = 'TM',
+  Tm: 'TM',
   /** Tunisia. */
-  Tn = 'TN',
+  Tn: 'TN',
   /** Tonga. */
-  To = 'TO',
+  To: 'TO',
   /** Türkiye. */
-  Tr = 'TR',
+  Tr: 'TR',
   /** Trinidad & Tobago. */
-  Tt = 'TT',
+  Tt: 'TT',
   /** Tuvalu. */
-  Tv = 'TV',
+  Tv: 'TV',
   /** Taiwan. */
-  Tw = 'TW',
+  Tw: 'TW',
   /** Tanzania. */
-  Tz = 'TZ',
+  Tz: 'TZ',
   /** Ukraine. */
-  Ua = 'UA',
+  Ua: 'UA',
   /** Uganda. */
-  Ug = 'UG',
+  Ug: 'UG',
   /** U.S. Outlying Islands. */
-  Um = 'UM',
+  Um: 'UM',
   /** United States. */
-  Us = 'US',
+  Us: 'US',
   /** Uruguay. */
-  Uy = 'UY',
+  Uy: 'UY',
   /** Uzbekistan. */
-  Uz = 'UZ',
+  Uz: 'UZ',
   /** Vatican City. */
-  Va = 'VA',
+  Va: 'VA',
   /** St. Vincent & Grenadines. */
-  Vc = 'VC',
+  Vc: 'VC',
   /** Venezuela. */
-  Ve = 'VE',
+  Ve: 'VE',
   /** British Virgin Islands. */
-  Vg = 'VG',
+  Vg: 'VG',
   /** Vietnam. */
-  Vn = 'VN',
+  Vn: 'VN',
   /** Vanuatu. */
-  Vu = 'VU',
+  Vu: 'VU',
   /** Wallis & Futuna. */
-  Wf = 'WF',
+  Wf: 'WF',
   /** Samoa. */
-  Ws = 'WS',
+  Ws: 'WS',
   /** Kosovo. */
-  Xk = 'XK',
+  Xk: 'XK',
   /** Yemen. */
-  Ye = 'YE',
+  Ye: 'YE',
   /** Mayotte. */
-  Yt = 'YT',
+  Yt: 'YT',
   /** South Africa. */
-  Za = 'ZA',
+  Za: 'ZA',
   /** Zambia. */
-  Zm = 'ZM',
+  Zm: 'ZM',
   /** Zimbabwe. */
-  Zw = 'ZW',
+  Zw: 'ZW',
   /** Unknown Region. */
-  Zz = 'ZZ'
-}
+  Zz: 'ZZ'
+} as const;
 
+export type CountryCode = typeof CountryCode[keyof typeof CountryCode];
 /** The part of the image that should remain after cropping. */
-export enum CropRegion {
+export const CropRegion = {
   /** Keep the bottom of the image. */
-  Bottom = 'BOTTOM',
+  Bottom: 'BOTTOM',
   /** Keep the center of the image. */
-  Center = 'CENTER',
+  Center: 'CENTER',
   /** Keep the left of the image. */
-  Left = 'LEFT',
+  Left: 'LEFT',
   /** Keep the right of the image. */
-  Right = 'RIGHT',
+  Right: 'RIGHT',
   /** Keep the top of the image. */
-  Top = 'TOP'
-}
+  Top: 'TOP'
+} as const;
 
+export type CropRegion = typeof CropRegion[keyof typeof CropRegion];
 /** A currency. */
 export type Currency = {
   __typename?: 'Currency';
@@ -2950,340 +2962,332 @@ export type Currency = {
  * and non-standard codes.
  *
  */
-export enum CurrencyCode {
+export const CurrencyCode = {
   /** United Arab Emirates Dirham (AED). */
-  Aed = 'AED',
+  Aed: 'AED',
   /** Afghan Afghani (AFN). */
-  Afn = 'AFN',
+  Afn: 'AFN',
   /** Albanian Lek (ALL). */
-  All = 'ALL',
+  All: 'ALL',
   /** Armenian Dram (AMD). */
-  Amd = 'AMD',
+  Amd: 'AMD',
   /** Netherlands Antillean Guilder. */
-  Ang = 'ANG',
+  Ang: 'ANG',
   /** Angolan Kwanza (AOA). */
-  Aoa = 'AOA',
+  Aoa: 'AOA',
   /** Argentine Pesos (ARS). */
-  Ars = 'ARS',
+  Ars: 'ARS',
   /** Australian Dollars (AUD). */
-  Aud = 'AUD',
+  Aud: 'AUD',
   /** Aruban Florin (AWG). */
-  Awg = 'AWG',
+  Awg: 'AWG',
   /** Azerbaijani Manat (AZN). */
-  Azn = 'AZN',
+  Azn: 'AZN',
   /** Bosnia and Herzegovina Convertible Mark (BAM). */
-  Bam = 'BAM',
+  Bam: 'BAM',
   /** Barbadian Dollar (BBD). */
-  Bbd = 'BBD',
+  Bbd: 'BBD',
   /** Bangladesh Taka (BDT). */
-  Bdt = 'BDT',
+  Bdt: 'BDT',
   /** Bulgarian Lev (BGN). */
-  Bgn = 'BGN',
+  Bgn: 'BGN',
   /** Bahraini Dinar (BHD). */
-  Bhd = 'BHD',
+  Bhd: 'BHD',
   /** Burundian Franc (BIF). */
-  Bif = 'BIF',
+  Bif: 'BIF',
   /** Bermudian Dollar (BMD). */
-  Bmd = 'BMD',
+  Bmd: 'BMD',
   /** Brunei Dollar (BND). */
-  Bnd = 'BND',
+  Bnd: 'BND',
   /** Bolivian Boliviano (BOB). */
-  Bob = 'BOB',
+  Bob: 'BOB',
   /** Brazilian Real (BRL). */
-  Brl = 'BRL',
+  Brl: 'BRL',
   /** Bahamian Dollar (BSD). */
-  Bsd = 'BSD',
+  Bsd: 'BSD',
   /** Bhutanese Ngultrum (BTN). */
-  Btn = 'BTN',
+  Btn: 'BTN',
   /** Botswana Pula (BWP). */
-  Bwp = 'BWP',
+  Bwp: 'BWP',
   /** Belarusian Ruble (BYN). */
-  Byn = 'BYN',
-  /**
-   * Belarusian Ruble (BYR).
-   * @deprecated `BYR` is deprecated. Use `BYN` available from version `2021-01` onwards instead.
-   */
-  Byr = 'BYR',
+  Byn: 'BYN',
+  /** Belarusian Ruble (BYR). */
+  Byr: 'BYR',
   /** Belize Dollar (BZD). */
-  Bzd = 'BZD',
+  Bzd: 'BZD',
   /** Canadian Dollars (CAD). */
-  Cad = 'CAD',
+  Cad: 'CAD',
   /** Congolese franc (CDF). */
-  Cdf = 'CDF',
+  Cdf: 'CDF',
   /** Swiss Francs (CHF). */
-  Chf = 'CHF',
+  Chf: 'CHF',
   /** Chilean Peso (CLP). */
-  Clp = 'CLP',
+  Clp: 'CLP',
   /** Chinese Yuan Renminbi (CNY). */
-  Cny = 'CNY',
+  Cny: 'CNY',
   /** Colombian Peso (COP). */
-  Cop = 'COP',
+  Cop: 'COP',
   /** Costa Rican Colones (CRC). */
-  Crc = 'CRC',
+  Crc: 'CRC',
   /** Cape Verdean escudo (CVE). */
-  Cve = 'CVE',
+  Cve: 'CVE',
   /** Czech Koruny (CZK). */
-  Czk = 'CZK',
+  Czk: 'CZK',
   /** Djiboutian Franc (DJF). */
-  Djf = 'DJF',
+  Djf: 'DJF',
   /** Danish Kroner (DKK). */
-  Dkk = 'DKK',
+  Dkk: 'DKK',
   /** Dominican Peso (DOP). */
-  Dop = 'DOP',
+  Dop: 'DOP',
   /** Algerian Dinar (DZD). */
-  Dzd = 'DZD',
+  Dzd: 'DZD',
   /** Egyptian Pound (EGP). */
-  Egp = 'EGP',
+  Egp: 'EGP',
   /** Eritrean Nakfa (ERN). */
-  Ern = 'ERN',
+  Ern: 'ERN',
   /** Ethiopian Birr (ETB). */
-  Etb = 'ETB',
+  Etb: 'ETB',
   /** Euro (EUR). */
-  Eur = 'EUR',
+  Eur: 'EUR',
   /** Fijian Dollars (FJD). */
-  Fjd = 'FJD',
+  Fjd: 'FJD',
   /** Falkland Islands Pounds (FKP). */
-  Fkp = 'FKP',
+  Fkp: 'FKP',
   /** United Kingdom Pounds (GBP). */
-  Gbp = 'GBP',
+  Gbp: 'GBP',
   /** Georgian Lari (GEL). */
-  Gel = 'GEL',
+  Gel: 'GEL',
   /** Ghanaian Cedi (GHS). */
-  Ghs = 'GHS',
+  Ghs: 'GHS',
   /** Gibraltar Pounds (GIP). */
-  Gip = 'GIP',
+  Gip: 'GIP',
   /** Gambian Dalasi (GMD). */
-  Gmd = 'GMD',
+  Gmd: 'GMD',
   /** Guinean Franc (GNF). */
-  Gnf = 'GNF',
+  Gnf: 'GNF',
   /** Guatemalan Quetzal (GTQ). */
-  Gtq = 'GTQ',
+  Gtq: 'GTQ',
   /** Guyanese Dollar (GYD). */
-  Gyd = 'GYD',
+  Gyd: 'GYD',
   /** Hong Kong Dollars (HKD). */
-  Hkd = 'HKD',
+  Hkd: 'HKD',
   /** Honduran Lempira (HNL). */
-  Hnl = 'HNL',
+  Hnl: 'HNL',
   /** Croatian Kuna (HRK). */
-  Hrk = 'HRK',
+  Hrk: 'HRK',
   /** Haitian Gourde (HTG). */
-  Htg = 'HTG',
+  Htg: 'HTG',
   /** Hungarian Forint (HUF). */
-  Huf = 'HUF',
+  Huf: 'HUF',
   /** Indonesian Rupiah (IDR). */
-  Idr = 'IDR',
+  Idr: 'IDR',
   /** Israeli New Shekel (NIS). */
-  Ils = 'ILS',
+  Ils: 'ILS',
   /** Indian Rupees (INR). */
-  Inr = 'INR',
+  Inr: 'INR',
   /** Iraqi Dinar (IQD). */
-  Iqd = 'IQD',
+  Iqd: 'IQD',
   /** Iranian Rial (IRR). */
-  Irr = 'IRR',
+  Irr: 'IRR',
   /** Icelandic Kronur (ISK). */
-  Isk = 'ISK',
+  Isk: 'ISK',
   /** Jersey Pound. */
-  Jep = 'JEP',
+  Jep: 'JEP',
   /** Jamaican Dollars (JMD). */
-  Jmd = 'JMD',
+  Jmd: 'JMD',
   /** Jordanian Dinar (JOD). */
-  Jod = 'JOD',
+  Jod: 'JOD',
   /** Japanese Yen (JPY). */
-  Jpy = 'JPY',
+  Jpy: 'JPY',
   /** Kenyan Shilling (KES). */
-  Kes = 'KES',
+  Kes: 'KES',
   /** Kyrgyzstani Som (KGS). */
-  Kgs = 'KGS',
+  Kgs: 'KGS',
   /** Cambodian Riel. */
-  Khr = 'KHR',
+  Khr: 'KHR',
   /** Kiribati Dollar (KID). */
-  Kid = 'KID',
+  Kid: 'KID',
   /** Comorian Franc (KMF). */
-  Kmf = 'KMF',
+  Kmf: 'KMF',
   /** South Korean Won (KRW). */
-  Krw = 'KRW',
+  Krw: 'KRW',
   /** Kuwaiti Dinar (KWD). */
-  Kwd = 'KWD',
+  Kwd: 'KWD',
   /** Cayman Dollars (KYD). */
-  Kyd = 'KYD',
+  Kyd: 'KYD',
   /** Kazakhstani Tenge (KZT). */
-  Kzt = 'KZT',
+  Kzt: 'KZT',
   /** Laotian Kip (LAK). */
-  Lak = 'LAK',
+  Lak: 'LAK',
   /** Lebanese Pounds (LBP). */
-  Lbp = 'LBP',
+  Lbp: 'LBP',
   /** Sri Lankan Rupees (LKR). */
-  Lkr = 'LKR',
+  Lkr: 'LKR',
   /** Liberian Dollar (LRD). */
-  Lrd = 'LRD',
+  Lrd: 'LRD',
   /** Lesotho Loti (LSL). */
-  Lsl = 'LSL',
+  Lsl: 'LSL',
   /** Lithuanian Litai (LTL). */
-  Ltl = 'LTL',
+  Ltl: 'LTL',
   /** Latvian Lati (LVL). */
-  Lvl = 'LVL',
+  Lvl: 'LVL',
   /** Libyan Dinar (LYD). */
-  Lyd = 'LYD',
+  Lyd: 'LYD',
   /** Moroccan Dirham. */
-  Mad = 'MAD',
+  Mad: 'MAD',
   /** Moldovan Leu (MDL). */
-  Mdl = 'MDL',
+  Mdl: 'MDL',
   /** Malagasy Ariary (MGA). */
-  Mga = 'MGA',
+  Mga: 'MGA',
   /** Macedonia Denar (MKD). */
-  Mkd = 'MKD',
+  Mkd: 'MKD',
   /** Burmese Kyat (MMK). */
-  Mmk = 'MMK',
+  Mmk: 'MMK',
   /** Mongolian Tugrik. */
-  Mnt = 'MNT',
+  Mnt: 'MNT',
   /** Macanese Pataca (MOP). */
-  Mop = 'MOP',
+  Mop: 'MOP',
   /** Mauritanian Ouguiya (MRU). */
-  Mru = 'MRU',
+  Mru: 'MRU',
   /** Mauritian Rupee (MUR). */
-  Mur = 'MUR',
+  Mur: 'MUR',
   /** Maldivian Rufiyaa (MVR). */
-  Mvr = 'MVR',
+  Mvr: 'MVR',
   /** Malawian Kwacha (MWK). */
-  Mwk = 'MWK',
+  Mwk: 'MWK',
   /** Mexican Pesos (MXN). */
-  Mxn = 'MXN',
+  Mxn: 'MXN',
   /** Malaysian Ringgits (MYR). */
-  Myr = 'MYR',
+  Myr: 'MYR',
   /** Mozambican Metical. */
-  Mzn = 'MZN',
+  Mzn: 'MZN',
   /** Namibian Dollar. */
-  Nad = 'NAD',
+  Nad: 'NAD',
   /** Nigerian Naira (NGN). */
-  Ngn = 'NGN',
+  Ngn: 'NGN',
   /** Nicaraguan Córdoba (NIO). */
-  Nio = 'NIO',
+  Nio: 'NIO',
   /** Norwegian Kroner (NOK). */
-  Nok = 'NOK',
+  Nok: 'NOK',
   /** Nepalese Rupee (NPR). */
-  Npr = 'NPR',
+  Npr: 'NPR',
   /** New Zealand Dollars (NZD). */
-  Nzd = 'NZD',
+  Nzd: 'NZD',
   /** Omani Rial (OMR). */
-  Omr = 'OMR',
+  Omr: 'OMR',
   /** Panamian Balboa (PAB). */
-  Pab = 'PAB',
+  Pab: 'PAB',
   /** Peruvian Nuevo Sol (PEN). */
-  Pen = 'PEN',
+  Pen: 'PEN',
   /** Papua New Guinean Kina (PGK). */
-  Pgk = 'PGK',
+  Pgk: 'PGK',
   /** Philippine Peso (PHP). */
-  Php = 'PHP',
+  Php: 'PHP',
   /** Pakistani Rupee (PKR). */
-  Pkr = 'PKR',
+  Pkr: 'PKR',
   /** Polish Zlotych (PLN). */
-  Pln = 'PLN',
+  Pln: 'PLN',
   /** Paraguayan Guarani (PYG). */
-  Pyg = 'PYG',
+  Pyg: 'PYG',
   /** Qatari Rial (QAR). */
-  Qar = 'QAR',
+  Qar: 'QAR',
   /** Romanian Lei (RON). */
-  Ron = 'RON',
+  Ron: 'RON',
   /** Serbian dinar (RSD). */
-  Rsd = 'RSD',
+  Rsd: 'RSD',
   /** Russian Rubles (RUB). */
-  Rub = 'RUB',
+  Rub: 'RUB',
   /** Rwandan Franc (RWF). */
-  Rwf = 'RWF',
+  Rwf: 'RWF',
   /** Saudi Riyal (SAR). */
-  Sar = 'SAR',
+  Sar: 'SAR',
   /** Solomon Islands Dollar (SBD). */
-  Sbd = 'SBD',
+  Sbd: 'SBD',
   /** Seychellois Rupee (SCR). */
-  Scr = 'SCR',
+  Scr: 'SCR',
   /** Sudanese Pound (SDG). */
-  Sdg = 'SDG',
+  Sdg: 'SDG',
   /** Swedish Kronor (SEK). */
-  Sek = 'SEK',
+  Sek: 'SEK',
   /** Singapore Dollars (SGD). */
-  Sgd = 'SGD',
+  Sgd: 'SGD',
   /** Saint Helena Pounds (SHP). */
-  Shp = 'SHP',
+  Shp: 'SHP',
   /** Sierra Leonean Leone (SLL). */
-  Sll = 'SLL',
+  Sll: 'SLL',
   /** Somali Shilling (SOS). */
-  Sos = 'SOS',
+  Sos: 'SOS',
   /** Surinamese Dollar (SRD). */
-  Srd = 'SRD',
+  Srd: 'SRD',
   /** South Sudanese Pound (SSP). */
-  Ssp = 'SSP',
-  /**
-   * Sao Tome And Principe Dobra (STD).
-   * @deprecated `STD` is deprecated. Use `STN` available from version `2022-07` onwards instead.
-   */
-  Std = 'STD',
+  Ssp: 'SSP',
+  /** Sao Tome And Principe Dobra (STD). */
+  Std: 'STD',
   /** Sao Tome And Principe Dobra (STN). */
-  Stn = 'STN',
+  Stn: 'STN',
   /** Syrian Pound (SYP). */
-  Syp = 'SYP',
+  Syp: 'SYP',
   /** Swazi Lilangeni (SZL). */
-  Szl = 'SZL',
+  Szl: 'SZL',
   /** Thai baht (THB). */
-  Thb = 'THB',
+  Thb: 'THB',
   /** Tajikistani Somoni (TJS). */
-  Tjs = 'TJS',
+  Tjs: 'TJS',
   /** Turkmenistani Manat (TMT). */
-  Tmt = 'TMT',
+  Tmt: 'TMT',
   /** Tunisian Dinar (TND). */
-  Tnd = 'TND',
+  Tnd: 'TND',
   /** Tongan Pa'anga (TOP). */
-  Top = 'TOP',
+  Top: 'TOP',
   /** Turkish Lira (TRY). */
-  Try = 'TRY',
+  Try: 'TRY',
   /** Trinidad and Tobago Dollars (TTD). */
-  Ttd = 'TTD',
+  Ttd: 'TTD',
   /** Taiwan Dollars (TWD). */
-  Twd = 'TWD',
+  Twd: 'TWD',
   /** Tanzanian Shilling (TZS). */
-  Tzs = 'TZS',
+  Tzs: 'TZS',
   /** Ukrainian Hryvnia (UAH). */
-  Uah = 'UAH',
+  Uah: 'UAH',
   /** Ugandan Shilling (UGX). */
-  Ugx = 'UGX',
+  Ugx: 'UGX',
   /** United States Dollars (USD). */
-  Usd = 'USD',
+  Usd: 'USD',
   /** Uruguayan Pesos (UYU). */
-  Uyu = 'UYU',
+  Uyu: 'UYU',
   /** Uzbekistan som (UZS). */
-  Uzs = 'UZS',
+  Uzs: 'UZS',
   /** Venezuelan Bolivares (VED). */
-  Ved = 'VED',
-  /**
-   * Venezuelan Bolivares (VEF).
-   * @deprecated `VEF` is deprecated. Use `VES` available from version `2020-10` onwards instead.
-   */
-  Vef = 'VEF',
+  Ved: 'VED',
+  /** Venezuelan Bolivares (VEF). */
+  Vef: 'VEF',
   /** Venezuelan Bolivares Soberanos (VES). */
-  Ves = 'VES',
+  Ves: 'VES',
   /** Vietnamese đồng (VND). */
-  Vnd = 'VND',
+  Vnd: 'VND',
   /** Vanuatu Vatu (VUV). */
-  Vuv = 'VUV',
+  Vuv: 'VUV',
   /** Samoan Tala (WST). */
-  Wst = 'WST',
+  Wst: 'WST',
   /** Central African CFA Franc (XAF). */
-  Xaf = 'XAF',
+  Xaf: 'XAF',
   /** East Caribbean Dollar (XCD). */
-  Xcd = 'XCD',
+  Xcd: 'XCD',
   /** West African CFA franc (XOF). */
-  Xof = 'XOF',
+  Xof: 'XOF',
   /** CFP Franc (XPF). */
-  Xpf = 'XPF',
+  Xpf: 'XPF',
   /** Unrecognized currency. */
-  Xxx = 'XXX',
+  Xxx: 'XXX',
   /** Yemeni Rial (YER). */
-  Yer = 'YER',
+  Yer: 'YER',
   /** South African Rand (ZAR). */
-  Zar = 'ZAR',
+  Zar: 'ZAR',
   /** Zambian Kwacha (ZMW). */
-  Zmw = 'ZMW'
-}
+  Zmw: 'ZMW'
+} as const;
 
+export type CurrencyCode = typeof CurrencyCode[keyof typeof CurrencyCode];
 /** A customer represents a customer account with the shop. Customer accounts store contact information for the customer, saving logged-in customers the trouble of having to provide it at every checkout. */
 export type Customer = HasMetafields & {
   __typename?: 'Customer';
@@ -3547,39 +3551,40 @@ export type CustomerDefaultAddressUpdatePayload = {
 };
 
 /** Possible error codes that can be returned by `CustomerUserError`. */
-export enum CustomerErrorCode {
+export const CustomerErrorCode = {
   /** Customer already enabled. */
-  AlreadyEnabled = 'ALREADY_ENABLED',
+  AlreadyEnabled: 'ALREADY_ENABLED',
   /** Input email contains an invalid domain name. */
-  BadDomain = 'BAD_DOMAIN',
+  BadDomain: 'BAD_DOMAIN',
   /** The input value is blank. */
-  Blank = 'BLANK',
+  Blank: 'BLANK',
   /** Input contains HTML tags. */
-  ContainsHtmlTags = 'CONTAINS_HTML_TAGS',
+  ContainsHtmlTags: 'CONTAINS_HTML_TAGS',
   /** Input contains URL. */
-  ContainsUrl = 'CONTAINS_URL',
+  ContainsUrl: 'CONTAINS_URL',
   /** Customer is disabled. */
-  CustomerDisabled = 'CUSTOMER_DISABLED',
+  CustomerDisabled: 'CUSTOMER_DISABLED',
   /** The input value is invalid. */
-  Invalid = 'INVALID',
+  Invalid: 'INVALID',
   /** Multipass token is not valid. */
-  InvalidMultipassRequest = 'INVALID_MULTIPASS_REQUEST',
+  InvalidMultipassRequest: 'INVALID_MULTIPASS_REQUEST',
   /** Address does not exist. */
-  NotFound = 'NOT_FOUND',
+  NotFound: 'NOT_FOUND',
   /** Input password starts or ends with whitespace. */
-  PasswordStartsOrEndsWithWhitespace = 'PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE',
+  PasswordStartsOrEndsWithWhitespace: 'PASSWORD_STARTS_OR_ENDS_WITH_WHITESPACE',
   /** The input value is already taken. */
-  Taken = 'TAKEN',
+  Taken: 'TAKEN',
   /** Invalid activation token. */
-  TokenInvalid = 'TOKEN_INVALID',
+  TokenInvalid: 'TOKEN_INVALID',
   /** The input value is too long. */
-  TooLong = 'TOO_LONG',
+  TooLong: 'TOO_LONG',
   /** The input value is too short. */
-  TooShort = 'TOO_SHORT',
+  TooShort: 'TOO_SHORT',
   /** Unidentified customer. */
-  UnidentifiedCustomer = 'UNIDENTIFIED_CUSTOMER'
-}
+  UnidentifiedCustomer: 'UNIDENTIFIED_CUSTOMER'
+} as const;
 
+export type CustomerErrorCode = typeof CustomerErrorCode[keyof typeof CustomerErrorCode];
 /** Return type for `customerRecover` mutation. */
 export type CustomerRecoverPayload = {
   __typename?: 'CustomerRecoverPayload';
@@ -3713,45 +3718,48 @@ export type DeliveryAddressInput = {
  * Defines the types of available validation strategies for delivery addresses.
  *
  */
-export enum DeliveryAddressValidationStrategy {
+export const DeliveryAddressValidationStrategy = {
   /** Only the country code is validated. */
-  CountryCodeOnly = 'COUNTRY_CODE_ONLY',
+  CountryCodeOnly: 'COUNTRY_CODE_ONLY',
   /**
    * Strict validation is performed, i.e. all fields in the address are validated
    * according to Shopify's checkout rules. If the address fails validation, the cart will not be updated.
    *
    */
-  Strict = 'STRICT'
-}
+  Strict: 'STRICT'
+} as const;
 
+export type DeliveryAddressValidationStrategy = typeof DeliveryAddressValidationStrategy[keyof typeof DeliveryAddressValidationStrategy];
 /** List of different delivery method types. */
-export enum DeliveryMethodType {
+export const DeliveryMethodType = {
   /** Local Delivery. */
-  Local = 'LOCAL',
+  Local: 'LOCAL',
   /** None. */
-  None = 'NONE',
+  None: 'NONE',
   /** Shipping to a Pickup Point. */
-  PickupPoint = 'PICKUP_POINT',
+  PickupPoint: 'PICKUP_POINT',
   /** Local Pickup. */
-  PickUp = 'PICK_UP',
+  PickUp: 'PICK_UP',
   /** Retail. */
-  Retail = 'RETAIL',
+  Retail: 'RETAIL',
   /** Shipping. */
-  Shipping = 'SHIPPING'
-}
+  Shipping: 'SHIPPING'
+} as const;
 
+export type DeliveryMethodType = typeof DeliveryMethodType[keyof typeof DeliveryMethodType];
 /** Digital wallet, such as Apple Pay, which can be used for accelerated checkouts. */
-export enum DigitalWallet {
+export const DigitalWallet = {
   /** Android Pay. */
-  AndroidPay = 'ANDROID_PAY',
+  AndroidPay: 'ANDROID_PAY',
   /** Apple Pay. */
-  ApplePay = 'APPLE_PAY',
+  ApplePay: 'APPLE_PAY',
   /** Google Pay. */
-  GooglePay = 'GOOGLE_PAY',
+  GooglePay: 'GOOGLE_PAY',
   /** Shopify Pay. */
-  ShopifyPay = 'SHOPIFY_PAY'
-}
+  ShopifyPay: 'SHOPIFY_PAY'
+} as const;
 
+export type DigitalWallet = typeof DigitalWallet[keyof typeof DigitalWallet];
 /**
  * An amount discounting the line that has been allocated by a discount.
  *
@@ -3781,18 +3789,16 @@ export type DiscountApplication = {
 };
 
 /** The method by which the discount's value is allocated onto its entitled lines. */
-export enum DiscountApplicationAllocationMethod {
+export const DiscountApplicationAllocationMethod = {
   /** The value is spread across all entitled lines. */
-  Across = 'ACROSS',
+  Across: 'ACROSS',
   /** The value is applied onto every entitled line. */
-  Each = 'EACH',
-  /**
-   * The value is specifically applied onto a particular line.
-   * @deprecated Use ACROSS instead.
-   */
-  One = 'ONE'
-}
+  Each: 'EACH',
+  /** The value is specifically applied onto a particular line. */
+  One: 'ONE'
+} as const;
 
+export type DiscountApplicationAllocationMethod = typeof DiscountApplicationAllocationMethod[keyof typeof DiscountApplicationAllocationMethod];
 /**
  * An auto-generated type for paginating through multiple DiscountApplications.
  *
@@ -3826,26 +3832,28 @@ export type DiscountApplicationEdge = {
  * The value `ALL`, combined with a `targetType` of `SHIPPING_LINE`, applies the discount on all shipping lines.
  *
  */
-export enum DiscountApplicationTargetSelection {
+export const DiscountApplicationTargetSelection = {
   /** The discount is allocated onto all the lines. */
-  All = 'ALL',
+  All: 'ALL',
   /** The discount is allocated onto only the lines that it's entitled for. */
-  Entitled = 'ENTITLED',
+  Entitled: 'ENTITLED',
   /** The discount is allocated onto explicitly chosen lines. */
-  Explicit = 'EXPLICIT'
-}
+  Explicit: 'EXPLICIT'
+} as const;
 
+export type DiscountApplicationTargetSelection = typeof DiscountApplicationTargetSelection[keyof typeof DiscountApplicationTargetSelection];
 /**
  * The type of line (i.e. line item or shipping line) on an order that the discount is applicable towards.
  *
  */
-export enum DiscountApplicationTargetType {
+export const DiscountApplicationTargetType = {
   /** The discount applies onto line items. */
-  LineItem = 'LINE_ITEM',
+  LineItem: 'LINE_ITEM',
   /** The discount applies onto shipping lines. */
-  ShippingLine = 'SHIPPING_LINE'
-}
+  ShippingLine: 'SHIPPING_LINE'
+} as const;
 
+export type DiscountApplicationTargetType = typeof DiscountApplicationTargetType[keyof typeof DiscountApplicationTargetType];
 /**
  * Discount code applications capture the intentions of a discount code at
  * the time that it is applied.
@@ -3935,15 +3943,16 @@ export type Filter = {
  * Defines how to present the filter values, specifies the presentation of the filter.
  *
  */
-export enum FilterPresentation {
+export const FilterPresentation = {
   /** Image presentation, filter values display an image. */
-  Image = 'IMAGE',
+  Image: 'IMAGE',
   /** Swatch presentation, filter values display color or image patterns. */
-  Swatch = 'SWATCH',
+  Swatch: 'SWATCH',
   /** Text presentation, no additional visual display for filter values. */
-  Text = 'TEXT'
-}
+  Text: 'TEXT'
+} as const;
 
+export type FilterPresentation = typeof FilterPresentation[keyof typeof FilterPresentation];
 /**
  * The type of data that the filter group represents.
  *
@@ -3951,15 +3960,16 @@ export enum FilterPresentation {
  * (https://shopify.dev/custom-storefronts/products-collections/filter-products).
  *
  */
-export enum FilterType {
+export const FilterType = {
   /** A boolean value. */
-  Boolean = 'BOOLEAN',
+  Boolean: 'BOOLEAN',
   /** A list of selectable values. */
-  List = 'LIST',
+  List: 'LIST',
   /** A range of prices. */
-  PriceRange = 'PRICE_RANGE'
-}
+  PriceRange: 'PRICE_RANGE'
+} as const;
 
+export type FilterType = typeof FilterType[keyof typeof FilterType];
 /** A selectable value within a filter. */
 export type FilterValue = {
   __typename?: 'FilterValue';
@@ -4199,15 +4209,16 @@ export type ImageConnection = {
 };
 
 /** List of supported image content types. */
-export enum ImageContentType {
+export const ImageContentType = {
   /** A JPG image. */
-  Jpg = 'JPG',
+  Jpg: 'JPG',
   /** A PNG image. */
-  Png = 'PNG',
+  Png: 'PNG',
   /** A WEBP image. */
-  Webp = 'WEBP'
-}
+  Webp: 'WEBP'
+} as const;
 
+export type ImageContentType = typeof ImageContentType[keyof typeof ImageContentType];
 /**
  * An auto-generated type which holds one Image and a cursor during pagination.
  *
@@ -4288,297 +4299,298 @@ export type Language = {
 };
 
 /** Language codes supported by Shopify. */
-export enum LanguageCode {
+export const LanguageCode = {
   /** Afrikaans. */
-  Af = 'AF',
+  Af: 'AF',
   /** Akan. */
-  Ak = 'AK',
+  Ak: 'AK',
   /** Amharic. */
-  Am = 'AM',
+  Am: 'AM',
   /** Arabic. */
-  Ar = 'AR',
+  Ar: 'AR',
   /** Assamese. */
-  As = 'AS',
+  As: 'AS',
   /** Azerbaijani. */
-  Az = 'AZ',
+  Az: 'AZ',
   /** Belarusian. */
-  Be = 'BE',
+  Be: 'BE',
   /** Bulgarian. */
-  Bg = 'BG',
+  Bg: 'BG',
   /** Bambara. */
-  Bm = 'BM',
+  Bm: 'BM',
   /** Bangla. */
-  Bn = 'BN',
+  Bn: 'BN',
   /** Tibetan. */
-  Bo = 'BO',
+  Bo: 'BO',
   /** Breton. */
-  Br = 'BR',
+  Br: 'BR',
   /** Bosnian. */
-  Bs = 'BS',
+  Bs: 'BS',
   /** Catalan. */
-  Ca = 'CA',
+  Ca: 'CA',
   /** Chechen. */
-  Ce = 'CE',
+  Ce: 'CE',
   /** Central Kurdish. */
-  Ckb = 'CKB',
+  Ckb: 'CKB',
   /** Czech. */
-  Cs = 'CS',
+  Cs: 'CS',
   /** Church Slavic. */
-  Cu = 'CU',
+  Cu: 'CU',
   /** Welsh. */
-  Cy = 'CY',
+  Cy: 'CY',
   /** Danish. */
-  Da = 'DA',
+  Da: 'DA',
   /** German. */
-  De = 'DE',
+  De: 'DE',
   /** Dzongkha. */
-  Dz = 'DZ',
+  Dz: 'DZ',
   /** Ewe. */
-  Ee = 'EE',
+  Ee: 'EE',
   /** Greek. */
-  El = 'EL',
+  El: 'EL',
   /** English. */
-  En = 'EN',
+  En: 'EN',
   /** Esperanto. */
-  Eo = 'EO',
+  Eo: 'EO',
   /** Spanish. */
-  Es = 'ES',
+  Es: 'ES',
   /** Estonian. */
-  Et = 'ET',
+  Et: 'ET',
   /** Basque. */
-  Eu = 'EU',
+  Eu: 'EU',
   /** Persian. */
-  Fa = 'FA',
+  Fa: 'FA',
   /** Fulah. */
-  Ff = 'FF',
+  Ff: 'FF',
   /** Finnish. */
-  Fi = 'FI',
+  Fi: 'FI',
   /** Filipino. */
-  Fil = 'FIL',
+  Fil: 'FIL',
   /** Faroese. */
-  Fo = 'FO',
+  Fo: 'FO',
   /** French. */
-  Fr = 'FR',
+  Fr: 'FR',
   /** Western Frisian. */
-  Fy = 'FY',
+  Fy: 'FY',
   /** Irish. */
-  Ga = 'GA',
+  Ga: 'GA',
   /** Scottish Gaelic. */
-  Gd = 'GD',
+  Gd: 'GD',
   /** Galician. */
-  Gl = 'GL',
+  Gl: 'GL',
   /** Gujarati. */
-  Gu = 'GU',
+  Gu: 'GU',
   /** Manx. */
-  Gv = 'GV',
+  Gv: 'GV',
   /** Hausa. */
-  Ha = 'HA',
+  Ha: 'HA',
   /** Hebrew. */
-  He = 'HE',
+  He: 'HE',
   /** Hindi. */
-  Hi = 'HI',
+  Hi: 'HI',
   /** Croatian. */
-  Hr = 'HR',
+  Hr: 'HR',
   /** Hungarian. */
-  Hu = 'HU',
+  Hu: 'HU',
   /** Armenian. */
-  Hy = 'HY',
+  Hy: 'HY',
   /** Interlingua. */
-  Ia = 'IA',
+  Ia: 'IA',
   /** Indonesian. */
-  Id = 'ID',
+  Id: 'ID',
   /** Igbo. */
-  Ig = 'IG',
+  Ig: 'IG',
   /** Sichuan Yi. */
-  Ii = 'II',
+  Ii: 'II',
   /** Icelandic. */
-  Is = 'IS',
+  Is: 'IS',
   /** Italian. */
-  It = 'IT',
+  It: 'IT',
   /** Japanese. */
-  Ja = 'JA',
+  Ja: 'JA',
   /** Javanese. */
-  Jv = 'JV',
+  Jv: 'JV',
   /** Georgian. */
-  Ka = 'KA',
+  Ka: 'KA',
   /** Kikuyu. */
-  Ki = 'KI',
+  Ki: 'KI',
   /** Kazakh. */
-  Kk = 'KK',
+  Kk: 'KK',
   /** Kalaallisut. */
-  Kl = 'KL',
+  Kl: 'KL',
   /** Khmer. */
-  Km = 'KM',
+  Km: 'KM',
   /** Kannada. */
-  Kn = 'KN',
+  Kn: 'KN',
   /** Korean. */
-  Ko = 'KO',
+  Ko: 'KO',
   /** Kashmiri. */
-  Ks = 'KS',
+  Ks: 'KS',
   /** Kurdish. */
-  Ku = 'KU',
+  Ku: 'KU',
   /** Cornish. */
-  Kw = 'KW',
+  Kw: 'KW',
   /** Kyrgyz. */
-  Ky = 'KY',
+  Ky: 'KY',
   /** Latin. */
-  La = 'LA',
+  La: 'LA',
   /** Luxembourgish. */
-  Lb = 'LB',
+  Lb: 'LB',
   /** Ganda. */
-  Lg = 'LG',
+  Lg: 'LG',
   /** Lingala. */
-  Ln = 'LN',
+  Ln: 'LN',
   /** Lao. */
-  Lo = 'LO',
+  Lo: 'LO',
   /** Lithuanian. */
-  Lt = 'LT',
+  Lt: 'LT',
   /** Luba-Katanga. */
-  Lu = 'LU',
+  Lu: 'LU',
   /** Latvian. */
-  Lv = 'LV',
+  Lv: 'LV',
   /** Malagasy. */
-  Mg = 'MG',
+  Mg: 'MG',
   /** Māori. */
-  Mi = 'MI',
+  Mi: 'MI',
   /** Macedonian. */
-  Mk = 'MK',
+  Mk: 'MK',
   /** Malayalam. */
-  Ml = 'ML',
+  Ml: 'ML',
   /** Mongolian. */
-  Mn = 'MN',
+  Mn: 'MN',
   /** Moldavian. */
-  Mo = 'MO',
+  Mo: 'MO',
   /** Marathi. */
-  Mr = 'MR',
+  Mr: 'MR',
   /** Malay. */
-  Ms = 'MS',
+  Ms: 'MS',
   /** Maltese. */
-  Mt = 'MT',
+  Mt: 'MT',
   /** Burmese. */
-  My = 'MY',
+  My: 'MY',
   /** Norwegian (Bokmål). */
-  Nb = 'NB',
+  Nb: 'NB',
   /** North Ndebele. */
-  Nd = 'ND',
+  Nd: 'ND',
   /** Nepali. */
-  Ne = 'NE',
+  Ne: 'NE',
   /** Dutch. */
-  Nl = 'NL',
+  Nl: 'NL',
   /** Norwegian Nynorsk. */
-  Nn = 'NN',
+  Nn: 'NN',
   /** Norwegian. */
-  No = 'NO',
+  No: 'NO',
   /** Oromo. */
-  Om = 'OM',
+  Om: 'OM',
   /** Odia. */
-  Or = 'OR',
+  Or: 'OR',
   /** Ossetic. */
-  Os = 'OS',
+  Os: 'OS',
   /** Punjabi. */
-  Pa = 'PA',
+  Pa: 'PA',
   /** Polish. */
-  Pl = 'PL',
+  Pl: 'PL',
   /** Pashto. */
-  Ps = 'PS',
+  Ps: 'PS',
   /** Portuguese. */
-  Pt = 'PT',
+  Pt: 'PT',
   /** Portuguese (Brazil). */
-  PtBr = 'PT_BR',
+  PtBr: 'PT_BR',
   /** Portuguese (Portugal). */
-  PtPt = 'PT_PT',
+  PtPt: 'PT_PT',
   /** Quechua. */
-  Qu = 'QU',
+  Qu: 'QU',
   /** Romansh. */
-  Rm = 'RM',
+  Rm: 'RM',
   /** Rundi. */
-  Rn = 'RN',
+  Rn: 'RN',
   /** Romanian. */
-  Ro = 'RO',
+  Ro: 'RO',
   /** Russian. */
-  Ru = 'RU',
+  Ru: 'RU',
   /** Kinyarwanda. */
-  Rw = 'RW',
+  Rw: 'RW',
   /** Sanskrit. */
-  Sa = 'SA',
+  Sa: 'SA',
   /** Sardinian. */
-  Sc = 'SC',
+  Sc: 'SC',
   /** Sindhi. */
-  Sd = 'SD',
+  Sd: 'SD',
   /** Northern Sami. */
-  Se = 'SE',
+  Se: 'SE',
   /** Sango. */
-  Sg = 'SG',
+  Sg: 'SG',
   /** Serbo-Croatian. */
-  Sh = 'SH',
+  Sh: 'SH',
   /** Sinhala. */
-  Si = 'SI',
+  Si: 'SI',
   /** Slovak. */
-  Sk = 'SK',
+  Sk: 'SK',
   /** Slovenian. */
-  Sl = 'SL',
+  Sl: 'SL',
   /** Shona. */
-  Sn = 'SN',
+  Sn: 'SN',
   /** Somali. */
-  So = 'SO',
+  So: 'SO',
   /** Albanian. */
-  Sq = 'SQ',
+  Sq: 'SQ',
   /** Serbian. */
-  Sr = 'SR',
+  Sr: 'SR',
   /** Sundanese. */
-  Su = 'SU',
+  Su: 'SU',
   /** Swedish. */
-  Sv = 'SV',
+  Sv: 'SV',
   /** Swahili. */
-  Sw = 'SW',
+  Sw: 'SW',
   /** Tamil. */
-  Ta = 'TA',
+  Ta: 'TA',
   /** Telugu. */
-  Te = 'TE',
+  Te: 'TE',
   /** Tajik. */
-  Tg = 'TG',
+  Tg: 'TG',
   /** Thai. */
-  Th = 'TH',
+  Th: 'TH',
   /** Tigrinya. */
-  Ti = 'TI',
+  Ti: 'TI',
   /** Turkmen. */
-  Tk = 'TK',
+  Tk: 'TK',
   /** Tongan. */
-  To = 'TO',
+  To: 'TO',
   /** Turkish. */
-  Tr = 'TR',
+  Tr: 'TR',
   /** Tatar. */
-  Tt = 'TT',
+  Tt: 'TT',
   /** Uyghur. */
-  Ug = 'UG',
+  Ug: 'UG',
   /** Ukrainian. */
-  Uk = 'UK',
+  Uk: 'UK',
   /** Urdu. */
-  Ur = 'UR',
+  Ur: 'UR',
   /** Uzbek. */
-  Uz = 'UZ',
+  Uz: 'UZ',
   /** Vietnamese. */
-  Vi = 'VI',
+  Vi: 'VI',
   /** Volapük. */
-  Vo = 'VO',
+  Vo: 'VO',
   /** Wolof. */
-  Wo = 'WO',
+  Wo: 'WO',
   /** Xhosa. */
-  Xh = 'XH',
+  Xh: 'XH',
   /** Yiddish. */
-  Yi = 'YI',
+  Yi: 'YI',
   /** Yoruba. */
-  Yo = 'YO',
+  Yo: 'YO',
   /** Chinese. */
-  Zh = 'ZH',
+  Zh: 'ZH',
   /** Chinese (Simplified). */
-  ZhCn = 'ZH_CN',
+  ZhCn: 'ZH_CN',
   /** Chinese (Traditional). */
-  ZhTw = 'ZH_TW',
+  ZhTw: 'ZH_TW',
   /** Zulu. */
-  Zu = 'ZU'
-}
+  Zu: 'ZU'
+} as const;
 
+export type LanguageCode = typeof LanguageCode[keyof typeof LanguageCode];
 /** Information about the localized experiences configured for the shop. */
 export type Localization = {
   __typename?: 'Localization';
@@ -4687,17 +4699,18 @@ export type LocationEdge = {
 };
 
 /** The set of valid sort keys for the Location query. */
-export enum LocationSortKeys {
+export const LocationSortKeys = {
   /** Sort by the `city` value. */
-  City = 'CITY',
+  City: 'CITY',
   /** Sort by the `distance` value. */
-  Distance = 'DISTANCE',
+  Distance: 'DISTANCE',
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `name` value. */
-  Name = 'NAME'
-}
+  Name: 'NAME'
+} as const;
 
+export type LocationSortKeys = typeof LocationSortKeys[keyof typeof LocationSortKeys];
 /** Represents a mailing address for customers and shipping. */
 export type MailingAddress = Node & {
   __typename?: 'MailingAddress';
@@ -4917,17 +4930,18 @@ export type MediaConnection = {
 };
 
 /** The possible content types for a media object. */
-export enum MediaContentType {
+export const MediaContentType = {
   /** An externally hosted video. */
-  ExternalVideo = 'EXTERNAL_VIDEO',
+  ExternalVideo: 'EXTERNAL_VIDEO',
   /** A Shopify hosted image. */
-  Image = 'IMAGE',
+  Image: 'IMAGE',
   /** A 3d model. */
-  Model_3D = 'MODEL_3D',
+  Model_3D: 'MODEL_3D',
   /** A Shopify hosted video. */
-  Video = 'VIDEO'
-}
+  Video: 'VIDEO'
+} as const;
 
+export type MediaContentType = typeof MediaContentType[keyof typeof MediaContentType];
 /**
  * An auto-generated type which holds one Media and a cursor during pagination.
  *
@@ -4941,13 +4955,14 @@ export type MediaEdge = {
 };
 
 /** Host for a Media Resource. */
-export enum MediaHost {
+export const MediaHost = {
   /** Host for Vimeo embedded videos. */
-  Vimeo = 'VIMEO',
+  Vimeo: 'VIMEO',
   /** Host for YouTube embedded videos. */
-  Youtube = 'YOUTUBE'
-}
+  Youtube: 'YOUTUBE'
+} as const;
 
+export type MediaHost = typeof MediaHost[keyof typeof MediaHost];
 /** Represents a Shopify hosted image. */
 export type MediaImage = Media & Node & {
   __typename?: 'MediaImage';
@@ -4981,13 +4996,14 @@ export type MediaPresentationAsJsonArgs = {
 };
 
 /** The possible formats for a media presentation. */
-export enum MediaPresentationFormat {
+export const MediaPresentationFormat = {
   /** A media image presentation. */
-  Image = 'IMAGE',
+  Image: 'IMAGE',
   /** A model viewer presentation. */
-  ModelViewer = 'MODEL_VIEWER'
-}
+  ModelViewer: 'MODEL_VIEWER'
+} as const;
 
+export type MediaPresentationFormat = typeof MediaPresentationFormat[keyof typeof MediaPresentationFormat];
 /**
  * A [navigation menu](https://help.shopify.com/manual/online-store/menus-and-links) representing a hierarchy
  * of hyperlinks (items).
@@ -5035,35 +5051,36 @@ export type MenuItem = Node & {
 export type MenuItemResource = Article | Blog | Collection | Metaobject | Page | Product | ShopPolicy;
 
 /** A menu item type. */
-export enum MenuItemType {
+export const MenuItemType = {
   /** An article link. */
-  Article = 'ARTICLE',
+  Article: 'ARTICLE',
   /** A blog link. */
-  Blog = 'BLOG',
+  Blog: 'BLOG',
   /** A catalog link. */
-  Catalog = 'CATALOG',
+  Catalog: 'CATALOG',
   /** A collection link. */
-  Collection = 'COLLECTION',
+  Collection: 'COLLECTION',
   /** A collection link. */
-  Collections = 'COLLECTIONS',
+  Collections: 'COLLECTIONS',
   /** A customer account page link. */
-  CustomerAccountPage = 'CUSTOMER_ACCOUNT_PAGE',
+  CustomerAccountPage: 'CUSTOMER_ACCOUNT_PAGE',
   /** A frontpage link. */
-  Frontpage = 'FRONTPAGE',
+  Frontpage: 'FRONTPAGE',
   /** An http link. */
-  Http = 'HTTP',
+  Http: 'HTTP',
   /** A metaobject page link. */
-  Metaobject = 'METAOBJECT',
+  Metaobject: 'METAOBJECT',
   /** A page link. */
-  Page = 'PAGE',
+  Page: 'PAGE',
   /** A product link. */
-  Product = 'PRODUCT',
+  Product: 'PRODUCT',
   /** A search link. */
-  Search = 'SEARCH',
+  Search: 'SEARCH',
   /** A shop policy link. */
-  ShopPolicy = 'SHOP_POLICY'
-}
+  ShopPolicy: 'SHOP_POLICY'
+} as const;
 
+export type MenuItemType = typeof MenuItemType[keyof typeof MenuItemType];
 /** The merchandise to be purchased at checkout. */
 export type Merchandise = ProductVariant;
 
@@ -5116,15 +5133,16 @@ export type MetafieldReferencesArgs = {
 };
 
 /** Possible error codes that can be returned by `MetafieldDeleteUserError`. */
-export enum MetafieldDeleteErrorCode {
+export const MetafieldDeleteErrorCode = {
   /** The current app is not authorized to perform this action. */
-  AppNotAuthorized = 'APP_NOT_AUTHORIZED',
+  AppNotAuthorized: 'APP_NOT_AUTHORIZED',
   /** The owner ID is invalid. */
-  InvalidOwner = 'INVALID_OWNER',
+  InvalidOwner: 'INVALID_OWNER',
   /** Metafield not found. */
-  MetafieldDoesNotExist = 'METAFIELD_DOES_NOT_EXIST'
-}
+  MetafieldDoesNotExist: 'METAFIELD_DOES_NOT_EXIST'
+} as const;
 
+export type MetafieldDeleteErrorCode = typeof MetafieldDeleteErrorCode[keyof typeof MetafieldDeleteErrorCode];
 /** An error that occurs during the execution of cart metafield deletion. */
 export type MetafieldDeleteUserError = DisplayableError & {
   __typename?: 'MetafieldDeleteUserError';
@@ -5204,29 +5222,30 @@ export type MetafieldsSetUserError = DisplayableError & {
 };
 
 /** Possible error codes that can be returned by `MetafieldsSetUserError`. */
-export enum MetafieldsSetUserErrorCode {
+export const MetafieldsSetUserErrorCode = {
   /** The current app is not authorized to perform this action. */
-  AppNotAuthorized = 'APP_NOT_AUTHORIZED',
+  AppNotAuthorized: 'APP_NOT_AUTHORIZED',
   /** The input value is blank. */
-  Blank = 'BLANK',
+  Blank: 'BLANK',
   /** The input value isn't included in the list. */
-  Inclusion = 'INCLUSION',
+  Inclusion: 'INCLUSION',
   /** The owner ID is invalid. */
-  InvalidOwner = 'INVALID_OWNER',
+  InvalidOwner: 'INVALID_OWNER',
   /** The type is invalid. */
-  InvalidType = 'INVALID_TYPE',
+  InvalidType: 'INVALID_TYPE',
   /** The value is invalid for metafield type or for definition options. */
-  InvalidValue = 'INVALID_VALUE',
+  InvalidValue: 'INVALID_VALUE',
   /** The input value should be less than or equal to the maximum value allowed. */
-  LessThanOrEqualTo = 'LESS_THAN_OR_EQUAL_TO',
+  LessThanOrEqualTo: 'LESS_THAN_OR_EQUAL_TO',
   /** The input value needs to be blank. */
-  Present = 'PRESENT',
+  Present: 'PRESENT',
   /** The input value is too long. */
-  TooLong = 'TOO_LONG',
+  TooLong: 'TOO_LONG',
   /** The input value is too short. */
-  TooShort = 'TOO_SHORT'
-}
+  TooShort: 'TOO_SHORT'
+} as const;
 
+export type MetafieldsSetUserErrorCode = typeof MetafieldsSetUserErrorCode[keyof typeof MetafieldsSetUserErrorCode];
 /** An instance of a user-defined model based on a MetaobjectDefinition. */
 export type Metaobject = Node & OnlineStorePublishable & {
   __typename?: 'Metaobject';
@@ -5967,21 +5986,22 @@ export type OrderSuccessfulFulfillmentsArgs = {
 };
 
 /** Represents the reason for the order's cancellation. */
-export enum OrderCancelReason {
+export const OrderCancelReason = {
   /** The customer wanted to cancel the order. */
-  Customer = 'CUSTOMER',
+  Customer: 'CUSTOMER',
   /** Payment was declined. */
-  Declined = 'DECLINED',
+  Declined: 'DECLINED',
   /** The order was fraudulent. */
-  Fraud = 'FRAUD',
+  Fraud: 'FRAUD',
   /** There was insufficient inventory. */
-  Inventory = 'INVENTORY',
+  Inventory: 'INVENTORY',
   /** The order was canceled for an unlisted reason. */
-  Other = 'OTHER',
+  Other: 'OTHER',
   /** Staff made an error. */
-  Staff = 'STAFF'
-}
+  Staff: 'STAFF'
+} as const;
 
+export type OrderCancelReason = typeof OrderCancelReason[keyof typeof OrderCancelReason];
 /**
  * An auto-generated type for paginating through multiple Orders.
  *
@@ -6011,45 +6031,47 @@ export type OrderEdge = {
 };
 
 /** Represents the order's current financial status. */
-export enum OrderFinancialStatus {
+export const OrderFinancialStatus = {
   /** Displayed as **Authorized**. */
-  Authorized = 'AUTHORIZED',
+  Authorized: 'AUTHORIZED',
   /** Displayed as **Paid**. */
-  Paid = 'PAID',
+  Paid: 'PAID',
   /** Displayed as **Partially paid**. */
-  PartiallyPaid = 'PARTIALLY_PAID',
+  PartiallyPaid: 'PARTIALLY_PAID',
   /** Displayed as **Partially refunded**. */
-  PartiallyRefunded = 'PARTIALLY_REFUNDED',
+  PartiallyRefunded: 'PARTIALLY_REFUNDED',
   /** Displayed as **Pending**. */
-  Pending = 'PENDING',
+  Pending: 'PENDING',
   /** Displayed as **Refunded**. */
-  Refunded = 'REFUNDED',
+  Refunded: 'REFUNDED',
   /** Displayed as **Voided**. */
-  Voided = 'VOIDED'
-}
+  Voided: 'VOIDED'
+} as const;
 
+export type OrderFinancialStatus = typeof OrderFinancialStatus[keyof typeof OrderFinancialStatus];
 /** Represents the order's aggregated fulfillment status for display purposes. */
-export enum OrderFulfillmentStatus {
+export const OrderFulfillmentStatus = {
   /** Displayed as **Fulfilled**. All of the items in the order have been fulfilled. */
-  Fulfilled = 'FULFILLED',
+  Fulfilled: 'FULFILLED',
   /** Displayed as **In progress**. Some of the items in the order have been fulfilled, or a request for fulfillment has been sent to the fulfillment service. */
-  InProgress = 'IN_PROGRESS',
+  InProgress: 'IN_PROGRESS',
   /** Displayed as **On hold**. All of the unfulfilled items in this order are on hold. */
-  OnHold = 'ON_HOLD',
+  OnHold: 'ON_HOLD',
   /** Displayed as **Open**. None of the items in the order have been fulfilled. Replaced by "UNFULFILLED" status. */
-  Open = 'OPEN',
+  Open: 'OPEN',
   /** Displayed as **Partially fulfilled**. Some of the items in the order have been fulfilled. */
-  PartiallyFulfilled = 'PARTIALLY_FULFILLED',
+  PartiallyFulfilled: 'PARTIALLY_FULFILLED',
   /** Displayed as **Pending fulfillment**. A request for fulfillment of some items awaits a response from the fulfillment service. Replaced by "IN_PROGRESS" status. */
-  PendingFulfillment = 'PENDING_FULFILLMENT',
+  PendingFulfillment: 'PENDING_FULFILLMENT',
   /** Displayed as **Restocked**. All of the items in the order have been restocked. Replaced by "UNFULFILLED" status. */
-  Restocked = 'RESTOCKED',
+  Restocked: 'RESTOCKED',
   /** Displayed as **Scheduled**. All of the unfulfilled items in this order are scheduled for fulfillment at later time. */
-  Scheduled = 'SCHEDULED',
+  Scheduled: 'SCHEDULED',
   /** Displayed as **Unfulfilled**. None of the items in the order have been fulfilled. */
-  Unfulfilled = 'UNFULFILLED'
-}
+  Unfulfilled: 'UNFULFILLED'
+} as const;
 
+export type OrderFulfillmentStatus = typeof OrderFulfillmentStatus[keyof typeof OrderFulfillmentStatus];
 /** Represents a single line in an order. There is one line item for each distinct product variant. */
 export type OrderLineItem = {
   __typename?: 'OrderLineItem';
@@ -6098,21 +6120,22 @@ export type OrderLineItemEdge = {
 };
 
 /** The set of valid sort keys for the Order query. */
-export enum OrderSortKeys {
+export const OrderSortKeys = {
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `processed_at` value. */
-  ProcessedAt = 'PROCESSED_AT',
+  ProcessedAt: 'PROCESSED_AT',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `total_price` value. */
-  TotalPrice = 'TOTAL_PRICE'
-}
+  TotalPrice: 'TOTAL_PRICE'
+} as const;
 
+export type OrderSortKeys = typeof OrderSortKeys[keyof typeof OrderSortKeys];
 /** Shopify merchants can create pages to hold static HTML content. Each Page object represents a custom page on the online store. */
 export type Page = HasMetafields & Node & OnlineStorePublishable & Trackable & {
   __typename?: 'Page';
@@ -6200,21 +6223,22 @@ export type PageInfo = {
 };
 
 /** The set of valid sort keys for the Page query. */
-export enum PageSortKeys {
+export const PageSortKeys = {
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `title` value. */
-  Title = 'TITLE',
+  Title: 'TITLE',
   /** Sort by the `updated_at` value. */
-  UpdatedAt = 'UPDATED_AT'
-}
+  UpdatedAt: 'UPDATED_AT'
+} as const;
 
+export type PageSortKeys = typeof PageSortKeys[keyof typeof PageSortKeys];
 /** Type for paginating through multiple sitemap's resources. */
 export type PaginatedSitemapResources = {
   __typename?: 'PaginatedSitemapResources';
@@ -6252,13 +6276,14 @@ export type PaymentSettings = {
 };
 
 /** Decides the distribution of results. */
-export enum PredictiveSearchLimitScope {
+export const PredictiveSearchLimitScope = {
   /** Return results up to limit across all types. */
-  All = 'ALL',
+  All: 'ALL',
   /** Return results up to limit per type. */
-  Each = 'EACH'
-}
+  Each: 'EACH'
+} as const;
 
+export type PredictiveSearchLimitScope = typeof PredictiveSearchLimitScope[keyof typeof PredictiveSearchLimitScope];
 /**
  * A predictive search result represents a list of products, collections, pages, articles, and query suggestions
  * that matches the predictive search query.
@@ -6279,29 +6304,31 @@ export type PredictiveSearchResult = {
 };
 
 /** The types of search items to perform predictive search on. */
-export enum PredictiveSearchType {
+export const PredictiveSearchType = {
   /** Returns matching articles. */
-  Article = 'ARTICLE',
+  Article: 'ARTICLE',
   /** Returns matching collections. */
-  Collection = 'COLLECTION',
+  Collection: 'COLLECTION',
   /** Returns matching pages. */
-  Page = 'PAGE',
+  Page: 'PAGE',
   /** Returns matching products. */
-  Product = 'PRODUCT',
+  Product: 'PRODUCT',
   /** Returns matching query strings. */
-  Query = 'QUERY'
-}
+  Query: 'QUERY'
+} as const;
 
+export type PredictiveSearchType = typeof PredictiveSearchType[keyof typeof PredictiveSearchType];
 /** The preferred delivery methods such as shipping, local pickup or through pickup points. */
-export enum PreferenceDeliveryMethodType {
+export const PreferenceDeliveryMethodType = {
   /** A delivery method used to let buyers collect purchases at designated locations like parcel lockers. */
-  PickupPoint = 'PICKUP_POINT',
+  PickupPoint: 'PICKUP_POINT',
   /** A delivery method used to let buyers receive items directly from a specific location within an area. */
-  PickUp = 'PICK_UP',
+  PickUp: 'PICK_UP',
   /** A delivery method used to send items directly to a buyer’s specified address. */
-  Shipping = 'SHIPPING'
-}
+  Shipping: 'SHIPPING'
+} as const;
 
+export type PreferenceDeliveryMethodType = typeof PreferenceDeliveryMethodType[keyof typeof PreferenceDeliveryMethodType];
 /**
  * The input fields for a filter used to view a subset of products in a collection matching a specific price range.
  *
@@ -6789,29 +6816,30 @@ export type ProductVariantsArgs = {
 };
 
 /** The set of valid sort keys for the ProductCollection query. */
-export enum ProductCollectionSortKeys {
+export const ProductCollectionSortKeys = {
   /** Sort by the `best-selling` value. */
-  BestSelling = 'BEST_SELLING',
+  BestSelling: 'BEST_SELLING',
   /** Sort by the `collection-default` value. */
-  CollectionDefault = 'COLLECTION_DEFAULT',
+  CollectionDefault: 'COLLECTION_DEFAULT',
   /** Sort by the `created` value. */
-  Created = 'CREATED',
+  Created: 'CREATED',
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `manual` value. */
-  Manual = 'MANUAL',
+  Manual: 'MANUAL',
   /** Sort by the `price` value. */
-  Price = 'PRICE',
+  Price: 'PRICE',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `title` value. */
-  Title = 'TITLE'
-}
+  Title: 'TITLE'
+} as const;
 
+export type ProductCollectionSortKeys = typeof ProductCollectionSortKeys[keyof typeof ProductCollectionSortKeys];
 /**
  * An auto-generated type for paginating through multiple Products.
  *
@@ -6870,35 +6898,37 @@ export type ProductFilter = {
 };
 
 /** The set of valid sort keys for the ProductImage query. */
-export enum ProductImageSortKeys {
+export const ProductImageSortKeys = {
   /** Sort by the `created_at` value. */
-  CreatedAt = 'CREATED_AT',
+  CreatedAt: 'CREATED_AT',
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `position` value. */
-  Position = 'POSITION',
+  Position: 'POSITION',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE'
-}
+  Relevance: 'RELEVANCE'
+} as const;
 
+export type ProductImageSortKeys = typeof ProductImageSortKeys[keyof typeof ProductImageSortKeys];
 /** The set of valid sort keys for the ProductMedia query. */
-export enum ProductMediaSortKeys {
+export const ProductMediaSortKeys = {
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `position` value. */
-  Position = 'POSITION',
+  Position: 'POSITION',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE'
-}
+  Relevance: 'RELEVANCE'
+} as const;
 
+export type ProductMediaSortKeys = typeof ProductMediaSortKeys[keyof typeof ProductMediaSortKeys];
 /**
  * Product property names like "Size", "Color", and "Material" that the customers can select.
  * Variants are selected based on permutations of these options.
@@ -6968,39 +6998,41 @@ export type ProductPriceRange = {
  * You can use intent to generate product recommendations according to different strategies.
  *
  */
-export enum ProductRecommendationIntent {
+export const ProductRecommendationIntent = {
   /** Offer customers products that are complementary to a product for which recommendations are to be fetched. An example is add-on products that display in a Pair it with section. */
-  Complementary = 'COMPLEMENTARY',
+  Complementary: 'COMPLEMENTARY',
   /** Offer customers a mix of products that are similar or complementary to a product for which recommendations are to be fetched. An example is substitutable products that display in a You may also like section. */
-  Related = 'RELATED'
-}
+  Related: 'RELATED'
+} as const;
 
+export type ProductRecommendationIntent = typeof ProductRecommendationIntent[keyof typeof ProductRecommendationIntent];
 /** The set of valid sort keys for the Product query. */
-export enum ProductSortKeys {
+export const ProductSortKeys = {
   /** Sort by the `best_selling` value. */
-  BestSelling = 'BEST_SELLING',
+  BestSelling: 'BEST_SELLING',
   /** Sort by the `created_at` value. */
-  CreatedAt = 'CREATED_AT',
+  CreatedAt: 'CREATED_AT',
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `price` value. */
-  Price = 'PRICE',
+  Price: 'PRICE',
   /** Sort by the `product_type` value. */
-  ProductType = 'PRODUCT_TYPE',
+  ProductType: 'PRODUCT_TYPE',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `title` value. */
-  Title = 'TITLE',
+  Title: 'TITLE',
   /** Sort by the `updated_at` value. */
-  UpdatedAt = 'UPDATED_AT',
+  UpdatedAt: 'UPDATED_AT',
   /** Sort by the `vendor` value. */
-  Vendor = 'VENDOR'
-}
+  Vendor: 'VENDOR'
+} as const;
 
+export type ProductSortKeys = typeof ProductSortKeys[keyof typeof ProductSortKeys];
 /**
  * A product variant represents a different version of a product, such as differing sizes or differing colors.
  *
@@ -7232,23 +7264,24 @@ export type ProductVariantEdge = {
 };
 
 /** The set of valid sort keys for the ProductVariant query. */
-export enum ProductVariantSortKeys {
+export const ProductVariantSortKeys = {
   /** Sort by the `id` value. */
-  Id = 'ID',
+  Id: 'ID',
   /** Sort by the `position` value. */
-  Position = 'POSITION',
+  Position: 'POSITION',
   /**
    * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
    * Don't use this sort key when no search query is specified.
    *
    */
-  Relevance = 'RELEVANCE',
+  Relevance: 'RELEVANCE',
   /** Sort by the `sku` value. */
-  Sku = 'SKU',
+  Sku: 'SKU',
   /** Sort by the `title` value. */
-  Title = 'TITLE'
-}
+  Title: 'TITLE'
+} as const;
 
+export type ProductVariantSortKeys = typeof ProductVariantSortKeys[keyof typeof ProductVariantSortKeys];
 /** Represents information about the buyer that is interacting with the cart. */
 export type PurchasingCompany = {
   __typename?: 'PurchasingCompany';
@@ -7723,13 +7756,14 @@ export type ScriptDiscountApplication = DiscountApplication & {
 };
 
 /** Specifies whether to perform a partial word match on the last search term. */
-export enum SearchPrefixQueryType {
+export const SearchPrefixQueryType = {
   /** Perform a partial word match on the last search term. */
-  Last = 'LAST',
+  Last: 'LAST',
   /** Don't perform a partial word match on the last search term. */
-  None = 'NONE'
-}
+  None: 'NONE'
+} as const;
 
+export type SearchPrefixQueryType = typeof SearchPrefixQueryType[keyof typeof SearchPrefixQueryType];
 /** A search query suggestion. */
 export type SearchQuerySuggestion = Trackable & {
   __typename?: 'SearchQuerySuggestion';
@@ -7778,55 +7812,59 @@ export type SearchResultItemEdge = {
 };
 
 /** The set of valid sort keys for the search query. */
-export enum SearchSortKeys {
+export const SearchSortKeys = {
   /** Sort by the `price` value. */
-  Price = 'PRICE',
+  Price: 'PRICE',
   /** Sort by relevance to the search terms. */
-  Relevance = 'RELEVANCE'
-}
+  Relevance: 'RELEVANCE'
+} as const;
 
+export type SearchSortKeys = typeof SearchSortKeys[keyof typeof SearchSortKeys];
 /** The types of search items to perform search within. */
-export enum SearchType {
+export const SearchType = {
   /** Returns matching articles. */
-  Article = 'ARTICLE',
+  Article: 'ARTICLE',
   /** Returns matching pages. */
-  Page = 'PAGE',
+  Page: 'PAGE',
   /** Returns matching products. */
-  Product = 'PRODUCT'
-}
+  Product: 'PRODUCT'
+} as const;
 
+export type SearchType = typeof SearchType[keyof typeof SearchType];
 /** Specifies whether to display results for unavailable products. */
-export enum SearchUnavailableProductsType {
+export const SearchUnavailableProductsType = {
   /** Exclude unavailable products. */
-  Hide = 'HIDE',
+  Hide: 'HIDE',
   /** Show unavailable products after all other matching results. This is the default. */
-  Last = 'LAST',
+  Last: 'LAST',
   /** Show unavailable products in the order that they're found. */
-  Show = 'SHOW'
-}
+  Show: 'SHOW'
+} as const;
 
+export type SearchUnavailableProductsType = typeof SearchUnavailableProductsType[keyof typeof SearchUnavailableProductsType];
 /** Specifies the list of resource fields to search. */
-export enum SearchableField {
+export const SearchableField = {
   /** Author of the page or article. */
-  Author = 'AUTHOR',
+  Author: 'AUTHOR',
   /** Body of the page or article or product description or collection description. */
-  Body = 'BODY',
+  Body: 'BODY',
   /** Product type. */
-  ProductType = 'PRODUCT_TYPE',
+  ProductType: 'PRODUCT_TYPE',
   /** Tag associated with the product or article. */
-  Tag = 'TAG',
+  Tag: 'TAG',
   /** Title of the page or article or product title or collection title. */
-  Title = 'TITLE',
+  Title: 'TITLE',
   /** Variant barcode. */
-  VariantsBarcode = 'VARIANTS_BARCODE',
+  VariantsBarcode: 'VARIANTS_BARCODE',
   /** Variant SKU. */
-  VariantsSku = 'VARIANTS_SKU',
+  VariantsSku: 'VARIANTS_SKU',
   /** Variant title. */
-  VariantsTitle = 'VARIANTS_TITLE',
+  VariantsTitle: 'VARIANTS_TITLE',
   /** Product vendor. */
-  Vendor = 'VENDOR'
-}
+  Vendor: 'VENDOR'
+} as const;
 
+export type SearchableField = typeof SearchableField[keyof typeof SearchableField];
 /**
  * Properties used by customers to select a product variant.
  * Products can have multiple options, like different sizes or colors.
@@ -7960,13 +7998,14 @@ export type SellingPlanCheckoutChargePercentageValue = {
 };
 
 /** The checkout charge when the full amount isn't charged at checkout. */
-export enum SellingPlanCheckoutChargeType {
+export const SellingPlanCheckoutChargeType = {
   /** The checkout charge is a percentage of the product or variant price. */
-  Percentage = 'PERCENTAGE',
+  Percentage: 'PERCENTAGE',
   /** The checkout charge is a fixed price amount. */
-  Price = 'PRICE'
-}
+  Price: 'PRICE'
+} as const;
 
+export type SellingPlanCheckoutChargeType = typeof SellingPlanCheckoutChargeType[keyof typeof SellingPlanCheckoutChargeType];
 /** The portion of the price to be charged at checkout. */
 export type SellingPlanCheckoutChargeValue = MoneyV2 | SellingPlanCheckoutChargePercentageValue;
 
@@ -8076,17 +8115,18 @@ export type SellingPlanGroupOption = {
 };
 
 /** Represents a valid selling plan interval. */
-export enum SellingPlanInterval {
+export const SellingPlanInterval = {
   /** Day interval. */
-  Day = 'DAY',
+  Day: 'DAY',
   /** Month interval. */
-  Month = 'MONTH',
+  Month: 'MONTH',
   /** Week interval. */
-  Week = 'WEEK',
+  Week: 'WEEK',
   /** Year interval. */
-  Year = 'YEAR'
-}
+  Year: 'YEAR'
+} as const;
 
+export type SellingPlanInterval = typeof SellingPlanInterval[keyof typeof SellingPlanInterval];
 /** An option provided by a Selling Plan. */
 export type SellingPlanOption = {
   __typename?: 'SellingPlanOption';
@@ -8199,13 +8239,14 @@ export type ShopPayInstallmentsFinancingPlan = Node & {
 };
 
 /** The payment frequency for a Shop Pay Installments Financing Plan. */
-export enum ShopPayInstallmentsFinancingPlanFrequency {
+export const ShopPayInstallmentsFinancingPlanFrequency = {
   /** Monthly payment frequency. */
-  Monthly = 'MONTHLY',
+  Monthly: 'MONTHLY',
   /** Weekly payment frequency. */
-  Weekly = 'WEEKLY'
-}
+  Weekly: 'WEEKLY'
+} as const;
 
+export type ShopPayInstallmentsFinancingPlanFrequency = typeof ShopPayInstallmentsFinancingPlanFrequency[keyof typeof ShopPayInstallmentsFinancingPlanFrequency];
 /** The terms of the financing plan in Shop Pay Installments. */
 export type ShopPayInstallmentsFinancingPlanTerm = Node & {
   __typename?: 'ShopPayInstallmentsFinancingPlanTerm';
@@ -8222,15 +8263,16 @@ export type ShopPayInstallmentsFinancingPlanTerm = Node & {
 };
 
 /** The loan type for a Shop Pay Installments Financing Plan Term. */
-export enum ShopPayInstallmentsLoan {
+export const ShopPayInstallmentsLoan = {
   /** An interest-bearing loan type. */
-  Interest = 'INTEREST',
+  Interest: 'INTEREST',
   /** A split-pay loan type. */
-  SplitPay = 'SPLIT_PAY',
+  SplitPay: 'SPLIT_PAY',
   /** A zero-percent loan type. */
-  ZeroPercent = 'ZERO_PERCENT'
-}
+  ZeroPercent: 'ZERO_PERCENT'
+} as const;
 
+export type ShopPayInstallmentsLoan = typeof ShopPayInstallmentsLoan[keyof typeof ShopPayInstallmentsLoan];
 /** The result for a Shop Pay Installments pricing request. */
 export type ShopPayInstallmentsPricing = {
   __typename?: 'ShopPayInstallmentsPricing';
@@ -8355,13 +8397,14 @@ export type ShopPayPaymentRequestDeliveryMethodInput = {
 };
 
 /** Represents the delivery method type for a Shop Pay payment request. */
-export enum ShopPayPaymentRequestDeliveryMethodType {
+export const ShopPayPaymentRequestDeliveryMethodType = {
   /** The delivery method type is pickup. */
-  Pickup = 'PICKUP',
+  Pickup: 'PICKUP',
   /** The delivery method type is shipping. */
-  Shipping = 'SHIPPING'
-}
+  Shipping: 'SHIPPING'
+} as const;
 
+export type ShopPayPaymentRequestDeliveryMethodType = typeof ShopPayPaymentRequestDeliveryMethodType[keyof typeof ShopPayPaymentRequestDeliveryMethodType];
 /** Represents a discount for a Shop Pay payment request. */
 export type ShopPayPaymentRequestDiscount = {
   __typename?: 'ShopPayPaymentRequestDiscount';
@@ -8714,26 +8757,27 @@ export type SitemapResourceMetaobject = SitemapResourceInterface & {
 };
 
 /** The types of resources potentially present in a sitemap. */
-export enum SitemapType {
+export const SitemapType = {
   /** Articles present in the sitemap. */
-  Article = 'ARTICLE',
+  Article: 'ARTICLE',
   /** Blogs present in the sitemap. */
-  Blog = 'BLOG',
+  Blog: 'BLOG',
   /** Collections present in the sitemap. */
-  Collection = 'COLLECTION',
+  Collection: 'COLLECTION',
   /**
    * Metaobjects present in the sitemap. Only metaobject types with the
    * [`renderable` capability](https://shopify.dev/docs/apps/build/custom-data/metaobjects/use-metaobject-capabilities#render-metaobjects-as-web-pages)
    * are included in sitemap.
    *
    */
-  Metaobject = 'METAOBJECT',
+  Metaobject: 'METAOBJECT',
   /** Pages present in the sitemap. */
-  Page = 'PAGE',
+  Page: 'PAGE',
   /** Products present in the sitemap. */
-  Product = 'PRODUCT'
-}
+  Product: 'PRODUCT'
+} as const;
 
+export type SitemapType = typeof SitemapType[keyof typeof SitemapType];
 /**
  * The availability of a product variant at a particular location.
  * Local pick-up must be enabled in the  store's shipping settings, otherwise this will return an empty result.
@@ -8813,106 +8857,107 @@ export type SubmissionError = {
 };
 
 /** The code of the error that occurred during cart submit for completion. */
-export enum SubmissionErrorCode {
-  BuyerIdentityEmailIsInvalid = 'BUYER_IDENTITY_EMAIL_IS_INVALID',
-  BuyerIdentityEmailRequired = 'BUYER_IDENTITY_EMAIL_REQUIRED',
-  BuyerIdentityPhoneIsInvalid = 'BUYER_IDENTITY_PHONE_IS_INVALID',
-  DeliveryAddress1Invalid = 'DELIVERY_ADDRESS1_INVALID',
-  DeliveryAddress1Required = 'DELIVERY_ADDRESS1_REQUIRED',
-  DeliveryAddress1TooLong = 'DELIVERY_ADDRESS1_TOO_LONG',
-  DeliveryAddress2Invalid = 'DELIVERY_ADDRESS2_INVALID',
-  DeliveryAddress2Required = 'DELIVERY_ADDRESS2_REQUIRED',
-  DeliveryAddress2TooLong = 'DELIVERY_ADDRESS2_TOO_LONG',
-  DeliveryAddressRequired = 'DELIVERY_ADDRESS_REQUIRED',
-  DeliveryCityInvalid = 'DELIVERY_CITY_INVALID',
-  DeliveryCityRequired = 'DELIVERY_CITY_REQUIRED',
-  DeliveryCityTooLong = 'DELIVERY_CITY_TOO_LONG',
-  DeliveryCompanyInvalid = 'DELIVERY_COMPANY_INVALID',
-  DeliveryCompanyRequired = 'DELIVERY_COMPANY_REQUIRED',
-  DeliveryCompanyTooLong = 'DELIVERY_COMPANY_TOO_LONG',
-  DeliveryCountryRequired = 'DELIVERY_COUNTRY_REQUIRED',
-  DeliveryFirstNameInvalid = 'DELIVERY_FIRST_NAME_INVALID',
-  DeliveryFirstNameRequired = 'DELIVERY_FIRST_NAME_REQUIRED',
-  DeliveryFirstNameTooLong = 'DELIVERY_FIRST_NAME_TOO_LONG',
-  DeliveryInvalidPostalCodeForCountry = 'DELIVERY_INVALID_POSTAL_CODE_FOR_COUNTRY',
-  DeliveryInvalidPostalCodeForZone = 'DELIVERY_INVALID_POSTAL_CODE_FOR_ZONE',
-  DeliveryLastNameInvalid = 'DELIVERY_LAST_NAME_INVALID',
-  DeliveryLastNameRequired = 'DELIVERY_LAST_NAME_REQUIRED',
-  DeliveryLastNameTooLong = 'DELIVERY_LAST_NAME_TOO_LONG',
-  DeliveryNoDeliveryAvailable = 'DELIVERY_NO_DELIVERY_AVAILABLE',
-  DeliveryNoDeliveryAvailableForMerchandiseLine = 'DELIVERY_NO_DELIVERY_AVAILABLE_FOR_MERCHANDISE_LINE',
-  DeliveryOptionsPhoneNumberInvalid = 'DELIVERY_OPTIONS_PHONE_NUMBER_INVALID',
-  DeliveryOptionsPhoneNumberRequired = 'DELIVERY_OPTIONS_PHONE_NUMBER_REQUIRED',
-  DeliveryPhoneNumberInvalid = 'DELIVERY_PHONE_NUMBER_INVALID',
-  DeliveryPhoneNumberRequired = 'DELIVERY_PHONE_NUMBER_REQUIRED',
-  DeliveryPostalCodeInvalid = 'DELIVERY_POSTAL_CODE_INVALID',
-  DeliveryPostalCodeRequired = 'DELIVERY_POSTAL_CODE_REQUIRED',
-  DeliveryZoneNotFound = 'DELIVERY_ZONE_NOT_FOUND',
-  DeliveryZoneRequiredForCountry = 'DELIVERY_ZONE_REQUIRED_FOR_COUNTRY',
-  Error = 'ERROR',
-  MerchandiseLineLimitReached = 'MERCHANDISE_LINE_LIMIT_REACHED',
-  MerchandiseNotApplicable = 'MERCHANDISE_NOT_APPLICABLE',
-  MerchandiseNotEnoughStockAvailable = 'MERCHANDISE_NOT_ENOUGH_STOCK_AVAILABLE',
-  MerchandiseOutOfStock = 'MERCHANDISE_OUT_OF_STOCK',
-  MerchandiseProductNotPublished = 'MERCHANDISE_PRODUCT_NOT_PUBLISHED',
-  NoDeliveryGroupSelected = 'NO_DELIVERY_GROUP_SELECTED',
-  PaymentsAddress1Invalid = 'PAYMENTS_ADDRESS1_INVALID',
-  PaymentsAddress1Required = 'PAYMENTS_ADDRESS1_REQUIRED',
-  PaymentsAddress1TooLong = 'PAYMENTS_ADDRESS1_TOO_LONG',
-  PaymentsAddress2Invalid = 'PAYMENTS_ADDRESS2_INVALID',
-  PaymentsAddress2Required = 'PAYMENTS_ADDRESS2_REQUIRED',
-  PaymentsAddress2TooLong = 'PAYMENTS_ADDRESS2_TOO_LONG',
-  PaymentsBillingAddressZoneNotFound = 'PAYMENTS_BILLING_ADDRESS_ZONE_NOT_FOUND',
-  PaymentsBillingAddressZoneRequiredForCountry = 'PAYMENTS_BILLING_ADDRESS_ZONE_REQUIRED_FOR_COUNTRY',
-  PaymentsCityInvalid = 'PAYMENTS_CITY_INVALID',
-  PaymentsCityRequired = 'PAYMENTS_CITY_REQUIRED',
-  PaymentsCityTooLong = 'PAYMENTS_CITY_TOO_LONG',
-  PaymentsCompanyInvalid = 'PAYMENTS_COMPANY_INVALID',
-  PaymentsCompanyRequired = 'PAYMENTS_COMPANY_REQUIRED',
-  PaymentsCompanyTooLong = 'PAYMENTS_COMPANY_TOO_LONG',
-  PaymentsCountryRequired = 'PAYMENTS_COUNTRY_REQUIRED',
-  PaymentsCreditCardBaseExpired = 'PAYMENTS_CREDIT_CARD_BASE_EXPIRED',
-  PaymentsCreditCardBaseGatewayNotSupported = 'PAYMENTS_CREDIT_CARD_BASE_GATEWAY_NOT_SUPPORTED',
-  PaymentsCreditCardBaseInvalidStartDateOrIssueNumberForDebit = 'PAYMENTS_CREDIT_CARD_BASE_INVALID_START_DATE_OR_ISSUE_NUMBER_FOR_DEBIT',
-  PaymentsCreditCardBrandNotSupported = 'PAYMENTS_CREDIT_CARD_BRAND_NOT_SUPPORTED',
-  PaymentsCreditCardFirstNameBlank = 'PAYMENTS_CREDIT_CARD_FIRST_NAME_BLANK',
-  PaymentsCreditCardGeneric = 'PAYMENTS_CREDIT_CARD_GENERIC',
-  PaymentsCreditCardLastNameBlank = 'PAYMENTS_CREDIT_CARD_LAST_NAME_BLANK',
-  PaymentsCreditCardMonthInclusion = 'PAYMENTS_CREDIT_CARD_MONTH_INCLUSION',
-  PaymentsCreditCardNameInvalid = 'PAYMENTS_CREDIT_CARD_NAME_INVALID',
-  PaymentsCreditCardNumberInvalid = 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID',
-  PaymentsCreditCardNumberInvalidFormat = 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID_FORMAT',
-  PaymentsCreditCardSessionId = 'PAYMENTS_CREDIT_CARD_SESSION_ID',
-  PaymentsCreditCardVerificationValueBlank = 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_BLANK',
-  PaymentsCreditCardVerificationValueInvalidForCardType = 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_INVALID_FOR_CARD_TYPE',
-  PaymentsCreditCardYearExpired = 'PAYMENTS_CREDIT_CARD_YEAR_EXPIRED',
-  PaymentsCreditCardYearInvalidExpiryYear = 'PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR',
-  PaymentsFirstNameInvalid = 'PAYMENTS_FIRST_NAME_INVALID',
-  PaymentsFirstNameRequired = 'PAYMENTS_FIRST_NAME_REQUIRED',
-  PaymentsFirstNameTooLong = 'PAYMENTS_FIRST_NAME_TOO_LONG',
-  PaymentsInvalidPostalCodeForCountry = 'PAYMENTS_INVALID_POSTAL_CODE_FOR_COUNTRY',
-  PaymentsInvalidPostalCodeForZone = 'PAYMENTS_INVALID_POSTAL_CODE_FOR_ZONE',
-  PaymentsLastNameInvalid = 'PAYMENTS_LAST_NAME_INVALID',
-  PaymentsLastNameRequired = 'PAYMENTS_LAST_NAME_REQUIRED',
-  PaymentsLastNameTooLong = 'PAYMENTS_LAST_NAME_TOO_LONG',
-  PaymentsMethodRequired = 'PAYMENTS_METHOD_REQUIRED',
-  PaymentsMethodUnavailable = 'PAYMENTS_METHOD_UNAVAILABLE',
-  PaymentsPhoneNumberInvalid = 'PAYMENTS_PHONE_NUMBER_INVALID',
-  PaymentsPhoneNumberRequired = 'PAYMENTS_PHONE_NUMBER_REQUIRED',
-  PaymentsPostalCodeInvalid = 'PAYMENTS_POSTAL_CODE_INVALID',
-  PaymentsPostalCodeRequired = 'PAYMENTS_POSTAL_CODE_REQUIRED',
-  PaymentsShopifyPaymentsRequired = 'PAYMENTS_SHOPIFY_PAYMENTS_REQUIRED',
-  PaymentsUnacceptablePaymentAmount = 'PAYMENTS_UNACCEPTABLE_PAYMENT_AMOUNT',
-  PaymentsWalletContentMissing = 'PAYMENTS_WALLET_CONTENT_MISSING',
+export const SubmissionErrorCode = {
+  BuyerIdentityEmailIsInvalid: 'BUYER_IDENTITY_EMAIL_IS_INVALID',
+  BuyerIdentityEmailRequired: 'BUYER_IDENTITY_EMAIL_REQUIRED',
+  BuyerIdentityPhoneIsInvalid: 'BUYER_IDENTITY_PHONE_IS_INVALID',
+  DeliveryAddress1Invalid: 'DELIVERY_ADDRESS1_INVALID',
+  DeliveryAddress1Required: 'DELIVERY_ADDRESS1_REQUIRED',
+  DeliveryAddress1TooLong: 'DELIVERY_ADDRESS1_TOO_LONG',
+  DeliveryAddress2Invalid: 'DELIVERY_ADDRESS2_INVALID',
+  DeliveryAddress2Required: 'DELIVERY_ADDRESS2_REQUIRED',
+  DeliveryAddress2TooLong: 'DELIVERY_ADDRESS2_TOO_LONG',
+  DeliveryAddressRequired: 'DELIVERY_ADDRESS_REQUIRED',
+  DeliveryCityInvalid: 'DELIVERY_CITY_INVALID',
+  DeliveryCityRequired: 'DELIVERY_CITY_REQUIRED',
+  DeliveryCityTooLong: 'DELIVERY_CITY_TOO_LONG',
+  DeliveryCompanyInvalid: 'DELIVERY_COMPANY_INVALID',
+  DeliveryCompanyRequired: 'DELIVERY_COMPANY_REQUIRED',
+  DeliveryCompanyTooLong: 'DELIVERY_COMPANY_TOO_LONG',
+  DeliveryCountryRequired: 'DELIVERY_COUNTRY_REQUIRED',
+  DeliveryFirstNameInvalid: 'DELIVERY_FIRST_NAME_INVALID',
+  DeliveryFirstNameRequired: 'DELIVERY_FIRST_NAME_REQUIRED',
+  DeliveryFirstNameTooLong: 'DELIVERY_FIRST_NAME_TOO_LONG',
+  DeliveryInvalidPostalCodeForCountry: 'DELIVERY_INVALID_POSTAL_CODE_FOR_COUNTRY',
+  DeliveryInvalidPostalCodeForZone: 'DELIVERY_INVALID_POSTAL_CODE_FOR_ZONE',
+  DeliveryLastNameInvalid: 'DELIVERY_LAST_NAME_INVALID',
+  DeliveryLastNameRequired: 'DELIVERY_LAST_NAME_REQUIRED',
+  DeliveryLastNameTooLong: 'DELIVERY_LAST_NAME_TOO_LONG',
+  DeliveryNoDeliveryAvailable: 'DELIVERY_NO_DELIVERY_AVAILABLE',
+  DeliveryNoDeliveryAvailableForMerchandiseLine: 'DELIVERY_NO_DELIVERY_AVAILABLE_FOR_MERCHANDISE_LINE',
+  DeliveryOptionsPhoneNumberInvalid: 'DELIVERY_OPTIONS_PHONE_NUMBER_INVALID',
+  DeliveryOptionsPhoneNumberRequired: 'DELIVERY_OPTIONS_PHONE_NUMBER_REQUIRED',
+  DeliveryPhoneNumberInvalid: 'DELIVERY_PHONE_NUMBER_INVALID',
+  DeliveryPhoneNumberRequired: 'DELIVERY_PHONE_NUMBER_REQUIRED',
+  DeliveryPostalCodeInvalid: 'DELIVERY_POSTAL_CODE_INVALID',
+  DeliveryPostalCodeRequired: 'DELIVERY_POSTAL_CODE_REQUIRED',
+  DeliveryZoneNotFound: 'DELIVERY_ZONE_NOT_FOUND',
+  DeliveryZoneRequiredForCountry: 'DELIVERY_ZONE_REQUIRED_FOR_COUNTRY',
+  Error: 'ERROR',
+  MerchandiseLineLimitReached: 'MERCHANDISE_LINE_LIMIT_REACHED',
+  MerchandiseNotApplicable: 'MERCHANDISE_NOT_APPLICABLE',
+  MerchandiseNotEnoughStockAvailable: 'MERCHANDISE_NOT_ENOUGH_STOCK_AVAILABLE',
+  MerchandiseOutOfStock: 'MERCHANDISE_OUT_OF_STOCK',
+  MerchandiseProductNotPublished: 'MERCHANDISE_PRODUCT_NOT_PUBLISHED',
+  NoDeliveryGroupSelected: 'NO_DELIVERY_GROUP_SELECTED',
+  PaymentsAddress1Invalid: 'PAYMENTS_ADDRESS1_INVALID',
+  PaymentsAddress1Required: 'PAYMENTS_ADDRESS1_REQUIRED',
+  PaymentsAddress1TooLong: 'PAYMENTS_ADDRESS1_TOO_LONG',
+  PaymentsAddress2Invalid: 'PAYMENTS_ADDRESS2_INVALID',
+  PaymentsAddress2Required: 'PAYMENTS_ADDRESS2_REQUIRED',
+  PaymentsAddress2TooLong: 'PAYMENTS_ADDRESS2_TOO_LONG',
+  PaymentsBillingAddressZoneNotFound: 'PAYMENTS_BILLING_ADDRESS_ZONE_NOT_FOUND',
+  PaymentsBillingAddressZoneRequiredForCountry: 'PAYMENTS_BILLING_ADDRESS_ZONE_REQUIRED_FOR_COUNTRY',
+  PaymentsCityInvalid: 'PAYMENTS_CITY_INVALID',
+  PaymentsCityRequired: 'PAYMENTS_CITY_REQUIRED',
+  PaymentsCityTooLong: 'PAYMENTS_CITY_TOO_LONG',
+  PaymentsCompanyInvalid: 'PAYMENTS_COMPANY_INVALID',
+  PaymentsCompanyRequired: 'PAYMENTS_COMPANY_REQUIRED',
+  PaymentsCompanyTooLong: 'PAYMENTS_COMPANY_TOO_LONG',
+  PaymentsCountryRequired: 'PAYMENTS_COUNTRY_REQUIRED',
+  PaymentsCreditCardBaseExpired: 'PAYMENTS_CREDIT_CARD_BASE_EXPIRED',
+  PaymentsCreditCardBaseGatewayNotSupported: 'PAYMENTS_CREDIT_CARD_BASE_GATEWAY_NOT_SUPPORTED',
+  PaymentsCreditCardBaseInvalidStartDateOrIssueNumberForDebit: 'PAYMENTS_CREDIT_CARD_BASE_INVALID_START_DATE_OR_ISSUE_NUMBER_FOR_DEBIT',
+  PaymentsCreditCardBrandNotSupported: 'PAYMENTS_CREDIT_CARD_BRAND_NOT_SUPPORTED',
+  PaymentsCreditCardFirstNameBlank: 'PAYMENTS_CREDIT_CARD_FIRST_NAME_BLANK',
+  PaymentsCreditCardGeneric: 'PAYMENTS_CREDIT_CARD_GENERIC',
+  PaymentsCreditCardLastNameBlank: 'PAYMENTS_CREDIT_CARD_LAST_NAME_BLANK',
+  PaymentsCreditCardMonthInclusion: 'PAYMENTS_CREDIT_CARD_MONTH_INCLUSION',
+  PaymentsCreditCardNameInvalid: 'PAYMENTS_CREDIT_CARD_NAME_INVALID',
+  PaymentsCreditCardNumberInvalid: 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID',
+  PaymentsCreditCardNumberInvalidFormat: 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID_FORMAT',
+  PaymentsCreditCardSessionId: 'PAYMENTS_CREDIT_CARD_SESSION_ID',
+  PaymentsCreditCardVerificationValueBlank: 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_BLANK',
+  PaymentsCreditCardVerificationValueInvalidForCardType: 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_INVALID_FOR_CARD_TYPE',
+  PaymentsCreditCardYearExpired: 'PAYMENTS_CREDIT_CARD_YEAR_EXPIRED',
+  PaymentsCreditCardYearInvalidExpiryYear: 'PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR',
+  PaymentsFirstNameInvalid: 'PAYMENTS_FIRST_NAME_INVALID',
+  PaymentsFirstNameRequired: 'PAYMENTS_FIRST_NAME_REQUIRED',
+  PaymentsFirstNameTooLong: 'PAYMENTS_FIRST_NAME_TOO_LONG',
+  PaymentsInvalidPostalCodeForCountry: 'PAYMENTS_INVALID_POSTAL_CODE_FOR_COUNTRY',
+  PaymentsInvalidPostalCodeForZone: 'PAYMENTS_INVALID_POSTAL_CODE_FOR_ZONE',
+  PaymentsLastNameInvalid: 'PAYMENTS_LAST_NAME_INVALID',
+  PaymentsLastNameRequired: 'PAYMENTS_LAST_NAME_REQUIRED',
+  PaymentsLastNameTooLong: 'PAYMENTS_LAST_NAME_TOO_LONG',
+  PaymentsMethodRequired: 'PAYMENTS_METHOD_REQUIRED',
+  PaymentsMethodUnavailable: 'PAYMENTS_METHOD_UNAVAILABLE',
+  PaymentsPhoneNumberInvalid: 'PAYMENTS_PHONE_NUMBER_INVALID',
+  PaymentsPhoneNumberRequired: 'PAYMENTS_PHONE_NUMBER_REQUIRED',
+  PaymentsPostalCodeInvalid: 'PAYMENTS_POSTAL_CODE_INVALID',
+  PaymentsPostalCodeRequired: 'PAYMENTS_POSTAL_CODE_REQUIRED',
+  PaymentsShopifyPaymentsRequired: 'PAYMENTS_SHOPIFY_PAYMENTS_REQUIRED',
+  PaymentsUnacceptablePaymentAmount: 'PAYMENTS_UNACCEPTABLE_PAYMENT_AMOUNT',
+  PaymentsWalletContentMissing: 'PAYMENTS_WALLET_CONTENT_MISSING',
   /** Redirect to checkout required to complete this action. */
-  RedirectToCheckoutRequired = 'REDIRECT_TO_CHECKOUT_REQUIRED',
-  TaxesDeliveryGroupIdNotFound = 'TAXES_DELIVERY_GROUP_ID_NOT_FOUND',
-  TaxesLineIdNotFound = 'TAXES_LINE_ID_NOT_FOUND',
-  TaxesMustBeDefined = 'TAXES_MUST_BE_DEFINED',
+  RedirectToCheckoutRequired: 'REDIRECT_TO_CHECKOUT_REQUIRED',
+  TaxesDeliveryGroupIdNotFound: 'TAXES_DELIVERY_GROUP_ID_NOT_FOUND',
+  TaxesLineIdNotFound: 'TAXES_LINE_ID_NOT_FOUND',
+  TaxesMustBeDefined: 'TAXES_MUST_BE_DEFINED',
   /** Validation failed. */
-  ValidationCustom = 'VALIDATION_CUSTOM'
-}
+  ValidationCustom: 'VALIDATION_CUSTOM'
+} as const;
 
+export type SubmissionErrorCode = typeof SubmissionErrorCode[keyof typeof SubmissionErrorCode];
 /** Cart submit for checkout completion is successful. */
 export type SubmitAlreadyAccepted = {
   __typename?: 'SubmitAlreadyAccepted';
@@ -9011,79 +9056,82 @@ export type UnitPriceMeasurement = {
 };
 
 /** The accepted types of unit of measurement. */
-export enum UnitPriceMeasurementMeasuredType {
+export const UnitPriceMeasurementMeasuredType = {
   /** Unit of measurements representing areas. */
-  Area = 'AREA',
+  Area: 'AREA',
   /** Unit of measurements representing counts. */
-  Count = 'COUNT',
+  Count: 'COUNT',
   /** Unit of measurements representing lengths. */
-  Length = 'LENGTH',
+  Length: 'LENGTH',
   /** The type of measurement is unknown. Upgrade to the latest version of the API to resolve this type. */
-  Unknown = 'UNKNOWN',
+  Unknown: 'UNKNOWN',
   /** Unit of measurements representing volumes. */
-  Volume = 'VOLUME',
+  Volume: 'VOLUME',
   /** Unit of measurements representing weights. */
-  Weight = 'WEIGHT'
-}
+  Weight: 'WEIGHT'
+} as const;
 
+export type UnitPriceMeasurementMeasuredType = typeof UnitPriceMeasurementMeasuredType[keyof typeof UnitPriceMeasurementMeasuredType];
 /** The valid units of measurement for a unit price measurement. */
-export enum UnitPriceMeasurementMeasuredUnit {
+export const UnitPriceMeasurementMeasuredUnit = {
   /** 100 centiliters equals 1 liter. */
-  Cl = 'CL',
+  Cl: 'CL',
   /** 100 centimeters equals 1 meter. */
-  Cm = 'CM',
+  Cm: 'CM',
   /** Imperial system unit of volume (U.S. customary unit). */
-  Floz = 'FLOZ',
+  Floz: 'FLOZ',
   /** 1 foot equals 12 inches. */
-  Ft = 'FT',
+  Ft: 'FT',
   /** Imperial system unit of area. */
-  Ft2 = 'FT2',
+  Ft2: 'FT2',
   /** Metric system unit of weight. */
-  G = 'G',
+  G: 'G',
   /** 1 gallon equals 128 fluid ounces (U.S. customary unit). */
-  Gal = 'GAL',
+  Gal: 'GAL',
   /** Imperial system unit of length. */
-  In = 'IN',
+  In: 'IN',
   /** 1 item, a unit of count. */
-  Item = 'ITEM',
+  Item: 'ITEM',
   /** 1 kilogram equals 1000 grams. */
-  Kg = 'KG',
+  Kg: 'KG',
   /** Metric system unit of volume. */
-  L = 'L',
+  L: 'L',
   /** Imperial system unit of weight. */
-  Lb = 'LB',
+  Lb: 'LB',
   /** Metric system unit of length. */
-  M = 'M',
+  M: 'M',
   /** Metric system unit of area. */
-  M2 = 'M2',
+  M2: 'M2',
   /** 1 cubic meter equals 1000 liters. */
-  M3 = 'M3',
+  M3: 'M3',
   /** 1000 milligrams equals 1 gram. */
-  Mg = 'MG',
+  Mg: 'MG',
   /** 1000 milliliters equals 1 liter. */
-  Ml = 'ML',
+  Ml: 'ML',
   /** 1000 millimeters equals 1 meter. */
-  Mm = 'MM',
+  Mm: 'MM',
   /** 16 ounces equals 1 pound. */
-  Oz = 'OZ',
+  Oz: 'OZ',
   /** 1 pint equals 16 fluid ounces (U.S. customary unit). */
-  Pt = 'PT',
+  Pt: 'PT',
   /** 1 quart equals 32 fluid ounces (U.S. customary unit). */
-  Qt = 'QT',
+  Qt: 'QT',
   /** The unit of measurement is unknown. Upgrade to the latest version of the API to resolve this unit. */
-  Unknown = 'UNKNOWN',
+  Unknown: 'UNKNOWN',
   /** 1 yard equals 36 inches. */
-  Yd = 'YD'
-}
+  Yd: 'YD'
+} as const;
 
+export type UnitPriceMeasurementMeasuredUnit = typeof UnitPriceMeasurementMeasuredUnit[keyof typeof UnitPriceMeasurementMeasuredUnit];
 /** Systems of weights and measures. */
-export enum UnitSystem {
+export const UnitSystem = {
   /** Imperial system of weights and measures. */
-  ImperialSystem = 'IMPERIAL_SYSTEM',
+  ImperialSystem: 'IMPERIAL_SYSTEM',
   /** Metric system of weights and measures. */
-  MetricSystem = 'METRIC_SYSTEM'
-}
+  MetricSystem: 'METRIC_SYSTEM'
+} as const;
 
+export type UnitSystem = typeof UnitSystem[keyof typeof UnitSystem];
 /** A redirect on the online store. */
 export type UrlRedirect = Node & {
   __typename?: 'UrlRedirect';
@@ -9142,15 +9190,16 @@ export type UserErrorsShopPayPaymentRequestSessionUserErrors = DisplayableError 
 };
 
 /** Possible error codes that can be returned by `ShopPayPaymentRequestSessionUserErrors`. */
-export enum UserErrorsShopPayPaymentRequestSessionUserErrorsCode {
+export const UserErrorsShopPayPaymentRequestSessionUserErrorsCode = {
   /** Idempotency key has already been used. */
-  IdempotencyKeyAlreadyUsed = 'IDEMPOTENCY_KEY_ALREADY_USED',
+  IdempotencyKeyAlreadyUsed: 'IDEMPOTENCY_KEY_ALREADY_USED',
   /** Payment request input is invalid. */
-  PaymentRequestInvalidInput = 'PAYMENT_REQUEST_INVALID_INPUT',
+  PaymentRequestInvalidInput: 'PAYMENT_REQUEST_INVALID_INPUT',
   /** Payment request not found. */
-  PaymentRequestNotFound = 'PAYMENT_REQUEST_NOT_FOUND'
-}
+  PaymentRequestNotFound: 'PAYMENT_REQUEST_NOT_FOUND'
+} as const;
 
+export type UserErrorsShopPayPaymentRequestSessionUserErrorsCode = typeof UserErrorsShopPayPaymentRequestSessionUserErrorsCode[keyof typeof UserErrorsShopPayPaymentRequestSessionUserErrorsCode];
 /** The input fields for a filter used to view a subset of products in a collection matching a specific variant option. */
 export type VariantOptionFilter = {
   /** The name of the variant option to filter on. */
@@ -9204,13 +9253,15 @@ export type VisitorConsent = {
 };
 
 /** Units of measurement for weight. */
-export enum WeightUnit {
+export const WeightUnit = {
   /** Metric system unit of mass. */
-  Grams = 'GRAMS',
+  Grams: 'GRAMS',
   /** 1 kilogram equals 1000 grams. */
-  Kilograms = 'KILOGRAMS',
+  Kilograms: 'KILOGRAMS',
   /** Imperial system unit of mass. */
-  Ounces = 'OUNCES',
+  Ounces: 'OUNCES',
   /** 1 pound equals 16 ounces. */
-  Pounds = 'POUNDS'
-}
+  Pounds: 'POUNDS'
+} as const;
+
+export type WeightUnit = typeof WeightUnit[keyof typeof WeightUnit];

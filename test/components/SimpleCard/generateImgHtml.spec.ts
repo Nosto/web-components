@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { generateImgHtml } from "@/components/SimpleCard/markup"
-import { ShopifyImage } from "@/shopify/graphql/types"
+import { ShopifyImage } from "@/shopify/types"
 
 describe("generateImgHtml", () => {
   function createImage(url: string) {

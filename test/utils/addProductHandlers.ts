@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw"
 import { addHandlers } from "../msw.setup"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyProduct } from "@/shopify/types"
 
 /**
  * Response object for product handler

@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "@/utils/jsx"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { ShopifyProduct } from "@/shopify/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
@@ -120,7 +120,7 @@ describe("SimpleCard", () => {
       ...mockedProduct,
       price: { currencyCode: "USD", amount: "19.99" },
       compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
-      variants: [
+      adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/789",
           title: "Default Title",
@@ -264,25 +264,19 @@ describe("SimpleCard", () => {
       ...mockedProduct,
       images: [
         {
-          altText: "Product image 3",
           height: 400,
           width: 400,
-          thumbhash: null,
           url: "https://example.com/image3.jpg"
         },
         {
-          altText: "Product image 4",
           height: 400,
           width: 400,
-          thumbhash: null,
           url: "https://example.com/image4.jpg"
         }
       ],
       featuredImage: {
-        altText: "Product image 3",
         height: 400,
         width: 400,
-        thumbhash: null,
         url: "https://example.com/image3.jpg"
       },
       title: "Product 2",
@@ -337,7 +331,7 @@ describe("SimpleCard", () => {
       ...mockedProduct,
       price: { currencyCode: "USD", amount: "9.99" },
       compareAtPrice: { currencyCode: "USD", amount: "12.99" },
-      variants: [
+      adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/789",
           title: "Default Title",
@@ -421,15 +415,14 @@ describe("SimpleCard", () => {
                 title: "Red",
                 availableForSale: true,
                 image: {
-                  altText: "Red variant image",
                   height: 800,
                   width: 800,
-                  thumbhash: null,
                   url: "https://example.com/red.jpg"
                 },
                 price: { currencyCode: "USD", amount: "24.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" },
+                selectedOptions: []
               }
             },
             {
@@ -440,31 +433,28 @@ describe("SimpleCard", () => {
                 title: "Blue",
                 availableForSale: true,
                 image: {
-                  altText: "Blue variant image",
                   height: 800,
                   width: 800,
-                  thumbhash: null,
                   url: "https://example.com/blue.jpg"
                 },
                 price: { currencyCode: "USD", amount: "19.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" },
+                selectedOptions: []
               }
             }
           ]
         }
       ],
-      variants: [
+      adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/1001",
           title: "Red",
           availableForSale: true,
           selectedOptions: [{ name: "Color", value: "Red" }],
           image: {
-            altText: "Red variant image",
             height: 800,
             width: 800,
-            thumbhash: null,
             url: "https://example.com/red.jpg"
           },
           price: { currencyCode: "USD", amount: "24.99" },
@@ -477,10 +467,8 @@ describe("SimpleCard", () => {
           availableForSale: true,
           selectedOptions: [{ name: "Color", value: "Blue" }],
           image: {
-            altText: "Blue variant image",
             height: 800,
             width: 800,
-            thumbhash: null,
             url: "https://example.com/blue.jpg"
           },
           price: { currencyCode: "USD", amount: "19.99" },
@@ -501,7 +489,7 @@ describe("SimpleCard", () => {
     // Simulate variant change event
     const variantChangeEvent = new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail: {
-        variant: variantProduct.variants[1] // Blue variant
+        variant: variantProduct.adjacentVariants[1] // Blue variant
       },
       bubbles: true
     })

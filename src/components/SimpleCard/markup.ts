@@ -2,7 +2,7 @@ import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
 import { createShopifyUrl } from "@/utils/createShopifyUrl"
 import { transform } from "../Image/transform"
-import { ShopifyImage, ShopifyMoney, ShopifyProduct } from "@/shopify/graphql/types"
+import { ShopifyImage, ShopifyMoney, ShopifyProduct } from "@/shopify/types"
 import { generateCarouselHTML } from "./carousel"
 import { parseId } from "@/shopify/graphql/utils"
 
@@ -10,7 +10,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
 
   const selectedVariant =
-    (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || undefined
+    (element.variantId && product.adjacentVariants.find(v => parseId(v.id) === element.variantId)) || undefined
   const prices = selectedVariant ?? product
   const images = selectedVariant?.image && !element.imageMode ? [selectedVariant.image] : product.images
 

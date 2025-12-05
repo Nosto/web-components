@@ -3,7 +3,7 @@ import { VariantSelector } from "../VariantSelector"
 import { generateVariantSelectorHTML } from "./markup"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import styles from "./styles.css?raw"
-import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
+import { ShopifyProduct, ShopifyVariant } from "@/shopify/types"
 import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../emitVariantChange"
 
@@ -58,9 +58,11 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
     const variantIdStr = toVariantGid(element.variantId)
-    variant = product.variants.find(v => v.id === variantIdStr)
+    variant = product.adjacentVariants.find(v => v.id === variantIdStr)
   } else if (element.preselect) {
-    variant = product.variants.find(v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl)
+    variant = product.adjacentVariants.find(
+      v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl
+    )
   }
   if (variant && variant.selectedOptions) {
     variant.selectedOptions.forEach(selectedOption => {
@@ -113,7 +115,7 @@ function updateActiveStates(element: VariantSelector) {
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
-  product.variants
+  product.adjacentVariants
     .filter(v => v.availableForSale)
     .forEach(variant => {
       if (variant.selectedOptions) {
@@ -141,7 +143,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
 
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
-    product.variants?.find(variant => {
+    product.adjacentVariants?.find(variant => {
       if (!variant.selectedOptions) return false
       return product.options.every(option => {
         const selectedValue = element.selectedOptions[option.name]

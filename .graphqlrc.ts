@@ -7,8 +7,9 @@ export default {
     default: shopifyApiProject({
       apiType: ApiType.Storefront,
       apiVersion: "2025-10",
-      outputDir: "./types",
-      documents: ["./src/**/*.graphql"]
+      outputDir: "./src/shopify/graphql/generated",
+      documents: ["./src/**/*.graphql"],
+      enumsAsConst: true
     })
   }
 }
