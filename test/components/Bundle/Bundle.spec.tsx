@@ -9,10 +9,10 @@ import { addProductHandlers } from "../../utils/addProductHandlers"
 describe("Bundle", () => {
   const mocks = createMockShopifyProducts(2)
   const mockedProducts = {
-    "product-1": mocks[0],
-    "product-2": mocks[1]
+    product1: mocks[0],
+    product2: mocks[1]
   }
-  const products = [{ handle: "product-1" }, { handle: "product-2" }] as JSONProduct[]
+  const products = [{ handle: "product1" }, { handle: "product2" }] as JSONProduct[]
 
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-bundle")).toBeDefined()
@@ -20,13 +20,13 @@ describe("Bundle", () => {
 
   it("initializes selectedProducts and updates summary on connectedCallback", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] },
-      "product-2": { product: mockedProducts["product-2"] }
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
     })
     const bundle = (
       <nosto-bundle products={products}>
         <span n-summary-price></span>
-        <input type="checkbox" value="product-1" checked />
+        <input type="checkbox" value="product1" checked />
       </nosto-bundle>
     ) as Bundle
 
@@ -40,17 +40,17 @@ describe("Bundle", () => {
 
   it("removes product from selection when checkbox with checked attribute is inputted", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] }
+      product1: { product: mockedProducts.product1 }
     })
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product-1" />
+        <nosto-simple-card handle="product1" />
         <span n-summary-price></span>
-        <input type="checkbox" value="product-1" checked />
+        <input type="checkbox" value="product1" checked />
       </nosto-bundle>
     ) as Bundle
 
-    bundle.selectedProducts = [mockedProducts["product-1"], mockedProducts["product-2"]]
+    bundle.selectedProducts = [mockedProducts.product1, mockedProducts.product2]
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
 
@@ -60,24 +60,24 @@ describe("Bundle", () => {
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
-    expect(bundle.selectedProducts?.find(p => p.handle === "product-1")).toBeUndefined()
+    expect(bundle.selectedProducts?.find(p => p.handle === "product1")).toBeUndefined()
     expect(summary.textContent).toBe("Total: $11.99")
   })
 
   it("adds product to selection when checkbox without checked attribute is inputted", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] },
-      "product-2": { product: mockedProducts["product-2"] }
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
     })
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product-1" />
+        <nosto-simple-card handle="product1" />
         <span n-summary-price></span>
-        <input type="checkbox" value="product-1" />
+        <input type="checkbox" value="product1" />
       </nosto-bundle>
     ) as Bundle
 
-    bundle.selectedProducts = [mockedProducts["product-2"]] // Only 'product-2' selected initially
+    bundle.selectedProducts = [mockedProducts.product2] // Only 'product2' selected initially
 
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
@@ -88,21 +88,21 @@ describe("Bundle", () => {
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
-    expect(bundle.selectedProducts.find(p => p.handle === "product-1")).toBeTruthy()
+    expect(bundle.selectedProducts.find(p => p.handle === "product1")).toBeTruthy()
     expect(input.checked).toBe(true)
     expect(summary.textContent).toBe("Total: $22.98")
   })
 
   it("handles empty selectedProducts array", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] },
-      "product-2": { product: mockedProducts["product-2"] }
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
     })
 
     const bundle = (
       <nosto-bundle>
         <span n-summary-price></span>
-        <input type="checkbox" value="product-1" />
+        <input type="checkbox" value="product1" />
       </nosto-bundle>
     ) as Bundle
 
@@ -119,22 +119,22 @@ describe("Bundle", () => {
 
   it("shows card when product is added to selection", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] },
-      "product-2": { product: mockedProducts["product-2"] }
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
     })
 
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product-1" />
+        <nosto-simple-card handle="product1" />
         <span n-summary-price></span>
-        <input type="checkbox" value="product-1" />
+        <input type="checkbox" value="product1" />
       </nosto-bundle>
     ) as Bundle
 
     await bundle.connectedCallback()
 
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
-    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product-1"]')
+    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product1"]')
 
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
@@ -144,22 +144,22 @@ describe("Bundle", () => {
 
   it("hides card when product is removed from selection", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] },
-      "product-2": { product: mockedProducts["product-2"] }
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
     })
 
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product-1" />
+        <nosto-simple-card handle="product1" />
         <span n-summary-price></span>
-        <input type="checkbox" value="product-1" checked />
+        <input type="checkbox" value="product1" checked />
       </nosto-bundle>
     ) as Bundle
 
     await bundle.connectedCallback()
 
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
-    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product-1"]')
+    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product1"]')
 
     // Remove product from selection
     input.checked = false
@@ -170,14 +170,14 @@ describe("Bundle", () => {
 
   it("should not hide bundle card if checkbox is inside the card", async () => {
     addProductHandlers({
-      "product-1": { product: mockedProducts["product-1"] },
-      "product-2": { product: mockedProducts["product-2"] }
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
     })
 
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product-1">
-          <input type="checkbox" value="product-1" checked />
+        <nosto-simple-card handle="product1">
+          <input type="checkbox" value="product1" checked />
         </nosto-simple-card>
         <span n-summary-price></span>
       </nosto-bundle>
@@ -186,7 +186,7 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
 
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
-    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product-1"]')
+    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product1"]')
 
     // Remove product from selection
     input.checked = false

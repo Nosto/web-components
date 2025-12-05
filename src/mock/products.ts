@@ -682,16 +682,16 @@ export const mockProductWithoutVariants: ShopifyProduct = {
 /**
  * Creates mock products for SimpleCard testing with unique handles and IDs.
  * @param count - Number of mock products to create
- * @returns Array of ShopifyProduct objects with handles like "product-1", "product-2", etc.
+ * @returns Array of ShopifyProduct objects with handles like "product1", "product2", etc.
  *
  * Each product will have:
- *   - A unique handle ("product-1", "product-2", ...)
+ *   - A unique handle ("product1", "product2", ...)
  *   - A unique product ID ("gid://shopify/Product/1", ...)
  *   - A unique variant ID ("gid://shopify/ProductVariant/1", ...)
  */
-export const createMockShopifyProducts = (count: number) =>
-  Array.from({ length: count }, (_, i) => {
-    const handle = `product-${i + 1}`
+export function createMockShopifyProducts(count: number) {
+  return Array.from({ length: count }, (_, i) => {
+    const handle = `product${i + 1}`
     return {
       id: `gid://shopify/Product/${i + 1}`,
       title: "Awesome Test Product",
@@ -744,3 +744,4 @@ export const createMockShopifyProducts = (count: number) =>
       ]
     }
   })
+}
