@@ -1,7 +1,10 @@
 interface Window {
   Nosto?: {
     addSkuToCart?: import("@nosto/nosto-js").addSkuToCart
-    migrateToShopifyMarket?: import("./shopify").MigrateToShopifyMarket
+    addMultipleProductsToCart(
+      products: { productId: string; skuId: string; quantity: number }[],
+      resultId?: string
+    ): void
   }
   Shopify?: {
     shop?: string

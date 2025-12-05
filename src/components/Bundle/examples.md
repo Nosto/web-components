@@ -7,7 +7,7 @@ This example demonstrates a product bundle inside a campaign context.
 ```html
 <nosto-campaign placement="frontpage-nosto-bundle">
   <template>
-    <nosto-bundle .products="products">
+    <nosto-bundle .products="products" :result-id="resultId">
       <div class="bundle-grid">
         <nosto-simple-card
           v-for="product in products"
