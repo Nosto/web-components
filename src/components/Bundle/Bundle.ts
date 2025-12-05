@@ -60,13 +60,10 @@ async function fetchShopifyProducts(bundle: Bundle) {
     return
   }
   bundle.toggleAttribute("loading", true)
-  for (const product of bundle.products) {
-    const fetchedProduct = await getProduct(product.handle)
-    if (fetchedProduct) {
-      bundle.shopifyProducts.push(fetchedProduct)
-      bundle.selectedProducts!.push(fetchedProduct)
-    }
-  }
+  const fetchPromises = bundle.products.map(product => getProduct(product.handle))
+  const fetchedProducts = await Promise.all(fetchPromises)
+  bundle.shopifyProducts = fetchedProducts.filter((p): p is ShopifyProduct => p !== null)
+  bundle.selectedProducts!.push(...bundle.shopifyProducts)
   bundle.toggleAttribute("loading", false)
   setSummaryPrice(bundle)
 }
