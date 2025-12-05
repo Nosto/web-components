@@ -3,6 +3,7 @@ query ProductsByIds($country: CountryCode!, $ids: [ID!]!) @inContext(country: $c
     ... on Product {
       id
       title
+      handle
       vendor
       description
       encodedVariantExistence

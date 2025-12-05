@@ -2,6 +2,7 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 
 export const mockProductWithSingleValueOption: ShopifyProduct = {
   id: "gid://shopify/Product/123456",
+  handle: "single-value-demo-tshirt",
   title: "Single Value Demo T-Shirt",
   vendor: "Demo Brand",
   description: "A demo product showing single-value option behavior",
@@ -130,6 +131,7 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
 export const mockProductAllSingleValue: ShopifyProduct = {
   id: "gid://shopify/Product/789012",
   title: "All Single Value Product",
+  handle: "all-single-value-product",
   vendor: "Demo Brand",
   description: "Product where all options have only one value each",
   encodedVariantExistence: "",
@@ -210,6 +212,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
 const baseTestProduct: ShopifyProduct = {
   id: "gid://shopify/Product/123456",
   title: "Variant Test Product",
+  handle: "variant-test-product",
   vendor: "Test Brand",
   description: "A product with variants for testing",
   encodedVariantExistence: "",
@@ -501,6 +504,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
 // Product with multiple variants for VariantSelector tests
 export const mockProductWithVariants: ShopifyProduct = {
   id: "gid://shopify/Product/123456",
+  handle: "variant-test-product",
   title: "Variant Test Product",
   vendor: "Test Brand",
   description: "A product with variants for testing",
@@ -675,50 +679,59 @@ export const mockProductWithoutVariants: ShopifyProduct = {
 }
 
 // Basic product for SimpleCard tests
-export const mockSimpleCardProduct: ShopifyProduct = {
-  id: "gid://shopify/Product/123456",
-  title: "Awesome Test Product",
-  vendor: "Test Brand",
-  description: "A great product for testing",
-  encodedVariantExistence: "",
-  onlineStoreUrl: "/products/awesome-test-product",
-  availableForSale: true,
-  adjacentVariants: [],
-  images: [
-    {
-      altText: "Product image 1",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://example.com/image1.jpg"
-    },
-    {
-      altText: "Product image 2",
-      height: 400,
-      width: 400,
-      thumbhash: null,
-      url: "https://example.com/image2.jpg"
-    }
-  ],
-  featuredImage: {
-    altText: "Product image 1",
-    height: 400,
-    width: 400,
-    thumbhash: null,
-    url: "https://example.com/image1.jpg"
-  },
-  options: [],
-  price: { currencyCode: "USD", amount: "19.99" },
-  compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-  variants: [
-    {
-      id: "gid://shopify/ProductVariant/789",
-      title: "Default Title",
+export const mockSimpleCardProducts = (count = 1) => {
+  return Array.from({ length: count }, (_, i) => {
+    const handle = `product-${i + 1}`
+    return {
+      id: `gid://shopify/Product/${i + 1}`,
+      title: "Awesome Test Product",
+      handle: handle,
+      vendor: "Test Brand",
+      description: "A great product for testing",
+      encodedVariantExistence: "",
+      onlineStoreUrl: `/products/${handle}`,
       availableForSale: true,
-      selectedOptions: [],
-      price: { currencyCode: "USD", amount: "19.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-      product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
+      adjacentVariants: [],
+      images: [
+        {
+          altText: "Product image 1",
+          height: 400,
+          width: 400,
+          thumbhash: null,
+          url: "https://example.com/image1.jpg"
+        },
+        {
+          altText: "Product image 2",
+          height: 400,
+          width: 400,
+          thumbhash: null,
+          url: "https://example.com/image2.jpg"
+        }
+      ],
+      featuredImage: {
+        altText: "Product image 1",
+        height: 400,
+        width: 400,
+        thumbhash: null,
+        url: "https://example.com/image1.jpg"
+      },
+      options: [],
+      price: { currencyCode: "USD", amount: String(10.99 + i) },
+      compareAtPrice: { currencyCode: "USD", amount: String(15.99 + i) },
+      variants: [
+        {
+          id: `gid://shopify/ProductVariant/${i + 1}`,
+          title: "Default Title",
+          availableForSale: true,
+          selectedOptions: [],
+          price: { currencyCode: "USD", amount: String(10.99 + i) },
+          compareAtPrice: { currencyCode: "USD", amount: String(15.99 + i) },
+          product: {
+            id: `gid://shopify/Product/${i + 1}`,
+            onlineStoreUrl: `/products/${handle}`
+          }
+        }
+      ]
     }
-  ]
+  })
 }

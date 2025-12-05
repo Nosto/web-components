@@ -6,11 +6,14 @@ import type { ShopifyProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { mockSimpleCardProduct } from "@/mock/products"
+import { mockSimpleCardProducts } from "@/mock/products"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 import { addProductHandlers } from "../../utils/addProductHandlers"
 
 describe("SimpleCard", () => {
+  const handle = "test-product"
+  const mockedProduct = mockSimpleCardProducts()[0]
+
   beforeEach(() => {
     clearProductCache()
   })
@@ -26,8 +29,6 @@ describe("SimpleCard", () => {
     return shadowContent.replace(/<style>[\s\S]*?<\/style>/g, "").trim()
   }
 
-  const mockProduct = mockSimpleCardProduct
-
   it("should throw an error if handle is not provided", async () => {
     const card = (<nosto-simple-card />) as SimpleCard
     await expect(card.connectedCallback()).rejects.toThrowError("Property handle is required.")
@@ -35,27 +36,27 @@ describe("SimpleCard", () => {
 
   it("should fetch product data and render basic card", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} />) as SimpleCard
 
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("card")
     expect(shadowContent).toContain("Awesome Test Product")
-    expect(shadowContent).toContain("$19.99")
+    expect(shadowContent).toContain("$10.99")
     expect(shadowContent).toContain("https://example.com/image1.jpg")
     expect(card.hasAttribute("loading")).toBe(false)
   })
 
   it("should render brand when brand attribute is enabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" brand />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} brand />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -66,11 +67,11 @@ describe("SimpleCard", () => {
 
   it("should handle add to cart clicks", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
     const card = (
-      <nosto-simple-card handle="test-product" brand>
+      <nosto-simple-card handle={handle} brand>
         <button n-atc>Add to Cart</button>
       </nosto-simple-card>
     ) as SimpleCard
@@ -83,15 +84,15 @@ describe("SimpleCard", () => {
     const button = card.querySelector("[n-atc]") as HTMLButtonElement
     button.click()
 
-    expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith({ productId: "123456", skuId: "789" }, undefined, undefined)
+    expect(window.Nosto!.addSkuToCart).toHaveBeenCalledWith({ productId: "1", skuId: "789" }, undefined, undefined)
   })
 
   it("should not render brand when brand attribute is disabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -102,21 +103,21 @@ describe("SimpleCard", () => {
 
   it("should render original price when discount attribute is enabled and product has discount", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" discount />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} discount />) as SimpleCard
 
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("$24.99") // original price
-    expect(shadowContent).toContain("$19.99") // current price
+    expect(shadowContent).toContain("$15.99") // original price
+    expect(shadowContent).toContain("$10.99") // current price
   })
 
   it("should not render original price when product has no discount", async () => {
     const productWithoutDiscount: ShopifyProduct = {
-      ...mockProduct,
+      ...mockedProduct,
       price: { currencyCode: "USD", amount: "19.99" },
       compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
       variants: [
@@ -133,10 +134,10 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": { product: productWithoutDiscount }
+      [handle]: { product: productWithoutDiscount }
     })
 
-    const card = (<nosto-simple-card handle="test-product" discount />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} discount />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -146,10 +147,10 @@ describe("SimpleCard", () => {
 
   it("should render rating when rating attribute is provided", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" rating={4.2} />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} rating={4.2} />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -160,10 +161,10 @@ describe("SimpleCard", () => {
 
   it('should render alternate image when image-mode="alternate"', async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" image-mode="alternate" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} image-mode="alternate" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -175,15 +176,15 @@ describe("SimpleCard", () => {
 
   it('should not render alternate image when product has only one image with image-mode="alternate"', async () => {
     const productWithOneImage = {
-      ...mockProduct,
-      images: [mockProduct.images[0]] // only one image
+      ...mockedProduct,
+      images: [mockedProduct.images[0]] // only one image
     }
 
     addProductHandlers({
-      "test-product": { product: productWithOneImage }
+      [handle]: { product: productWithOneImage }
     })
 
-    const card = (<nosto-simple-card handle="test-product" image-mode="alternate" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} image-mode="alternate" />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -197,11 +198,11 @@ describe("SimpleCard", () => {
 
   it("should render all features when all attributes are enabled", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
     const card = (
-      <nosto-simple-card handle="test-product" brand discount rating={3.5} image-mode="alternate" />
+      <nosto-simple-card handle={handle} brand discount rating={3.5} image-mode="alternate" />
     ) as SimpleCard
 
     await card.connectedCallback()
@@ -209,7 +210,7 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("brand")
     expect(shadowContent).toContain("Test Brand")
-    expect(shadowContent).toContain("$24.99") // original price shown with discount attribute
+    expect(shadowContent).toContain("$15.99") // original price shown with discount attribute
     expect(shadowContent).toContain("rating")
     expect(shadowContent).toContain("★★★☆☆ (3.5)")
     expect(shadowContent).toContain("img primary")
@@ -218,15 +219,15 @@ describe("SimpleCard", () => {
 
   it("should handle product with no images", async () => {
     const productWithoutImages = {
-      ...mockProduct,
+      ...mockedProduct,
       images: []
     }
 
     addProductHandlers({
-      "test-product": { product: productWithoutImages }
+      [handle]: { product: productWithoutImages }
     })
 
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -258,9 +259,9 @@ describe("SimpleCard", () => {
   })
 
   it("should re-render when handle attribute changes", async () => {
-    const product1: ShopifyProduct = { ...mockProduct, title: "Product 1" }
+    const product1: ShopifyProduct = { ...mockedProduct, handle: "product-1", title: "Product 1" }
     const product2: ShopifyProduct = {
-      ...mockProduct,
+      ...mockedProduct,
       images: [
         {
           altText: "Product image 3",
@@ -284,7 +285,8 @@ describe("SimpleCard", () => {
         thumbhash: null,
         url: "https://example.com/image3.jpg"
       },
-      title: "Product 2"
+      title: "Product 2",
+      handle: "product-2"
     }
 
     addProductHandlers({
@@ -308,16 +310,16 @@ describe("SimpleCard", () => {
 
   it("should escape HTML in product data", async () => {
     const productWithHTML = {
-      ...mockProduct,
+      ...mockedProduct,
       title: "<script>alert('xss')</script>Safe Title",
       vendor: "<img src=x onerror=alert('xss')>Brand"
     }
 
     addProductHandlers({
-      "test-product": { product: productWithHTML }
+      [handle]: { product: productWithHTML }
     })
 
-    const card = (<nosto-simple-card handle="test-product" brand />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} brand />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -332,7 +334,7 @@ describe("SimpleCard", () => {
 
   it("should format price correctly", async () => {
     const productWithDifferentPrice: ShopifyProduct = {
-      ...mockProduct,
+      ...mockedProduct,
       price: { currencyCode: "USD", amount: "9.99" },
       compareAtPrice: { currencyCode: "USD", amount: "12.99" },
       variants: [
@@ -349,10 +351,10 @@ describe("SimpleCard", () => {
     }
 
     addProductHandlers({
-      "test-product": { product: productWithDifferentPrice }
+      [handle]: { product: productWithDifferentPrice }
     })
 
-    const card = (<nosto-simple-card handle="test-product" discount />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} discount />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -363,12 +365,11 @@ describe("SimpleCard", () => {
 
   it("should forward imageSizes attribute to nosto-image elements", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
     const sizesValue = "(max-width: 768px) 100vw, 50vw"
-    const card = (<nosto-simple-card handle="test-product" image-sizes={sizesValue} />) as SimpleCard
-
+    const card = (<nosto-simple-card handle={handle} image-sizes={sizesValue} />) as SimpleCard
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
@@ -377,13 +378,11 @@ describe("SimpleCard", () => {
 
   it("should forward imageSizes attribute to both primary and alternate images", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
     const sizesValue = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-    const card = (
-      <nosto-simple-card handle="test-product" image-mode="alternate" image-sizes={sizesValue} />
-    ) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} image-mode="alternate" image-sizes={sizesValue} />) as SimpleCard
 
     await card.connectedCallback()
 
@@ -395,10 +394,10 @@ describe("SimpleCard", () => {
 
   it("should include slot for additional content", async () => {
     addProductHandlers({
-      "test-product": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
-    const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} />) as SimpleCard
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
@@ -408,7 +407,8 @@ describe("SimpleCard", () => {
 
   it("should handle variant change events and update images", async () => {
     const variantProduct: ShopifyProduct = {
-      ...mockProduct,
+      ...mockedProduct,
+      handle: "variant-product",
       options: [
         {
           name: "Color",
@@ -519,7 +519,7 @@ describe("SimpleCard", () => {
   })
 
   it("should emit SimpleCard/rendered event when content is loaded", async () => {
-    const validProduct = { ...mockProduct, title: "Event Test Product" }
+    const validProduct = { ...mockedProduct, handle: "event-test-handle", title: "Event Test Product" }
     addProductHandlers({
       "event-test-handle": { product: validProduct }
     })
@@ -543,7 +543,7 @@ describe("SimpleCard", () => {
   it("should emit SimpleCard/rendered event when product property is set", async () => {
     // Set up mock for the network fetch that will also happen
     addProductHandlers({
-      "test-handle": { product: mockProduct }
+      [handle]: { product: mockedProduct }
     })
 
     const mockJSONProduct: JSONProduct = {
@@ -557,7 +557,7 @@ describe("SimpleCard", () => {
       price_currency_code: "USD"
     } as JSONProduct
 
-    const card = (<nosto-simple-card handle="test-handle" />) as SimpleCard
+    const card = (<nosto-simple-card handle={handle} />) as SimpleCard
     card.product = mockJSONProduct
 
     // Set up event listener to capture the event
@@ -577,7 +577,7 @@ describe("SimpleCard", () => {
 
   describe("Mock Mode", () => {
     it("should render all mock features when all attributes are enabled", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock brand discount rating={3.5} />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} mock brand discount rating={3.5} />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -590,7 +590,7 @@ describe("SimpleCard", () => {
     })
 
     it("should emit rendered event when mock mode is enabled", async () => {
-      const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} mock />) as SimpleCard
 
       const renderedEvent = vi.fn()
       card.addEventListener("@nosto/SimpleCard/rendered", renderedEvent)
@@ -603,9 +603,9 @@ describe("SimpleCard", () => {
     it("should not fetch from Shopify when mock mode is enabled", async () => {
       let fetchCalled = false
       addProductHandlers({
-        "test-handle": {
+        [handle]: {
           product: {
-            ...mockProduct,
+            ...mockedProduct,
             get id() {
               fetchCalled = true
               return toProductId(123)
@@ -614,7 +614,7 @@ describe("SimpleCard", () => {
         }
       })
 
-      const card = (<nosto-simple-card handle="test-handle" mock />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} mock />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -627,10 +627,10 @@ describe("SimpleCard", () => {
   describe("Carousel Mode", () => {
     it('should render carousel when image-mode="carousel"', async () => {
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -642,15 +642,15 @@ describe("SimpleCard", () => {
 
     it('should not render carousel when product has only one image with image-mode="carousel"', async () => {
       const productWithOneImage = {
-        ...mockProduct,
-        images: [mockProduct.images[0]]
+        ...mockedProduct,
+        images: [mockedProduct.images[0]]
       }
 
       addProductHandlers({
-        "test-product": { product: productWithOneImage }
+        [handle]: { product: productWithOneImage }
       })
 
-      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -660,10 +660,10 @@ describe("SimpleCard", () => {
 
     it("should render carousel indicators for each image", async () => {
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} image-mode="carousel" />) as SimpleCard
 
       await card.connectedCallback()
 
@@ -673,10 +673,10 @@ describe("SimpleCard", () => {
 
     it("should support horizontal scroll for navigation", async () => {
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} image-mode="carousel" />) as SimpleCard
       document.body.appendChild(card)
 
       await card.connectedCallback()
@@ -692,10 +692,10 @@ describe("SimpleCard", () => {
 
     it("should navigate to specific image when indicator is clicked", async () => {
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} image-mode="carousel" />) as SimpleCard
       document.body.appendChild(card)
 
       await card.connectedCallback()
@@ -730,11 +730,10 @@ describe("SimpleCard", () => {
   describe("Image Mode", () => {
     it("should render basic image without alternate or carousel when image-mode is not set", async () => {
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
-
+      const card = (<nosto-simple-card handle={handle} />) as SimpleCard
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)
@@ -754,17 +753,17 @@ describe("SimpleCard", () => {
       })
 
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
-      const card = (<nosto-simple-card handle="test-product" />) as SimpleCard
+      const card = (<nosto-simple-card handle={handle} />) as SimpleCard
 
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)
       expect(shadowContent).toContain("brand")
       expect(shadowContent).toContain("Test Brand")
-      expect(shadowContent).toContain("$24.99") // original price
+      expect(shadowContent).toContain("$15.99") // original price
       expect(shadowContent).toContain("img alternate")
       expect(shadowContent).toContain("rating")
       expect(shadowContent).toContain("★★★☆☆ (3.8)")
@@ -774,12 +773,11 @@ describe("SimpleCard", () => {
       setSimpleCardDefaults({ brand: true, imageMode: "alternate" })
 
       addProductHandlers({
-        "test-product": { product: mockProduct }
+        [handle]: { product: mockedProduct }
       })
 
       // Override imageMode default with explicit carousel
-      const card = (<nosto-simple-card handle="test-product" image-mode="carousel" />) as SimpleCard
-
+      const card = (<nosto-simple-card handle={handle} image-mode="carousel" />) as SimpleCard
       await card.connectedCallback()
 
       const shadowContent = getShadowContent(card)

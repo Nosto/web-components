@@ -1,6 +1,7 @@
 export type ShopifyProduct = {
   id: string
   title: string
+  handle: string
   vendor: string
   description: string
   encodedVariantExistence: string

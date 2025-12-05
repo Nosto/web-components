@@ -1,6 +1,8 @@
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
+import { fetchProduct } from "@/shopify/graphql/fetchProduct"
+import { ShopifyProduct } from "@/shopify/graphql/types"
 
 /**
  * This component allows users to select multiple products from a bundle and displays
@@ -30,11 +32,13 @@ import { NostoElement } from "../Element"
 export class Bundle extends NostoElement {
   products!: JSONProduct[]
   /** @hidden */
-  selectedProducts?: JSONProduct[]
+  selectedProducts?: ShopifyProduct[]
+  /** @hidden */
+  shopifyProducts?: ShopifyProduct[]
 
-  connectedCallback() {
-    this.selectedProducts = this.products
-    setSummaryPrice(this)
+  async connectedCallback() {
+    this.selectedProducts = []
+    await fetchShopifyProducts(this)
     addListeners(this)
   }
 
@@ -50,16 +54,42 @@ export class Bundle extends NostoElement {
   }
 }
 
+async function fetchShopifyProducts(bundle: Bundle) {
+  bundle.shopifyProducts = []
+  if (!bundle.products || bundle.products.length === 0) {
+    return
+  }
+  bundle.toggleAttribute("loading", true)
+  for (const product of bundle.products) {
+    const fetchedProduct = await getProduct(product.handle)
+    if (fetchedProduct) {
+      bundle.shopifyProducts.push(fetchedProduct)
+      bundle.selectedProducts!.push(fetchedProduct)
+    }
+  }
+  bundle.toggleAttribute("loading", false)
+  setSummaryPrice(bundle)
+}
+
+async function getProduct(handle: string): Promise<ShopifyProduct | null> {
+  try {
+    return await fetchProduct(handle)
+  } catch (error) {
+    console.error(`Error fetching product with handle ${handle}:`, error)
+    return null
+  }
+}
+
 function addListeners(bundle: Bundle) {
   bundle.addEventListener("click", bundle)
   bundle.addEventListener("input", bundle)
 }
 
 function setSummaryPrice(bundle: Bundle) {
-  const currencyCode = bundle.selectedProducts?.[0]?.price_currency_code || "USD"
+  const currencyCode = bundle.selectedProducts?.[0]?.price.currencyCode || "USD"
   const totalAmount =
     bundle.selectedProducts?.reduce((sum, product) => {
-      return sum + product.price
+      return sum + Number(product.price.amount)
     }, 0) || 0
   const formatted = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -102,7 +132,7 @@ function onChange(bundle: Bundle, event: Event) {
       bundle.selectedProducts = bundle.selectedProducts?.filter(p => p.handle !== handle)
     } else {
       // Add product to selection
-      const product = bundle.products.find(p => p.handle === handle)
+      const product = bundle.shopifyProducts?.find(p => p.handle === handle)
       if (product && !bundle.selectedProducts?.find(p => p.handle === handle)) {
         bundle.selectedProducts = [...(bundle.selectedProducts ?? []), product]
         target.setAttribute("checked", "")
