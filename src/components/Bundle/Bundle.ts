@@ -3,14 +3,13 @@ import { customElement } from "../decorators"
 import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct } from "@/shopify/graphql/types"
+import { formatPrice } from "@/shopify/formatPrice"
 
 /**
  * This component allows users to select multiple products from a bundle and displays
  * the total price. Products can be toggled on/off via checkboxes, and the component
  * automatically updates the summary price and product visibility. The selected products can
  * be added to the cart as a group.
- *
- *
  *
  * {@include ./examples.md}
  *
@@ -86,10 +85,7 @@ function setSummaryPrice(bundle: Bundle) {
     bundle.selectedProducts?.reduce((sum, product) => {
       return sum + Number(product.price.amount)
     }, 0) || 0
-  const formatted = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode
-  }).format(totalAmount)
+  const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
   const summaryElement = bundle.querySelector("[n-summary-price]")
   summaryElement!.textContent = `Total: ${formatted}`
 }

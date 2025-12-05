@@ -5,6 +5,7 @@ import { transform } from "../Image/transform"
 import { ShopifyImage, ShopifyMoney, ShopifyProduct } from "@/shopify/graphql/types"
 import { generateCarouselHTML } from "./carousel"
 import { parseId } from "@/shopify/graphql/utils"
+import { formatPrice } from "@/shopify/formatPrice"
 
 export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
@@ -111,14 +112,6 @@ function generateRatingHTML(rating: number) {
   const starDisplay =
     "★".repeat(fullStars) + (hasHalfStar ? "☆" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
   return html`<div class="rating" part="rating">${starDisplay} (${rating.toFixed(1)})</div>`
-}
-
-function formatPrice({ amount, currencyCode }: ShopifyMoney) {
-  // Convert from cents to dollars and format
-  return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {
-    style: "currency",
-    currency: currencyCode
-  }).format(+amount)
 }
 
 function isDiscounted(prices: { compareAtPrice: ShopifyMoney | null; price: ShopifyMoney }) {
