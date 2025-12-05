@@ -32,13 +32,11 @@ import { ShopifyProduct } from "@/shopify/graphql/types"
 export class Bundle extends NostoElement {
   products!: JSONProduct[]
   /** @hidden */
-  selectedProducts?: ShopifyProduct[]
+  selectedProducts: ShopifyProduct[] = []
   /** @hidden */
-  shopifyProducts?: ShopifyProduct[]
+  shopifyProducts: ShopifyProduct[] = []
 
   async connectedCallback() {
-    this.selectedProducts = []
-    this.shopifyProducts = []
     addListeners(this)
     await fetchShopifyProducts(this)
   }
