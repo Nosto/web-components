@@ -3,6 +3,7 @@ query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle:
   product(handle: $handle) {
     id
     title
+    handle
     vendor
     description
     encodedVariantExistence
