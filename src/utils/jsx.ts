@@ -19,13 +19,33 @@ type ElementProps<T extends HTMLElement> = {
   [K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K extends keyof HTMLElement ? never : K]?: T[K]
 }
 
+/**
+ * Extracts HTML attributes from an element type, allowing flexible attribute values for JSX.
+ * This supports both strict typing and common JSX patterns (e.g., string styles, numeric string attributes).
+ */
+type HTMLAttributes<T extends HTMLElement> = Partial<{
+  [K in keyof T as K extends "style" ? never : K]: T[K] | string
+}> & {
+  style?: string | Record<string, string>
+  className?: string
+  [key: string]: unknown
+}
+
+/**
+ * Maps all native HTML element tag names to their corresponding attribute types.
+ * This provides proper type safety for standard HTML elements in JSX while maintaining flexibility.
+ */
+type HTMLElementAttributes = {
+  [K in keyof HTMLElementTagNameMap]: HTMLAttributes<HTMLElementTagNameMap[K]>
+}
+
 type DummyProps = Record<string, unknown>
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
-    interface IntrinsicElements {
+    interface IntrinsicElements extends HTMLElementAttributes {
       "nosto-bundle": ElementProps<Bundle>
       "nosto-campaign": ElementProps<Campaign>
       "nosto-control": ElementProps<Control>
@@ -36,21 +56,7 @@ declare global {
       "nosto-simple-card": ElementProps<SimpleCard>
       "nosto-sku-options": ElementProps<SkuOptions>
       "nosto-variant-selector": ElementProps<VariantSelector>
-      button: DummyProps
-      div: DummyProps
-      h3: DummyProps
-      img: DummyProps
-      input: DummyProps
-      label: DummyProps
-      li: DummyProps
-      option: DummyProps
-      p: DummyProps
-      script: DummyProps
-      select: DummyProps
-      span: DummyProps
       "test-element": DummyProps
-      template: DummyProps
-      ul: DummyProps
     }
   }
 }
