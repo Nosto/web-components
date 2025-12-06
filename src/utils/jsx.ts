@@ -12,9 +12,18 @@ import type { VariantSelector } from "@/components/VariantSelector/VariantSelect
 type MaybeArray<T> = T | T[]
 
 /**
- * Extracts element properties and attributes with flexible JSX typing.
- * For custom elements: excludes methods and HTMLElement base properties.
- * For all elements: allows string coercion and special handling for style/className.
+ * Base type for element attributes with flexible JSX typing.
+ * Provides special handling for style, className, and an index signature for flexibility.
+ */
+type BaseAttributes = {
+  style?: string | Record<string, string>
+  className?: string
+  [key: string]: unknown
+}
+
+/**
+ * Extracts properties from custom elements with strict typing.
+ * Filters out methods and HTMLElement base properties.
  */
 type ElementProps<T extends HTMLElement> = Partial<{
   [K in keyof T as T[K] extends (...args: never[]) => unknown
@@ -23,19 +32,25 @@ type ElementProps<T extends HTMLElement> = Partial<{
       ? never
       : K extends "style"
         ? never
-        : K]: T[K] | string
-}> & {
-  style?: string | Record<string, string>
-  className?: string
-  [key: string]: unknown
-}
+        : K]: T[K]
+}> &
+  BaseAttributes
+
+/**
+ * Extracts attributes from native HTML elements with flexible typing.
+ * Allows string coercion for numeric and other properties (e.g., width="300").
+ */
+type HTMLAttributes<T extends HTMLElement> = Partial<{
+  [K in keyof T as K extends "style" ? never : K]: T[K] | string
+}> &
+  BaseAttributes
 
 /**
  * Maps all native HTML element tag names to their corresponding attribute types.
  * This provides proper type safety for standard HTML elements in JSX while maintaining flexibility.
  */
 type HTMLElementAttributes = {
-  [K in keyof HTMLElementTagNameMap]: ElementProps<HTMLElementTagNameMap[K]>
+  [K in keyof HTMLElementTagNameMap]: HTMLAttributes<HTMLElementTagNameMap[K]>
 }
 
 declare global {
