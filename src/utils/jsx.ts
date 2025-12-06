@@ -12,24 +12,38 @@ import type { VariantSelector } from "@/components/VariantSelector/VariantSelect
 type MaybeArray<T> = T | T[]
 
 /**
- * Extracts all non-method properties from a custom element type `T`, excluding any properties inherited from the base `HTMLElement`.
- * This utility type is useful for defining prop types for custom elements without including standard HTMLElement properties or methods.
+ * Base type for element attributes with flexible JSX typing.
+ * Provides special handling for style, className, and an index signature for flexibility.
  */
-type ElementProps<T extends HTMLElement> = {
-  [K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K extends keyof HTMLElement ? never : K]?: T[K]
-}
-
-/**
- * Extracts HTML attributes from an element type, allowing flexible attribute values for JSX.
- * This supports both strict typing and common JSX patterns (e.g., string styles, numeric string attributes).
- */
-type HTMLAttributes<T extends HTMLElement> = Partial<{
-  [K in keyof T as K extends "style" ? never : K]: T[K] | string
-}> & {
+type BaseAttributes = {
   style?: string | Record<string, string>
   className?: string
   [key: string]: unknown
 }
+
+/**
+ * Extracts properties from custom elements with strict typing.
+ * Filters out methods and HTMLElement base properties.
+ */
+type ElementProps<T extends HTMLElement> = Partial<{
+  [K in keyof T as T[K] extends (...args: never[]) => unknown
+    ? never
+    : K extends keyof HTMLElement
+      ? never
+      : K extends "style"
+        ? never
+        : K]: T[K]
+}> &
+  BaseAttributes
+
+/**
+ * Extracts attributes from native HTML elements with flexible typing.
+ * Allows string coercion for numeric and other properties (e.g., width="300").
+ */
+type HTMLAttributes<T extends HTMLElement> = Partial<{
+  [K in keyof T as K extends "style" ? never : K]: T[K] | string
+}> &
+  BaseAttributes
 
 /**
  * Maps all native HTML element tag names to their corresponding attribute types.
