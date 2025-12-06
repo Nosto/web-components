@@ -11,30 +11,46 @@ import type { VariantSelector } from "@/components/VariantSelector/VariantSelect
 
 type MaybeArray<T> = T | T[]
 
-// remaps entries in GlobalEventHandlersEventMap to their respective React style event handlers
-type GlobalEventHandlersMapping = {
-  [K in keyof GlobalEventHandlersEventMap as `on${Capitalize<K>}`]?: (event: GlobalEventHandlersEventMap[K]) => void
+/**
+ * Extracts all non-method properties from a custom element type `T`, excluding any properties inherited from the base `HTMLElement`.
+ * This utility type is useful for defining prop types for custom elements without including standard HTMLElement properties or methods.
+ */
+type ElementProps<T extends HTMLElement> = {
+  [K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K extends keyof HTMLElement ? never : K]?: T[K]
 }
 
-type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping
+type DummyProps = Record<string, unknown>
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
-    type IntrinsicElements = {
-      "nosto-bundle": ElementMapping<Bundle>
-      "nosto-campaign": ElementMapping<Campaign>
-      "nosto-control": ElementMapping<Control>
-      "nosto-dynamic-card": ElementMapping<DynamicCard>
-      "nosto-image": ElementMapping<Image>
-      "nosto-product": ElementMapping<Product>
-      "nosto-section-campaign": ElementMapping<SectionCampaign>
-      "nosto-simple-card": ElementMapping<SimpleCard>
-      "nosto-sku-options": ElementMapping<SkuOptions>
-      "nosto-variant-selector": ElementMapping<VariantSelector>
-      // Keep generic fallback for other HTML elements
-      [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
+    interface IntrinsicElements {
+      "nosto-bundle": ElementProps<Bundle>
+      "nosto-campaign": ElementProps<Campaign>
+      "nosto-control": ElementProps<Control>
+      "nosto-dynamic-card": ElementProps<DynamicCard>
+      "nosto-image": ElementProps<Image>
+      "nosto-product": ElementProps<Product>
+      "nosto-section-campaign": ElementProps<SectionCampaign>
+      "nosto-simple-card": ElementProps<SimpleCard>
+      "nosto-sku-options": ElementProps<SkuOptions>
+      "nosto-variant-selector": ElementProps<VariantSelector>
+      button: DummyProps
+      div: DummyProps
+      h3: DummyProps
+      img: DummyProps
+      input: DummyProps
+      label: DummyProps
+      li: DummyProps
+      option: DummyProps
+      p: DummyProps
+      script: DummyProps
+      select: DummyProps
+      span: DummyProps
+      "test-element": DummyProps
+      template: DummyProps
+      ul: DummyProps
     }
   }
 }
