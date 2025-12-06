@@ -39,8 +39,6 @@ type HTMLElementAttributes = {
   [K in keyof HTMLElementTagNameMap]: HTMLAttributes<HTMLElementTagNameMap[K]>
 }
 
-type DummyProps = Record<string, unknown>
-
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
@@ -56,7 +54,7 @@ declare global {
       "nosto-simple-card": ElementProps<SimpleCard>
       "nosto-sku-options": ElementProps<SkuOptions>
       "nosto-variant-selector": ElementProps<VariantSelector>
-      "test-element": DummyProps
+      "test-element": Record<string, unknown>
     }
   }
 }
