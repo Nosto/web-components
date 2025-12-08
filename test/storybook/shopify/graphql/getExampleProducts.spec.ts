@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getExampleProducts, getExampleHandles, clearCache } from "@/storybook/shopify/graphql/getExampleProducts"
+import { getExampleProducts, clearCache } from "@/storybook/shopify/graphql/getExampleProducts"
 import { addHandlers } from "../../../msw.setup"
 import { http, HttpResponse } from "msw"
 
@@ -168,23 +168,5 @@ describe("getExampleProducts", () => {
     await getExampleProducts(shopifyShop)
 
     expect(contentType).toBe("application/json")
-  })
-
-  describe("getExampleHandles (deprecated wrapper)", () => {
-    it("should return only handles from getExampleProducts", async () => {
-      addHandlers(
-        http.post(endpoint, () => {
-          return HttpResponse.json(
-            createMockResponse([
-              { handle: "product-1", title: "Product 1" },
-              { handle: "product-2", title: "Product 2" }
-            ])
-          )
-        })
-      )
-
-      const handles = await getExampleHandles(shopifyShop)
-      expect(handles).toEqual(["product-1", "product-2"])
-    })
   })
 })

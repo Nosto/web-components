@@ -2,7 +2,7 @@
 import { createElement } from "@/utils/jsx"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import type { JSONProduct } from "@nosto/nosto-js/client"
-import { exampleHandlesLoader, updateShopifyShop } from "@/storybook/loader"
+import { exampleProductsLoader, updateShopifyShop } from "@/storybook/loader"
 import "./Bundle"
 import "./Bundle.stories.css"
 
@@ -22,7 +22,7 @@ const meta: Meta = {
       return story()
     }
   ],
-  loaders: [exampleHandlesLoader],
+  loaders: [exampleProductsLoader],
   argTypes: {
     shopifyShop: {
       control: "text",

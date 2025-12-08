@@ -23,12 +23,3 @@ export const [getExampleProducts, clearCache] = cached(async (shopifyDomain: str
     })) ?? []
   )
 })
-
-/**
- * Get example product handles from Shopify
- * @deprecated Use getExampleProducts instead to get both handle and title
- */
-export const getExampleHandles = async (shopifyDomain: string): Promise<string[]> => {
-  const products = await getExampleProducts(shopifyDomain)
-  return products.map(p => p.handle)
-}
