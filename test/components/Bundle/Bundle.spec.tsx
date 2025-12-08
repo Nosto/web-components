@@ -196,6 +196,7 @@ describe("Bundle", () => {
   })
 
   it("triggers add to cart logic when clicking element with n-atc attribute", async () => {
+    // @ts-expect-error partial mock
     window.Nosto = {
       addMultipleProductsToCart: vi.fn()
     }
@@ -212,7 +213,7 @@ describe("Bundle", () => {
 
     const button = bundle.querySelector<HTMLButtonElement>("button[n-atc]")!
     button.click()
-    expect(window.Nosto.addMultipleProductsToCart).toHaveBeenCalledWith(
+    expect(window.Nosto?.addMultipleProductsToCart).toHaveBeenCalledWith(
       [
         {
           productId: "1",

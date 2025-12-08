@@ -85,7 +85,7 @@ function addListeners(bundle: Bundle) {
 function setSummaryPrice(bundle: Bundle) {
   const summaryElement = bundle.querySelector("[n-summary-price]")
   if (!summaryElement) {
-    return
+    throw new Error("Element with attribute n-summary-price not found")
   }
   const currencyCode = bundle.shopifyProducts[0]?.price.currencyCode || "USD"
   const totalAmount =
