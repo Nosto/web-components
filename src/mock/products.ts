@@ -691,7 +691,7 @@ export const mockProductWithoutVariants: ShopifyProduct = {
  */
 export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
   Array.from({ length: count }, (_, i) => {
-    const handle = `product-${i + 1}`
+    const handle = `product${i + 1}`
     return {
       id: `gid://shopify/Product/${i + 1}`,
       title: "Awesome Test Product",

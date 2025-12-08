@@ -1,4 +1,4 @@
-import { ShopifyMoney } from "./graphql/types"
+import { ShopifyMoney } from "./types"
 
 export function formatPrice({ amount, currencyCode }: ShopifyMoney) {
   return new Intl.NumberFormat(window.Shopify?.locale ?? "en-US", {

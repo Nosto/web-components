@@ -4,6 +4,7 @@ import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { formatPrice } from "@/shopify/formatPrice"
 import { ShopifyProduct, ShopifyVariant } from "@/shopify/types"
+import { CurrencyCode } from "@/shopify/graphql/generated/storefront.types"
 
 /**
  * This component allows users to select multiple products from a bundle and displays
@@ -88,7 +89,7 @@ function getPrice(variants: ShopifyVariant[]) {
 }
 
 function setSummaryPrice(bundle: Bundle) {
-  const currencyCode = window.Shopify?.currency?.active || "USD"
+  const currencyCode = (window.Shopify?.currency?.active || "USD") as CurrencyCode
   const totalAmount =
     bundle.selectedProducts?.reduce((sum, product) => {
       const { price } = getPrice(product.adjacentVariants)
