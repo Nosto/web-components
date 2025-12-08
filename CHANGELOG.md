@@ -1,3 +1,19 @@
+# [10.8.0](https://github.com/Nosto/web-components/compare/v10.7.1...v10.8.0) (2025-12-08)
+
+
+### Bug Fixes
+
+* **Bundle:** use real ATC call ([0bf694c](https://github.com/Nosto/web-components/commit/0bf694c630b2a3437a9fbe0ad931fa33172ebffe))
+* **comments:** minor improvements with function naming and property assignments ([0020ffe](https://github.com/Nosto/web-components/commit/0020ffe62e7b28b87d64b720b46d125a1915abac))
+* **comments:** move listener registration on line up ([705b376](https://github.com/Nosto/web-components/commit/705b37641f298178e6981cd16a866747ab11f423))
+* move initialization to field init ([55dbe64](https://github.com/Nosto/web-components/commit/55dbe64e47f704486c4083377bf47d1ebdd7bbd4))
+* update mock products method signature ([caec6e9](https://github.com/Nosto/web-components/commit/caec6e981fc1472d894d4d423fbad56c2ab1dfc5))
+
+
+### Features
+
+* introduce storefront API in bundle component ([9a6f6f2](https://github.com/Nosto/web-components/commit/9a6f6f2529bb80bfcb12eee5525e3724004a2da2))
+
 ## [10.7.1](https://github.com/Nosto/web-components/compare/v10.7.0...v10.7.1) (2025-12-01)
 
 
