@@ -1,4 +1,4 @@
-import { ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
+import { ShopifyImage, ShopifyProduct, ShopifyVariant } from "../types"
 
 type GenericGraphQLType = {
   data: {

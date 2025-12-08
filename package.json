@@ -36,13 +36,15 @@
     "prepare": "husky",
     "visualize": "esbuild-visualizer --metadata ./meta.json",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "graphql-codegen": "graphql-codegen"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@eslint/js": "^9.39.1",
     "@nosto/nosto-js": "^2.9.3",
+    "@shopify/api-codegen-preset": "^1.2.0",
     "@storybook/addon-docs": "^10.1.4",
     "@storybook/react-vite": "^10.1.4",
     "@storybook/web-components-vite": "^10.1.4",
