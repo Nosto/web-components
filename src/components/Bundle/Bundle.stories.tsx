@@ -54,7 +54,9 @@ export const Default: Story = {
       <nosto-bundle products={products}>
         <div class="bundle-grid">
           {products.map(product => (
-            <nosto-simple-card handle={product.handle}></nosto-simple-card>
+            <nosto-simple-card handle={product.handle}>
+              <nosto-variant-selector handle={product.handle} mode="compact"></nosto-variant-selector>
+            </nosto-simple-card>
           ))}
         </div>
         <div class="bundle-controls">
@@ -85,6 +87,7 @@ export const CheckboxCard: Story = {
         <div class="bundle-grid">
           {products.map(product => (
             <nosto-simple-card handle={product.handle}>
+              <nosto-variant-selector handle={product.handle} mode="compact"></nosto-variant-selector>
               <input type="checkbox" value={product.handle} checked />
             </nosto-simple-card>
           ))}
