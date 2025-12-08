@@ -11,18 +11,14 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
   availableForSale: true,
   images: [
     {
-      altText: "Product image",
       height: 400,
       width: 400,
-      thumbhash: null,
       url: "https://picsum.photos/400/400?random=1"
     }
   ],
   featuredImage: {
-    altText: "Product image",
     height: 400,
     width: 400,
-    thumbhash: null,
     url: "https://picsum.photos/400/400?random=1"
   },
   adjacentVariants: [],
@@ -39,7 +35,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" },
+            selectedOptions: []
           }
         },
         {
@@ -51,7 +48,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" },
+            selectedOptions: []
           }
         },
         {
@@ -63,7 +61,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "29.99" },
             compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" },
+            selectedOptions: []
           }
         }
       ]
@@ -80,7 +79,8 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/single-value-demo-tshirt" },
+            selectedOptions: []
           }
         }
       ]
@@ -140,18 +140,14 @@ export const mockProductAllSingleValue: ShopifyProduct = {
   adjacentVariants: [],
   images: [
     {
-      altText: "Product image",
       height: 400,
       width: 400,
-      thumbhash: null,
       url: "https://picsum.photos/400/400?random=1"
     }
   ],
   featuredImage: {
-    altText: "Product image",
     height: 400,
     width: 400,
-    thumbhash: null,
     url: "https://picsum.photos/400/400?random=1"
   },
   options: [
@@ -167,7 +163,8 @@ export const mockProductAllSingleValue: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" }
+            product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -184,7 +181,8 @@ export const mockProductAllSingleValue: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-            product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" }
+            product: { id: "gid://shopify/Product/789012", onlineStoreUrl: "/products/all-single-value-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -221,25 +219,19 @@ const baseTestProduct: ShopifyProduct = {
   adjacentVariants: [],
   images: [
     {
-      altText: "Product image 1",
       height: 300,
       width: 300,
-      thumbhash: null,
       url: "https://example.com/image1.jpg"
     },
     {
-      altText: "Product image 2",
       height: 300,
       width: 300,
-      thumbhash: null,
       url: "https://example.com/image2.jpg"
     }
   ],
   featuredImage: {
-    altText: "Product image 1",
     height: 300,
     width: 300,
-    thumbhash: null,
     url: "https://example.com/image1.jpg"
   },
   options: [
@@ -255,7 +247,8 @@ const baseTestProduct: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -267,7 +260,8 @@ const baseTestProduct: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -279,7 +273,8 @@ const baseTestProduct: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "29.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -296,7 +291,8 @@ const baseTestProduct: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -308,7 +304,8 @@ const baseTestProduct: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -320,7 +317,8 @@ const baseTestProduct: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -360,7 +358,8 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -372,7 +371,8 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -384,7 +384,8 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -401,7 +402,8 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -462,7 +464,8 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -479,7 +482,8 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -514,25 +518,19 @@ export const mockProductWithVariants: ShopifyProduct = {
   adjacentVariants: [],
   images: [
     {
-      altText: "Product image 1",
       height: 300,
       width: 300,
-      thumbhash: null,
       url: "https://example.com/image1.jpg"
     },
     {
-      altText: "Product image 2",
       height: 300,
       width: 300,
-      thumbhash: null,
       url: "https://example.com/image2.jpg"
     }
   ],
   featuredImage: {
-    altText: "Product image 1",
     height: 300,
     width: 300,
-    thumbhash: null,
     url: "https://example.com/image1.jpg"
   },
   options: [
@@ -548,7 +546,8 @@ export const mockProductWithVariants: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -560,7 +559,8 @@ export const mockProductWithVariants: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -572,7 +572,8 @@ export const mockProductWithVariants: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "29.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -589,7 +590,8 @@ export const mockProductWithVariants: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -601,7 +603,8 @@ export const mockProductWithVariants: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         },
         {
@@ -613,7 +616,8 @@ export const mockProductWithVariants: ShopifyProduct = {
             availableForSale: true,
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+            selectedOptions: []
           }
         }
       ]
@@ -689,8 +693,8 @@ export const mockProductWithoutVariants: ShopifyProduct = {
  *   - A unique product ID ("gid://shopify/Product/1", ...)
  *   - A unique variant ID ("gid://shopify/ProductVariant/1", ...)
  */
-export function createMockShopifyProducts(count: number) {
-  return Array.from({ length: count }, (_, i) => {
+export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
+  Array.from({ length: count }, (_, i) => {
     const handle = `product${i + 1}`
     return {
       id: `gid://shopify/Product/${i + 1}`,
@@ -744,4 +748,3 @@ export function createMockShopifyProducts(count: number) {
       ]
     }
   })
-}
