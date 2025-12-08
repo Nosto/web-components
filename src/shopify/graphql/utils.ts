@@ -1,25 +1,45 @@
-import { ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
+import { GraphQLProduct, GraphQLResponse } from "../types"
+import { ProductByHandleQuery } from "./generated/storefront.generated"
+import { ShopifyProduct, ShopifyVariant } from "../types"
 
-type GenericGraphQLType = {
-  data: {
-    product: Record<string, unknown>
+/**
+ * Recursively flattens GraphQL response by unwrapping { nodes: [...] } structures
+ */
+function flattenNodes<T, R>(obj: T): R {
+  if (obj === null || obj === undefined) return obj as unknown as R
+
+  if (Array.isArray(obj)) {
+    return obj.map(flattenNodes) as R
   }
+
+  if (typeof obj === "object") {
+    // Check if this is a nodes wrapper
+    if ("nodes" in obj && Array.isArray(obj.nodes)) {
+      return flattenNodes(obj.nodes) as R
+    }
+
+    // Recursively flatten nested objects
+    const result: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = flattenNodes(value)
+    }
+    return result as R
+  }
+
+  return obj as R
 }
 
-// can be improved later to handle more cases
-export function flattenResponse(obj: GenericGraphQLType) {
+export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): ShopifyProduct {
   const product = obj.data.product
 
-  const typedProduct = product as ShopifyProduct
-
-  // Flatten images from nodes structure
-  let images: ShopifyImage[] = []
-  if (hasImagesNodes(product)) {
-    images = (product.images as { nodes: ShopifyImage[] }).nodes
+  if (!product) {
+    throw new Error("Product not found in response")
   }
 
+  const flattenedProduct = flattenNodes<GraphQLProduct, ShopifyProduct>(product)
+
   // collect variants from option values and adjacentVariants
-  const variants = typedProduct.variants ?? getCombinedVariants(typedProduct)
+  const variants = product.adjacentVariants ?? getCombinedVariants(product)
 
   // Get price and compareAtPrice from first variant if available
   const firstVariant = variants.find(v => v.availableForSale) || variants[0]
@@ -27,15 +47,14 @@ export function flattenResponse(obj: GenericGraphQLType) {
   const compareAtPrice = firstVariant?.compareAtPrice || null
 
   return {
-    ...product,
+    ...flattenedProduct,
     price,
     compareAtPrice,
-    images,
     variants
   } as ShopifyProduct
 }
 
-function getCombinedVariants(product: ShopifyProduct) {
+function getCombinedVariants(product: GraphQLProduct) {
   const variantsMap = new Map<string, ShopifyVariant>()
 
   product.options
@@ -52,10 +71,6 @@ function getCombinedVariants(product: ShopifyProduct) {
   })
 
   return Array.from(variantsMap.values())
-}
-
-function hasImagesNodes(product: Record<string, unknown>) {
-  return "images" in product && product.images && typeof product.images === "object" && "nodes" in product.images
 }
 
 export function parseId(graphQLId: string): number {

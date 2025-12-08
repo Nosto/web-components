@@ -1,5 +1,5 @@
 import type { SimpleCard } from "./SimpleCard"
-import type { ShopifyImage } from "@/shopify/graphql/types"
+import type { ShopifyImage } from "@/shopify/types"
 import { html } from "@/templating/html"
 import { generateImgHtml } from "./markup"
 

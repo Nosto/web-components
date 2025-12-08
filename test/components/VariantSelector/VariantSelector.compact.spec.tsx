@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { createElement } from "@/utils/jsx"
-import type { VariantChangeDetail } from "@/shopify/graphql/types"
+import type { VariantChangeDetail } from "@/shopify/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithVariants } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
@@ -62,8 +62,8 @@ describe("VariantSelector - Compact Mode", () => {
   it("should mark unavailable variants as disabled in compact mode", async () => {
     const productWithUnavailableVariants = {
       ...mockProductWithVariants,
-      variants: [
-        ...mockProductWithVariants.variants.map((v, idx) => ({
+      adjacentVariants: [
+        ...mockProductWithVariants.adjacentVariants.map((v, idx) => ({
           ...v,
           availableForSale: idx === 1 // Only Medium/Blue is available
         }))
@@ -88,8 +88,8 @@ describe("VariantSelector - Compact Mode", () => {
   it("should preselect first available variant in compact mode when preselect is true", async () => {
     const productWithUnavailableVariants = {
       ...mockProductWithVariants,
-      variants: [
-        ...mockProductWithVariants.variants.map((v, idx) => ({
+      adjacentVariants: [
+        ...mockProductWithVariants.adjacentVariants.map((v, idx) => ({
           ...v,
           availableForSale: idx !== 0 // First variant is unavailable
         }))
@@ -140,7 +140,7 @@ describe("VariantSelector - Compact Mode", () => {
   it("should not render dropdown if product has only one variant in compact mode", async () => {
     const productWithSingleVariant = {
       ...mockProductWithVariants,
-      variants: [mockProductWithVariants.variants[0]]
+      adjacentVariants: [mockProductWithVariants.adjacentVariants[0]]
     }
 
     addProductHandlers({
@@ -199,7 +199,7 @@ describe("VariantSelector - Compact Mode", () => {
   it("should disable dropdown when all variants are unavailable", async () => {
     const productWithAllUnavailable = {
       ...mockProductWithVariants,
-      variants: mockProductWithVariants.variants.map(v => ({
+      adjacentVariants: mockProductWithVariants.adjacentVariants.map(v => ({
         ...v,
         availableForSale: false
       }))
@@ -220,7 +220,7 @@ describe("VariantSelector - Compact Mode", () => {
   it("should enable dropdown when at least one variant is available", async () => {
     const productWithOneAvailable = {
       ...mockProductWithVariants,
-      variants: mockProductWithVariants.variants.map((v, idx) => ({
+      adjacentVariants: mockProductWithVariants.adjacentVariants.map((v, idx) => ({
         ...v,
         availableForSale: idx === 1 // Only second variant is available
       }))

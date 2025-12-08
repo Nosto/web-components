@@ -1,4 +1,4 @@
-import { ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { ShopifyVariant, VariantChangeDetail } from "@/shopify/types"
 import { VariantSelector } from "./VariantSelector"
 import { parseId, toHandle } from "@/shopify/graphql/utils"
 
