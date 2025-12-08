@@ -37,6 +37,7 @@ describe("Product", () => {
     beforeEach(() => {
       element.setAttribute("product-id", PROD_ID)
       element.setAttribute("reco-id", RECO_ID)
+      // @ts-expect-error partial mock
       window.Nosto = { addSkuToCart: vi.fn(() => Promise.resolve()) }
     })
 

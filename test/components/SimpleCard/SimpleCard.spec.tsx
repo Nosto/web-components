@@ -79,6 +79,7 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
     card.variantId = 789
 
+    // @ts-expect-error partial mock
     window.Nosto = { addSkuToCart: vi.fn(() => Promise.resolve()) }
 
     const button = card.querySelector("[n-atc]") as HTMLButtonElement

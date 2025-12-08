@@ -64,12 +64,8 @@ type Story = StoryObj
 
 // Mock Nosto cart function for stories
 if (typeof window !== "undefined") {
-  interface NostoWindow extends Window {
-    Nosto?: {
-      addSkuToCart: (skuId: string, productId: string, recoId: string) => void
-    }
-  }
-  ;(window as NostoWindow).Nosto = {
+  // @ts-expect-error not defined
+  window.Nosto = {
     addSkuToCart: (skuId: string, productId: string, recoId: string) => {
       console.log("Add to cart clicked:", { skuId, productId, recoId })
       alert(`Added SKU ${skuId} of product ${productId} to cart`)

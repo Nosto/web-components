@@ -196,9 +196,13 @@ describe("Bundle", () => {
   })
 
   it("triggers add to cart logic when clicking element with n-atc attribute", async () => {
-    const consoleSpy = vi.spyOn(console, "log")
+    // @ts-expect-error partial mock
+    window.Nosto = {
+      addMultipleProductsToCart: vi.fn()
+    }
+
     const bundle = (
-      <nosto-bundle>
+      <nosto-bundle result-id="test-result">
         <button n-atc>Add to Cart</button>
         <span n-summary-price></span>
       </nosto-bundle>
@@ -209,7 +213,20 @@ describe("Bundle", () => {
 
     const button = bundle.querySelector<HTMLButtonElement>("button[n-atc]")!
     button.click()
-    // TODO: Replace with proper add to cart logic verification
-    expect(consoleSpy).toHaveBeenCalledWith("Bundle Add to Cart clicked", expect.any(Array))
+    expect(window.Nosto?.addMultipleProductsToCart).toHaveBeenCalledWith(
+      [
+        {
+          productId: "1",
+          quantity: 1,
+          skuId: "1"
+        },
+        {
+          productId: "2",
+          quantity: 1,
+          skuId: "2"
+        }
+      ],
+      "test-result"
+    )
   })
 })

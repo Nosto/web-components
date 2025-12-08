@@ -40,23 +40,25 @@ describe("createStore", () => {
   it("should call addSkuToCart when addToCart is called with selectedSkuId", () => {
     const [store, state] = newStore("product1", "reco1")
     store.registerOptionGroup()
+    // @ts-expect-error partial mock
     window.Nosto = {
       addSkuToCart: vi.fn()
     }
     store.selectSkuId("sku1")
     expect(state.selectedSkuId).toBe("sku1")
     store.addToCart()
-    expect(window.Nosto.addSkuToCart).toHaveBeenCalledWith({ productId: "product1", skuId: "sku1" }, "reco1", 1)
+    expect(window.Nosto?.addSkuToCart).toHaveBeenCalledWith({ productId: "product1", skuId: "sku1" }, "reco1", 1)
   })
 
   it("should not call addSkuToCart when addToCart is called without selectedSkuId", () => {
     const [store, state] = newStore("product1", "reco1")
     store.registerOptionGroup()
+    // @ts-expect-error partial mock
     window.Nosto = {
       addSkuToCart: vi.fn()
     }
     store.addToCart()
     expect(state.selectedSkuId).toBeUndefined()
-    expect(window.Nosto.addSkuToCart).not.toHaveBeenCalled()
+    expect(window.Nosto?.addSkuToCart).not.toHaveBeenCalled()
   })
 })
