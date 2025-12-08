@@ -1,4 +1,4 @@
-import { getExampleHandles } from "./shopify/graphql/getExampleHandles"
+import { getExampleProducts } from "./shopify/graphql/getExampleProducts"
 
 export function updateShopifyShop(shop: string) {
   window.Shopify = {
@@ -12,8 +12,8 @@ export const exampleHandlesLoader = async (context: { args: { shopifyShop?: stri
     if (!shopifyShop) {
       return { handles: [] }
     }
-    // fetch handles with titles
-    const products = await getExampleHandles(shopifyShop)
+    // fetch products with handle and title
+    const products = await getExampleProducts(shopifyShop)
     return { handles: products.slice(0, count) }
   } catch (error) {
     console.warn("Error fetching example handles:", error)
