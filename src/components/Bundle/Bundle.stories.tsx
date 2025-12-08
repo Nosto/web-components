@@ -27,18 +27,7 @@ const meta: Meta = {
     shopifyShop: {
       control: "text",
       description: "The Shopify store hostname"
-    }
-  },
-  args: {
-    shopifyShop
-  }
-}
-
-export default meta
-type Story = StoryObj
-
-export const Default: Story = {
-  argTypes: {
+    },
     products: {
       description: "Number of products to display in the bundle",
       control: { type: "range", min: 2, max: 8, step: 1 },
@@ -48,8 +37,15 @@ export const Default: Story = {
     }
   },
   args: {
+    shopifyShop,
     products: 4
-  },
+  }
+}
+
+export default meta
+type Story = StoryObj
+
+export const Default: Story = {
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     const products: JSONProduct[] = handles.slice(0, args.products).map(handle => ({ handle }) as JSONProduct)
@@ -80,18 +76,6 @@ export const Default: Story = {
 }
 
 export const CheckboxCard: Story = {
-  argTypes: {
-    products: {
-      description: "Number of products to display in the bundle",
-      control: { type: "range", min: 2, max: 8, step: 1 },
-      table: {
-        category: "Layout options"
-      }
-    }
-  },
-  args: {
-    products: 4
-  },
   render: (args, { loaded }) => {
     const handles = loaded?.handles as string[]
     const products: JSONProduct[] = handles.slice(0, args.products).map(handle => ({ handle }) as JSONProduct)
