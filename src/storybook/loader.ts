@@ -12,9 +12,9 @@ export const exampleHandlesLoader = async (context: { args: { shopifyShop?: stri
     if (!shopifyShop) {
       return { handles: [] }
     }
-    // fetch handles
-    const handles = await getExampleHandles(shopifyShop)
-    return { handles: handles.slice(0, count) }
+    // fetch handles with titles
+    const products = await getExampleHandles(shopifyShop)
+    return { handles: products.slice(0, count) }
   } catch (error) {
     console.warn("Error fetching example handles:", error)
     return { handles: [] }

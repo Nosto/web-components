@@ -10,10 +10,10 @@ describe("exampleHandlesLoader", () => {
   const shopifyShop = "example-shop.myshopify.com"
   const endpoint = `https://${shopifyShop}/api/2025-10/graphql.json`
 
-  const createMockResponse = (handles: string[]) => ({
+  const createMockResponse = (products: Array<{ handle: string; title: string }>) => ({
     data: {
       products: {
-        edges: handles.map(handle => ({ node: { handle } }))
+        edges: products.map(product => ({ node: product }))
       }
     }
   })
@@ -25,7 +25,11 @@ describe("exampleHandlesLoader", () => {
   it("should fetch default amount when count arg not specified", async () => {
     addHandlers(
       http.post(endpoint, () => {
-        return HttpResponse.json(createMockResponse(Array.from({ length: 20 }, (_, i) => `product-${i + 1}`)))
+        return HttpResponse.json(
+          createMockResponse(
+            Array.from({ length: 20 }, (_, i) => ({ handle: `product-${i + 1}`, title: `Product ${i + 1}` }))
+          )
+        )
       })
     )
 
@@ -36,7 +40,11 @@ describe("exampleHandlesLoader", () => {
   it("should use custom count from args when specified", async () => {
     addHandlers(
       http.post(endpoint, () => {
-        return HttpResponse.json(createMockResponse(Array.from({ length: 20 }, (_, i) => `product-${i + 1}`)))
+        return HttpResponse.json(
+          createMockResponse(
+            Array.from({ length: 20 }, (_, i) => ({ handle: `product-${i + 1}`, title: `Product ${i + 1}` }))
+          )
+        )
       })
     )
 
@@ -50,7 +58,11 @@ describe("exampleHandlesLoader", () => {
     addHandlers(
       http.post(endpoint, async ({ request }) => {
         requestBody = await request.json()
-        return HttpResponse.json(createMockResponse(Array.from({ length: 20 }, (_, i) => `product-${i + 1}`)))
+        return HttpResponse.json(
+          createMockResponse(
+            Array.from({ length: 20 }, (_, i) => ({ handle: `product-${i + 1}`, title: `Product ${i + 1}` }))
+          )
+        )
       })
     )
 

@@ -5,7 +5,7 @@ import { postJSON } from "@/utils/fetch"
 type ExampleHandlesResponse = {
   data?: {
     products?: {
-      edges?: Array<{ node: { handle: string } }>
+      edges?: Array<{ node: { handle: string; title: string } }>
     }
   }
 }
@@ -16,5 +16,10 @@ export const [getExampleHandles, clearCache] = cached(async (shopifyDomain: stri
     query: getExampleHandlesQuery,
     variables: { first: 20 }
   })
-  return data?.data?.products?.edges?.map((edge: { node: { handle: string } }) => edge.node.handle) ?? []
+  return (
+    data?.data?.products?.edges?.map((edge: { node: { handle: string; title: string } }) => ({
+      handle: edge.node.handle,
+      title: edge.node.title
+    })) ?? []
+  )
 })

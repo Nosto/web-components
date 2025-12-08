@@ -72,7 +72,8 @@ export const Default: Story = {
     products: 12
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     if (!args.template && !args.section) {
       return <p>Please provide either a template or section id.</p>
     }

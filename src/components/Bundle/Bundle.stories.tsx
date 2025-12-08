@@ -47,8 +47,9 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    const products: JSONProduct[] = handles.slice(0, args.products).map(handle => ({ handle }) as JSONProduct)
+    const handles = loaded?.handles as Array<{ handle: string; title: string }>
+    const productsWithTitles = handles.slice(0, args.products)
+    const products: JSONProduct[] = productsWithTitles.map(({ handle }) => ({ handle }) as unknown as JSONProduct)
 
     return (
       <nosto-bundle products={products}>
@@ -62,10 +63,10 @@ export const Default: Story = {
         <div class="bundle-controls">
           <h4>Complete the Look</h4>
           <ul>
-            {products.map(product => (
+            {productsWithTitles.map(product => (
               <li>
                 <input type="checkbox" id={`bundle-${product.handle}`} value={product.handle} checked />
-                <label for={`bundle-${product.handle}`}>Include product</label>
+                <label for={`bundle-${product.handle}`}>Include {product.title}</label>
               </li>
             ))}
           </ul>
@@ -79,8 +80,9 @@ export const Default: Story = {
 
 export const CheckboxCard: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    const products: JSONProduct[] = handles.slice(0, args.products).map(handle => ({ handle }) as JSONProduct)
+    const handles = loaded?.handles as Array<{ handle: string; title: string }>
+    const productsWithTitles = handles.slice(0, args.products)
+    const products: JSONProduct[] = productsWithTitles.map(({ handle }) => ({ handle }) as unknown as JSONProduct)
 
     return (
       <nosto-bundle products={products}>

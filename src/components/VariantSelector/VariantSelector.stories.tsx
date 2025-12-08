@@ -106,7 +106,8 @@ export const Default: Story = {
     maxValues: 5
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return (
       <div
         style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 0.1rem; max-width: 1200px;`}
@@ -137,7 +138,8 @@ export const Default: Story = {
 export const SingleProduct: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (_args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
   }
 }
@@ -145,7 +147,8 @@ export const SingleProduct: Story = {
 export const InSimpleCard: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return (
       <nosto-simple-card
         handle={handles[0]}
@@ -164,7 +167,8 @@ export const InSimpleCard: Story = {
 export const InSimpleCard_AddToCart: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return (
       <nosto-simple-card
         handle={handles[0]}
@@ -184,7 +188,8 @@ export const InSimpleCard_AddToCart: Story = {
 export const WithPlaceholder: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return (
       <nosto-simple-card
         handle={handles[0]}
@@ -219,7 +224,8 @@ export const WithMaxValues: Story = {
     maxValues: 3
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return (
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0.1rem; max-width: 1200px;">
         {handles.slice(0, 6).map(handle => (
@@ -250,7 +256,8 @@ export const WithMaxValues: Story = {
 export const CompactMode: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
+    const handles = products.map(p => p.handle)
     return (
       <nosto-simple-card
         handle={handles[0]}
