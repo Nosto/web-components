@@ -12,6 +12,10 @@ export function setShopifyShop(shop: string) {
   shopifyShop = shop
 }
 
+export function resetShopifyShop() {
+  shopifyShop = null
+}
+
 // Resolves the root URL of the Shopify store and excludes any query parameters.
 function resolveRootUrl() {
   const root = window.Shopify?.routes?.root ?? "/"
