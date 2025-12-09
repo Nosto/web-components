@@ -1,3 +1,10 @@
+## [10.10.1](https://github.com/Nosto/web-components/compare/v10.10.0...v10.10.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* improve shopify url resolving ([a2c81e5](https://github.com/Nosto/web-components/commit/a2c81e508f5089684d588f7f483ba99dbfb5d7d7))
+
 # [10.10.0](https://github.com/Nosto/web-components/compare/v10.9.0...v10.10.0) (2025-12-09)
 
 
