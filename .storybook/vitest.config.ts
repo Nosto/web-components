@@ -4,11 +4,7 @@ import { playwright } from "@vitest/browser-playwright"
 
 // More info at: https://storybook.js.org/docs/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  plugins: [
-    storybookTest({
-      storybookScript: "npm run storybook"
-    })
-  ],
+  plugins: [storybookTest()],
   test: {
     name: "storybook",
     browser: {
