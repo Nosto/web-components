@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getShopifyUrl } from "@/shopify/getShopifyUrl"
+import { getShopifyUrl, setShopifyShop } from "@/shopify/getShopifyUrl"
 
 function mockLocation(mockValue: Partial<Location> = {}) {
   Object.defineProperty(window, "location", {
@@ -55,27 +55,15 @@ describe("getShopifyUrl", () => {
     expect(result.toString()).toBe("https://example.com/en-us/products/test")
   })
 
-  it("uses Shopify.shop for localhost", () => {
+  it("uses setShopifyShop provided domain", () => {
     window.Shopify = {
-      routes: { root: "/shop/" },
-      shop: "my-test-store.myshopify.com"
+      routes: { root: "/shop/" }
     }
+    setShopifyShop("my-test-store.myshopify.com")
     mockLocation({
       hostname: "localhost"
     })
     const result = getShopifyUrl("/products/test")
     expect(result.toString()).toBe("https://my-test-store.myshopify.com/shop/products/test")
-  })
-
-  it("ignores Shopify.shop for non-localhost", () => {
-    window.Shopify = {
-      routes: { root: "/shop/" },
-      shop: "my-test-store.myshopify.com"
-    }
-    mockLocation({
-      hostname: "example.com"
-    })
-    const result = getShopifyUrl("/products/test")
-    expect(result.toString()).toBe("https://example.com/shop/products/test")
   })
 })

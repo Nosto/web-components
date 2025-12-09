@@ -1,11 +1,12 @@
 /** @jsx createElement */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { createElement } from "@/utils/jsx"
-import { exampleHandlesLoader, updateShopifyShop } from "@/storybook/loader"
+import { exampleHandlesLoader } from "@/storybook/loader"
 import "./VariantSelector"
+import { setShopifyShop } from "@/shopify/getShopifyUrl"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
-updateShopifyShop(shopifyShop)
+setShopifyShop(shopifyShop)
 
 const meta: Meta = {
   title: "Components/VariantSelector",
@@ -14,7 +15,7 @@ const meta: Meta = {
     (story, context) => {
       // Update Shopify shop hostname if provided via args
       if (context.args?.shopifyShop) {
-        updateShopifyShop(context.args.shopifyShop)
+        setShopifyShop(context.args.shopifyShop)
       }
       return story()
     }
