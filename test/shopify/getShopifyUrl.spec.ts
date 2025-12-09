@@ -55,7 +55,7 @@ describe("getShopifyUrl", () => {
     expect(result.toString()).toBe("https://example.com/en-us/products/test")
   })
 
-  it("uses setShopifyShop provided domain", () => {
+  it("uses setShopifyShop to override hostname", () => {
     window.Shopify = {
       routes: { root: "/shop/" }
     }
