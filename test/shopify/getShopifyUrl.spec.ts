@@ -20,8 +20,6 @@ describe("getShopifyUrl", () => {
     resetShopifyShop()
     // Mock window.location.href
     mockLocation()
-    // Reset shopify shop to prevent test pollution
-    resetShopifyShop()
   })
 
   it("creates URL with default root when Shopify not available", () => {
