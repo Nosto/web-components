@@ -1,3 +1,15 @@
+# [10.10.0](https://github.com/Nosto/web-components/compare/v10.9.0...v10.10.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* **jsx:** restore strict typing for custom elements, flexible for native elements ([05a3e34](https://github.com/Nosto/web-components/commit/05a3e34ff5779dc4b397ae86d66db7a9bc969035))
+
+
+### Features
+
+* **jsx:** replace manual HTML element mappings with imported TypeScript types ([cd1ebd5](https://github.com/Nosto/web-components/commit/cd1ebd563f766cc7ccdf71f0d057f69f19c8f7de))
+
 # [10.9.0](https://github.com/Nosto/web-components/compare/v10.8.0...v10.9.0) (2025-12-09)
 
 
