@@ -1,5 +1,5 @@
 import { assertRequired } from "@/utils/assertRequired"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { getShopifyUrl } from "@/shopify/getShopifyUrl"
 import { getText } from "@/utils/fetch"
 import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
@@ -96,7 +96,7 @@ async function loadAndRenderMarkup(element: DynamicCard) {
 }
 
 async function getMarkup(element: DynamicCard) {
-  const target = createShopifyUrl(`/products/${element.handle}`)
+  const target = getShopifyUrl(`/products/${element.handle}`)
 
   if (element.template) {
     target.searchParams.set("view", element.template)
