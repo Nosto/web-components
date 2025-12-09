@@ -1,3 +1,17 @@
+# [10.11.0](https://github.com/Nosto/web-components/compare/v10.10.1...v10.11.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* **storybook:** correct error message in exampleProductsLoader ([56a3641](https://github.com/Nosto/web-components/commit/56a36414415f08cd7bcbc131621fc87dc6f38e2d))
+
+
+### Features
+
+* **Bundle:** add compact variant selector to both stories ([b67a376](https://github.com/Nosto/web-components/commit/b67a37606391639edfaba9acb3010bdea0e62616))
+* **Bundle:** align storybook stories with SimpleCard pattern ([41b89a3](https://github.com/Nosto/web-components/commit/41b89a30c395ccd6fd046287e9469bbe5532512c))
+* **storybook:** update exampleHandlesLoader to return handle and title ([8928897](https://github.com/Nosto/web-components/commit/8928897d570faf44d1da8c69ec227c0edd48e0a8))
+
 ## [10.10.1](https://github.com/Nosto/web-components/compare/v10.10.0...v10.10.1) (2025-12-09)
 
 
