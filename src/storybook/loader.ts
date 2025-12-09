@@ -21,9 +21,6 @@ export const exampleProductsLoader = async (context: { args: { shopifyShop?: str
   }
 }
 
-/**
- * @deprecated Use exampleProductsLoader instead to get both handle and title
- */
 export const exampleHandlesLoader = async (context: { args: { shopifyShop?: string; count?: number } }) => {
   const { shopifyShop, count = 12 } = context.args
   try {
