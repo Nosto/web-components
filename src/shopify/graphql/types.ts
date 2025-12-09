@@ -21,10 +21,10 @@ export type ShopifyVariant = GraphQLProduct["adjacentVariants"][0]
 
 export type ShopifyOptionValue = GraphQLProduct["options"][0]["optionValues"][0]
 
-export type ShopifyOption = Simplify<{
+export type ShopifyOption = {
   name: GraphQLProduct["options"][0]["name"]
   optionValues: ShopifyOptionValue[]
-}>
+}
 
 // Flattened product type derived from GraphQL with augmented fields
 // TODO: Omit adjacentVariants later and rename variants to combinedVariants
