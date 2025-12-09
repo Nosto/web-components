@@ -121,7 +121,7 @@ describe("SimpleCard", () => {
       ...mockedProduct,
       price: { currencyCode: "USD", amount: "19.99" },
       compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
-      variants: [
+      combinedVariants: [
         {
           id: "gid://shopify/ProductVariant/789",
           title: "Default Title",
@@ -332,7 +332,7 @@ describe("SimpleCard", () => {
       ...mockedProduct,
       price: { currencyCode: "USD", amount: "9.99" },
       compareAtPrice: { currencyCode: "USD", amount: "12.99" },
-      variants: [
+      combinedVariants: [
         {
           id: "gid://shopify/ProductVariant/789",
           title: "Default Title",
@@ -447,7 +447,7 @@ describe("SimpleCard", () => {
           ]
         }
       ],
-      variants: [
+      combinedVariants: [
         {
           id: "gid://shopify/ProductVariant/1001",
           title: "Red",
@@ -490,7 +490,7 @@ describe("SimpleCard", () => {
     // Simulate variant change event
     const variantChangeEvent = new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail: {
-        variant: variantProduct.variants[1] // Blue variant
+        variant: variantProduct.combinedVariants[1] // Blue variant
       },
       bubbles: true
     })

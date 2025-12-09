@@ -63,7 +63,7 @@ describe("VariantSelector - Compact Mode", () => {
     const productWithUnavailableVariants = {
       ...mockProductWithVariants,
       variants: [
-        ...mockProductWithVariants.variants.map((v, idx) => ({
+        ...mockProductWithVariants.combinedVariants.map((v, idx) => ({
           ...v,
           availableForSale: idx === 1 // Only Medium/Blue is available
         }))
@@ -89,7 +89,7 @@ describe("VariantSelector - Compact Mode", () => {
     const productWithUnavailableVariants = {
       ...mockProductWithVariants,
       variants: [
-        ...mockProductWithVariants.variants.map((v, idx) => ({
+        ...mockProductWithVariants.combinedVariants.map((v, idx) => ({
           ...v,
           availableForSale: idx !== 0 // First variant is unavailable
         }))
@@ -140,7 +140,7 @@ describe("VariantSelector - Compact Mode", () => {
   it("should not render dropdown if product has only one variant in compact mode", async () => {
     const productWithSingleVariant = {
       ...mockProductWithVariants,
-      variants: [mockProductWithVariants.variants[0]]
+      variants: [mockProductWithVariants.combinedVariants[0]]
     }
 
     addProductHandlers({
@@ -199,7 +199,7 @@ describe("VariantSelector - Compact Mode", () => {
   it("should disable dropdown when all variants are unavailable", async () => {
     const productWithAllUnavailable = {
       ...mockProductWithVariants,
-      variants: mockProductWithVariants.variants.map(v => ({
+      variants: mockProductWithVariants.combinedVariants.map(v => ({
         ...v,
         availableForSale: false
       }))
@@ -220,7 +220,7 @@ describe("VariantSelector - Compact Mode", () => {
   it("should enable dropdown when at least one variant is available", async () => {
     const productWithOneAvailable = {
       ...mockProductWithVariants,
-      variants: mockProductWithVariants.variants.map((v, idx) => ({
+      variants: mockProductWithVariants.combinedVariants.map((v, idx) => ({
         ...v,
         availableForSale: idx === 1 // Only second variant is available
       }))
