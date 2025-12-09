@@ -6,7 +6,7 @@ import { ProductByHandleQuery } from "./generated/storefront.generated"
  * Recursively simplifies nested types for complete flattening.
  */
 export type Simplify<T> = {
-  [K in keyof T]: T[K] extends object ? (T[K] extends Array<infer U> ? Array<Simplify<U>> : Simplify<T[K]>) : T[K]
+  [K in keyof T]: T[K] extends Array<infer U> ? Array<Simplify<U>> : T[K] extends object ? Simplify<T[K]> : T[K]
 } & {}
 
 export type GraphQLResponse<T> = {
