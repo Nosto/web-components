@@ -1,6 +1,6 @@
 import { html } from "@/templating/html"
 import type { SimpleCard } from "./SimpleCard"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { getShopifyUrl } from "@/shopify/getShopifyUrl"
 import { transform } from "../Image/transform"
 import { ShopifyImage, ShopifyMoney, ShopifyProduct } from "@/shopify/graphql/types"
 import { generateCarouselHTML } from "./carousel"
@@ -67,7 +67,7 @@ function normalizeUrl(url: string) {
   if (!url || url.startsWith("//") || !url.startsWith("/")) {
     return url
   }
-  return createShopifyUrl(url).toString()
+  return getShopifyUrl(url).toString()
 }
 
 const defaultImageSizes = `(min-width: 1024px) 25vw,

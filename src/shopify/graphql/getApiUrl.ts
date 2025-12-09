@@ -1,5 +1,5 @@
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { getShopifyUrl } from "@/shopify/getShopifyUrl"
 
 export function getApiUrl() {
-  return createShopifyUrl(`/api/2025-10/graphql.json`)
+  return getShopifyUrl(`/api/2025-10/graphql.json`)
 }

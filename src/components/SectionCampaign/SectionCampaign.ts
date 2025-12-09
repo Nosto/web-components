@@ -1,6 +1,6 @@
 import { nostojs } from "@nosto/nosto-js"
 import { getText } from "@/utils/fetch"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { getShopifyUrl } from "@/shopify/getShopifyUrl"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
@@ -48,7 +48,7 @@ export class SectionCampaign extends NostoElement {
 
 async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
   const handles = rec.products.map(product => product.handle).join(":")
-  const target = createShopifyUrl("/search")
+  const target = getShopifyUrl("/search")
   target.searchParams.set("section_id", element.section)
   target.searchParams.set("q", handles)
   const sectionHtml = await getText(target.href)

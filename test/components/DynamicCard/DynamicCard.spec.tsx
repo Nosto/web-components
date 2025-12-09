@@ -4,7 +4,7 @@ import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/Dy
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { createElement } from "@/utils/jsx"
-import { createShopifyUrl } from "@/utils/createShopifyUrl"
+import { getShopifyUrl } from "@/shopify/getShopifyUrl"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("DynamicCard", () => {
@@ -16,7 +16,7 @@ describe("DynamicCard", () => {
 
   function addProductHandlers(responses: Record<string, { markup?: string; status?: number }>) {
     // Use createShopifyUrl to get the correct path with Shopify root handling
-    const productUrl = createShopifyUrl("/products/:handle")
+    const productUrl = getShopifyUrl("/products/:handle")
     const productPath = productUrl.pathname
 
     addHandlers(
