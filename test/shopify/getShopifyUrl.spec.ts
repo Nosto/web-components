@@ -66,4 +66,17 @@ describe("getShopifyUrl", () => {
     const result = getShopifyUrl("/products/test")
     expect(result.toString()).toBe("https://my-test-store.myshopify.com/shop/products/test")
   })
+
+  it("uses setShopifyShop to override non-localhost hostname", () => {
+    window.Shopify = {
+      routes: { root: "/shop/" }
+    }
+    setShopifyShop("my-test-store.myshopify.com")
+    mockLocation({
+      origin: "https://example.com",
+      hostname: "example.com"
+    })
+    const result = getShopifyUrl("/products/test")
+    expect(result.toString()).toBe("https://my-test-store.myshopify.com/shop/products/test")
+  })
 })
