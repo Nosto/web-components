@@ -3,8 +3,11 @@ import { ProductByHandleQuery } from "./generated/storefront.generated"
 /**
  * Utility type to simplify complex intersection types into a single flat object type.
  * This makes types more readable in IDE hover information and error messages.
+ * Recursively simplifies nested types for complete flattening.
  */
-export type Simplify<T> = { [K in keyof T]: T[K] } & {}
+export type Simplify<T> = {
+  [K in keyof T]: T[K] extends object ? (T[K] extends Array<infer U> ? Array<Simplify<U>> : Simplify<T[K]>) : T[K]
+} & {}
 
 export type GraphQLResponse<T> = {
   data: T
