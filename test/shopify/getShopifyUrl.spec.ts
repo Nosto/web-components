@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getShopifyUrl, setShopifyShop } from "@/shopify/getShopifyUrl"
+import { getShopifyUrl, setShopifyShop, resetShopifyShop } from "@/shopify/getShopifyUrl"
 
 function mockLocation(mockValue: Partial<Location> = {}) {
   Object.defineProperty(window, "location", {
@@ -18,6 +18,8 @@ describe("getShopifyUrl", () => {
     delete (window as unknown as { Shopify?: unknown }).Shopify
     // Mock window.location.href
     mockLocation()
+    // Reset shopify shop to prevent test pollution
+    resetShopifyShop()
   })
 
   it("creates URL with default root when Shopify not available", () => {
