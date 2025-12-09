@@ -1,3 +1,16 @@
+# [10.12.0](https://github.com/Nosto/web-components/compare/v10.11.0...v10.12.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* add scoped shopify override ([b4f0424](https://github.com/Nosto/web-components/commit/b4f042436b14797963ba5b8214c27c5db472e915))
+* **getShopifyUrl:** add resetShopifyShop to prevent test pollution ([5e5e192](https://github.com/Nosto/web-components/commit/5e5e192a50cd56e6359ee2c55bdcb01a535a540d))
+
+
+### Features
+
+* **getShopifyUrl:** add resetShopifyShop cleanup function ([c85df02](https://github.com/Nosto/web-components/commit/c85df0251ae8f211c5a4a053f1c9c79d99829079))
+
 # [10.11.0](https://github.com/Nosto/web-components/compare/v10.10.1...v10.11.0) (2025-12-09)
 
 
