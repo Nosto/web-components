@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getExampleHandles, clearCache } from "@/storybook/shopify/graphql/getExampleHandles"
+import { getExampleProducts, clearCache } from "@/storybook/shopify/graphql/getExampleProducts"
 import { addHandlers } from "../../../msw.setup"
 import { http, HttpResponse } from "msw"
 
 type GraphQLRequestBody = { query: string; variables: { first: number } }
 
-describe("getExampleHandles", () => {
+describe("getExampleProducts", () => {
   const shopifyShop = "example-shop.myshopify.com"
   const endpoint = `https://${shopifyShop}/api/2025-10/graphql.json`
 
-  const createMockResponse = (handles: string[]) => ({
+  const createMockResponse = (products: Array<{ handle: string; title: string }>) => ({
     data: {
       products: {
-        edges: handles.map(handle => ({ node: { handle } }))
+        edges: products.map(product => ({ node: product }))
       }
     }
   })
@@ -21,15 +21,25 @@ describe("getExampleHandles", () => {
     clearCache()
   })
 
-  it("should fetch product handles successfully", async () => {
+  it("should fetch product handles and titles successfully", async () => {
     addHandlers(
       http.post(endpoint, () => {
-        return HttpResponse.json(createMockResponse(["product-1", "product-2", "product-3"]))
+        return HttpResponse.json(
+          createMockResponse([
+            { handle: "product-1", title: "Product 1" },
+            { handle: "product-2", title: "Product 2" },
+            { handle: "product-3", title: "Product 3" }
+          ])
+        )
       })
     )
 
-    const handles = await getExampleHandles(shopifyShop)
-    expect(handles).toEqual(["product-1", "product-2", "product-3"])
+    const products = await getExampleProducts(shopifyShop)
+    expect(products).toEqual([
+      { handle: "product-1", title: "Product 1" },
+      { handle: "product-2", title: "Product 2" },
+      { handle: "product-3", title: "Product 3" }
+    ])
   })
 
   it("should throw error when fetch fails with 404", async () => {
@@ -39,7 +49,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await expect(getExampleHandles(shopifyShop)).rejects.toThrow(`Failed to fetch ${endpoint}: 404 Not Found`)
+    await expect(getExampleProducts(shopifyShop)).rejects.toThrow(`Failed to fetch ${endpoint}: 404 Not Found`)
   })
 
   it("should return empty array when products data is missing", async () => {
@@ -51,8 +61,8 @@ describe("getExampleHandles", () => {
       })
     )
 
-    const handles = await getExampleHandles(shopifyShop)
-    expect(handles).toEqual([])
+    const products = await getExampleProducts(shopifyShop)
+    expect(products).toEqual([])
   })
 
   it("should cache results for the same parameters", async () => {
@@ -61,15 +71,15 @@ describe("getExampleHandles", () => {
     addHandlers(
       http.post(endpoint, () => {
         callCount++
-        return HttpResponse.json(createMockResponse(["product-1"]))
+        return HttpResponse.json(createMockResponse([{ handle: "product-1", title: "Product 1" }]))
       })
     )
 
-    const result1 = await getExampleHandles(shopifyShop)
-    const result2 = await getExampleHandles(shopifyShop)
+    const result1 = await getExampleProducts(shopifyShop)
+    const result2 = await getExampleProducts(shopifyShop)
 
-    expect(result1).toEqual(["product-1"])
-    expect(result2).toEqual(["product-1"])
+    expect(result1).toEqual([{ handle: "product-1", title: "Product 1" }])
+    expect(result2).toEqual([{ handle: "product-1", title: "Product 1" }])
     expect(callCount).toBe(1)
   })
 
@@ -79,13 +89,13 @@ describe("getExampleHandles", () => {
     addHandlers(
       http.post(endpoint, () => {
         callCount++
-        return HttpResponse.json(createMockResponse(["product-1"]))
+        return HttpResponse.json(createMockResponse([{ handle: "product-1", title: "Product 1" }]))
       })
     )
 
-    await getExampleHandles(shopifyShop)
+    await getExampleProducts(shopifyShop)
     clearCache()
-    await getExampleHandles(shopifyShop)
+    await getExampleProducts(shopifyShop)
 
     expect(callCount).toBe(2)
   })
@@ -99,14 +109,14 @@ describe("getExampleHandles", () => {
         if (callCount === 1) {
           return HttpResponse.json({ error: "Server Error" }, { status: 500 })
         }
-        return HttpResponse.json(createMockResponse(["product-1"]))
+        return HttpResponse.json(createMockResponse([{ handle: "product-1", title: "Product 1" }]))
       })
     )
 
-    await expect(getExampleHandles(shopifyShop)).rejects.toThrow()
-    const result = await getExampleHandles(shopifyShop)
+    await expect(getExampleProducts(shopifyShop)).rejects.toThrow()
+    const result = await getExampleProducts(shopifyShop)
 
-    expect(result).toEqual(["product-1"])
+    expect(result).toEqual([{ handle: "product-1", title: "Product 1" }])
     expect(callCount).toBe(2)
   })
 
@@ -126,7 +136,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(shopifyShop)
+    await getExampleProducts(shopifyShop)
 
     expect(requestBody).not.toBeNull()
     const body = requestBody as GraphQLRequestBody
@@ -135,6 +145,7 @@ describe("getExampleHandles", () => {
     expect(body.query).toContain("edges")
     expect(body.query).toContain("node")
     expect(body.query).toContain("handle")
+    expect(body.query).toContain("title")
     expect(body.variables).toEqual({ first: 20 })
   })
 
@@ -154,7 +165,7 @@ describe("getExampleHandles", () => {
       })
     )
 
-    await getExampleHandles(shopifyShop)
+    await getExampleProducts(shopifyShop)
 
     expect(contentType).toBe("application/json")
   })

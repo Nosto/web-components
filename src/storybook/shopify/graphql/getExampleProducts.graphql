@@ -3,6 +3,7 @@ query ExampleHandles($first: Int!) {
     edges {
       node {
         handle
+        title
       }
     }
   }
