@@ -2,11 +2,11 @@ import { ProductByHandleQuery } from "./generated/storefront.generated"
 import { GraphQLProduct, GraphQLResponse, ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
 
 // can be improved later to handle more cases
-export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): ShopifyProduct | null {
+export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): ShopifyProduct {
   const product = obj.data.product
 
   if (!product) {
-    return null
+    throw new Error("No products returned by Storefront GraphQL")
   }
 
   // Flatten images from nodes structure
@@ -29,7 +29,7 @@ export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): Sho
     compareAtPrice,
     images,
     variants
-  } as ShopifyProduct
+  }
 }
 
 function getCombinedVariants(product: GraphQLProduct) {
