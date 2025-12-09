@@ -16,6 +16,8 @@ describe("getShopifyUrl", () => {
   beforeEach(() => {
     // Reset window.Shopify before each test
     delete (window as unknown as { Shopify?: unknown }).Shopify
+    // Reset shopify shop state
+    resetShopifyShop()
     // Mock window.location.href
     mockLocation()
     // Reset shopify shop to prevent test pollution
