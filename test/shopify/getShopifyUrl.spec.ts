@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getShopifyUrl, setShopifyShop } from "@/shopify/getShopifyUrl"
+import { getShopifyUrl, setShopifyShop, resetShopifyShop } from "@/shopify/getShopifyUrl"
 
 function mockLocation(mockValue: Partial<Location> = {}) {
   Object.defineProperty(window, "location", {
@@ -16,6 +16,8 @@ describe("getShopifyUrl", () => {
   beforeEach(() => {
     // Reset window.Shopify before each test
     delete (window as unknown as { Shopify?: unknown }).Shopify
+    // Reset shopifyShop to ensure test isolation
+    resetShopifyShop()
     // Mock window.location.href
     mockLocation()
   })
