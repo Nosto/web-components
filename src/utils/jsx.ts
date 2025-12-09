@@ -26,13 +26,7 @@ type BaseAttributes = {
  * Filters out methods and HTMLElement base properties.
  */
 type CustomElementProps<T extends HTMLElement> = Partial<{
-  [K in keyof T as T[K] extends (...args: never[]) => unknown
-    ? never
-    : K extends keyof HTMLElement
-      ? never
-      : K extends "style"
-        ? never
-        : K]: T[K]
+  [K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K extends keyof HTMLElement ? never : K]: T[K]
 }> &
   BaseAttributes
 
