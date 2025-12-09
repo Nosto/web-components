@@ -47,9 +47,10 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as Array<{ handle: string; title: string }>
-    const productsWithTitles = handles.slice(0, args.products)
-    const products: JSONProduct[] = productsWithTitles.map(({ handle }) => ({ handle }) as unknown as JSONProduct)
+    const productsWithTitles = (loaded?.products as Array<{ handle: string; title: string }>) || []
+    const products: JSONProduct[] = productsWithTitles
+      .slice(0, args.products)
+      .map(({ handle }) => ({ handle }) as unknown as JSONProduct)
 
     return (
       <nosto-bundle products={products}>
@@ -80,9 +81,10 @@ export const Default: Story = {
 
 export const CheckboxCard: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as Array<{ handle: string; title: string }>
-    const productsWithTitles = handles.slice(0, args.products)
-    const products: JSONProduct[] = productsWithTitles.map(({ handle }) => ({ handle }) as unknown as JSONProduct)
+    const productsWithTitles = (loaded?.products as Array<{ handle: string; title: string }>) || []
+    const products: JSONProduct[] = productsWithTitles
+      .slice(0, args.products)
+      .map(({ handle }) => ({ handle }) as unknown as JSONProduct)
 
     return (
       <nosto-bundle products={products}>

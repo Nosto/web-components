@@ -45,16 +45,16 @@ describe("exampleProductsLoader", () => {
     setupMockHandler(createMockProducts(20))
 
     const result = await exampleProductsLoader({ args: { shopifyShop } })
-    expect(result.handles).toHaveLength(12) // default count from loader
-    expect(result.handles[0]).toHaveProperty("handle")
-    expect(result.handles[0]).toHaveProperty("title")
+    expect(result.products).toHaveLength(12) // default count from loader
+    expect(result.products[0]).toHaveProperty("handle")
+    expect(result.products[0]).toHaveProperty("title")
   })
 
   it("should use custom count from args when specified", async () => {
     setupMockHandler(createMockProducts(20))
 
     const result = await exampleProductsLoader({ args: { shopifyShop, count: 10 } })
-    expect(result.handles).toHaveLength(10)
+    expect(result.products).toHaveLength(10)
   })
 
   it("should request 20 products from GraphQL API but return specified count", async () => {
@@ -74,7 +74,7 @@ describe("exampleProductsLoader", () => {
     expect(requestBody).not.toBeNull()
     const body = requestBody as GraphQLRequestBody
     expect(body.variables).toEqual({ first: 20 }) // always fetches 20, then slices
-    expect(result.handles).toHaveLength(15)
+    expect(result.products).toHaveLength(15)
   })
 })
 

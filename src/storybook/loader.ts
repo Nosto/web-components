@@ -10,14 +10,14 @@ export const exampleProductsLoader = async (context: { args: { shopifyShop?: str
   const { shopifyShop, count = 12 } = context.args
   try {
     if (!shopifyShop) {
-      return { handles: [] }
+      return { products: [] }
     }
     // fetch products with handle and title
     const products = await getExampleProducts(shopifyShop)
-    return { handles: products.slice(0, count) }
+    return { products: products.slice(0, count) }
   } catch (error) {
     console.warn("Error fetching example products:", error)
-    return { handles: [] }
+    return { products: [] }
   }
 }
 
