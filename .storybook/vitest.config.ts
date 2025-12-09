@@ -1,3 +1,4 @@
+import { resolve } from "path"
 import { defineConfig } from "vitest/config"
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin"
 import { playwright } from "@vitest/browser-playwright"
@@ -5,6 +6,11 @@ import { playwright } from "@vitest/browser-playwright"
 // More info at: https://storybook.js.org/docs/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [storybookTest()],
+  resolve: {
+    alias: {
+      "@": resolve(import.meta.dirname, "../src")
+    }
+  },
   test: {
     name: "storybook",
     browser: {
