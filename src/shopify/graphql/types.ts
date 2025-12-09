@@ -17,9 +17,9 @@ export type ShopifyImage = GraphQLProduct["images"]["nodes"][0]
 export type ShopifyMoney = GraphQLProduct["adjacentVariants"][0]["price"]
 export type ShopifySelectedOption = GraphQLProduct["adjacentVariants"][0]["selectedOptions"][0]
 
-export type ShopifyVariant = GraphQLProduct["adjacentVariants"][0]
+export type ShopifyVariant = Simplify<GraphQLProduct["adjacentVariants"][0]>
 
-export type ShopifyOptionValue = GraphQLProduct["options"][0]["optionValues"][0]
+export type ShopifyOptionValue = Simplify<GraphQLProduct["options"][0]["optionValues"][0]>
 
 export type ShopifyOption = {
   name: GraphQLProduct["options"][0]["name"]
