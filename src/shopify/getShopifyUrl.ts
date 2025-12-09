@@ -6,11 +6,21 @@ export function getShopifyUrl(url: string) {
   return new URL(root + url)
 }
 
+let shopifyShop: string | null = null
+
+export function setShopifyShop(shop: string) {
+  shopifyShop = shop
+}
+
+export function resetShopifyShop() {
+  shopifyShop = null
+}
+
 // Resolves the root URL of the Shopify store and excludes any query parameters.
 function resolveRootUrl() {
   const root = window.Shopify?.routes?.root ?? "/"
-  if (window.location.hostname === "localhost" && window.Shopify?.shop) {
-    return `https://${window.Shopify.shop + root}`
+  if (shopifyShop) {
+    return `https://${shopifyShop + root}`
   }
   return window.location.origin + root
 }

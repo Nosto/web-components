@@ -7,7 +7,6 @@ interface Window {
     ): void
   }
   Shopify?: {
-    shop?: string
     routes?: {
       root?: string
     }

@@ -1,11 +1,5 @@
 import { getExampleProducts } from "./shopify/graphql/getExampleProducts"
 
-export function updateShopifyShop(shop: string) {
-  window.Shopify = {
-    shop
-  }
-}
-
 type Context = {
   args: {
     shopifyShop?: string

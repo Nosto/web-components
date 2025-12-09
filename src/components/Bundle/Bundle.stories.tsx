@@ -2,12 +2,13 @@
 import { createElement } from "@/utils/jsx"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import type { JSONProduct } from "@nosto/nosto-js/client"
-import { exampleProductsLoader, updateShopifyShop } from "@/storybook/loader"
+import { exampleProductsLoader } from "@/storybook/loader"
 import "./Bundle"
 import "./Bundle.stories.css"
+import { setShopifyShop } from "@/shopify/getShopifyUrl"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
-updateShopifyShop(shopifyShop)
+setShopifyShop(shopifyShop)
 
 const meta: Meta = {
   title: "Components/Bundle",
@@ -17,7 +18,7 @@ const meta: Meta = {
     (story, context) => {
       // Update Shopify shop hostname if provided via args
       if (context.args?.shopifyShop) {
-        updateShopifyShop(context.args.shopifyShop)
+        setShopifyShop(context.args.shopifyShop)
       }
       return story()
     }

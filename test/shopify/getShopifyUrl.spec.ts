@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getShopifyUrl } from "@/shopify/getShopifyUrl"
+import { getShopifyUrl, setShopifyShop, resetShopifyShop } from "@/shopify/getShopifyUrl"
 
 function mockLocation(mockValue: Partial<Location> = {}) {
   Object.defineProperty(window, "location", {
@@ -16,6 +16,8 @@ describe("getShopifyUrl", () => {
   beforeEach(() => {
     // Reset window.Shopify before each test
     delete (window as unknown as { Shopify?: unknown }).Shopify
+    // Reset shopify shop state
+    resetShopifyShop()
     // Mock window.location.href
     mockLocation()
   })
@@ -55,11 +57,11 @@ describe("getShopifyUrl", () => {
     expect(result.toString()).toBe("https://example.com/en-us/products/test")
   })
 
-  it("uses Shopify.shop for localhost", () => {
+  it("uses setShopifyShop to override hostname", () => {
     window.Shopify = {
-      routes: { root: "/shop/" },
-      shop: "my-test-store.myshopify.com"
+      routes: { root: "/shop/" }
     }
+    setShopifyShop("my-test-store.myshopify.com")
     mockLocation({
       hostname: "localhost"
     })
@@ -67,15 +69,16 @@ describe("getShopifyUrl", () => {
     expect(result.toString()).toBe("https://my-test-store.myshopify.com/shop/products/test")
   })
 
-  it("ignores Shopify.shop for non-localhost", () => {
+  it("uses setShopifyShop to override non-localhost hostname", () => {
     window.Shopify = {
-      routes: { root: "/shop/" },
-      shop: "my-test-store.myshopify.com"
+      routes: { root: "/shop/" }
     }
+    setShopifyShop("my-test-store.myshopify.com")
     mockLocation({
+      origin: "https://example.com",
       hostname: "example.com"
     })
     const result = getShopifyUrl("/products/test")
-    expect(result.toString()).toBe("https://example.com/shop/products/test")
+    expect(result.toString()).toBe("https://my-test-store.myshopify.com/shop/products/test")
   })
 })
