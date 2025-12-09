@@ -9,7 +9,7 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import barrelFiles from "eslint-plugin-barrel-files"
 
 export default defineConfig(
-  { ignores: ["*", "!src", "!test"] },
+  { ignores: ["*", "!src", "!test", "src/shopify/graphql/generated/**"] },
   eslint.configs.recommended,
   tseslint.configs.recommended,
   {

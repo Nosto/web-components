@@ -265,25 +265,19 @@ describe("SimpleCard", () => {
       ...mockedProduct,
       images: [
         {
-          altText: "Product image 3",
           height: 400,
           width: 400,
-          thumbhash: null,
           url: "https://example.com/image3.jpg"
         },
         {
-          altText: "Product image 4",
           height: 400,
           width: 400,
-          thumbhash: null,
           url: "https://example.com/image4.jpg"
         }
       ],
       featuredImage: {
-        altText: "Product image 3",
         height: 400,
         width: 400,
-        thumbhash: null,
         url: "https://example.com/image3.jpg"
       },
       title: "Product 2",
@@ -422,15 +416,14 @@ describe("SimpleCard", () => {
                 title: "Red",
                 availableForSale: true,
                 image: {
-                  altText: "Red variant image",
                   height: 800,
                   width: 800,
-                  thumbhash: null,
                   url: "https://example.com/red.jpg"
                 },
                 price: { currencyCode: "USD", amount: "24.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" },
+                selectedOptions: []
               }
             },
             {
@@ -441,15 +434,14 @@ describe("SimpleCard", () => {
                 title: "Blue",
                 availableForSale: true,
                 image: {
-                  altText: "Blue variant image",
                   height: 800,
                   width: 800,
-                  thumbhash: null,
                   url: "https://example.com/blue.jpg"
                 },
                 price: { currencyCode: "USD", amount: "19.99" },
                 compareAtPrice: { currencyCode: "USD", amount: "24.99" },
-                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" }
+                product: { id: "gid://shopify/Product/456", onlineStoreUrl: "/products/variant-product" },
+                selectedOptions: []
               }
             }
           ]
@@ -462,10 +454,8 @@ describe("SimpleCard", () => {
           availableForSale: true,
           selectedOptions: [{ name: "Color", value: "Red" }],
           image: {
-            altText: "Red variant image",
             height: 800,
             width: 800,
-            thumbhash: null,
             url: "https://example.com/red.jpg"
           },
           price: { currencyCode: "USD", amount: "24.99" },
@@ -478,10 +468,8 @@ describe("SimpleCard", () => {
           availableForSale: true,
           selectedOptions: [{ name: "Color", value: "Blue" }],
           image: {
-            altText: "Blue variant image",
             height: 800,
             width: 800,
-            thumbhash: null,
             url: "https://example.com/blue.jpg"
           },
           price: { currencyCode: "USD", amount: "19.99" },

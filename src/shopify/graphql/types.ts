@@ -1,64 +1,34 @@
-export type ShopifyProduct = {
-  id: string
-  title: string
-  handle: string
-  vendor: string
-  description: string
-  encodedVariantExistence: string
-  onlineStoreUrl: string
-  availableForSale: boolean
-  images: ShopifyImage[]
-  featuredImage: ShopifyImage
-  options: ShopifyOption[]
-  adjacentVariants: ShopifyVariant[]
+import { ProductByHandleQuery } from "./generated/storefront.generated"
 
+export type GraphQLResponse<T> = {
+  data: T
+}
+
+export type GraphQLProduct = NonNullable<ProductByHandleQuery["product"]>
+
+// Derive flattened types directly from the generated GraphQL types
+export type ShopifyImage = GraphQLProduct["images"]["nodes"][0]
+export type ShopifyMoney = GraphQLProduct["adjacentVariants"][0]["price"]
+export type ShopifySelectedOption = GraphQLProduct["adjacentVariants"][0]["selectedOptions"][0]
+
+export type ShopifyVariant = GraphQLProduct["adjacentVariants"][0]
+
+export type ShopifyOptionValue = GraphQLProduct["options"][0]["optionValues"][0]
+
+export type ShopifyOption = {
+  name: GraphQLProduct["options"][0]["name"]
+  optionValues: ShopifyOptionValue[]
+}
+
+// Flattened product type derived from GraphQL with augmented fields
+// TODO: Omit adjacentVariants later and rename variants to combinedVariants
+export type ShopifyProduct = Omit<GraphQLProduct, "images" | "options"> & {
+  images: ShopifyImage[]
+  options: ShopifyOption[]
   // augmented fields
   price: ShopifyMoney
   compareAtPrice: ShopifyMoney | null
   variants: ShopifyVariant[]
-}
-
-export type ShopifyImage = {
-  altText: string | null
-  height: number
-  width: number
-  thumbhash: string | null
-  url: string
-}
-
-export type ShopifyOption = {
-  name: string
-  optionValues: ShopifyOptionValue[]
-}
-
-export type ShopifyOptionValue = {
-  firstSelectableVariant: ShopifyVariant | null
-  name: string
-  swatch: string | null
-}
-
-export type ShopifyVariant = {
-  availableForSale: boolean
-  title: string
-  id: string
-  image?: ShopifyImage
-  price: ShopifyMoney
-  compareAtPrice: ShopifyMoney | null
-  selectedOptions?: ShopifySelectedOption[]
-  product: {
-    id: string
-    onlineStoreUrl: string
-  }
-}
-
-export type ShopifySelectedOption = {
-  name: string
-  value: string
-}
-
-export type ShopifyMoney = {
-  currencyCode: string
-  amount: string
 }
 
 /**
