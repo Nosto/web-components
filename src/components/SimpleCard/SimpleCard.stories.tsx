@@ -83,8 +83,7 @@ export const Default: Story = {
     products: 12
   },
   render: (args, { loaded }) => {
-    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
-    const handles = products.map(p => p.handle)
+    const handles = loaded?.handles as string[]
     return (
       <div
         style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 1rem; max-width: 1200px;`}
@@ -108,8 +107,7 @@ export const Default: Story = {
 export const SingleCard: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
-    const handles = products.map(p => p.handle)
+    const handles = loaded?.handles as string[]
     return (
       <nosto-simple-card
         handle={handles[0]}
@@ -128,8 +126,7 @@ export const SingleCard: Story = {
 export const WithVariantSelector: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
-    const handles = products.map(p => p.handle)
+    const handles = loaded?.handles as string[]
     return (
       <nosto-simple-card
         handle={handles[0]}
@@ -147,8 +144,7 @@ export const WithVariantSelector: Story = {
 
 export const WithAllFeatures: Story = {
   render: (args, { loaded }) => {
-    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
-    const handles = products.map(p => p.handle)
+    const handles = loaded?.handles as string[]
     return (
       <nosto-simple-card
         handle={handles[0]}
@@ -171,8 +167,7 @@ export const WithAllFeatures: Story = {
 
 export const WithCarousel: Story = {
   render: (args, { loaded }) => {
-    const products = (loaded?.handles as Array<{ handle: string; title: string }>) || []
-    const handles = products.map(p => p.handle)
+    const handles = loaded?.handles as string[]
     return (
       <nosto-simple-card
         handle={handles[0]}

@@ -78,7 +78,7 @@ describe("exampleProductsLoader", () => {
   })
 })
 
-describe("exampleHandlesLoader (deprecated)", () => {
+describe("exampleHandlesLoader", () => {
   beforeEach(() => {
     clearCache()
   })
