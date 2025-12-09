@@ -1,3 +1,15 @@
+# [10.9.0](https://github.com/Nosto/web-components/compare/v10.8.0...v10.9.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* adjust eslint and fix mock generation ([c8e8356](https://github.com/Nosto/web-components/commit/c8e8356126effdc8ab83eb378a8c0a2b530b9cea))
+
+
+### Features
+
+* generate shopify graphql types ([7fd8976](https://github.com/Nosto/web-components/commit/7fd897667561b5609a0d4c271b058117c8188281))
+
 # [10.8.0](https://github.com/Nosto/web-components/compare/v10.7.1...v10.8.0) (2025-12-08)
 
 
