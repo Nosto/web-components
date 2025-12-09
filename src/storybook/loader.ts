@@ -6,7 +6,14 @@ export function updateShopifyShop(shop: string) {
   }
 }
 
-export const exampleProductsLoader = async (context: { args: { shopifyShop?: string; count?: number } }) => {
+type Context = {
+  args: {
+    shopifyShop?: string
+    count?: number
+  }
+}
+
+export const exampleProductsLoader = async (context: Context) => {
   const { shopifyShop, count = 12 } = context.args
   try {
     if (!shopifyShop) {
@@ -21,17 +28,9 @@ export const exampleProductsLoader = async (context: { args: { shopifyShop?: str
   }
 }
 
-export const exampleHandlesLoader = async (context: { args: { shopifyShop?: string; count?: number } }) => {
-  const { shopifyShop, count = 12 } = context.args
-  try {
-    if (!shopifyShop) {
-      return { handles: [] }
-    }
-    // fetch products and extract handles only
-    const products = await getExampleProducts(shopifyShop)
-    return { handles: products.slice(0, count).map(p => p.handle) }
-  } catch (error) {
-    console.warn("Error fetching example handles:", error)
-    return { handles: [] }
+export const exampleHandlesLoader = async (context: Context) => {
+  const { products } = await exampleProductsLoader(context)
+  return {
+    handles: products.map(p => p.handle)
   }
 }
