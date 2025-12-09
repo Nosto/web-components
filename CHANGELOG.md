@@ -1,3 +1,10 @@
+# [10.13.0](https://github.com/Nosto/web-components/compare/v10.12.0...v10.13.0) (2025-12-09)
+
+
+### Features
+
+* migrate to trusted publishing ([01c49bb](https://github.com/Nosto/web-components/commit/01c49bbffa92979958e25c3b9224592866319e8c))
+
 # [10.12.0](https://github.com/Nosto/web-components/compare/v10.11.0...v10.12.0) (2025-12-09)
 
 
