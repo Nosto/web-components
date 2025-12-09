@@ -11,30 +11,58 @@ import type { VariantSelector } from "@/components/VariantSelector/VariantSelect
 
 type MaybeArray<T> = T | T[]
 
-// remaps entries in GlobalEventHandlersEventMap to their respective React style event handlers
-type GlobalEventHandlersMapping = {
-  [K in keyof GlobalEventHandlersEventMap as `on${Capitalize<K>}`]?: (event: GlobalEventHandlersEventMap[K]) => void
+/**
+ * Base type for element attributes with flexible JSX typing.
+ * Provides special handling for style, className, and an index signature for flexibility.
+ */
+type BaseAttributes = {
+  style?: string | Record<string, string>
+  className?: string
+  [key: string]: unknown
 }
 
-type ElementMapping<T extends HTMLElement> = Partial<T> & GlobalEventHandlersMapping
+/**
+ * Extracts properties from custom elements with strict typing.
+ * Filters out methods and HTMLElement base properties.
+ */
+type CustomElementProps<T extends HTMLElement> = Partial<{
+  [K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K extends keyof HTMLElement ? never : K]: T[K]
+}> &
+  BaseAttributes
+
+/**
+ * Extracts attributes from native HTML elements with flexible typing.
+ * Allows string coercion for numeric and other properties (e.g., width="300").
+ */
+type NativeElementProps<T extends HTMLElement> = Partial<{
+  [K in keyof T as K extends "style" ? never : K]: T[K] | string
+}> &
+  BaseAttributes
+
+/**
+ * Maps all native HTML element tag names to their corresponding attribute types.
+ * This provides proper type safety for standard HTML elements in JSX while maintaining flexibility.
+ */
+type HTMLElementAttributes = {
+  [K in keyof HTMLElementTagNameMap]: NativeElementProps<HTMLElementTagNameMap[K]>
+}
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
-    type IntrinsicElements = {
-      "nosto-bundle": ElementMapping<Bundle>
-      "nosto-campaign": ElementMapping<Campaign>
-      "nosto-control": ElementMapping<Control>
-      "nosto-dynamic-card": ElementMapping<DynamicCard>
-      "nosto-image": ElementMapping<Image>
-      "nosto-product": ElementMapping<Product>
-      "nosto-section-campaign": ElementMapping<SectionCampaign>
-      "nosto-simple-card": ElementMapping<SimpleCard>
-      "nosto-sku-options": ElementMapping<SkuOptions>
-      "nosto-variant-selector": ElementMapping<VariantSelector>
-      // Keep generic fallback for other HTML elements
-      [key: string]: Record<string, unknown> & GlobalEventHandlersMapping
+    interface IntrinsicElements extends HTMLElementAttributes {
+      "nosto-bundle": CustomElementProps<Bundle>
+      "nosto-campaign": CustomElementProps<Campaign>
+      "nosto-control": CustomElementProps<Control>
+      "nosto-dynamic-card": CustomElementProps<DynamicCard>
+      "nosto-image": CustomElementProps<Image>
+      "nosto-product": CustomElementProps<Product>
+      "nosto-section-campaign": CustomElementProps<SectionCampaign>
+      "nosto-simple-card": CustomElementProps<SimpleCard>
+      "nosto-sku-options": CustomElementProps<SkuOptions>
+      "nosto-variant-selector": CustomElementProps<VariantSelector>
+      "test-element": Record<string, unknown>
     }
   }
 }
