@@ -53,7 +53,8 @@ export const Default: Story = {
     )
 
     return (
-      <nosto-bundle products={productsWithTitles as unknown as JSONProduct[]}>
+      // @ts-expect-error - Intentionally passing partial JSONProduct objects with only handle and title
+      <nosto-bundle products={productsWithTitles as JSONProduct[]}>
         <div class="bundle-grid">
           {productsWithTitles.map(product => (
             <nosto-simple-card handle={product.handle}>
@@ -87,7 +88,8 @@ export const CheckboxCard: Story = {
     )
 
     return (
-      <nosto-bundle products={productsWithTitles as unknown as JSONProduct[]}>
+      // @ts-expect-error - Intentionally passing partial JSONProduct objects with only handle and title
+      <nosto-bundle products={productsWithTitles as JSONProduct[]}>
         <div class="bundle-grid">
           {productsWithTitles.map(product => (
             <nosto-simple-card handle={product.handle}>
