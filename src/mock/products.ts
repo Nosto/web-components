@@ -1,6 +1,6 @@
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { GraphQLProduct } from "@/shopify/graphql/types"
 
-export const mockProductWithSingleValueOption: ShopifyProduct = {
+export const mockProductWithSingleValueOption: GraphQLProduct = {
   id: "gid://shopify/Product/123456",
   handle: "single-value-demo-tshirt",
   title: "Single Value Demo T-Shirt",
@@ -9,19 +9,20 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/single-value-demo-tshirt",
   availableForSale: true,
-  images: [
-    {
-      height: 400,
-      width: 400,
-      url: "https://picsum.photos/400/400?random=1"
-    }
-  ],
+  images: {
+    nodes: [
+      {
+        height: 400,
+        width: 400,
+        url: "https://picsum.photos/400/400?random=1"
+      }
+    ]
+  },
   featuredImage: {
     height: 400,
     width: 400,
     url: "https://picsum.photos/400/400?random=1"
   },
-  adjacentVariants: [],
   options: [
     {
       name: "Size",
@@ -86,9 +87,7 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "24.99" },
-  compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/1001",
       title: "Small / Cotton",
@@ -128,7 +127,7 @@ export const mockProductWithSingleValueOption: ShopifyProduct = {
   ]
 }
 
-export const mockProductAllSingleValue: ShopifyProduct = {
+export const mockProductAllSingleValue: GraphQLProduct = {
   id: "gid://shopify/Product/789012",
   title: "All Single Value Product",
   handle: "all-single-value-product",
@@ -137,14 +136,15 @@ export const mockProductAllSingleValue: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/all-single-value-product",
   availableForSale: true,
-  adjacentVariants: [],
-  images: [
-    {
-      height: 400,
-      width: 400,
-      url: "https://picsum.photos/400/400?random=1"
-    }
-  ],
+  images: {
+    nodes: [
+      {
+        height: 400,
+        width: 400,
+        url: "https://picsum.photos/400/400?random=1"
+      }
+    ]
+  },
   featuredImage: {
     height: 400,
     width: 400,
@@ -188,9 +188,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "24.99" },
-  compareAtPrice: { currencyCode: "USD", amount: "29.99" },
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/2001",
       title: "One Size / Natural",
@@ -207,7 +205,7 @@ export const mockProductAllSingleValue: ShopifyProduct = {
 }
 
 // Base product for tests
-const baseTestProduct: ShopifyProduct = {
+const baseTestProduct: GraphQLProduct = {
   id: "gid://shopify/Product/123456",
   title: "Variant Test Product",
   handle: "variant-test-product",
@@ -216,19 +214,20 @@ const baseTestProduct: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/variant-test-product",
   availableForSale: true,
-  adjacentVariants: [],
-  images: [
-    {
-      height: 300,
-      width: 300,
-      url: "https://example.com/image1.jpg"
-    },
-    {
-      height: 300,
-      width: 300,
-      url: "https://example.com/image2.jpg"
-    }
-  ],
+  images: {
+    nodes: [
+      {
+        height: 300,
+        width: 300,
+        url: "https://example.com/image1.jpg"
+      },
+      {
+        height: 300,
+        width: 300,
+        url: "https://example.com/image2.jpg"
+      }
+    ]
+  },
   featuredImage: {
     height: 300,
     width: 300,
@@ -324,9 +323,7 @@ const baseTestProduct: ShopifyProduct = {
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "19.99" },
-  compareAtPrice: null,
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/1001",
       title: "Small / Red",
@@ -343,7 +340,7 @@ const baseTestProduct: ShopifyProduct = {
 }
 
 // Test products for VariantSelector component tests
-export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
+export const mockProductWithSingleValueOptionTest: GraphQLProduct = {
   ...baseTestProduct,
   options: [
     {
@@ -409,7 +406,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
       ]
     }
   ],
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/3001",
       title: "Small / Cotton",
@@ -449,7 +446,7 @@ export const mockProductWithSingleValueOptionTest: ShopifyProduct = {
   ]
 }
 
-export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
+export const mockProductWithAllSingleValueOptionsTest: GraphQLProduct = {
   ...baseTestProduct,
   options: [
     {
@@ -489,7 +486,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
       ]
     }
   ],
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/4001",
       title: "Medium / Red",
@@ -506,7 +503,7 @@ export const mockProductWithAllSingleValueOptionsTest: ShopifyProduct = {
 }
 
 // Product with multiple variants for VariantSelector tests
-export const mockProductWithVariants: ShopifyProduct = {
+export const mockProductWithVariants: GraphQLProduct = {
   id: "gid://shopify/Product/123456",
   handle: "variant-test-product",
   title: "Variant Test Product",
@@ -515,19 +512,20 @@ export const mockProductWithVariants: ShopifyProduct = {
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/variant-test-product",
   availableForSale: true,
-  adjacentVariants: [],
-  images: [
-    {
-      height: 300,
-      width: 300,
-      url: "https://example.com/image1.jpg"
-    },
-    {
-      height: 300,
-      width: 300,
-      url: "https://example.com/image2.jpg"
-    }
-  ],
+  images: {
+    nodes: [
+      {
+        height: 300,
+        width: 300,
+        url: "https://example.com/image1.jpg"
+      },
+      {
+        height: 300,
+        width: 300,
+        url: "https://example.com/image2.jpg"
+      }
+    ]
+  },
   featuredImage: {
     height: 300,
     width: 300,
@@ -623,9 +621,7 @@ export const mockProductWithVariants: ShopifyProduct = {
       ]
     }
   ],
-  price: { currencyCode: "USD", amount: "19.99" },
-  compareAtPrice: null,
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/1001",
       title: "Small / Red",
@@ -666,10 +662,10 @@ export const mockProductWithVariants: ShopifyProduct = {
 }
 
 // Product without variants for VariantSelector tests
-export const mockProductWithoutVariants: ShopifyProduct = {
+export const mockProductWithoutVariants: GraphQLProduct = {
   ...mockProductWithVariants,
   options: [],
-  variants: [
+  adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/2001",
       title: "Default",
@@ -693,7 +689,7 @@ export const mockProductWithoutVariants: ShopifyProduct = {
  *   - A unique product ID ("gid://shopify/Product/1", ...)
  *   - A unique variant ID ("gid://shopify/ProductVariant/1", ...)
  */
-export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
+export const createMockShopifyProducts = (count: number): GraphQLProduct[] =>
   Array.from({ length: count }, (_, i) => {
     const handle = `product${i + 1}`
     return {
@@ -705,23 +701,24 @@ export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
       encodedVariantExistence: "",
       onlineStoreUrl: `/products/${handle}`,
       availableForSale: true,
-      adjacentVariants: [],
-      images: [
-        {
-          altText: "Product image 1",
-          height: 400,
-          width: 400,
-          thumbhash: null,
-          url: "https://example.com/image1.jpg"
-        },
-        {
-          altText: "Product image 2",
-          height: 400,
-          width: 400,
-          thumbhash: null,
-          url: "https://example.com/image2.jpg"
-        }
-      ],
+      images: {
+        nodes: [
+          {
+            altText: "Product image 1",
+            height: 400,
+            width: 400,
+            thumbhash: null,
+            url: "https://example.com/image1.jpg"
+          },
+          {
+            altText: "Product image 2",
+            height: 400,
+            width: 400,
+            thumbhash: null,
+            url: "https://example.com/image2.jpg"
+          }
+        ]
+      },
       featuredImage: {
         altText: "Product image 1",
         height: 400,
@@ -732,7 +729,7 @@ export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
       options: [],
       price: { currencyCode: "USD", amount: String(10.99 + i) },
       compareAtPrice: { currencyCode: "USD", amount: String(15.99 + i) },
-      variants: [
+      adjacentVariants: [
         {
           id: `gid://shopify/ProductVariant/${i + 1}`,
           title: "Default Title",

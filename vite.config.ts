@@ -11,6 +11,7 @@ export default defineConfig(() => ({
     port: 8080
   },
   test: {
+    include: ["test/**/SimpleCard.spec.tsx"],
     coverage: {
       include: ["src/**/*.{js,ts}"],
       exclude: ["src/main.ts", "src/**/*.stories.ts", "src/**/*.d.ts"],

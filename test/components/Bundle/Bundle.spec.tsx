@@ -50,7 +50,6 @@ describe("Bundle", () => {
       </nosto-bundle>
     ) as Bundle
 
-    bundle.selectedProducts = [mockedProducts.product1, mockedProducts.product2]
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
 
