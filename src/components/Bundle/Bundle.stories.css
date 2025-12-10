@@ -8,10 +8,36 @@
   background: white;
   border-radius: 8px;
   padding: 16px;
+  position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
 }
 
 .product-card:hover {
   transform: translateY(-4px);
+}
+
+.checkbox-cards {
+  nosto-simple-card {
+    position: relative;
+  }
+
+  input[type="checkbox"] {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    transform: scale(2);
+  }
+}
+
+.bundle-summary {
+  display: flex;
+  flex-direction: row;
+  justify-self: center;
+  column-gap: 16px;
+}
+
+[n-summary-price] {
+  font-size: 24px;
+  font-weight: bold;
 }
