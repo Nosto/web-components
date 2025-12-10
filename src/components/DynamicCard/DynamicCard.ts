@@ -13,27 +13,23 @@ const setShadowContent = shadowContentFactory(styles)
 /** Event name for the DynamicCard loaded event */
 const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
 
-type DefaultProps = Pick<DynamicCard, "section" | "placeholder" | "lazy" | "mock"> & {
-  /** @deprecated Use `section` property instead. Template-based rendering will be removed in a future version. */
-  template?: string
-}
+type DefaultProps = Pick<DynamicCard, "section" | "template" | "placeholder" | "lazy" | "mock">
 
 /** Default values for DynamicCard attributes */
 let dynamicCardDefaults: DefaultProps = {}
 
 /**
- * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and section or template.
+ * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
  *
  * This component is designed to be used in a Shopify environment and fetches product data dynamically.
- * **Recommended:** Use the `section` property for better performance and maintainability. The `template` property is deprecated.
  *
  * {@include ./examples.md}
  *
  * @category Campaign level templating
  *
  * @property {string} handle - The product handle to fetch data for. Required.
- * @property {string} section - The section to use for rendering the product. Recommended approach using Shopify's Section Rendering API.
- * @property {string} [template] - **Deprecated:** Use `section` property instead. Template-based rendering will be removed in a future version.
+ * @property {string} section - The section to use for rendering the product. section or template is required.
+ * @property {string} template - The template to use for rendering the product. section or template is required.
  * @property {string} [variantId] (`variant-id`) - The variant ID to fetch specific variant data. Optional.
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
@@ -43,9 +39,6 @@ let dynamicCardDefaults: DefaultProps = {}
 export class DynamicCard extends ReactiveElement {
   @property(String) handle!: string
   @property(String) section?: string
-  /**
-   * @deprecated Use `section` property instead. Template-based rendering will be removed in a future version.
-   */
   @property(String) template?: string
   @property(String) variantId?: string
   @property(Boolean) placeholder?: boolean
@@ -55,12 +48,6 @@ export class DynamicCard extends ReactiveElement {
   async connectedCallback() {
     // Apply default values before rendering
     applyDefaults(this, dynamicCardDefaults as this)
-
-    // Warn about deprecated template property
-    if (this.template) {
-      console.warn("DynamicCard: template property is deprecated. Use section property instead.")
-    }
-
     if (this.mock) {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
@@ -133,7 +120,7 @@ async function getMarkup(element: DynamicCard) {
   placeholders.set(key, markup)
   if (/<(body|html)/.test(markup)) {
     throw new Error(
-      `Invalid markup for ${element.template ? "template" : "section"} ${key}, make sure that no <body> or <html> tags are included.`
+      `Invalid markup for template ${element.template}, make sure that no <body> or <html> tags are included.`
     )
   }
   return markup
@@ -149,18 +136,10 @@ async function getMarkup(element: DynamicCard) {
  * ```typescript
  * import { setDynamicCardDefaults } from '@nosto/web-components'
  *
- * // Recommended: Use section instead of template
  * setDynamicCardDefaults({
  *   placeholder: true,
  *   lazy: true,
- *   section: 'product-card-section'
- * })
- *
- * // Deprecated: template property
- * setDynamicCardDefaults({
- *   placeholder: true,
- *   lazy: true,
- *   template: 'product-card' // ⚠️ Deprecated - use section instead
+ *   template: 'product-card'
  * })
  * ```
  */
