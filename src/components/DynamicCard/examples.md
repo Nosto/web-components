@@ -16,7 +16,7 @@ This demonstrates using Shopify's Section Rendering API. The `section` attribute
 
 ### Basic usage with template (deprecated)
 
-This example shows how to render a product using a Shopify template with a specific variant. The component fetches the product markup and rendered using the "product-card" Shopify Liquid template, with optional placeholder content shown during loading. This is useful for creating dynamic product cards that match your existing Shopify theme design.
+This example shows how to render a product using a Shopify template with a specific variant. The component fetches and renders the product markup using the "product-card" Shopify Liquid template, with optional placeholder content shown during loading. This is useful for creating dynamic product cards that match your existing Shopify theme design.
 
 We recommend to use dynamic cards with Section Rendering, since this is the recommended approach from Shopify.
 
