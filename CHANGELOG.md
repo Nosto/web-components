@@ -1,3 +1,18 @@
+# [10.14.0](https://github.com/Nosto/web-components/compare/v10.13.0...v10.14.0) (2025-12-10)
+
+
+### Bug Fixes
+
+* add path aliases and playwright install to storybook tests ([304a720](https://github.com/Nosto/web-components/commit/304a72097b9f490e648855a092893b3382264ea1))
+* simplify storybookTest config and align vitest versions ([034582d](https://github.com/Nosto/web-components/commit/034582d1b6e12f148c72e58561a2c42168af6003))
+
+
+### Features
+
+* add and configure storybook vitest addon ([cb7b5a6](https://github.com/Nosto/web-components/commit/cb7b5a69de62623faa43b020ff8dec0270b902d0))
+* add storybook-tests CI job with vitest browser config ([10ab7d9](https://github.com/Nosto/web-components/commit/10ab7d9343f25daca4e6d5a69d64c4ab0e459994))
+* add test-storybook script and update CI job name ([58d4736](https://github.com/Nosto/web-components/commit/58d4736aabae5d126033394b01b4a86ce344c15b))
+
 # [10.13.0](https://github.com/Nosto/web-components/compare/v10.12.0...v10.13.0) (2025-12-09)
 
 
