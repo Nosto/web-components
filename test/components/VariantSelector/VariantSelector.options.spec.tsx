@@ -379,7 +379,7 @@ describe("VariantSelector - Options Mode", () => {
       "variant-test-product": { product: mockProductWithVariants }
     })
 
-    const selector = (<nosto-variant-selector handle="variant-test-product" variantId={1002} />) as VariantSelector
+    const selector = (<nosto-variant-selector handle="variant-test-product" variant-id={1002} />) as VariantSelector
     await selector.connectedCallback()
 
     expect(selector.selectedOptions["Size"]).toBe("Medium")
@@ -476,7 +476,7 @@ describe("VariantSelector - Options Mode", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={2} />) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" max-values={2} />) as VariantSelector
       await selector.connectedCallback()
 
       const shadowContent = getShadowContent(selector)
@@ -498,7 +498,7 @@ describe("VariantSelector - Options Mode", () => {
         "variant-test-product": { product: mockProductWithVariants }
       })
 
-      const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={1} />) as VariantSelector
+      const selector = (<nosto-variant-selector handle="variant-test-product" max-values={1} />) as VariantSelector
       await selector.connectedCallback()
 
       const shadowRoot = selector.shadowRoot!
