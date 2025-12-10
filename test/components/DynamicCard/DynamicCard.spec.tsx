@@ -1,9 +1,9 @@
-/** @jsx createElement */
+/** @jsx h */
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { DynamicCard, setDynamicCardDefaults } from "@/components/DynamicCard/DynamicCard"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
-import { createElement } from "@/utils/jsx"
+import { h } from "@/utils/jsx-runtime"
 import { getShopifyUrl } from "@/shopify/getShopifyUrl"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 

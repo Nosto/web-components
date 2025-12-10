@@ -1,5 +1,5 @@
-/** @jsx createElement */
-import { createElement } from "@/utils/jsx"
+/** @jsx h */
+import { h } from "@/utils/jsx-runtime"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { exampleProductsLoader } from "@/storybook/loader"

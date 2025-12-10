@@ -22,8 +22,8 @@
 
     /* JSX */
     "jsx": "react",
-    "jsxFactory": "createElement",
-    "jsxFragmentFactory": "createFragment",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "DocumentFragment",
 
     "paths": {
       "@/*": ["./src/*"]

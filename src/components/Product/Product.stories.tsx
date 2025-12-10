@@ -1,7 +1,7 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
+/** @jsx h */
+/** @jsxFrag DocumentFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement, createFragment } from "@/utils/jsx"
+import { h } from "@/utils/jsx-runtime"
 import "./Product.stories.css"
 
 function generateSampleProducts() {

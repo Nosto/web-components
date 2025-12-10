@@ -1,7 +1,7 @@
-/** @jsx createElement */
+/** @jsx h */
 import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
-import { createElement } from "@/utils/jsx"
+import { h } from "@/utils/jsx-runtime"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { mockProductWithSingleValueOptionTest, mockProductWithVariants } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"

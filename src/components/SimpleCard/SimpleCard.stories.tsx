@@ -1,6 +1,6 @@
-/** @jsx createElement */
+/** @jsx h */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement } from "@/utils/jsx"
+import { h } from "@/utils/jsx-runtime"
 import { exampleHandlesLoader } from "@/storybook/loader"
 import { setShopifyShop } from "@/shopify/getShopifyUrl"
 
