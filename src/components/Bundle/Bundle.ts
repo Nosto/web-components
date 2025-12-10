@@ -85,18 +85,15 @@ function addListeners(bundle: Bundle) {
 }
 
 function initializeSelectedProducts(bundle: Bundle) {
-  const checkboxes = bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')
-  bundle.selectedProducts = []
+  const checkboxes = [...bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')]
 
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) {
-      const handle = checkbox.value
-      const product = bundle.shopifyProducts.find(p => p.handle === handle)
-      if (product) {
-        bundle.selectedProducts.push(product)
-      }
-    }
-  })
+  bundle.selectedProducts = checkboxes
+    .filter(checkbox => checkbox.checked)
+    .map(checkboxChecked => {
+      const handle = checkboxChecked.value
+      return bundle.shopifyProducts.find(p => p.handle === handle)
+    })
+    .filter(product => !!product)
 }
 
 function setSummaryPrice(bundle: Bundle) {
