@@ -503,7 +503,10 @@ export const mockProductWithAllSingleValueOptionsTest: GraphQLProduct = {
 }
 
 // Product with multiple variants for VariantSelector tests
-export const mockProductWithVariants: GraphQLProduct = {
+export const getProductWithVariantsMock = (
+  productStatus = true,
+  unavailableVariants: string[] = []
+): GraphQLProduct => ({
   id: "gid://shopify/Product/123456",
   handle: "variant-test-product",
   title: "Variant Test Product",
@@ -511,7 +514,7 @@ export const mockProductWithVariants: GraphQLProduct = {
   description: "A product with variants for testing",
   encodedVariantExistence: "",
   onlineStoreUrl: "/products/variant-test-product",
-  availableForSale: true,
+  availableForSale: productStatus,
   images: {
     nodes: [
       {
@@ -541,7 +544,7 @@ export const mockProductWithVariants: GraphQLProduct = {
           firstSelectableVariant: {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Red",
-            availableForSale: true,
+            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
@@ -554,7 +557,7 @@ export const mockProductWithVariants: GraphQLProduct = {
           firstSelectableVariant: {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Blue",
-            availableForSale: true,
+            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
@@ -567,7 +570,7 @@ export const mockProductWithVariants: GraphQLProduct = {
           firstSelectableVariant: {
             id: "gid://shopify/ProductVariant/1003",
             title: "Large / Red",
-            availableForSale: true,
+            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1003"),
             price: { currencyCode: "USD", amount: "29.99" },
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
@@ -585,7 +588,7 @@ export const mockProductWithVariants: GraphQLProduct = {
           firstSelectableVariant: {
             id: "gid://shopify/ProductVariant/1001",
             title: "Small / Red",
-            availableForSale: true,
+            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
@@ -598,7 +601,7 @@ export const mockProductWithVariants: GraphQLProduct = {
           firstSelectableVariant: {
             id: "gid://shopify/ProductVariant/1002",
             title: "Medium / Blue",
-            availableForSale: true,
+            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
             price: { currencyCode: "USD", amount: "24.99" },
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
@@ -611,7 +614,7 @@ export const mockProductWithVariants: GraphQLProduct = {
           firstSelectableVariant: {
             id: "gid://shopify/ProductVariant/1004",
             title: "Small / Green",
-            availableForSale: true,
+            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1004"),
             price: { currencyCode: "USD", amount: "19.99" },
             compareAtPrice: null,
             product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
@@ -625,7 +628,7 @@ export const mockProductWithVariants: GraphQLProduct = {
     {
       id: "gid://shopify/ProductVariant/1001",
       title: "Small / Red",
-      availableForSale: true,
+      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
       selectedOptions: [
         { name: "Size", value: "Small" },
         { name: "Color", value: "Red" }
@@ -637,7 +640,7 @@ export const mockProductWithVariants: GraphQLProduct = {
     {
       id: "gid://shopify/ProductVariant/1002",
       title: "Medium / Blue",
-      availableForSale: true,
+      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
       selectedOptions: [
         { name: "Size", value: "Medium" },
         { name: "Color", value: "Blue" }
@@ -649,7 +652,7 @@ export const mockProductWithVariants: GraphQLProduct = {
     {
       id: "gid://shopify/ProductVariant/1003",
       title: "Large / Red",
-      availableForSale: true,
+      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1003"),
       selectedOptions: [
         { name: "Size", value: "Large" },
         { name: "Color", value: "Red" }
@@ -659,24 +662,27 @@ export const mockProductWithVariants: GraphQLProduct = {
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
   ]
-}
+})
 
 // Product without variants for VariantSelector tests
-export const mockProductWithoutVariants: GraphQLProduct = {
-  ...mockProductWithVariants,
+export const getProductWithoutVariantsMock = (
+  productStatus = true,
+  unavailableVariants: string[] = []
+): GraphQLProduct => ({
+  ...getProductWithVariantsMock(productStatus, unavailableVariants),
   options: [],
   adjacentVariants: [
     {
       id: "gid://shopify/ProductVariant/2001",
       title: "Default",
-      availableForSale: true,
+      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/2001"),
       selectedOptions: [],
       price: { currencyCode: "USD", amount: "19.99" },
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
   ]
-}
+})
 
 // Basic product for SimpleCard tests
 /**
