@@ -71,15 +71,45 @@ declare global {
 }
 
 /**
+ * Check if a value should be set as a property rather than an attribute
+ */
+function shouldSetAsProperty(element: HTMLElement, key: string, value: unknown): boolean {
+  // Objects/arrays should always be properties (can't be serialized to attributes)
+  if (typeof value === "object" && value !== null) return true
+
+  // Check if property exists on the element
+  return key in element
+}
+
+/**
  * JSX pragma function that uses jsx-dom as the underlying implementation
- * Provides proper return type of HTMLElement for type safety
+ * Enhanced to properly handle properties vs attributes for custom elements
  */
 export function h(
   type: string | ((props: unknown) => HTMLElement),
   props: Record<string, unknown>,
   ...children: unknown[]
 ): HTMLElement {
-  // Use jsx-dom for the actual implementation
+  // Use jsx-dom to create the element
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return jsxDomH(type as any, props, ...(children as any)) as HTMLElement
+  const element = jsxDomH(type as any, props, ...(children as any)) as HTMLElement
+
+  // For custom elements, jsx-dom sets everything as attributes
+  // We need to also set properties for things that should be properties
+  if (typeof type === "string" && props) {
+    Object.entries(props).forEach(([key, value]) => {
+      // Skip special React/JSX props and event handlers
+      if (key === "children" || key === "key" || key === "ref" || key.startsWith("on")) {
+        return
+      }
+
+      // If it should be a property, set it as a property
+      if (shouldSetAsProperty(element, key, value)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(element as any)[key] = value
+      }
+    })
+  }
+
+  return element
 }
