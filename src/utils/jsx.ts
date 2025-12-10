@@ -1,14 +1,3 @@
-import type { Bundle } from "@/components/Bundle/Bundle"
-import type { Campaign } from "@/components/Campaign/Campaign"
-import type { Control } from "@/components/Control/Control"
-import type { DynamicCard } from "@/components/DynamicCard/DynamicCard"
-import type { Image } from "@/components/Image/Image"
-import type { Product } from "@/components/Product/Product"
-import type { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
-import type { SimpleCard } from "@/components/SimpleCard/SimpleCard"
-import type { SkuOptions } from "@/components/SkuOptions/SkuOptions"
-import type { VariantSelector } from "@/components/VariantSelector/VariantSelector"
-
 type MaybeArray<T> = T | T[]
 
 /**
@@ -39,30 +28,14 @@ type NativeElementProps<T extends HTMLElement> = Partial<{
 }> &
   BaseAttributes
 
-/**
- * Maps all native HTML element tag names to their corresponding attribute types.
- * This provides proper type safety for standard HTML elements in JSX while maintaining flexibility.
- */
-type HTMLElementAttributes = {
-  [K in keyof HTMLElementTagNameMap]: NativeElementProps<HTMLElementTagNameMap[K]>
-}
-
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
-    interface IntrinsicElements extends HTMLElementAttributes {
-      "nosto-bundle": CustomElementProps<Bundle>
-      "nosto-campaign": CustomElementProps<Campaign>
-      "nosto-control": CustomElementProps<Control>
-      "nosto-dynamic-card": CustomElementProps<DynamicCard>
-      "nosto-image": CustomElementProps<Image>
-      "nosto-product": CustomElementProps<Product>
-      "nosto-section-campaign": CustomElementProps<SectionCampaign>
-      "nosto-simple-card": CustomElementProps<SimpleCard>
-      "nosto-sku-options": CustomElementProps<SkuOptions>
-      "nosto-variant-selector": CustomElementProps<VariantSelector>
-      "test-element": Record<string, unknown>
+    type IntrinsicElements = {
+      [K in keyof HTMLElementTagNameMap]: K extends `${string}-${string}`
+        ? CustomElementProps<HTMLElementTagNameMap[K]>
+        : NativeElementProps<HTMLElementTagNameMap[K]>
     }
   }
 }
