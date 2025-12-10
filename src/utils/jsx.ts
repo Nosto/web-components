@@ -6,25 +6,13 @@ type MaybeArray<T> = T | T[]
  */
 type BaseAttributes = {
   style?: string | Record<string, string>
+  class?: string
   className?: string
   [key: string]: unknown
 }
 
-/**
- * Extracts properties from custom elements with strict typing.
- * Filters out methods and HTMLElement base properties.
- */
-type CustomElementProps<T extends HTMLElement> = Partial<{
-  [K in keyof T as T[K] extends (...args: never[]) => unknown ? never : K extends keyof HTMLElement ? never : K]: T[K]
-}> &
-  BaseAttributes
-
-/**
- * Extracts attributes from native HTML elements with flexible typing.
- * Allows string coercion for numeric and other properties (e.g., width="300").
- */
-type NativeElementProps<T extends HTMLElement> = Partial<{
-  [K in keyof T as K extends "style" ? never : K]: T[K] | string
+type ElementProps<T extends HTMLElement> = Partial<{
+  [K in keyof T as K extends "style" ? never : K]: T[K]
 }> &
   BaseAttributes
 
@@ -33,9 +21,7 @@ declare global {
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
-      [K in keyof HTMLElementTagNameMap]: K extends `${string}-${string}`
-        ? CustomElementProps<HTMLElementTagNameMap[K]>
-        : NativeElementProps<HTMLElementTagNameMap[K]>
+      [K in keyof HTMLElementTagNameMap]: ElementProps<HTMLElementTagNameMap[K]>
     }
   }
 }
