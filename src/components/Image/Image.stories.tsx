@@ -1,7 +1,7 @@
 /** @jsx h */
-/** @jsxFrag DocumentFragment */
+/** @jsxFrag Fragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { h } from "jsx-dom"
+import { h, Fragment } from "jsx-dom"
 import "./Image.stories.css"
 
 const sampleImages = [
