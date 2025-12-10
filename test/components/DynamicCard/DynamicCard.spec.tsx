@@ -454,8 +454,16 @@ describe("DynamicCard", () => {
   })
 
   describe("Deprecation warnings", () => {
+    let consoleWarnSpy: ReturnType<typeof vi.spyOn>
+
+    afterEach(() => {
+      if (consoleWarnSpy) {
+        consoleWarnSpy.mockRestore()
+      }
+    })
+
     it("should log deprecation warning when template property is used", async () => {
-      const consoleWarnSpy = vi.spyOn(console, "warn")
+      consoleWarnSpy = vi.spyOn(console, "warn")
 
       const validMarkup = "<div>Product Info</div>"
       addProductHandlers({
@@ -471,12 +479,10 @@ describe("DynamicCard", () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         "DynamicCard: template property is deprecated. Use section property instead."
       )
-
-      consoleWarnSpy.mockRestore()
     })
 
     it("should not log deprecation warning when section property is used", async () => {
-      const consoleWarnSpy = vi.spyOn(console, "warn")
+      consoleWarnSpy = vi.spyOn(console, "warn")
 
       const validMarkup = "<section><div>Product Info</div></section>"
       addProductHandlers({
@@ -490,20 +496,16 @@ describe("DynamicCard", () => {
       await card.connectedCallback()
 
       expect(consoleWarnSpy).not.toHaveBeenCalled()
-
-      consoleWarnSpy.mockRestore()
     })
 
     it("should not log deprecation warning when mock is used without template", async () => {
-      const consoleWarnSpy = vi.spyOn(console, "warn")
+      consoleWarnSpy = vi.spyOn(console, "warn")
 
       const card = (<nosto-dynamic-card handle="test-handle" mock={true} />) as DynamicCard
 
       await card.connectedCallback()
 
       expect(consoleWarnSpy).not.toHaveBeenCalled()
-
-      consoleWarnSpy.mockRestore()
     })
   })
 })

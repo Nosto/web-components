@@ -133,7 +133,7 @@ async function getMarkup(element: DynamicCard) {
   placeholders.set(key, markup)
   if (/<(body|html)/.test(markup)) {
     throw new Error(
-      `Invalid markup for template ${element.template}, make sure that no <body> or <html> tags are included.`
+      `Invalid markup for ${element.template ? "template" : "section"} ${key}, make sure that no <body> or <html> tags are included.`
     )
   }
   return markup
