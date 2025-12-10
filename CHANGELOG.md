@@ -1,3 +1,11 @@
+## [10.14.1](https://github.com/Nosto/web-components/compare/v10.14.0...v10.14.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* **comment:** use functional style for initializing selected products ([d00c18b](https://github.com/Nosto/web-components/commit/d00c18b1d2414f780c3b3fda7f0b520d07e42dfa))
+* default selected products and adjust bundle tests ([69e5719](https://github.com/Nosto/web-components/commit/69e5719ede6094bc6114db2fd91979f16c785c2a))
+
 # [10.14.0](https://github.com/Nosto/web-components/compare/v10.13.0...v10.14.0) (2025-12-10)
 
 
