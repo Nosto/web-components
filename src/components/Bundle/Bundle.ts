@@ -64,8 +64,6 @@ async function fetchShopifyProducts(bundle: Bundle) {
   const fetchedProducts = await Promise.all(fetchPromises)
   bundle.shopifyProducts = fetchedProducts.filter(p => p !== null)
   bundle.toggleAttribute("loading", false)
-
-  // Initialize selected products based on initial checkbox states
   initializeSelectedProducts(bundle)
   setSummaryPrice(bundle)
 }
@@ -85,9 +83,9 @@ function addListeners(bundle: Bundle) {
 }
 
 function initializeSelectedProducts(bundle: Bundle) {
-  const checkboxes = [...bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')]
+  const checkboxes = bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')
 
-  bundle.selectedProducts = checkboxes
+  bundle.selectedProducts = Array.from(checkboxes)
     .filter(checkbox => checkbox.checked)
     .map(checkboxChecked => {
       const handle = checkboxChecked.value
