@@ -3,7 +3,6 @@ import { defineConfig } from "vitest/config"
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin"
 import { playwright } from "@vitest/browser-playwright"
 
-// More info at: https://storybook.js.org/docs/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [storybookTest()],
   resolve: {
