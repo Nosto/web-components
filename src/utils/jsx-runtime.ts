@@ -98,7 +98,8 @@ export function h(
   // We need to also set properties for things that should be properties
   if (typeof type === "string" && props) {
     Object.entries(props).forEach(([key, value]) => {
-      // Skip special React/JSX props and event handlers
+      // Skip special React/JSX props and event handlers (jsx-dom handles these)
+      // Event handlers starting with 'on' are automatically converted to addEventListener by jsx-dom
       if (key === "children" || key === "key" || key === "ref" || key.startsWith("on")) {
         return
       }
