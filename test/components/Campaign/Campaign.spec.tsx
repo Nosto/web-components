@@ -3,7 +3,7 @@ import { describe, it, expect, vi, Mock, beforeEach, afterEach } from "vitest"
 import { Campaign } from "@/components/Campaign/Campaign"
 import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { mockNostoRecs } from "../../mockNostoRecs"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 import { mockIntersectionObserver } from "../../utils/mockIntersectionObserver"
 
 describe("Campaign", () => {

@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { exampleProductsLoader } from "@/storybook/loader"

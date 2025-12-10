@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { Product } from "@/components/Product/Product"
 import "@/components/SkuOptions/SkuOptions"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 
 describe("sku options integration", () => {
   const element = (selector: string) => document.querySelector<HTMLElement>(selector)!

@@ -5,7 +5,7 @@ import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../../mockNostoRecs"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 
 describe("SectionCampaign", () => {
   it("should be defined as a custom element", () => {

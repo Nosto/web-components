@@ -1,7 +1,7 @@
 import { describe, beforeEach, it, expect } from "vitest"
 import { Control } from "@/components/Control/Control"
 import { mockNostojs } from "@nosto/nosto-js/testing"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 
 describe("Control", () => {
   beforeEach(() => {

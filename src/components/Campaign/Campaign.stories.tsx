@@ -1,7 +1,7 @@
 /** @jsx h */
 /** @jsxFrag DocumentFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 import { Template } from "@/utils/template"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"

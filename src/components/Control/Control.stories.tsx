@@ -1,6 +1,6 @@
 /** @jsx h */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import "./Control.stories.css"
 

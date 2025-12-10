@@ -1,6 +1,6 @@
 /** @jsx h */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { h } from "@/utils/jsx-runtime"
+import { h } from "jsx-dom"
 import { exampleHandlesLoader } from "@/storybook/loader"
 import "./VariantSelector"
 import { setShopifyShop } from "@/shopify/getShopifyUrl"
