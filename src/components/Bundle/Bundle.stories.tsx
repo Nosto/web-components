@@ -68,8 +68,13 @@ export const Default: Story = {
           <ul>
             {productsWithTitles.map(product => (
               <li>
-                <input type="checkbox" id={`bundle-${product.handle}`} value={product.handle} checked />
-                <label for={`bundle-${product.handle}`}>Include {product.title}</label>
+                (
+                {product.handle !== "awesome-sneakers" ? (
+                  <input type="checkbox" id={`bundle-${product.handle}`} value={product.handle} checked />
+                ) : (
+                  <input type="checkbox" id={`bundle-${product.handle}`} value={product.handle} />
+                )}
+                )<label for={`bundle-${product.handle}`}>Include {product.title}</label>
               </li>
             ))}
           </ul>

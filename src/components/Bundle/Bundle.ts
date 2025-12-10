@@ -63,8 +63,10 @@ async function fetchShopifyProducts(bundle: Bundle) {
   const fetchPromises = bundle.products.map(product => getProduct(product.handle))
   const fetchedProducts = await Promise.all(fetchPromises)
   bundle.shopifyProducts = fetchedProducts.filter(p => p !== null)
-  bundle.selectedProducts = bundle.shopifyProducts
   bundle.toggleAttribute("loading", false)
+
+  // Initialize selected products based on initial checkbox states
+  initializeSelectedProducts(bundle)
   setSummaryPrice(bundle)
 }
 
@@ -80,6 +82,21 @@ async function getProduct(handle: string): Promise<ShopifyProduct | null> {
 function addListeners(bundle: Bundle) {
   bundle.addEventListener("click", bundle)
   bundle.addEventListener("input", bundle)
+}
+
+function initializeSelectedProducts(bundle: Bundle) {
+  const checkboxes = bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')
+  bundle.selectedProducts = []
+
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      const handle = checkbox.value
+      const product = bundle.shopifyProducts.find(p => p.handle === handle)
+      if (product) {
+        bundle.selectedProducts.push(product)
+      }
+    }
+  })
 }
 
 function setSummaryPrice(bundle: Bundle) {
