@@ -30,7 +30,7 @@ This demonstrates using Shopify's Section Rendering API with lazy loading for be
 
 > ⚠️ **DEPRECATED:** The `template` property is deprecated and will be removed in a future version. Please use the `section` property instead.
 
-This example shows how to render a product using a Shopify template with a specific variant. The component fetches the product markup and rendered using the "product-card" Shopify Liquid template, with optional placeholder content shown during loading.
+This example shows how to render a product using a Shopify template with a specific variant. The component fetches the product markup and renders it using the "product-card" Shopify Liquid template, with optional placeholder content shown during loading.
 
 ```html
 <!-- ⚠️ Deprecated - use section instead -->
