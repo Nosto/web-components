@@ -3,13 +3,13 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { VariantSelector } from "@/components/VariantSelector/VariantSelector"
 import { createElement } from "@/utils/jsx"
 import type { GraphQLProduct, VariantChangeDetail } from "@/shopify/graphql/types"
-import { mockProductWithSingleValueOptionTest, productWithVariantsMock } from "@/mock/products"
+import { mockProductWithSingleValueOptionTest, getProductWithVariantsMock } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 import { addProductHandlers } from "../../utils/addProductHandlers"
 
 describe("VariantSelector - Compact Mode", () => {
-  const withVariantsMock: GraphQLProduct = productWithVariantsMock()
+  const withVariantsMock: GraphQLProduct = getProductWithVariantsMock()
 
   beforeEach(() => {
     clearProductCache()
@@ -63,7 +63,7 @@ describe("VariantSelector - Compact Mode", () => {
 
   it("should mark unavailable variants as disabled in compact mode", async () => {
     // Only Medium/Blue is available
-    const productWithUnavailableVariants = productWithVariantsMock(true, [
+    const productWithUnavailableVariants = getProductWithVariantsMock(true, [
       "gid://shopify/ProductVariant/1001", // Small/Red
       "gid://shopify/ProductVariant/1003", // Large/Red
       "gid://shopify/ProductVariant/1004" // Small/Green
@@ -89,7 +89,7 @@ describe("VariantSelector - Compact Mode", () => {
 
   it("should preselect first available variant in compact mode when preselect is true", async () => {
     // Only the first variant (Small/Red) is unavailable
-    const productWithUnavailableVariants = productWithVariantsMock(true, [
+    const productWithUnavailableVariants = getProductWithVariantsMock(true, [
       "gid://shopify/ProductVariant/1001" // Small/Red
     ])
 
@@ -196,7 +196,7 @@ describe("VariantSelector - Compact Mode", () => {
 
   it("should disable dropdown when all variants are unavailable", async () => {
     // All variants are unavailable
-    const productWithAllUnavailable = productWithVariantsMock(true, [
+    const productWithAllUnavailable = getProductWithVariantsMock(true, [
       "gid://shopify/ProductVariant/1001",
       "gid://shopify/ProductVariant/1002",
       "gid://shopify/ProductVariant/1003",

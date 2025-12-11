@@ -503,183 +503,187 @@ export const mockProductWithAllSingleValueOptionsTest: GraphQLProduct = {
 }
 
 // Product with multiple variants for VariantSelector tests
-export const productWithVariantsMock = (productStatus = true, unavailableVariants: string[] = []): GraphQLProduct => ({
-  id: "gid://shopify/Product/123456",
-  handle: "variant-test-product",
-  title: "Variant Test Product",
-  vendor: "Test Brand",
-  description: "A product with variants for testing",
-  encodedVariantExistence: "",
-  onlineStoreUrl: "/products/variant-test-product",
-  availableForSale: productStatus,
-  images: {
-    nodes: [
+export function getProductWithVariantsMock(productStatus = true, unavailableVariants: string[] = []): GraphQLProduct {
+  return {
+    id: "gid://shopify/Product/123456",
+    handle: "variant-test-product",
+    title: "Variant Test Product",
+    vendor: "Test Brand",
+    description: "A product with variants for testing",
+    encodedVariantExistence: "",
+    onlineStoreUrl: "/products/variant-test-product",
+    availableForSale: productStatus,
+    images: {
+      nodes: [
+        {
+          height: 300,
+          width: 300,
+          url: "https://example.com/image1.jpg"
+        },
+        {
+          height: 300,
+          width: 300,
+          url: "https://example.com/image2.jpg"
+        }
+      ]
+    },
+    featuredImage: {
+      height: 300,
+      width: 300,
+      url: "https://example.com/image1.jpg"
+    },
+    options: [
       {
-        height: 300,
-        width: 300,
-        url: "https://example.com/image1.jpg"
+        name: "Size",
+        optionValues: [
+          {
+            name: "Small",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1001",
+              title: "Small / Red",
+              availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+              selectedOptions: []
+            }
+          },
+          {
+            name: "Medium",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1002",
+              title: "Medium / Blue",
+              availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
+              price: { currencyCode: "USD", amount: "24.99" },
+              compareAtPrice: null,
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+              selectedOptions: []
+            }
+          },
+          {
+            name: "Large",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1003",
+              title: "Large / Red",
+              availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1003"),
+              price: { currencyCode: "USD", amount: "29.99" },
+              compareAtPrice: null,
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+              selectedOptions: []
+            }
+          }
+        ]
       },
       {
-        height: 300,
-        width: 300,
-        url: "https://example.com/image2.jpg"
+        name: "Color",
+        optionValues: [
+          {
+            name: "Red",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1001",
+              title: "Small / Red",
+              availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+              selectedOptions: []
+            }
+          },
+          {
+            name: "Blue",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1002",
+              title: "Medium / Blue",
+              availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
+              price: { currencyCode: "USD", amount: "24.99" },
+              compareAtPrice: null,
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+              selectedOptions: []
+            }
+          },
+          {
+            name: "Green",
+            swatch: null,
+            firstSelectableVariant: {
+              id: "gid://shopify/ProductVariant/1004",
+              title: "Small / Green",
+              availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1004"),
+              price: { currencyCode: "USD", amount: "19.99" },
+              compareAtPrice: null,
+              product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
+              selectedOptions: []
+            }
+          }
+        ]
+      }
+    ],
+    adjacentVariants: [
+      {
+        id: "gid://shopify/ProductVariant/1001",
+        title: "Small / Red",
+        availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
+        selectedOptions: [
+          { name: "Size", value: "Small" },
+          { name: "Color", value: "Red" }
+        ],
+        price: { currencyCode: "USD", amount: "19.99" },
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+      },
+      {
+        id: "gid://shopify/ProductVariant/1002",
+        title: "Medium / Blue",
+        availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
+        selectedOptions: [
+          { name: "Size", value: "Medium" },
+          { name: "Color", value: "Blue" }
+        ],
+        price: { currencyCode: "USD", amount: "24.99" },
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+      },
+      {
+        id: "gid://shopify/ProductVariant/1003",
+        title: "Large / Red",
+        availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1003"),
+        selectedOptions: [
+          { name: "Size", value: "Large" },
+          { name: "Color", value: "Red" }
+        ],
+        price: { currencyCode: "USD", amount: "29.99" },
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
       }
     ]
-  },
-  featuredImage: {
-    height: 300,
-    width: 300,
-    url: "https://example.com/image1.jpg"
-  },
-  options: [
-    {
-      name: "Size",
-      optionValues: [
-        {
-          name: "Small",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1001",
-            title: "Small / Red",
-            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
-            selectedOptions: []
-          }
-        },
-        {
-          name: "Medium",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1002",
-            title: "Medium / Blue",
-            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
-            selectedOptions: []
-          }
-        },
-        {
-          name: "Large",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1003",
-            title: "Large / Red",
-            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1003"),
-            price: { currencyCode: "USD", amount: "29.99" },
-            compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
-            selectedOptions: []
-          }
-        }
-      ]
-    },
-    {
-      name: "Color",
-      optionValues: [
-        {
-          name: "Red",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1001",
-            title: "Small / Red",
-            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
-            selectedOptions: []
-          }
-        },
-        {
-          name: "Blue",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1002",
-            title: "Medium / Blue",
-            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
-            price: { currencyCode: "USD", amount: "24.99" },
-            compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
-            selectedOptions: []
-          }
-        },
-        {
-          name: "Green",
-          swatch: null,
-          firstSelectableVariant: {
-            id: "gid://shopify/ProductVariant/1004",
-            title: "Small / Green",
-            availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1004"),
-            price: { currencyCode: "USD", amount: "19.99" },
-            compareAtPrice: null,
-            product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" },
-            selectedOptions: []
-          }
-        }
-      ]
-    }
-  ],
-  adjacentVariants: [
-    {
-      id: "gid://shopify/ProductVariant/1001",
-      title: "Small / Red",
-      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1001"),
-      selectedOptions: [
-        { name: "Size", value: "Small" },
-        { name: "Color", value: "Red" }
-      ],
-      price: { currencyCode: "USD", amount: "19.99" },
-      compareAtPrice: null,
-      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
-    },
-    {
-      id: "gid://shopify/ProductVariant/1002",
-      title: "Medium / Blue",
-      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1002"),
-      selectedOptions: [
-        { name: "Size", value: "Medium" },
-        { name: "Color", value: "Blue" }
-      ],
-      price: { currencyCode: "USD", amount: "24.99" },
-      compareAtPrice: null,
-      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
-    },
-    {
-      id: "gid://shopify/ProductVariant/1003",
-      title: "Large / Red",
-      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1003"),
-      selectedOptions: [
-        { name: "Size", value: "Large" },
-        { name: "Color", value: "Red" }
-      ],
-      price: { currencyCode: "USD", amount: "29.99" },
-      compareAtPrice: null,
-      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
-    }
-  ]
-})
+  }
+}
 
 // Product without variants for VariantSelector tests
-export const productWithoutVariantsMock = (
+export function getProductWithoutVariantsMock(
   productStatus = true,
   unavailableVariants: string[] = []
-): GraphQLProduct => ({
-  ...productWithVariantsMock(productStatus, unavailableVariants),
-  options: [],
-  adjacentVariants: [
-    {
-      id: "gid://shopify/ProductVariant/2001",
-      title: "Default",
-      availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/2001"),
-      selectedOptions: [],
-      price: { currencyCode: "USD", amount: "19.99" },
-      compareAtPrice: null,
-      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
-    }
-  ]
-})
+): GraphQLProduct {
+  return {
+    ...getProductWithVariantsMock(productStatus, unavailableVariants),
+    options: [],
+    adjacentVariants: [
+      {
+        id: "gid://shopify/ProductVariant/2001",
+        title: "Default",
+        availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/2001"),
+        selectedOptions: [],
+        price: { currencyCode: "USD", amount: "19.99" },
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+      }
+    ]
+  }
+}
 
 // Basic product for SimpleCard tests
 /**
@@ -692,8 +696,8 @@ export const productWithoutVariantsMock = (
  *   - A unique product ID ("gid://shopify/Product/1", ...)
  *   - A unique variant ID ("gid://shopify/ProductVariant/1", ...)
  */
-export const createMockShopifyProducts = (count: number): GraphQLProduct[] =>
-  Array.from({ length: count }, (_, i): GraphQLProduct => {
+export function createMockShopifyProducts(count: number): GraphQLProduct[] {
+  return Array.from({ length: count }, (_, i): GraphQLProduct => {
     const handle = `product${i + 1}`
     return {
       id: `gid://shopify/Product/${i + 1}`,
@@ -740,3 +744,4 @@ export const createMockShopifyProducts = (count: number): GraphQLProduct[] =>
       ]
     }
   })
+}
