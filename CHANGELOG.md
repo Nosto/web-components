@@ -1,3 +1,11 @@
+## [10.17.2](https://github.com/Nosto/web-components/compare/v10.17.1...v10.17.2) (2025-12-11)
+
+
+### Bug Fixes
+
+* handle empty product in response ([682a672](https://github.com/Nosto/web-components/commit/682a6722124be2e734ee7cf277b609af22d3b88a))
+* use shopify types in fetch products ([30dfbd2](https://github.com/Nosto/web-components/commit/30dfbd240cdd8dadb5fa0edde30163e0eff128e4))
+
 ## [10.17.1](https://github.com/Nosto/web-components/compare/v10.17.0...v10.17.1) (2025-12-11)
 
 
