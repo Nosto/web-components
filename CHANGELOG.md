@@ -1,3 +1,18 @@
+# [10.15.0](https://github.com/Nosto/web-components/compare/v10.14.1...v10.15.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* address type issues ([23c3d38](https://github.com/Nosto/web-components/commit/23c3d388999f25bd00f984c0b6be1295c148cdab))
+* improve GraphQLProduct type usage when returning array of mock products ([b592bd3](https://github.com/Nosto/web-components/commit/b592bd3404585179bcbe66ed21c6b13f693e777b))
+* improve mocck generations and adjust tests to handle GraphQL data ([a72b4ac](https://github.com/Nosto/web-components/commit/a72b4acb944e862874524e63018dd919d16a084f))
+* use function syntax ([938237c](https://github.com/Nosto/web-components/commit/938237cd793ec0e68fc2e27d4e1be77a8bf3e8ce))
+
+
+### Features
+
+* use GraphQL types in mock products ([5231aa2](https://github.com/Nosto/web-components/commit/5231aa2ec9f48f7736a0fe3c1c24eed7e0dda083))
+
 ## [10.14.1](https://github.com/Nosto/web-components/compare/v10.14.0...v10.14.1) (2025-12-10)
 
 
