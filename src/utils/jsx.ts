@@ -5,7 +5,7 @@ type MaybeArray<T> = T | T[]
  * Provides special handling for style, className, and an index signature for flexibility.
  */
 type BaseAttributes = {
-  style?: string | Record<string, string>
+  style?: string | Partial<CSSStyleDeclaration>
   class?: string
   className?: string
   [key: string]: unknown
