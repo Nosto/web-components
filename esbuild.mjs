@@ -14,19 +14,19 @@ const sharedConfig = {
 
 async function build() {
   try {
-    await esbuild.build({
+    const ctx1 = await esbuild.context({
       ...sharedConfig,
       outfile: "dist/main.cjs.js",
       format: "cjs"
     })
 
-    await esbuild.build({
+    const ctx2 = await esbuild.context({
       ...sharedConfig,
       outfile: "dist/main.es.js",
       format: "esm"
     })
 
-    const result = await esbuild.build({
+    const ctx3 = await esbuild.context({
       ...sharedConfig,
       minifyWhitespace: true,
       outfile: "dist/main.es.bundle.js",
@@ -34,9 +34,18 @@ async function build() {
       metafile: true
     })
 
-    fs.writeFileSync("meta.json", JSON.stringify(result.metafile))
+    if (process.argv.includes("--watch")) {
+      await Promise.all([ctx1.watch(), ctx2.watch(), ctx3.watch()])
+      console.info("Watching for changes...")
+    } else {
+      const results = await Promise.all([ctx1.rebuild(), ctx2.rebuild(), ctx3.rebuild()])
+      fs.writeFileSync("meta.json", JSON.stringify(results[2].metafile))
 
-    console.log("Build completed successfully.")
+      ctx1.dispose()
+      ctx2.dispose()
+      ctx3.dispose()
+      console.info("Build completed successfully.")
+    }
   } catch (error) {
     console.error("Build failed:", error)
     process.exit(1)
