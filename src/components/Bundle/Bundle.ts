@@ -120,7 +120,7 @@ function onClick(bundle: Bundle, event: MouseEvent) {
       return {
         productId: String(parseId(product.id)),
         // TODO use selected variant id instead
-        skuId: String(parseId(product.variants[0].id)),
+        skuId: String(parseId(product.combinedVariants[0].id)),
         quantity: 1
       }
     })

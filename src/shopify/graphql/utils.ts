@@ -12,7 +12,7 @@ export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): Sho
   // Flatten images from nodes structure
   let images: ShopifyImage[] = []
   if (hasImagesNodes(product)) {
-    images = (product.images as { nodes: ShopifyImage[] }).nodes
+    images = product.images.nodes
   }
 
   // collect variants from option values and adjacentVariants
@@ -28,7 +28,7 @@ export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): Sho
     price,
     compareAtPrice,
     images,
-    variants
+    combinedVariants: variants
   }
 }
 
