@@ -688,7 +688,7 @@ export const getProductWithoutVariantsMock = (
 /**
  * Creates mock products for SimpleCard testing with unique handles and IDs.
  * @param count - Number of mock products to create
- * @returns Array of ShopifyProduct objects with handles like "product1", "product2", etc.
+ * @returns Array of GraphQLProduct objects with handles like "product1", "product2", etc.
  *
  * Each product will have:
  *   - A unique handle ("product1", "product2", ...)
@@ -696,7 +696,7 @@ export const getProductWithoutVariantsMock = (
  *   - A unique variant ID ("gid://shopify/ProductVariant/1", ...)
  */
 export const createMockShopifyProducts = (count: number): GraphQLProduct[] =>
-  Array.from({ length: count }, (_, i) => {
+  Array.from({ length: count }, (_, i): GraphQLProduct => {
     const handle = `product${i + 1}`
     return {
       id: `gid://shopify/Product/${i + 1}`,
@@ -710,31 +710,23 @@ export const createMockShopifyProducts = (count: number): GraphQLProduct[] =>
       images: {
         nodes: [
           {
-            altText: "Product image 1",
             height: 400,
             width: 400,
-            thumbhash: null,
             url: "https://example.com/image1.jpg"
           },
           {
-            altText: "Product image 2",
             height: 400,
             width: 400,
-            thumbhash: null,
             url: "https://example.com/image2.jpg"
           }
         ]
       },
       featuredImage: {
-        altText: "Product image 1",
         height: 400,
         width: 400,
-        thumbhash: null,
         url: "https://example.com/image1.jpg"
       },
       options: [],
-      price: { currencyCode: "USD", amount: String(10.99 + i) },
-      compareAtPrice: { currencyCode: "USD", amount: String(15.99 + i) },
       adjacentVariants: [
         {
           id: `gid://shopify/ProductVariant/${i + 1}`,
