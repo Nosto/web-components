@@ -119,7 +119,6 @@ describe("SimpleCard", () => {
   it("should not render original price when product has no discount", async () => {
     const productWithoutDiscount: GraphQLProduct = {
       ...mockedProduct,
-
       adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/789",

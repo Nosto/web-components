@@ -1,16 +1,13 @@
-import { ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
-
-type GenericGraphQLType = {
-  data: {
-    product: Record<string, unknown>
-  }
-}
+import { ProductByHandleQuery } from "./generated/storefront.generated"
+import { GraphQLProduct, GraphQLResponse, ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
 
 // can be improved later to handle more cases
-export function flattenResponse(obj: GenericGraphQLType) {
+export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): ShopifyProduct {
   const product = obj.data.product
 
-  const typedProduct = product as ShopifyProduct
+  if (!product) {
+    throw new Error("No products returned by Storefront GraphQL")
+  }
 
   // Flatten images from nodes structure
   let images: ShopifyImage[] = []
@@ -19,7 +16,7 @@ export function flattenResponse(obj: GenericGraphQLType) {
   }
 
   // collect variants from option values and adjacentVariants
-  const variants = typedProduct.variants ?? getCombinedVariants(typedProduct)
+  const variants = getCombinedVariants(product)
 
   // Get price and compareAtPrice from first variant if available
   const firstVariant = variants.find(v => v.availableForSale) || variants[0]
@@ -32,10 +29,10 @@ export function flattenResponse(obj: GenericGraphQLType) {
     compareAtPrice,
     images,
     variants
-  } as ShopifyProduct
+  }
 }
 
-function getCombinedVariants(product: ShopifyProduct) {
+function getCombinedVariants(product: GraphQLProduct) {
   const variantsMap = new Map<string, ShopifyVariant>()
 
   product.options
@@ -54,7 +51,7 @@ function getCombinedVariants(product: ShopifyProduct) {
   return Array.from(variantsMap.values())
 }
 
-function hasImagesNodes(product: Record<string, unknown>) {
+function hasImagesNodes(product: GraphQLProduct) {
   return "images" in product && product.images && typeof product.images === "object" && "nodes" in product.images
 }
 
