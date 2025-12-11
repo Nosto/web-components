@@ -1,3 +1,69 @@
+# [10.17.0](https://github.com/Nosto/web-components/compare/v10.16.1...v10.17.0) (2025-12-11)
+
+
+### Features
+
+* **main:** export Bundle component ([6c775ef](https://github.com/Nosto/web-components/commit/6c775efaf3d0f60044f92727ef4758569746fca6))
+
+## [10.16.1](https://github.com/Nosto/web-components/compare/v10.16.0...v10.16.1) (2025-12-11)
+
+
+### Bug Fixes
+
+* move deprecated annotation to property level ([0e50579](https://github.com/Nosto/web-components/commit/0e50579d021b81c2bec09461f28eda71f6a73500))
+
+# [10.16.0](https://github.com/Nosto/web-components/compare/v10.15.0...v10.16.0) (2025-12-11)
+
+
+### Features
+
+* **eslint:** add prefer-function-declaration rule and convert arrow functions ([856fdda](https://github.com/Nosto/web-components/commit/856fdda07a9cad22c05e0753adfc7f9cbe8d2d7b))
+
+# [10.15.0](https://github.com/Nosto/web-components/compare/v10.14.1...v10.15.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* address type issues ([23c3d38](https://github.com/Nosto/web-components/commit/23c3d388999f25bd00f984c0b6be1295c148cdab))
+* improve GraphQLProduct type usage when returning array of mock products ([b592bd3](https://github.com/Nosto/web-components/commit/b592bd3404585179bcbe66ed21c6b13f693e777b))
+* improve mocck generations and adjust tests to handle GraphQL data ([a72b4ac](https://github.com/Nosto/web-components/commit/a72b4acb944e862874524e63018dd919d16a084f))
+* use function syntax ([938237c](https://github.com/Nosto/web-components/commit/938237cd793ec0e68fc2e27d4e1be77a8bf3e8ce))
+
+
+### Features
+
+* use GraphQL types in mock products ([5231aa2](https://github.com/Nosto/web-components/commit/5231aa2ec9f48f7736a0fe3c1c24eed7e0dda083))
+
+## [10.14.1](https://github.com/Nosto/web-components/compare/v10.14.0...v10.14.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* **comment:** use functional style for initializing selected products ([d00c18b](https://github.com/Nosto/web-components/commit/d00c18b1d2414f780c3b3fda7f0b520d07e42dfa))
+* default selected products and adjust bundle tests ([69e5719](https://github.com/Nosto/web-components/commit/69e5719ede6094bc6114db2fd91979f16c785c2a))
+
+# [10.14.0](https://github.com/Nosto/web-components/compare/v10.13.0...v10.14.0) (2025-12-10)
+
+
+### Bug Fixes
+
+* add path aliases and playwright install to storybook tests ([304a720](https://github.com/Nosto/web-components/commit/304a72097b9f490e648855a092893b3382264ea1))
+* simplify storybookTest config and align vitest versions ([034582d](https://github.com/Nosto/web-components/commit/034582d1b6e12f148c72e58561a2c42168af6003))
+
+
+### Features
+
+* add and configure storybook vitest addon ([cb7b5a6](https://github.com/Nosto/web-components/commit/cb7b5a69de62623faa43b020ff8dec0270b902d0))
+* add storybook-tests CI job with vitest browser config ([10ab7d9](https://github.com/Nosto/web-components/commit/10ab7d9343f25daca4e6d5a69d64c4ab0e459994))
+* add test-storybook script and update CI job name ([58d4736](https://github.com/Nosto/web-components/commit/58d4736aabae5d126033394b01b4a86ce344c15b))
+
+# [10.13.0](https://github.com/Nosto/web-components/compare/v10.12.0...v10.13.0) (2025-12-09)
+
+
+### Features
+
+* migrate to trusted publishing ([01c49bb](https://github.com/Nosto/web-components/commit/01c49bbffa92979958e25c3b9224592866319e8c))
+
 # [10.12.0](https://github.com/Nosto/web-components/compare/v10.11.0...v10.12.0) (2025-12-09)
 
 

@@ -1,4 +1,5 @@
 /* eslint-disable barrel-files/avoid-barrel-files */
+export { Bundle } from "./components/Bundle/Bundle"
 export { Campaign } from "./components/Campaign/Campaign"
 export { Control } from "./components/Control/Control"
 export { DynamicCard, setDynamicCardDefaults } from "./components/DynamicCard/DynamicCard"

@@ -73,8 +73,10 @@ export const Default: Story = {
               </li>
             ))}
           </ul>
-          <button n-atc>Add Bundle to Cart</button>
-          <span n-summary-price></span>
+          <div class="bundle-summary">
+            <span n-summary-price></span>
+            <button n-atc>Add Bundle to Cart</button>
+          </div>
         </div>
       </nosto-bundle>
     )
@@ -91,7 +93,7 @@ export const CheckboxCard: Story = {
     return (
       // @ts-expect-error - Intentionally passing partial JSONProduct objects with only handle and title
       <nosto-bundle products={productsWithTitles as JSONProduct[]}>
-        <div class="bundle-grid">
+        <div class="bundle-grid checkbox-cards">
           {productsWithTitles.map(product => (
             <nosto-simple-card handle={product.handle}>
               <nosto-variant-selector handle={product.handle} mode="compact"></nosto-variant-selector>
@@ -100,8 +102,8 @@ export const CheckboxCard: Story = {
           ))}
         </div>
         <div class="bundle-summary">
-          <button n-atc>Add Bundle to Cart</button>
           <span n-summary-price></span>
+          <button n-atc>Add Bundle to Cart</button>
         </div>
       </nosto-bundle>
     )

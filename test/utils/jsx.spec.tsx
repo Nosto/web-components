@@ -208,6 +208,7 @@ describe("jsx", () => {
 
   describe("edge cases", () => {
     it("should handle null values", () => {
+      // @ts-expect-error Testing null assignment
       const element = (<test-element objectProp={null} />) as TestElement
       // null is technically an object but should be handled as attribute
       expect(element.getAttribute("object-prop")).toBe("null")
