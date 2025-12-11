@@ -1,3 +1,10 @@
+# [10.16.0](https://github.com/Nosto/web-components/compare/v10.15.0...v10.16.0) (2025-12-11)
+
+
+### Features
+
+* **eslint:** add prefer-function-declaration rule and convert arrow functions ([856fdda](https://github.com/Nosto/web-components/commit/856fdda07a9cad22c05e0753adfc7f9cbe8d2d7b))
+
 # [10.15.0](https://github.com/Nosto/web-components/compare/v10.14.1...v10.15.0) (2025-12-11)
 
 
