@@ -693,8 +693,8 @@ export const mockProductWithoutVariants: ShopifyProduct = {
  *   - A unique product ID ("gid://shopify/Product/1", ...)
  *   - A unique variant ID ("gid://shopify/ProductVariant/1", ...)
  */
-export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
-  Array.from({ length: count }, (_, i) => {
+export function createMockShopifyProducts(count: number): ShopifyProduct[] {
+  return Array.from({ length: count }, (_, i) => {
     const handle = `product${i + 1}`
     return {
       id: `gid://shopify/Product/${i + 1}`,
@@ -748,3 +748,4 @@ export const createMockShopifyProducts = (count: number): ShopifyProduct[] =>
       ]
     }
   })
+}

@@ -59,11 +59,13 @@ function createRecommendationSection(products: HTMLElement[]) {
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => unknown) => (
-  <div class="story-container">
-    <div class="block__recommendation">{story()}</div>
-  </div>
-)
+function withStoryContainer(story: () => unknown) {
+  return (
+    <div class="story-container">
+      <div class="block__recommendation">{story()}</div>
+    </div>
+  )
+}
 
 const meta: Meta = {
   title: "Components/Product",
