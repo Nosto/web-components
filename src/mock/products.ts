@@ -335,6 +335,42 @@ const baseTestProduct: GraphQLProduct = {
       price: { currencyCode: "USD", amount: "19.99" },
       compareAtPrice: null,
       product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+    },
+    {
+      id: "gid://shopify/ProductVariant/1002",
+      title: "Medium / Blue",
+      availableForSale: true,
+      selectedOptions: [
+        { name: "Size", value: "Medium" },
+        { name: "Color", value: "Blue" }
+      ],
+      price: { currencyCode: "USD", amount: "24.99" },
+      compareAtPrice: null,
+      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+    },
+    {
+      id: "gid://shopify/ProductVariant/1003",
+      title: "Large / Red",
+      availableForSale: true,
+      selectedOptions: [
+        { name: "Size", value: "Large" },
+        { name: "Color", value: "Red" }
+      ],
+      price: { currencyCode: "USD", amount: "29.99" },
+      compareAtPrice: null,
+      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+    },
+    {
+      id: "gid://shopify/ProductVariant/1004",
+      title: "Small / Green",
+      availableForSale: true,
+      selectedOptions: [
+        { name: "Size", value: "Small" },
+        { name: "Color", value: "Green" }
+      ],
+      price: { currencyCode: "USD", amount: "19.99" },
+      compareAtPrice: null,
+      product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
     }
   ]
 }
@@ -656,6 +692,18 @@ export function getProductWithVariantsMock(productStatus = true, unavailableVari
           { name: "Color", value: "Red" }
         ],
         price: { currencyCode: "USD", amount: "29.99" },
+        compareAtPrice: null,
+        product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
+      },
+      {
+        id: "gid://shopify/ProductVariant/1004",
+        title: "Small / Green",
+        availableForSale: !unavailableVariants.includes("gid://shopify/ProductVariant/1004"),
+        selectedOptions: [
+          { name: "Size", value: "Small" },
+          { name: "Color", value: "Green" }
+        ],
+        price: { currencyCode: "USD", amount: "19.99" },
         compareAtPrice: null,
         product: { id: "gid://shopify/Product/123456", onlineStoreUrl: "/products/variant-test-product" }
       }

@@ -52,13 +52,17 @@ describe("VariantSelector - Compact Mode", () => {
     expect(options[0].textContent).toContain("Small / Red")
     expect(options[0].disabled).toBe(false)
 
-    expect(options[1].value).toBe("gid://shopify/ProductVariant/1002")
-    expect(options[1].textContent).toContain("Medium / Blue")
+    expect(options[1].value).toBe("gid://shopify/ProductVariant/1004")
+    expect(options[1].textContent).toContain("Small / Green")
     expect(options[1].disabled).toBe(false)
 
-    expect(options[2].value).toBe("gid://shopify/ProductVariant/1003")
-    expect(options[2].textContent).toContain("Large / Red")
+    expect(options[2].value).toBe("gid://shopify/ProductVariant/1002")
+    expect(options[2].textContent).toContain("Medium / Blue")
     expect(options[2].disabled).toBe(false)
+
+    expect(options[3].value).toBe("gid://shopify/ProductVariant/1003")
+    expect(options[3].textContent).toContain("Large / Red")
+    expect(options[3].disabled).toBe(false)
   })
 
   it("should mark unavailable variants as disabled in compact mode", async () => {
@@ -80,8 +84,8 @@ describe("VariantSelector - Compact Mode", () => {
     const options = dropdown.querySelectorAll("option")
 
     expect(options[0].disabled).toBe(true)
-    expect(options[1].disabled).toBe(false)
-    expect(options[2].disabled).toBe(true)
+    expect(options[1].disabled).toBe(true)
+    expect(options[2].disabled).toBe(false)
     expect(options[3].disabled).toBe(true)
     expect(dropdown).toBeTruthy()
     expect(dropdown.disabled).toBe(false)
@@ -228,9 +232,8 @@ describe("VariantSelector - Compact Mode", () => {
 
     // Expect options to be sorted as Small, Medium, Large based on first option value order
     expect(options[0].textContent).toContain("Small / Red")
-    expect(options[1].textContent).toContain("Medium / Blue")
-    expect(options[2].textContent).toContain("Large / Red")
-    // TODO: Fix this expectation as per the correct order
-    expect(options[3].textContent).toContain("Small / Green")
+    expect(options[1].textContent).toContain("Small / Green")
+    expect(options[2].textContent).toContain("Medium / Blue")
+    expect(options[3].textContent).toContain("Large / Red")
   })
 })
