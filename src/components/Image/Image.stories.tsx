@@ -46,11 +46,13 @@ function createImageGrid(
 }
 
 // Storybook decorator for wrapping stories with container styling
-const withStoryContainer = (story: () => unknown) => (
-  <div class="story-container">
-    <div class="image-demo-section">{story()}</div>
-  </div>
-)
+function withStoryContainer(story: () => unknown) {
+  return (
+    <div class="story-container">
+      <div class="image-demo-section">{story()}</div>
+    </div>
+  )
+}
 
 const meta: Meta = {
   title: "Components/Image",

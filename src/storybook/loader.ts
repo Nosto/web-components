@@ -7,7 +7,7 @@ type Context = {
   }
 }
 
-export const exampleProductsLoader = async (context: Context) => {
+export async function exampleProductsLoader(context: Context) {
   const { shopifyShop, count = 12 } = context.args
   try {
     if (!shopifyShop) {
@@ -22,7 +22,7 @@ export const exampleProductsLoader = async (context: Context) => {
   }
 }
 
-export const exampleHandlesLoader = async (context: Context) => {
+export async function exampleHandlesLoader(context: Context) {
   const { products } = await exampleProductsLoader(context)
   return {
     handles: products.map(p => p.handle)

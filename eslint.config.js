@@ -45,6 +45,19 @@ export default defineConfig(
       ]
     }
   },
+  {
+    files: ["src/**/*.{js,ts,tsx}"],
+    rules: {
+      "func-style": [
+        "error",
+        "declaration",
+        {
+          allowArrowFunctions: false
+        }
+      ],
+      "@typescript-eslint/prefer-function-type": "error"
+    }
+  },
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
   storybook.configs["flat/recommended"]
