@@ -22,13 +22,13 @@ export type ShopifyOption = {
 
 // Flattened product type derived from GraphQL with augmented fields
 // TODO: Omit adjacentVariants later and rename variants to combinedVariants
-export type ShopifyProduct = Omit<GraphQLProduct, "images" | "options"> & {
+export type ShopifyProduct = Omit<GraphQLProduct, "images" | "options" | "adjacentVariants"> & {
   images: ShopifyImage[]
   options: ShopifyOption[]
   // augmented fields
   price: ShopifyMoney
   compareAtPrice: ShopifyMoney | null
-  variants: ShopifyVariant[]
+  combinedVariants: ShopifyVariant[]
 }
 
 /**

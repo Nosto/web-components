@@ -11,7 +11,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
   const hasDiscount = element.discount && isDiscounted(product)
 
   const selectedVariant =
-    (element.variantId && product.variants.find(v => parseId(v.id) === element.variantId)) || undefined
+    (element.variantId && product.combinedVariants.find(v => parseId(v.id) === element.variantId)) || undefined
   const prices = selectedVariant ?? product
   const images = selectedVariant?.image && !element.imageMode ? [selectedVariant.image] : product.images
 

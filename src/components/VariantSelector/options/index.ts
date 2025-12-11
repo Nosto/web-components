@@ -58,9 +58,11 @@ function initializeDefaultSelections(element: VariantSelector, product: ShopifyP
   let variant: ShopifyVariant | undefined
   if (element.variantId) {
     const variantIdStr = toVariantGid(element.variantId)
-    variant = product.variants.find(v => v.id === variantIdStr)
+    variant = product.combinedVariants.find(v => v.id === variantIdStr)
   } else if (element.preselect) {
-    variant = product.variants.find(v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl)
+    variant = product.combinedVariants.find(
+      v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl
+    )
   }
   if (variant && variant.selectedOptions) {
     variant.selectedOptions.forEach(selectedOption => {
@@ -113,7 +115,7 @@ function updateActiveStates(element: VariantSelector) {
 
 function updateUnavailableStates(element: VariantSelector, product: ShopifyProduct) {
   const availableOptions = new Set<string>()
-  product.variants
+  product.combinedVariants
     .filter(v => v.availableForSale)
     .forEach(variant => {
       if (variant.selectedOptions) {
@@ -141,7 +143,7 @@ function togglePart(element: HTMLElement, partName: string, enable: boolean) {
 
 export function getSelectedVariant(element: VariantSelector, product: ShopifyProduct): ShopifyVariant | null {
   return (
-    product.variants?.find(variant => {
+    product.combinedVariants?.find(variant => {
       if (!variant.selectedOptions) return false
       return product.options.every(option => {
         const selectedValue = element.selectedOptions[option.name]

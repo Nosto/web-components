@@ -30,12 +30,12 @@ export async function loadAndRenderCompact(element: VariantSelector) {
 
 function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no variants
-  if (!product.variants || product.variants.length === 0) {
+  if (!product.combinedVariants || product.combinedVariants.length === 0) {
     return html`<slot></slot>`
   }
 
   // If all variants have only one option combination, don't render the selector
-  if (product.variants.length === 1) {
+  if (product.combinedVariants.length === 1) {
     return html`<slot></slot>`
   }
 
@@ -50,7 +50,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
     return option?.optionValues.findIndex(ov => ov.name === value) ?? -1
   }
 
-  const sortedVariants = [...product.variants].sort((a, b) => {
+  const sortedVariants = [...product.combinedVariants].sort((a, b) => {
     const optsA = a.selectedOptions ?? []
     const optsB = b.selectedOptions ?? []
     const len = Math.min(optsA.length, optsB.length)
@@ -66,7 +66,7 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
   })
 
   // Check if all variants are unavailable
-  const allVariantsUnavailable = product.variants.every(variant => !variant.availableForSale)
+  const allVariantsUnavailable = product.combinedVariants.every(variant => !variant.availableForSale)
   const disabledAttr = allVariantsUnavailable ? "disabled" : ""
 
   return html`
@@ -82,13 +82,15 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
 function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct) {
   if (element.variantId) {
     const variantIdStr = toVariantGid(element.variantId)
-    const variant = product.variants.find(v => v.id === variantIdStr)
+    const variant = product.combinedVariants.find(v => v.id === variantIdStr)
     if (variant) {
       return variant.id
     }
   }
-  const variant = product.variants.find(v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl)
-  return variant ? variant.id : product.variants[0].id
+  const variant = product.combinedVariants.find(
+    v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl
+  )
+  return variant ? variant.id : product.combinedVariants[0].id
 }
 
 function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: string, fixedOptions: string[]) {
@@ -120,7 +122,7 @@ function setupDropdownListener(element: VariantSelector) {
     const target = e.target as HTMLSelectElement
     if (target.matches("select") && !target.disabled) {
       const productData = await fetchProduct(element.handle)
-      const variant = productData.variants.find(v => v.id === target.value)
+      const variant = productData.combinedVariants.find(v => v.id === target.value)
       if (variant) {
         emitVariantChange(element, variant)
       }

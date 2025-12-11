@@ -12,14 +12,14 @@ export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): Sho
   // Flatten images from nodes structure
   let images: ShopifyImage[] = []
   if (hasImagesNodes(product)) {
-    images = (product.images as { nodes: ShopifyImage[] }).nodes
+    images = product.images.nodes
   }
 
   // collect variants from option values and adjacentVariants
-  const variants = getCombinedVariants(product)
+  const combinedVariants = getCombinedVariants(product)
 
   // Get price and compareAtPrice from first variant if available
-  const firstVariant = variants.find(v => v.availableForSale) || variants[0]
+  const firstVariant = combinedVariants.find(v => v.availableForSale) || combinedVariants[0]
   const price = firstVariant?.price || { currencyCode: "USD", amount: "0" }
   const compareAtPrice = firstVariant?.compareAtPrice || null
 
@@ -28,7 +28,7 @@ export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): Sho
     price,
     compareAtPrice,
     images,
-    variants
+    combinedVariants
   }
 }
 
