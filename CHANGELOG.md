@@ -1,3 +1,10 @@
+## [10.17.3](https://github.com/Nosto/web-components/compare/v10.17.2...v10.17.3) (2025-12-11)
+
+
+### Bug Fixes
+
+* rename variants to combinedVariants and omit adjacentVariants in ShopifyProduct ([757c191](https://github.com/Nosto/web-components/commit/757c19157526e8c992c69b572988d49599f9786b))
+
 ## [10.17.2](https://github.com/Nosto/web-components/compare/v10.17.1...v10.17.2) (2025-12-11)
 
 
