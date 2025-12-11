@@ -1,3 +1,10 @@
+## [10.17.1](https://github.com/Nosto/web-components/compare/v10.17.0...v10.17.1) (2025-12-11)
+
+
+### Bug Fixes
+
+* **mock:** adjust mock data to resemble real data structure ([8f5e3e5](https://github.com/Nosto/web-components/commit/8f5e3e5a73c32bda853757b099374d009f8cf993))
+
 # [10.17.0](https://github.com/Nosto/web-components/compare/v10.16.1...v10.17.0) (2025-12-11)
 
 
