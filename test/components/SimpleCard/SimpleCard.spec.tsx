@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "@/utils/jsx"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { GraphQLProduct } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
@@ -117,11 +117,10 @@ describe("SimpleCard", () => {
   })
 
   it("should not render original price when product has no discount", async () => {
-    const productWithoutDiscount: ShopifyProduct = {
+    const productWithoutDiscount: GraphQLProduct = {
       ...mockedProduct,
-      price: { currencyCode: "USD", amount: "19.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "19.99" }, // same price, no discount
-      variants: [
+
+      adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/789",
           title: "Default Title",
@@ -176,9 +175,9 @@ describe("SimpleCard", () => {
   })
 
   it('should not render alternate image when product has only one image with image-mode="alternate"', async () => {
-    const productWithOneImage = {
+    const productWithOneImage: GraphQLProduct = {
       ...mockedProduct,
-      images: [mockedProduct.images[0]] // only one image
+      images: { nodes: [mockedProduct.images.nodes[0]] } // only one image
     }
 
     addProductHandlers({
@@ -219,9 +218,9 @@ describe("SimpleCard", () => {
   })
 
   it("should handle product with no images", async () => {
-    const productWithoutImages = {
+    const productWithoutImages: GraphQLProduct = {
       ...mockedProduct,
-      images: []
+      images: { nodes: [] }
     }
 
     addProductHandlers({
@@ -260,21 +259,23 @@ describe("SimpleCard", () => {
   })
 
   it("should re-render when handle attribute changes", async () => {
-    const product1: ShopifyProduct = { ...mockedProduct, handle: "product-1", title: "Product 1" }
-    const product2: ShopifyProduct = {
+    const product1: GraphQLProduct = { ...mockedProduct, handle: "product-1", title: "Product 1" }
+    const product2: GraphQLProduct = {
       ...mockedProduct,
-      images: [
-        {
-          height: 400,
-          width: 400,
-          url: "https://example.com/image3.jpg"
-        },
-        {
-          height: 400,
-          width: 400,
-          url: "https://example.com/image4.jpg"
-        }
-      ],
+      images: {
+        nodes: [
+          {
+            height: 400,
+            width: 400,
+            url: "https://example.com/image3.jpg"
+          },
+          {
+            height: 400,
+            width: 400,
+            url: "https://example.com/image4.jpg"
+          }
+        ]
+      },
       featuredImage: {
         height: 400,
         width: 400,
@@ -328,11 +329,9 @@ describe("SimpleCard", () => {
   })
 
   it("should format price correctly", async () => {
-    const productWithDifferentPrice: ShopifyProduct = {
+    const productWithDifferentPrice: GraphQLProduct = {
       ...mockedProduct,
-      price: { currencyCode: "USD", amount: "9.99" },
-      compareAtPrice: { currencyCode: "USD", amount: "12.99" },
-      variants: [
+      adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/789",
           title: "Default Title",
@@ -401,7 +400,7 @@ describe("SimpleCard", () => {
   })
 
   it("should handle variant change events and update images", async () => {
-    const variantProduct: ShopifyProduct = {
+    const variantProduct: GraphQLProduct = {
       ...mockedProduct,
       handle: "variant-product",
       options: [
@@ -447,7 +446,7 @@ describe("SimpleCard", () => {
           ]
         }
       ],
-      variants: [
+      adjacentVariants: [
         {
           id: "gid://shopify/ProductVariant/1001",
           title: "Red",
@@ -490,7 +489,7 @@ describe("SimpleCard", () => {
     // Simulate variant change event
     const variantChangeEvent = new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail: {
-        variant: variantProduct.variants[1] // Blue variant
+        variant: variantProduct.adjacentVariants[1] // Blue variant
       },
       bubbles: true
     })
@@ -632,7 +631,7 @@ describe("SimpleCard", () => {
     it('should not render carousel when product has only one image with image-mode="carousel"', async () => {
       const productWithOneImage = {
         ...mockedProduct,
-        images: [mockedProduct.images[0]]
+        images: { nodes: [mockedProduct.images.nodes[0]] }
       }
 
       addProductHandlers({

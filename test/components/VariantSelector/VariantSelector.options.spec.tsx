@@ -5,15 +5,19 @@ import { createElement } from "@/utils/jsx"
 import {
   mockProductWithSingleValueOptionTest,
   mockProductWithAllSingleValueOptionsTest,
-  mockProductWithVariants,
-  mockProductWithoutVariants
+  getProductWithVariantsMock,
+  getProductWithoutVariantsMock
 } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
-import { getSelectedVariant, selectOption } from "@/components/VariantSelector/options"
+import { selectOption } from "@/components/VariantSelector/options"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 import { addProductHandlers } from "../../utils/addProductHandlers"
+import { ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 
 describe("VariantSelector - Options Mode", () => {
+  const withVariantsMock = getProductWithVariantsMock()
+  const withoutVariantsMock = getProductWithoutVariantsMock()
+
   beforeEach(() => {
     clearProductCache()
   })
@@ -34,7 +38,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should render variant options for products with multiple variants", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -54,7 +58,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should not render selector UI for products without variants but include slot", async () => {
     addProductHandlers({
-      "no-variants": { product: mockProductWithoutVariants }
+      "no-variants": { product: withoutVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
@@ -66,7 +70,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should not preselect by default", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -81,7 +85,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should emit variantchange event on option selection", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -104,25 +108,31 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should update selected variant when options change", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
+    let selectedVariant = undefined
+    selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
+      const detail = (event as CustomEvent).detail as VariantChangeDetail
+      selectedVariant = detail.variant.id
+    })
+
     await selector.connectedCallback()
 
     // Initial selection should be first variant (Small/Red)
-    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe("gid://shopify/ProductVariant/1001")
+    expect(selectedVariant).toBe("gid://shopify/ProductVariant/1001")
 
     // Change to Medium/Blue
     await selectOption(selector, "Size", "Medium")
     await selectOption(selector, "Color", "Blue")
 
-    expect(getSelectedVariant(selector, mockProductWithVariants)?.id).toBe("gid://shopify/ProductVariant/1002")
+    expect(selectedVariant).toBe("gid://shopify/ProductVariant/1002")
   })
 
   it("should handle option button clicks", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -158,7 +168,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should update active states when selection changes", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
@@ -186,7 +196,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should preselect when preselect attribute is present", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect />) as VariantSelector
@@ -200,7 +210,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should not preselect by default when preselect attribute is not specified", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -214,7 +224,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should include default slot in shadow DOM", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -228,7 +238,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should include default slot even when no variants are rendered", async () => {
     addProductHandlers({
-      "no-variants": { product: mockProductWithoutVariants }
+      "no-variants": { product: withoutVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
@@ -242,7 +252,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should render slotted content correctly", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
@@ -360,14 +370,19 @@ describe("VariantSelector - Options Mode", () => {
       })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
+      let selectedVariant: ShopifyVariant | undefined = undefined
+      selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
+        const detail = (event as CustomEvent).detail as VariantChangeDetail
+        selectedVariant = detail.variant
+      })
+
       await selector.connectedCallback()
 
       // Select a size option (Material is auto-selected)
       await selectOption(selector, "Size", "Large")
-
-      const variant = getSelectedVariant(selector, mockProductWithSingleValueOptionTest)
-      expect(variant?.id).toBe("gid://shopify/ProductVariant/3003") // Large / Cotton
-      expect(variant?.selectedOptions).toEqual([
+      expect(selectedVariant).toBeTruthy()
+      expect(selectedVariant!.id).toBe("gid://shopify/ProductVariant/3003") // Large / Cotton
+      expect(selectedVariant!.selectedOptions).toEqual([
         { name: "Size", value: "Large" },
         { name: "Material", value: "Cotton" }
       ])
@@ -376,7 +391,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should preselect options based on given variantId", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="variant-test-product" variantId={1002} />) as VariantSelector
@@ -388,7 +403,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should emit VariantSelector/rendered event when content is loaded", async () => {
     addProductHandlers({
-      "event-test-handle": { product: mockProductWithVariants }
+      "event-test-handle": { product: withVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="event-test-handle" />) as VariantSelector
@@ -410,7 +425,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should emit VariantSelector/rendered event even for products without variants", async () => {
     addProductHandlers({
-      "no-variants": { product: mockProductWithoutVariants }
+      "no-variants": { product: withoutVariantsMock }
     })
 
     const selector = (<nosto-variant-selector handle="no-variants" />) as VariantSelector
@@ -432,7 +447,7 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should use placeholder content when placeholder attribute is set", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock }
     })
 
     // First, render without placeholder to populate cache
@@ -453,8 +468,8 @@ describe("VariantSelector - Options Mode", () => {
 
   it("should use cached placeholder content even with different handle", async () => {
     addProductHandlers({
-      "variant-test-product": { product: mockProductWithVariants },
-      "different-handle": { product: mockProductWithVariants }
+      "variant-test-product": { product: withVariantsMock },
+      "different-handle": { product: withVariantsMock }
     })
 
     // First, render without placeholder to populate cache for variant-test-product
@@ -473,7 +488,7 @@ describe("VariantSelector - Options Mode", () => {
   describe("maxValues attribute", () => {
     it("should cap option values at maxValues limit and show ellipsis", async () => {
       addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
+        "variant-test-product": { product: withVariantsMock }
       })
 
       const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={2} />) as VariantSelector
@@ -495,7 +510,7 @@ describe("VariantSelector - Options Mode", () => {
 
     it("should render ellipsis with correct aria-label", async () => {
       addProductHandlers({
-        "variant-test-product": { product: mockProductWithVariants }
+        "variant-test-product": { product: withVariantsMock }
       })
 
       const selector = (<nosto-variant-selector handle="variant-test-product" maxValues={1} />) as VariantSelector
