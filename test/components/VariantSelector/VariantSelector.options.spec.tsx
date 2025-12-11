@@ -5,8 +5,8 @@ import { createElement } from "@/utils/jsx"
 import {
   mockProductWithSingleValueOptionTest,
   mockProductWithAllSingleValueOptionsTest,
-  getProductWithVariantsMock,
-  getProductWithoutVariantsMock
+  productWithVariantsMock,
+  productWithoutVariantsMock
 } from "@/mock/products"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { selectOption } from "@/components/VariantSelector/options"
@@ -15,8 +15,8 @@ import { addProductHandlers } from "../../utils/addProductHandlers"
 import { ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 
 describe("VariantSelector - Options Mode", () => {
-  const withVariantsMock = getProductWithVariantsMock()
-  const withoutVariantsMock = getProductWithoutVariantsMock()
+  const withVariantsMock = productWithVariantsMock()
+  const withoutVariantsMock = productWithoutVariantsMock()
 
   beforeEach(() => {
     clearProductCache()

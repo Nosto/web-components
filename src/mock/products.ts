@@ -503,10 +503,7 @@ export const mockProductWithAllSingleValueOptionsTest: GraphQLProduct = {
 }
 
 // Product with multiple variants for VariantSelector tests
-export const getProductWithVariantsMock = (
-  productStatus = true,
-  unavailableVariants: string[] = []
-): GraphQLProduct => ({
+export const productWithVariantsMock = (productStatus = true, unavailableVariants: string[] = []): GraphQLProduct => ({
   id: "gid://shopify/Product/123456",
   handle: "variant-test-product",
   title: "Variant Test Product",
@@ -665,11 +662,11 @@ export const getProductWithVariantsMock = (
 })
 
 // Product without variants for VariantSelector tests
-export const getProductWithoutVariantsMock = (
+export const productWithoutVariantsMock = (
   productStatus = true,
   unavailableVariants: string[] = []
 ): GraphQLProduct => ({
-  ...getProductWithVariantsMock(productStatus, unavailableVariants),
+  ...productWithVariantsMock(productStatus, unavailableVariants),
   options: [],
   adjacentVariants: [
     {
