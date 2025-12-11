@@ -27,7 +27,7 @@ function createProductCard(
   return (
     <nosto-product product-id={product.productId} reco-id="storybook-demo">
       <div class="nosto__product-image">
-        <img src={product.imageUrl} alt={product.name} width="300" height="300" />
+        <img src={product.imageUrl} alt={product.name} width={300} height={300} />
       </div>
       <div class="nosto__product-details--card">
         <div class="nosto__product-name">{product.name}</div>

@@ -1,7 +1,7 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import type { Meta, StoryObj } from "@storybook/web-components-vite"
-import { createElement, createFragment, Template } from "@/utils/jsx"
+import { createElement, createFragment } from "@/utils/jsx"
 import "./Campaign.stories.css"
 import { mockNostojs } from "@nosto/nosto-js/testing"
 import type { RequestBuilder } from "@nosto/nosto-js/client"
@@ -222,4 +222,13 @@ export const ManualInitialization: Story = {
       }
     }
   }
+}
+
+function Template(props: { children?: unknown[] }): HTMLTemplateElement {
+  const template = document.createElement("template")
+  const children = props.children ?? []
+  const childArray = Array.isArray(children) ? children : [children]
+  const htmlContent = childArray.map(child => String(child)).join("")
+  template.innerHTML = htmlContent
+  return template
 }
