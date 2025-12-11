@@ -1,3 +1,10 @@
+# [10.17.0](https://github.com/Nosto/web-components/compare/v10.16.1...v10.17.0) (2025-12-11)
+
+
+### Features
+
+* **main:** export Bundle component ([6c775ef](https://github.com/Nosto/web-components/commit/6c775efaf3d0f60044f92727ef4758569746fca6))
+
 ## [10.16.1](https://github.com/Nosto/web-components/compare/v10.16.0...v10.16.1) (2025-12-11)
 
 
