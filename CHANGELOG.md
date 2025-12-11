@@ -1,3 +1,10 @@
+## [10.16.1](https://github.com/Nosto/web-components/compare/v10.16.0...v10.16.1) (2025-12-11)
+
+
+### Bug Fixes
+
+* move deprecated annotation to property level ([0e50579](https://github.com/Nosto/web-components/commit/0e50579d021b81c2bec09461f28eda71f6a73500))
+
 # [10.16.0](https://github.com/Nosto/web-components/compare/v10.15.0...v10.16.0) (2025-12-11)
 
 
