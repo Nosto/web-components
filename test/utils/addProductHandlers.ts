@@ -1,13 +1,13 @@
 import { http, HttpResponse } from "msw"
 import { addHandlers } from "../msw.setup"
 import { getApiUrl } from "@/shopify/graphql/getApiUrl"
-import type { ShopifyProduct } from "@/shopify/graphql/types"
+import type { GraphQLProduct } from "@/shopify/graphql/types"
 
 /**
  * Response object for product handler
  */
 export interface ProductHandlerResponse {
-  product?: ShopifyProduct
+  product?: GraphQLProduct
   status?: number
 }
 
@@ -38,13 +38,9 @@ export function addProductHandlers(responses: Record<string, ProductHandlerRespo
       if (!response.product && response.status) {
         return HttpResponse.json({ errors: [{ message: "Failed to fetch product" }] }, { status: response.status })
       }
-      const product = (response.product || response) as ShopifyProduct
+      const product = response.product || response
       // Wrap images in nodes structure for GraphQL response
-      const graphqlProduct = {
-        ...product,
-        images: { nodes: product.images || [] }
-      }
-      return HttpResponse.json({ data: { product: graphqlProduct } }, { status: response.status || 200 })
+      return HttpResponse.json({ data: { product } }, { status: response.status || 200 })
     })
   )
 }
