@@ -29,8 +29,7 @@ let dynamicCardDefaults: DefaultProps = {}
  *
  * @property {string} handle - The product handle to fetch data for. Required.
  * @property {string} section - The section to use for rendering the product. section or template is required.
- * @property {string} template - The template to use for rendering the product. section or template is required.
- * @deprecated Use the `section` property instead. Section Rendering is the recommended approach from Shopify.
+ * @property {string} template - [DEPRECATED] Use {@link section} instead. The template to use for rendering the product. section or template is required.
  * @property {string} [variantId] (`variant-id`) - The variant ID to fetch specific variant data. Optional.
  * @property {boolean} [placeholder] - If true, the component will display placeholder content while loading. Defaults to false.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
@@ -40,6 +39,7 @@ let dynamicCardDefaults: DefaultProps = {}
 export class DynamicCard extends ReactiveElement {
   @property(String) handle!: string
   @property(String) section?: string
+  /** @deprecated Use the `section` property instead. Section Rendering is the recommended approach from Shopify. */
   @property(String) template?: string
   @property(String) variantId?: string
   @property(Boolean) placeholder?: boolean
