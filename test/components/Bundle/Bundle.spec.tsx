@@ -356,4 +356,40 @@ describe("Bundle", () => {
       "test-result"
     )
   })
+
+  it("uses default template when no summary property is provided", async () => {
+    addProductHandlers({
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
+    })
+    const bundle = (
+      <nosto-bundle products={products}>
+        <span n-summary-price></span>
+        <input type="checkbox" value="product1" checked />
+        <input type="checkbox" value="product2" checked />
+      </nosto-bundle>
+    ) as Bundle
+
+    await bundle.connectedCallback()
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    expect(summary.textContent).toBe("Total: $22.98")
+  })
+
+  it("formats summary with custom summary containing both placeholders", async () => {
+    addProductHandlers({
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
+    })
+    const bundle = (
+      <nosto-bundle products={products} summary="Buy {amount} items for {total}">
+        <span n-summary-price></span>
+        <input type="checkbox" value="product1" checked />
+        <input type="checkbox" value="product2" checked />
+      </nosto-bundle>
+    ) as Bundle
+
+    await bundle.connectedCallback()
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    expect(summary.textContent).toBe("Buy 2 items for $22.98")
+  })
 })

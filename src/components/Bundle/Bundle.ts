@@ -22,6 +22,7 @@ const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
  * @category Campaign level templating
  *
  * @property {JSONProduct[]} products - Array of products in the bundle
+ * @property {string} [summary] - Template string for summary display. Use {amount} for product count and {total} for formatted price. Default: "Total: {total}"
  *
  * @remarks
  *
@@ -36,6 +37,7 @@ const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
   @property(String) resultId?: string
+  @property(String) summary?: string
 
   products!: JSONProduct[]
   /** @hidden */
@@ -131,6 +133,10 @@ function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>
   }
 }
 
+function formatSummaryTemplate(template: string, amount: number, total: string) {
+  return template.replace(/{amount}/g, amount.toString()).replace(/{total}/g, total)
+}
+
 function setSummaryPrice(bundle: Bundle) {
   const summaryElement = bundle.querySelector("[n-summary-price]")
   if (!summaryElement) {
@@ -142,7 +148,10 @@ function setSummaryPrice(bundle: Bundle) {
       return sum + Number(product.price.amount)
     }, 0) || 0
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
-  summaryElement.textContent = `Total: ${formatted}`
+  const template = bundle.summary || "Total: {total}"
+  const amount = bundle.selectedProducts.length
+
+  summaryElement.textContent = formatSummaryTemplate(template, amount, formatted)
 }
 
 function isAddToCartClick(event: MouseEvent) {
