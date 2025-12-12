@@ -17,7 +17,7 @@ import { parseId } from "@/shopify/graphql/utils"
  * @category Campaign level templating
  *
  * @property {JSONProduct[]} products - Array of products in the bundle
- * @property {string} [template] - Template string for summary display. Use {amount} for product count and {total} for formatted price. Default: "Total: {total}"
+ * @property {string} [summary] - Template string for summary display. Use {amount} for product count and {total} for formatted price. Default: "Total: {total}"
  *
  * @remarks
  *
@@ -32,7 +32,7 @@ import { parseId } from "@/shopify/graphql/utils"
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
   @property(String) resultId?: string
-  @property(String) template?: string
+  @property(String) summary?: string
 
   products!: JSONProduct[]
   /** @hidden */
@@ -112,7 +112,7 @@ function setSummaryPrice(bundle: Bundle) {
       return sum + Number(product.price.amount)
     }, 0) || 0
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
-  const template = bundle.template || "Total: {total}"
+  const template = bundle.summary || "Total: {total}"
   const amount = bundle.selectedProducts.length
 
   summaryElement.textContent = formatSummaryTemplate(template, amount, formatted)

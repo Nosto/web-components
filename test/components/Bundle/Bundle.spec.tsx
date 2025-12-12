@@ -265,7 +265,7 @@ describe("Bundle", () => {
     )
   })
 
-  it("uses default template when no template property is provided", async () => {
+  it("uses default template when no summary property is provided", async () => {
     addProductHandlers({
       product1: { product: mockedProducts.product1 },
       product2: { product: mockedProducts.product2 }
@@ -283,13 +283,13 @@ describe("Bundle", () => {
     expect(summary.textContent).toBe("Total: $22.98")
   })
 
-  it("formats summary with custom template containing both placeholders", async () => {
+  it("formats summary with custom summary containing both placeholders", async () => {
     addProductHandlers({
       product1: { product: mockedProducts.product1 },
       product2: { product: mockedProducts.product2 }
     })
     const bundle = (
-      <nosto-bundle products={products} template="Buy {amount} items for {total}">
+      <nosto-bundle products={products} summary="Buy {amount} items for {total}">
         <span n-summary-price></span>
         <input type="checkbox" value="product1" checked />
         <input type="checkbox" value="product2" checked />

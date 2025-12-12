@@ -36,7 +36,7 @@ const meta: Meta = {
         category: "Layout options"
       }
     },
-    template: {
+    summary: {
       control: "text",
       description:
         "Template string for summary display. Use {amount} for product count and {total} for formatted price",
@@ -48,7 +48,7 @@ const meta: Meta = {
   args: {
     shopifyShop,
     products: 4,
-    template: "Total: {total}"
+    summary: "Total: {total}"
   }
 }
 
@@ -64,7 +64,7 @@ export const Default: Story = {
 
     return (
       // @ts-expect-error - Intentionally passing partial JSONProduct objects with only handle and title
-      <nosto-bundle products={productsWithTitles as JSONProduct[]} template={args.template}>
+      <nosto-bundle products={productsWithTitles as JSONProduct[]} summary={args.summary}>
         <div class="bundle-grid">
           {productsWithTitles.map(product => (
             <nosto-simple-card handle={product.handle}>

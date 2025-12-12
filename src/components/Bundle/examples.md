@@ -35,7 +35,7 @@ This example demonstrates a product bundle inside a campaign context.
 
 ### Bundle with Custom Summary Template
 
-This example shows how to customize the summary text using the `template` property with placeholders.
+This example shows how to customize the summary text using the `summary` property with placeholders.
 
 ```html
 <nosto-campaign placement="frontpage-bundle-custom">
@@ -43,7 +43,7 @@ This example shows how to customize the summary text using the `template` proper
     <nosto-bundle 
       .products="products" 
       :result-id="resultId"
-      template="Buy {amount} items for {total}">
+      summary="Buy {amount} items for {total}">
       <div class="bundle-grid">
         <nosto-simple-card
           v-for="product in products"
