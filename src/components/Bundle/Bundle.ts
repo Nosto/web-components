@@ -2,9 +2,13 @@ import { JSONProduct } from "@nosto/nosto-js/client"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { ShopifyProduct } from "@/shopify/graphql/types"
+import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId } from "@/shopify/graphql/utils"
+import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
+
+/** Event name for the SimpleCard rendered event */
+const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
 
 /**
  * This component allows users to select multiple products from a bundle and displays
@@ -41,6 +45,13 @@ export class Bundle extends NostoElement {
   async connectedCallback() {
     addListeners(this)
     await fetchShopifyProducts(this)
+    this.dispatchEvent(new CustomEvent(BUNDLE_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("click", this)
+    this.removeEventListener("input", this)
+    this.removeEventListener(EVENT_NAME_VARIANT_CHANGE, this)
   }
 
   handleEvent(event: Event) {
@@ -50,6 +61,9 @@ export class Bundle extends NostoElement {
         break
       case "input":
         onChange(this, event as Event)
+        break
+      case EVENT_NAME_VARIANT_CHANGE:
+        onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
         break
     }
   }
@@ -80,6 +94,8 @@ async function getProduct(handle: string): Promise<ShopifyProduct | null> {
 function addListeners(bundle: Bundle) {
   bundle.addEventListener("click", bundle)
   bundle.addEventListener("input", bundle)
+
+  bundle.addEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
 function initializeSelectedProducts(bundle: Bundle) {
@@ -92,6 +108,17 @@ function initializeSelectedProducts(bundle: Bundle) {
       return bundle.shopifyProducts.find(p => p.handle === handle)
     })
     .filter(product => !!product)
+}
+
+function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
+  event.stopPropagation()
+  const { variant } = event.detail
+  const matchedSelectedProduct = bundle.selectedProducts.find(p => p.id === variant.product.id)
+  if (matchedSelectedProduct) {
+    matchedSelectedProduct.price = variant.price
+    matchedSelectedProduct.compareAtPrice = variant.compareAtPrice || null
+    setSummaryPrice(bundle)
+  }
 }
 
 function setSummaryPrice(bundle: Bundle) {

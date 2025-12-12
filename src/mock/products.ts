@@ -775,19 +775,208 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
         width: 400,
         url: "https://example.com/image1.jpg"
       },
-      options: [],
+      options: [
+        {
+          name: "COLOR",
+          optionValues: [
+            {
+              firstSelectableVariant: {
+                availableForSale: true,
+                title: "Navy / Small",
+                id: `gid://shopify/ProductVariant/${i + 1}`,
+                image: {
+                  url: "https://example.com/image-navy-small.png",
+                  width: 1248,
+                  height: 832
+                },
+                price: {
+                  currencyCode: "USD",
+                  amount: `${100.0 + i}`
+                },
+                compareAtPrice: null,
+                product: {
+                  id: `gid://shopify/Product/${i + 1}`,
+                  onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+                },
+                selectedOptions: [
+                  {
+                    name: "COLOR",
+                    value: "Navy"
+                  },
+                  {
+                    name: "SIZE",
+                    value: "Small"
+                  }
+                ]
+              },
+              name: "Navy",
+              swatch: null
+            }
+          ]
+        },
+        {
+          name: "SIZE",
+          optionValues: [
+            {
+              firstSelectableVariant: {
+                availableForSale: true,
+                title: "Navy / Small",
+                id: `gid://shopify/ProductVariant/${i + 1}`,
+                image: {
+                  url: "https://example.com/image-navy-small.png",
+                  width: 1248,
+                  height: 832
+                },
+                price: {
+                  currencyCode: "USD",
+                  amount: `${100.0 + i}`
+                },
+                compareAtPrice: null,
+                product: {
+                  id: `gid://shopify/Product/${i + 1}`,
+                  onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+                },
+                selectedOptions: [
+                  {
+                    name: "COLOR",
+                    value: "Navy"
+                  },
+                  {
+                    name: "SIZE",
+                    value: "Small"
+                  }
+                ]
+              },
+              name: "Small",
+              swatch: null
+            },
+            {
+              firstSelectableVariant: {
+                availableForSale: true,
+                title: "Navy / Medium",
+                id: `gid://shopify/ProductVariant/${i + 2}`,
+                image: {
+                  url: "https://example.com/image-navy-medium.png",
+                  width: 1248,
+                  height: 832
+                },
+                price: {
+                  currencyCode: "USD",
+                  amount: `${120.0 + i}`
+                },
+                compareAtPrice: null,
+                product: {
+                  id: `gid://shopify/Product/${i + 1}`,
+                  onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+                },
+                selectedOptions: [
+                  {
+                    name: "COLOR",
+                    value: "Navy"
+                  },
+                  {
+                    name: "SIZE",
+                    value: "Medium"
+                  }
+                ]
+              },
+              name: "Medium",
+              swatch: null
+            },
+            {
+              firstSelectableVariant: {
+                availableForSale: true,
+                title: "Navy / Large",
+                id: `gid://shopify/ProductVariant/${i + 3}`,
+                image: {
+                  url: "https://example.com/image-navy-large.png",
+                  width: 1248,
+                  height: 832
+                },
+                price: {
+                  currencyCode: "USD",
+                  amount: `${150.0 + i}`
+                },
+                compareAtPrice: null,
+                product: {
+                  id: `gid://shopify/Product/${i + 1}`,
+                  onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+                },
+                selectedOptions: [
+                  {
+                    name: "COLOR",
+                    value: "Navy"
+                  },
+                  {
+                    name: "SIZE",
+                    value: "Large"
+                  }
+                ]
+              },
+              name: "Large",
+              swatch: null
+            }
+          ]
+        }
+      ],
       adjacentVariants: [
         {
-          id: `gid://shopify/ProductVariant/${i + 1}`,
-          title: "Default Title",
           availableForSale: true,
-          selectedOptions: [],
-          price: { currencyCode: "USD", amount: String(10.99 + i) },
-          compareAtPrice: { currencyCode: "USD", amount: String(15.99 + i) },
+          title: "Navy / Medium",
+          id: `gid://shopify/ProductVariant/${i + 2}`,
+          image: {
+            url: "https://example.com/image-navy-medium.png",
+            width: 1248,
+            height: 832
+          },
+          price: {
+            currencyCode: "USD",
+            amount: `${120.0 + i}`
+          },
+          compareAtPrice: null,
           product: {
             id: `gid://shopify/Product/${i + 1}`,
-            onlineStoreUrl: `/products/${handle}`
-          }
+            onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+          },
+          selectedOptions: [
+            {
+              name: "COLOR",
+              value: "Navy"
+            },
+            {
+              name: "SIZE",
+              value: "Medium"
+            }
+          ]
+        },
+        {
+          availableForSale: true,
+          title: "Navy / Large",
+          id: `gid://shopify/ProductVariant/${i + 3}`,
+          image: {
+            url: "https://example.com/image-navy-large.png",
+            width: 1248,
+            height: 832
+          },
+          price: {
+            currencyCode: "USD",
+            amount: `${150.0 + i}`
+          },
+          compareAtPrice: null,
+          product: {
+            id: `gid://shopify/Product/${i + 1}`,
+            onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+          },
+          selectedOptions: [
+            {
+              name: "COLOR",
+              value: "Navy"
+            },
+            {
+              name: "SIZE",
+              value: "Large"
+            }
+          ]
         }
       ]
     }
