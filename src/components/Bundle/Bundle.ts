@@ -96,7 +96,7 @@ function initializeSelectedProducts(bundle: Bundle) {
     .filter(product => !!product)
 }
 
-function formatSummaryTemplate(template: string, amount: number, total: string): string {
+function formatSummaryTemplate(template: string, amount: number, total: string) {
   return template.replace(/{amount}/g, amount.toString()).replace(/{total}/g, total)
 }
 
