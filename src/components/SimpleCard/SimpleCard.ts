@@ -85,6 +85,16 @@ export class SimpleCard extends ReactiveElement {
     }
   }
 
+  disconnectedCallback() {
+    this.removeEventListener("click", this)
+    this.shadowRoot?.removeEventListener("click", this)
+    this.removeEventListener(EVENT_NAME_VARIANT_CHANGE, this)
+
+    if (this.imageMode === "carousel") {
+      this.shadowRoot?.removeEventListener("scroll", this, { capture: true })
+    }
+  }
+
   async render() {
     await loadAndRenderMarkup(this)
   }
@@ -130,10 +140,14 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 }
 
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
-  event.stopPropagation()
   const { variant } = event.detail
-  element.productId = parseId(variant.product.id)
-  element.variantId = parseId(variant.id)
+  const selectedProductId = parseId(variant.product.id)
+  const selectedVariantId = parseId(variant.id)
+  if (element.productId === selectedProductId && element.variantId === selectedVariantId) {
+    return
+  }
+  element.productId = selectedProductId
+  element.variantId = selectedVariantId
   const handle = toHandle(variant.product.onlineStoreUrl)
   if (handle && handle !== element.handle) {
     element.handle = handle

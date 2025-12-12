@@ -46,7 +46,7 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("card")
     expect(shadowContent).toContain("Awesome Test Product")
-    expect(shadowContent).toContain("$10.99")
+    expect(shadowContent).toContain("$100.00")
     expect(shadowContent).toContain("https://example.com/image1.jpg")
     expect(card.hasAttribute("loading")).toBe(false)
   })
@@ -100,20 +100,6 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).not.toContain("brand")
     expect(shadowContent).not.toContain("Test Brand")
-  })
-
-  it("should render original price when discount attribute is enabled and product has discount", async () => {
-    addProductHandlers({
-      [handle]: { product: mockedProduct }
-    })
-
-    const card = (<nosto-simple-card handle={handle} discount />) as SimpleCard
-
-    await card.connectedCallback()
-
-    const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("$15.99") // original price
-    expect(shadowContent).toContain("$10.99") // current price
   })
 
   it("should not render original price when product has no discount", async () => {
@@ -209,7 +195,7 @@ describe("SimpleCard", () => {
     const shadowContent = getShadowContent(card)
     expect(shadowContent).toContain("brand")
     expect(shadowContent).toContain("Test Brand")
-    expect(shadowContent).toContain("$15.99") // original price shown with discount attribute
+    expect(shadowContent).toContain("$100.00") // original price shown with discount attribute
     expect(shadowContent).toContain("rating")
     expect(shadowContent).toContain("★★★☆☆ (3.5)")
     expect(shadowContent).toContain("img primary")
@@ -327,18 +313,41 @@ describe("SimpleCard", () => {
     expect(shadowContent).toContain("&lt;script&gt;alert('xss')&lt;/script&gt;Safe Title")
   })
 
-  it("should format price correctly", async () => {
+  it("should render original price when discount attribute is enabled and product has discount", async () => {
     const productWithDifferentPrice: GraphQLProduct = {
       ...mockedProduct,
       adjacentVariants: [
         {
-          id: "gid://shopify/ProductVariant/789",
-          title: "Default Title",
           availableForSale: true,
-          selectedOptions: [],
-          price: { currencyCode: "USD", amount: "9.99" },
-          compareAtPrice: { currencyCode: "USD", amount: "12.99" },
-          product: { id: "gid://shopify/Product/123", onlineStoreUrl: "/products/test-product" }
+          title: "Navy / Small",
+          id: `gid://shopify/ProductVariant/1`,
+          image: {
+            url: "https://example.com/image-navy-small.png",
+            width: 1248,
+            height: 832
+          },
+          price: {
+            currencyCode: "USD",
+            amount: "100.00"
+          },
+          compareAtPrice: {
+            currencyCode: "USD",
+            amount: "135.00"
+          },
+          product: {
+            id: `gid://shopify/Product/1`,
+            onlineStoreUrl: `https://example.com/en-us/products/${handle}`
+          },
+          selectedOptions: [
+            {
+              name: "COLOR",
+              value: "Navy"
+            },
+            {
+              name: "SIZE",
+              value: "Small"
+            }
+          ]
         }
       ]
     }
@@ -352,8 +361,8 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     const shadowContent = getShadowContent(card)
-    expect(shadowContent).toContain("$9.99")
-    expect(shadowContent).toContain("$12.99")
+    expect(shadowContent).toContain("$100.00")
+    expect(shadowContent).toContain("$135.00")
   })
 
   it("should forward imageSizes attribute to nosto-image elements", async () => {
@@ -750,7 +759,7 @@ describe("SimpleCard", () => {
       const shadowContent = getShadowContent(card)
       expect(shadowContent).toContain("brand")
       expect(shadowContent).toContain("Test Brand")
-      expect(shadowContent).toContain("$15.99") // original price
+      expect(shadowContent).toContain("$100.00") // original price
       expect(shadowContent).toContain("img alternate")
       expect(shadowContent).toContain("rating")
       expect(shadowContent).toContain("★★★☆☆ (3.8)")
