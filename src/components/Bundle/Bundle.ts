@@ -17,6 +17,7 @@ import { parseId } from "@/shopify/graphql/utils"
  * @category Campaign level templating
  *
  * @property {JSONProduct[]} products - Array of products in the bundle
+ * @property {string} [template] - Template string for summary display. Use {amount} for product count and {total} for formatted price. Default: "Total: {total}"
  *
  * @remarks
  *
@@ -31,6 +32,7 @@ import { parseId } from "@/shopify/graphql/utils"
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
   @property(String) resultId?: string
+  @property(String) template?: string
 
   products!: JSONProduct[]
   /** @hidden */
@@ -94,6 +96,10 @@ function initializeSelectedProducts(bundle: Bundle) {
     .filter(product => !!product)
 }
 
+function formatSummaryTemplate(template: string, amount: number, total: string): string {
+  return template.replace(/{amount}/g, amount.toString()).replace(/{total}/g, total)
+}
+
 function setSummaryPrice(bundle: Bundle) {
   const summaryElement = bundle.querySelector("[n-summary-price]")
   if (!summaryElement) {
@@ -106,7 +112,10 @@ function setSummaryPrice(bundle: Bundle) {
       return sum + Number(product.price.amount)
     }, 0) || 0
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
-  summaryElement.textContent = `Total: ${formatted}`
+  const template = bundle.template || "Total: {total}"
+  const amount = bundle.selectedProducts.length
+
+  summaryElement.textContent = formatSummaryTemplate(template, amount, formatted)
 }
 
 function isAddToCartClick(event: MouseEvent) {
