@@ -49,9 +49,7 @@ export class Bundle extends NostoElement {
   }
 
   disconnectedCallback() {
-    this.removeEventListener("click", this)
-    this.removeEventListener("input", this)
-    this.removeEventListener(EVENT_NAME_VARIANT_CHANGE, this)
+    removeListeners(this)
   }
 
   handleEvent(event: Event) {
@@ -94,8 +92,13 @@ async function getProduct(handle: string): Promise<ShopifyProduct | null> {
 function addListeners(bundle: Bundle) {
   bundle.addEventListener("click", bundle)
   bundle.addEventListener("input", bundle)
-
   bundle.addEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
+}
+
+function removeListeners(bundle: Bundle) {
+  bundle.removeEventListener("click", bundle)
+  bundle.removeEventListener("input", bundle)
+  bundle.removeEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
 function initializeSelectedProducts(bundle: Bundle) {

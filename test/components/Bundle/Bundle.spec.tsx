@@ -289,9 +289,6 @@ describe("Bundle", () => {
     expect(variantSelectorShadowRoot).toBeTruthy()
     const select = variantSelectorShadowRoot!.querySelector<HTMLSelectElement>("select")
     expect(select).toBeTruthy()
-    select!.value = "gid://shopify/ProductVariant/2"
-
-    select!.dispatchEvent(new Event("change", { bubbles: true }))
 
     const variantChangePromise = new Promise<void>(resolve => {
       bundle.addEventListener(EVENT_NAME_VARIANT_CHANGE, event => {
@@ -302,6 +299,8 @@ describe("Bundle", () => {
       })
     })
 
+    select!.value = "gid://shopify/ProductVariant/2"
+    select!.dispatchEvent(new Event("change", { bubbles: true }))
     await variantChangePromise
   })
 
