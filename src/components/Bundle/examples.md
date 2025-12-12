@@ -68,31 +68,3 @@ This example shows how to customize the summary text using the `template` proper
   </template>
 </nosto-campaign>
 ```
-
-### Bundle with Amount-Only Template
-
-This example uses a template that only shows the number of selected products.
-
-```html
-<nosto-bundle 
-  .products="products"
-  template="{amount} items selected">
-  <span n-summary-price></span>
-  <input type="checkbox" value="product-handle-1" checked />
-  <input type="checkbox" value="product-handle-2" checked />
-</nosto-bundle>
-```
-
-### Bundle with Price-Only Template
-
-This example uses the default-style template with custom text.
-
-```html
-<nosto-bundle 
-  .products="products"
-  template="Bundle Total: {total}">
-  <span n-summary-price></span>
-  <input type="checkbox" value="product-handle-1" checked />
-  <input type="checkbox" value="product-handle-2" />
-</nosto-bundle>
-```
