@@ -1,3 +1,11 @@
+# [10.18.0](https://github.com/Nosto/web-components/compare/v10.17.3...v10.18.0) (2025-12-12)
+
+
+### Features
+
+* **Bundle:** add Storybook stories for template examples ([191a04a](https://github.com/Nosto/web-components/commit/191a04adf204156492ae8fb86882377886e0ee3c))
+* **Bundle:** add template property for customizable summary text ([12ed817](https://github.com/Nosto/web-components/commit/12ed81736ca7fd798a21010758d0d03551dd46d4))
+
 ## [10.17.3](https://github.com/Nosto/web-components/compare/v10.17.2...v10.17.3) (2025-12-11)
 
 
