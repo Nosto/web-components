@@ -35,11 +35,20 @@ const meta: Meta = {
       table: {
         category: "Layout options"
       }
+    },
+    template: {
+      control: "text",
+      description:
+        "Template string for summary display. Use {amount} for product count and {total} for formatted price",
+      table: {
+        category: "Layout options"
+      }
     }
   },
   args: {
     shopifyShop,
-    products: 4
+    products: 4,
+    template: "Total: {total}"
   }
 }
 
@@ -55,7 +64,7 @@ export const Default: Story = {
 
     return (
       // @ts-expect-error - Intentionally passing partial JSONProduct objects with only handle and title
-      <nosto-bundle products={productsWithTitles as JSONProduct[]}>
+      <nosto-bundle products={productsWithTitles as JSONProduct[]} template={args.template}>
         <div class="bundle-grid">
           {productsWithTitles.map(product => (
             <nosto-simple-card handle={product.handle}>
@@ -104,43 +113,6 @@ export const CheckboxCard: Story = {
         <div class="bundle-summary">
           <span n-summary-price></span>
           <button n-atc>Add Bundle to Cart</button>
-        </div>
-      </nosto-bundle>
-    )
-  }
-}
-
-export const CustomTemplate: Story = {
-  render: (args, { loaded }) => {
-    const productsWithTitles = ((loaded?.products as Array<{ handle: string; title: string }>) || []).slice(
-      0,
-      args.products
-    )
-
-    return (
-      // @ts-expect-error - Intentionally passing partial JSONProduct objects with only handle and title
-      <nosto-bundle products={productsWithTitles as JSONProduct[]} template="Buy {amount} items for {total}">
-        <div class="bundle-grid">
-          {productsWithTitles.map(product => (
-            <nosto-simple-card handle={product.handle}>
-              <nosto-variant-selector handle={product.handle} mode="compact"></nosto-variant-selector>
-            </nosto-simple-card>
-          ))}
-        </div>
-        <div class="bundle-controls">
-          <h4>Special Bundle Offer</h4>
-          <ul>
-            {productsWithTitles.map(product => (
-              <li>
-                <input type="checkbox" id={`custom-${product.handle}`} value={product.handle} checked />
-                <label for={`custom-${product.handle}`}>Include {product.title}</label>
-              </li>
-            ))}
-          </ul>
-          <div class="bundle-summary">
-            <span n-summary-price></span>
-            <button n-atc>Add Bundle to Cart</button>
-          </div>
         </div>
       </nosto-bundle>
     )
