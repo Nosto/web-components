@@ -7,7 +7,7 @@ import { formatPrice } from "@/shopify/formatPrice"
 import { parseId } from "@/shopify/graphql/utils"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
 
-/** Event name for the SimpleCard rendered event */
+/** Event name for the Bundle rendered event */
 const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
 
 /**
