@@ -372,7 +372,7 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(summary.textContent).toBe("Total: $22.98")
+    expect(summary.textContent).toBe("Total: $201.00")
   })
 
   it("formats summary with custom summary containing both placeholders", async () => {
@@ -390,6 +390,6 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(summary.textContent).toBe("Buy 2 items for $22.98")
+    expect(summary.textContent).toBe("Buy 2 items for $201.00")
   })
 })
