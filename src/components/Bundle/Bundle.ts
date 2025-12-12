@@ -6,6 +6,7 @@ import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId } from "@/shopify/graphql/utils"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
+import { SelectedProduct } from "./types"
 
 /** Event name for the Bundle rendered event */
 const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
@@ -38,7 +39,7 @@ export class Bundle extends NostoElement {
 
   products!: JSONProduct[]
   /** @hidden */
-  selectedProducts: ShopifyProduct[] = []
+  selectedProducts: SelectedProduct[] = []
   /** @hidden */
   shopifyProducts: ShopifyProduct[] = []
 
@@ -102,15 +103,20 @@ function removeListeners(bundle: Bundle) {
 }
 
 function initializeSelectedProducts(bundle: Bundle) {
-  const checkboxes = bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')
+  const checkedProducts = Array.from(bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')).filter(
+    checkbox => checkbox.checked
+  )
 
-  bundle.selectedProducts = Array.from(checkboxes)
-    .filter(checkbox => checkbox.checked)
+  bundle.selectedProducts = checkedProducts
     .map(checkboxChecked => {
       const handle = checkboxChecked.value
       return bundle.shopifyProducts.find(p => p.handle === handle)
     })
     .filter(product => !!product)
+    .map(product => ({
+      ...product,
+      selectedVariant: product.combinedVariants[0]
+    }))
 }
 
 function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
@@ -120,6 +126,7 @@ function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>
   if (matchedSelectedProduct) {
     matchedSelectedProduct.price = variant.price
     matchedSelectedProduct.compareAtPrice = variant.compareAtPrice || null
+    matchedSelectedProduct.selectedVariant = variant
     setSummaryPrice(bundle)
   }
 }
@@ -132,7 +139,6 @@ function setSummaryPrice(bundle: Bundle) {
   const currencyCode = bundle.shopifyProducts[0]?.price.currencyCode || "USD"
   const totalAmount =
     bundle.selectedProducts.reduce((sum, product) => {
-      // TODO use price of selected variant instead
       return sum + Number(product.price.amount)
     }, 0) || 0
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
@@ -150,7 +156,7 @@ function onClick(bundle: Bundle, event: MouseEvent) {
       return {
         productId: String(parseId(product.id)),
         // TODO use selected variant id instead
-        skuId: String(parseId(product.combinedVariants[0].id)),
+        skuId: String(parseId(product.selectedVariant.id)),
         quantity: 1
       }
     })
@@ -182,7 +188,11 @@ function onChange(bundle: Bundle, event: Event) {
       // Add product to selection
       const product = bundle.shopifyProducts.find(p => p.handle === handle)
       if (product && !bundle.selectedProducts.find(p => p.handle === handle)) {
-        bundle.selectedProducts = [...bundle.selectedProducts, product]
+        const selectedProduct = {
+          ...product,
+          selectedVariant: product.combinedVariants[0]
+        }
+        bundle.selectedProducts = [...bundle.selectedProducts, selectedProduct]
         target.setAttribute("checked", "")
       }
     }

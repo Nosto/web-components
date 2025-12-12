@@ -747,6 +747,7 @@ export function getProductWithoutVariantsMock(
 export function createMockShopifyProducts(count: number): GraphQLProduct[] {
   return Array.from({ length: count }, (_, i): GraphQLProduct => {
     const handle = `product${i + 1}`
+    const startVariantId = i * 4
     return {
       id: `gid://shopify/Product/${i + 1}`,
       title: "Awesome Test Product",
@@ -783,7 +784,7 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
               firstSelectableVariant: {
                 availableForSale: true,
                 title: "Navy / Small",
-                id: `gid://shopify/ProductVariant/${i + 1}`,
+                id: `gid://shopify/ProductVariant/${startVariantId + 1}`,
                 image: {
                   url: "https://example.com/image-navy-small.png",
                   width: 1248,
@@ -821,7 +822,7 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
               firstSelectableVariant: {
                 availableForSale: true,
                 title: "Navy / Small",
-                id: `gid://shopify/ProductVariant/${i + 1}`,
+                id: `gid://shopify/ProductVariant/${startVariantId + 1}`,
                 image: {
                   url: "https://example.com/image-navy-small.png",
                   width: 1248,
@@ -854,7 +855,7 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
               firstSelectableVariant: {
                 availableForSale: true,
                 title: "Navy / Medium",
-                id: `gid://shopify/ProductVariant/${i + 2}`,
+                id: `gid://shopify/ProductVariant/${startVariantId + 2}`,
                 image: {
                   url: "https://example.com/image-navy-medium.png",
                   width: 1248,
@@ -887,7 +888,7 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
               firstSelectableVariant: {
                 availableForSale: true,
                 title: "Navy / Large",
-                id: `gid://shopify/ProductVariant/${i + 3}`,
+                id: `gid://shopify/ProductVariant/${startVariantId + 3}`,
                 image: {
                   url: "https://example.com/image-navy-large.png",
                   width: 1248,
@@ -923,7 +924,7 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
         {
           availableForSale: true,
           title: "Navy / Medium",
-          id: `gid://shopify/ProductVariant/${i + 2}`,
+          id: `gid://shopify/ProductVariant/${startVariantId + 2}`,
           image: {
             url: "https://example.com/image-navy-medium.png",
             width: 1248,
@@ -952,7 +953,7 @@ export function createMockShopifyProducts(count: number): GraphQLProduct[] {
         {
           availableForSale: true,
           title: "Navy / Large",
-          id: `gid://shopify/ProductVariant/${i + 3}`,
+          id: `gid://shopify/ProductVariant/${startVariantId + 3}`,
           image: {
             url: "https://example.com/image-navy-large.png",
             width: 1248,

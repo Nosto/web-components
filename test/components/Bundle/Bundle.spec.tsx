@@ -70,7 +70,10 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(bundle.selectedProducts).toHaveLength(2)
+    const selectedProducts = bundle.selectedProducts
+    expect(selectedProducts).toHaveLength(2)
+    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/1")
+    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
@@ -89,7 +92,10 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(bundle.selectedProducts).toHaveLength(1)
+    const selectedProducts = bundle.selectedProducts
+    expect(selectedProducts).toHaveLength(1)
+    expect(selectedProducts[0].handle).toBe("product1")
+    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/1")
     expect(summary.textContent).toBe("Total: $100.00")
   })
 
@@ -117,8 +123,10 @@ describe("Bundle", () => {
     // dispatch input event
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
-    expect(bundle.selectedProducts).toHaveLength(1)
-    expect(bundle.selectedProducts?.find(p => p.handle === "product1")).toBeUndefined()
+    const selectedProducts = bundle.selectedProducts
+    expect(selectedProducts).toHaveLength(1)
+    expect(selectedProducts[0].handle).toBe("product2")
+    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
     expect(summary.textContent).toBe("Total: $101.00")
   })
 
@@ -146,9 +154,11 @@ describe("Bundle", () => {
     // dispatch input event to add product
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
-    expect(bundle.selectedProducts).toHaveLength(2)
-    expect(bundle.selectedProducts.find(p => p.handle === "product1")).toBeTruthy()
+    const selectedProducts = bundle.selectedProducts
+    expect(selectedProducts).toHaveLength(2)
+    expect(selectedProducts[0].handle).toBe("product2")
     expect(input.checked).toBe(true)
+    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
@@ -295,6 +305,7 @@ describe("Bundle", () => {
         const variant = (event as CustomEvent).detail.variant
         expect(variant.id).toBe("gid://shopify/ProductVariant/2")
         expect(summary.textContent).toBe("Total: $221.00")
+        expect(bundle.selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/2")
         resolve()
       })
     })
@@ -339,7 +350,7 @@ describe("Bundle", () => {
         {
           productId: "2",
           quantity: 1,
-          skuId: "2"
+          skuId: "5"
         }
       ],
       "test-result"
