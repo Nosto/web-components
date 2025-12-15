@@ -1,11 +1,12 @@
-import { ShopifyImage } from "@/shopify/graphql/types"
 import type { CoreImageAttributes, Layout, Operations, UnpicBaseImageProps } from "@unpic/core/base"
 import type { ShopifyOperations } from "unpic/providers/shopify"
 
 export type Crop = Exclude<ShopifyOperations["crop"], undefined>
 
-export type ImageProps = Pick<ShopifyImage, "height" | "width"> & {
+export type ImageProps = {
   src: string
+  width?: number | null
+  height?: number | null
   aspectRatio?: number
   layout?: Layout
   crop?: Crop
