@@ -1,3 +1,10 @@
+## [10.18.2](https://github.com/Nosto/web-components/compare/v10.18.1...v10.18.2) (2025-12-15)
+
+
+### Bug Fixes
+
+* decouple image types from shopify types ([d3eb71b](https://github.com/Nosto/web-components/commit/d3eb71b1aa0a8050e55c0ca56b0e9efc2d1e77b7))
+
 ## [10.18.1](https://github.com/Nosto/web-components/compare/v10.18.0...v10.18.1) (2025-12-15)
 
 
