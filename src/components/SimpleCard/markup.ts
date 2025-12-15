@@ -93,8 +93,8 @@ export function generateImgHtml(image: ShopifyImage, alt: string, className: str
 function getImageProps(image: ShopifyImage, sizes?: string) {
   return {
     src: normalizeUrl(image.url),
-    width: image.width,
-    height: image.height,
+    width: image.width ?? undefined,
+    height: image.height ?? undefined,
     sizes: sizes || defaultImageSizes
   }
 }
