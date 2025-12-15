@@ -22,6 +22,7 @@ This package provides the following custom elements:
 
 | Component       | Tag Name                 | Description                                     | Notes        |
 | --------------- | ------------------------ | ----------------------------------------------- | ------------ |
+| Bundle          | `nosto-bundle`           | Product bundle selection and pricing display    | Shopify only |
 | DynamicCard     | `nosto-dynamic-card`     | Dynamic product card templating                 | Shopify only |
 | Image           | `nosto-image`            | Progressive image enhancement with optimization |              |
 | Product         | `nosto-product`          | Product interaction and cart management         |              |
