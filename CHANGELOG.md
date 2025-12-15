@@ -1,3 +1,13 @@
+## [10.18.1](https://github.com/Nosto/web-components/compare/v10.18.0...v10.18.1) (2025-12-15)
+
+
+### Bug Fixes
+
+* adjust new tests based on updated mock ([83bce73](https://github.com/Nosto/web-components/commit/83bce731ca2134a878cda24ef2f61f94a3ac2770))
+* **comment:** update add to cart to use selected variant ([a913449](https://github.com/Nosto/web-components/commit/a91344981154ec288a9dd168b49db3c71f49b5fe))
+* event listeners trigger multiple times, add bundle rendered event and add price change tests ([20f5620](https://github.com/Nosto/web-components/commit/20f5620eafa6f265bc5b402097ccc78179ecb260))
+* maintain listener management consistency ([92bd3b7](https://github.com/Nosto/web-components/commit/92bd3b770af9fdae0499a7548e3d21920b9b4dc5))
+
 # [10.18.0](https://github.com/Nosto/web-components/compare/v10.17.3...v10.18.0) (2025-12-12)
 
 
