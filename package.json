@@ -54,7 +54,7 @@
     "@types/jsdom": "^27.0.0",
     "@types/node": "^25.0.2",
     "@types/serve-favicon": "^2.5.7",
-    "@unpic/core": "^1.0.2",
+    "@unpic/core": "^1.0.3",
     "@vitest/browser": "^4.0.15",
     "@vitest/browser-playwright": "^4.0.15",
     "@vitest/coverage-v8": "^4.0.15",
