@@ -6,7 +6,7 @@ import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId } from "@/shopify/graphql/utils"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
-import { SelectedProduct } from "./types"
+import { SelectableProduct } from "./types"
 
 /** Event name for the Bundle rendered event */
 const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
@@ -33,7 +33,6 @@ const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
  * - `n-summary-price`: An element (e.g., `<span>`, `<div>`) where the total price of selected products will be displayed.
  * Example: `<span n-summary-price></span>`
  */
-
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
   @property(String) resultId?: string
@@ -41,9 +40,11 @@ export class Bundle extends NostoElement {
 
   products!: JSONProduct[]
   /** @hidden */
-  selectedProducts: SelectedProduct[] = []
-  /** @hidden */
-  shopifyProducts: ShopifyProduct[] = []
+  shopifyProducts: SelectableProduct[] = []
+
+  get selectedProducts(): SelectableProduct[] {
+    return this.shopifyProducts.filter(product => product.selected)
+  }
 
   async connectedCallback() {
     addListeners(this)
@@ -75,12 +76,21 @@ async function fetchShopifyProducts(bundle: Bundle) {
     return
   }
   bundle.toggleAttribute("loading", true)
+  await initializeProducts(bundle)
+  setSummaryPrice(bundle)
+  bundle.toggleAttribute("loading", false)
+}
+
+async function initializeProducts(bundle: Bundle) {
   const fetchPromises = bundle.products.map(product => getProduct(product.handle))
   const fetchedProducts = await Promise.all(fetchPromises)
-  bundle.shopifyProducts = fetchedProducts.filter(p => p !== null)
-  bundle.toggleAttribute("loading", false)
-  initializeSelectedProducts(bundle)
-  setSummaryPrice(bundle)
+  bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => {
+    return {
+      ...product!,
+      selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
+      selectedVariant: product!.combinedVariants.find(v => v.availableForSale) ?? product!.combinedVariants[0]
+    }
+  })
 }
 
 async function getProduct(handle: string): Promise<ShopifyProduct | null> {
@@ -104,31 +114,12 @@ function removeListeners(bundle: Bundle) {
   bundle.removeEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
-function initializeSelectedProducts(bundle: Bundle) {
-  const checkedProducts = Array.from(bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')).filter(
-    checkbox => checkbox.checked
-  )
-
-  bundle.selectedProducts = checkedProducts
-    .map(checkboxChecked => {
-      const handle = checkboxChecked.value
-      return bundle.shopifyProducts.find(p => p.handle === handle)
-    })
-    .filter(product => !!product)
-    .map(product => ({
-      ...product,
-      selectedVariant: product.combinedVariants[0]
-    }))
-}
-
 function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variant } = event.detail
-  const matchedSelectedProduct = bundle.selectedProducts.find(p => p.id === variant.product.id)
-  if (matchedSelectedProduct) {
-    matchedSelectedProduct.price = variant.price
-    matchedSelectedProduct.compareAtPrice = variant.compareAtPrice || null
-    matchedSelectedProduct.selectedVariant = variant
+  const matchedProduct = bundle.shopifyProducts.find(p => p.id === variant.product.id)
+  if (matchedProduct) {
+    matchedProduct.selectedVariant = variant
     setSummaryPrice(bundle)
   }
 }
@@ -145,7 +136,7 @@ function setSummaryPrice(bundle: Bundle) {
   const currencyCode = bundle.shopifyProducts[0]?.price.currencyCode || "USD"
   const totalAmount =
     bundle.selectedProducts.reduce((sum, product) => {
-      return sum + Number(product.price.amount)
+      return sum + Number(product.selectedVariant.price.amount)
     }, 0) || 0
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
   const template = bundle.summary || "Total: {total}"
@@ -181,35 +172,21 @@ function setCardVisibility(card: HTMLElement | null, visible: boolean) {
 
 function onChange(bundle: Bundle, event: Event) {
   const target = event.target as HTMLInputElement
-  if (target.type !== "checkbox") {
+  if (target.type !== "checkbox" || !target.value) {
     return
   }
 
   const handle = target.value
   const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
   const isCheckboxInsideCard = card?.contains(target)
-  if (target.value) {
-    if (!target.checked) {
-      // Remove product from selection
-      target.removeAttribute("checked")
-      bundle.selectedProducts = bundle.selectedProducts.filter(p => p.handle !== handle)
-    } else {
-      // Add product to selection
-      const product = bundle.shopifyProducts.find(p => p.handle === handle)
-      if (product && !bundle.selectedProducts.find(p => p.handle === handle)) {
-        const selectedProduct = {
-          ...product,
-          selectedVariant: product.combinedVariants[0]
-        }
-        bundle.selectedProducts = [...bundle.selectedProducts, selectedProduct]
-        target.setAttribute("checked", "")
-      }
-    }
-    if (!isCheckboxInsideCard) {
-      setCardVisibility(card, target.checked)
-    }
-    setSummaryPrice(bundle)
+  const product = bundle.shopifyProducts.find(p => p.handle === handle)
+  if (product) {
+    product.selected = target.checked
   }
+  if (!isCheckboxInsideCard) {
+    setCardVisibility(card, target.checked)
+  }
+  setSummaryPrice(bundle)
 }
 
 declare global {

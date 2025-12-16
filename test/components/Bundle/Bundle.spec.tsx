@@ -156,9 +156,9 @@ describe("Bundle", () => {
     input.dispatchEvent(new Event("input", { bubbles: true }))
     const selectedProducts = bundle.selectedProducts
     expect(selectedProducts).toHaveLength(2)
-    expect(selectedProducts[0].handle).toBe("product2")
+    expect(selectedProducts[1].handle).toBe("product2")
     expect(input.checked).toBe(true)
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
+    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
