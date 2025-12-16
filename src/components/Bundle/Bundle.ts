@@ -145,7 +145,6 @@ function setSummaryPrice(bundle: Bundle) {
     const product = bundle.shopifyProducts.find(p => p.id === productId)
     const variant = product?.combinedVariants.find(v => v.id === variantId)
     if (variant) {
-      // Update selected variant if needed
       totalAmount += Number(variant.price.amount)
     }
   })
