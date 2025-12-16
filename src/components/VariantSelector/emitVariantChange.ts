@@ -4,10 +4,14 @@ import { parseId, toHandle } from "@/shopify/graphql/utils"
 
 export const EVENT_NAME_VARIANT_CHANGE = "@nosto/VariantSelector/variantchange"
 
-export function emitVariantChange(element: VariantSelector, variant: ShopifyVariant) {
+export function emitVariantChange(
+  element: VariantSelector,
+  variant: ShopifyVariant,
+  options: { force?: boolean } = {}
+) {
   const handle = toHandle(variant.product.onlineStoreUrl)
   const selectedVariantId = parseId(variant.id)
-  if (element.variantId === selectedVariantId && element.handle === handle) {
+  if (!options.force && element.variantId === selectedVariantId && element.handle === handle) {
     return
   }
   if (handle) {

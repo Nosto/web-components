@@ -7,12 +7,11 @@ import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../emitVariantChange"
 
+const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
+
 const setShadowContent = shadowContentFactory(styles)
 
 let placeholder = ""
-
-/** Event name for the VariantSelector rendered event */
-const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
 
 export async function loadAndRenderMarkup(element: VariantSelector, initial = false) {
   if (initial && element.placeholder && placeholder) {
@@ -44,7 +43,7 @@ export async function loadAndRenderMarkup(element: VariantSelector, initial = fa
     if (Object.keys(element.selectedOptions).length > 0) {
       const variant = getSelectedVariant(element, productData)
       if (variant) {
-        emitVariantChange(element, variant)
+        emitVariantChange(element, variant, { force: initial })
       }
     }
 
