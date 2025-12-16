@@ -123,7 +123,7 @@ describe("VariantSelector - Compact Mode", () => {
 
     selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, e => {
       eventFired = true
-      eventDetail = (e as CustomEvent).detail
+      eventDetail = (e as CustomEvent<VariantChangeDetail>).detail
     })
 
     const dropdown = selector.shadowRoot!.querySelector("select") as HTMLSelectElement
@@ -134,8 +134,7 @@ describe("VariantSelector - Compact Mode", () => {
 
     expect(eventFired).toBe(true)
     expect(eventDetail).toBeDefined()
-    expect(eventDetail!.variant.id).toBe("gid://shopify/ProductVariant/1002")
-    expect(eventDetail!.variant.title).toBe("Medium / Blue")
+    expect(eventDetail!.variantId).toBe("gid://shopify/ProductVariant/1002")
   })
 
   it("should not render dropdown if product has only one variant in compact mode", async () => {

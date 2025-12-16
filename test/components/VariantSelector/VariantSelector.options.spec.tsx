@@ -12,7 +12,7 @@ import { clearProductCache } from "@/shopify/graphql/fetchProduct"
 import { selectOption } from "@/components/VariantSelector/options"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 import { addProductHandlers } from "../../utils/addProductHandlers"
-import { ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { VariantChangeDetail } from "@/shopify/graphql/types"
 
 describe("VariantSelector - Options Mode", () => {
   const withVariantsMock = getProductWithVariantsMock()
@@ -91,19 +91,16 @@ describe("VariantSelector - Options Mode", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" />) as VariantSelector
     await selector.connectedCallback()
 
-    let eventDetail: Record<string, unknown> | null = null
+    let eventDetail: VariantChangeDetail | undefined = undefined
     selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
-      eventDetail = (event as CustomEvent).detail
+      eventDetail = (event as CustomEvent<VariantChangeDetail>).detail
     })
 
     await selectOption(selector, "Size", "Large")
     await selectOption(selector, "Color", "Red")
 
     expect(eventDetail).toBeTruthy()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((eventDetail as any)?.variant).toBeTruthy()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/1003") // Large / Red
+    expect(eventDetail!.variantId).toBe("gid://shopify/ProductVariant/1003") // Large / Red
   })
 
   it("should update selected variant when options change", async () => {
@@ -114,8 +111,8 @@ describe("VariantSelector - Options Mode", () => {
     const selector = (<nosto-variant-selector handle="variant-test-product" preselect={true} />) as VariantSelector
     let selectedVariant = undefined
     selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
-      const detail = (event as CustomEvent).detail as VariantChangeDetail
-      selectedVariant = detail.variant.id
+      const { variantId } = (event as CustomEvent<VariantChangeDetail>).detail
+      selectedVariant = variantId
     })
 
     await selector.connectedCallback()
@@ -352,16 +349,15 @@ describe("VariantSelector - Options Mode", () => {
 
       const selector = (<nosto-variant-selector handle="all-single-value-test" />) as VariantSelector
 
-      let eventDetail: Record<string, unknown> | null = null
+      let eventDetail: VariantChangeDetail | undefined = undefined
       selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
-        eventDetail = (event as CustomEvent).detail
+        eventDetail = (event as CustomEvent<VariantChangeDetail>).detail
       })
 
       await selector.connectedCallback()
 
       expect(eventDetail).toBeTruthy()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((eventDetail as any)?.variant?.id).toBe("gid://shopify/ProductVariant/4001")
+      expect(eventDetail!.variantId).toBe("gid://shopify/ProductVariant/4001")
     })
 
     it("should correctly select variants with mixed single and multi-value options", async () => {
@@ -370,10 +366,10 @@ describe("VariantSelector - Options Mode", () => {
       })
 
       const selector = (<nosto-variant-selector handle="single-value-test" />) as VariantSelector
-      let selectedVariant: ShopifyVariant | undefined = undefined
+      let selectedVariant: string | undefined = undefined
       selector.addEventListener(EVENT_NAME_VARIANT_CHANGE, (event: Event) => {
-        const detail = (event as CustomEvent).detail as VariantChangeDetail
-        selectedVariant = detail.variant
+        const { variantId } = (event as CustomEvent<VariantChangeDetail>).detail
+        selectedVariant = variantId
       })
 
       await selector.connectedCallback()
@@ -381,11 +377,7 @@ describe("VariantSelector - Options Mode", () => {
       // Select a size option (Material is auto-selected)
       await selectOption(selector, "Size", "Large")
       expect(selectedVariant).toBeTruthy()
-      expect(selectedVariant!.id).toBe("gid://shopify/ProductVariant/3003") // Large / Cotton
-      expect(selectedVariant!.selectedOptions).toEqual([
-        { name: "Size", value: "Large" },
-        { name: "Material", value: "Cotton" }
-      ])
+      expect(selectedVariant).toBe("gid://shopify/ProductVariant/3003") // Large / Cotton
     })
   })
 
