@@ -80,20 +80,20 @@ export class DynamicCard extends ReactiveElement {
   }
 
   async render() {
-    await this.loadAndRenderMarkup()
+    await this.#loadAndRenderMarkup()
   }
 
-  private async loadAndRenderMarkup() {
+  async #loadAndRenderMarkup() {
     this.toggleAttribute("loading", true)
     try {
-      this.innerHTML = await this.getMarkup()
+      this.innerHTML = await this.#getMarkup()
       this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
     } finally {
       this.toggleAttribute("loading", false)
     }
   }
 
-  private async getMarkup() {
+  async #getMarkup() {
     const target = getShopifyUrl(`/products/${this.handle}`)
 
     if (this.template) {
