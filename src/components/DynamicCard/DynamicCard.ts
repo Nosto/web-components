@@ -118,7 +118,7 @@ export class DynamicCard extends ReactiveElement {
     placeholders.set(key, markup)
     if (/<(body|html)/.test(markup)) {
       throw new Error(
-        `Invalid markup for template ${this.template}, make sure that no <body> or <html> tags are included.`
+        `Invalid markup for ${this.template ? `template ${this.template}` : `section ${this.section}`}, make sure that no <body> or <html> tags are included.`
       )
     }
     return markup
