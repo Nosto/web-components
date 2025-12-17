@@ -80,52 +80,52 @@ export class DynamicCard extends ReactiveElement {
   }
 
   async render() {
-    await loadAndRenderMarkup(this)
+    await this.#loadAndRenderMarkup()
+  }
+
+  async #loadAndRenderMarkup() {
+    this.toggleAttribute("loading", true)
+    try {
+      this.innerHTML = await this.#getMarkup()
+      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+    } finally {
+      this.toggleAttribute("loading", false)
+    }
+  }
+
+  async #getMarkup() {
+    const target = getShopifyUrl(`/products/${this.handle}`)
+
+    if (this.template) {
+      target.searchParams.set("view", this.template)
+      target.searchParams.set("layout", "none")
+    } else if (this.section) {
+      target.searchParams.set("section_id", this.section)
+    }
+
+    if (this.variantId) {
+      target.searchParams.set("variant", this.variantId)
+    }
+
+    let markup = await getText(target.href, { cached: true })
+
+    if (this.section) {
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(markup, "text/html")
+      markup = doc.body.firstElementChild?.innerHTML?.trim() || markup
+    }
+    const key = this.template || this.section || ""
+    placeholders.set(key, markup)
+    if (/<(body|html)/.test(markup)) {
+      throw new Error(
+        `Invalid markup for ${this.template ? `template ${this.template}` : `section ${this.section}`}, make sure that no <body> or <html> tags are included.`
+      )
+    }
+    return markup
   }
 }
 
 const placeholders = new Map<string, string>()
-
-async function loadAndRenderMarkup(element: DynamicCard) {
-  element.toggleAttribute("loading", true)
-  try {
-    element.innerHTML = await getMarkup(element)
-    element.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
-  } finally {
-    element.toggleAttribute("loading", false)
-  }
-}
-
-async function getMarkup(element: DynamicCard) {
-  const target = getShopifyUrl(`/products/${element.handle}`)
-
-  if (element.template) {
-    target.searchParams.set("view", element.template)
-    target.searchParams.set("layout", "none")
-  } else if (element.section) {
-    target.searchParams.set("section_id", element.section)
-  }
-
-  if (element.variantId) {
-    target.searchParams.set("variant", element.variantId)
-  }
-
-  let markup = await getText(target.href, { cached: true })
-
-  if (element.section) {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(markup, "text/html")
-    markup = doc.body.firstElementChild?.innerHTML?.trim() || markup
-  }
-  const key = element.template || element.section || ""
-  placeholders.set(key, markup)
-  if (/<(body|html)/.test(markup)) {
-    throw new Error(
-      `Invalid markup for template ${element.template}, make sure that no <body> or <html> tags are included.`
-    )
-  }
-  return markup
-}
 
 /**
  * Sets default values for DynamicCard attributes.
