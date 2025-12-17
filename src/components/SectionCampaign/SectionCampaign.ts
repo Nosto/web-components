@@ -40,27 +40,27 @@ export class SectionCampaign extends NostoElement {
     if (!rec) {
       return
     }
-    const markup = await getSectionMarkup(this, rec)
+    const markup = await this.#getSectionMarkup(rec)
     this.innerHTML = markup
     api.attributeProductClicksInCampaign(this, rec)
   }
-}
 
-async function getSectionMarkup(element: SectionCampaign, rec: JSONResult) {
-  const handles = rec.products.map(product => product.handle).join(":")
-  const target = getShopifyUrl("/search")
-  target.searchParams.set("section_id", element.section)
-  target.searchParams.set("q", handles)
-  const sectionHtml = await getText(target.href)
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(sectionHtml, "text/html")
-  if (rec.title) {
-    const headingEl = doc.querySelector("[nosto-title]")
-    if (headingEl) {
-      headingEl.textContent = rec.title
+  async #getSectionMarkup(rec: JSONResult) {
+    const handles = rec.products.map(product => product.handle).join(":")
+    const target = getShopifyUrl("/search")
+    target.searchParams.set("section_id", this.section)
+    target.searchParams.set("q", handles)
+    const sectionHtml = await getText(target.href)
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(sectionHtml, "text/html")
+    if (rec.title) {
+      const headingEl = doc.querySelector("[nosto-title]")
+      if (headingEl) {
+        headingEl.textContent = rec.title
+      }
     }
+    return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
   }
-  return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
 }
 
 declare global {
