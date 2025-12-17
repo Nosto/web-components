@@ -7,10 +7,9 @@ import { ShopifyProduct, ShopifyVariant, ShopifySelectedOption } from "@/shopify
 import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../emitVariantChange"
 
-const setShadowContent = shadowContentFactory(styles)
-
-/** Event name for the VariantSelector rendered event */
 const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
+
+const setShadowContent = shadowContentFactory(styles)
 
 export async function loadAndRenderCompact(element: VariantSelector) {
   element.toggleAttribute("loading", true)

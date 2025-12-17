@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect, vi, afterEach } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
 import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "@/utils/jsx"
@@ -51,6 +51,11 @@ describe("Bundle", () => {
     product2: mocks[1]
   }
   const products = [{ handle: "product1" }, { handle: "product2" }] as JSONProduct[]
+
+  afterEach(() => {
+    document.body.innerHTML = ""
+    vi.clearAllMocks()
+  })
 
   it("should be defined as a custom element", () => {
     expect(customElements.get("nosto-bundle")).toBeDefined()
@@ -381,5 +386,69 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
     expect(summary.textContent).toBe("Buy 2 items for $201.00")
+  })
+
+  // TODO: Add support for pending variant changes in bundle logic and then enable this test
+  it.skip("handles variant change events triggered before bundle is initialized", async () => {
+    addProductHandlers({
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
+    })
+    const bundle = (
+      <nosto-bundle products={products}>
+        <nosto-simple-card handle="product1">
+          <nosto-variant-selector handle="product1" variantId={2} mode="compact"></nosto-variant-selector>
+        </nosto-simple-card>
+        <nosto-simple-card handle="product2">
+          <nosto-variant-selector handle="product2" variantId={7} mode="compact"></nosto-variant-selector>
+        </nosto-simple-card>
+        s<span n-summary-price></span>
+        <input type="checkbox" value="product1" checked />
+        <input type="checkbox" value="product2" checked />
+      </nosto-bundle>
+    ) as Bundle
+
+    await waitForRender(bundle)
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    const selectedProducts = bundle.selectedProducts
+    expect(selectedProducts).toHaveLength(2)
+    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/2")
+    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/7")
+    expect(summary.textContent).toBe("Total: $271.00")
+  })
+
+  it("considers recommended_sku when no variant change is pending", async () => {
+    addProductHandlers({
+      product1: { product: mockedProducts.product1 },
+      product2: { product: mockedProducts.product2 }
+    })
+    const bundle = (
+      <nosto-bundle
+        products={
+          [
+            { handle: "product1", recommended_sku: { id: 3 } },
+            { handle: "product2", recommended_sku: { id: 6 } }
+          ] as unknown as JSONProduct[]
+        }
+      >
+        <nosto-simple-card handle="product1">
+          <nosto-variant-selector handle="product1" mode="compact"></nosto-variant-selector>
+        </nosto-simple-card>
+        <nosto-simple-card handle="product2">
+          <nosto-variant-selector handle="product2" mode="compact"></nosto-variant-selector>
+        </nosto-simple-card>
+        <span n-summary-price></span>
+        <input type="checkbox" value="product1" checked />
+        <input type="checkbox" value="product2" checked />
+      </nosto-bundle>
+    ) as Bundle
+
+    await waitForRender(bundle)
+    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
+    const selectedProducts = bundle.selectedProducts
+    expect(selectedProducts).toHaveLength(2)
+    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/3")
+    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/6")
+    expect(summary.textContent).toBe("Total: $271.00")
   })
 })
