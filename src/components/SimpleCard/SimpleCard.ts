@@ -96,20 +96,73 @@ export class SimpleCard extends ReactiveElement {
   }
 
   async render() {
-    await loadAndRenderMarkup(this)
+    await this.loadAndRenderMarkup()
   }
 
   handleEvent(event: Event) {
     switch (event.type) {
       case "click":
-        onClick(this, event as MouseEvent)
+        this.onClick(event as MouseEvent)
         break
       case EVENT_NAME_VARIANT_CHANGE:
-        onVariantChange(this, event as CustomEvent<VariantChangeDetail>)
+        this.onVariantChange(event as CustomEvent<VariantChangeDetail>)
         break
       case "scroll":
         onCarouselScroll(this, event)
         break
+    }
+  }
+
+  private async onClick(event: MouseEvent) {
+    if (isCarouselIndicatorClick(event)) {
+      event.preventDefault()
+      event.stopPropagation()
+      handleIndicatorClick(this, event)
+      return
+    }
+
+    if (isAddToCartClick(event) && this.productId && this.variantId) {
+      event.stopPropagation()
+      await addSkuToCart({
+        productId: this.productId.toString(),
+        skuId: this.variantId.toString()
+      })
+    }
+  }
+
+  private onVariantChange(event: CustomEvent<VariantChangeDetail>) {
+    const { productId, variantId, handle } = event.detail
+    const selectedProductId = parseId(productId)
+    const selectedVariantId = parseId(variantId)
+    if (this.productId === selectedProductId && this.variantId === selectedVariantId) {
+      return
+    }
+    this.productId = selectedProductId
+    this.variantId = selectedVariantId
+    if (handle && handle !== this.handle) {
+      this.handle = handle
+    }
+  }
+
+  private async loadAndRenderMarkup() {
+    if (this.product) {
+      const normalized = convertProduct(this.product)
+      const cardHTML = generateCardHTML(this, normalized)
+      setShadowContent(this, cardHTML.html)
+      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    }
+    this.toggleAttribute("loading", true)
+    try {
+      const productData = this.mock ? mockProduct : await fetchProduct(this.handle)
+      this.productId = parseId(productData.id)
+
+      const cardHTML = generateCardHTML(this, productData)
+      setShadowContent(this, cardHTML.html)
+      if (!this.product) {
+        this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+      }
+    } finally {
+      this.toggleAttribute("loading", false)
     }
   }
 }
@@ -120,59 +173,6 @@ function isAddToCartClick(event: MouseEvent) {
 
 function isCarouselIndicatorClick(event: MouseEvent) {
   return event.target instanceof HTMLElement && event.target.classList.contains("carousel-indicator")
-}
-
-async function onClick(element: SimpleCard, event: MouseEvent) {
-  if (isCarouselIndicatorClick(event)) {
-    event.preventDefault()
-    event.stopPropagation()
-    handleIndicatorClick(element, event)
-    return
-  }
-
-  if (isAddToCartClick(event) && element.productId && element.variantId) {
-    event.stopPropagation()
-    await addSkuToCart({
-      productId: element.productId.toString(),
-      skuId: element.variantId.toString()
-    })
-  }
-}
-
-function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
-  const { productId, variantId, handle } = event.detail
-  const selectedProductId = parseId(productId)
-  const selectedVariantId = parseId(variantId)
-  if (element.productId === selectedProductId && element.variantId === selectedVariantId) {
-    return
-  }
-  element.productId = selectedProductId
-  element.variantId = selectedVariantId
-  if (handle && handle !== element.handle) {
-    element.handle = handle
-  }
-}
-
-async function loadAndRenderMarkup(element: SimpleCard) {
-  if (element.product) {
-    const normalized = convertProduct(element.product)
-    const cardHTML = generateCardHTML(element, normalized)
-    setShadowContent(element, cardHTML.html)
-    element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  }
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = element.mock ? mockProduct : await fetchProduct(element.handle)
-    element.productId = parseId(productData.id)
-
-    const cardHTML = generateCardHTML(element, productData)
-    setShadowContent(element, cardHTML.html)
-    if (!element.product) {
-      element.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-    }
-  } finally {
-    element.toggleAttribute("loading", false)
-  }
 }
 
 /**
