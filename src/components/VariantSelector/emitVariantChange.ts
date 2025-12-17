@@ -14,7 +14,11 @@ export function emitVariantChange(element: VariantSelector, variant: ShopifyVari
     element.handle = handle
   }
   element.variantId = selectedVariantId
-  const detail: VariantChangeDetail = { variant }
+  const detail: VariantChangeDetail = {
+    variantId: variant.id,
+    productId: variant.product.id,
+    handle: handle
+  }
   element.dispatchEvent(
     new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail,

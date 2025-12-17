@@ -17,8 +17,12 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   try {
     const productData = await fetchProduct(element.handle)
 
-    const selectorHTML = generateCompactSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+    const { template, selectedVariant } = getCompactSelectorRenderData(element, productData)
+    setShadowContent(element, template.html)
+
+    if (selectedVariant) {
+      emitVariantChange(element, selectedVariant)
+    }
 
     setupDropdownListener(element)
 
@@ -28,19 +32,15 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   }
 }
 
-function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyProduct) {
+function getCompactSelectorRenderData(element: VariantSelector, product: ShopifyProduct) {
   // Don't render if there are no variants
-  if (!product.combinedVariants || product.combinedVariants.length === 0) {
-    return html`<slot></slot>`
-  }
-
-  // If all variants have only one option combination, don't render the selector
-  if (product.combinedVariants.length === 1) {
-    return html`<slot></slot>`
+  if (!product.combinedVariants || product.combinedVariants.length <= 1) {
+    return { template: html`<slot></slot>` }
   }
 
   // Determine which variant should be selected
   const selectedVariantGid = getSelectedVariantId(element, product)
+  const selectedVariant = product.combinedVariants.find(variant => variant.id === selectedVariantGid) ?? null
 
   // Find option names that have only one value across all variants
   const fixedOptions = product.options.filter(option => option.optionValues.length === 1).map(option => option.name)
@@ -69,14 +69,17 @@ function generateCompactSelectorHTML(element: VariantSelector, product: ShopifyP
   const allVariantsUnavailable = product.combinedVariants.every(variant => !variant.availableForSale)
   const disabledAttr = allVariantsUnavailable ? "disabled" : ""
 
-  return html`
-    <div class="compact-selector" part="compact-selector">
-      <select name="variant" part="variant-dropdown" aria-label="Select variant" ${disabledAttr}>
-        ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
-      </select>
-      <slot></slot>
-    </div>
-  `
+  return {
+    template: html`
+      <div class="compact-selector" part="compact-selector">
+        <select name="variant" part="variant-dropdown" aria-label="Select variant" ${disabledAttr}>
+          ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
+        </select>
+        <slot></slot>
+      </div>
+    `,
+    selectedVariant
+  }
 }
 
 function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct) {

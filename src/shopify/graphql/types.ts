@@ -35,5 +35,7 @@ export type ShopifyProduct = Omit<GraphQLProduct, "images" | "options" | "adjace
  * Event detail for variant change events
  */
 export type VariantChangeDetail = {
-  variant: ShopifyVariant
+  variantId: string
+  productId: string
+  handle?: string
 }

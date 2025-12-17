@@ -6,7 +6,6 @@ import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId } from "@/shopify/graphql/utils"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
-import { SelectedProduct } from "./types"
 
 /** Event name for the Bundle rendered event */
 const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
@@ -41,7 +40,7 @@ export class Bundle extends NostoElement {
 
   products!: JSONProduct[]
   /** @hidden */
-  selectedProducts: SelectedProduct[] = []
+  selectedVariantsByProduct: Record<string, string> = {}
   /** @hidden */
   shopifyProducts: ShopifyProduct[] = []
 
@@ -109,26 +108,23 @@ function initializeSelectedProducts(bundle: Bundle) {
     checkbox => checkbox.checked
   )
 
-  bundle.selectedProducts = checkedProducts
-    .map(checkboxChecked => {
-      const handle = checkboxChecked.value
-      return bundle.shopifyProducts.find(p => p.handle === handle)
-    })
-    .filter(product => !!product)
-    .map(product => ({
-      ...product,
-      selectedVariant: product.combinedVariants[0]
-    }))
+  bundle.selectedVariantsByProduct = Object.fromEntries(
+    checkedProducts
+      .map(checkboxChecked => {
+        const handle = checkboxChecked.value
+        return bundle.shopifyProducts.find(p => p.handle === handle)
+      })
+      .filter(product => !!product)
+      .map(product => [product!.id, product.combinedVariants[0].id])
+  )
 }
 
 function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
-  const { variant } = event.detail
-  const matchedSelectedProduct = bundle.selectedProducts.find(p => p.id === variant.product.id)
-  if (matchedSelectedProduct) {
-    matchedSelectedProduct.price = variant.price
-    matchedSelectedProduct.compareAtPrice = variant.compareAtPrice || null
-    matchedSelectedProduct.selectedVariant = variant
+  const { variantId, productId } = event.detail
+
+  if (bundle.selectedVariantsByProduct[productId]) {
+    bundle.selectedVariantsByProduct[productId] = variantId
     setSummaryPrice(bundle)
   }
 }
@@ -143,13 +139,19 @@ function setSummaryPrice(bundle: Bundle) {
     throw new Error("Element with attribute n-summary-price not found")
   }
   const currencyCode = bundle.shopifyProducts[0]?.price.currencyCode || "USD"
-  const totalAmount =
-    bundle.selectedProducts.reduce((sum, product) => {
-      return sum + Number(product.price.amount)
-    }, 0) || 0
+  let totalAmount = 0
+  const selectedProductEntries = Object.entries(bundle.selectedVariantsByProduct)
+  selectedProductEntries.forEach(([productId, variantId]) => {
+    const product = bundle.shopifyProducts.find(p => p.id === productId)
+    const variant = product?.combinedVariants.find(v => v.id === variantId)
+    if (variant) {
+      totalAmount += Number(variant.price.amount)
+    }
+  })
+
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
   const template = bundle.summary || "Total: {total}"
-  const amount = bundle.selectedProducts.length
+  const amount = selectedProductEntries.length
 
   summaryElement.textContent = formatSummaryTemplate(template, amount, formatted)
 }
@@ -161,14 +163,11 @@ function isAddToCartClick(event: MouseEvent) {
 function onClick(bundle: Bundle, event: MouseEvent) {
   // ATC click inside the bundle
   if (isAddToCartClick(event)) {
-    const payload = bundle.selectedProducts.map(product => {
-      return {
-        productId: String(parseId(product.id)),
-        // TODO use selected variant id instead
-        skuId: String(parseId(product.selectedVariant.id)),
-        quantity: 1
-      }
-    })
+    const payload = Object.entries(bundle.selectedVariantsByProduct).map(([productId, variantId]) => ({
+      productId: String(parseId(productId)),
+      skuId: String(parseId(variantId)),
+      quantity: 1
+    }))
     window.Nosto?.addMultipleProductsToCart(payload, bundle.resultId)
   }
 }
@@ -189,20 +188,20 @@ function onChange(bundle: Bundle, event: Event) {
   const card = bundle.querySelector<HTMLElement>(`[handle="${handle}"]`)
   const isCheckboxInsideCard = card?.contains(target)
   if (target.value) {
+    const product = bundle.shopifyProducts.find(p => p.handle === handle)
+    if (!product) {
+      return
+    }
     if (!target.checked) {
       // Remove product from selection
-      target.removeAttribute("checked")
-      bundle.selectedProducts = bundle.selectedProducts.filter(p => p.handle !== handle)
+      target.toggleAttribute("checked", false)
+      delete bundle.selectedVariantsByProduct[product.id]
     } else {
       // Add product to selection
-      const product = bundle.shopifyProducts.find(p => p.handle === handle)
-      if (product && !bundle.selectedProducts.find(p => p.handle === handle)) {
-        const selectedProduct = {
-          ...product,
-          selectedVariant: product.combinedVariants[0]
-        }
-        bundle.selectedProducts = [...bundle.selectedProducts, selectedProduct]
-        target.setAttribute("checked", "")
+      if (!bundle.selectedVariantsByProduct[product.id]) {
+        // TODO: Consider recommended variant from recs
+        bundle.selectedVariantsByProduct[product.id] = product.combinedVariants[0].id
+        target.toggleAttribute("checked", true)
       }
     }
     if (!isCheckboxInsideCard) {
