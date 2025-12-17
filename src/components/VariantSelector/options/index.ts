@@ -43,7 +43,7 @@ export async function loadAndRenderMarkup(element: VariantSelector, initial = fa
     if (Object.keys(element.selectedOptions).length > 0) {
       const variant = getSelectedVariant(element, productData)
       if (variant) {
-        emitVariantChange(element, { productId: productData.id, handle: productData.handle }, variant)
+        emitVariantChange(element, { productId: productData.id, handle: productData.handle, variantId: variant.id })
       }
     }
 
@@ -100,7 +100,7 @@ export async function selectOption(element: VariantSelector, optionName: string,
   const productData = await fetchProduct(element.handle)
   const variant = getSelectedVariant(element, productData)
   if (variant) {
-    emitVariantChange(element, { productId: productData.id, handle: productData.handle }, variant)
+    emitVariantChange(element, { productId: productData.id, handle: productData.handle, variantId: variant.id })
   }
 }
 

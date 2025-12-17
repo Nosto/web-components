@@ -50,7 +50,10 @@ describe("Bundle", () => {
     product1: mocks[0],
     product2: mocks[1]
   }
-  const products = [{ handle: "product1" }, { handle: "product2" }] as JSONProduct[]
+  const products = [
+    { handle: "product1", product_id: "1" },
+    { handle: "product2", product_id: "2" }
+  ] as JSONProduct[]
 
   afterEach(() => {
     document.body.innerHTML = ""
@@ -388,8 +391,7 @@ describe("Bundle", () => {
     expect(summary.textContent).toBe("Buy 2 items for $201.00")
   })
 
-  // TODO: Add support for pending variant changes in bundle logic and then enable this test
-  it.skip("handles variant change events triggered before bundle is initialized", async () => {
+  it("handles variant change events triggered before bundle is initialized", async () => {
     addProductHandlers({
       product1: { product: mockedProducts.product1 },
       product2: { product: mockedProducts.product2 }
@@ -409,6 +411,9 @@ describe("Bundle", () => {
     ) as Bundle
 
     await waitForRender(bundle)
+
+    expect(bundle.products.map(p => p.recommended_sku?.id)).toEqual(["2", "7"])
+
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
     const selectedProducts = bundle.selectedProducts
     expect(selectedProducts).toHaveLength(2)

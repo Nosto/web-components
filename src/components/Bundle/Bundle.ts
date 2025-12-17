@@ -1,4 +1,4 @@
-import { JSONProduct } from "@nosto/nosto-js/client"
+import { JSONProduct, JSONSku } from "@nosto/nosto-js/client"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
@@ -102,14 +102,15 @@ function removeListeners(bundle: Bundle) {
   bundle.removeEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
-function getSelectedVariant(bundle: Bundle, product: ShopifyProduct) {
-  const fromRecommendation = bundle.products.find(p => p.handle === product.handle && p.recommended_sku)
-
-  const recommendedSkuId = fromRecommendation?.recommended_sku?.id
+function getInitialVariant(bundle: Bundle, product: ShopifyProduct) {
+  const recommendedSkuId = bundle.products.find(p => p.handle === product.handle)?.recommended_sku?.id
   if (recommendedSkuId) {
-    return product.combinedVariants.find(variant => variant.id === toVariantGid(Number(recommendedSkuId)))
+    const gid = toVariantGid(+recommendedSkuId)
+    const variant = product.combinedVariants.find(variant => variant.id === gid)
+    if (variant) {
+      return variant
+    }
   }
-
   return product!.combinedVariants.find(v => v.availableForSale) ?? product.combinedVariants[0]
 }
 
@@ -119,13 +120,23 @@ async function initializeProducts(bundle: Bundle) {
   bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
     ...product!,
     selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
-    selectedVariant: getSelectedVariant(bundle, product!)!
+    selectedVariant: getInitialVariant(bundle, product!)!
   }))
 }
 
 function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variantId, productId } = event.detail
+  if (!bundle.shopifyProducts.length) {
+    const shortProductId = String(parseId(productId))
+    bundle.products
+      .filter(p => p.product_id === shortProductId)
+      .forEach(p => {
+        const shortVariantId = String(parseId(variantId))
+        p.recommended_sku = { id: shortVariantId } as JSONSku
+      })
+    return
+  }
   const product = bundle.shopifyProducts.find(p => p.id === productId)
   if (product) {
     const variant = product.combinedVariants.find(v => v.id === variantId)

@@ -23,7 +23,11 @@ export async function loadAndRenderCompact(element: VariantSelector) {
     setShadowContent(element, template.html)
 
     if (selectedVariant) {
-      emitVariantChange(element, { productId: productData.id, handle: productData.handle }, selectedVariant)
+      emitVariantChange(element, {
+        productId: productData.id,
+        handle: productData.handle,
+        variantId: selectedVariant.id
+      })
     }
 
     setupDropdownListener(element)
@@ -122,7 +126,7 @@ function setupDropdownListener(element: VariantSelector) {
       const productData = await fetchProduct(element.handle)
       const variant = productData.combinedVariants.find(v => v.id === target.value)
       if (variant) {
-        emitVariantChange(element, { productId: productData.id, handle: productData.handle }, variant)
+        emitVariantChange(element, { productId: productData.id, handle: productData.handle, variantId: variant.id })
       }
     }
   })
