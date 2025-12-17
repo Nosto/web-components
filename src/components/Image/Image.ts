@@ -52,7 +52,7 @@ export class Image extends ReactiveElement {
 
   connectedCallback() {
     this.#validateProps()
-    this.render()
+    this.#render()
   }
 
   #validateProps() {
@@ -77,6 +77,10 @@ export class Image extends ReactiveElement {
   }
 
   render() {
+    this.#render()
+  }
+
+  #render() {
     const { src, width, height, layout, aspectRatio, crop, alt, sizes, breakpoints, unstyled, fetchpriority, loading } =
       this
 
