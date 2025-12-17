@@ -2,7 +2,7 @@ import { ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
 import { VariantSelector } from "./VariantSelector"
 import { parseId } from "@/shopify/graphql/utils"
 
-export const EVENT_NAME_VARIANT_CHANGE = "@nosto/VariantSelector/variantchange"
+export const EVENT_NAME_VARIANT_CHANGE = "@nosto/variantchange"
 
 export type VariantProduct = {
   productId: string
