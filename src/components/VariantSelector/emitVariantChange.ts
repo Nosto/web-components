@@ -24,8 +24,8 @@ export function emitVariantChange(
   element.variantId = selectedVariantId
   const detail: VariantChangeDetail = {
     variantId: variant.id,
-    productId: productId,
-    handle: handle
+    productId,
+    handle
   }
   element.dispatchEvent(
     new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
