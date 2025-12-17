@@ -120,7 +120,9 @@ function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>
     const variant = product.combinedVariants.find(v => v.id === variantId)
     if (variant) {
       product.selectedVariant = variant
-      setSummaryPrice(bundle)
+      if (product.selected) {
+        setSummaryPrice(bundle)
+      }
     }
   }
 }
