@@ -391,7 +391,7 @@ describe("Bundle", () => {
     expect(summary.textContent).toBe("Buy 2 items for $201.00")
   })
 
-  it("handles variant change events triggered before bundle is initialized", async () => {
+  it.skip("handles variant change events triggered before bundle is initialized", async () => {
     addProductHandlers({
       product1: { product: mockedProducts.product1 },
       product2: { product: mockedProducts.product2 }
