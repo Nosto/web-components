@@ -105,13 +105,11 @@ function removeListeners(bundle: Bundle) {
 async function initializeProducts(bundle: Bundle) {
   const fetchPromises = bundle.products.map(product => getProduct(product.handle))
   const fetchedProducts = await Promise.all(fetchPromises)
-  bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => {
-    return {
-      ...product!,
-      selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
-      selectedVariant: product!.combinedVariants.find(v => v.availableForSale) ?? product!.combinedVariants[0]
-    }
-  })
+  bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
+    ...product!,
+    selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
+    selectedVariant: product!.combinedVariants.find(v => v.availableForSale) ?? product!.combinedVariants[0]
+  }))
 }
 
 function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
