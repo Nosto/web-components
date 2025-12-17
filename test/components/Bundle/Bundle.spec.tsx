@@ -388,7 +388,8 @@ describe("Bundle", () => {
     expect(summary.textContent).toBe("Buy 2 items for $201.00")
   })
 
-  it.skip("handles pending variant changes on initial render in compact mode", async () => {
+  // TODO: Add support for pending variant changes in bundle logic and then enable this test
+  it.skip("handles variant change events triggered before bundle is initialized", async () => {
     addProductHandlers({
       product1: { product: mockedProducts.product1 },
       product2: { product: mockedProducts.product2 }
