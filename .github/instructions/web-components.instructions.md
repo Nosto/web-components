@@ -10,7 +10,8 @@ applyTo: "src/components/**/*.ts"
 - Register classes via the `customElement` decorator
 - Define attributes using the static `attributes` object and matching property definitions
 - Implement mainly `connectedCallback` and `disconnectedCallback` lifecycle methods
-- Use module level functions for other logic
+- Use private instance methods (with `#` prefix) for logic that operates on the custom element instance (e.g., validation, internal state management)
+- Use module level functions for pure logic that doesn't require access to instance properties
 - Use `{ observe: true }` for reactive custom elements that should re-render on attribute changes
 - Include HTMLElementTagNameMap declaration for TypeScript JSX support:
   ```typescript

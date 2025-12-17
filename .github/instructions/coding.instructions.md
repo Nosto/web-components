@@ -4,7 +4,7 @@ applyTo: "**/*.ts"
 
 # Coding Standards
 
-- Use closures over classes
+- Use closures over classes (except for custom element classes where instance methods with `#` prefix should be used for logic that operates on the element instance)
 - Utilize type inference in return types, except for functions with multiple return statements
 - Use utility types to derive types from constants
 - Avoid 'any' type usage - use proper TypeScript types

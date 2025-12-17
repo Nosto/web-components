@@ -51,8 +51,29 @@ export class Image extends ReactiveElement {
   }
 
   connectedCallback() {
-    validateProps(this)
+    this.#validateProps()
     this.render()
+  }
+
+  #validateProps() {
+    if (this.layout && !["fixed", "constrained", "fullWidth"].includes(this.layout)) {
+      throw new Error(`Invalid layout: ${this.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
+    }
+    if (this.layout !== "fullWidth" && this.layout !== undefined) {
+      if (!this.width && !this.height) {
+        throw new Error("At least one of 'width' or 'height' must be provided.")
+      }
+    }
+    if (this.breakpoints) {
+      const invalidItems = this.breakpoints.filter(
+        item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
+      )
+      if (invalidItems.length > 0) {
+        throw new Error(
+          `All breakpoints must be positive finite numbers, found these illegal entries ${JSON.stringify(invalidItems)}`
+        )
+      }
+    }
   }
 
   render() {
@@ -100,27 +121,6 @@ export function setImageProps(img: HTMLImageElement, transformProps: ImageProps,
   })
   if (!unstyled) {
     Object.assign(img.style, style)
-  }
-}
-
-function validateProps(element: Image) {
-  if (element.layout && !["fixed", "constrained", "fullWidth"].includes(element.layout)) {
-    throw new Error(`Invalid layout: ${element.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
-  }
-  if (element.layout !== "fullWidth" && element.layout !== undefined) {
-    if (!element.width && !element.height) {
-      throw new Error("At least one of 'width' or 'height' must be provided.")
-    }
-  }
-  if (element.breakpoints) {
-    const invalidItems = element.breakpoints.filter(
-      item => typeof item !== "number" || !Number.isFinite(item) || item <= 0
-    )
-    if (invalidItems.length > 0) {
-      throw new Error(
-        `All breakpoints must be positive finite numbers, found these illegal entries ${JSON.stringify(invalidItems)}`
-      )
-    }
   }
 }
 
