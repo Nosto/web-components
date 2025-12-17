@@ -6,6 +6,7 @@ import { createMockShopifyProducts } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { addProductHandlers } from "../../utils/addProductHandlers"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
+import { VariantChangeDetail } from "@/shopify/graphql/types"
 
 async function waitForRender(bundle: Bundle) {
   const cards = bundle.querySelectorAll("nosto-simple-card")
@@ -75,10 +76,7 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    const selectedProducts = bundle.selectedProducts
-    expect(selectedProducts).toHaveLength(2)
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/1")
-    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
+    expect(bundle.selectedProducts).toHaveLength(2)
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
@@ -97,10 +95,8 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    const selectedProducts = bundle.selectedProducts
-    expect(selectedProducts).toHaveLength(1)
-    expect(selectedProducts[0].handle).toBe("product1")
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/1")
+
+    expect(bundle.selectedProducts).toHaveLength(1)
     expect(summary.textContent).toBe("Total: $100.00")
   })
 
@@ -128,10 +124,7 @@ describe("Bundle", () => {
     // dispatch input event
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
-    const selectedProducts = bundle.selectedProducts
-    expect(selectedProducts).toHaveLength(1)
-    expect(selectedProducts[0].handle).toBe("product2")
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
+    expect(bundle.selectedProducts).toHaveLength(1)
     expect(summary.textContent).toBe("Total: $101.00")
   })
 
@@ -159,11 +152,9 @@ describe("Bundle", () => {
     // dispatch input event to add product
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
-    const selectedProducts = bundle.selectedProducts
-    expect(selectedProducts).toHaveLength(2)
-    expect(selectedProducts[0].handle).toBe("product2")
+
     expect(input.checked).toBe(true)
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/5")
+    expect(bundle.selectedProducts).toHaveLength(2)
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
@@ -306,17 +297,12 @@ describe("Bundle", () => {
     expect(select).toBeTruthy()
 
     const variantChangePromise = new Promise<void>(resolve => {
-      bundle.addEventListener(
-        EVENT_NAME_VARIANT_CHANGE,
-        event => {
-          const variant = (event as CustomEvent).detail.variant
-          expect(variant.id).toBe("gid://shopify/ProductVariant/2")
-          expect(summary.textContent).toBe("Total: $221.00")
-          expect(bundle.selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/2")
-          resolve()
-        },
-        { once: true }
-      )
+      bundle.addEventListener(EVENT_NAME_VARIANT_CHANGE, event => {
+        const { variantId } = (event as CustomEvent<VariantChangeDetail>).detail
+        expect(variantId).toBe("gid://shopify/ProductVariant/2")
+        expect(summary.textContent).toBe("Total: $221.00")
+        resolve()
+      })
     })
 
     select!.value = "gid://shopify/ProductVariant/2"

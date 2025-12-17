@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { SimpleCard, setSimpleCardDefaults } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "@/utils/jsx"
-import type { GraphQLProduct } from "@/shopify/graphql/types"
+import type { GraphQLProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { toProductId } from "@/shopify/graphql/utils"
 import { clearProductCache } from "@/shopify/graphql/fetchProduct"
@@ -495,9 +495,12 @@ describe("SimpleCard", () => {
     await card.connectedCallback()
 
     // Simulate variant change event
-    const variantChangeEvent = new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
+    const variantChangeEvent = new CustomEvent<VariantChangeDetail>(EVENT_NAME_VARIANT_CHANGE, {
       detail: {
-        variant: variantProduct.adjacentVariants[1] // Blue variant
+        // Blue variant
+        variantId: variantProduct.adjacentVariants[1].id,
+        productId: variantProduct.id,
+        handle: variantProduct.handle
       },
       bubbles: true
     })

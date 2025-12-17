@@ -25,7 +25,7 @@ import { loadAndRenderCompact } from "./compact"
  * @property {number} maxValues - (Optional) Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator.
  * @property {string} mode - (Optional) Display mode: "options" or "compact". Defaults to "options".
  *
- * @fires variantchange - Emitted when variant selection changes, contains { variant, product }
+ * @fires @nosto/variantchange - Emitted when variant selection changes, contains { variant, product }
  * @fires @nosto/VariantSelector/rendered - Emitted when the component has finished rendering
  */
 @customElement("nosto-variant-selector", { observe: true })

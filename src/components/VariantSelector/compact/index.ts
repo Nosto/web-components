@@ -16,8 +16,15 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   try {
     const productData = await fetchProduct(element.handle)
 
-    const { template, selectedVariant } = getCompactSelectorRenderData(element, productData)
+    // Determine which variant should be selected
+    const selectedVariant = getSelectedVariant(element, productData)
+
+    const template = getCompactSelectorHTML(productData, selectedVariant.id)
     setShadowContent(element, template.html)
+
+    if (selectedVariant) {
+      emitVariantChange(element, { productId: productData.id, handle: productData.handle }, selectedVariant)
+    }
 
     setupDropdownListener(element)
 
@@ -31,15 +38,11 @@ export async function loadAndRenderCompact(element: VariantSelector) {
   }
 }
 
-function getCompactSelectorRenderData(element: VariantSelector, product: ShopifyProduct) {
-  // Don't render if there are no variants or only one variant
+function getCompactSelectorHTML(product: ShopifyProduct, selectedVariantGid: string) {
+  // Don't render if there are no variants
   if (!product.combinedVariants || product.combinedVariants.length <= 1) {
-    return { template: html`<slot></slot>` }
+    return html`<slot></slot>`
   }
-
-  // Determine which variant should be selected
-  const { selectedVariantGid, fallback } = getSelectedVariantId(element, product)
-  const selectedVariant = product.combinedVariants.find(variant => variant.id === selectedVariantGid) ?? null
 
   // Find option names that have only one value across all variants
   const fixedOptions = product.options.filter(option => option.optionValues.length === 1).map(option => option.name)
@@ -81,21 +84,18 @@ function getCompactSelectorRenderData(element: VariantSelector, product: Shopify
   }
 }
 
-function getSelectedVariantId(element: VariantSelector, product: ShopifyProduct) {
+function getSelectedVariant(element: VariantSelector, product: ShopifyProduct) {
   if (element.variantId) {
     const variantIdStr = toVariantGid(element.variantId)
     const variant = product.combinedVariants.find(v => v.id === variantIdStr)
     if (variant) {
-      return { selectedVariantGid: variant.id, fallback: false }
+      return variant
     }
   }
   const variant = product.combinedVariants.find(
     v => v.availableForSale && v.product.onlineStoreUrl === product.onlineStoreUrl
   )
-  return {
-    selectedVariantGid: variant ? variant.id : product.combinedVariants[0].id,
-    fallback: true
-  }
+  return variant ? variant : product.combinedVariants[0]
 }
 
 function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: string, fixedOptions: string[]) {
@@ -129,7 +129,7 @@ function setupDropdownListener(element: VariantSelector) {
       const productData = await fetchProduct(element.handle)
       const variant = productData.combinedVariants.find(v => v.id === target.value)
       if (variant) {
-        emitVariantChange(element, variant)
+        emitVariantChange(element, { productId: productData.id, handle: productData.handle }, variant)
       }
     }
   })

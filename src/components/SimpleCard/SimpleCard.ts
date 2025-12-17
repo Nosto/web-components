@@ -10,7 +10,7 @@ import { applyDefaults } from "@/utils/applyDefaults"
 import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { parseId, toHandle } from "@/shopify/graphql/utils"
+import { parseId } from "@/shopify/graphql/utils"
 import { handleIndicatorClick, onCarouselScroll } from "./carousel"
 import { mockProduct } from "./mockProduct"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
@@ -140,15 +140,14 @@ async function onClick(element: SimpleCard, event: MouseEvent) {
 }
 
 function onVariantChange(element: SimpleCard, event: CustomEvent<VariantChangeDetail>) {
-  const { variant } = event.detail
-  const selectedProductId = parseId(variant.product.id)
-  const selectedVariantId = parseId(variant.id)
+  const { productId, variantId, handle } = event.detail
+  const selectedProductId = parseId(productId)
+  const selectedVariantId = parseId(variantId)
   if (element.productId === selectedProductId && element.variantId === selectedVariantId) {
     return
   }
   element.productId = selectedProductId
   element.variantId = selectedVariantId
-  const handle = toHandle(variant.product.onlineStoreUrl)
   if (handle && handle !== element.handle) {
     element.handle = handle
   }

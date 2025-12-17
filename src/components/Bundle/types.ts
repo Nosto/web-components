@@ -1,5 +1,6 @@
 import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 
-export type SelectedProduct = ShopifyProduct & {
+export type SelectableProduct = ShopifyProduct & {
+  selected: boolean
   selectedVariant: ShopifyVariant
 }
