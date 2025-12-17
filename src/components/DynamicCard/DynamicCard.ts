@@ -37,6 +37,8 @@ let dynamicCardDefaults: DefaultProps = {}
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends ReactiveElement {
+  private static placeholders = new Map<string, string>()
+
   @property(String) handle!: string
   @property(String) section?: string
   /** @deprecated Use the `section` property instead. Section Rendering is the recommended approach from Shopify. */
@@ -123,8 +125,6 @@ export class DynamicCard extends ReactiveElement {
     }
     return markup
   }
-
-  private static placeholders = new Map<string, string>()
 }
 
 /**
