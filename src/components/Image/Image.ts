@@ -76,7 +76,8 @@ export class Image extends ReactiveElement {
     }
   }
 
-  render() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  render(_: boolean) {
     this.#render()
   }
 
