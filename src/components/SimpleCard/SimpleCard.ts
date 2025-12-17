@@ -96,16 +96,16 @@ export class SimpleCard extends ReactiveElement {
   }
 
   async render() {
-    await this.loadAndRenderMarkup()
+    await this.#loadAndRenderMarkup()
   }
 
   handleEvent(event: Event) {
     switch (event.type) {
       case "click":
-        this.onClick(event as MouseEvent)
+        this.#onClick(event as MouseEvent)
         break
       case EVENT_NAME_VARIANT_CHANGE:
-        this.onVariantChange(event as CustomEvent<VariantChangeDetail>)
+        this.#onVariantChange(event as CustomEvent<VariantChangeDetail>)
         break
       case "scroll":
         onCarouselScroll(this, event)
@@ -113,7 +113,7 @@ export class SimpleCard extends ReactiveElement {
     }
   }
 
-  private async onClick(event: MouseEvent) {
+  async #onClick(event: MouseEvent) {
     if (isCarouselIndicatorClick(event)) {
       event.preventDefault()
       event.stopPropagation()
@@ -130,7 +130,7 @@ export class SimpleCard extends ReactiveElement {
     }
   }
 
-  private onVariantChange(event: CustomEvent<VariantChangeDetail>) {
+  #onVariantChange(event: CustomEvent<VariantChangeDetail>) {
     const { productId, variantId, handle } = event.detail
     const selectedProductId = parseId(productId)
     const selectedVariantId = parseId(variantId)
@@ -144,7 +144,7 @@ export class SimpleCard extends ReactiveElement {
     }
   }
 
-  private async loadAndRenderMarkup() {
+  async #loadAndRenderMarkup() {
     if (this.product) {
       const normalized = convertProduct(this.product)
       const cardHTML = generateCardHTML(this, normalized)
