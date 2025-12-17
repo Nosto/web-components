@@ -51,11 +51,11 @@ export class Image extends ReactiveElement {
   }
 
   connectedCallback() {
-    this.validateProps()
+    this.#validateProps()
     this.render()
   }
 
-  private validateProps() {
+  #validateProps() {
     if (this.layout && !["fixed", "constrained", "fullWidth"].includes(this.layout)) {
       throw new Error(`Invalid layout: ${this.layout}. Allowed values are 'fixed', 'constrained', 'fullWidth'.`)
     }
