@@ -32,103 +32,103 @@ export class SkuOptions extends NostoElement {
 
   connectedCallback() {
     assertRequired(this, "name")
-    initSkuOptions(this, inject(this, injectKey)!)
+    this.#initSkuOptions(inject(this, injectKey)!)
   }
-}
 
-function initSkuOptions(element: SkuOptions, store: Store) {
-  store.registerOptionGroup()
-  const optionId = element.name
-  // implementation via [n-option] elements
-  const optionElements = Array.from(element.querySelectorAll<HTMLElement>("[n-option]"))
-  if (optionElements.length) {
-    optionElements.forEach(element => (element.dataset.tracked = "true"))
-    registerClickEvents(optionId, store, optionElements)
-    registerStateChange(optionId, store, optionElements)
-    handlePreselection(optionId, store, optionElements)
-    return
+  #initSkuOptions(store: Store) {
+    store.registerOptionGroup()
+    const optionId = this.name
+    // implementation via [n-option] elements
+    const optionElements = Array.from(this.querySelectorAll<HTMLElement>("[n-option]"))
+    if (optionElements.length) {
+      optionElements.forEach(element => (element.dataset.tracked = "true"))
+      this.#registerClickEvents(optionId, store, optionElements)
+      this.#registerStateChange(optionId, store, optionElements)
+      this.#handlePreselection(optionId, store, optionElements)
+      return
+    }
+    // implementation via <select> element
+    const select = this.querySelector<HTMLSelectElement>("select[n-target]")
+    if (select) {
+      select.dataset.tracked = "true"
+      this.#registerSelectChange(optionId, store, select)
+      this.#registerStateChange(optionId, store, Array.from(select.querySelectorAll("option")))
+      this.#handleSelectPreselection(optionId, store, select)
+    }
   }
-  // implementation via <select> element
-  const select = element.querySelector<HTMLSelectElement>("select[n-target]")
-  if (select) {
-    select.dataset.tracked = "true"
-    registerSelectChange(optionId, store, select)
-    registerStateChange(optionId, store, Array.from(select.querySelectorAll("option")))
-    handleSelectPreselection(optionId, store, select)
-  }
-}
 
-function handleSelectPreselection(optionId: string, { selectSkuOption }: Store, select: HTMLSelectElement) {
-  const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
-  if (selected) {
-    const skuIds = getAllSkus(selected)
-    selectSkuOption(optionId, skuIds)
-  }
-}
-
-function registerSelectChange(optionId: string, { selectSkuOption }: Store, select: HTMLSelectElement) {
-  select.addEventListener("change", () => {
+  #handleSelectPreselection(optionId: string, { selectSkuOption }: Store, select: HTMLSelectElement) {
     const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
-    if (!selected) {
-      return
+    if (selected) {
+      const skuIds = getAllSkus(selected)
+      selectSkuOption(optionId, skuIds)
     }
-    const skuIds = getAllSkus(selected)
-    selectSkuOption(optionId, skuIds)
-  })
-}
-
-function registerStateChange(optionId: string, { listen }: Store, optionElements: HTMLElement[]) {
-  listen("skuOptions", skuOptions => {
-    const otherGroups = Object.keys(skuOptions)
-      .filter(key => key !== optionId)
-      .map(key => skuOptions[key])
-    if (otherGroups.length === 0) {
-      optionElements.forEach(option => option.removeAttribute("disabled"))
-      setAvailability(optionElements)
-      return
-    }
-    function hasIntersection(skuIds: string[]) {
-      // an option is available if it intersects with all other groups
-      return otherGroups.every(group => intersectionOf(group, skuIds).length > 0)
-    }
-    optionElements.forEach(option => {
-      const availableMatches = hasIntersection(getSkus(option))
-      const unavailableMatches = hasIntersection(getSkus(option, false))
-      option.toggleAttribute("disabled", !availableMatches && !unavailableMatches)
-      option.toggleAttribute("unavailable", !availableMatches && unavailableMatches)
-    })
-  })
-}
-
-function handlePreselection(optionId: string, { selectSkuOption }: Store, optionElements: HTMLElement[]) {
-  const selected = optionElements.find(o => o.hasAttribute("selected"))
-  if (selected) {
-    const skuIds = getAllSkus(selected)
-    selectSkuOption(optionId, skuIds)
   }
-  setAvailability(optionElements)
-}
 
-function registerClickEvents(
-  optionId: string,
-  { addToCart, selectSkuOption, setSkuFields }: Store,
-  optionElements: HTMLElement[]
-) {
-  optionElements.forEach(option => {
-    option.addEventListener("click", () => {
-      if (option.hasAttribute("disabled") || option.hasAttribute("unavailable")) {
+  #registerSelectChange(optionId: string, { selectSkuOption }: Store, select: HTMLSelectElement) {
+    select.addEventListener("change", () => {
+      const selected = select.querySelector<HTMLElement>("option[n-skus]:checked")
+      if (!selected) {
         return
       }
-      const skuIds = getAllSkus(option)
-      option.toggleAttribute("selected", true)
-      optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
+      const skuIds = getAllSkus(selected)
       selectSkuOption(optionId, skuIds)
-      syncSkuData(option, setSkuFields)
-      if (option.matches("[n-atc]")) {
-        addToCart()
-      }
     })
-  })
+  }
+
+  #registerStateChange(optionId: string, { listen }: Store, optionElements: HTMLElement[]) {
+    listen("skuOptions", skuOptions => {
+      const otherGroups = Object.keys(skuOptions)
+        .filter(key => key !== optionId)
+        .map(key => skuOptions[key])
+      if (otherGroups.length === 0) {
+        optionElements.forEach(option => option.removeAttribute("disabled"))
+        setAvailability(optionElements)
+        return
+      }
+      function hasIntersection(skuIds: string[]) {
+        // an option is available if it intersects with all other groups
+        return otherGroups.every(group => intersectionOf(group, skuIds).length > 0)
+      }
+      optionElements.forEach(option => {
+        const availableMatches = hasIntersection(getSkus(option))
+        const unavailableMatches = hasIntersection(getSkus(option, false))
+        option.toggleAttribute("disabled", !availableMatches && !unavailableMatches)
+        option.toggleAttribute("unavailable", !availableMatches && unavailableMatches)
+      })
+    })
+  }
+
+  #handlePreselection(optionId: string, { selectSkuOption }: Store, optionElements: HTMLElement[]) {
+    const selected = optionElements.find(o => o.hasAttribute("selected"))
+    if (selected) {
+      const skuIds = getAllSkus(selected)
+      selectSkuOption(optionId, skuIds)
+    }
+    setAvailability(optionElements)
+  }
+
+  #registerClickEvents(
+    optionId: string,
+    { addToCart, selectSkuOption, setSkuFields }: Store,
+    optionElements: HTMLElement[]
+  ) {
+    optionElements.forEach(option => {
+      option.addEventListener("click", () => {
+        if (option.hasAttribute("disabled") || option.hasAttribute("unavailable")) {
+          return
+        }
+        const skuIds = getAllSkus(option)
+        option.toggleAttribute("selected", true)
+        optionElements.filter(o => o !== option).forEach(o => o.removeAttribute("selected"))
+        selectSkuOption(optionId, skuIds)
+        syncSkuData(option, setSkuFields)
+        if (option.matches("[n-atc]")) {
+          addToCart()
+        }
+      })
+    })
+  }
 }
 
 function getSkus(element: Element, available = true) {
