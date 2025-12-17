@@ -6,6 +6,7 @@ import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId } from "@/shopify/graphql/utils"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
+import { SelectableProduct } from "./types"
 
 /** Event name for the Bundle rendered event */
 const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
@@ -32,7 +33,6 @@ const BUNDLE_RENDERED_EVENT = "@nosto/Bundle/rendered"
  * - `n-summary-price`: An element (e.g., `<span>`, `<div>`) where the total price of selected products will be displayed.
  * Example: `<span n-summary-price></span>`
  */
-
 @customElement("nosto-bundle")
 export class Bundle extends NostoElement {
   @property(String) resultId?: string
@@ -40,9 +40,11 @@ export class Bundle extends NostoElement {
 
   products!: JSONProduct[]
   /** @hidden */
-  selectedVariantsByProduct: Record<string, string> = {}
-  /** @hidden */
-  shopifyProducts: ShopifyProduct[] = []
+  shopifyProducts: SelectableProduct[] = []
+
+  get selectedProducts(): SelectableProduct[] {
+    return this.shopifyProducts.filter(product => product.selected)
+  }
 
   async connectedCallback() {
     addListeners(this)
@@ -74,12 +76,9 @@ async function fetchShopifyProducts(bundle: Bundle) {
     return
   }
   bundle.toggleAttribute("loading", true)
-  const fetchPromises = bundle.products.map(product => getProduct(product.handle))
-  const fetchedProducts = await Promise.all(fetchPromises)
-  bundle.shopifyProducts = fetchedProducts.filter(p => p !== null)
-  bundle.toggleAttribute("loading", false)
-  initializeSelectedProducts(bundle)
+  await initializeProducts(bundle)
   setSummaryPrice(bundle)
+  bundle.toggleAttribute("loading", false)
 }
 
 async function getProduct(handle: string): Promise<ShopifyProduct | null> {
@@ -103,29 +102,28 @@ function removeListeners(bundle: Bundle) {
   bundle.removeEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
-function initializeSelectedProducts(bundle: Bundle) {
-  const checkedProducts = Array.from(bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')).filter(
-    checkbox => checkbox.checked
-  )
-
-  bundle.selectedVariantsByProduct = Object.fromEntries(
-    checkedProducts
-      .map(checkboxChecked => {
-        const handle = checkboxChecked.value
-        return bundle.shopifyProducts.find(p => p.handle === handle)
-      })
-      .filter(product => !!product)
-      .map(product => [product!.id, product.combinedVariants[0].id])
-  )
+async function initializeProducts(bundle: Bundle) {
+  const fetchPromises = bundle.products.map(product => getProduct(product.handle))
+  const fetchedProducts = await Promise.all(fetchPromises)
+  bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
+    ...product!,
+    selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
+    selectedVariant: product!.combinedVariants.find(v => v.availableForSale) ?? product!.combinedVariants[0]
+  }))
 }
 
 function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>) {
   event.stopPropagation()
   const { variantId, productId } = event.detail
-
-  if (bundle.selectedVariantsByProduct[productId]) {
-    bundle.selectedVariantsByProduct[productId] = variantId
-    setSummaryPrice(bundle)
+  const product = bundle.shopifyProducts.find(p => p.id === productId)
+  if (product) {
+    const variant = product.combinedVariants.find(v => v.id === variantId)
+    if (variant) {
+      product.selectedVariant = variant
+      if (product.selected) {
+        setSummaryPrice(bundle)
+      }
+    }
   }
 }
 
@@ -139,19 +137,13 @@ function setSummaryPrice(bundle: Bundle) {
     throw new Error("Element with attribute n-summary-price not found")
   }
   const currencyCode = bundle.shopifyProducts[0]?.price.currencyCode || "USD"
-  let totalAmount = 0
-  const selectedProductEntries = Object.entries(bundle.selectedVariantsByProduct)
-  selectedProductEntries.forEach(([productId, variantId]) => {
-    const product = bundle.shopifyProducts.find(p => p.id === productId)
-    const variant = product?.combinedVariants.find(v => v.id === variantId)
-    if (variant) {
-      totalAmount += Number(variant.price.amount)
-    }
-  })
+  const totalAmount = bundle.selectedProducts.reduce((sum, product) => {
+    return sum + Number(product.selectedVariant.price.amount)
+  }, 0)
 
   const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
   const template = bundle.summary || "Total: {total}"
-  const amount = selectedProductEntries.length
+  const amount = bundle.selectedProducts.length
 
   summaryElement.textContent = formatSummaryTemplate(template, amount, formatted)
 }
@@ -163,9 +155,9 @@ function isAddToCartClick(event: MouseEvent) {
 function onClick(bundle: Bundle, event: MouseEvent) {
   // ATC click inside the bundle
   if (isAddToCartClick(event)) {
-    const payload = Object.entries(bundle.selectedVariantsByProduct).map(([productId, variantId]) => ({
-      productId: String(parseId(productId)),
-      skuId: String(parseId(variantId)),
+    const payload = bundle.selectedProducts.map(product => ({
+      productId: String(parseId(product.id)),
+      skuId: String(parseId(product.selectedVariant.id)),
       quantity: 1
     }))
     window.Nosto?.addMultipleProductsToCart(payload, bundle.resultId)
@@ -192,18 +184,7 @@ function onChange(bundle: Bundle, event: Event) {
     if (!product) {
       return
     }
-    if (!target.checked) {
-      // Remove product from selection
-      target.toggleAttribute("checked", false)
-      delete bundle.selectedVariantsByProduct[product.id]
-    } else {
-      // Add product to selection
-      if (!bundle.selectedVariantsByProduct[product.id]) {
-        // TODO: Consider recommended variant from recs
-        bundle.selectedVariantsByProduct[product.id] = product.combinedVariants[0].id
-        target.toggleAttribute("checked", true)
-      }
-    }
+    product.selected = target.checked
     if (!isCheckboxInsideCard) {
       setCardVisibility(card, target.checked)
     }
