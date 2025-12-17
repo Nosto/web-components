@@ -2,7 +2,7 @@ import { JSONProduct } from "@nosto/nosto-js/client"
 import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
-import { ShopifyProduct, ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
@@ -102,31 +102,7 @@ function removeListeners(bundle: Bundle) {
   bundle.removeEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
-function initializeSelectedProducts(bundle: Bundle) {
-  const checkedProducts = Array.from(bundle.querySelectorAll<HTMLInputElement>('input[type="checkbox"][value]')).filter(
-    checkbox => checkbox.checked
-  )
-
-  bundle.selectedProducts = checkedProducts
-    .map(checkboxChecked => {
-      const handle = checkboxChecked.value
-      return bundle.shopifyProducts.find(p => p.handle === handle)
-    })
-    .filter(product => !!product)
-    .map(product => {
-      const variant = getSelectedVariant(bundle, product)
-      return applyVariantChange(product as SelectedProduct, variant)
-    })
-
-  bundle.pendingVariantChanges.clear()
-}
-
 function getSelectedVariant(bundle: Bundle, product: ShopifyProduct) {
-  const fromVariantChange = bundle.pendingVariantChanges.get(product.id)
-  if (fromVariantChange) {
-    return fromVariantChange
-  }
-
   const fromRecommendation = bundle.products.find(p => p.handle === product.handle && p.recommended_sku)
 
   const recommendedSkuId = fromRecommendation?.recommended_sku?.id
@@ -134,14 +110,16 @@ function getSelectedVariant(bundle: Bundle, product: ShopifyProduct) {
     return product.combinedVariants.find(variant => variant.id === toVariantGid(Number(recommendedSkuId)))
   }
 
-  return product.combinedVariants[0]
+  return product!.combinedVariants.find(v => v.availableForSale) ?? product.combinedVariants[0]
+}
+
 async function initializeProducts(bundle: Bundle) {
   const fetchPromises = bundle.products.map(product => getProduct(product.handle))
   const fetchedProducts = await Promise.all(fetchPromises)
   bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
     ...product!,
     selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
-    selectedVariant: product!.combinedVariants.find(v => v.availableForSale) ?? product!.combinedVariants[0]
+    selectedVariant: getSelectedVariant(bundle, product!)!
   }))
 }
 
@@ -158,16 +136,6 @@ function onVariantChange(bundle: Bundle, event: CustomEvent<VariantChangeDetail>
       }
     }
   }
-}
-
-function applyVariantChange(product: SelectedProduct, variant?: ShopifyVariant) {
-  if (!variant) {
-    return product
-  }
-  product.price = variant.price
-  product.compareAtPrice = variant.compareAtPrice || null
-  product.selectedVariant = variant
-  return product
 }
 
 function formatSummaryTemplate(template: string, amount: number, total: string) {

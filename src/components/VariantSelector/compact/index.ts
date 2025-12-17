@@ -28,10 +28,6 @@ export async function loadAndRenderCompact(element: VariantSelector) {
 
     setupDropdownListener(element)
 
-    if (selectedVariant) {
-      emitVariantChange(element, selectedVariant, { force: true })
-    }
-
     element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
   } finally {
     element.toggleAttribute("loading", false)
@@ -71,17 +67,14 @@ function getCompactSelectorHTML(product: ShopifyProduct, selectedVariantGid: str
   const allVariantsUnavailable = product.combinedVariants.every(variant => !variant.availableForSale)
   const disabledAttr = allVariantsUnavailable ? "disabled" : ""
 
-  return {
-    template: html`
-      <div class="compact-selector" part="compact-selector">
-        <select name="variant" part="variant-dropdown" aria-label="Select variant" ${disabledAttr}>
-          ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
-        </select>
-        <slot></slot>
-      </div>
-    `,
-    ...(!fallback && { selectedVariant })
-  }
+  return html`
+    <div class="compact-selector" part="compact-selector">
+      <select name="variant" part="variant-dropdown" aria-label="Select variant" ${disabledAttr}>
+        ${sortedVariants.map(variant => generateVariantOption(variant, selectedVariantGid, fixedOptions))}
+      </select>
+      <slot></slot>
+    </div>
+  `
 }
 
 function getSelectedVariant(element: VariantSelector, product: ShopifyProduct) {
