@@ -114,7 +114,11 @@ function generateVariantOption(variant: ShopifyVariant, selectedVariantGid: stri
   }
 
   return (
-    <option value={variant.id} selected={isSelected || undefined} disabled={isDisabled || undefined}>
+    <option
+      value={variant.id}
+      {...(isSelected ? { selected: true } : {})}
+      {...(isDisabled ? { disabled: true } : {})}
+    >
       {title}
     </option>
   )

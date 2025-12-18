@@ -72,6 +72,9 @@ function shouldSetAsProperty(element: HTMLElement, key: string, value: unknown):
   // Objects/arrays should always be properties (can't be serialized to attributes)
   if (typeof value === "object" && value !== null) return true
 
+  // Special case: selected and disabled on option elements should be attributes for HTML serialization
+  if (element instanceof HTMLOptionElement && (key === "selected" || key === "disabled")) return false
+
   // For aliased keys, use attribute; otherwise check if property exists
   return !aliases[key] && key in element
 }
