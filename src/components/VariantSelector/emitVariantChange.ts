@@ -1,32 +1,16 @@
-import { ShopifyVariant, VariantChangeDetail } from "@/shopify/graphql/types"
+import { VariantChangeDetail } from "@/shopify/graphql/types"
 import { VariantSelector } from "./VariantSelector"
 import { parseId } from "@/shopify/graphql/utils"
 
 export const EVENT_NAME_VARIANT_CHANGE = "@nosto/variantchange"
 
-export type VariantProduct = {
-  productId: string
-  handle: string
-}
-
-export function emitVariantChange(
-  element: VariantSelector,
-  { productId, handle }: VariantProduct,
-  variant: ShopifyVariant
-) {
-  const selectedVariantId = parseId(variant.id)
-  if (element.variantId === selectedVariantId && element.handle === handle) {
+export function emitVariantChange(element: VariantSelector, detail: VariantChangeDetail) {
+  const selectedVariantId = parseId(detail.variantId)
+  if (element.variantId === selectedVariantId && element.handle === detail.handle) {
     return
   }
-
-  element.handle = handle
-
+  element.handle = detail.handle
   element.variantId = selectedVariantId
-  const detail: VariantChangeDetail = {
-    variantId: variant.id,
-    productId,
-    handle
-  }
   element.dispatchEvent(
     new CustomEvent(EVENT_NAME_VARIANT_CHANGE, {
       detail,
