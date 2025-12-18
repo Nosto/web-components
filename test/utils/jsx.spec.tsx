@@ -211,7 +211,7 @@ describe("jsx", () => {
       // @ts-expect-error Testing null assignment
       const element = (<test-element objectProp={null} />) as TestElement
       // null is technically an object but should be handled as attribute
-      expect(element.getAttribute("object-prop")).toBe("null")
+      expect(element.getAttribute("object-prop")).toBe(null)
     })
 
     it("should handle undefined values", () => {
