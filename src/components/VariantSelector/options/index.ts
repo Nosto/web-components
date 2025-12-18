@@ -1,6 +1,6 @@
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { VariantSelector } from "../VariantSelector"
-import { generateVariantSelectorHTML } from "./markup"
+import { generateVariantSelectorHTML } from "./markup.tsx"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import styles from "./styles.css?raw"
 import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
@@ -26,10 +26,10 @@ export async function loadAndRenderMarkup(element: VariantSelector, initial = fa
     initializeDefaultSelections(element, productData)
 
     const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+    setShadowContent(element, selectorHTML)
 
     // Cache the rendered HTML for placeholder use
-    placeholder = selectorHTML.html
+    placeholder = selectorHTML
 
     // Setup event listeners for option buttons
     setupOptionListeners(element)

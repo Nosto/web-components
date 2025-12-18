@@ -6,7 +6,7 @@ import { ReactiveElement } from "../Element"
 import { shadowContentFactory } from "@/utils/shadowContentFactory"
 import { applyDefaults } from "@/utils/applyDefaults"
 import styles from "./styles.css?raw"
-import { generateMockMarkup } from "./markup"
+import { generateMockMarkup } from "./markup.tsx"
 
 const setShadowContent = shadowContentFactory(styles)
 
@@ -55,7 +55,7 @@ export class DynamicCard extends ReactiveElement {
       if (!this.shadowRoot) {
         this.attachShadow({ mode: "open" })
       }
-      setShadowContent(this, generateMockMarkup().html)
+      setShadowContent(this, generateMockMarkup())
       this.dispatchEvent(
         new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true, detail: { mock: true } })
       )

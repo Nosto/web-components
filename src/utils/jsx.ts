@@ -2,26 +2,25 @@ type MaybeArray<T> = T | T[]
 
 /**
  * Base type for element attributes with flexible JSX typing.
- * Provides special handling for style, className, and an index signature for flexibility.
+ * Provides special handling for style, className, part and an index signature for flexibility.
  */
 type BaseAttributes = {
   style?: string | Partial<CSSStyleDeclaration>
   class?: string
   className?: string
+  part?: string
   [key: string]: unknown
 }
-
-type ElementProps<T extends HTMLElement> = Partial<{
-  [K in keyof T as K extends "style" ? never : K]: T[K]
-}> &
-  BaseAttributes
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     type Element = HTMLElement
     type IntrinsicElements = {
-      [K in keyof HTMLElementTagNameMap]: ElementProps<HTMLElementTagNameMap[K]>
+      [K in keyof HTMLElementTagNameMap]: Partial<
+        Omit<HTMLElementTagNameMap[K], "style" | "class" | "className" | "children" | "part">
+      > &
+        BaseAttributes & { children?: unknown }
     }
   }
 }
@@ -114,4 +113,18 @@ function appendChild(element: ParentNode, child: MaybeArray<Child>) {
   } else if (child !== undefined && child !== null && child !== false) {
     element.appendChild(document.createTextNode(String(child)))
   }
+}
+
+/**
+ * Convert a JSX element to an HTML string
+ * @param element - The JSX element to serialize
+ * @returns The HTML string representation of the element
+ */
+export function toHtmlString(element: HTMLElement | DocumentFragment): string {
+  if (element instanceof DocumentFragment) {
+    const div = document.createElement("div")
+    div.appendChild(element.cloneNode(true))
+    return div.innerHTML
+  }
+  return element.outerHTML
 }

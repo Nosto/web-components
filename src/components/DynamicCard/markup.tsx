@@ -1,7 +1,8 @@
-import { html } from "@/templating/html"
+/** @jsx createElement */
+import { createElement, toHtmlString } from "@/utils/jsx"
 
 export function generateMockMarkup() {
-  return html`
+  return toHtmlString(
     <div class="card">
       <div class="image">
         <img src="https://cdn.nosto.com/nosto/7/mock" alt="Mock Product Image" />
@@ -13,5 +14,5 @@ export function generateMockMarkup() {
         <span class="price-original">XX.XX</span>
       </div>
     </div>
-  `
+  )
 }

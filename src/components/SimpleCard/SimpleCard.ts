@@ -1,7 +1,7 @@
 import { assertRequired } from "@/utils/assertRequired"
 import { customElement, property } from "../decorators"
 import { ReactiveElement } from "../Element"
-import { generateCardHTML } from "./markup"
+import { generateCardHTML } from "./markup.tsx"
 import styles from "./styles.css?raw"
 import type { VariantChangeDetail } from "@/shopify/graphql/types"
 import { addSkuToCart } from "@nosto/nosto-js"
@@ -11,7 +11,7 @@ import { JSONProduct } from "@nosto/nosto-js/client"
 import { convertProduct } from "./convertProduct"
 import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { parseId } from "@/shopify/graphql/utils"
-import { handleIndicatorClick, onCarouselScroll } from "./carousel"
+import { handleIndicatorClick, onCarouselScroll } from "./carousel.tsx"
 import { mockProduct } from "./mockProduct"
 import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
 
@@ -148,7 +148,7 @@ export class SimpleCard extends ReactiveElement {
     if (this.product) {
       const normalized = convertProduct(this.product)
       const cardHTML = generateCardHTML(this, normalized)
-      setShadowContent(this, cardHTML.html)
+      setShadowContent(this, cardHTML)
       this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
     }
     this.toggleAttribute("loading", true)
@@ -157,7 +157,7 @@ export class SimpleCard extends ReactiveElement {
       this.productId = parseId(productData.id)
 
       const cardHTML = generateCardHTML(this, productData)
-      setShadowContent(this, cardHTML.html)
+      setShadowContent(this, cardHTML)
       if (!this.product) {
         this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
       }
