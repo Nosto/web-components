@@ -102,14 +102,15 @@ function removeListeners(bundle: Bundle) {
   bundle.removeEventListener(EVENT_NAME_VARIANT_CHANGE, bundle)
 }
 
-function getSelectedVariant(bundle: Bundle, product: ShopifyProduct) {
-  const fromRecommendation = bundle.products.find(p => p.handle === product.handle && p.recommended_sku)
-
-  const recommendedSkuId = fromRecommendation?.recommended_sku?.id
+function getInitialVariant(bundle: Bundle, product: ShopifyProduct) {
+  const recommendedSkuId = bundle.products.find(p => p.handle === product.handle)?.recommended_sku?.id
   if (recommendedSkuId) {
-    return product.combinedVariants.find(variant => variant.id === toVariantGid(Number(recommendedSkuId)))
+    const gid = toVariantGid(Number(recommendedSkuId))
+    const variant = product.combinedVariants.find(variant => variant.id === gid)
+    if (variant) {
+      return variant
+    }
   }
-
   return product!.combinedVariants.find(v => v.availableForSale) ?? product.combinedVariants[0]
 }
 
@@ -119,7 +120,7 @@ async function initializeProducts(bundle: Bundle) {
   bundle.shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
     ...product!,
     selected: !!bundle.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
-    selectedVariant: getSelectedVariant(bundle, product!)!
+    selectedVariant: getInitialVariant(bundle, product!)!
   }))
 }
 
