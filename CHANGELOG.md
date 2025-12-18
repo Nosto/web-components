@@ -1,3 +1,25 @@
+## [10.18.3](https://github.com/Nosto/web-components/compare/v10.18.2...v10.18.3) (2025-12-18)
+
+
+### Bug Fixes
+
+* add test coverage ([202c000](https://github.com/Nosto/web-components/commit/202c000630885d92090e0c335755de17630f73e2))
+* **DynamicCard:** improve error message for section rendering ([720d53b](https://github.com/Nosto/web-components/commit/720d53b174316c6bdde1a3681d87774ac6481992))
+* emitVariantChange improvement and product handle fix ([20ef23c](https://github.com/Nosto/web-components/commit/20ef23c1b28e6cfc3b6853d1059ec501d0362136))
+* fix and simplify getSelectedVariant ([b3321d2](https://github.com/Nosto/web-components/commit/b3321d26cc3fde5b4883f00f7f44e93e93c18f75))
+* improve null and undefined binding ([2bfd7c2](https://github.com/Nosto/web-components/commit/2bfd7c2ef0f197b8f4faf4b671a6d4cfacdfb8fb))
+* include default variant selection from recommended sku and skip pending variant test ([b5c7c2e](https://github.com/Nosto/web-components/commit/b5c7c2e61251b6cfe73c3e1d560df29269bcaca8))
+* resolve npm audit security vulnerability in brace-expansion ([233b064](https://github.com/Nosto/web-components/commit/233b064f10058a8cfd12635bf39a608cd06c7dc7))
+* simplify emitVariantChange ([02ce5a8](https://github.com/Nosto/web-components/commit/02ce5a8ea94c87b36e2e977af174130c18f8f8d5))
+* simplify products handling in Bundle ([ddd09a2](https://github.com/Nosto/web-components/commit/ddd09a27ad304648e35956696dcacfb977ab181d))
+* simplify variant selector event ([c514b0b](https://github.com/Nosto/web-components/commit/c514b0be3b858405842d1f565009e2907702310a))
+* simplofy parameters to variantchangedetail ([cbaa81c](https://github.com/Nosto/web-components/commit/cbaa81c4cc9dfe235848ad0049d252668908f57a))
+
+
+### Reverts
+
+* remove npm audit from copilot-setup-steps workflow ([c77a225](https://github.com/Nosto/web-components/commit/c77a225169238679970267c09fb9b84e41112c34))
+
 ## [10.18.2](https://github.com/Nosto/web-components/compare/v10.18.1...v10.18.2) (2025-12-15)
 
 
