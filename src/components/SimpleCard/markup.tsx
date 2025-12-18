@@ -31,8 +31,7 @@ export function generateCardHTML(element: SimpleCard, product: ShopifyProduct) {
           </h3>
           <div class="price" part="price">
             <span class="price-current" part="price-current">
-              {" "}
-              {formatPrice(prices.price)}{" "}
+              {formatPrice(prices.price)}
             </span>
             {hasDiscount && (
               <span class="price-original" part="price-original">
