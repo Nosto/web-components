@@ -93,7 +93,11 @@ function applyProperties(element: HTMLElement, props: Props) {
       ;(element as any)[propName] = value
     } else {
       const normKey = aliases[key] ?? toKebabCase(key)
-      element.setAttribute(normKey, String(value))
+      if (value != null) {
+        element.setAttribute(normKey, String(value))
+      } else {
+        element.removeAttribute(normKey)
+      }
     }
   })
 }
