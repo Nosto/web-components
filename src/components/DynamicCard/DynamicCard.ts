@@ -37,6 +37,8 @@ let dynamicCardDefaults: DefaultProps = {}
  */
 @customElement("nosto-dynamic-card", { observe: true })
 export class DynamicCard extends ReactiveElement {
+  private static placeholders = new Map<string, string>()
+
   @property(String) handle!: string
   @property(String) section?: string
   /** @deprecated Use the `section` property instead. Section Rendering is the recommended approach from Shopify. */
@@ -62,9 +64,9 @@ export class DynamicCard extends ReactiveElement {
 
     assertRequired(this, "handle")
     const key = this.template || this.section || ""
-    if (this.placeholder && placeholders.has(key)) {
+    if (this.placeholder && DynamicCard.placeholders.has(key)) {
       this.toggleAttribute("loading", true)
-      this.innerHTML = placeholders.get(key) || ""
+      this.innerHTML = DynamicCard.placeholders.get(key) || ""
     }
     if (this.lazy) {
       const observer = new IntersectionObserver(async entries => {
@@ -115,7 +117,7 @@ export class DynamicCard extends ReactiveElement {
       markup = doc.body.firstElementChild?.innerHTML?.trim() || markup
     }
     const key = this.template || this.section || ""
-    placeholders.set(key, markup)
+    DynamicCard.placeholders.set(key, markup)
     if (/<(body|html)/.test(markup)) {
       throw new Error(
         `Invalid markup for ${this.template ? `template ${this.template}` : `section ${this.section}`}, make sure that no <body> or <html> tags are included.`
@@ -124,8 +126,6 @@ export class DynamicCard extends ReactiveElement {
     return markup
   }
 }
-
-const placeholders = new Map<string, string>()
 
 /**
  * Sets default values for DynamicCard attributes.
