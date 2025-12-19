@@ -4,7 +4,21 @@ export type GraphQLResponse<T> = {
   data: T
 }
 
-export type GraphQLProduct = NonNullable<ProductByHandleQuery["product"]>
+export type Gid = `gid://shopify/${string}/${string}`
+
+export type WithGid<T> = T extends object
+  ? {
+      [K in keyof T]: K extends "id"
+        ? Gid
+        : T[K] extends (infer U)[]
+          ? WithGid<U>[]
+          : T[K] extends object
+            ? WithGid<T[K]>
+            : T[K]
+    }
+  : T
+
+export type GraphQLProduct = WithGid<NonNullable<ProductByHandleQuery["product"]>>
 
 // Derive flattened types directly from the generated GraphQL types
 export type ShopifyImage = GraphQLProduct["images"]["nodes"][0]
@@ -35,7 +49,7 @@ export type ShopifyProduct = Omit<GraphQLProduct, "images" | "options" | "adjace
  * Event detail for variant change events
  */
 export type VariantChangeDetail = {
-  variantId: string
-  productId: string
+  variantId: Gid
+  productId: Gid
   handle: string
 }

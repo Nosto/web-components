@@ -1,9 +1,9 @@
 import { ProductByHandleQuery } from "./generated/storefront.generated"
-import { GraphQLProduct, GraphQLResponse, ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
+import { Gid, GraphQLProduct, GraphQLResponse, ShopifyImage, ShopifyProduct, ShopifyVariant } from "./types"
 
 // can be improved later to handle more cases
 export function flattenResponse(obj: GraphQLResponse<ProductByHandleQuery>): ShopifyProduct {
-  const product = obj.data.product
+  const product = obj.data.product as GraphQLProduct | undefined
 
   if (!product) {
     throw new Error("No products returned by Storefront GraphQL")
@@ -55,15 +55,15 @@ function hasImagesNodes(product: GraphQLProduct) {
   return "images" in product && product.images && typeof product.images === "object" && "nodes" in product.images
 }
 
-export function parseId(graphQLId: string): number {
+export function parseId(graphQLId: Gid): number {
   const split = graphQLId.split("/")
   return Number(split[split.length - 1])
 }
 
-export function toProductId(productId: number): string {
+export function toProductId(productId: number): Gid {
   return `gid://shopify/Product/${productId}`
 }
 
-export function toVariantGid(variantId: number): string {
+export function toVariantGid(variantId: number): Gid {
   return `gid://shopify/ProductVariant/${variantId}`
 }
