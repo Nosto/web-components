@@ -95,7 +95,25 @@ export class SimpleCard extends ReactiveElement {
   }
 
   async render() {
-    await this.#loadAndRenderMarkup()
+    if (this.product) {
+      const normalized = convertProduct(this.product)
+      const cardHTML = generateCardHTML(this, normalized)
+      setShadowContent(this, cardHTML.html)
+      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    }
+    this.toggleAttribute("loading", true)
+    try {
+      const productData = this.mock ? mockProduct : await fetchProduct(this.handle)
+      this.#productId = parseId(productData.id)
+
+      const cardHTML = generateCardHTML(this, productData)
+      setShadowContent(this, cardHTML.html)
+      if (!this.product) {
+        this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+      }
+    } finally {
+      this.toggleAttribute("loading", false)
+    }
   }
 
   handleEvent(event: Event) {
@@ -140,28 +158,6 @@ export class SimpleCard extends ReactiveElement {
     this.variantId = selectedVariantId
     if (handle && handle !== this.handle) {
       this.handle = handle
-    }
-  }
-
-  async #loadAndRenderMarkup() {
-    if (this.product) {
-      const normalized = convertProduct(this.product)
-      const cardHTML = generateCardHTML(this, normalized)
-      setShadowContent(this, cardHTML.html)
-      this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-    }
-    this.toggleAttribute("loading", true)
-    try {
-      const productData = this.mock ? mockProduct : await fetchProduct(this.handle)
-      this.#productId = parseId(productData.id)
-
-      const cardHTML = generateCardHTML(this, productData)
-      setShadowContent(this, cardHTML.html)
-      if (!this.product) {
-        this.dispatchEvent(new CustomEvent(SIMPLE_CARD_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-      }
-    } finally {
-      this.toggleAttribute("loading", false)
     }
   }
 }
