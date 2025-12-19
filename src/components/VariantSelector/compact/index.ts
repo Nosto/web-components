@@ -7,35 +7,26 @@ import { ShopifyProduct, ShopifyVariant, ShopifySelectedOption } from "@/shopify
 import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../emitVariantChange"
 
-const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
-
 const setShadowContent = shadowContentFactory(styles)
 
 export async function loadAndRenderCompact(element: VariantSelector) {
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProduct(element.handle)
+  const productData = await fetchProduct(element.handle)
 
-    // Determine which variant should be selected
-    const selectedVariant = getSelectedVariant(element, productData)
+  // Determine which variant should be selected
+  const selectedVariant = getSelectedVariant(element, productData)
 
-    const template = getCompactSelectorHTML(productData, selectedVariant.id)
-    setShadowContent(element, template.html)
+  const template = getCompactSelectorHTML(productData, selectedVariant.id)
+  setShadowContent(element, template.html)
 
-    if (selectedVariant) {
-      emitVariantChange(element, {
-        productId: productData.id,
-        handle: productData.handle,
-        variantId: selectedVariant.id
-      })
-    }
-
-    setupDropdownListener(element)
-
-    element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  } finally {
-    element.toggleAttribute("loading", false)
+  if (selectedVariant) {
+    emitVariantChange(element, {
+      productId: productData.id,
+      handle: productData.handle,
+      variantId: selectedVariant.id
+    })
   }
+
+  setupDropdownListener(element)
 }
 
 function getCompactSelectorHTML(product: ShopifyProduct, selectedVariantGid: string) {
