@@ -13,13 +13,6 @@ const sharedConfig = {
   plugins: [cssPlugin(), graphqlPlugin()]
 }
 
-/**
- * Discovers all custom elements in the components directory by scanning for @customElement decorators.
- * @returns {Promise<Array<{name: string, entryPoint: string, className: string}>>} Array of component metadata objects containing:
- *   - name: The custom element tag name (e.g., "nosto-image")
- *   - entryPoint: Path to the component's main TypeScript file
- *   - className: The component's class name (e.g., "Image")
- */
 async function discoverComponents() {
   const componentsDir = "src/components"
   const entries = await fs.promises.readdir(componentsDir, { withFileTypes: true })
@@ -50,11 +43,6 @@ async function discoverComponents() {
   return components
 }
 
-/**
- * Builds individual component artifacts in ESM and minified formats.
- * Generates separate build artifacts for each discovered component to enable tree-shaking and reduce bundle sizes.
- * Output files are written to dist/components/ directory.
- */
 async function buildComponents() {
   const components = await discoverComponents()
   const componentsOutputDir = "dist/components"
