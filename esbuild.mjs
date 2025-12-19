@@ -24,7 +24,7 @@ async function discoverComponents() {
       try {
         await fs.promises.access(componentPath)
         const content = await fs.promises.readFile(componentPath, "utf8")
-        const customElementMatch = content.match(/@customElement\(["']([^"']+)["']/)
+        const customElementMatch = content.match(/@customElement\(["']([^"']+)["'][^)]*\)/)
         if (customElementMatch) {
           components.push({
             name: customElementMatch[1],
