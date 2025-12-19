@@ -1,3 +1,10 @@
+## [10.18.4](https://github.com/Nosto/web-components/compare/v10.18.3...v10.18.4) (2025-12-19)
+
+
+### Bug Fixes
+
+* remove event emission duplication ([c0f3d59](https://github.com/Nosto/web-components/commit/c0f3d59522024e75884c9d4273ace24f1d068965))
+
 ## [10.18.3](https://github.com/Nosto/web-components/compare/v10.18.2...v10.18.3) (2025-12-18)
 
 
