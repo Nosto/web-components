@@ -19,10 +19,7 @@
       "browser": "./dist/main.es.bundle.js",
       "require": "./dist/main.cjs.js"
     },
-    "./components/*": {
-      "import": "./dist/components/*.js",
-      "require": "./dist/components/*.cjs.js"
-    }
+    "./components/*": "./dist/components/*.js"
   },
   "repository": {
     "type": "git",

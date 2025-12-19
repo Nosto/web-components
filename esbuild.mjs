@@ -13,6 +13,13 @@ const sharedConfig = {
   plugins: [cssPlugin(), graphqlPlugin()]
 }
 
+/**
+ * Discovers all custom elements in the components directory by scanning for @customElement decorators.
+ * @returns {Promise<Array<{name: string, entryPoint: string, className: string}>>} Array of component metadata objects containing:
+ *   - name: The custom element tag name (e.g., "nosto-image")
+ *   - entryPoint: Path to the component's main TypeScript file
+ *   - className: The component's class name (e.g., "Image")
+ */
 async function discoverComponents() {
   const componentsDir = "src/components"
   const entries = await fs.promises.readdir(componentsDir, { withFileTypes: true })
@@ -21,8 +28,12 @@ async function discoverComponents() {
   for (const entry of entries) {
     if (entry.isDirectory()) {
       const componentPath = path.join(componentsDir, entry.name, `${entry.name}.ts`)
-      try {
-        await fs.promises.access(componentPath)
+      const fileExists = await fs.promises
+        .access(componentPath)
+        .then(() => true)
+        .catch(() => false)
+
+      if (fileExists) {
         const content = await fs.promises.readFile(componentPath, "utf8")
         const customElementMatch = content.match(/@customElement\(["']([^"']+)["'][^)]*\)/)
         if (customElementMatch) {
@@ -32,8 +43,6 @@ async function discoverComponents() {
             className: entry.name
           })
         }
-      } catch {
-        // Skip if file doesn't exist
       }
     }
   }
@@ -41,6 +50,11 @@ async function discoverComponents() {
   return components
 }
 
+/**
+ * Builds individual component artifacts in ESM and minified formats.
+ * Generates separate build artifacts for each discovered component to enable tree-shaking and reduce bundle sizes.
+ * Output files are written to dist/components/ directory.
+ */
 async function buildComponents() {
   const components = await discoverComponents()
   const componentsOutputDir = "dist/components"
@@ -50,37 +64,27 @@ async function buildComponents() {
   console.log(`Building ${components.length} individual components...`)
 
   for (const component of components) {
+    const { entryPoints: _, ...baseConfig } = sharedConfig
     const componentSharedConfig = {
-      entryPoints: [component.entryPoint],
-      bundle: true,
-      minifyIdentifiers: true,
-      minifySyntax: true,
-      target: "es2020",
-      sourcemap: true,
-      plugins: [cssPlugin(), graphqlPlugin()]
+      ...baseConfig,
+      entryPoints: [component.entryPoint]
     }
 
-    // ESM build
-    await esbuild.build({
-      ...componentSharedConfig,
-      outfile: `${componentsOutputDir}/${component.name}.js`,
-      format: "esm"
-    })
-
-    // CommonJS build
-    await esbuild.build({
-      ...componentSharedConfig,
-      outfile: `${componentsOutputDir}/${component.name}.cjs.js`,
-      format: "cjs"
-    })
-
-    // Minified ESM build
-    await esbuild.build({
-      ...componentSharedConfig,
-      outfile: `${componentsOutputDir}/${component.name}.min.js`,
-      format: "esm",
-      minifyWhitespace: true
-    })
+    await Promise.all([
+      // ESM build
+      esbuild.build({
+        ...componentSharedConfig,
+        outfile: `${componentsOutputDir}/${component.name}.js`,
+        format: "esm"
+      }),
+      // Minified ESM build
+      esbuild.build({
+        ...componentSharedConfig,
+        outfile: `${componentsOutputDir}/${component.name}.min.js`,
+        format: "esm",
+        minifyWhitespace: true
+      })
+    ])
 
     console.log(`  ✓ Built ${component.name}`)
   }

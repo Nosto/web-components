@@ -9,19 +9,15 @@ This package supports importing individual components to reduce bundle sizes and
 You can import individual components instead of the entire bundle:
 
 ```javascript
-// Import specific component (ESM)
+// Import specific component
 import '@nosto/web-components/components/nosto-image'
-
-// Import specific component (CommonJS)
-const nostoImage = require('@nosto/web-components/components/nosto-image.cjs')
 ```
 
 ### Available Components
 
-Each component is available in three formats:
+Each component is available in two formats:
 
 - **ESM**: `@nosto/web-components/components/[component-name].js`
-- **CommonJS**: `@nosto/web-components/components/[component-name].cjs.js`
 - **Minified ESM**: `@nosto/web-components/components/[component-name].min.js`
 
 #### Component List
