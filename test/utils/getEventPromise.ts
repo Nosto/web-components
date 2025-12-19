@@ -13,7 +13,7 @@
  * await promise // Resolves when event is dispatched
  * ```
  */
-export function getEventPromise(eventTarget: EventTarget, eventName: string): Promise<void> {
+export function getEventPromise(eventTarget: EventTarget, eventName: string) {
   return new Promise<void>(resolve => {
     eventTarget.addEventListener(eventName, () => resolve(), { once: true })
   })
