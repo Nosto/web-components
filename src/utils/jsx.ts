@@ -11,10 +11,7 @@ type BaseAttributes = {
   [key: string]: unknown
 }
 
-type ElementProps<T extends HTMLElement> = Partial<{
-  [K in keyof T as K extends "style" ? never : K]: T[K]
-}> &
-  BaseAttributes
+type ElementProps<T extends HTMLElement> = Partial<Omit<T, "style">> & BaseAttributes
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
