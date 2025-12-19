@@ -4,6 +4,8 @@ import { ReactiveElement } from "../Element"
 import { loadAndRenderMarkup } from "./options"
 import { loadAndRenderCompact } from "./compact"
 
+const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
+
 /**
  * A custom element that displays product variant options as clickable pills.
  *
@@ -54,10 +56,16 @@ export class VariantSelector extends ReactiveElement {
   }
 
   async render(initial = false) {
-    if (this.mode === "compact") {
-      await loadAndRenderCompact(this)
-    } else {
-      await loadAndRenderMarkup(this, initial)
+    this.toggleAttribute("loading", true)
+    try {
+      if (this.mode === "compact") {
+        await loadAndRenderCompact(this)
+      } else {
+        await loadAndRenderMarkup(this, initial)
+      }
+      this.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
+    } finally {
+      this.toggleAttribute("loading", false)
     }
   }
 }

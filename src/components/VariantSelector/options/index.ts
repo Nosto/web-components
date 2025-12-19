@@ -7,49 +7,39 @@ import { ShopifyProduct, ShopifyVariant } from "@/shopify/graphql/types"
 import { toVariantGid } from "@/shopify/graphql/utils"
 import { emitVariantChange } from "../emitVariantChange"
 
-const VARIANT_SELECTOR_RENDERED_EVENT = "@nosto/VariantSelector/rendered"
-
 const setShadowContent = shadowContentFactory(styles)
 
 let placeholder = ""
 
 export async function loadAndRenderMarkup(element: VariantSelector, initial = false) {
   if (initial && element.placeholder && placeholder) {
-    element.toggleAttribute("loading", true)
     setShadowContent(element, placeholder)
   }
-  element.toggleAttribute("loading", true)
-  try {
-    const productData = await fetchProduct(element.handle)
+  const productData = await fetchProduct(element.handle)
 
-    // Initialize selections with first value of each option
-    initializeDefaultSelections(element, productData)
+  // Initialize selections with first value of each option
+  initializeDefaultSelections(element, productData)
 
-    const selectorHTML = generateVariantSelectorHTML(element, productData)
-    setShadowContent(element, selectorHTML.html)
+  const selectorHTML = generateVariantSelectorHTML(element, productData)
+  setShadowContent(element, selectorHTML.html)
 
-    // Cache the rendered HTML for placeholder use
-    placeholder = selectorHTML.html
+  // Cache the rendered HTML for placeholder use
+  placeholder = selectorHTML.html
 
-    // Setup event listeners for option buttons
-    setupOptionListeners(element)
+  // Setup event listeners for option buttons
+  setupOptionListeners(element)
 
-    // active state for selected options
-    updateActiveStates(element)
-    // unavailable state for options without available variants
-    updateUnavailableStates(element, productData)
-    // TODO disabled state
+  // active state for selected options
+  updateActiveStates(element)
+  // unavailable state for options without available variants
+  updateUnavailableStates(element, productData)
+  // TODO disabled state
 
-    if (Object.keys(element.selectedOptions).length > 0) {
-      const variant = getSelectedVariant(element, productData)
-      if (variant) {
-        emitVariantChange(element, { productId: productData.id, handle: productData.handle, variantId: variant.id })
-      }
+  if (Object.keys(element.selectedOptions).length > 0) {
+    const variant = getSelectedVariant(element, productData)
+    if (variant) {
+      emitVariantChange(element, { productId: productData.id, handle: productData.handle, variantId: variant.id })
     }
-
-    element.dispatchEvent(new CustomEvent(VARIANT_SELECTOR_RENDERED_EVENT, { bubbles: true, cancelable: true }))
-  } finally {
-    element.toggleAttribute("loading", false)
   }
 }
 
