@@ -67,7 +67,6 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(bundle.selectedProducts).toHaveLength(2)
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
@@ -86,8 +85,6 @@ describe("Bundle", () => {
 
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-
-    expect(bundle.selectedProducts).toHaveLength(1)
     expect(summary.textContent).toBe("Total: $100.00")
   })
 
@@ -110,12 +107,10 @@ describe("Bundle", () => {
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
 
     await bundle.connectedCallback()
-    expect(bundle.selectedProducts).toHaveLength(2)
 
     // dispatch input event
     input.checked = false
     input.dispatchEvent(new Event("input", { bubbles: true }))
-    expect(bundle.selectedProducts).toHaveLength(1)
     expect(summary.textContent).toBe("Total: $101.00")
   })
 
@@ -138,14 +133,12 @@ describe("Bundle", () => {
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
 
     await bundle.connectedCallback()
-    expect(bundle.selectedProducts).toHaveLength(1)
 
     // dispatch input event to add product
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
 
     expect(input.checked).toBe(true)
-    expect(bundle.selectedProducts).toHaveLength(2)
     expect(summary.textContent).toBe("Total: $201.00")
   })
 
@@ -168,7 +161,6 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
 
-    expect(bundle.selectedProducts).toHaveLength(0)
     expect(summary.textContent).toBe("Total: $0.00")
   })
 
@@ -401,10 +393,6 @@ describe("Bundle", () => {
 
     await waitForRender(bundle)
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    const selectedProducts = bundle.selectedProducts
-    expect(selectedProducts).toHaveLength(2)
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/2")
-    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/7")
     expect(summary.textContent).toBe("Total: $271.00")
   })
 
@@ -436,10 +424,6 @@ describe("Bundle", () => {
 
     await waitForRender(bundle)
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    const selectedProducts = bundle.selectedProducts
-    expect(selectedProducts).toHaveLength(2)
-    expect(selectedProducts[0].selectedVariant.id).toBe("gid://shopify/ProductVariant/3")
-    expect(selectedProducts[1].selectedVariant.id).toBe("gid://shopify/ProductVariant/6")
     expect(summary.textContent).toBe("Total: $271.00")
   })
 })

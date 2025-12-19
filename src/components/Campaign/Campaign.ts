@@ -47,8 +47,7 @@ export class Campaign extends NostoElement {
   @property(Boolean) cartSynced?: boolean
   @property(Boolean) navSynced?: boolean
 
-  /** @hidden */
-  templateElement?: HTMLTemplateElement
+  #templateElement?: HTMLTemplateElement
 
   #load = this.load.bind(this)
 
@@ -97,7 +96,7 @@ export class Campaign extends NostoElement {
   async load() {
     this.toggleAttribute("loading", true)
     try {
-      const useTemplate = this.templateElement || this.template || this.querySelector(":scope > template")
+      const useTemplate = this.#templateElement || this.template || this.querySelector(":scope > template")
       const placement = this.placement ?? this.id
       const api = await new Promise(nostojs)
 
@@ -110,7 +109,7 @@ export class Campaign extends NostoElement {
 
       if (rec) {
         if (useTemplate) {
-          const template = getTemplate(this)
+          const template = this.#templateElement ?? (this.#templateElement = getTemplate(this))
           compile(this, template, getContext(rec as JSONResult))
           api.attributeProductClicksInCampaign(this, rec as JSONResult)
         } else {

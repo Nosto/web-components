@@ -39,11 +39,10 @@ export class Bundle extends NostoElement {
   @property(String) summary?: string
 
   products!: JSONProduct[]
-  /** @hidden */
-  shopifyProducts: SelectableProduct[] = []
+  #shopifyProducts: SelectableProduct[] = []
 
-  get selectedProducts(): SelectableProduct[] {
-    return this.shopifyProducts.filter(product => product.selected)
+  get #selectedProducts(): SelectableProduct[] {
+    return this.#shopifyProducts.filter(product => product.selected)
   }
 
   async connectedCallback() {
@@ -107,7 +106,7 @@ export class Bundle extends NostoElement {
   async #initializeProducts() {
     const fetchPromises = this.products.map(product => getProduct(product.handle))
     const fetchedProducts = await Promise.all(fetchPromises)
-    this.shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
+    this.#shopifyProducts = fetchedProducts.filter(Boolean).map(product => ({
       ...product!,
       selected: !!this.querySelector<HTMLElement>(`input[type="checkbox"][value="${product!.handle}"]:checked`),
       selectedVariant: this.#getInitialVariant(product!)!
@@ -117,7 +116,7 @@ export class Bundle extends NostoElement {
   #onVariantChange(event: CustomEvent<VariantChangeDetail>) {
     event.stopPropagation()
     const { variantId, productId } = event.detail
-    const product = this.shopifyProducts.find(p => p.id === productId)
+    const product = this.#shopifyProducts.find(p => p.id === productId)
     if (product) {
       const variant = product.combinedVariants.find(v => v.id === variantId)
       if (variant) {
@@ -134,14 +133,14 @@ export class Bundle extends NostoElement {
     if (!summaryElement) {
       throw new Error("Element with attribute n-summary-price not found")
     }
-    const currencyCode = this.shopifyProducts[0]?.price.currencyCode || "USD"
-    const totalAmount = this.selectedProducts.reduce((sum, product) => {
+    const currencyCode = this.#shopifyProducts[0]?.price.currencyCode || "USD"
+    const totalAmount = this.#selectedProducts.reduce((sum, product) => {
       return sum + Number(product.selectedVariant.price.amount)
     }, 0)
 
     const formatted = formatPrice({ amount: totalAmount.toString(), currencyCode })
     const template = this.summary || "Total: {total}"
-    const amount = this.selectedProducts.length
+    const amount = this.#selectedProducts.length
 
     summaryElement.textContent = formatSummaryTemplate(template, amount, formatted)
   }
@@ -149,7 +148,7 @@ export class Bundle extends NostoElement {
   #onClick(event: MouseEvent) {
     // ATC click inside the bundle
     if (isAddToCartClick(event)) {
-      const payload = this.selectedProducts.map(product => ({
+      const payload = this.#selectedProducts.map(product => ({
         productId: String(parseId(product.id)),
         skuId: String(parseId(product.selectedVariant.id)),
         quantity: 1
@@ -168,7 +167,7 @@ export class Bundle extends NostoElement {
     const card = this.querySelector<HTMLElement>(`[handle="${handle}"]`)
     const isCheckboxInsideCard = card?.contains(target)
     if (target.value) {
-      const product = this.shopifyProducts.find(p => p.handle === handle)
+      const product = this.#shopifyProducts.find(p => p.handle === handle)
       if (!product) {
         return
       }

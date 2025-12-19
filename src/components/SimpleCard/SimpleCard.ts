@@ -62,8 +62,7 @@ export class SimpleCard extends ReactiveElement {
 
   product?: JSONProduct
 
-  /** @hidden */
-  productId?: number
+  #productId?: number
 
   constructor() {
     super()
@@ -121,10 +120,10 @@ export class SimpleCard extends ReactiveElement {
       return
     }
 
-    if (isAddToCartClick(event) && this.productId && this.variantId) {
+    if (isAddToCartClick(event) && this.#productId && this.variantId) {
       event.stopPropagation()
       await addSkuToCart({
-        productId: this.productId.toString(),
+        productId: this.#productId.toString(),
         skuId: this.variantId.toString()
       })
     }
@@ -134,10 +133,10 @@ export class SimpleCard extends ReactiveElement {
     const { productId, variantId, handle } = event.detail
     const selectedProductId = parseId(productId)
     const selectedVariantId = parseId(variantId)
-    if (this.productId === selectedProductId && this.variantId === selectedVariantId) {
+    if (this.#productId === selectedProductId && this.variantId === selectedVariantId) {
       return
     }
-    this.productId = selectedProductId
+    this.#productId = selectedProductId
     this.variantId = selectedVariantId
     if (handle && handle !== this.handle) {
       this.handle = handle
@@ -154,7 +153,7 @@ export class SimpleCard extends ReactiveElement {
     this.toggleAttribute("loading", true)
     try {
       const productData = this.mock ? mockProduct : await fetchProduct(this.handle)
-      this.productId = parseId(productData.id)
+      this.#productId = parseId(productData.id)
 
       const cardHTML = generateCardHTML(this, productData)
       setShadowContent(this, cardHTML.html)
