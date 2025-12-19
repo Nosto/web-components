@@ -82,10 +82,6 @@ export class DynamicCard extends ReactiveElement {
   }
 
   async render() {
-    await this.#loadAndRenderMarkup()
-  }
-
-  async #loadAndRenderMarkup() {
     this.toggleAttribute("loading", true)
     try {
       this.innerHTML = await this.#getMarkup()
