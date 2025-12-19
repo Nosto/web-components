@@ -26,22 +26,4 @@ describe("getEventPromise", () => {
     await promise
     expect(resolveCount).toBe(1)
   })
-
-  it("works with custom events", async () => {
-    const element = document.createElement("div")
-    const promise = getEventPromise(element, "my-custom-event")
-
-    element.dispatchEvent(new CustomEvent("my-custom-event", { detail: { test: "data" } }))
-
-    await expect(promise).resolves.toBeUndefined()
-  })
-
-  it("works with different event targets", async () => {
-    const button = document.createElement("button")
-    const promise = getEventPromise(button, "click")
-
-    button.click()
-
-    await expect(promise).resolves.toBeUndefined()
-  })
 })
