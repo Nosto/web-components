@@ -1,3 +1,10 @@
+## [10.18.5](https://github.com/Nosto/web-components/compare/v10.18.4...v10.18.5) (2025-12-19)
+
+
+### Bug Fixes
+
+* further improve encapsulation ([b278c1f](https://github.com/Nosto/web-components/commit/b278c1fe7a4390e537cbf38ec9873b8f2feb4b9e))
+
 ## [10.18.4](https://github.com/Nosto/web-components/compare/v10.18.3...v10.18.4) (2025-12-19)
 
 
