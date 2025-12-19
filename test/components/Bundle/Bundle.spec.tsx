@@ -16,7 +16,7 @@ async function waitForRender(bundle: Bundle) {
   const bundlePromise = getEventPromise(bundle, "@nosto/Bundle/rendered")
 
   const cardPromises = Array.from(cards).flatMap(card => {
-    const promises: Promise<void>[] = []
+    const promises: Promise<Event>[] = []
     const variantSelector = card.querySelector("nosto-variant-selector")
 
     if (variantSelector) {
