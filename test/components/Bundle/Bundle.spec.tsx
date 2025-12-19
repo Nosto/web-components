@@ -7,32 +7,23 @@ import type { JSONProduct } from "@nosto/nosto-js/client"
 import { addProductHandlers } from "../../utils/addProductHandlers"
 import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
 import { VariantChangeDetail } from "@/shopify/graphql/types"
+import { getEventPromise } from "../../utils/getEventPromise"
 
 async function waitForRender(bundle: Bundle) {
   const cards = bundle.querySelectorAll("nosto-simple-card")
 
   // Set up all listeners BEFORE appending to DOM or calling connectedCallback
-  const bundlePromise = new Promise<void>(resolve => {
-    bundle.addEventListener("@nosto/Bundle/rendered", () => resolve(), { once: true })
-  })
+  const bundlePromise = getEventPromise(bundle, "@nosto/Bundle/rendered")
 
   const cardPromises = Array.from(cards).flatMap(card => {
-    const promises: Promise<void>[] = []
+    const promises: Promise<Event>[] = []
     const variantSelector = card.querySelector("nosto-variant-selector")
 
     if (variantSelector) {
-      promises.push(
-        new Promise<void>(resolve => {
-          variantSelector.addEventListener("@nosto/VariantSelector/rendered", () => resolve(), { once: true })
-        })
-      )
+      promises.push(getEventPromise(variantSelector, "@nosto/VariantSelector/rendered"))
     }
 
-    promises.push(
-      new Promise<void>(resolve => {
-        card.addEventListener("@nosto/SimpleCard/rendered", () => resolve(), { once: true })
-      })
-    )
+    promises.push(getEventPromise(card, "@nosto/SimpleCard/rendered"))
 
     return promises
   })
