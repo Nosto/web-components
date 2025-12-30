@@ -1,3 +1,10 @@
+## [10.18.6](https://github.com/Nosto/web-components/compare/v10.18.5...v10.18.6) (2025-12-30)
+
+
+### Bug Fixes
+
+* inline render() method contents in DynamicCard and SimpleCard ([48833b2](https://github.com/Nosto/web-components/commit/48833b2011e7c40d650eeda7c4a8aca73c54609e))
+
 ## [10.18.5](https://github.com/Nosto/web-components/compare/v10.18.4...v10.18.5) (2025-12-19)
 
 
