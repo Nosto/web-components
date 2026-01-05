@@ -34,3 +34,6 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+      commitlint:
+        patterns:
+          - "@commitlint/*"
