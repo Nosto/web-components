@@ -1,3 +1,10 @@
+## [10.18.7](https://github.com/Nosto/web-components/compare/v10.18.6...v10.18.7) (2026-01-07)
+
+
+### Bug Fixes
+
+* update configure-pages version comment to v5.0.0 ([2bf6ec5](https://github.com/Nosto/web-components/commit/2bf6ec50946ccd0ae72e0a11a6ade376cbc26f01))
+
 ## [10.18.6](https://github.com/Nosto/web-components/compare/v10.18.5...v10.18.6) (2025-12-30)
 
 
