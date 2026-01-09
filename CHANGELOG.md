@@ -1,3 +1,10 @@
+## [10.18.8](https://github.com/Nosto/web-components/compare/v10.18.7...v10.18.8) (2026-01-09)
+
+
+### Bug Fixes
+
+* rating documentation in simple card ([9443ea5](https://github.com/Nosto/web-components/commit/9443ea509f4672f8b9a8d1823ccaddf15831c6bc))
+
 ## [10.18.7](https://github.com/Nosto/web-components/compare/v10.18.6...v10.18.7) (2026-01-07)
 
 
