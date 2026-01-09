@@ -43,7 +43,7 @@ let simpleCardDefaults: DefaultProps = {}
  * @property {string} [imageMode] - Image display mode. Use "alternate" for hover image swap or "carousel" for image carousel with navigation. Defaults to undefined.
  * @property {boolean} [brand] - Show brand/vendor data. Defaults to false.
  * @property {boolean} [discount] - Show discount data. Defaults to false.
- * @property {boolean} [rating] - Show product rating. Defaults to false.
+ * @property {number} [rating] - Product rating value. Displays star rating if set. Defaults to undefined.
  * @property {string} [imageSizes] - The sizes attribute for responsive images to help the browser choose the right image size.
  * @property {boolean} [mock] - If true, uses mock data instead of fetching from Shopify. Defaults to false.
  *
