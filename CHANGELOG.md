@@ -1,3 +1,10 @@
+## [10.18.9](https://github.com/Nosto/web-components/compare/v10.18.8...v10.18.9) (2026-02-04)
+
+
+### Bug Fixes
+
+* update @isaacs/brace-expansion from 5.0.0 to 5.0.1 ([c7ebe0c](https://github.com/Nosto/web-components/commit/c7ebe0cc851cf9462ef388c35ad820f4c96d269d))
+
 ## [10.18.8](https://github.com/Nosto/web-components/compare/v10.18.7...v10.18.8) (2026-01-09)
 
 
