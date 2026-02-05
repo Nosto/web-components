@@ -73,7 +73,6 @@
     "prettier": "^3.8.1",
     "serve-favicon": "^2.5.1",
     "storybook": "^10.1.10",
-    "swiper": "^12.1.0",
     "typedoc": "^0.28.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.54.0",
