@@ -375,7 +375,7 @@ const baseTestProduct: GraphQLProduct = {
   ]
 }
 
-// Test products for VariantSelector component tests
+// Test products with single value options
 export const mockProductWithSingleValueOptionTest: GraphQLProduct = {
   ...baseTestProduct,
   options: [
@@ -538,7 +538,7 @@ export const mockProductWithAllSingleValueOptionsTest: GraphQLProduct = {
   ]
 }
 
-// Product with multiple variants for VariantSelector tests
+// Product with multiple variants for testing
 export function getProductWithVariantsMock(productStatus = true, unavailableVariants: string[] = []): GraphQLProduct {
   return {
     id: "gid://shopify/Product/123456",
@@ -711,7 +711,7 @@ export function getProductWithVariantsMock(productStatus = true, unavailableVari
   }
 }
 
-// Product without variants for VariantSelector tests
+// Product without variants for testing
 export function getProductWithoutVariantsMock(
   productStatus = true,
   unavailableVariants: string[] = []
@@ -733,9 +733,9 @@ export function getProductWithoutVariantsMock(
   }
 }
 
-// Basic product for SimpleCard tests
+// Basic product for component testing
 /**
- * Creates mock products for SimpleCard testing with unique handles and IDs.
+ * Creates mock products for component testing with unique handles and IDs.
  * @param count - Number of mock products to create
  * @returns Array of GraphQLProduct objects with handles like "product1", "product2", etc.
  *

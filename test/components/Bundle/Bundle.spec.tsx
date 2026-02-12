@@ -1,39 +1,9 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { Bundle } from "@/components/Bundle/Bundle"
-import { SimpleCard } from "@/components/SimpleCard/SimpleCard"
 import { createElement } from "@/utils/jsx"
 import { createMockShopifyProducts } from "@/mock/products"
 import type { JSONProduct } from "@nosto/nosto-js/client"
 import { addProductHandlers } from "../../utils/addProductHandlers"
-import { EVENT_NAME_VARIANT_CHANGE } from "@/components/VariantSelector/emitVariantChange"
-import { VariantChangeDetail } from "@/shopify/graphql/types"
-import { getEventPromise } from "../../utils/getEventPromise"
-
-async function waitForRender(bundle: Bundle) {
-  const cards = bundle.querySelectorAll("nosto-simple-card")
-
-  // Set up all listeners BEFORE appending to DOM or calling connectedCallback
-  const bundlePromise = getEventPromise(bundle, "@nosto/Bundle/rendered")
-
-  const cardPromises = Array.from(cards).flatMap(card => {
-    const promises: Promise<Event>[] = []
-    const variantSelector = card.querySelector("nosto-variant-selector")
-
-    if (variantSelector) {
-      promises.push(getEventPromise(variantSelector, "@nosto/VariantSelector/rendered"))
-    }
-
-    promises.push(getEventPromise(card, "@nosto/SimpleCard/rendered"))
-
-    return promises
-  })
-
-  // Now append to DOM to trigger connectedCallback
-  document.body.appendChild(bundle)
-
-  // Wait for all render events
-  return await Promise.all([bundlePromise, ...cardPromises])
-}
 
 describe("Bundle", () => {
   const mocks = createMockShopifyProducts(2)
@@ -95,8 +65,8 @@ describe("Bundle", () => {
     })
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1" />
-        <nosto-simple-card handle="product2" />
+        <div handle="product1" />
+        <div handle="product2" />
         <span n-summary-price></span>
         <input type="checkbox" value="product1" checked />
         <input type="checkbox" value="product2" checked />
@@ -121,8 +91,8 @@ describe("Bundle", () => {
     })
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1" />
-        <nosto-simple-card handle="product2" />
+        <div handle="product1" />
+        <div handle="product2" />
         <span n-summary-price></span>
         <input type="checkbox" value="product1" />
         <input type="checkbox" value="product2" checked />
@@ -172,8 +142,8 @@ describe("Bundle", () => {
 
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1" />
-        <nosto-simple-card handle="product2" />
+        <div handle="product1" />
+        <div handle="product2" />
         <span n-summary-price></span>
         <input type="checkbox" value="product1" />
         <input type="checkbox" value="product2" />
@@ -183,7 +153,7 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
 
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
-    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product1"]')
+    const card = bundle.querySelector<HTMLElement>('[handle="product1"]')
 
     input.checked = true
     input.dispatchEvent(new Event("input", { bubbles: true }))
@@ -199,8 +169,8 @@ describe("Bundle", () => {
 
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1" />
-        <nosto-simple-card handle="product2" />
+        <div handle="product1" />
+        <div handle="product2" />
         <span n-summary-price></span>
         <input type="checkbox" value="product1" checked />
         <input type="checkbox" value="product2" checked />
@@ -210,7 +180,7 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
 
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
-    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product1"]')
+    const card = bundle.querySelector<HTMLElement>('[handle="product1"]')
 
     // Remove product from selection
     input.checked = false
@@ -227,12 +197,12 @@ describe("Bundle", () => {
 
     const bundle = (
       <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1">
+        <div handle="product1">
           <input type="checkbox" value="product1" checked />
-        </nosto-simple-card>
-        <nosto-simple-card handle="product2">
+        </div>
+        <div handle="product2">
           <input type="checkbox" value="product2" checked />
-        </nosto-simple-card>
+        </div>
         <span n-summary-price></span>
       </nosto-bundle>
     ) as Bundle
@@ -240,7 +210,7 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
 
     const input = bundle.querySelector<HTMLInputElement>('input[type="checkbox"]')!
-    const card = bundle.querySelector<SimpleCard>('nosto-simple-card[handle="product1"]')
+    const card = bundle.querySelector<HTMLElement>('[handle="product1"]')
 
     // Remove product from selection
     input.checked = false
@@ -249,51 +219,7 @@ describe("Bundle", () => {
     expect(card?.style.display).not.toBe("none")
   })
 
-  it("updates summary price when variant changes", async () => {
-    addProductHandlers({
-      product1: { product: mockedProducts.product1 },
-      product2: { product: mockedProducts.product2 }
-    })
-
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1">
-          <nosto-variant-selector handle="product1" mode="compact"></nosto-variant-selector>
-        </nosto-simple-card>
-        <nosto-simple-card handle="product2">
-          <nosto-variant-selector handle="product2" mode="compact"></nosto-variant-selector>
-        </nosto-simple-card>
-        <span n-summary-price></span>
-        <input type="checkbox" value="product1" checked />
-        <input type="checkbox" value="product2" checked />
-      </nosto-bundle>
-    ) as Bundle
-
-    await waitForRender(bundle)
-
-    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(summary.textContent).toBe("Total: $201.00")
-
-    const variantSelectorShadowRoot = document.querySelector("nosto-variant-selector")!.shadowRoot
-    expect(variantSelectorShadowRoot).toBeTruthy()
-    const select = variantSelectorShadowRoot!.querySelector<HTMLSelectElement>("select")
-    expect(select).toBeTruthy()
-
-    const variantChangePromise = new Promise<void>(resolve => {
-      bundle.addEventListener(EVENT_NAME_VARIANT_CHANGE, event => {
-        const { variantId } = (event as CustomEvent<VariantChangeDetail>).detail
-        expect(variantId).toBe("gid://shopify/ProductVariant/2")
-        expect(summary.textContent).toBe("Total: $221.00")
-        resolve()
-      })
-    })
-
-    select!.value = "gid://shopify/ProductVariant/2"
-    select!.dispatchEvent(new Event("change", { bubbles: true }))
-    await variantChangePromise
-  })
-
-  it("triggers add to cart logic when clicking element with n-atc attribute", async () => {
+  it("formats summary with custom summary containing both placeholders", async () => {
     addProductHandlers({
       product1: { product: mockedProducts.product1 },
       product2: { product: mockedProducts.product2 }
@@ -369,61 +295,5 @@ describe("Bundle", () => {
     await bundle.connectedCallback()
     const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
     expect(summary.textContent).toBe("Buy 2 items for $201.00")
-  })
-
-  // TODO: Add support for pending variant changes in bundle logic and then enable this test
-  it.skip("handles variant change events triggered before bundle is initialized", async () => {
-    addProductHandlers({
-      product1: { product: mockedProducts.product1 },
-      product2: { product: mockedProducts.product2 }
-    })
-    const bundle = (
-      <nosto-bundle products={products}>
-        <nosto-simple-card handle="product1">
-          <nosto-variant-selector handle="product1" variantId={2} mode="compact"></nosto-variant-selector>
-        </nosto-simple-card>
-        <nosto-simple-card handle="product2">
-          <nosto-variant-selector handle="product2" variantId={7} mode="compact"></nosto-variant-selector>
-        </nosto-simple-card>
-        s<span n-summary-price></span>
-        <input type="checkbox" value="product1" checked />
-        <input type="checkbox" value="product2" checked />
-      </nosto-bundle>
-    ) as Bundle
-
-    await waitForRender(bundle)
-    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(summary.textContent).toBe("Total: $271.00")
-  })
-
-  it("considers recommended_sku when no variant change is pending", async () => {
-    addProductHandlers({
-      product1: { product: mockedProducts.product1 },
-      product2: { product: mockedProducts.product2 }
-    })
-    const bundle = (
-      <nosto-bundle
-        products={
-          [
-            { handle: "product1", recommended_sku: { id: 3 } },
-            { handle: "product2", recommended_sku: { id: 6 } }
-          ] as unknown as JSONProduct[]
-        }
-      >
-        <nosto-simple-card handle="product1">
-          <nosto-variant-selector handle="product1" mode="compact"></nosto-variant-selector>
-        </nosto-simple-card>
-        <nosto-simple-card handle="product2">
-          <nosto-variant-selector handle="product2" mode="compact"></nosto-variant-selector>
-        </nosto-simple-card>
-        <span n-summary-price></span>
-        <input type="checkbox" value="product1" checked />
-        <input type="checkbox" value="product2" checked />
-      </nosto-bundle>
-    ) as Bundle
-
-    await waitForRender(bundle)
-    const summary = bundle.querySelector<HTMLSpanElement>("span[n-summary-price]")!
-    expect(summary.textContent).toBe("Total: $271.00")
   })
 })

@@ -49,7 +49,6 @@ applyTo: "test/*"
 - Available mock products include:
   - `mockProductWithVariants` - Product with multiple variants (Size, Color options)
   - `mockProductWithoutVariants` - Product with no options
-  - `mockSimpleCardProduct` - Basic product for SimpleCard tests
   - `mockProductWithSingleValueOption` - Product with one single-value option
   - `mockProductAllSingleValue` - Product where all options have single values
   - Additional specialized test products as needed

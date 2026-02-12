@@ -25,9 +25,7 @@ This package provides the following custom elements:
 | DynamicCard     | `nosto-dynamic-card`     | Dynamic product card templating                 | Shopify only |
 | Image           | `nosto-image`            | Progressive image enhancement with optimization |              |
 | Product         | `nosto-product`          | Product interaction and cart management         |              |
-| SimpleCard      | `nosto-simple-card`      | Simple product card templating                  | Shopify only |
 | SkuOptions      | `nosto-sku-options`      | Product variant and SKU selection interface     |              |
-| VariantSelector | `nosto-variant-selector` | Product variant options as clickable pills      | Shopify only |
 
 ## Documentation
 
