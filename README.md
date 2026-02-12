@@ -16,7 +16,6 @@ This package provides the following custom elements:
 | --------------- | ------------------------ | ------------------------------------------------------ | ------------ |
 | Campaign        | `nosto-campaign`         | Campaign rendering and product recommendation display  |              |           
 | Control         | `nosto-control`          | Conditional content rendering based on user segments   |              |
-| SectionCampaign | `nosto-section-campaign` | Campaign rendering using the Section Rendering API     | Shopify only |
 
 ### Campaign level templating
 

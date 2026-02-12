@@ -1,3 +1,9 @@
+## Unreleased
+
+### BREAKING CHANGES
+
+* **SectionCampaign:** Remove SectionCampaign component
+
 ## [10.18.9](https://github.com/Nosto/web-components/compare/v10.18.8...v10.18.9) (2026-02-04)
 
 
