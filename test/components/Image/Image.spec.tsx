@@ -177,11 +177,10 @@ describe("Image", () => {
     it("forwards layout-related props to the custom element", () => {
       nostoImage = (
         <nosto-image
-          src="https://example.com/responsive.jpg"
+          src={shopifyUrl}
           width={640}
-          height={360}
-          layout="constrained"
           aspectRatio={16 / 9}
+          layout="constrained"
           crop="center"
           sizes="(min-width: 1024px) 50vw, 100vw"
         />
@@ -191,7 +190,7 @@ describe("Image", () => {
       // Verify shadow DOM img element attributes
       const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
-      expect(imgElement!.src).toContain("https://example.com/responsive.jpg")
+      expect(imgElement!.src).toContain(shopifyUrl)
       expect(imgElement!.getAttribute("srcset")).toBeDefined()
       expect(imgElement!.getAttribute("sizes")).toBe("(min-width: 1024px) 50vw, 100vw")
       expect(imgElement!.getAttribute("loading")).toBe("lazy")
