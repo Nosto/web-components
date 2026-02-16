@@ -27,7 +27,7 @@ Here's an example of a Shopify Liquid template that can be used with the `nosto-
 {% endcomment %}
 
 {% if search.terms != blank %}
-  {% assign handles = search.terms | split: ':' %}
+  {% assign handles = search.terms | split: ' OR ' %}
   <div class="product-recommendations">
     <h2 nosto-title></h2>
     <div class="product-grid">

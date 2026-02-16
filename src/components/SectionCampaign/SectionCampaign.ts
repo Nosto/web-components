@@ -46,7 +46,7 @@ export class SectionCampaign extends NostoElement {
   }
 
   async #getSectionMarkup(rec: JSONResult) {
-    const handles = rec.products.map(product => product.handle).join(":")
+    const handles = rec.products.map(product => product.handle).join(" OR ")
     const target = getShopifyUrl("/search")
     target.searchParams.set("section_id", this.section)
     target.searchParams.set("q", handles)
