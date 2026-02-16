@@ -45,7 +45,9 @@ export function isShopifyProductItem(el: Element): boolean {
 export function findRepeatingItems(root: Element, opts: FindRepeatingOptions = {}): RepeatingItemsResult | null {
   const { minItems = 2, maxDepth = 8, preferLists = true, isItemElement } = opts
 
-  const children = (el: Element) => Array.from(el.children).filter(c => c.tagName !== "SCRIPT" && c.tagName !== "STYLE")
+  function children(el: Element) {
+    return Array.from(el.children).filter(c => c.tagName !== "SCRIPT" && c.tagName !== "STYLE")
+  }
 
   function depthBetween(ancestor: Element, node: Element): number {
     let d = 0

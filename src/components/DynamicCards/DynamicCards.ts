@@ -5,9 +5,10 @@ import { applyDefaults } from "@/utils/applyDefaults"
 import { nostojs } from "@nosto/nosto-js"
 import { JSONResult } from "@nosto/nosto-js/client"
 import { getText } from "@/utils/fetch"
+import { NostoElement } from "../Element"
 
-/** Event name for the DynamicCard loaded event */
-const DYNAMIC_CARD_LOADED_EVENT = "@nosto/DynamicCard/loaded"
+/** Event name for the DynamicCards loaded event */
+const DYNAMIC_CARDS_LOADED_EVENT = "@nosto/DynamicCards/loaded"
 
 type Product = {
   id: string
@@ -16,28 +17,27 @@ type Product = {
 
 type DefaultProps = Pick<DynamicCards, "lazy" | "loadRecommendations" | "section">
 
-/** Default values for DynamicCard attributes */
+/** Default values for DynamicCards attributes */
 let dynamicCardsDefaults: DefaultProps = {}
 
 /**
- * A custom element that renders a product by fetching the markup from Shopify based on the provided handle and template.
+ * A custom element that renders multiple products by fetching their markup from Shopify, using Storefront search API, based on the provided handles and the section.
  *
- * This component is designed to be used in a Shopify environment and fetches product data dynamically.
+ * This component is designed to be used in a Shopify environment and fetches product card markup dynamically for a list of products.
  *
- * {@include ./examples.md}
  *
  * @category Campaign level templating
  *
- * @property {string} [section] - The section to use for rendering the product. section or template is required.
+ * @property {string} [section] - The section to use for rendering the product cards. section should be supplied as an attribute or through the defaults.
  * @property {boolean} [lazy] - If true, the component will only fetch data when it comes into view. Defaults to false.
- * @property {string} [placement] - Optional placement identifier to include in the request for analytics and campaign targeting purposes.
- * @property {boolean} [loadRecommendations] - If true, the component will load product recommendations. Defaults to false.
+ * @property {string} [placement] - Optional placement identifier to include in the request for analytics and campaign targeting purposes. Required when `loadRecommendations` is true.
+ * @property {boolean} [loadRecommendations] - If true, the component will load product ids from Nosto. Defaults to false.
  * @property {boolean} [searchPerformed] - Internal flag to prevent multiple recommendation loads. Not settable via attribute.
- * @property {string} [productsContainerSelector] - Optional CSS selector to identify the container within the fetched markup where product items are located. Used for appending additional batches of products while preserving existing content.
- * @property {string} [productItemSelector] - Optional CSS selector to identify individual product items within the fetched markup. Used for sorting products based on the original order of the input product list.
+ * @property {string} [productsContainerSelector] - Optional CSS selector to identify the container within the fetched markup where product card items are located. Used for appending additional batches of products while preserving existing content.
+ * @property {string} [productItemSelector] - Optional CSS selector to identify individual product card items within the fetched markup. Used for sorting products based on the original order of the input product list.
  */
 @customElement("nosto-dynamic-cards")
-export class DynamicCards extends HTMLElement {
+export class DynamicCards extends NostoElement {
   private BATCH_SIZE = 10
   #products: Product[] = []
   @property(String) section?: string
@@ -73,10 +73,8 @@ export class DynamicCards extends HTMLElement {
     // Apply default values before rendering
     applyDefaults(this, dynamicCardsDefaults as this)
 
-    assertRequired(this, "placement")
-
     if (!this.loadRecommendations || (this.loadRecommendations && !this.placement) || this.searchPerformed) {
-      return false
+      return
     }
 
     const api = await new Promise(nostojs)
@@ -87,14 +85,12 @@ export class DynamicCards extends HTMLElement {
       .setResponseMode("JSON_ORIGINAL")
       .load()
 
-    // ts-expect-error
     const recs = recommendations[this.placement] as JSONResult
     if (recs && recs.products) {
       this.searchPerformed = true
       this.products = recs.products.map(p => ({
         id: p.product_id,
-        handle: p.handle,
-        title: p.name.trim()
+        handle: p.handle
       }))
 
       console.log("Loaded recommendations for DynamicCards:", this.products)
@@ -119,7 +115,7 @@ export class DynamicCards extends HTMLElement {
         batchIndex++
       }
 
-      this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+      this.dispatchEvent(new CustomEvent(DYNAMIC_CARDS_LOADED_EVENT, { bubbles: true, cancelable: true }))
     } finally {
       this.toggleAttribute("loading", false)
     }
@@ -128,7 +124,7 @@ export class DynamicCards extends HTMLElement {
   async #getMarkup(batch: Product[]) {
     const target = this.#generateUrl(false, batch)
 
-    let markup = await getText(target, { cached: true })
+    const markup = await getText(target, { cached: true })
 
     if (/<(body|html)/.test(markup)) {
       throw new Error(
@@ -138,11 +134,11 @@ export class DynamicCards extends HTMLElement {
     return markup
   }
 
-  #sortResultsIfApplicable(recomendations: HTMLElement, batchIndex: number) {
+  #sortResultsIfApplicable(recommendations: HTMLElement, batchIndex: number) {
     if (this.productItemSelector) {
       this.products.forEach((product, index) => {
         const productUrl = `/products/${product.handle}`
-        const productCardItem = recomendations.querySelector<HTMLElement>(
+        const productCardItem = recommendations.querySelector<HTMLElement>(
           `${this.productItemSelector!}:has(a[href*="${productUrl}"])`
         )
         if (productCardItem) {
@@ -151,7 +147,7 @@ export class DynamicCards extends HTMLElement {
       })
     }
 
-    return recomendations
+    return recommendations
   }
 
   #generateUrl(predictiveSearch: boolean, batch: Product[]) {
@@ -194,7 +190,7 @@ export class DynamicCards extends HTMLElement {
     if (!recommendations) {
       return html
     }
-    var sortedContent = this.#sortResultsIfApplicable(recommendations, batchIndex)
+    const sortedContent = this.#sortResultsIfApplicable(recommendations, batchIndex)
 
     if (batchIndex === 0) {
       if (sortedContent.children.length > 0) {
@@ -213,18 +209,18 @@ export class DynamicCards extends HTMLElement {
 }
 
 /**
- * Sets default values for DynamicCard attributes.
- * These defaults will be applied to all DynamicCard instances created after this function is called.
+ * Sets default values for DynamicCards attributes.
+ * These defaults will be applied to all DynamicCards instances created after this function is called.
  *
- * @param defaults - An object containing default values for DynamicCard attributes
+ * @param defaults - An object containing default values for DynamicCards attributes
  *
  * @example
  * ```typescript
  * import { setDynamicCardsDefaults } from '@nosto/web-components'
  *
- * setDynamicCardDefaults({
- *   placeholder: true,
+ * setDynamicCardsDefaults({
  *   lazy: true,
+ *   loadRecommendations: true,
  *   section: 'product-card'
  * })
  * ```
