@@ -18,7 +18,10 @@ describe("SectionCampaign", () => {
 
     const sectionHTML = `<div class="wrapper"><div class="inner">Rendered Section</div></div>`
     addHandlers(
-      http.get("/search", () => {
+      http.get("/search", ({ request }) => {
+        const url = new URL(request.url)
+        const q = url.searchParams.get("q")
+        expect(q).toBe("product-a:product-b") // Default handle mode
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
       })
     )
@@ -34,6 +37,70 @@ describe("SectionCampaign", () => {
     expect(callArg).toContain("placement1")
 
     expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Rendered Section</div></div>`)
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+    expect(el.hasAttribute("loading")).toBe(false)
+  })
+
+  it("renders section markup using id mode with OR operator", async () => {
+    const products = [
+      { product_id: "10", handle: "product-a" },
+      { product_id: "20", handle: "product-b" },
+      { product_id: "30", handle: "product-c" }
+    ]
+    const { attributeProductClicksInCampaign, load, mockBuilder } = mockNostoRecs({ placement1: { products } })
+
+    const sectionHTML = `<div class="wrapper"><div class="inner">ID Mode Section</div></div>`
+    addHandlers(
+      http.get("/search", ({ request }) => {
+        const url = new URL(request.url)
+        const q = url.searchParams.get("q")
+        expect(q).toBe("id:10 OR id:20 OR id:30") // ID mode with OR
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (
+      <nosto-section-campaign placement="placement1" section="featured-section" mode="id" />
+    ) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    const callArg = (mockBuilder.setElements as Mock<RequestBuilder["setElements"]>).mock.calls[0][0]
+    expect(callArg).toContain("placement1")
+
+    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">ID Mode Section</div></div>`)
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+    expect(el.hasAttribute("loading")).toBe(false)
+  })
+
+  it("renders section markup using explicit handle mode", async () => {
+    const products = [
+      { product_id: "10", handle: "product-a" },
+      { product_id: "20", handle: "product-b" }
+    ]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })
+
+    const sectionHTML = `<div class="wrapper"><div class="inner">Handle Mode Section</div></div>`
+    addHandlers(
+      http.get("/search", ({ request }) => {
+        const url = new URL(request.url)
+        const q = url.searchParams.get("q")
+        expect(q).toBe("product-a:product-b") // Explicit handle mode
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (
+      <nosto-section-campaign placement="placement1" section="featured-section" mode="handle" />
+    ) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Handle Mode Section</div></div>`)
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
     expect(el.hasAttribute("loading")).toBe(false)
   })

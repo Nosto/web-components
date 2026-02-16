@@ -16,11 +16,13 @@ import { JSONResult } from "@nosto/nosto-js/client"
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
+ * @property {string} mode - (Optional) Query mode: "handle" (default) uses product handles, "id" uses product IDs with OR operator.
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
   @property(String) placement!: string
   @property(String) section!: string
+  @property(String) mode?: "handle" | "id"
 
   async connectedCallback() {
     this.toggleAttribute("loading", true)
@@ -46,10 +48,19 @@ export class SectionCampaign extends NostoElement {
   }
 
   async #getSectionMarkup(rec: JSONResult) {
-    const handles = rec.products.map(product => product.handle).join(":")
     const target = getShopifyUrl("/search")
     target.searchParams.set("section_id", this.section)
-    target.searchParams.set("q", handles)
+
+    // Format q parameter based on mode
+    if (this.mode === "id") {
+      const idQuery = rec.products.map(product => `id:${product.product_id}`).join(" OR ")
+      target.searchParams.set("q", idQuery)
+    } else {
+      // Default mode: use handles separated by colon
+      const handles = rec.products.map(product => product.handle).join(":")
+      target.searchParams.set("q", handles)
+    }
+
     const sectionHtml = await getText(target.href)
     const parser = new DOMParser()
     const doc = parser.parseFromString(sectionHtml, "text/html")

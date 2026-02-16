@@ -16,6 +16,14 @@ This shows a more targeted implementation for product page cross-selling. By usi
 <nosto-section-campaign placement="product-page-cross-sell" section="related-products-section"></nosto-section-campaign>
 ```
 
+### Using ID mode for union of ID filters
+
+This example demonstrates using the `mode="id"` attribute to format the search query as a union of product IDs. Instead of product handles, the component will use product IDs with the OR operator (e.g., "id:10 OR id:20 OR id:30"), which is useful for certain Shopify search configurations.
+
+```html
+<nosto-section-campaign placement="front-page" section="product-recommendations" mode="id"></nosto-section-campaign>
+```
+
 ### Example Shopify Liquid template for use with nosto-section-campaign
 
 Here's an example of a Shopify Liquid template that can be used with the `nosto-section-campaign` component:
