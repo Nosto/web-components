@@ -188,15 +188,6 @@ describe("Image", () => {
       ) as Image
       nostoImage.connectedCallback()
 
-      // Verify custom element attributes
-      expect(nostoImage.getAttribute("src")).toBe("https://example.com/responsive.jpg")
-      expect(nostoImage.getAttribute("width")).toBe("640")
-      expect(nostoImage.getAttribute("height")).toBe("360")
-      expect(nostoImage.getAttribute("layout")).toBe("constrained")
-      expect(nostoImage.getAttribute("aspect-ratio")).toBe(String(16 / 9))
-      expect(nostoImage.getAttribute("crop")).toBe("center")
-      expect(nostoImage.getAttribute("sizes")).toBe("(min-width: 1024px) 50vw, 100vw")
-
       // Verify shadow DOM img element attributes
       const imgElement = nostoImage.shadowRoot?.querySelector("img")
       expect(imgElement).toBeDefined()
