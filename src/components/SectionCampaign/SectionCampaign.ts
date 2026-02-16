@@ -47,19 +47,18 @@ export class SectionCampaign extends NostoElement {
     api.attributeProductClicksInCampaign(this, rec)
   }
 
+  #getQuery(rec: JSONResult): string {
+    if (this.mode === "id") {
+      return rec.products.map(product => `id:${product.product_id}`).join(" OR ")
+    }
+    // Default mode: use handles separated by colon
+    return rec.products.map(product => product.handle).join(":")
+  }
+
   async #getSectionMarkup(rec: JSONResult) {
     const target = getShopifyUrl("/search")
     target.searchParams.set("section_id", this.section)
-
-    // Format q parameter based on mode
-    if (this.mode === "id") {
-      const idQuery = rec.products.map(product => `id:${product.product_id}`).join(" OR ")
-      target.searchParams.set("q", idQuery)
-    } else {
-      // Default mode: use handles separated by colon
-      const handles = rec.products.map(product => product.handle).join(":")
-      target.searchParams.set("q", handles)
-    }
+    target.searchParams.set("q", this.#getQuery(rec))
 
     const sectionHtml = await getText(target.href)
     const parser = new DOMParser()
