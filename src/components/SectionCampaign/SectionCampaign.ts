@@ -51,7 +51,6 @@ export class SectionCampaign extends NostoElement {
     if (this.mode === "id") {
       return rec.products.map(product => `id:${product.product_id}`).join(" OR ")
     }
-    // Default mode: use handles separated by colon
     return rec.products.map(product => product.handle).join(":")
   }
 
