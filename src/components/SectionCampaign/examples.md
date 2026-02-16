@@ -20,6 +20,8 @@ This shows a more targeted implementation for product page cross-selling. By usi
 
 Here's an example of a Shopify Liquid template that can be used with the `nosto-section-campaign` component:
 
+> **Note**: The component now joins product handles with ` OR ` separator (changed from `:` in previous versions). Make sure your Liquid template splits on ` OR ` as shown below.
+
 ```liquid
 {% comment %}
   Section: product-recommendations.liquid
