@@ -6,7 +6,5 @@ export { DynamicCard, setDynamicCardDefaults } from "./components/DynamicCard/Dy
 export { Image } from "./components/Image/Image"
 export { Product } from "./components/Product/Product"
 export { SectionCampaign } from "./components/SectionCampaign/SectionCampaign"
-export { SimpleCard, setSimpleCardDefaults } from "./components/SimpleCard/SimpleCard"
 export { SkuOptions } from "./components/SkuOptions/SkuOptions"
-export { VariantSelector } from "./components/VariantSelector/VariantSelector"
 export { setShopifyShop } from "./shopify/getShopifyUrl"

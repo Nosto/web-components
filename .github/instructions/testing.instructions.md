@@ -49,8 +49,8 @@ applyTo: "test/*"
 - Available mock products include:
   - `mockProductWithVariants` - Product with multiple variants (Size, Color options)
   - `mockProductWithoutVariants` - Product with no options
-  - `mockSimpleCardProduct` - Basic product for SimpleCard tests
   - `mockProductWithSingleValueOption` - Product with one single-value option
   - `mockProductAllSingleValue` - Product where all options have single values
+  - `createMockShopifyProducts` - Function to create multiple mock products with unique handles and IDs
   - Additional specialized test products as needed
 - When adding new mock products, add them to `src/mock/products.ts` for reusability
