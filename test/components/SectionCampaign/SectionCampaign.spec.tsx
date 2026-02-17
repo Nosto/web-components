@@ -98,4 +98,27 @@ describe("SectionCampaign", () => {
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
+
+  it("joins product handles with ' OR ' separator for search query", async () => {
+    const products = [{ handle: "product-a" }, { handle: "product-b" }, { handle: "product-c" }]
+    mockNostoRecs({ placement1: { products } })
+
+    let capturedUrl = ""
+    const sectionHTML = `<div class="wrapper">Products</div>`
+    addHandlers(
+      http.get("/search", ({ request }) => {
+        capturedUrl = request.url
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    const url = new URL(capturedUrl)
+    expect(url.searchParams.get("q")).toBe("product-a OR product-b OR product-c")
+    expect(url.searchParams.get("section_id")).toBe("featured-section")
+  })
 })
