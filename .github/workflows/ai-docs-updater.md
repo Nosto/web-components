@@ -4,8 +4,8 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
-  pull-requests: read
+  contents: write
+  pull-requests: write
 
 safe-outputs:
   create-pull-request:
