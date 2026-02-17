@@ -1,3 +1,26 @@
+# [11.0.0](https://github.com/Nosto/web-components/compare/v10.18.9...v11.0.0) (2026-02-17)
+
+
+### Documentation
+
+* add BREAKING_CHANGE.md for SectionCampaign handle separator ([38f33d1](https://github.com/Nosto/web-components/commit/38f33d1c3be14ec4394e1614d075f5e6a3afb7ad))
+
+
+### Features
+
+* **deps:** bump jsdom from ^28.0.0 to ^28.1.0 ([3115908](https://github.com/Nosto/web-components/commit/311590815ece9b18873ca948be856a58a2b5a1f2))
+* **SectionCampaign:** replace handle separator with " OR " for valid search query ([61fdea2](https://github.com/Nosto/web-components/commit/61fdea21d6fdc6c8fc0aafa78a4a73d840dda44a))
+
+
+### BREAKING CHANGES
+
+* Product handles in SectionCampaign now use ' OR ' separator instead of ':'.
+
+Merchants must update Liquid templates from `split: ':'` to `split: ' OR '`.
+See BREAKING_CHANGE.md for full migration guide.
+
+Co-authored-by: timowestnosto <13622115+timowestnosto@users.noreply.github.com>
+
 ## [10.18.9](https://github.com/Nosto/web-components/compare/v10.18.8...v10.18.9) (2026-02-04)
 
 
