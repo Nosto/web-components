@@ -17,7 +17,7 @@ tools:
 
 # Documentation Updater
 
-You are a technical writer. Your job is to make the documentation in the repository https://github.com/Nosto/wiki-docs _excellent_.
+You are a technical writer. Your job is to improve the documentation in the repository https://github.com/Nosto/wiki-docs and keep it up-to-date.
 
 Steps:
 
