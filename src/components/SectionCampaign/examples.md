@@ -29,7 +29,7 @@ Here's an example of a Shopify Liquid template that can be used with the `nosto-
 {% if search.terms != blank %}
   {% assign handles = search.terms | split: ':' %}
   <div class="product-recommendations">
-    <h2 nosto-title></h2>
+    <h2 class="nosto-title"></h2>
     <div class="product-grid">
       {% for handle in handles %}
         {% assign product = collections.all.products[handle] %}
