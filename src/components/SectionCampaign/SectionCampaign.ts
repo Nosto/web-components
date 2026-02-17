@@ -54,7 +54,7 @@ export class SectionCampaign extends NostoElement {
     const parser = new DOMParser()
     const doc = parser.parseFromString(sectionHtml, "text/html")
     if (rec.title) {
-      const headingEl = doc.querySelector("[nosto-title]")
+      const headingEl = doc.querySelector(".nosto-title")
       if (headingEl) {
         headingEl.textContent = rec.title
       }

@@ -55,7 +55,7 @@ describe("SectionCampaign", () => {
       placement1: { products, title: "Custom Title" }
     })
 
-    const sectionHTML = `<div class="wrapper"><h2 nosto-title>Default Title</h2><div class="inner">Rendered Section</div></div>`
+    const sectionHTML = `<div class="wrapper"><h2 class="nosto-title">Default Title</h2><div class="inner">Rendered Section</div></div>`
     addHandlers(
       http.get("/search", () => {
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
@@ -74,7 +74,7 @@ describe("SectionCampaign", () => {
     expect(el.hasAttribute("loading")).toBe(false)
   })
 
-  it("does not replace title in regular heading elements without nosto-title attribute", async () => {
+  it("does not replace title in regular heading elements without nosto-title class", async () => {
     const products = [{ handle: "product-a" }]
     const { attributeProductClicksInCampaign, load } = mockNostoRecs({
       placement1: { products, title: "Custom Title" }
