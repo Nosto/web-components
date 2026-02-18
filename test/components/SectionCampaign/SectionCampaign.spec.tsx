@@ -126,7 +126,7 @@ describe("SectionCampaign", () => {
     const products = [{ handle: "product-a" }]
     const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })
 
-    const sectionHTML = `<div class="wrapper"><nosto-section-campaign><div class="campaign-content">Campaign Content</div></nosto-section-campaign></div>`
+    const sectionHTML = `<div class="wrapper"><nosto-section-campaign placement="placement1"><div class="campaign-content">Campaign Content</div></nosto-section-campaign></div>`
     addHandlers(
       http.get("/search", () => {
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
@@ -162,6 +162,29 @@ describe("SectionCampaign", () => {
 
     expect(load).toHaveBeenCalled()
     expect(el.innerHTML).toBe(`<div class="wrapper"><div class="inner">Regular Content</div></div>`)
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+    expect(el.hasAttribute("loading")).toBe(false)
+  })
+
+  it("returns first element's inner HTML when nosto-section-campaign has different placement", async () => {
+    const products = [{ handle: "product-a" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })
+
+    const sectionHTML = `<div class="wrapper"><nosto-section-campaign placement="placement2"><div class="other">Other Placement</div></nosto-section-campaign></div>`
+    addHandlers(
+      http.get("/search", () => {
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    expect(el.innerHTML).toContain(`<nosto-section-campaign placement="placement2"`)
+    expect(el.innerHTML).toContain(`<div class="other">Other Placement</div>`)
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
     expect(el.hasAttribute("loading")).toBe(false)
   })

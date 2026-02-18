@@ -60,7 +60,7 @@ export class SectionCampaign extends NostoElement {
       }
     }
     // Check if nosto-section-campaign element exists in the section body
-    const nostoSectionCampaign = doc.body.querySelector("nosto-section-campaign")
+    const nostoSectionCampaign = doc.body.querySelector(`nosto-section-campaign[placement="${this.placement}"]`)
     if (nostoSectionCampaign) {
       return nostoSectionCampaign.innerHTML.trim()
     }
