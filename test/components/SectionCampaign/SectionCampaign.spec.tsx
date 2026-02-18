@@ -144,16 +144,13 @@ describe("SectionCampaign", () => {
     expect(el.hasAttribute("loading")).toBe(false)
   })
 
-  it("replaces existing .nosto-title with title from nested nosto-section-campaign content", async () => {
+  it("replaces title in nested nosto-section-campaign element with nosto-title class", async () => {
     const products = [{ handle: "product-a" }]
-    const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
+      placement1: { products, title: "Custom Title" }
+    })
 
-    const existingTitle = document.createElement("h1")
-    existingTitle.className = "nosto-title"
-    existingTitle.textContent = "Original Title"
-    document.body.appendChild(existingTitle)
-
-    const sectionHTML = `<div class="wrapper"><nosto-section-campaign><div class="campaign-content"><h1 class="nosto-title">Campaign Title</h1></div></nosto-section-campaign></div>`
+    const sectionHTML = `<div class="wrapper"><nosto-section-campaign placement="placement1"><h2 class="nosto-title">Default Title</h2><div class="campaign-content">Campaign Content</div></nosto-section-campaign></div>`
     addHandlers(
       http.get("/search", () => {
         return HttpResponse.text(`<section>${sectionHTML}</section>`)
@@ -166,11 +163,12 @@ describe("SectionCampaign", () => {
     await el.connectedCallback()
 
     expect(load).toHaveBeenCalled()
-    expect(el.innerHTML).toBe(`<div class="campaign-content"><h1 class="nosto-title">Campaign Title</h1></div>`)
-    expect(existingTitle.textContent).toBe("Campaign Title")
-    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+    expect(el.innerHTML).toContain("Custom Title")
+    expect(el.innerHTML).not.toContain("Default Title")
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
   })
+
   it("returns first element's inner HTML when nosto-section-campaign is not present", async () => {
     const products = [{ handle: "product-a" }]
     const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })

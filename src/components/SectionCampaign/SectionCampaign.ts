@@ -53,14 +53,15 @@ export class SectionCampaign extends NostoElement {
     const sectionHtml = await getText(target.href)
     const parser = new DOMParser()
     const doc = parser.parseFromString(sectionHtml, "text/html")
-    if (rec.title) {
-      const headingEl = doc.querySelector(".nosto-title")
+    // Check if nosto-section-campaign element exists in the section body
+    const nostoSectionCampaign = doc.body.querySelector(`nosto-section-campaign[placement="${this.placement}"]`)
+    const targetElement = nostoSectionCampaign || doc.body.firstElementChild
+    if (rec.title && targetElement) {
+      const headingEl = targetElement.querySelector(".nosto-title")
       if (headingEl) {
         headingEl.textContent = rec.title
       }
     }
-    // Check if nosto-section-campaign element exists in the section body
-    const nostoSectionCampaign = doc.body.querySelector(`nosto-section-campaign[placement="${this.placement}"]`)
     if (nostoSectionCampaign) {
       return nostoSectionCampaign.innerHTML.trim()
     }
