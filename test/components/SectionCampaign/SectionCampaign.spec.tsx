@@ -144,6 +144,33 @@ describe("SectionCampaign", () => {
     expect(el.hasAttribute("loading")).toBe(false)
   })
 
+  it("replaces existing .nosto-title with title from nested nosto-section-campaign content", async () => {
+    const products = [{ handle: "product-a" }]
+    const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })
+
+    const existingTitle = document.createElement("h1")
+    existingTitle.className = "nosto-title"
+    existingTitle.textContent = "Original Title"
+    document.body.appendChild(existingTitle)
+
+    const sectionHTML = `<div class="wrapper"><nosto-section-campaign><div class="campaign-content"><h1 class="nosto-title">Campaign Title</h1></div></nosto-section-campaign></div>`
+    addHandlers(
+      http.get("/search", () => {
+        return HttpResponse.text(`<section>${sectionHTML}</section>`)
+      })
+    )
+
+    const el = (<nosto-section-campaign placement="placement1" section="featured-section" />) as SectionCampaign
+    document.body.appendChild(el)
+
+    await el.connectedCallback()
+
+    expect(load).toHaveBeenCalled()
+    expect(el.innerHTML).toBe(`<div class="campaign-content"><h1 class="nosto-title">Campaign Title</h1></div>`)
+    expect(existingTitle.textContent).toBe("Campaign Title")
+    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products })
+    expect(el.hasAttribute("loading")).toBe(false)
+  })
   it("returns first element's inner HTML when nosto-section-campaign is not present", async () => {
     const products = [{ handle: "product-a" }]
     const { attributeProductClicksInCampaign, load } = mockNostoRecs({ placement1: { products } })
