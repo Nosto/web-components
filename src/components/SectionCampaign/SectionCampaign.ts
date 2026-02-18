@@ -16,7 +16,7 @@ import { JSONResult } from "@nosto/nosto-js/client"
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
- * @property {string} [titleSelector] - CSS selector for the title element to inject the campaign title. Defaults to ".nosto-title".
+ * @property {string} [titleSelector] - CSS selector for the title element to inject the campaign title (attribute: "title-selector"). Defaults to ".nosto-title".
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
