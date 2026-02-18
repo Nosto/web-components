@@ -40,12 +40,12 @@ export class SectionCampaign extends NostoElement {
     if (!rec) {
       return
     }
-    const markup = await this.#getSectionMarkup(rec)
+    const markup = await this.#getMarkup(rec)
     this.innerHTML = markup
     api.attributeProductClicksInCampaign(this, rec)
   }
 
-  async #getSectionMarkup(rec: JSONResult) {
+  async #getMarkup(rec: JSONResult) {
     const handles = rec.products.map(product => product.handle).join(" OR ")
     const target = getShopifyUrl("/search")
     target.searchParams.set("section_id", this.section)
@@ -53,13 +53,16 @@ export class SectionCampaign extends NostoElement {
     const sectionHtml = await getText(target.href)
     const parser = new DOMParser()
     const doc = parser.parseFromString(sectionHtml, "text/html")
-    if (rec.title) {
-      const headingEl = doc.querySelector(".nosto-title")
+    // Check if nosto-section-campaign element exists in the section body
+    const nostoSectionCampaign = doc.body.querySelector(`nosto-section-campaign[placement="${this.placement}"]`)
+    const targetElement = nostoSectionCampaign || doc.body.firstElementChild
+    if (rec.title && targetElement) {
+      const headingEl = targetElement.querySelector(".nosto-title")
       if (headingEl) {
         headingEl.textContent = rec.title
       }
     }
-    return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
+    return targetElement?.innerHTML?.trim() || sectionHtml
   }
 }
 
