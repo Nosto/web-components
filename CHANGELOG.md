@@ -1,3 +1,16 @@
+# [11.1.0](https://github.com/Nosto/web-components/compare/v11.0.0...v11.1.0) (2026-02-18)
+
+
+### Bug Fixes
+
+* **SectionCampaign:** scope title replacement to target element and improve test ([9a0286a](https://github.com/Nosto/web-components/commit/9a0286aebd414c0dd6f22566889bcb68330db206))
+
+
+### Features
+
+* **SectionCampaign:** filter nosto-section-campaign by placement attribute ([3b4e74a](https://github.com/Nosto/web-components/commit/3b4e74aef96f65aacbdbbda8eb6bc32d1c59413f))
+* **SectionCampaign:** rename getSectionMarkup to getMarkup and add nosto-section-campaign detection ([f40e8f2](https://github.com/Nosto/web-components/commit/f40e8f2ebc37eb41855efeef115fcbcb6a298e40))
+
 # [11.0.0](https://github.com/Nosto/web-components/compare/v10.18.9...v11.0.0) (2026-02-17)
 
 
