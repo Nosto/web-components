@@ -62,10 +62,7 @@ export class SectionCampaign extends NostoElement {
         headingEl.textContent = rec.title
       }
     }
-    if (nostoSectionCampaign) {
-      return nostoSectionCampaign.innerHTML.trim()
-    }
-    return doc.body.firstElementChild?.innerHTML?.trim() || sectionHtml
+    return targetElement?.innerHTML?.trim() || sectionHtml
   }
 }
 
