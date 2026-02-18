@@ -10,6 +10,11 @@ export default defineConfig(() => ({
   server: {
     port: 8080
   },
+  preview: {
+    port: 40510,
+    open: false,
+    cors: true
+  },
   test: {
     coverage: {
       include: ["src/**/*.{js,ts}"],
