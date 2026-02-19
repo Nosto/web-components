@@ -16,7 +16,7 @@ import { JSONResult } from "@nosto/nosto-js/client"
  *
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
- * @property {string} [titleSelector] - CSS selector for the title element to inject the campaign title (attribute: "title-selector"). Defaults to ".nosto-title".
+ * @property {string} [titleSelector] - CSS selector for the title element to inject the campaign title (attribute: "title-selector"). If not provided, no title injection will be performed.
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
@@ -58,9 +58,13 @@ export class SectionCampaign extends NostoElement {
     // Check if nosto-section-campaign element exists in the section body
     const nostoSectionCampaign = doc.body.querySelector(`nosto-section-campaign[placement="${this.placement}"]`)
     const targetElement = nostoSectionCampaign || doc.body.firstElementChild
-    if (rec.title && targetElement) {
-      const selector = this.titleSelector || ".nosto-title"
-      const headingEl = targetElement.querySelector(selector)
+    if (rec.title && targetElement && this.titleSelector) {
+      let headingEl: Element | null = null
+      try {
+        headingEl = targetElement.querySelector(this.titleSelector)
+      } catch (error) {
+        console.warn("[nosto-section-campaign] Invalid title selector:", this.titleSelector, error)
+      }
       if (headingEl) {
         headingEl.textContent = rec.title
       }
