@@ -59,12 +59,7 @@ export class SectionCampaign extends NostoElement {
     const nostoSectionCampaign = doc.body.querySelector(`nosto-section-campaign[placement="${this.placement}"]`)
     const targetElement = nostoSectionCampaign || doc.body.firstElementChild
     if (rec.title && targetElement && this.titleSelector) {
-      let headingEl: Element | null = null
-      try {
-        headingEl = targetElement.querySelector(this.titleSelector)
-      } catch (error) {
-        console.warn("[nosto-section-campaign] Invalid title selector:", this.titleSelector, error)
-      }
+      const headingEl = targetElement.querySelector(this.titleSelector)
       if (headingEl) {
         headingEl.textContent = rec.title
       }

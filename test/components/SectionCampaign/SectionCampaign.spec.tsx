@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import { describe, it, expect, Mock, vi } from "vitest"
+import { describe, it, expect, Mock } from "vitest"
 import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
 import { addHandlers } from "../../msw.setup"
@@ -265,41 +265,5 @@ describe("SectionCampaign", () => {
     expect(el.innerHTML).toContain("Should Not Change")
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
-  })
-
-  it("handles invalid title-selector gracefully", async () => {
-    const products = [{ handle: "product-a" }]
-    const { attributeProductClicksInCampaign, load } = mockNostoRecs({
-      placement1: { products, title: "Custom Title" }
-    })
-
-    const sectionHTML = `<div class="wrapper"><h2 class="custom-heading">Default Title</h2><div class="inner">Rendered Section</div></div>`
-    addHandlers(
-      http.get("/search", () => {
-        return HttpResponse.text(`<section>${sectionHTML}</section>`)
-      })
-    )
-
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
-
-    const el = (
-      <nosto-section-campaign placement="placement1" section="featured-section" title-selector="[invalid::selector" />
-    ) as SectionCampaign
-    document.body.appendChild(el)
-
-    await el.connectedCallback()
-
-    expect(load).toHaveBeenCalled()
-    expect(el.innerHTML).toContain("Default Title")
-    expect(el.innerHTML).not.toContain("Custom Title")
-    expect(warnSpy).toHaveBeenCalledWith(
-      "[nosto-section-campaign] Invalid title selector:",
-      "[invalid::selector",
-      expect.any(DOMException)
-    )
-    expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
-    expect(el.hasAttribute("loading")).toBe(false)
-
-    warnSpy.mockRestore()
   })
 })
