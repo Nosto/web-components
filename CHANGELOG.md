@@ -1,3 +1,10 @@
+# [11.2.0](https://github.com/Nosto/web-components/compare/v11.1.0...v11.2.0) (2026-02-19)
+
+
+### Features
+
+* **SectionCampaign:** add customizable title-selector attribute ([018706f](https://github.com/Nosto/web-components/commit/018706f20421e02a73a9af7f2e29853f9d35dcbb))
+
 # [11.1.0](https://github.com/Nosto/web-components/compare/v11.0.0...v11.1.0) (2026-02-18)
 
 
