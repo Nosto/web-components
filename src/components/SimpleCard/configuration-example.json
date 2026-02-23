@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SimpleCard Configuration Example",
+  "description": "Comprehensive configuration example for the nosto-simple-card web component, including all exposed attributes, variant selector integration for sibling product aggregation, swatch rendering configuration (metafields/metaobjects), and style overrides for all sections.",
+  "example": {
+    "component": "nosto-simple-card",
+    "attributes": {
+      "handle": {
+        "value": "awesome-product",
+        "type": "string",
+        "required": true,
+        "description": "The Shopify product handle to fetch data for"
+      },
+      "variantId": {
+        "value": 12345678901234,
+        "type": "number",
+        "required": false,
+        "description": "The specific variant ID to display. When set, shows this variant's data instead of the default variant"
+      },
+      "imageMode": {
+        "value": "carousel",
+        "type": "string",
+        "required": false,
+        "options": ["alternate", "carousel"],
+        "description": "Image display mode. 'alternate' for hover image swap, 'carousel' for image carousel with navigation"
+      },
+      "brand": {
+        "value": true,
+        "type": "boolean",
+        "required": false,
+        "description": "Show brand/vendor data"
+      },
+      "discount": {
+        "value": true,
+        "type": "boolean",
+        "required": false,
+        "description": "Show discount data (compare-at-price and discount percentage)"
+      },
+      "rating": {
+        "value": 4.5,
+        "type": "number",
+        "required": false,
+        "description": "Product rating value (0-5). Displays star rating if set"
+      },
+      "imageSizes": {
+        "value": "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+        "type": "string",
+        "required": false,
+        "description": "The sizes attribute for responsive images to help the browser choose the right image size"
+      },
+      "mock": {
+        "value": false,
+        "type": "boolean",
+        "required": false,
+        "description": "If true, uses mock data instead of fetching from Shopify"
+      }
+    },
+    "variantSelector": {
+      "description": "Configuration for nested variant selector to enable sibling product aggregation and variant selection",
+      "element": "nosto-variant-selector",
+      "attributes": {
+        "handle": {
+          "value": "awesome-product",
+          "type": "string",
+          "required": true,
+          "description": "The Shopify product handle (should match SimpleCard handle)"
+        },
+        "variantId": {
+          "value": 12345678901234,
+          "type": "number",
+          "required": false,
+          "description": "The ID of the variant to preselect on load"
+        },
+        "preselect": {
+          "value": true,
+          "type": "boolean",
+          "required": false,
+          "description": "Whether to automatically preselect the options of the first available variant"
+        },
+        "placeholder": {
+          "value": false,
+          "type": "boolean",
+          "required": false,
+          "description": "If true, displays placeholder content while loading"
+        },
+        "maxValues": {
+          "value": 8,
+          "type": "number",
+          "required": false,
+          "description": "Maximum number of option values to display per option. When exceeded, shows an ellipsis indicator"
+        },
+        "mode": {
+          "value": "options",
+          "type": "string",
+          "required": false,
+          "options": ["options", "compact"],
+          "description": "Display mode: 'options' for pill buttons or 'compact' for dropdown select"
+        }
+      },
+      "integration": {
+        "description": "How VariantSelector integrates with SimpleCard for sibling product aggregation",
+        "eventName": "@nosto/VariantSelector/EmitVariantChange",
+        "workflow": [
+          "1. User selects a variant option in the VariantSelector",
+          "2. VariantSelector emits a custom event with variant details (productId, variantId, handle)",
+          "3. SimpleCard listens for the event and updates its variantId and handle properties",
+          "4. SimpleCard re-renders with the new variant's data",
+          "5. This enables showing different sibling products (e.g., different colors with same style)"
+        ]
+      }
+    },
+    "swatchRendering": {
+      "description": "Configuration for swatch rendering using Shopify metafields and metaobjects",
+      "status": "planned",
+      "note": "Swatch rendering is currently planned for future implementation (see TODO in VariantSelector/options/markup.ts line 51)",
+      "plannedFeatures": {
+        "colorSwatches": {
+          "description": "Display color swatches for color options using metafield data",
+          "metafieldSource": "product.metafields.custom.color_swatch",
+          "dataTypes": [
+            {
+              "type": "color",
+              "description": "Hex color value stored in metafield",
+              "example": "#FF5733"
+            },
+            {
+              "type": "file_reference",
+              "description": "Reference to uploaded swatch image in Shopify Files",
+              "example": "gid://shopify/MediaImage/123456789"
+            }
+          ]
+        },
+        "patternSwatches": {
+          "description": "Display pattern/texture swatches using metaobject references",
+          "metaobjectSource": "product.metafields.custom.pattern_swatch",
+          "structure": {
+            "type": "metaobject",
+            "fields": {
+              "name": "string",
+              "image": "file_reference",
+              "pattern_type": "single_line_text"
+            }
+          }
+        },
+        "materialSwatches": {
+          "description": "Display material swatches with images and labels",
+          "metafieldSource": "variant.metafields.custom.material_swatch",
+          "dataType": "single_line_text",
+          "example": "leather, cotton, wool"
+        }
+      },
+      "implementationApproach": {
+        "description": "Recommended implementation strategy for swatch rendering",
+        "steps": [
+          "1. Extend GraphQL query to fetch option metafields (getProductByHandle.graphql)",
+          "2. Add swatch property to ShopifyOptionValue type",
+          "3. Update generateOptionValueHTML() to render swatches based on metafield data",
+          "4. Add CSS custom properties for swatch styling",
+          "5. Support both inline color values and image references"
+        ]
+      }
+    },
+    "styleOverrides": {
+      "description": "CSS custom properties for styling all sections of SimpleCard and nested VariantSelector",
+      "simpleCard": {
+        "description": "Style overrides for the SimpleCard component",
+        "cssCustomProperties": {
+          "--font-family": {
+            "default": "Arial, sans-serif",
+            "description": "Font family for card text",
+            "example": "'Helvetica Neue', sans-serif"
+          },
+          "--font-size": {
+            "default": "0.9rem",
+            "description": "Base font size for card content",
+            "example": "1rem"
+          },
+          "--content-padding": {
+            "default": "0.5rem",
+            "description": "Inner card padding",
+            "example": "1rem"
+          },
+          "--brand-color": {
+            "default": "#666",
+            "description": "Vendor/brand text color",
+            "example": "#333"
+          },
+          "--discount-bg": {
+            "default": "#e74c3c",
+            "description": "Discount badge background color",
+            "example": "#ff0000"
+          },
+          "--discount-color": {
+            "default": "white",
+            "description": "Discount badge text color",
+            "example": "#fff"
+          },
+          "--rating-color": {
+            "default": "inherit",
+            "description": "Star rating color",
+            "example": "#ffa500"
+          },
+          "--placeholder-bg": {
+            "default": "#f5f5f5",
+            "description": "Missing image placeholder background",
+            "example": "#e0e0e0"
+          },
+          "--placeholder-color": {
+            "default": "#999",
+            "description": "Missing image placeholder text color",
+            "example": "#666"
+          },
+          "--link-color": {
+            "default": "inherit",
+            "description": "Product title link color",
+            "example": "#007bff"
+          },
+          "--price-color": {
+            "default": "inherit",
+            "description": "Current price color",
+            "example": "#000"
+          },
+          "--slot-padding": {
+            "default": "1rem",
+            "description": "Padding for slotted content",
+            "example": "1.5rem"
+          },
+          "--slot-padding-top": {
+            "default": "0.5rem",
+            "description": "Top padding for slotted content",
+            "example": "1rem"
+          },
+          "--loading-opacity": {
+            "default": "0.7",
+            "description": "Opacity when loading",
+            "example": "0.5"
+          },
+          "--carousel-indicator-bg": {
+            "default": "rgba(255, 255, 255, 0.6)",
+            "description": "Carousel indicator default background",
+            "example": "rgba(0, 0, 0, 0.4)"
+          },
+          "--carousel-indicator-bg-hover": {
+            "default": "rgba(255, 255, 255, 0.8)",
+            "description": "Carousel indicator hover background",
+            "example": "rgba(0, 0, 0, 0.6)"
+          },
+          "--carousel-indicator-bg-active": {
+            "default": "rgba(255, 255, 255, 1)",
+            "description": "Active carousel indicator background",
+            "example": "#007bff"
+          }
+        },
+        "cssParts": {
+          "description": "CSS part selectors for deeper styling of shadow DOM elements",
+          "parts": {
+            "card": "The main card container",
+            "image": "The product image element",
+            "price": "The price display element",
+            "carousel-indicator": "Individual carousel navigation indicators"
+          },
+          "example": "nosto-simple-card::part(card) { border: 1px solid #ccc; }"
+        }
+      },
+      "variantSelector": {
+        "description": "Style overrides for the VariantSelector component (both 'options' and 'compact' modes)",
+        "optionsMode": {
+          "description": "CSS custom properties for 'options' mode (pill buttons)",
+          "cssCustomProperties": {
+            "--row-gap": {
+              "default": "0.5rem",
+              "description": "Gap between option label and values",
+              "example": "0.75rem"
+            },
+            "--row-margin": {
+              "default": "1rem",
+              "description": "Bottom margin for each option row",
+              "example": "1.5rem"
+            },
+            "--values-gap": {
+              "default": "0.5rem",
+              "description": "Gap between value buttons",
+              "example": "0.75rem"
+            },
+            "--value-bg": {
+              "default": "#f8f9fa",
+              "description": "Default value button background",
+              "example": "#ffffff"
+            },
+            "--value-border": {
+              "default": "1px solid #e1e5e9",
+              "description": "Value button border",
+              "example": "2px solid #ccc"
+            },
+            "--value-padding": {
+              "default": "0.5rem 1rem",
+              "description": "Value button padding",
+              "example": "0.75rem 1.25rem"
+            },
+            "--value-margin-bottom": {
+              "default": "1rem",
+              "description": "Bottom margin for the selector",
+              "example": "1.5rem"
+            },
+            "--value-hover-bg": {
+              "default": "#e9ecef",
+              "description": "Value button hover background",
+              "example": "#f0f0f0"
+            },
+            "--value-hover-border": {
+              "default": "#adb5bd",
+              "description": "Value button hover border color",
+              "example": "#999"
+            },
+            "--value-active-bg": {
+              "default": "#007bff",
+              "description": "Active value button background",
+              "example": "#0056b3"
+            },
+            "--value-active-border": {
+              "default": "#007bff",
+              "description": "Active value button border color",
+              "example": "#0056b3"
+            },
+            "--value-active-color": {
+              "default": "white",
+              "description": "Active value button text color",
+              "example": "#fff"
+            },
+            "--value-active-hover-bg": {
+              "default": "#0056b3",
+              "description": "Active value button hover background",
+              "example": "#004085"
+            },
+            "--value-active-hover-border": {
+              "default": "#0056b3",
+              "description": "Active value button hover border",
+              "example": "#004085"
+            },
+            "--value-focus-color": {
+              "default": "#007bff",
+              "description": "Value button focus outline color",
+              "example": "#0056b3"
+            },
+            "--value-unavailable-opacity": {
+              "default": "0.5",
+              "description": "Opacity for unavailable options",
+              "example": "0.3"
+            },
+            "--loading-opacity": {
+              "default": "0.7",
+              "description": "Opacity when loading",
+              "example": "0.5"
+            },
+            "--ellipsis-color": {
+              "default": "#6c757d",
+              "description": "Color for ellipsis indicator (when maxValues exceeded)",
+              "example": "#999"
+            }
+          },
+          "cssParts": {
+            "description": "CSS part selectors for options mode",
+            "parts": {
+              "selector": "The main selector container",
+              "row": "Each option row container",
+              "label": "Option label/name",
+              "values": "Container for value buttons",
+              "value": "Individual value button",
+              "value active": "Active/selected value button",
+              "value unavailable": "Unavailable value button",
+              "ellipsis": "Ellipsis indicator for truncated options"
+            }
+          }
+        },
+        "compactMode": {
+          "description": "CSS custom properties for 'compact' mode (dropdown select)",
+          "cssCustomProperties": {
+            "--dropdown-bg": {
+              "default": "white",
+              "description": "Dropdown background color",
+              "example": "#f8f9fa"
+            },
+            "--dropdown-border": {
+              "default": "1px solid #e1e5e9",
+              "description": "Dropdown border",
+              "example": "2px solid #ccc"
+            },
+            "--dropdown-padding": {
+              "default": "0.5rem 1rem",
+              "description": "Dropdown padding",
+              "example": "0.75rem 1.25rem"
+            },
+            "--dropdown-margin-bottom": {
+              "default": "1rem",
+              "description": "Dropdown bottom margin",
+              "example": "1.5rem"
+            },
+            "--dropdown-border-radius": {
+              "default": "4px",
+              "description": "Dropdown border radius",
+              "example": "8px"
+            },
+            "--dropdown-focus-border": {
+              "default": "#007bff",
+              "description": "Dropdown focus border color",
+              "example": "#0056b3"
+            },
+            "--dropdown-focus-outline": {
+              "default": "2px solid #007bff",
+              "description": "Dropdown focus outline",
+              "example": "2px solid #0056b3"
+            },
+            "--dropdown-focus-shadow": {
+              "default": "0 0 0 0.2rem rgba(0, 123, 255, 0.25)",
+              "description": "Dropdown focus shadow",
+              "example": "0 0 0 0.2rem rgba(0, 86, 179, 0.25)"
+            },
+            "--dropdown-disabled-opacity": {
+              "default": "0.6",
+              "description": "Opacity for disabled state",
+              "example": "0.5"
+            },
+            "--dropdown-disabled-bg": {
+              "default": "#f5f5f5",
+              "description": "Background color for disabled state",
+              "example": "#e9ecef"
+            },
+            "--loading-opacity": {
+              "default": "0.7",
+              "description": "Opacity when loading",
+              "example": "0.5"
+            }
+          }
+        }
+      }
+    },
+    "usage": {
+      "description": "Complete HTML usage examples with all features",
+      "examples": [
+        {
+          "name": "Basic SimpleCard with all attributes",
+          "html": "<nosto-simple-card\n  handle=\"awesome-product\"\n  variant-id=\"12345678901234\"\n  image-mode=\"carousel\"\n  brand\n  discount\n  rating=\"4.5\"\n  image-sizes=\"(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw\"\n></nosto-simple-card>"
+        },
+        {
+          "name": "SimpleCard with VariantSelector for sibling product aggregation",
+          "html": "<nosto-simple-card\n  handle=\"awesome-product\"\n  image-mode=\"alternate\"\n  brand\n  discount\n  rating=\"4.5\"\n>\n  <nosto-variant-selector\n    handle=\"awesome-product\"\n    preselect\n    max-values=\"8\"\n    mode=\"options\"\n  ></nosto-variant-selector>\n  <button n-atc>Add to cart</button>\n</nosto-simple-card>"
+        },
+        {
+          "name": "SimpleCard with compact VariantSelector",
+          "html": "<nosto-simple-card\n  handle=\"awesome-product\"\n  brand\n  discount\n>\n  <nosto-variant-selector\n    handle=\"awesome-product\"\n    mode=\"compact\"\n  ></nosto-variant-selector>\n  <button n-atc>Add to cart</button>\n</nosto-simple-card>"
+        },
+        {
+          "name": "Styled SimpleCard with CSS custom properties",
+          "html": "<style>\n  nosto-simple-card {\n    --font-family: 'Helvetica Neue', sans-serif;\n    --font-size: 1rem;\n    --content-padding: 1rem;\n    --brand-color: #333;\n    --discount-bg: #ff0000;\n    --discount-color: #fff;\n    --rating-color: #ffa500;\n    --carousel-indicator-bg-active: #007bff;\n  }\n\n  nosto-simple-card::part(card) {\n    border: 1px solid #e0e0e0;\n    border-radius: 8px;\n    box-shadow: 0 2px 8px rgba(0,0,0,0.1);\n  }\n\n  nosto-variant-selector {\n    --value-active-bg: #ff0000;\n    --value-active-border: #ff0000;\n    --value-padding: 0.75rem 1.5rem;\n  }\n</style>\n\n<nosto-simple-card\n  handle=\"awesome-product\"\n  image-mode=\"carousel\"\n  brand\n  discount\n  rating=\"4.5\"\n>\n  <nosto-variant-selector\n    handle=\"awesome-product\"\n    preselect\n  ></nosto-variant-selector>\n</nosto-simple-card>"
+        }
+      ]
+    },
+    "globalDefaults": {
+      "description": "Set default values for all SimpleCard instances using the setSimpleCardDefaults function",
+      "example": "import { setSimpleCardDefaults } from '@nosto/web-components'\n\nsetSimpleCardDefaults({\n  brand: true,\n  discount: true,\n  imageMode: 'alternate',\n  imageSizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'\n})"
+    }
+  }
+}
