@@ -463,6 +463,143 @@ await swatchLib.load()
 swatchLib.apply('[data-option-name="Color"] button')
 ```
 
+##### Alternative: Metaobject References from Product Options
+
+**Data Source**: Product option values with direct metaobject references
+
+Instead of maintaining a separate swatch library, you can reference metaobjects directly from product option values. This approach allows each product to reference specific swatch metaobjects.
+
+```graphql
+query ProductByHandleWithSwatchRefs($handle: String!) {
+  product(handle: $handle) {
+    id
+    handle
+    title
+    options {
+      id
+      name
+      optionValues {
+        id
+        name
+        # Direct metaobject reference from option value
+        swatch {
+          color
+          image {
+            url
+            altText
+          }
+          reference {
+            ... on Metaobject {
+              id
+              handle
+              type
+              fields {
+                key
+                value
+                reference {
+                  ... on MediaImage {
+                    image {
+                      url
+                      altText
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Implementation with metaobject references:
+
+```javascript
+async function applySwatchesFromMetaobjectRefs(productData) {
+  const colorOption = productData.options.find(opt => opt.name === 'Color')
+  
+  if (!colorOption) return
+  
+  colorOption.optionValues.forEach(value => {
+    const swatchRef = value.swatch?.reference
+    
+    if (!swatchRef) return
+    
+    // Extract swatch data from metaobject fields
+    const swatchData = extractSwatchFromMetaobject(swatchRef)
+    
+    // Apply to UI
+    const button = document.querySelector(
+      `[data-option-name="Color"][data-option-value="${value.name}"]`
+    )
+    
+    if (button && swatchData) {
+      if (swatchData.hex) {
+        button.style.backgroundColor = swatchData.hex
+      }
+      if (swatchData.imageUrl) {
+        button.style.backgroundImage = `url(${swatchData.imageUrl})`
+        button.style.backgroundSize = 'cover'
+      }
+    }
+  })
+}
+
+function extractSwatchFromMetaobject(metaobject) {
+  const fields = metaobject.fields || []
+  const data = {}
+  
+  fields.forEach(field => {
+    switch (field.key) {
+      case 'hex_color':
+      case 'color_hex':
+      case 'hex_value':
+        data.hex = field.value
+        break
+      case 'swatch_image':
+      case 'pattern_image':
+        // Handle image reference
+        if (field.reference?.image) {
+          data.imageUrl = field.reference.image.url
+        }
+        break
+      case 'color_name':
+      case 'display_name':
+        data.displayName = field.value
+        break
+    }
+  })
+  
+  return data
+}
+
+// Usage with SimpleCard
+const card = document.querySelector('nosto-simple-card')
+card.addEventListener('@nosto/SimpleCard/rendered', async () => {
+  const productData = await fetchProduct(card.handle)
+  await applySwatchesFromMetaobjectRefs(productData)
+})
+```
+
+**Benefits of this approach:**
+- Product-specific swatch configurations
+- No need to maintain a separate swatch library
+- Metaobjects can be shared across products or be product-specific
+- Shopify admin can manage swatch metaobjects per product
+- Supports both hex colors and image-based swatches in metaobject fields
+
+**Example metaobject structure for product option reference:**
+```yaml
+Metaobject Type: "product_color_swatch"
+Fields:
+  - color_name: "Ocean Blue"
+  - hex_color: "#006699"
+  - swatch_image: <MediaImage reference>
+  - description: "A deep ocean blue shade"
+```
+
 ### CSS Custom Properties for Swatch Styling
 
 The `nosto-variant-selector` component exposes CSS variables for swatch customization:
