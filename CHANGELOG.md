@@ -1,3 +1,10 @@
+## [11.2.1](https://github.com/Nosto/web-components/compare/v11.2.0...v11.2.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* update ajv to 6.14.0 and rollup to 4.59.0 to resolve security vulnerabilities ([05c660e](https://github.com/Nosto/web-components/commit/05c660e793bc4b7ab46e9c6ab5a2d6058b83f561))
+
 # [11.2.0](https://github.com/Nosto/web-components/compare/v11.1.0...v11.2.0) (2026-02-19)
 
 
