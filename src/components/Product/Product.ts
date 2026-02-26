@@ -3,7 +3,7 @@ import { createStore, injectKey, Store } from "./store"
 import { customElement, property } from "../decorators"
 import { syncSkuData } from "../common"
 import { NostoElement } from "../Element"
-import { provide } from "../inject"
+import { provide, unprovide } from "../inject"
 
 /**
  * Custom element that represents a Nosto product component.
@@ -37,6 +37,10 @@ export class Product extends NostoElement {
     this.#registerSkuIds(store)
     this.#registerAtcButtons(store)
     this.#registerSkuData(store)
+  }
+
+  disconnectedCallback() {
+    unprovide(this)
   }
 
   #addListeners({ listen }: Store) {

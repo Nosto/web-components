@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi } from "vitest"
 import { Product } from "@/components/Product/Product"
 import { EventName } from "@/components/Product/events"
 import { createElement } from "@/utils/jsx"
+import { inject } from "@/components/inject"
+import { injectKey } from "@/components/Product/store"
 
 describe("Product", () => {
   let element: Product
@@ -30,6 +32,23 @@ describe("Product", () => {
     it("should throw an error if reco-id is not provided", () => {
       element.setAttribute("product-id", PROD_ID)
       expect(() => element.connectedCallback()).toThrow("Property recoId is required.")
+    })
+
+    it("should clean up injection mappings on disconnect", () => {
+      element.setAttribute("product-id", PROD_ID)
+      element.setAttribute("reco-id", RECO_ID)
+      element.connectedCallback()
+
+      // Verify the store is injected after connection
+      const store = inject(element, injectKey)
+      expect(store).toBeDefined()
+
+      // Disconnect and verify cleanup
+      element.disconnectedCallback()
+
+      // Verify the store is no longer injected after disconnection
+      const storeAfterDisconnect = inject(element, injectKey)
+      expect(storeAfterDisconnect).toBeUndefined()
     })
   })
 
