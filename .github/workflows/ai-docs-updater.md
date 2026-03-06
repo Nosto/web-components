@@ -3,10 +3,6 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
-  pull-requests: write
-
 safe-outputs:
   create-pull-request:
 
