@@ -88,6 +88,8 @@
     "access": "public"
   },
   "overrides": {
-    "minimatch": "^10.2.1"
+    "minimatch": "^10.2.1",
+    "immutable": ">=4.3.8",
+    "@ardatan/relay-compiler": "12.3.0"
   }
 }
