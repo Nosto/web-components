@@ -1,3 +1,10 @@
+## [11.3.1](https://github.com/Nosto/web-components/compare/v11.3.0...v11.3.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* **deps:** bump flatted from 3.3.2 to 3.4.1 to fix npm audit vulnerability ([ff52385](https://github.com/Nosto/web-components/commit/ff523858be288a59f055c2c678e232de06c5421a))
+
 # [11.3.0](https://github.com/Nosto/web-components/compare/v11.2.1...v11.3.0) (2026-02-26)
 
 
