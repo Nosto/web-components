@@ -3,6 +3,18 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 5
+    security-updates-only: true
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
       interval: "monthly"
       day: "monday"
       time: "09:00"
@@ -12,6 +24,17 @@ updates:
       prefix: "chore"
       include: "scope"
     open-pull-requests-limit: 5
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 10
+    security-updates-only: true
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
