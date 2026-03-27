@@ -5,7 +5,7 @@ import { fetchProduct } from "@/shopify/graphql/fetchProduct"
 import { ShopifyProduct, VariantChangeDetail } from "@/shopify/graphql/types"
 import { formatPrice } from "@/shopify/formatPrice"
 import { parseId, toVariantGid } from "@/shopify/graphql/utils"
-import { EVENT_NAME_VARIANT_CHANGE } from "../VariantSelector/emitVariantChange"
+import { EVENT_NAME_VARIANT_CHANGE } from "../events"
 import { SelectableProduct } from "./types"
 
 /** Event name for the Bundle rendered event */
