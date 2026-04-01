@@ -28,21 +28,26 @@ updates:
     open-pull-requests-limit: 10
     groups:
       patch-and-minor-updates:
+        applies-to: version-updates
         update-types:
           - "patch"
           - "minor"
       storybook:
+        applies-to: version-updates
         patterns:
           - "@storybook/*"
           - "storybook"
       eslint:
+        applies-to: version-updates
         patterns:
           - "eslint"
           - "eslint-*"
       vitest:
+        applies-to: version-updates
         patterns:
           - "vitest"
           - "@vitest/*"
       commitlint:
+        applies-to: version-updates
         patterns:
           - "@commitlint/*"
