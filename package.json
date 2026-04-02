@@ -4,7 +4,7 @@
   "author": {
     "name": "Nosto Solutions Oy"
   },
-  "version": "11.3.1",
+  "version": "11.3.2",
   "type": "module",
   "files": [
     "dist"

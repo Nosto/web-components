@@ -1,3 +1,11 @@
+## [11.3.2](https://github.com/Nosto/web-components/compare/v11.3.1...v11.3.2) (2026-04-02)
+
+
+### Bug Fixes
+
+* initial plan to fix npm audit errors ([4957e7d](https://github.com/Nosto/web-components/commit/4957e7d524dd391104feadada46a0e0284ec0bb2))
+* **security:** add lodash override to resolve high severity vulnerabilities ([476839f](https://github.com/Nosto/web-components/commit/476839f56339d4cb16bbf08ddf51938677cfd898))
+
 ## [11.3.1](https://github.com/Nosto/web-components/compare/v11.3.0...v11.3.1) (2026-03-15)
 
 
