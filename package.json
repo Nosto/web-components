@@ -88,6 +88,7 @@
     "access": "public"
   },
   "overrides": {
-    "minimatch": "^10.2.1"
+    "minimatch": "^10.2.1",
+    "lodash": "^4.18.0"
   }
 }
