@@ -7,9 +7,7 @@ import "@/components/DynamicCard/DynamicCard"
 import "@/components/Image/Image"
 import "@/components/Product/Product"
 import "@/components/SectionCampaign/SectionCampaign"
-import "@/components/SimpleCard/SimpleCard"
 import "@/components/SkuOptions/SkuOptions"
-import "@/components/VariantSelector/VariantSelector"
 import "@/components/Bundle/Bundle"
 
 beforeAll(() => {
