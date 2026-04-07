@@ -43,7 +43,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^10.0.1",
     "@nosto/nosto-js": "^2.11.2",
     "@shopify/api-codegen-preset": "^2.0.0",
     "@storybook/addon-docs": "^10.3.4",
