@@ -1,3 +1,10 @@
+## [11.3.3](https://github.com/Nosto/web-components/compare/v11.3.2...v11.3.3) (2026-04-07)
+
+
+### Bug Fixes
+
+* **tsconfig:** add rootDir to tsconfig.types.json for TypeScript 6.0 compatibility ([a27a06c](https://github.com/Nosto/web-components/commit/a27a06c89c5c3a7705389134c0d71f1d205db154))
+
 ## [11.3.2](https://github.com/Nosto/web-components/compare/v11.3.1...v11.3.2) (2026-04-02)
 
 
