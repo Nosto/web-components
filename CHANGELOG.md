@@ -1,3 +1,10 @@
+## [11.3.4](https://github.com/Nosto/web-components/compare/v11.3.3...v11.3.4) (2026-04-07)
+
+
+### Bug Fixes
+
+* add globals as direct devDependency for ESLint 10 compatibility ([c1a9515](https://github.com/Nosto/web-components/commit/c1a9515395656c535dcd38eafa889200f189edc3))
+
 ## [11.3.3](https://github.com/Nosto/web-components/compare/v11.3.2...v11.3.3) (2026-04-07)
 
 
