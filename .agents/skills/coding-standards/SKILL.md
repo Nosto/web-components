@@ -6,7 +6,7 @@ description: TypeScript coding standards for this repository.
 # Coding Standards
 
 ## Use this skill when
-- Editing `**/*.ts` files.
+- Editing `**/*.{ts,tsx}` files.
 
 ## Rules
 - Use closures over classes (except custom element classes where instance logic should use `#` private methods)
