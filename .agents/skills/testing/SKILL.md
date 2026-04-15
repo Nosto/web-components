@@ -6,7 +6,7 @@ description: Testing conventions for this repository.
 # Testing Conventions
 
 ## Use this skill when
-- Editing tests in `test/*`.
+- Editing tests in `test/**/*`.
 
 ## Core testing rules
 - Use vitest
