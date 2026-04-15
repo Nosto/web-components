@@ -13,7 +13,7 @@ description: Testing conventions for this repository.
 - Use `describe` and `it`
 - Use `beforeEach` and `afterEach` for setup/cleanup
 - Use `expect` for assertions
-- Maintain 90%+ coverage on statements, branches, lines, and functions
+- Maintain coverage at or above the repository's enforced thresholds for statements, branches, lines, and functions
 - Tests run in jsdom
 
 ## JSX/TSX testing patterns
