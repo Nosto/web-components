@@ -26,4 +26,4 @@ Also validate changes with Storybook:
   - `feat(NostoImage): add lazy loading support`
   - `fix(build): resolve TypeScript compilation error`
   - `test(NostoProduct): add SKU selection test cases`
-- Commit with `--no-verify`
+- Commit with `--no-verify` to avoid Husky failing and erroring out the pipeline

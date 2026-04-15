@@ -11,7 +11,7 @@ description: Web component conventions for component source files.
 ## Rules
 - Use `nosto-` prefix for custom element tags
 - Register classes via the `customElement` decorator
-- Define attributes using static `attributes` and matching properties
+- Define attributes using static `attributes` and matching property definitions (attribute/property names should align)
 - Prefer `connectedCallback` and `disconnectedCallback` lifecycle methods
 - Use private instance methods (`#`) for element instance logic
 - Use module-level functions for pure logic
