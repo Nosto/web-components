@@ -1,3 +1,10 @@
+# [11.4.0](https://github.com/Nosto/web-components/compare/v11.3.4...v11.4.0) (2026-04-15)
+
+
+### Features
+
+* **agents:** add codex skills and claude symlink ([fbe534c](https://github.com/Nosto/web-components/commit/fbe534ccca89a4328f171717f40c38b300d5ccbc))
+
 ## [11.3.4](https://github.com/Nosto/web-components/compare/v11.3.3...v11.3.4) (2026-04-07)
 
 
