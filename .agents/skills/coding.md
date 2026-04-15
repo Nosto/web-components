@@ -1,5 +1,8 @@
 ---
-applyTo: "**/*.ts"
+name: coding-standards
+description: Coding standards for TypeScript files
+globs:
+  - "**/*.ts"
 ---
 
 # Coding Standards

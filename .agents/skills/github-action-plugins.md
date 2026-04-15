@@ -1,5 +1,8 @@
 ---
-applyTo: ".github/workflows/*.yml"
+name: github-action-plugins
+description: Review checklist for GitHub Action plugin changes
+globs:
+  - ".github/workflows/*.yml"
 ---
 
 # GitHub Action Plugins – Review Checklist

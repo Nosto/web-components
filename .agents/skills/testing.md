@@ -1,5 +1,8 @@
 ---
-applyTo: "test/*"
+name: testing
+description: Testing conventions and patterns for test files
+globs:
+  - "test/*"
 ---
 
 # Testing

@@ -1,5 +1,8 @@
 ---
-applyTo: "src/components/**/*.ts"
+name: web-components
+description: Conventions for building web components
+globs:
+  - "src/components/**/*.ts"
 ---
 
 # Web Components Conventions
