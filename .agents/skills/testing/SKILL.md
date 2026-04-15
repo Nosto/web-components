@@ -21,8 +21,8 @@ description: Testing conventions for this repository.
 - Use `.tsx` extension for tests creating custom elements
 - Add `/** @jsx createElement */` pragma in TSX test files
 - Import `createElement` from `@/utils/jsx` and custom element classes
-- Explicitly register custom elements in `beforeAll()` and guard with `if (!customElements.get('custom-element'))` before defining
-- Keep custom element imports to trigger `@customElement` decorator registration
+- Keep custom element imports to trigger `@customElement` decorator registration for component tests
+- Only explicitly register custom elements in `beforeAll()` when defining test-only elements inside the spec; guard with `if (!customElements.get('custom-element'))` before calling `customElements.define(...)`
 
 ## Mock products
 - Centralize mock Shopify products in `src/mock/products.ts`
