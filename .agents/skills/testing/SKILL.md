@@ -20,7 +20,7 @@ description: Testing conventions for this repository.
 - Prefer JSX/TSX syntax for component creation tests
 - Use `.tsx` extension for tests creating custom elements
 - Add `/** @jsx createElement */` pragma in TSX test files
-- Import `createElement` from `../utils/jsx` and custom element classes
+- Import `createElement` from `@/utils/jsx` and custom element classes
 - Explicitly register custom elements in `beforeAll()` and guard with `if (!customElements.get('custom-element'))` before defining
 - Keep custom element imports to trigger `@customElement` decorator registration
 
