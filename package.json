@@ -26,6 +26,7 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.types.json && node esbuild.mjs && npm run typedoc",
+    "dev": "node esbuild.mjs --watch & vite preview --outDir dist",
     "preview": "vite preview",
     "lint": "eslint",
     "lint-fix": "eslint --fix",
