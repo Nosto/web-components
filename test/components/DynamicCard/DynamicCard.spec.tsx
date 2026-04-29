@@ -190,6 +190,97 @@ describe("DynamicCard", () => {
     expect(card.hasAttribute("loading")).toBe(false)
   })
 
+  it("sets empty attribute when fetched markup is empty", async () => {
+    addProductHandlers({
+      "empty-handle": {
+        markup: ""
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="empty-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.hasAttribute("empty")).toBe(true)
+  })
+
+  it("sets empty attribute when fetched markup is whitespace only", async () => {
+    addProductHandlers({
+      "whitespace-handle": {
+        markup: "   "
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="whitespace-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.hasAttribute("empty")).toBe(true)
+  })
+
+  it("does not set empty attribute when fetched markup has content", async () => {
+    addProductHandlers({
+      "content-handle": {
+        markup: "<div>Product</div>"
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="content-handle" template="default" />) as DynamicCard
+
+    await card.connectedCallback()
+
+    expect(card.hasAttribute("empty")).toBe(false)
+  })
+
+  it("sets error attribute when fetch fails", async () => {
+    addProductHandlers({
+      "error-handle": {
+        markup: "Error",
+        status: 500
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="error-handle" template="default" />) as DynamicCard
+
+    await expect(card.connectedCallback()).rejects.toThrow()
+    expect(card.hasAttribute("error")).toBe(true)
+  })
+
+  it("sets error attribute when markup is invalid", async () => {
+    addProductHandlers({
+      "invalid-handle": {
+        markup: "<html><body>Invalid</body></html>"
+      }
+    })
+
+    const card = (<nosto-dynamic-card handle="invalid-handle" template="default" />) as DynamicCard
+
+    await expect(card.connectedCallback()).rejects.toThrow()
+    expect(card.hasAttribute("error")).toBe(true)
+  })
+
+  it("clears error attribute on successful re-render", async () => {
+    addProductHandlers({
+      "error-handle": {
+        markup: "Error",
+        status: 500
+      },
+      "success-handle": {
+        markup: "<div>Success</div>"
+      }
+    })
+
+    const errorCard = (<nosto-dynamic-card handle="error-handle" template="default" />) as DynamicCard
+
+    await expect(errorCard.connectedCallback()).rejects.toThrow()
+    expect(errorCard.hasAttribute("error")).toBe(true)
+
+    errorCard.handle = "success-handle"
+    await errorCard.render()
+
+    expect(errorCard.hasAttribute("error")).toBe(false)
+  })
+
   it("uses Shopify routes root when available", async () => {
     // Set up window.Shopify.routes.root
     vi.stubGlobal("Shopify", { routes: { root: "/en-us/" } })
