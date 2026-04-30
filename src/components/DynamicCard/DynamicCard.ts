@@ -83,9 +83,15 @@ export class DynamicCard extends ReactiveElement {
 
   async render() {
     this.toggleAttribute("loading", true)
+    this.toggleAttribute("error", false)
     try {
-      this.innerHTML = await this.#getMarkup()
+      const markup = await this.#getMarkup()
+      this.innerHTML = markup
+      this.toggleAttribute("empty", !markup.trim())
       this.dispatchEvent(new CustomEvent(DYNAMIC_CARD_LOADED_EVENT, { bubbles: true, cancelable: true }))
+    } catch (e) {
+      this.toggleAttribute("error", true)
+      throw e
     } finally {
       this.toggleAttribute("loading", false)
     }
