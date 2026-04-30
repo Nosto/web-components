@@ -1,3 +1,10 @@
+# [11.5.0](https://github.com/Nosto/web-components/compare/v11.4.0...v11.5.0) (2026-04-30)
+
+
+### Features
+
+* **DynamicCard:** set empty attribute on empty response, error attribute on errors ([4cc92a6](https://github.com/Nosto/web-components/commit/4cc92a6e8ffb930127fac8e2b6b4c86317085af2))
+
 # [11.4.0](https://github.com/Nosto/web-components/compare/v11.3.4...v11.4.0) (2026-04-15)
 
 
