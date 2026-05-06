@@ -39,7 +39,7 @@ The `products` property accepts the product array from the Nosto campaign result
 
 The component relies on specific attributes in its child DOM to wire up behavior. No shadow DOM is used; all markup is provided by the template author.
 
-**`n-summary-price`** — An element (e.g. `<span>`, `<div>`) where the component writes the formatted total price of selected products. By default the text is set to `Total: $XX.XX` using the currency from the first product. The format can be customized with the `summary` attribute (see below). The component throws if this element is missing.
+**`n-summary-price`** — An element (e.g. `<span>`, `<div>`) where the component writes the formatted total price of selected products. By default the text uses the template `Total: {total}`, where `{total}` is formatted using the currency from the first product. The format can be customized with the `summary` attribute (see below). The component throws if this element is missing.
 
 **`n-atc`** — A button or clickable element that triggers add-to-cart. When clicked, the component calls `window.Nosto.addMultipleProductsToCart` with one entry per selected product, passing the numeric product ID, the selected variant ID, and a quantity of one.
 
