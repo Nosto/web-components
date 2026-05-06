@@ -191,11 +191,11 @@ nosto-bundle[loading] {
 
 ## Rendered Event
 
-The component dispatches a `@nosto/Bundle/rendered` custom event after product data has been fetched and the summary price has been set. The event bubbles and is cancelable. Use it to initialize carousels, analytics, or other post-render logic that depends on the bundle content being ready.
+The component dispatches a `@nosto/Bundle/rendered` custom event when its initialization flow completes. In the typical case, that means Shopify product data has been fetched and the summary price has been set. If the `products` list is empty, the component skips fetching and summary updates but still dispatches the event. The event bubbles and is cancelable. Use it to initialize carousels, analytics, or other post-render logic that should run after the bundle has finished attempting to initialize.
 
 ```js
 document.addEventListener("@nosto/Bundle/rendered", () => {
-  // Bundle content is ready
+  // Bundle initialization has completed
 })
 ```
 
