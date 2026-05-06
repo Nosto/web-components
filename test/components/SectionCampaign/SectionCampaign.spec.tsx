@@ -1,7 +1,8 @@
 /** @jsx createElement */
-import { describe, it, expect, Mock } from "vitest"
+import { describe, it, expect, Mock, vi, beforeEach, afterEach } from "vitest"
 import { SectionCampaign } from "@/components/SectionCampaign/SectionCampaign"
 import { RequestBuilder } from "@nosto/nosto-js/client"
+import { mockNostojs, restoreNostojs } from "@nosto/nosto-js/testing"
 import { addHandlers } from "../../msw.setup"
 import { http, HttpResponse } from "msw"
 import { mockNostoRecs } from "../../mockNostoRecs"
@@ -265,5 +266,130 @@ describe("SectionCampaign", () => {
     expect(el.innerHTML).toContain("Should Not Change")
     expect(attributeProductClicksInCampaign).toHaveBeenCalledWith(el, { products, title: "Custom Title" })
     expect(el.hasAttribute("loading")).toBe(false)
+  })
+
+  describe("cart-synced functionality", () => {
+    let mockListen: Mock
+    let mockUnlisten: Mock
+
+    beforeEach(() => {
+      mockListen = vi.fn()
+      mockUnlisten = vi.fn()
+    })
+
+    afterEach(() => {
+      restoreNostojs()
+      vi.restoreAllMocks()
+    })
+
+    it("registers cart update listener when cart-synced is true", async () => {
+      mockNostojs({
+        listen: mockListen,
+        unlisten: mockUnlisten
+      })
+      vi.spyOn(SectionCampaign.prototype, "load").mockResolvedValue(undefined)
+
+      const el = (
+        <nosto-section-campaign placement="placement1" section="featured-section" cart-synced />
+      ) as SectionCampaign
+
+      await el.connectedCallback()
+
+      expect(mockListen).toHaveBeenCalledWith("cartupdated", expect.any(Function))
+    })
+
+    it("reloads campaign when cart update event is triggered", async () => {
+      mockNostojs({
+        listen: mockListen,
+        unlisten: mockUnlisten
+      })
+      const loadSpy = vi.spyOn(SectionCampaign.prototype, "load").mockResolvedValue(undefined)
+
+      const el = (
+        <nosto-section-campaign placement="placement1" section="featured-section" cart-synced={true} />
+      ) as SectionCampaign
+
+      await el.connectedCallback()
+
+      const cartUpdateCallback = mockListen.mock.calls[0][1]
+      await cartUpdateCallback()
+
+      expect(loadSpy).toHaveBeenCalledTimes(2)
+
+      await el.disconnectedCallback()
+
+      expect(mockUnlisten).toHaveBeenCalledWith("cartupdated", expect.any(Function))
+    })
+  })
+
+  describe("nav-synced functionality", () => {
+    let mockNavigation: {
+      addEventListener: Mock
+      removeEventListener: Mock
+    }
+
+    beforeEach(() => {
+      mockNavigation = {
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn()
+      }
+      // @ts-expect-error partial mock assignment
+      global.navigation = mockNavigation
+    })
+
+    afterEach(() => {
+      // @ts-expect-error cleanup
+      delete global.navigation
+      vi.restoreAllMocks()
+    })
+
+    it("registers navigation listener when nav-synced is true", async () => {
+      vi.spyOn(SectionCampaign.prototype, "load").mockResolvedValue(undefined)
+
+      const el = (
+        <nosto-section-campaign placement="placement1" section="featured-section" nav-synced />
+      ) as SectionCampaign
+
+      await el.connectedCallback()
+
+      expect(mockNavigation.addEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
+    })
+
+    it("does not register navigation listener when Navigation API is not supported", async () => {
+      // @ts-expect-error cleanup
+      delete global.navigation
+
+      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
+      vi.spyOn(SectionCampaign.prototype, "load").mockResolvedValue(undefined)
+
+      const el = (
+        <nosto-section-campaign placement="placement1" section="featured-section" nav-synced />
+      ) as SectionCampaign
+
+      await el.connectedCallback()
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "Navigation API is not supported in this browser. The nav-synced feature will not work."
+      )
+    })
+
+    it("reloads campaign when navigation success event is triggered", async () => {
+      const loadSpy = vi.spyOn(SectionCampaign.prototype, "load").mockResolvedValue(undefined)
+
+      const el = (
+        <nosto-section-campaign placement="placement1" section="featured-section" nav-synced={true} />
+      ) as SectionCampaign
+
+      await el.connectedCallback()
+
+      const navigationCallback = mockNavigation.addEventListener.mock.calls[0][1]
+      await navigationCallback()
+
+      expect(loadSpy).toHaveBeenCalledTimes(2)
+
+      await el.disconnectedCallback()
+
+      expect(mockNavigation.removeEventListener).toHaveBeenCalledWith("navigatesuccess", expect.any(Function))
+    })
   })
 })
