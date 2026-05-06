@@ -39,11 +39,57 @@ The `products` property accepts the product array from the Nosto campaign result
 
 The component relies on specific attributes in its child DOM to wire up behavior. No shadow DOM is used; all markup is provided by the template author.
 
-**`n-summary-price`** — An element (e.g. `<span>`, `<div>`) where the component writes the formatted total price of selected products. The text is set to `Total: $XX.XX` using the currency from the first product. The component throws if this element is missing.
+**`n-summary-price`** — An element (e.g. `<span>`, `<div>`) where the component writes the formatted total price of selected products. By default the text is set to `Total: $XX.XX` using the currency from the first product. The format can be customized with the `summary` attribute (see below). The component throws if this element is missing.
 
-**`n-atc`** — A button or clickable element that triggers add-to-cart. When clicked, the component calls `window.Nosto.addMultipleProductsToCart` with one entry per selected product, passing the numeric product ID, the first variant ID, and a quantity of one.
+**`n-atc`** — A button or clickable element that triggers add-to-cart. When clicked, the component calls `window.Nosto.addMultipleProductsToCart` with one entry per selected product, passing the numeric product ID, the selected variant ID, and a quantity of one.
 
-**Checkboxes with `value` set to a product handle** — Standard `<input type="checkbox">` elements control which products are included in the bundle. All products are selected by default. Toggling a checkbox adds or removes the matching product from the selection and recalculates the total.
+**Checkboxes with `value` set to a product handle** — Standard `<input type="checkbox">` elements control which products are included in the bundle. The initial checked state of each checkbox determines which products are selected on load. Toggling a checkbox adds or removes the matching product from the selection and recalculates the total.
+
+## Summary Template
+
+The `summary` attribute controls the text written into the `n-summary-price` element. It supports two placeholders:
+
+- `{total}` — the formatted price of all selected products.
+- `{amount}` — the number of selected products.
+
+The default template is `Total: {total}`.
+
+```html
+<nosto-bundle
+  .products="products"
+  summary="Buy {amount} items for {total}"
+>
+  ...
+  <span n-summary-price></span>
+  <button n-atc>Add Bundle to Cart</button>
+</nosto-bundle>
+```
+
+With three products selected at a combined price of $120.00, the summary element would read `Buy 3 items for $120.00`.
+
+## Variant Selection
+
+When a `nosto-variant-selector` is placed inside a product card, the bundle listens for variant change events and updates the selected variant for that product. The total price recalculates automatically using the price of each product's currently selected variant.
+
+If the Nosto recommendation result includes a `recommended_sku` for a product, the component selects that variant initially. Otherwise it falls back to the first available variant.
+
+```html
+<nosto-bundle .products="products">
+  <div class="bundle-grid">
+    <nosto-simple-card handle="product-a">
+      <nosto-variant-selector handle="product-a" mode="compact"></nosto-variant-selector>
+    </nosto-simple-card>
+    <nosto-simple-card handle="product-b">
+      <nosto-variant-selector handle="product-b" mode="compact"></nosto-variant-selector>
+    </nosto-simple-card>
+  </div>
+
+  <span n-summary-price></span>
+  <button n-atc>Add Bundle to Cart</button>
+</nosto-bundle>
+```
+
+When the shopper selects a different variant, the add-to-cart payload uses the newly selected variant ID for that product.
 
 ## Checkbox Placement and Card Visibility
 
@@ -141,6 +187,16 @@ nosto-bundle[loading] {
   opacity: 0.5;
   pointer-events: none;
 }
+```
+
+## Rendered Event
+
+The component dispatches a `@nosto/Bundle/rendered` custom event after product data has been fetched and the summary price has been set. The event bubbles and is cancelable. Use it to initialize carousels, analytics, or other post-render logic that depends on the bundle content being ready.
+
+```js
+document.addEventListener("@nosto/Bundle/rendered", () => {
+  // Bundle content is ready
+})
 ```
 
 ## Production Recommendations
