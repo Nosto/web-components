@@ -207,7 +207,7 @@ Preserve Nosto attribution. The component calls `addMultipleProductsToCart` with
 
 Style the summary price element before render. The `n-summary-price` element starts empty and is populated after product data loads. Reserve space or apply a minimum height so the layout does not shift when the total appears.
 
-Handle empty results. Nosto may return no products for a placement. The component exits early when the product list is empty, so the bundle will render nothing. Wrap the component or its parent in conditional logic that shows a fallback or hides the section entirely when the placement has no result.
+Handle empty results. Nosto may return no products for a placement. When the product list is empty the component skips fetching and leaves the summary unpopulated, but any light DOM content inside the element remains visible. Conditionally render or hide the entire bundle section when the placement has no result so that empty markup, headings, or add-to-cart buttons are not shown to the shopper.
 
 Use stable placement names. The `placement` attribute on the wrapping `nosto-campaign` and the Nosto campaign configuration must match. Changing either silently breaks rendering and attribution.
 
