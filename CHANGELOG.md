@@ -1,3 +1,10 @@
+# [11.6.0](https://github.com/Nosto/web-components/compare/v11.5.0...v11.6.0) (2026-05-07)
+
+
+### Features
+
+* **SectionCampaign:** add sync attributes ([5b142c7](https://github.com/Nosto/web-components/commit/5b142c75a432e0a0dcb4835643d089bc59bffa7b))
+
 # [11.5.0](https://github.com/Nosto/web-components/compare/v11.4.0...v11.5.0) (2026-04-30)
 
 
