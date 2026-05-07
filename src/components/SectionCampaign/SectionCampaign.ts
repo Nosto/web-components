@@ -5,6 +5,7 @@ import { customElement, property } from "../decorators"
 import { NostoElement } from "../Element"
 import { addRequest } from "../Campaign/orchestrator"
 import { JSONResult } from "@nosto/nosto-js/client"
+import { isNavigationApiSupported } from "@/utils/navigationApi"
 
 /**
  * A custom element that fetches Nosto placement results and renders them using Shopify section templates.
@@ -17,14 +18,51 @@ import { JSONResult } from "@nosto/nosto-js/client"
  * @property {string} placement - The placement identifier for the campaign.
  * @property {string} section - The section to be used for Section Rendering API based rendering.
  * @property {string} [titleSelector] - CSS selector for the title element to inject the campaign title (attribute: "title-selector").
+ * @property {boolean} [cartSynced] (`cart-synced`) - If true, the component will reload the campaign
+ * whenever a cart update event occurs. Useful for keeping cart-related campaigns in sync
+ * with cart changes. Defaults to false.
+ * @property {boolean} [navSynced] (`nav-synced`) - If true, the component will reload the campaign
+ * whenever a successful page navigation occurs via the Navigation API. Useful for keeping
+ * campaigns in sync with URL changes (e.g., category-specific recommendations). Requires
+ * browser support for the Navigation API. Defaults to false.
  */
 @customElement("nosto-section-campaign")
 export class SectionCampaign extends NostoElement {
   @property(String) placement!: string
   @property(String) section!: string
   @property(String) titleSelector?: string
+  @property(Boolean) cartSynced?: boolean
+  @property(Boolean) navSynced?: boolean
+
+  #load = this.load.bind(this)
 
   async connectedCallback() {
+    if (this.cartSynced) {
+      const api = await new Promise(nostojs)
+      api.listen("cartupdated", this.#load)
+    }
+    if (this.navSynced) {
+      if (isNavigationApiSupported()) {
+        navigation.addEventListener("navigatesuccess", this.#load)
+      } else {
+        console.warn("Navigation API is not supported in this browser. The nav-synced feature will not work.")
+      }
+    }
+
+    await this.load()
+  }
+
+  async disconnectedCallback() {
+    if (this.cartSynced) {
+      const api = await new Promise(nostojs)
+      api.unlisten("cartupdated", this.#load)
+    }
+    if (this.navSynced && isNavigationApiSupported()) {
+      navigation.removeEventListener("navigatesuccess", this.#load)
+    }
+  }
+
+  async load() {
     this.toggleAttribute("loading", true)
     try {
       await this.#initializeMarkup()
