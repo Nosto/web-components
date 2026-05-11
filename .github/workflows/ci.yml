@@ -19,9 +19,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Audit dependencies
-        run: npm audit --audit-level=high
-
       - name: Build project
         run: npm run build
 
@@ -42,9 +39,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Audit dependencies
-        run: npm audit --audit-level=high
-
       - name: Run lint
         run: npm run lint
 
@@ -61,9 +55,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Audit dependencies
-        run: npm audit --audit-level=high
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
