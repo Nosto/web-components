@@ -26,6 +26,18 @@ async function build() {
       format: "esm"
     })
 
+    await Promise.all(
+      getElements().map((element) =>
+        esbuild.build({
+          ...sharedConfig,
+          entryPoints: [`src/components/${element}/${element}.ts`],
+          minifyWhitespace: true,
+          outfile: `dist/components/${element}/${element}.js`,
+          format: "esm",
+        })
+      )
+    )
+
     const result = await esbuild.build({
       ...sharedConfig,
       minifyWhitespace: true,
@@ -41,6 +53,12 @@ async function build() {
     console.error("Build failed:", error)
     process.exit(1)
   }
+}
+
+function getElements() {
+  return fs.readdirSync("src/components").filter((file) => {
+    return fs.statSync(`src/components/${file}`).isDirectory()
+  })
 }
 
 await build()
