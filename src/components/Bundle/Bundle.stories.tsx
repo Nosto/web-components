@@ -67,9 +67,9 @@ export const Default: Story = {
       <nosto-bundle products={productsWithTitles as JSONProduct[]} summary={args.summary}>
         <div class="bundle-grid">
           {productsWithTitles.map(product => (
-            <nosto-simple-card handle={product.handle}>
-              <nosto-variant-selector handle={product.handle} mode="compact"></nosto-variant-selector>
-            </nosto-simple-card>
+            <div class="product-card" handle={product.handle}>
+              <p>{product.title}</p>
+            </div>
           ))}
         </div>
         <div class="bundle-controls">
@@ -104,10 +104,10 @@ export const CheckboxCard: Story = {
       <nosto-bundle products={productsWithTitles as JSONProduct[]}>
         <div class="bundle-grid checkbox-cards">
           {productsWithTitles.map(product => (
-            <nosto-simple-card handle={product.handle}>
-              <nosto-variant-selector handle={product.handle} mode="compact"></nosto-variant-selector>
+            <div class="product-card" handle={product.handle}>
+              <p>{product.title}</p>
               <input type="checkbox" value={product.handle} checked />
-            </nosto-simple-card>
+            </div>
           ))}
         </div>
         <div class="bundle-summary">
