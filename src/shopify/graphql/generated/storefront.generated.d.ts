@@ -84,12 +84,15 @@ export type ExampleHandlesQueryVariables = StorefrontTypes.Exact<{
 }>;
 
 
-export type ExampleHandlesQuery = { products: { edges: Array<{ node: Pick<StorefrontTypes.Product, 'handle'> }> } };
+export type ExampleHandlesQuery = { products: { edges: Array<{ node: (
+        Pick<StorefrontTypes.Product, 'handle' | 'title'>
+        & { variants: { nodes: Array<Pick<StorefrontTypes.ProductVariant, 'id'>> } }
+      ) }> } };
 
 interface GeneratedQueryTypes {
   "query ProductByHandle($country: CountryCode!, $language: LanguageCode!, $handle: String!) @inContext(country: $country, language: $language) {\n  product(handle: $handle) {\n    id\n    title\n    handle\n    vendor\n    description\n    encodedVariantExistence\n    onlineStoreUrl\n    availableForSale\n    images(first: 10) {\n      nodes {\n        url\n        width\n        height\n      }\n    }\n    featuredImage {\n      url\n      width\n      height\n    }\n    adjacentVariants {\n      ...VariantFragment\n    }\n    options(first: 50) {\n      name\n      optionValues {\n        firstSelectableVariant {\n          ...VariantFragment\n        }\n        name\n        swatch {\n          color\n          image {\n            alt\n            id\n            mediaContentType\n            previewImage {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment VariantFragment on ProductVariant {\n  availableForSale\n  title\n  id\n  image {\n    url\n    width\n    height\n  }\n  price {\n    currencyCode\n    amount\n  }\n  compareAtPrice {\n    currencyCode\n    amount\n  }\n  product {\n    id\n    onlineStoreUrl\n  }\n  selectedOptions {\n    name\n    value\n  }\n}": {return: ProductByHandleQuery, variables: ProductByHandleQueryVariables},
   "query ProductsByIds($country: CountryCode!, $ids: [ID!]!) @inContext(country: $country) {\n  nodes(ids: $ids) {\n    ... on Product {\n      id\n      title\n      handle\n      vendor\n      description\n      encodedVariantExistence\n      onlineStoreUrl\n      availableForSale\n      images(first: 10) {\n        nodes {\n          altText\n          height\n          width\n          thumbhash\n          url\n        }\n      }\n      featuredImage {\n        altText\n        height\n        width\n        thumbhash\n        url\n      }\n      options(first: 50) {\n        name\n        optionValues {\n          name\n          swatch {\n            color\n            image {\n              alt\n              id\n              mediaContentType\n              previewImage {\n                url\n                width\n                height\n                altText\n                thumbhash\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}": {return: ProductsByIdsQuery, variables: ProductsByIdsQueryVariables},
-  "query ExampleHandles($first: Int!) {\n  products(first: $first) {\n    edges {\n      node {\n        handle\n      }\n    }\n  }\n}": {return: ExampleHandlesQuery, variables: ExampleHandlesQueryVariables},
+  "query ExampleHandles($first: Int!) {\n  products(first: $first) {\n    edges {\n      node {\n        handle\n        title\n        variants(first: 1) {\n          nodes {\n            id\n          }\n        }\n      }\n    }\n  }\n}": {return: ExampleHandlesQuery, variables: ExampleHandlesQueryVariables},
 }
 
 interface GeneratedMutationTypes {

@@ -1,15 +1,16 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { exampleHandlesLoader, exampleProductsLoader } from "@/storybook/loader"
-import { clearCache } from "@/storybook/shopify/graphql/getExampleProducts"
+import { clearCache, ExampleProduct } from "@/storybook/shopify/graphql/getExampleProducts"
+import { apiVersion } from "@/shopify/graphql/apiVersion"
 import { addHandlers } from "../msw.setup"
 import { http, HttpResponse } from "msw"
 
 type GraphQLRequestBody = { query: string; variables: { first: number } }
 
 const shopifyShop = "example-shop.myshopify.com"
-const endpoint = `https://${shopifyShop}/api/2025-10/graphql.json`
+const endpoint = `https://${shopifyShop}/api/${apiVersion}/graphql.json`
 
-const createMockResponse = (products: Array<{ handle: string; title: string }>) => ({
+const createMockResponse = (products: ExampleProduct[]) => ({
   data: {
     products: {
       edges: products.map(product => ({ node: product }))
@@ -18,12 +19,17 @@ const createMockResponse = (products: Array<{ handle: string; title: string }>) 
 })
 
 const createMockProducts = (count: number) =>
-  Array.from({ length: count }, (_, i) => ({ handle: `product-${i + 1}`, title: `Product ${i + 1}` }))
+  Array.from(
+    { length: count },
+    (_, i) =>
+      ({
+        handle: `product-${i + 1}`,
+        title: `Product ${i + 1}`,
+        variants: { nodes: [{ id: `gid://shopify/ProductVariant/${i + 1}` }] }
+      }) satisfies ExampleProduct
+  )
 
-const setupMockHandler = (
-  products: Array<{ handle: string; title: string }>,
-  requestBodyCapture?: (body: unknown) => void
-) => {
+const setupMockHandler = (products: ExampleProduct[], requestBodyCapture?: (body: unknown) => void) => {
   addHandlers(
     http.post(endpoint, async ({ request }) => {
       if (requestBodyCapture) {
@@ -87,16 +93,21 @@ describe("exampleHandlesLoader", () => {
     setupMockHandler(createMockProducts(20))
 
     const result = await exampleHandlesLoader({ args: { shopifyShop } })
-    expect(result.handles).toHaveLength(12)
-    expect(typeof result.handles[0]).toBe("string")
-    expect(result.handles[0]).toBe("product-1")
+    expect(result.data).toHaveLength(12)
+
+    expect(result.data[0]).toEqual({ handle: "product-1", variant: "1" })
   })
 
   it("should use custom count from args", async () => {
     setupMockHandler(createMockProducts(20))
 
     const result = await exampleHandlesLoader({ args: { shopifyShop, count: 5 } })
-    expect(result.handles).toHaveLength(5)
-    expect(result.handles).toEqual(["product-1", "product-2", "product-3", "product-4", "product-5"])
+    expect(result.data).toHaveLength(5)
+
+    const handles = result.data.map(it => it.handle)
+    const variantIds = result.data.map(it => it.variant)
+
+    expect(handles).toEqual(["product-1", "product-2", "product-3", "product-4", "product-5"])
+    expect(variantIds).toEqual(["1", "2", "3", "4", "5"])
   })
 })
