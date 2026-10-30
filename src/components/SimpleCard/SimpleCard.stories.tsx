@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { createElement } from "@/utils/jsx"
 import { exampleHandlesLoader } from "@/storybook/loader"
 import { setShopifyShop } from "@/shopify/getShopifyUrl"
+import { ExampleData } from "@/storybook/shopify/graphql/getExampleProducts"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
 setShopifyShop(shopifyShop)
@@ -84,14 +85,14 @@ export const Default: Story = {
     products: 12
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <div
         style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 1rem; max-width: 1200px;`}
       >
-        {handles.map(handle => (
+        {data.map(item => (
           <nosto-simple-card
-            handle={handle}
+            handle={item.handle}
             image-mode={args.imageMode || undefined}
             brand={args.brand}
             discount={args.discount}
@@ -108,10 +109,10 @@ export const Default: Story = {
 export const SingleCard: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
@@ -127,16 +128,16 @@ export const SingleCard: Story = {
 export const WithVariantSelector: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
       >
-        <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
+        <nosto-variant-selector handle={data[0].handle}></nosto-variant-selector>
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
     )
@@ -145,10 +146,10 @@ export const WithVariantSelector: Story = {
 
 export const WithAllFeatures: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
@@ -168,10 +169,10 @@ export const WithAllFeatures: Story = {
 
 export const WithCarousel: Story = {
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}

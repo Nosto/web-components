@@ -4,6 +4,7 @@ import { createElement } from "@/utils/jsx"
 import { exampleHandlesLoader } from "@/storybook/loader"
 import "./VariantSelector"
 import { setShopifyShop } from "@/shopify/getShopifyUrl"
+import { ExampleData } from "@/storybook/shopify/graphql/getExampleProducts"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
 setShopifyShop(shopifyShop)
@@ -107,14 +108,14 @@ export const Default: Story = {
     maxValues: 5
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <div
         style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 0.5rem; padding: 0.1rem; max-width: 1200px;`}
       >
-        {handles.map(handle => (
+        {data.map(item => (
           <nosto-simple-card
-            handle={handle}
+            handle={item.handle}
             image-mode={args.imageMode || undefined}
             brand={args.brand}
             discount={args.discount}
@@ -122,7 +123,7 @@ export const Default: Story = {
             image-sizes={args.sizes || ""}
           >
             <nosto-variant-selector
-              handle={handle}
+              handle={item.handle}
               mode={args.mode}
               placeholder={args.placeholder}
               preselect={args.preselect}
@@ -138,25 +139,25 @@ export const Default: Story = {
 export const SingleProduct: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (_args, { loaded }) => {
-    const handles = loaded?.handles as string[]
-    return <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
+    const data = loaded?.data as ExampleData[]
+    return <nosto-variant-selector handle={data[0].handle}></nosto-variant-selector>
   }
 }
 
 export const InSimpleCard: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
         image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
+        <nosto-variant-selector handle={data[0].handle}></nosto-variant-selector>
       </nosto-simple-card>
     )
   }
@@ -165,17 +166,17 @@ export const InSimpleCard: Story = {
 export const InSimpleCard_AddToCart: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
         image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle={handles[0]}></nosto-variant-selector>
+        <nosto-variant-selector handle={data[0].handle}></nosto-variant-selector>
         <button n-atc>Add to cart</button>
       </nosto-simple-card>
     )
@@ -185,17 +186,17 @@ export const InSimpleCard_AddToCart: Story = {
 export const WithPlaceholder: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
         image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle={handles[0]} placeholder></nosto-variant-selector>
+        <nosto-variant-selector handle={data[0].handle} placeholder></nosto-variant-selector>
       </nosto-simple-card>
     )
   },
@@ -220,19 +221,19 @@ export const WithMaxValues: Story = {
     maxValues: 3
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0.1rem; max-width: 1200px;">
-        {handles.slice(0, 6).map(handle => (
+        {data.slice(0, 6).map(item => (
           <nosto-simple-card
-            handle={handle}
+            handle={item.handle}
             image-mode={args.imageMode || undefined}
             brand={args.brand}
             discount={args.brand}
             rating={args.rating || 0}
             image-sizes={args.sizes || ""}
           >
-            <nosto-variant-selector handle={handle} max-values={args.maxValues}></nosto-variant-selector>
+            <nosto-variant-selector handle={item.handle} max-values={args.maxValues}></nosto-variant-selector>
           </nosto-simple-card>
         ))}
       </div>
@@ -251,17 +252,17 @@ export const WithMaxValues: Story = {
 export const CompactMode: Story = {
   decorators: [story => <div style="max-width: 300px; margin: 0 auto;">{story()}</div>],
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     return (
       <nosto-simple-card
-        handle={handles[0]}
+        handle={data[0].handle}
         image-mode={args.imageMode || undefined}
         brand={args.brand}
         discount={args.discount}
         rating={args.rating || 0}
         image-sizes={args.sizes || ""}
       >
-        <nosto-variant-selector handle={handles[0]} mode="compact"></nosto-variant-selector>
+        <nosto-variant-selector handle={data[0].handle} mode="compact"></nosto-variant-selector>
       </nosto-simple-card>
     )
   },
