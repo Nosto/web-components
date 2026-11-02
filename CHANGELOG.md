@@ -1,3 +1,10 @@
+# [11.7.0](https://github.com/Nosto/web-components/compare/v11.6.0...v11.7.0) (2026-11-02)
+
+
+### Features
+
+* update graphql version to match backend and add variant-id in dpc story ([87c922b](https://github.com/Nosto/web-components/commit/87c922b971a7bea5689172473d5f9d7fd72efc44))
+
 # [11.6.0](https://github.com/Nosto/web-components/compare/v11.5.0...v11.6.0) (2026-05-07)
 
 
