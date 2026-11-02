@@ -25,6 +25,6 @@ export async function exampleProductsLoader(context: Context) {
 export async function exampleHandlesLoader(context: Context) {
   const { products } = await exampleProductsLoader(context)
   return {
-    handles: products.map(p => p.handle)
+    data: products.map(p => ({ handle: p.handle, variant: p.variant }))
   }
 }

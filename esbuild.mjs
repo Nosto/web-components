@@ -2,6 +2,8 @@ import esbuild from "esbuild"
 import fs from "fs"
 import { cssPlugin, graphqlPlugin } from "./plugins/esbuild.mjs"
 
+process.loadEnvFile()
+
 const sharedConfig = {
   entryPoints: ["src/main.ts"],
   bundle: true,
@@ -9,7 +11,10 @@ const sharedConfig = {
   minifySyntax: true,
   target: "es2020",
   sourcemap: true,
-  plugins: [cssPlugin(), graphqlPlugin()]
+  plugins: [cssPlugin(), graphqlPlugin()],
+  define: {
+    "import.meta.env.VITE_SHOPIFY_API_VERSION": JSON.stringify(process.env.VITE_SHOPIFY_API_VERSION)
+  }
 }
 
 async function build() {

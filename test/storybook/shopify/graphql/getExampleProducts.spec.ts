@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { getExampleProducts, clearCache } from "@/storybook/shopify/graphql/getExampleProducts"
+import { getExampleProducts, clearCache, ExampleProduct } from "@/storybook/shopify/graphql/getExampleProducts"
+import { apiVersion } from "@/shopify/graphql/apiVersion"
 import { addHandlers } from "../../../msw.setup"
 import { http, HttpResponse } from "msw"
 
@@ -7,9 +8,9 @@ type GraphQLRequestBody = { query: string; variables: { first: number } }
 
 describe("getExampleProducts", () => {
   const shopifyShop = "example-shop.myshopify.com"
-  const endpoint = `https://${shopifyShop}/api/2025-10/graphql.json`
+  const endpoint = `https://${shopifyShop}/api/${apiVersion}/graphql.json`
 
-  const createMockResponse = (products: Array<{ handle: string; title: string }>) => ({
+  const createMockResponse = (products: ExampleProduct[]) => ({
     data: {
       products: {
         edges: products.map(product => ({ node: product }))
@@ -21,14 +22,16 @@ describe("getExampleProducts", () => {
     clearCache()
   })
 
-  it("should fetch product handles and titles successfully", async () => {
+  const variants = (...ids: string[]) => ({ nodes: ids.map(id => ({ id })) })
+
+  it("should fetch product handles, titles and first variant ids successfully", async () => {
     addHandlers(
       http.post(endpoint, () => {
         return HttpResponse.json(
           createMockResponse([
-            { handle: "product-1", title: "Product 1" },
-            { handle: "product-2", title: "Product 2" },
-            { handle: "product-3", title: "Product 3" }
+            { handle: "product-1", title: "Product 1", variants: variants("gid://shopify/ProductVariant/101") },
+            { handle: "product-2", title: "Product 2", variants: variants("gid://shopify/ProductVariant/201") },
+            { handle: "product-3", title: "Product 3", variants: variants("gid://shopify/ProductVariant/301") }
           ])
         )
       })
@@ -36,10 +39,46 @@ describe("getExampleProducts", () => {
 
     const products = await getExampleProducts(shopifyShop)
     expect(products).toEqual([
-      { handle: "product-1", title: "Product 1" },
-      { handle: "product-2", title: "Product 2" },
-      { handle: "product-3", title: "Product 3" }
+      { handle: "product-1", title: "Product 1", variant: "101" },
+      { handle: "product-2", title: "Product 2", variant: "201" },
+      { handle: "product-3", title: "Product 3", variant: "301" }
     ])
+  })
+
+  it("should leave variant undefined when product has no variants", async () => {
+    addHandlers(
+      http.post(endpoint, () => {
+        return HttpResponse.json(
+          createMockResponse([
+            { handle: "product-1", title: "Product 1" },
+            { handle: "product-2", title: "Product 2", variants: variants() }
+          ])
+        )
+      })
+    )
+
+    const products = await getExampleProducts(shopifyShop)
+    expect(products).toEqual([
+      { handle: "product-1", title: "Product 1", variant: undefined },
+      { handle: "product-2", title: "Product 2", variant: undefined }
+    ])
+  })
+
+  it("should leave variant undefined when variant id is not a valid Shopify gid", async () => {
+    addHandlers(
+      http.post(endpoint, () => {
+        return HttpResponse.json(
+          createMockResponse([
+            { handle: "product-1", title: "Product 1", variants: variants("not-a-gid") },
+            { handle: "product-2", title: "Product 2", variants: variants("gid://other/ProductVariant/1") },
+            { handle: "product-3", title: "Product 3", variants: variants("gid://shopify/ProductVariant") }
+          ])
+        )
+      })
+    )
+
+    const products = await getExampleProducts(shopifyShop)
+    expect(products.map(p => p.variant)).toEqual([undefined, undefined, undefined])
   })
 
   it("should throw error when fetch fails with 404", async () => {
@@ -146,6 +185,7 @@ describe("getExampleProducts", () => {
     expect(body.query).toContain("node")
     expect(body.query).toContain("handle")
     expect(body.query).toContain("title")
+    expect(body.query).toContain("variants(first: 1)")
     expect(body.variables).toEqual({ first: 20 })
   })
 

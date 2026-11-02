@@ -38,3 +38,11 @@ declare module "*.graphql?raw" {
   const content: string
   export default content
 }
+
+interface ImportMetaEnv {
+  readonly VITE_SHOPIFY_API_VERSION: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}

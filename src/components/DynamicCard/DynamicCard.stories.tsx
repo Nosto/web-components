@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite"
 import { createElement } from "@/utils/jsx"
 import { exampleHandlesLoader } from "@/storybook/loader"
 import { setShopifyShop } from "@/shopify/getShopifyUrl"
+import { ExampleData } from "@/storybook/shopify/graphql/getExampleProducts"
 
 const shopifyShop = "nosto-shopify1.myshopify.com"
 setShopifyShop(shopifyShop)
@@ -73,17 +74,18 @@ export const Default: Story = {
     products: 12
   },
   render: (args, { loaded }) => {
-    const handles = loaded?.handles as string[]
+    const data = loaded?.data as ExampleData[]
     if (!args.template && !args.section) {
       return <p>Please provide either a template or section id.</p>
     }
     return (
       <div style={`display: grid; grid-template-columns: repeat(${args.columns}, 1fr); gap: 1rem; padding: 1rem;`}>
-        {handles.map(handle => (
+        {data.map(item => (
           <nosto-dynamic-card
-            handle={handle}
+            handle={item.handle}
             template={args.template}
             section={args.section}
+            variantId={item.variant}
             mock={args.mock}
           ></nosto-dynamic-card>
         ))}
